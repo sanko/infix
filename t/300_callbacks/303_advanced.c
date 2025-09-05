@@ -1,0 +1,188 @@
+/**
+ * Copyright (c) 2025 Sanko Robinson
+ *
+ * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
+ * You may choose to use this code under the terms of either license.
+ *
+ * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
+ *
+ * The documentation blocks within this file are licensed under the
+ * Creative Commons Attribution 4.0 International License (CC BY 4.0).
+ *
+ * SPDX-License-Identifier: CC-BY-4.0
+ */
+/**
+ * @file 303_advanced.c
+ * @brief Tests advanced reverse trampoline (callback) patterns.
+ *
+ * @details This test suite verifies the library's ability to handle complex,
+ * higher-order function patterns involving callbacks. It consolidates several
+ * previous tests to create a focused suite for advanced use cases.
+ *
+ * The scenarios tested are:
+ * 1.  **Pointer Modification:** A callback receives a pointer to a variable in
+ *     the caller's scope and modifies its value, a common pattern for "out"
+ *     parameters.
+ * 2.  **Callback as an Argument:** A generated callback (reverse trampoline) is
+ *     passed as a function pointer argument to a different function (called via
+ *     a forward trampoline). This tests the interplay between the two FFI mechanisms.
+ * 3.  **Callback Returning a Callback:** A callback is generated whose sole
+ *     purpose is to return a different, dynamically-generated function pointer.
+ *     This is achieved by storing the target function pointer in the `user_data`
+ *     field of the reverse trampoline context, testing a powerful feature for
+ *     creating stateful, dynamic callback providers.
+ */
+
+#define DBLTAP_IMPLEMENTATION
+#include "types.h"
+#include <double_tap.h>
+#include <infix.h>
+
+// Scenario 1: Modify Data Via Pointer
+
+/** @brief Handler that dereferences a pointer and writes a new value. */
+void pointer_modify_handler(int * p) {
+    note("pointer_modify_handler received pointer p=%p", (void *)p);
+    if (p)
+        *p = 999;
+}
+
+/** @brief Harness that calls the provided function pointer, passing it an address. */
+void execute_pointer_modify_callback(void (*func_ptr)(int *), int * p) {
+    func_ptr(p);
+    ok(*p == 999, "Callback correctly modified the integer via its pointer");
+}
+
+// Scenario 2: Callback as an Argument
+
+/** @brief The inner callback that will be passed as an argument. */
+void inner_callback_handler(int val) {
+    note("inner_callback_handler received val=%d", val);
+    ok(val == 42, "Inner callback received the correct value from the harness");
+}
+
+/** @brief The harness function that accepts a function pointer as its argument. */
+void execute_callback_as_arg_harness(void (*cb)(int)) {
+    note("Harness is about to call the provided callback with value 42.");
+    cb(42);
+}
+
+// Scenario 3: Callback Returning a Callback
+
+/** @brief The innermost handler that will be returned and ultimately called. */
+int final_multiply_handler(int val) {
+    return val * 10;
+}
+/**
+ * @brief A stub handler for the "provider" callback.
+ * @details This handler's code is never actually called. The FFI library has a
+ * special-case optimization: if a reverse trampoline is for a function with
+ * signature `void*(void)`, it will directly return the `user_data` pointer
+ * instead of invoking the handler. We use this to make a callback that "returns"
+ * the function pointer we stored in its `user_data`.
+ */
+void * callback_provider_stub(void) {
+    // This should never be reached.
+    fail("The provider stub should not be called directly.");
+    return NULL;
+}
+
+/** @brief A harness that receives the provider, calls it to get the real callback, and then calls that. */
+typedef int (*int_func_int)(int);
+typedef int_func_int (*callback_provider)(void);
+
+int call_returned_callback_harness(callback_provider provider, int val) {
+    // 1. Call the provider to get the actual worker callback.
+    int_func_int worker_cb = provider();
+    // 2. Call the worker callback and return its result.
+    return worker_cb(val);
+}
+
+
+TEST {
+    plan(3);
+
+    subtest("Callback modifies data via pointer") {
+        plan(2);
+        ffi_type * ret_type = ffi_type_create_void();
+        ffi_type * arg_types[] = {ffi_type_create_pointer()};
+        ffi_reverse_trampoline_t * rt = NULL;
+        ffi_status status =
+            generate_reverse_trampoline(&rt, ret_type, arg_types, 1, 1, (void *)pointer_modify_handler, NULL);
+        ok(status == FFI_SUCCESS, "Reverse trampoline for pointer modification created");
+
+        if (rt) {
+            int my_value = 100;
+            execute_pointer_modify_callback((void (*)(int *))rt->exec_code.rx_ptr, &my_value);
+        }
+        else {
+            skip(1, "Test skipped");
+        }
+        ffi_reverse_trampoline_free(rt);
+    }
+
+    subtest("Callback passed as an argument") {
+        // 1. Create the inner callback: void(int)
+        plan(3);
+        ffi_reverse_trampoline_t * inner_rt = NULL;
+        ffi_type * inner_arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
+        ffi_status status = generate_reverse_trampoline(
+            &inner_rt, ffi_type_create_void(), inner_arg_types, 1, 1, (void *)inner_callback_handler, NULL);
+        ok(status == FFI_SUCCESS, "Inner reverse trampoline (the argument) created");
+
+        // 2. Create the forward trampoline to call the harness: void(void*)
+        ffi_trampoline_t * fwd_trampoline = NULL;
+        ffi_type * fwd_arg_types[] = {ffi_type_create_pointer()};
+        status = generate_forward_trampoline(&fwd_trampoline, ffi_type_create_void(), fwd_arg_types, 1, 1);
+        ok(status == FFI_SUCCESS, "Forward trampoline (for the harness) created");
+
+        // 3. Execute the call
+        if (inner_rt && fwd_trampoline) {
+            void * callback_ptr_arg = inner_rt->exec_code.rx_ptr;
+            void * args[] = {&callback_ptr_arg};
+            ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(fwd_trampoline);
+            cif((void *)execute_callback_as_arg_harness, NULL, args);
+        }
+        else {
+            skip(1, "Test skipped");
+        }
+
+        ffi_reverse_trampoline_free(inner_rt);
+        ffi_trampoline_free(fwd_trampoline);
+    }
+
+    subtest("Callback returns a function pointer (via user_data)") {
+        plan(3);
+
+        // 1. Create the final, innermost callback: int(int)
+        ffi_reverse_trampoline_t * inner_t = NULL;
+        ffi_type * inner_arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
+        ffi_status status = generate_reverse_trampoline(&inner_t,
+                                                        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
+                                                        inner_arg_types,
+                                                        1,
+                                                        1,
+                                                        (void *)final_multiply_handler,
+                                                        NULL);
+        ok(status == FFI_SUCCESS, "Inner callback created");
+
+        // 2. Create the provider callback: void*(void)
+        // Store the function pointer of the inner callback in the provider's user_data.
+        ffi_reverse_trampoline_t * provider_t = NULL;
+        void * user_data_ptr = inner_t ? inner_t->exec_code.rx_ptr : NULL;
+        status = generate_reverse_trampoline(&provider_t, ffi_type_create_pointer(), NULL, 0, 0, NULL, user_data_ptr);
+        ok(status == FFI_SUCCESS, "Provider callback created");
+
+        // 3. Call the harness that uses the provider
+        if (inner_t && provider_t) {
+            int result = call_returned_callback_harness((callback_provider)provider_t->exec_code.rx_ptr, 7);
+            ok(result == 70, "Callback returned from another callback works correctly (7 * 10 = 70)");
+        }
+        else {
+            skip(1, "Test skipped");
+        }
+
+        ffi_reverse_trampoline_free(provider_t);
+        ffi_reverse_trampoline_free(inner_t);
+    }
+}

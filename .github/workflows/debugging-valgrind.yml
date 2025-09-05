@@ -1,0 +1,51 @@
+name: Reusable Valgrind Runner
+
+on:
+  workflow_call:
+    inputs:
+      test-type:
+        description: 'The type of valgrind test (memcheck, fault-injection, or helgrind).'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read # Required to download artifacts in the summary job
+
+jobs:
+  run-valgrind:
+    name: ${{ inputs.test-type }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc perl valgrind
+      - name: Determine Test Command
+        id: command
+        shell: bash
+        run: |
+          if [[ "${{ inputs.test-type }}" == "memcheck" ]]; then
+            echo "cmd=memtest" >> $GITHUB_OUTPUT
+            echo "file_part=memcheck" >> $GITHUB_OUTPUT
+          elif [[ "${{ inputs.test-type }}" == "fault-injection" ]]; then
+            echo "cmd=memtest:fault" >> $GITHUB_OUTPUT
+            echo "file_part=fault-injection" >> $GITHUB_OUTPUT
+          elif [[ "${{ inputs.test-type }}" == "helgrind" ]]; then
+            echo "cmd=helgrindtest" >> $GITHUB_OUTPUT
+            echo "file_part=helgrind" >> $GITHUB_OUTPUT
+          fi
+      - name: Run Test
+        id: test-execution
+        continue-on-error: true
+        run: perl build.pl ${{ steps.command.outputs.cmd }} --compiler=gcc
+      - name: Record Build Status
+        if: always()
+        shell: bash
+        run: echo ${{ steps.test-execution.outcome }} > valgrind-${{ steps.command.outputs.file_part }}-x86_64-gcc.result
+      - name: Upload Build Status Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-artifact-valgrind-${{ steps.command.outputs.file_part }}-x86_64-gcc.result
+          path: valgrind-${{ steps.command.outputs.file_part }}-x86_64-gcc.result
+          retention-days: 1

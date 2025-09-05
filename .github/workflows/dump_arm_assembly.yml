@@ -1,0 +1,70 @@
+name: Dump ARM64 Assembly
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch: ~
+
+jobs:
+  dump-asm:
+    name: Dump Assembly on ${{ matrix.os }} ARM64
+    strategy:
+      matrix:
+        os: [ubuntu-24.04-arm, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Create realistic C file for simulation
+        shell: bash
+        run: |
+          cat << 'EOF' > harness.c
+          #include <stdio.h>
+          #include <stdint.h>
+
+          int add_ints(int a, int b) {
+              return a + b;
+          }
+
+          void call_harness(
+              void* target_fn,
+              void* return_value,
+              void** args
+          ) {
+              int (*func_ptr)(int, int) = (int (*)(int, int))target_fn;
+
+              int* p_arg1 = (int*)args[0];
+              int* p_arg2 = (int*)args[1];
+
+              int val1 = *p_arg1;
+              int val2 = *p_arg2;
+
+              int result = func_ptr(val1, val2);
+
+              *(int*)return_value = result;
+          }
+
+          int main() {
+              volatile int a = 10;
+              volatile int b = 25;
+              volatile int result = 0;
+
+              void* args[] = { (void*)&a, (void*)&b };
+
+              call_harness(
+                  (void*)add_ints,
+                  (void*)&result,
+                  (void**)args
+              );
+
+              printf("Result: %d\n", result);
+              return 0;
+          }
+          EOF
+
+      - name: Compile to Assembly (-O2)
+        run: gcc -O2 -S harness.c -o harness.s
+
+      - name: Display Assembly
+        run: |
+          cat harness.s

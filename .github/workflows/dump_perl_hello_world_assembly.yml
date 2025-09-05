@@ -1,0 +1,101 @@
+name: Dump Assembly with perl.h
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch: ~
+
+jobs:
+  dump-asm:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest, windows-11-arm]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Create C file with Perl embedding
+        shell: bash
+        run: |
+          cat << 'EOF' > harness.c
+          #include <stdio.h>
+          // The two required headers for embedding a Perl interpreter
+          #include <EXTERN.h>
+          #include <perl.h>
+
+            extern void etc(void**, void *);
+
+            void nv2ptr(pTHX_ SV* sv, void* ptr) {
+                double x = SvNV(sv);
+                ptr = &x;
+            }
+
+            SV * ptr2nv(pTHX_ void*ptr, SV*sv) {
+                SvNV_set(sv, *(double*)ptr);
+            }
+
+            void pv2ptr(pTHX_ SV* sv, void* ptr) {
+                char* x = SvPV_nolen(sv);
+                ptr = &x;
+            }
+
+            SV * inout(pTHX_ SV * a, SV * b) {
+                void ** args; // Wrong but close enough
+                nv2ptr(aTHX_ a, args);
+                pv2ptr(aTHX_ b, args[1]);
+                void* ret;
+                etc(args, ret);
+                SV*ret_sv = newSVnv(0); // Generated
+                ptr2nv(aTHX_ ret, ret_sv);
+                return ret_sv;
+            }
+
+          int main(int argc, char **argv, char **env) {
+              PerlInterpreter *my_perl;
+
+              // Initialize the Perl interpreter
+              PERL_SYS_INIT3(&argc, &argv, &env);
+              my_perl = perl_alloc();
+              perl_construct(my_perl);
+              PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
+
+              // Execute a simple piece of Perl code to prove it works
+              eval_pv("print 'Hello from Embedded Perl!\\n'", TRUE);
+
+              // Clean up the interpreter
+              perl_destruct(my_perl);
+              perl_free(my_perl);
+              PERL_SYS_TERM();
+
+              return 0;
+          }
+          EOF
+
+      #~ - name: Get Perl Compilation Flags
+        #~ id: perl_flags
+        #~ run: |
+          #~ # Use Perl's own utilities to get the correct flags for embedding.
+          #~ # 'ccopts' provides include paths (-I) and defines (-D).
+          #~ # 'ldopts' provides library paths (-L) and libraries to link (-l).
+          #~ echo "CFLAGS=$(perl -MExtUtils::Embed -e 'print ccopts')" >> "$GITHUB_OUTPUT"
+          #~ echo "LDFLAGS=$(perl -MExtUtils::Embed -e 'print ldopts')" >> "$GITHUB_OUTPUT"
+
+      #~ - name: Compile and Verify Executable
+        #~ run: |
+          #~ echo "Compiling with flags: ${{ steps.perl_flags.outputs.CFLAGS }} ${{ steps.perl_flags.outputs.LDFLAGS }}"
+          #~ gcc -O2 harness.c -o harness.exe ${{ steps.perl_flags.outputs.CFLAGS }} ${{ steps.perl_flags.outputs.LDFLAGS }}
+          #~ echo "Running executable:"
+          #~ ./harness.exe
+
+      - name: Compile to Assembly (-O2)
+        shell: bash
+        run: |
+          echo "Generating assembly with flags: ${{ steps.perl_flags.outputs.CFLAGS }}"
+          gcc -O2 -S harness.c -o harness.s `perl -MExtUtils::Embed -e ccopts -e ldopts`
+
+      # Step 5: Display the final assembly file.
+      - name: Display Assembly
+        run: |
+          cat harness.s

@@ -1,0 +1,110 @@
+name: Debugging Pipeline
+
+on:
+  pull_request: ~
+  push: ~
+  schedule:
+    - cron: '42 5 * * 0'
+  workflow_dispatch:
+    inputs:
+      run:
+        description: 'Which set of tests to run'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+          - 'all'
+          - 'valgrind'
+          - 'fuzz'
+      fuzz_duration:
+        description: 'Fuzzing duration in seconds (for manual runs)'
+        required: false
+        default: '300'
+
+permissions:
+  contents: read
+  actions: read # Required to download artifacts in the summary job
+
+jobs:
+  valgrind-memcheck:
+    name: Valgrind
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run == 'all' || github.event.inputs.run == 'valgrind'
+    uses: ./.github/workflows/debugging-valgrind.yml
+    with:
+      test-type: 'memcheck'
+
+  valgrind-fault-injection:
+    name: Valgrind
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run == 'all' || github.event.inputs.run == 'valgrind'
+    uses: ./.github/workflows/debugging-valgrind.yml
+    with:
+      test-type: 'fault-injection'
+
+  valgrind-helgrind:
+    name: Valgrind
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run == 'all' || github.event.inputs.run == 'valgrind'
+    uses: ./.github/workflows/debugging-valgrind.yml
+    with:
+      test-type: 'helgrind'
+
+  fuzz:
+    name: Fuzz ${{ matrix.harness }}
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run == 'all' || github.event.inputs.run == 'fuzz'
+    strategy:
+      fail-fast: false
+      matrix:
+        harness: [types, trampoline]
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+        abi: [FFI_FORCE_ABI_WINDOWS_X64, FFI_FORCE_ABI_SYSV_X64, FFI_FORCE_ABI_AAPCS64]
+    uses: ./.github/workflows/debugging-fuzz.yml
+    with:
+      harness: ${{ matrix.harness }}
+      os: ${{ matrix.os }}
+      abi: ${{ matrix.abi }}
+      # Pass the duration from the manual input, or use the default 300s for other events.
+      fuzz-duration: ${{ github.event.inputs.fuzz_duration || '300' }}
+
+  summary:
+    name: Summary
+    if: always()
+    needs: [valgrind-memcheck, valgrind-fault-injection, valgrind-helgrind, fuzz]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all result artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: result-artifact-*
+          path: results/
+          merge-multiple: true
+
+      - name: Generate Job Summary
+        shell: bash
+        run: |
+          echo "## Fuzzing & Valgrind Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Category | Test / Harness | OS (Arch) | ABI / Compiler | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|:---|:---|:---|:---|:---|" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -d "results" ] || [ -z "$(ls -A results)" ]; then
+              echo "| All Jobs | - | - | - | ❌ No result artifacts found |" >> $GITHUB_STEP_SUMMARY
+              exit 0
+          fi
+
+          find results -type f -name "*.result" | sort | while IFS= read -r file; do
+              result=$(cat "$file")
+              filename=$(basename "$file" .result)
+              ICON=$([[ $result == 'success' ]] && echo '✅' || echo '❌')
+
+              if [[ "$filename" == *,* ]]; then # Comma-separated format for fuzzing results
+                  IFS=',' read -r category_slug harness os abi <<< "$filename"
+                  category="Fuzzing"
+                  echo "| **$category** | \`$harness\` | \`$os\` | \`$abi\` | $ICON $result |" >> $GITHUB_STEP_SUMMARY
+              else # Dash-separated format for Valgrind results
+                  IFS='-' read -ra parts <<< "$filename"
+                  category="Valgrind"
+                  test_name="${parts[1]}"
+                  arch="${parts[2]}"
+                  compiler="${parts[3]}"
+                  test_name_pretty=$(echo "$test_name" | sed 's/_/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
+                  echo "| **$category** | $test_name_pretty | \`$arch\` | \`$compiler\` | $ICON $result |" >> $GITHUB_STEP_SUMMARY
+              fi
+          done

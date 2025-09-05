@@ -1,0 +1,66 @@
+name: Reusable Fuzz Runner
+
+on:
+  workflow_call:
+    inputs:
+      harness:
+        required: true
+        type: string
+      os:
+        required: true
+        type: string
+      abi:
+        required: true
+        type: string
+      fuzz-duration:
+        description: 'Maximum time in seconds to run the fuzzer.'
+        required: false
+        type: string
+        default: '300' # Default to 5 minutes
+
+permissions:
+  contents: read
+  actions: read # Required to download artifacts in the summary job
+
+jobs:
+  fuzz:
+    name: ${{ (inputs.abi == 'FFI_FORCE_ABI_SYSV_X64' && 'SysV') || (inputs.abi == 'FFI_FORCE_ABI_WINDOWS_X64' && 'Win64') || 'ARM' }} ABI on ${{ inputs.os }}
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang perl
+
+      - name: Build and Run Fuzzer
+        id: test-execution
+        continue-on-error: true
+        run: |
+          perl build.pl fuzz:${{ inputs.harness }} --compiler=clang --cflags=-D${{ inputs.abi }}
+          mkdir -p corpus findings
+          ./fuzz_${{ inputs.harness }}_harness -max_total_time=${{ inputs.fuzz-duration }} corpus
+
+      - name: Upload Crash Artifacts
+        if: steps.test-execution.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: crash-artifact,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}
+          path: |
+            crash-*
+            leak-*
+            oom-*
+            findings/crashes/*
+            findings/hangs/*
+          retention-days: 7
+
+      - name: Record Build Status
+        if: always()
+        shell: bash
+        run: echo ${{ steps.test-execution.outcome }} > fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
+
+      - name: Upload Build Status Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-artifact-fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
+          path: fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
+          retention-days: 1

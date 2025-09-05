@@ -1,0 +1,178 @@
+name: Compile and Run Large Stack Callee
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-assembly:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSYS2 for GCC on Windows
+      if: runner.os == 'Windows'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+
+    - name: Create C source file for Trampoline Simulation
+      shell: bash
+      run: |
+        cat << 'EOF' > test.c
+        #include <stdio.h>
+        #include <stdlib.h>
+        #include <stdarg.h> // For va_list, va_start, va_end
+
+        #define ARG(N) double arg##N
+        #define UNUSED(N) (void)arg##N
+
+        #define LIST10(M, p) M(p##0), M(p##1), M(p##2), M(p##3), M(p##4), M(p##5), M(p##6), M(p##7), M(p##8), M(p##9)
+        #define LIST100(M, p)                                                                                     \
+            LIST10(M, p##0), LIST10(M, p##1), LIST10(M, p##2), LIST10(M, p##3), LIST10(M, p##4), LIST10(M, p##5), \
+                LIST10(M, p##6), LIST10(M, p##7), LIST10(M, p##8), LIST10(M, p##9)
+
+        #define ARGS_520                                                                                                    \
+            ARG(0), ARG(1), ARG(2), ARG(3), ARG(4), ARG(5), ARG(6), ARG(7), ARG(8), ARG(9), LIST10(ARG, 1), LIST10(ARG, 2), \
+                LIST10(ARG, 3), LIST10(ARG, 4), LIST100(ARG, 1), LIST100(ARG, 2), LIST100(ARG, 3), LIST100(ARG, 4),         \
+                LIST10(ARG, 50), LIST10(ARG, 51)
+
+        #define PREP_ARG_STMT(N)                                                     \
+            do {                                                                     \
+                arg_types[N] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE); \
+                arg_values[N] = (double)(N + 1.0);                                   \
+                args[N] = &arg_values[N];                                            \
+            } while (0)
+
+        #define UNUSED_STMT(N) UNUSED(N);
+        #define STMT_LIST10(M, p) M(p##0) M(p##1) M(p##2) M(p##3) M(p##4) M(p##5) M(p##6) M(p##7) M(p##8) M(p##9)
+        #define STMT_LIST100(M, p) \
+            STMT_LIST10(M, p##0)   \
+            STMT_LIST10(M, p##1)   \
+            STMT_LIST10(M, p##2)   \
+            STMT_LIST10(M, p##3)   \
+            STMT_LIST10(M, p##4)   \
+            STMT_LIST10(M, p##5) STMT_LIST10(M, p##6) STMT_LIST10(M, p##7) STMT_LIST10(M, p##8) STMT_LIST10(M, p##9)
+
+        // Declare the large_stack_callee function (extern to link with main.o)
+        double large_stack_callee(ARGS_520) {
+            note("large_stack_callee called. arg0=%.1f, arg519=%.1f", arg0, arg519);
+            // Explicitly mark all parameters except the first and last as unused to suppress compiler warnings.
+            UNUSED(1);
+            UNUSED(2);
+            UNUSED(3);
+            UNUSED(4);
+            UNUSED(5);
+            UNUSED(6);
+            UNUSED(7);
+            UNUSED(8);
+            UNUSED(9);
+            STMT_LIST10(UNUSED_STMT, 1);
+            STMT_LIST10(UNUSED_STMT, 2);
+            STMT_LIST10(UNUSED_STMT, 3);
+            STMT_LIST10(UNUSED_STMT, 4);
+            STMT_LIST100(UNUSED_STMT, 1);
+            STMT_LIST100(UNUSED_STMT, 2);
+            STMT_LIST100(UNUSED_STMT, 3);
+            STMT_LIST100(UNUSED_STMT, 4);
+            STMT_LIST10(UNUSED_STMT, 50);
+            STMT_LIST10(UNUSED_STMT, 51);
+            UNUSED(510);
+            UNUSED(511);
+            UNUSED(512);
+            UNUSED(513);
+            UNUSED(514);
+            UNUSED(515);
+            UNUSED(516);
+            UNUSED(517);
+            UNUSED(518);
+
+            return arg0 + arg519;
+        }
+
+        // A helper function to call large_stack_callee with a list of void pointers
+        // This simulates how an FFI might pass arguments from a generic array.
+        double __attribute__((noinline)) call_large_stack_callee_from_void_ptrs(void **args_ptr_array) {
+            // We need to unpack the void pointers into the correct types for the function call.
+            // This is a simplified example and assumes the correct order and types.
+            // In a real FFI, you'd have more sophisticated type handling.
+
+            // Create an array to hold the actual double values
+            double actual_args[520];
+            for (int i = 0; i < 520; ++i) {
+                actual_args[i] = *(double *)args_ptr_array[i];
+            }
+
+            const int num_args = 520;
+            // Call large_stack_callee with the unpacked arguments.
+            // This requires a direct call with all arguments, not a generic array.
+            // The following is a manual expansion for demonstration.
+            // In a real FFI, this expansion would be handled by generated assembly.
+            double arg_values[num_args];
+            void * args[num_args];
+
+            // Generate types and arguments for the monster function
+            for (int i = 0; i < num_args; i++) {
+                PREP_ARG_STMT(i);
+            }
+
+            // Set specific values for the first and last arguments to check correctness
+            arg_values[0] = 100.0;
+            arg_values[519] = 200.0;
+            return large_stack_callee(arg_values);
+        }
+
+        int main() {
+            double values[520];
+            void *args_ptrs[520];
+
+            for (int i = 0; i < 520; ++i) {
+                values[i] = (double)(i + 1.0); // Assign values similar to the original test
+                args_ptrs[i] = &values[i];
+            }
+
+            printf("Calling large_stack_callee via wrapper...\n");
+            double result = call_large_stack_callee_from_void_ptrs(args_ptrs);
+            printf("Result from large_stack_callee: %.1f\n", result);
+
+            // Expected result: arg0 + arg519 = (0+1.0) + (519+1.0) = 1.0 + 520.0 = 521.0
+            if (result == 521.0) {
+                printf("Test PASSED: Result is as expected.\n");
+                return 0;
+            } else {
+                printf("Test FAILED: Result is not as expected.\n");
+                return 1;
+            }
+        }
+        EOF
+
+    - name: Compile to Assembly on Linux/macOS
+      if: runner.os != 'Windows'
+      run: gcc -S -O2 -fno-asynchronous-unwind-tables -o test.s test.c
+
+    - name: Compile to Assembly on Windows
+      if: runner.os == 'Windows'
+      shell: msys2 {0}
+      run: gcc -S -O2 -o test.s test.c
+
+    - name: Display Assembly for ${{ runner.os }}
+      shell: bash
+      run: |
+        echo "============================================================"
+        echo " Assembly for ${{ runner.os }} (x86_64 GCC) "
+        echo "============================================================"
+        cat test.s | sed -n '/call_by_pointer:/,/ret/p'
+        echo ""
+        echo "------------------------------------------------------------"
+        echo ""
+        cat test.s | sed -n '/process_big_struct:/,/ret/p'

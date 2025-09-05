@@ -1,0 +1,114 @@
+name: ABI Large Struct Assembly Dump
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-assembly:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSYS2 for GCC on Windows
+      if: runner.os == 'Windows'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+
+    - name: Create C source file for Trampoline Simulation
+      shell: bash
+      run: |
+        cat << 'EOF' > test.c
+        #include <stdio.h>
+        #include <string.h>
+
+        #define BIG_STRUCT_SIZE 5000
+
+        // Define a large struct that must be passed on the stack.
+        struct BigStruct {
+            char data[BIG_STRUCT_SIZE];
+            int id;
+        };
+
+        // --- THE CALLEE ---
+        // This is the target function our FFI wants to call.
+        // It's a standard function that accepts the struct BY VALUE.
+        // We will examine its prologue to see where it expects to find 's'.
+        void __attribute__((noinline)) process_big_struct(struct BigStruct s) {
+            // Use volatile to ensure memory access is not optimized away.
+            volatile char c = s.data[0];
+            volatile int i = s.id;
+            (void)c;
+            (void)i;
+        }
+
+        // --- THE TRAMPOLINE SIMULATOR ---
+        // This function mimics our FFI trampoline. It receives a generic
+        // function pointer and a pointer to an array of void pointers (args).
+        // The assembly for THIS function is what we need to replicate.
+        void __attribute__((noinline)) call_by_pointer(void (*target_fn)(), void** args) {
+            // The argument is a pointer to our struct.
+            struct BigStruct* arg_ptr = (struct BigStruct*)args[0];
+
+            // To call the target, we must pass the struct by value.
+            // This requires dereferencing the pointer. The compiler will
+            // generate code to copy the struct's contents onto the stack
+            // according to the platform's ABI.
+
+            // This is the key line. We are casting the generic function pointer
+            // to the correct signature and then calling it by dereferencing
+            // our argument pointer.
+            ((void (*)(struct BigStruct))target_fn)(*arg_ptr);
+        }
+
+        // --- THE CALLER ---
+        // This sets up the call, just like our FFI test harness does.
+        int main() {
+            // 1. The original struct exists somewhere in memory.
+            struct BigStruct my_struct;
+            memset(&my_struct, 0, sizeof(my_struct));
+            my_struct.data[0] = 'A';
+            my_struct.id = 123;
+
+            // 2. The FFI user creates an array of void pointers to the arguments.
+            void* args[1];
+            args[0] = &my_struct;
+
+            // 3. The user calls the trampoline (our simulator).
+            call_by_pointer((void (*)())process_big_struct, args);
+
+            return 0;
+        }
+        EOF
+
+    - name: Compile to Assembly on Linux/macOS
+      if: runner.os != 'Windows'
+      run: gcc -S -O2 -fno-asynchronous-unwind-tables -o test.s test.c
+
+    - name: Compile to Assembly on Windows
+      if: runner.os == 'Windows'
+      shell: msys2 {0}
+      run: gcc -S -O2 -o test.s test.c
+
+    - name: Display Assembly for ${{ runner.os }}
+      shell: bash
+      run: |
+        echo "============================================================"
+        echo " Assembly for ${{ runner.os }} (x86_64 GCC) "
+        echo "============================================================"
+        cat test.s | sed -n '/call_by_pointer:/,/ret/p'
+        echo ""
+        echo "------------------------------------------------------------"
+        echo ""
+        cat test.s | sed -n '/process_big_struct:/,/ret/p'

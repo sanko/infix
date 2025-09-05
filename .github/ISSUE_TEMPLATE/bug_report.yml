@@ -1,0 +1,82 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[BUG] A brief, descriptive title"
+labels: ["bug"]
+assignees:
+- sanko
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: Prerequisites
+      description: Please ensure the following are true before submitting.
+      options:
+        - label: I have searched the existing [issues](https://github.com/your-username/infix/issues) to make sure this bug has not been reported yet.
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps To Reproduce
+      description: "Provide a minimal, complete, and verifiable example (MCVE). This is the most important part! A bug report with a clear, self-contained code example is far more likely to be addressed."
+      placeholder: |
+        1. C code used: `...`
+        2. `ffi_type` description: `...`
+        3. Call to `generate_forward_trampoline(...)` with these arguments
+        4. FFI call that triggers the bug
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened? Include any error messages, logs, or crash dumps.
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running on?
+      options:
+        - Linux
+        - Windows
+        - macOS
+        - FreeBSD
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: arch
+    attributes:
+      label: Architecture
+      options:
+        - x86-64
+        - AArch64 (ARM64)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: compiler
+    attributes:
+      label: Compiler and Version
+      description: "e.g., GCC 11.2, Clang 14.0, MSVC 19.30"
+    validations:
+      required: true

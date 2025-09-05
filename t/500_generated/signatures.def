@@ -1,0 +1,194 @@
+# infix FFI Generative Test Signatures
+#
+# Format:  args... => ret_type
+#
+# Primitives (based on Itanium C++ ABI mangling):
+#   v: void
+#   b: bool
+#   a: signed char          c: char               h: unsigned char
+#   s: short                t: unsigned short
+#   i: int                  j: unsigned int
+#   l: long                 m: unsigned long
+#   x: long long            y: unsigned long long
+#   n: __int128_t           o: __uint128_t
+#   f: float
+#   d: double               e: long double
+#
+# Composites:
+#   {...}: standard struct    p{...}: packed struct
+#   <...>: union              T[#]: array
+#   T*: pointer to T          (...=>...): function pointer
+#
+# Delimiters:
+#   . : Separates fixed from variadic args (e.g., c*.ijd => i)
+#   ; : Separates members in structs/unions (e.g., {i;j;f})
+#
+
+# Section 1: All Primitive Types
+# -------------------------------
+i => i
+d => d
+f => f
+c => c
+s => s
+x => x
+j => j
+h => h
+t => t
+y => y
+m => m
+a => a
+e => e
+b => b
+n => n
+o => o
+v => v
+i => v
+v => i
+
+# Section 2: Pointers
+# --------------------
+# Basic and multi-level pointers
+c* => c*
+v => i**
+x** => x**
+v*** => v
+# Pointers to all primitives
+v => a*
+b* => s*
+t* => h*
+j* => i*
+l* => m*
+x* => y*
+n* => o*
+f* => d*
+e* => v*
+
+# Section 3: Standard Structs
+# ----------------------------
+# Pass by value (small)
+{i;j} => {c;s}
+# Pass by value (large, may be passed by reference on some ABIs)
+{x;x;x;x} => {d;d;d;d}
+# Pass by pointer
+{i;j}* => {c;s}*
+# Nested structs
+{i;{d;x}} => v
+v => {c;{i;j[2]};s}
+{i;{c*}}* => v*
+# Structs with array and pointer members
+{i[4];c*} => v
+v => {d[2];j*}
+{i;j[8];c**}* => i
+
+# Section 4: Packed Structs (p{...})
+# -----------------------------------
+# Simple packed struct by value (note size/alignment differences from standard)
+p{c;i} => v
+v => p{c;x}
+p{c;s;i;l;x} => p{c;s;i;l;x}
+# Pointer to packed struct
+p{c;i}* => v
+v => p{c;x}*
+# Nested packed structs
+p{s;p{c;i};h} => v
+v => p{c;p{s;d}}
+# Standard struct inside a packed struct
+p{c;{i;d};s} => v
+# Packed struct inside a standard struct
+{i;p{c;s};j} => v
+# Return pointer to a packed struct
+v => p{j;d}*
+# Pointer to pointer to packed struct
+p{c;s}** => v
+
+# Section 5: Unions
+# ------------------
+<i;f;d> => <l;x;e>
+<i;f;d>* => <l;x;e>*
+# Complex unions with structs (standard and packed) and arrays
+<{i;j};d> => v
+v => <i[4];c*>
+<p{c;i};{d;f}>* => v
+
+# Section 6: Arrays
+# ------------------
+# Arrays of primitives
+i[10] => v
+v => d[4]
+e[2] => e[2]
+# Pointers to arrays
+(i[10])* => v
+v => (d[4])*
+# Arrays of standard structs
+{i;j}[4] => v
+v => {c*}[2]
+# Arrays of packed structs
+p{c;i}[8] => v
+v => p{c;x}[4]
+# Array of pointers to packed structs
+p{c;i}*[4] => v
+
+# Section 7: Function Pointers (Callbacks)
+# -----------------------------------------
+# Simple callbacks
+(i=>j) => v
+v => (v=>v)
+(j=>j) => (i=>i)
+# Complex callbacks with structs and pointers
+({i;j}=>{c;h}) => v
+v => (p{c;s}*=>j*)
+({i;j}*=>{c;h}*) => ({i;j}*=>{c;h}*)
+# Return a pointer to a function pointer
+v => (i=>j)*
+# Struct containing a callback
+{i;(d*=>v*);j} => v
+
+# Section 8: Variadic Functions
+# ------------------------------
+c*.ijd => i
+if.ex => v
+# Variadic with structs and pointers
+i.{c;s}.d.j* => v
+l.p{c;i}.f* => v
+
+# Section 9: ABI-Specific Aggregate Passing
+# ------------------------------------------
+# Structs of only floats/doubles (often passed in FP registers)
+{f} => {f}
+{f;f} => {f;f}
+{d;d} => {d;d}
+{f;f;f;f} => v
+{d;d;d;d} => v
+# Mixed integer and float members
+{i;f} => {i;f}
+{f;i} => v
+# Alignment and padding tests
+{c;x} => v
+{x;c} => v
+p{c;x} => v
+p{x;c} => v
+
+# Section 10: Register Spilling
+# ------------------------------
+# Test integer/pointer register spilling (e.g., > 6 GPRs on SysV x86-64)
+iiiiii => v
+iiiiiii => v
+c*c*c*c*c*c* => v
+c*c*c*c*c*c*c* => v
+# Test floating-point register spilling (e.g., > 8 SSE regs on SysV x86-64)
+dddddddd => v
+ddddddddd => v
+# Mixed spilling
+iiiffdddiiiffddd => v
+
+# Section 11: Kitchen Sink - Complex Combinations
+# -----------------------------------------------
+# Take a pointer to a struct containing a union of an array of packed structs
+# and a function pointer, and return a packed struct.
+({i; <p{c;s}[4]; (v=>v)> }*) => p{d;d}
+# Take a callback that takes a packed struct, and return a pointer to an
+# array of 4 standard structs.
+( (p{c;i}=>v) ) => ({x;y}[4])*
+# The ultimate stress test
+p{c;(i[2])*}* => < (v=>p{i;j}*); {c;d;e;f;p{a;b;h;s;t;i;j;l;m}[2]} >*

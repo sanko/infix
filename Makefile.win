@@ -1,0 +1,48 @@
+#
+# NMake Makefile for the infix FFI Library (Windows + MSVC)
+#
+# USAGE: This Makefile is for the native Windows toolchain.
+# It must be run with `nmake.exe` from a Visual Studio Developer Command Prompt.
+# Its *only* purpose is to build the static library `infix.lib`.
+#
+# TARGETS:
+#   nmake /f Makefile.win       - Builds infix.lib (default)
+#   nmake /f Makefile.win clean - Removes build artifacts
+#
+
+# --- Compiler and Toolchain ---
+CC = cl.exe
+LIB = lib.exe
+
+# --- Directories ---
+SRC_DIR = src\core
+INC_DIR = include
+OBJ_DIR = obj
+LIB_NAME = infix.lib
+
+# --- Flags ---
+# Includes the necessary flags for C11 atomics and all required include paths.
+CFLAGS = /std:c11 /W4 /Zi /nologo /experimental:c11atomics /DFFI_DEBUG_ENABLED=1 /I$(INC_DIR) /Isrc /Isrc\arch\x64 /Isrc\arch\aarch64
+
+# --- Source & Object Files (Listed on one line for robustness) ---
+LIB_OBJECTS = $(OBJ_DIR)\arena.obj $(OBJ_DIR)\executor.obj $(OBJ_DIR)\trampoline.obj $(OBJ_DIR)\types.obj $(OBJ_DIR)\utility.obj $(OBJ_DIR)\signature.obj
+
+# --- Main Targets ---
+all: $(OBJ_DIR)\$(LIB_NAME)
+
+# --- Build Rules ---
+
+# Rule to create the static library from its object files.
+$(OBJ_DIR)\$(LIB_NAME): $(LIB_OBJECTS)
+    @echo AR $@
+    $(LIB) /OUT:$@ $(LIB_OBJECTS)
+
+# Inference Rule to build .obj files from .c files found in the core source directory.
+{$(SRC_DIR)}.c{$(OBJ_DIR)}.obj:
+    @if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+    @echo CC $**
+    $(CC) $(CFLAGS) /c $** /Fo$@
+
+# --- Cleanup ---
+clean:
+    @if exist $(OBJ_DIR) rmdir /S /Q $(OBJ_DIR)
