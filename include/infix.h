@@ -1146,7 +1146,7 @@ void emit_int64(code_buffer * buf, int64_t value);
  * @details This API is the recommended way for most users to interact with infix.
  *          It provides a simple, readable, and powerful way to generate FFI
  *          trampolines without needing to manually construct `ffi_type` objects.
- *          The implementation for these functions is in `infix_signature.c`.
+ *          The implementation for these functions is in `src/core/signature.c`.
  * @{
  */
 
@@ -1208,4 +1208,83 @@ c23_nodiscard ffi_status ffi_create_reverse_trampoline_from_signature(ffi_revers
                                                                       const char * signature,
                                                                       void * user_callback_fn,
                                                                       void * user_data);
+/**
+ * @brief Parses a full function signature string into its constituent ffi_type parts.
+ * @details This function provides direct access to the signature parser. It creates a
+ *          dedicated arena to hold the resulting `ffi_type` object graph for the
+ *          entire function signature. This is an advanced function for callers who
+ *          need to inspect the type information before or after generating a
+ *          trampoline, or for those who wish to use the lower-level
+ *          `generate_forward_trampoline` function directly.
+ *
+ * @param[in]  signature A null-terminated string describing the function signature.
+ *                       See the project's documentation for the full signature language.
+ * @param[out] out_arena On success, this will be populated with a pointer to the new
+ *                       arena that owns the entire parsed type graph. The caller is
+ *                       responsible for destroying this arena with `arena_destroy()`.
+ * @param[out] out_ret_type On success, will point to the `ffi_type` for the return value.
+ *                          This pointer is valid for the lifetime of the arena.
+ * @param[out] out_arg_types On success, will point to an array of `ffi_type*` for the
+ *                           arguments. This array is also allocated within the arena.
+ * @param[out] out_num_args On success, will be set to the total number of arguments.
+ * @param[out] out_num_fixed_args On success, will be set to the number of non-variadic arguments.
+ *
+ * @return Returns `FFI_SUCCESS` if parsing is successful.
+ * @return Returns `FFI_ERROR_INVALID_ARGUMENT` if any parameters are null or the
+ *         signature string is malformed.
+ * @return Returns `FFI_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
+ *
+ * @note **Memory Management:** On success, this function transfers ownership of the newly
+ *       created arena to the caller. A single call to `arena_destroy(*out_arena)` is
+ *       sufficient to free all memory associated with the parsed types. If the
+ *       function fails, `*out_arena` will be set to `NULL`.
+ */
+ffi_status ffi_signature_parse(const char * signature,
+                               arena_t ** out_arena,
+                               ffi_type ** out_ret_type,
+                               ffi_type *** out_arg_types,
+                               size_t * out_num_args,
+                               size_t * out_num_fixed_args);
+
+/**
+ * @brief Parses a signature string representing a single data type.
+ * @details This is a specialized version of the parser for use cases like data
+ *          marshalling, serialization, or dynamic type inspection, where you need
+ *          to describe a single data type rather than a full function signature.
+ *          It creates a dedicated arena to hold the resulting `ffi_type` object
+ *          graph for the specified type.
+ *
+ * @param[out] out_type On success, will point to the newly created `ffi_type`. This
+ *                      pointer is valid for the lifetime of the returned arena.
+ * @param[out] out_arena On success, will point to the new arena that owns the type
+ *                       object graph. The caller is responsible for destroying this
+ *                       arena with `arena_destroy()`.
+ * @param[in]  signature A string describing the data type (e.g., "i", "d*", "{s@0;i@4}").
+ *
+ * @return Returns `FFI_SUCCESS` if parsing is successful.
+ * @return Returns `FFI_ERROR_INVALID_ARGUMENT` if any parameters are null or the
+ *         signature string is malformed or contains trailing characters.
+ * @return Returns `FFI_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
+ *
+ * @note **Memory Management:** On success, the caller takes ownership of the arena
+ *       returned in `*out_arena` and is responsible for its destruction. This
+ *       function is the ideal tool for creating the `ffi_type` descriptors needed
+ *       for pinning variables or for manually constructing aggregate types.
+ */
+c23_nodiscard ffi_status ffi_type_from_signature(ffi_type ** out_type, arena_t ** out_arena, const char * signature);
 /** @} */  // End of high_level_api group
+
+/**
+ * @internal
+ * @struct parser_context_t
+ * @brief Holds the state of the parser as it walks the signature string.
+ */
+typedef struct {
+    const char * current;        // The parser's current position in the string.
+    arena_t * arena;             // An arena for all temporary allocations.
+    const char * error_message;  // If an error occurs, this will point to a message.
+} parser_context_t;
+
+// Forward declaration is required for recursive parsing (e.g., structs containing arrays).
+/** @internal */
+ffi_type * parse_type(parser_context_t * ctx);

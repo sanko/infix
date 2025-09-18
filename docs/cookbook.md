@@ -11,6 +11,7 @@ Welcome to the infix Cookbook! This guide provides practical, real-world example
     *   [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
     *   [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
 *   **Chapter 2: Handling Complex Data Structures**
+    *   [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
     *   [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
     *   [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
     *   [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
@@ -265,6 +266,105 @@ int main() {
 ---
 
 ## Chapter 2: Handling Complex Data Structures
+
+### Recipe: Dynamic Struct Marshalling with the Signature Parser
+
+**Problem**: You have data in a high-level form (like a dictionary or map) and you need to pack it into a raw memory buffer that matches a C `struct`'s layout. You want to do this dynamically using a signature string, without hardcoding offsets or sizes in your code.
+
+**Discussion**: This is a powerful pattern for language bindings and serialization tools. The `ffi_type_from_signature` function is the perfect tool for this job. It acts as a "schema parser," turning a signature string into a detailed `ffi_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information you need to correctly write data into a C-compatible memory buffer.
+
+**Solution**:
+1.  Define the target C struct layout with a signature string.
+2.  Call `ffi_type_from_signature` to parse it. This gives you an `arena_t*` and the root `ffi_type*`.
+3.  Allocate a raw memory buffer of `ffi_type->size`.
+4.  Iterate through the `ffi_type->meta.aggregate_info.members` array.
+5.  For each member, get its name, type, and offset. Use this information to find the corresponding data in your high-level data structure and `memcpy` it to the correct location in the buffer.
+6.  Remember to `arena_destroy` the arena when you're done with the type information.
+
+**Example**: A C function that simulates a key-value store to represent high-level data, and a marshalling function that packs this data into a C struct.
+
+```c
+#include <infix.h>
+#include <stdio.h>
+#include <string.h>
+#include <stddef.h>
+
+// The target C struct we want to pack data into.
+typedef struct {
+    int32_t user_id;
+    double score;
+    char name;
+} UserProfile;
+
+// --- Simulation of a high-level key-value data source ---
+typedef struct { const char* key; void* value; } KeyValue;
+void* find_value(KeyValue* data, size_t count, const char* key) {
+    for (size_t i = 0; i < count; ++i) {
+        if (strcmp(data[i].key, key) == 0) return data[i].value;
+    }
+    return NULL;
+}
+// --- End Simulation ---
+
+// The marshalling function.
+void marshal_from_kv(void* dest_buffer, const char* signature, KeyValue* data, size_t data_count) {
+    ffi_type* struct_type = NULL;
+    arena_t* arena = NULL;
+
+    // 1. Parse the signature to get the layout blueprint.
+    if (ffi_type_from_signature(&struct_type, &arena, signature) != FFI_SUCCESS) {
+        fprintf(stderr, "Failed to parse signature!\n");
+        return;
+    }
+
+    // 2. Clear the destination buffer.
+    memset(dest_buffer, 0, struct_type->size);
+
+    // 3. Iterate through the struct members defined in the blueprint.
+    for (size_t i = 0; i < struct_type->meta.aggregate_info.num_members; ++i) {
+        ffi_struct_member* member = &struct_type->meta.aggregate_info.members[i];
+
+        // Find the corresponding data in our key-value source.
+        void* value_ptr = find_value(data, data_count, member->name);
+        if (value_ptr) {
+            // Copy the data to the correct offset in the buffer.
+            memcpy((char*)dest_buffer + member->offset, value_ptr, member->type->size);
+            printf("Marshalled member '%s' (size %zu) to offset %zu\n",
+                   member->name, member->type->size, member->offset);
+        }
+    }
+
+    // 4. The type graph is no longer needed. Clean it up.
+    arena_destroy(arena);
+}
+
+int main() {
+    // Our high-level data.
+    int32_t id_val = 123;
+    double score_val = 98.6;
+    char name_val = "Sanko";
+    KeyValue my_data[] = {
+        { "score", &score_val }, // Out of order to prove it works
+        { "user_id", &id_val },
+        { "name", &name_val }
+    };
+
+    // The signature string for the UserProfile struct.
+    // We must manually add member names for the lookup to work.
+    const char* profile_sig = "{i@0'user_id';d@8'score';c@16'name'}";
+
+    // Allocate a buffer and marshal the data into it.
+    UserProfile profile_buffer;
+    marshal_from_kv(&profile_buffer, profile_sig, my_data, 3);
+
+    printf("\nResulting C struct:\n");
+    printf("  user_id: %d\n", profile_buffer.user_id);
+    printf("  score:   %f\n", profile_buffer.score);
+    printf("  name:    %s\n", profile_buffer.name);
+
+    return 0;
+}
+```
 
 ### Recipe: Small Structs Passed by Value
 

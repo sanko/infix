@@ -27,19 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/**
- * @internal
- * @struct parser_context_t
- * @brief Holds the state of the parser as it walks the signature string.
- */
-typedef struct {
-    const char * current;        // The parser's current position in the string.
-    arena_t * arena;             // An arena for all temporary allocations.
-    const char * error_message;  // If an error occurs, this will point to a message.
-} parser_context_t;
-
-// Forward declaration is required for recursive parsing (e.g., structs containing arrays).
-static ffi_type * parse_type(parser_context_t * ctx);
 
 /** @internal Consumes whitespace characters from the input stream. */
 static void consume_whitespace(parser_context_t * ctx) {
@@ -238,7 +225,6 @@ static ffi_type * parse_aggregate(
     else
         status = ffi_type_create_union_arena(ctx->arena, &agg_type, members, num_members);
 
-
     if (status != FFI_SUCCESS)
         return parse_error(ctx, "Failed to create aggregate type layout");
     return agg_type;
@@ -249,7 +235,7 @@ static ffi_type * parse_aggregate(
  * @brief The main recursive parsing function. Dispatches to other parsers and handles postfix operators.
  * @return An `ffi_type*` (either static or arena-allocated), or NULL on error.
  */
-static ffi_type * parse_type(parser_context_t * ctx) {
+ffi_type * parse_type(parser_context_t * ctx) {
     consume_whitespace(ctx);
 
     ffi_type * base_type = NULL;

@@ -80,6 +80,7 @@ The `ffi_type` struct is the cornerstone of the library. It provides the generat
 *   **Static vs. Dynamic Types**: Primitives (`int`, `float`, `void*`) are represented by static, singleton `ffi_type` instances to avoid allocations. Complex types (structs, unions, arrays) are dynamically allocated and must be freed with `ffi_type_destroy`.
 *   **Compiler-Specific Nuances**: The type system is aware of compiler-specific type aliases. For example, it knows that `long double` on MSVC and Clang for Windows is an 8-byte alias for `double`, and returns the canonical `double` type to ensure correct ABI classification.
 *   **Security**: The type creation functions (`ffi_type_create_struct`, etc.) contain explicit checks to prevent integer overflows. They also follow a strict ownership model: if a creation function fails, the caller retains ownership of all pointers passed in and is responsible for freeing them. This model was validated and hardened using fuzz testing, which uncovered and led to the fixing of a `double-free` vulnerability in the error-handling paths.
+*   **Exposed Parser**: While primarily for internal use during trampoline generation, the signature parser is also exposed as a public utility via `ffi_signature_parse` and `ffi_type_from_signature`. This allows advanced users to leverage the parser for other tasks, such as building dynamic data marshalling systems or for type introspection, making the signature language a universal descriptor for C types within the library's ecosystem.
 
 #### 2. Executable Memory Management and Security
 

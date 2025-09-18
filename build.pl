@@ -11,6 +11,7 @@ use File::Spec;
 use File::Temp   qw[tempfile];
 use Getopt::Long qw[GetOptions];
 use List::Util   qw[uniq];
+use FindBin;
 $|++;
 
 # Argument Parsing
@@ -27,9 +28,23 @@ my %git_info;
 my $is_fuzz_build     = ( $command =~ /^fuzz/ );
 my $is_coverage_build = ( $command eq 'coverage' );
 my %config            = (
-    sources =>
-        [ 'src/core/executor.c', 'src/core/trampoline.c', 'src/core/types.c', 'src/core/arena.c', 'src/core/utility.c', 'src/core/signature.c', ],
-    include_dirs => [ 'include', 'src', 'src/arch/x64/', 'src/arch/aarch64', 'third_party/double_tap', 't/include' ],
+    sources => [
+        $FindBin::Bin . '/src/core/executor.c',
+        $FindBin::Bin . '/src/core/trampoline.c',
+        $FindBin::Bin . '/src/core/types.c',
+        $FindBin::Bin . '/src/core/arena.c',
+        $FindBin::Bin . '/src/core/utility.c',
+        $FindBin::Bin . '/src/core/signature.c'
+    ],
+    include_dirs => [
+        File::Spec->catdir( $FindBin::Bin, 'include' ),
+        File::Spec->catdir( $FindBin::Bin, 'src' ),
+        File::Spec->catdir( $FindBin::Bin, 'src/core' ),
+        File::Spec->catdir( $FindBin::Bin, 'src/arch/x64/' ),
+        File::Spec->catdir( $FindBin::Bin, 'src/arch/aarch64' ),
+        File::Spec->catdir( $FindBin::Bin, 'third_party/double_tap' ),
+        File::Spec->catdir( $FindBin::Bin, 't/include' ),
+    ],
     lib_dir      => 'build_lib',
     lib_name     => 'infix',
     coverage_dir => 'coverage'

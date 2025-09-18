@@ -160,8 +160,10 @@ void tap_note(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
     for (int _tap_todo_once = (tap_todo_start(reason), 1); _tap_todo_once; _tap_todo_once = (tap_todo_end(), 0))
 /** @brief Prints a diagnostic message to stderr, prefixed with '#'. */
 #define diag(...) diag(__VA_ARGS__)
+#ifndef note
 /** @brief Prints a note to stdout, prefixed with '#'. Part of the TAP standard. */
 #define note(...) tap_note(__VA_ARGS__)
+#endif
 /** @brief Defines the main body of the test runner function. */
 #define TEST void test_body(void)
 void test_body(void);

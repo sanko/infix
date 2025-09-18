@@ -20,6 +20,7 @@ The entire project is written from scratch in C17 and serves as a practical exam
     *   **Use-After-Free Protection:** Freed trampolines are converted into guard pages, ensuring calls to dangling pointers result in a safe, immediate crash.
     *   **Read-Only Contexts:** Callback context data is made read-only after creation to protect against runtime memory corruption attacks.
 *   **Simple Integration**: Add `infix.h` to your includes and compile with your project to get started.
+*   **Exposed Signature Parser**: Use the powerful signature parser directly for tasks like data marshalling, serialization, or dynamic type inspection.
 
 ## API Quick Reference
 
@@ -57,6 +58,32 @@ ffi_type* arg_types[] = { ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
 ffi_trampoline_t* t;
 generate_forward_trampoline(&t, ret_type, arg_types, 2, 2);
 ```
+
+#### For Parsing and Type Introspection (Advanced):
+
+Beyond creating trampolines, the signature API now allows you to parse signature strings directly into `ffi_type` objects. This is a powerful feature for building data marshalling systems or other advanced tooling.
+
+```
+#include <infix.h>
+
+// Parse a single struct type signature into an ffi_type graph.
+ffi_type* my_struct_type = NULL;
+arena_t* arena = NULL; // The parser allocates an arena for the types.
+const char* sig = "{i;d}"; // struct { int; double; }
+
+ffi_status status = ffi_type_from_signature(&my_struct_type, &arena, sig);
+
+if (status == FFI_SUCCESS) {
+    // Now you can inspect my_struct_type to get size, alignment,
+    // and member offsets for data marshalling.
+    printf("Struct size: %zu\n", my_struct_type->size);
+
+    // IMPORTANT: The caller owns the arena and must destroy it.
+    arena_destroy(arena);
+}
+```
+
+See the [Cookbook](docs/cookbook.md) for a detailed recipe on this.
 
 ## Getting Started Example
 
