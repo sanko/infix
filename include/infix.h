@@ -1208,6 +1208,7 @@ c23_nodiscard ffi_status ffi_create_reverse_trampoline_from_signature(ffi_revers
                                                                       const char * signature,
                                                                       void * user_callback_fn,
                                                                       void * user_data);
+
 /**
  * @brief Parses a full function signature string into its constituent ffi_type parts.
  * @details This function provides direct access to the signature parser. It creates a

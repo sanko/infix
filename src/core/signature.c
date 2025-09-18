@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /** @internal Consumes whitespace characters from the input stream. */
 static void consume_whitespace(parser_context_t * ctx) {
     while (*ctx->current == ' ' || *ctx->current == '\t' || *ctx->current == '\n') {
@@ -176,6 +175,8 @@ static ffi_type * parse_aggregate(
         return parse_error(ctx, "Arena allocation failed for members");
 
     size_t num_members = 0;
+    size_t current_offset = 0;  // Needed for non-packed layout calculation
+
     while (*ctx->current != end_delim && *ctx->current != '\0') {
         if (num_members >= 32)
             return parse_error(ctx, "Exceeded maximum number of aggregate members (32)");
@@ -185,6 +186,28 @@ static ffi_type * parse_aggregate(
             return NULL;
 
         members[num_members].name = NULL;
+
+        // Member names are now parsed for all struct types.
+        consume_whitespace(ctx);
+        if (*ctx->current == '\'') {
+            ctx->current++;  // Consume opening quote
+            const char * name_start = ctx->current;
+            while (*ctx->current != '\'' && *ctx->current != '\0') {
+                ctx->current++;
+            }
+            if (*ctx->current == '\'') {
+                size_t name_len = ctx->current - name_start;
+                char * name_buf = arena_alloc(ctx->arena, name_len + 1, 1);
+                if (name_buf) {
+                    memcpy(name_buf, name_start, name_len);
+                    name_buf[name_len] = '\0';
+                    members[num_members].name = name_buf;
+                }
+                ctx->current++;  // Consume closing quote
+            }
+        }
+        else
+            members[num_members].name = NULL;
 
         if (is_packed) {
             if (*ctx->current != ':')
@@ -196,10 +219,20 @@ static ffi_type * parse_aggregate(
                 return parse_error(ctx, "Invalid member offset");
             ctx->current = end_ptr;
         }
-        else
-            // For standard structs, offsetof is used; for unions it's always 0.
-            // The core `_arena` functions will calculate the final layout.
-            members[num_members].offset = (category == FFI_TYPE_UNION) ? 0 : 0;
+        else {
+            // For standard structs, we must calculate the offset.
+            if (category == FFI_TYPE_STRUCT) {
+                // Align the current offset up to the member's alignment requirement.
+                size_t alignment = members[num_members].type->alignment;
+                if (alignment > 0) {
+                    current_offset = (current_offset + alignment - 1) & ~(alignment - 1);
+                }
+                members[num_members].offset = current_offset;
+                current_offset += members[num_members].type->size;
+            }
+            else  // For unions, offset is always 0.
+                members[num_members].offset = 0;
+        }
 
         num_members++;
 
@@ -475,4 +508,87 @@ ffi_status ffi_create_reverse_trampoline_from_signature(ffi_reverse_trampoline_t
 
     arena_destroy(arena);
     return status;
+}
+
+/**
+ * @brief Parses a full function signature string into its constituent ffi_type parts.
+ * @details This function provides direct access to the signature parser. It creates a
+ *          dedicated arena to hold the resulting `ffi_type` object graph for the
+ *          entire function signature. This is an advanced function for callers who
+ *          need to inspect the type information before or after generating a
+ *          trampoline, or for those who wish to use the lower-level
+ *          `generate_forward_trampoline` function directly.
+ */
+ffi_status ffi_signature_parse(const char * signature,
+                               arena_t ** out_arena,
+                               ffi_type ** out_ret_type,
+                               ffi_type *** out_arg_types,
+                               size_t * out_num_args,
+                               size_t * out_num_fixed_args) {
+    // Validate all output pointers.
+    if (!signature || !out_arena || !out_ret_type || !out_arg_types || !out_num_args || !out_num_fixed_args)
+        return FFI_ERROR_INVALID_ARGUMENT;
+
+    // Create a dedicated arena for this parse operation.
+    arena_t * arena = arena_create(4096);
+    if (!arena) {
+        *out_arena = NULL;
+        return FFI_ERROR_ALLOCATION_FAILED;
+    }
+
+    // Call the internal parsing engine.
+    ffi_status status =
+        parse_full_signature(signature, arena, out_ret_type, out_arg_types, out_num_args, out_num_fixed_args);
+
+    // Handle success or failure.
+    if (status != FFI_SUCCESS) {
+        // If parsing failed, destroy the arena we created and nullify the output.
+        arena_destroy(arena);
+        *out_arena = NULL;
+        // The other out-params are assumed to be garbage at this point.
+    }
+    else
+        // On success, transfer ownership of the arena to the caller.
+        *out_arena = arena;
+
+    return status;
+}
+
+/**
+ * @brief Parses a signature string representing a single data type.
+ * @details This is a specialized version of the parser for use cases like data
+ *          marshalling, serialization, or dynamic type inspection, where you need
+ *          to describe a single data type rather than a full function signature.
+ *          It creates a dedicated arena to hold the resulting `ffi_type` object
+ *          graph for the specified type.
+ */
+ffi_status ffi_type_from_signature(ffi_type ** out_type, arena_t ** out_arena, const char * signature) {
+    if (!out_type || !out_arena || !signature)
+        return FFI_ERROR_INVALID_ARGUMENT;
+
+    // Create and manage the arena internally.
+    arena_t * arena = arena_create(4096);
+    if (!arena)
+        return FFI_ERROR_ALLOCATION_FAILED;
+
+    // Set up the internal parser context. The user never sees this.
+    parser_context_t ctx = {.current = signature, .arena = arena, .error_message = NULL};
+
+    // Call the internal, "unsafe" parse function.
+    ffi_type * parsed_type = parse_type(&ctx);
+
+    // Crucially, perform robust error checking
+    consume_whitespace(&ctx);
+    if (ctx.error_message || !parsed_type || *ctx.current != '\0') {
+        // If there's a parser error OR the entire string wasn't consumed, it's an error.
+        arena_destroy(arena);  // Clean up on failure.
+        *out_type = NULL;
+        *out_arena = NULL;
+        return FFI_ERROR_INVALID_ARGUMENT;
+    }
+
+    // On success, transfer ownership of the results to the caller.
+    *out_type = parsed_type;
+    *out_arena = arena;
+    return FFI_SUCCESS;
 }

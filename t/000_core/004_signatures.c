@@ -23,6 +23,8 @@
  *     `p(size,align){type:offset;...}` syntax.
  * 3.  Error Handling: Ensuring the parser correctly rejects a wide variety of
  *     malformed and invalid signature strings.
+ * 4.  Public Parser API: Directly testing `ffi_signature_parse` and
+ *     `ffi_type_from_signature` for correctness and error handling.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -31,6 +33,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 // Native C Target Functions
 int add_ints(int a, int b) {
@@ -42,6 +45,13 @@ typedef struct {
     uint64_t b;
 } PackedStruct;
 #pragma pack(pop)
+
+typedef struct {
+    char c;
+    double d;
+} TestStruct;
+
+
 int process_packed_struct(PackedStruct p) {
     if (p.a == 'X' && p.b == 0xDEADBEEFCAFEBABE)
         return 42;
@@ -58,7 +68,7 @@ void call_int_int_cb(int (*func)(int, int)) {
 }
 
 TEST {
-    plan(4);
+    plan(5);
 
     subtest("Simple and Variadic Signatures") {
         plan(2);
@@ -75,9 +85,9 @@ TEST {
                 ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)add_ints, &result, args);
                 ok(result == 42, "add_ints(30, 12) returned 42");
             }
-            else {
+            else
                 skip(1, "Test skipped due to creation failure");
-            }
+
             ffi_trampoline_free(trampoline);
         }
 
@@ -95,9 +105,9 @@ TEST {
                 ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)printf, &ret, args);
                 ok(ret > 0, "Variadic call to printf executed without crashing");
             }
-            else {
+            else
                 skip(1, "Test skipped due to creation failure");
-            }
+
             ffi_trampoline_free(trampoline);
         }
     }
@@ -132,9 +142,9 @@ TEST {
             ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)process_packed_struct, &result, args);
             ok(result == 42, "Packed struct passed and processed correctly");
         }
-        else {
+        else
             skip(1, "Test skipped due to creation failure");
-        }
+
         ffi_trampoline_free(trampoline);
     }
 
@@ -154,9 +164,8 @@ TEST {
             native_func_ptr func_ptr = (native_func_ptr)rt->exec_code.rx_ptr;
             call_int_int_cb(func_ptr);
         }
-        else {
+        else
             skip(1, "Test skipped due to creation failure");
-        }
 
         ffi_reverse_trampoline_free(rt);
     }
@@ -186,6 +195,75 @@ TEST {
                "Correctly failed to parse invalid signature: \"%s\"",
                bad_signatures[i]);
             ffi_trampoline_free(trampoline);
+        }
+    }
+
+    subtest("Public Parser API (ffi_signature_parse / ffi_type_from_signature)") {
+        plan(2);
+
+        subtest("ffi_type_from_signature") {
+            plan(5);
+            ffi_type * type = NULL;
+            arena_t * arena = NULL;
+
+            // Happy path
+            const char * correct_sig = "{c'c_member';d'd_member'}";
+            ffi_status status = ffi_type_from_signature(&type, &arena, correct_sig);
+            if (ok(status == FFI_SUCCESS && type && arena, "Successfully parsed a valid struct signature")) {
+                diag("Expected size: %llu, alignment: %llu", sizeof(TestStruct), _Alignof(TestStruct));
+                diag("Actual size:   %llu, alignment: %llu", type->size, type->alignment);
+                ok(type->size == sizeof(TestStruct) && type->alignment == _Alignof(TestStruct),
+                   "Parsed struct has correct size and alignment");
+
+                // Verify that the member names were parsed correctly.
+                bool names_ok = type->meta.aggregate_info.num_members == 2 &&
+                    strcmp(type->meta.aggregate_info.members[0].name, "c_member") == 0 &&
+                    strcmp(type->meta.aggregate_info.members[1].name, "d_member") == 0;
+                ok(names_ok, "Parsed struct has correct member names");
+
+                arena_destroy(arena);
+            }
+            else
+                skip(1, "Skipping layout check due to parse failure");
+
+            // Error: Malformed signature
+            status = ffi_type_from_signature(&type, &arena, "{i;d");
+            ok(status == FFI_ERROR_INVALID_ARGUMENT && !type && !arena, "Correctly fails on malformed signature");
+
+            // Error: Trailing characters
+            status = ffi_type_from_signature(&type, &arena, "i foo");
+            ok(status == FFI_ERROR_INVALID_ARGUMENT && !type && !arena, "Correctly fails on trailing characters");
+        }
+
+        subtest("ffi_signature_parse") {
+            plan(4);
+            ffi_type *ret_type = NULL, **arg_types = NULL;
+            arena_t * arena = NULL;
+            size_t num_args = 0, num_fixed_args = 0;
+
+            // Happy path (non-variadic)
+            ffi_status status =
+                ffi_signature_parse("c*i=>d", &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
+            if (ok(status == FFI_SUCCESS && arena, "Successfully parsed a valid function signature")) {
+                bool check = ret_type->category == FFI_TYPE_PRIMITIVE &&
+                    ret_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_DOUBLE && num_args == 2 && num_fixed_args == 2 &&
+                    arg_types[0]->category == FFI_TYPE_POINTER && arg_types[1]->category == FFI_TYPE_PRIMITIVE &&
+                    arg_types[1]->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32;
+                ok(check, "Parsed function signature components are correct");
+                arena_destroy(arena);
+            }
+            else
+                skip(1, "Skipping component check due to parse failure");
+
+            // Happy path (variadic)
+            status = ffi_signature_parse("c*.i=>v", &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
+            if (ok(status == FFI_SUCCESS && arena, "Successfully parsed a variadic function signature")) {
+                bool check = ret_type->category == FFI_TYPE_VOID && num_args == 2 && num_fixed_args == 1;
+                ok(check, "Variadic signature components are correct");
+                arena_destroy(arena);
+            }
+            else
+                skip(1, "Skipping component check due to parse failure");
         }
     }
 }

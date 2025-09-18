@@ -168,7 +168,6 @@ void tap_note(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
 #define TEST void test_body(void)
 void test_body(void);
 
-
 #else  // DBLTAP_ENABLE is NOT defined
 // No-Op Stubs for when testing is disabled.
 #define plan(count) ((void)0)

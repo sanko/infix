@@ -20,7 +20,7 @@ Welcome to the infix Cookbook! This guide provides practical, real-world example
     *   [Recipe: Working with Unions](#recipe-working-with-unions)
 *   **Chapter 3: The Power of Callbacks (Reverse Calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
-    *  [Recipe: Creating a Stateless Callback for `qsort` via the Signature API](#recipe-creating-a-stateless-callback-for-qsort-via-the-signature-api)
+    *   [Recipe: Creating a Stateless Callback for `qsort` via the Signature API](#recipe-creating-a-stateless-callback-for-qsort-via-the-signature-api)
     *   [Recipe: Callbacks with State (The `user_data` Pattern)](#recipe-callbacks-with-state-the-user_data-pattern)
 *   **Chapter 4: Advanced Techniques**
     *   [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
