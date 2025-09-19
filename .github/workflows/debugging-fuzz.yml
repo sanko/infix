@@ -64,3 +64,9 @@ jobs:
           name: result-artifact-fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
           path: fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
           retention-days: 1
+
+      - name: Check for Fuzzing Failures
+        if: steps.test-execution.outcome == 'failure'
+        run: |
+          echo "Fuzzer found a crash! Failing the workflow."
+          exit 1

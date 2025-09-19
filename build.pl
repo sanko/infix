@@ -259,7 +259,7 @@ sub show_help {
       helgrindtest       Runs the threading stress test under Valgrind/Helgrind.
       helgrindtest:bare  Runs a "barebones" Helgrind test with no testing framework.
       clean              Removes all build and coverage artifacts.
-      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature).
+      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi).
 
     Options:
       --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'clang').
