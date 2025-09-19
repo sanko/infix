@@ -25,6 +25,7 @@
  */
 
 #include <infix.h>
+#include <infix_internals.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -35,7 +36,7 @@
 // Configuration Constants
 // These values control the complexity and depth of the generated types to
 // prevent excessively long or deep recursion, which could slow down fuzzing.
-#define MAX_RECURSION_DEPTH 4
+#define MAX_RECURSION_DEPTH 32
 #define MAX_MEMBERS 16
 #define MAX_ARRAY_ELEMENTS 128
 #define MAX_TYPES_IN_POOL 16

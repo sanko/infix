@@ -72,6 +72,11 @@ static const x64_xmm XMM_ARGS[] = {XMM0_REG, XMM1_REG, XMM2_REG, XMM3_REG, XMM4_
 /** @brief The number of XMM registers available for argument passing. */
 #define NUM_XMM_ARGS 8
 
+/** @brief A safe recursion limit for the aggregate classification algorithm to prevent stack overflow. */
+#define MAX_CLASSIFY_DEPTH 32
+/** @brief A safe limit on the number of fields to classify to prevent DoS from exponential complexity. */
+#define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
+
 /**
  * @brief The System V classification for an "eightbyte" (a 64-bit chunk of a type).
  * @internal This enum represents the classes defined by the ABI for each 8-byte portion of an argument.
@@ -126,12 +131,6 @@ const ffi_reverse_abi_spec g_sysv_x64_reverse_spec = {
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_sysv_x64,
     .generate_reverse_epilogue = generate_reverse_epilogue_sysv_x64};
 
-/** @brief A safe recursion limit for the aggregate classification algorithm to prevent stack overflow. */
-#define MAX_CLASSIFY_DEPTH 32
-
-/** @brief A safe limit on the number of fields to classify to prevent DoS. */
-#define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
-
 /**
  * @brief Recursively classifies the eightbytes of an aggregate type.
  * @details This is the core of the complex System V classification algorithm. It traverses
@@ -146,18 +145,14 @@ const ffi_reverse_abi_spec g_sysv_x64_reverse_spec = {
  * @param offset The byte offset of this member from the start of the aggregate.
  * @param[in,out] classes An array of two `arg_class_t` that is updated during classification.
  * @param depth The current recursion depth.
+ * @param field_count [in,out] A counter for the total number of fields inspected for this aggregate.
  * @return `true` if an unaligned field was found (forcing MEMORY classification), `false` otherwise.
  */
 static bool classify_recursive(
     ffi_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
-    // Abort classification if the type is excessively complex.
-    if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY) {
+    // Abort classification if the type is excessively complex or too deep. Give up and pass in memory.
+    if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY || depth > MAX_CLASSIFY_DEPTH) {
         classes[0] = MEMORY;
-        return true;
-    }
-
-    if (depth > MAX_CLASSIFY_DEPTH) {
-        classes[0] = MEMORY;  // If we go too deep, give up and pass in memory.
         return true;
     }
 
@@ -190,21 +185,26 @@ static bool classify_recursive(
     if (type->category == FFI_TYPE_POINTER) {
         (*field_count)++;
         size_t index = offset / 8;
-        if (index < 2) {
-            // Pointers are always INTEGER class. Merge with existing class.
-            if (classes[index] != INTEGER)
-                classes[index] = INTEGER;
-        }
+        if (index < 2 && classes[index] != INTEGER)
+            classes[index] = INTEGER;  // Pointers are always INTEGER class. Merge with existing class.
         return false;
     }
     if (type->category == FFI_TYPE_ARRAY) {
         // Recursively classify each element of the array.
         for (size_t i = 0; i < type->meta.array_info.num_elements; ++i) {
-            if (classify_recursive(type->meta.array_info.element_type,
-                                   offset + i * type->meta.array_info.element_type->size,
-                                   classes,
-                                   depth + 1,
-                                   field_count))
+            // Check count *before* each recursive call inside the loop.
+            if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY) {
+                classes[0] = MEMORY;
+                return true;
+            }
+            size_t element_offset = offset + i * type->meta.array_info.element_type->size;
+            // If we are already past the 16-byte boundary relevant for
+            // register passing, there is no need to classify further. This prunes
+            // the recursion tree for large arrays.
+            if (element_offset >= 16)
+                break;
+
+            if (classify_recursive(type->meta.array_info.element_type, element_offset, classes, depth + 1, field_count))
                 return true;  // Propagate unaligned discovery up the call stack
         }
         return false;
@@ -212,8 +212,19 @@ static bool classify_recursive(
     if (type->category == FFI_TYPE_STRUCT || type->category == FFI_TYPE_UNION) {
         // Recursively classify each member of the struct/union.
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            // Check count *before* each recursive call inside the loop.
+            if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY) {
+                classes[0] = MEMORY;
+                return true;
+            }
             ffi_struct_member * member = &type->meta.aggregate_info.members[i];
-            if (classify_recursive(member->type, offset + member->offset, classes, depth + 1, field_count))
+            size_t member_offset = offset + member->offset;
+            // If this member starts at or after the 16-byte boundary,
+            // it cannot influence register classification, so we can skip it.
+            if (member_offset >= 16)
+                continue;
+
+            if (classify_recursive(member->type, member_offset, classes, depth + 1, field_count))
                 return true;  // Propagate unaligned discovery
         }
         return false;
@@ -238,7 +249,7 @@ static void classify_aggregate_sysv(ffi_type * type, arg_class_t classes[2], siz
     classes[1] = NO_CLASS;
     *num_classes = 0;
 
-    // Rule 1: If the size is greater than 16 bytes, it's passed in memory.
+    // If the size is greater than 16 bytes, it's passed in memory.
     if (type->size > 16) {
         classes[0] = MEMORY;
         *num_classes = 1;

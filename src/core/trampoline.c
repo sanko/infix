@@ -41,6 +41,7 @@
 
 #include <assert.h>
 #include <infix.h>
+#include <infix_internals.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,7 +92,7 @@ extern const ffi_reverse_abi_spec g_arm64_reverse_spec;
  *          code generation logic for forward trampolines.
  * @return A pointer to the active `ffi_forward_abi_spec`, or `nullptr` if unsupported.
  */
-static const ffi_forward_abi_spec * get_current_forward_abi_spec() {
+const ffi_forward_abi_spec * get_current_forward_abi_spec() {
 #if defined(FFI_ABI_WINDOWS_X64)
     return &g_win_x64_forward_spec;
 #elif defined(FFI_ABI_SYSV_X64)
@@ -108,7 +109,7 @@ static const ffi_forward_abi_spec * get_current_forward_abi_spec() {
  * @details Similar to `get_current_forward_abi_spec`, but for reverse trampolines (callbacks).
  * @return A pointer to the active `ffi_reverse_abi_spec`, or `nullptr` if unsupported.
  */
-static const ffi_reverse_abi_spec * get_current_reverse_abi_spec() {
+const ffi_reverse_abi_spec * get_current_reverse_abi_spec() {
 #if defined(FFI_ABI_WINDOWS_X64)
     return &g_win_x64_reverse_spec;
 #elif defined(FFI_ABI_SYSV_X64)

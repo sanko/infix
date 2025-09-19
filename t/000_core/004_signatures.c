@@ -28,6 +28,14 @@
 #define DBLTAP_IMPLEMENTATION
 #include <double_tap.h>
 #include <infix.h>
+#include <string.h>
+
+// This must match the internal definition in signature.c to test the boundary correctly.
+#define MAX_RECURSION_DEPTH 32
+
+// Use preprocessor macros for compile-time constants to ensure MSVC compatibility.
+#define SAFE_NESTING_DEPTH ((MAX_RECURSION_DEPTH / 2) - 1)
+#define OVERFLOW_NESTING_DEPTH (SAFE_NESTING_DEPTH + 1)
 
 /**
  * @brief Helper subtest to verify that a single type signature string parses correctly.
@@ -65,7 +73,7 @@ static void test_type_fail(const char * signature, const char * name) {
 }
 
 TEST {
-    plan(5);
+    plan(6);
 
     subtest("Valid Single Type Signatures") {
         plan(15);
@@ -160,12 +168,10 @@ TEST {
         ok(s == FFI_SUCCESS, "Parsing succeeds");                                                                     \
         ok(na == n_args, "num_args should be %llu, was %llu", (unsigned long long)n_args, (unsigned long long)na);    \
         ok(nf == n_fixed, "num_fixed should be %llu, was %llu", (unsigned long long)n_fixed, (unsigned long long)nf); \
-        if (rt) {                                                                                                     \
+        if (rt)                                                                                                       \
             ok(rt->category == ret_cat, "Return type category should be %d", ret_cat);                                \
-        }                                                                                                             \
-        else {                                                                                                        \
+        else                                                                                                          \
             fail("Return type was null");                                                                             \
-        }                                                                                                             \
         arena_destroy(a);                                                                                             \
     }
 
@@ -204,5 +210,37 @@ TEST {
                FFI_ERROR_INVALID_ARGUMENT,
            "Trailing junk after signature should fail");
         arena_destroy(arena);
+    }
+
+    subtest("Parser Security Hardening") {
+        plan(2);
+
+        // Build a deeply nested signature string that is JUST UNDER the limit.
+        // For each level of nesting (e.g., `{...}`), the parser calls `parse_type`,
+        // which then calls `parse_aggregate`, so the effective depth is ~2N.
+        // The guard is `depth > 32`, so the max allowed depth is 32.
+        // Therefore, the max nesting level is (32 / 2) - 1 = 15.
+        char deep_sig[SAFE_NESTING_DEPTH * 2 + 2];
+        char * p = deep_sig;
+        for (int i = 0; i < SAFE_NESTING_DEPTH; ++i)
+            *p++ = '{';
+        *p++ = 'i';
+        for (int i = 0; i < SAFE_NESTING_DEPTH; ++i)
+            *p++ = '}';
+        *p = '\0';
+
+        test_type_ok(deep_sig, FFI_TYPE_STRUCT, "Type nested to a safe depth should pass");
+
+        // Build a signature that is one level too deep.
+        char overflow_sig[OVERFLOW_NESTING_DEPTH * 2 + 2];
+        p = overflow_sig;
+        for (int i = 0; i < OVERFLOW_NESTING_DEPTH; ++i)
+            *p++ = '{';
+        *p++ = 'i';
+        for (int i = 0; i < OVERFLOW_NESTING_DEPTH; ++i)
+            *p++ = '}';
+        *p = '\0';
+
+        test_type_fail(overflow_sig, "Type nested beyond the safe depth should fail");
     }
 }

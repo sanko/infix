@@ -38,10 +38,12 @@ jobs:
         id: test-execution
         continue-on-error: true
         run: perl build.pl ${{ steps.command.outputs.cmd }} --compiler=gcc
+
       - name: Record Build Status
         if: always()
         shell: bash
         run: echo ${{ steps.test-execution.outcome }} > valgrind-${{ steps.command.outputs.file_part }}-x86_64-gcc.result
+
       - name: Upload Build Status Artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -49,3 +51,9 @@ jobs:
           name: result-artifact-valgrind-${{ steps.command.outputs.file_part }}-x86_64-gcc.result
           path: valgrind-${{ steps.command.outputs.file_part }}-x86_64-gcc.result
           retention-days: 1
+
+      - name: Check for Valgrind Failures
+        if: steps.test-execution.outcome == 'failure'
+        run: |
+          echo "Valgrind test failed! Failing the workflow."
+          exit 1

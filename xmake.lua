@@ -6,7 +6,7 @@ set_version("0.1.0", {build = "%Y%m%d%H%M", soname = true})
 set_languages("c17")
 
 -- Add all necessary include directories for the build process.
-add_includedirs("include", "src", "src/arch/x64", "src/arch/aarch64")
+add_includedirs("include", "src", "src/core", "src/arch/x64", "src/arch/aarch64")
 
 -- Add compiler-specific flags globally.
 after_load(function (target)
@@ -34,6 +34,16 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         set_default(false)
 
         add_files(test_file)
+
+        -- Add dependencies for the special regression test case
+        if test_file:endswith("850_regression_cases.c") then
+            -- This test needs the fuzzer's helper functions to compile.
+            -- We call add_files() directly; it's scoped to the current target.
+            add_files("fuzz/fuzz_helpers.c")
+            -- It also needs the fuzz/ directory in its include path to find fuzz_helpers.h.
+            add_includedirs("fuzz")
+        end
+
         add_deps("infix")
         set_targetdir("bin")
 
@@ -73,7 +83,7 @@ for _, fuzz_harness in ipairs(os.files("fuzz/fuzz_*.c")) do
             add_files("fuzz/fuzz_helpers.c")
             add_deps("infix")
 
-            add_includedirs("fuzz")
+            add_includedirs("fuzz", "src/core") -- Add src/core for internals.h
 
             -- Add fuzzer-specific flags
             -- This requires the user to configure the toolchain appropriately,

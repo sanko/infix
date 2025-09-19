@@ -195,13 +195,17 @@ elsif ( $command eq 'memtest:arena' ) {
 elsif ( $command eq 'helgrindtest' ) {
     my %helgrind_config = %config;
     @{ $helgrind_config{cflags} } = @{ $config{cflags} };
-    push @{ $helgrind_config{cflags} }, '-DDBLTAP_ENABLE=1', '-DFFI_DEBUG_ENABLED=1';
+    push @{ $helgrind_config{cflags} }, '-DDBLTAP_ENABLE=1';    # Keep testing framework enabled but...
+
+    # disable FFI_DEBUG_ENABLED=1 for this test to avoid I/O threading
     $final_status = run_valgrind_test( \%helgrind_config, $obj_suffix, '800_security/820_threading_helgrind', 'helgrind' );
 }
 elsif ( $command eq 'helgrindtest:bare' ) {
     my %bare_config = %config;
     @{ $bare_config{cflags} } = @{ $config{cflags} };
-    push @{ $bare_config{cflags} }, '-DFFI_DEBUG_ENABLED=1';
+
+    #~ push @{ $bare_config{cflags} }, '-DFFI_DEBUG_ENABLED=1';
+    # Bare test has no testing framework and no debug prints
     $final_status = run_valgrind_test( \%bare_config, $obj_suffix, '800_security/821_threading_bare', 'helgrind' );
 }
 elsif ( $command =~ /^fuzz(?::(\w+))?$/ ) {
@@ -365,6 +369,16 @@ sub compile_and_run_tests {
     print "\nCompiling all test executables...\n";
     my @test_executables;
     for my $test_c (@test_c_files) {
+
+        # Add the fuzz helper source file as a dependency for the regression test.
+        my @source_files = ($test_c);
+        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+            print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
+            push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
+
+            # Also add the fuzz directory to the include path for this test
+            push @{ $config->{cflags} }, '-Ifuzz';
+        }
         if ( $test_c =~ m{800_security[/\\]821_threading_bare\.c$} ) {
             print "# INFO: Skipping '821_threading_bare.c' in regular test run. Use 'helgrindtest:bare' to run it.\n";
             next;
@@ -381,7 +395,7 @@ sub compile_and_run_tests {
             run_command( $config->{cc}, '-Fe' . $exe_path, $obj_path, $static_lib_path,  @ldflags );
         }
         else {
-            my @compile_cmd = ( $config->{cc}, @cflags, '-o', $exe_path, $test_c, $static_lib_path, @ldflags );
+            my @compile_cmd = ( $config->{cc}, @cflags, '-o', $exe_path, @source_files, $static_lib_path, @ldflags );
             run_command(@compile_cmd);
         }
     }
@@ -735,6 +749,15 @@ sub run_valgrind_test {
     for my $key ( keys %$config ) {
         if   ( ref( $config->{$key} ) eq 'ARRAY' ) { $local_config{$key} = [ @{ $config->{$key} } ]; }
         else                                       { $local_config{$key} = $config->{$key}; }
+    }
+
+    # For Helgrind tests, we must disable the noisy FFI_DEBUG logging, as the
+    # concurrent calls to printf/tap_note will cause expected data races on stdout.
+    # We want Helgrind to focus only on the core library logic.
+    my @cflags_for_test = @{ $local_config{cflags} };
+    if ( $tool eq 'helgrind' ) {
+        print "# NOTE: Disabling FFI_DEBUG_ENABLED for Helgrind test to prevent I/O data races.\n";
+        @cflags_for_test = grep { $_ ne '-DFFI_DEBUG_ENABLED=1' } @cflags_for_test;
     }
     my $lib_build_config = \%local_config;
     if ( $test_name =~ /bare/ ) {

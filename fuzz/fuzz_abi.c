@@ -37,11 +37,6 @@
 
 #include "fuzz_helpers.h"
 
-// Forward declare the internal ABI spec getters from trampoline.c
-// This is a common pattern in "white-box" fuzzing where we test internal components.
-const ffi_forward_abi_spec * get_current_forward_abi_spec(void);
-const ffi_reverse_abi_spec * get_current_reverse_abi_spec(void);
-
 // Fuzzing Logic Core
 static void FuzzTest(fuzzer_input in) {
     ffi_type * type_pool[MAX_TYPES_IN_POOL] = {0};

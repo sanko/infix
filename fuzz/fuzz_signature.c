@@ -51,6 +51,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "fuzz_helpers.h"
+
 /**
  * @brief The entry point called by the libFuzzer engine for each test case.
  * @details The fuzzer engine repeatedly calls this function, providing a
@@ -63,18 +65,15 @@
  * @return An integer, which is unused by libFuzzer but required by the function signature.
  */
 int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
-    if (size == 0) {
-        // The parser expects a non-empty string.
+    if (size == 0)  // The parser expects a non-empty string.
         return 0;
-    }
 
     // The input data from the fuzzer is not null-terminated. We must create
     // a proper C string from it to safely pass it to our parser.
     char * signature = malloc(size + 1);
-    if (!signature) {
-        // If malloc fails, we can't proceed.
+    if (!signature)  // If malloc fails, we can't proceed.
         return 0;
-    }
+
     memcpy(signature, data, size);
     signature[size] = '\0';
 
@@ -104,9 +103,8 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
 
     // As with the first target, a successful parse must be followed by a clean
     // destruction to pass the test under AddressSanitizer.
-    if (status == FFI_SUCCESS) {
+    if (status == FFI_SUCCESS)
         arena_destroy(type_arena);
-    }
 
     // Clean up the temporary string we allocated.
     free(signature);
