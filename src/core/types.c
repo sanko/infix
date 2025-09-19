@@ -750,6 +750,16 @@ void ffi_type_destroy(ffi_type * type) {
         infix_free(type);
         break;
 
+    case FFI_TYPE_REVERSE_TRAMPOLINE:
+        if (type->meta.func_ptr_info.arg_types) {
+            for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i)
+                ffi_type_destroy(type->meta.func_ptr_info.arg_types[i]);
+            // The arg_types array itself is arena-allocated, so we don't free it here.
+        }
+        ffi_type_destroy(type->meta.func_ptr_info.return_type);
+        infix_free(type);
+        break;
+
     default:
         // Do nothing for static types (primitives, pointer, void) as they
         // were not dynamically allocated. This makes the function safe to

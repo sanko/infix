@@ -13,310 +13,204 @@
  */
 /**
  * @file signature.c
- * @brief Implements the string-based signature parser and high-level API.
+ * @brief Implements the high-level FFI signature parsing API.
+ * @details This file contains a recursive-descent parser that translates a
+ * human-readable signature string into the `ffi_type` object graph required
+ * by the core trampoline generator. The parser is designed to be robust,
+ * handling complex nested types, variadic arguments, and packed structs.
  *
- * @details This file provides a recursive-descent parser for the infix signature
- * language. It is responsible for translating a signature string into a collection
- * of `ffi_type` objects, which are then used by the core library to generate
- * trampolines. All memory for the intermediate `ffi_type` objects is allocated
- * from a temporary arena, ensuring efficient memory usage and automatic cleanup.
+ * ### Parser Strategy
+ * The parser follows a classic recursive-descent approach. The main entry point
+ * for parsing any type is the `parse_type` function, which acts as a dispatcher.
+ * It determines the kind of type to parse based on the leading character(s)
+ * and calls a specialized function for that construct (e.g., `parse_aggregate` for
+ * structs, `parse_array` for arrays). This design allows for natural handling of
+ * nested types, like an array of structs.
+ *
+ * ### Memory Management
+ * All `ffi_type` and `ffi_struct_member` objects created during a parse are
+ * allocated from a single memory arena. This strategy is highly efficient,
+ * replacing potentially thousands of small `malloc` calls with simple pointer
+ * bumps. More importantly, it dramatically simplifies memory management. The
+ * high-level public API functions (`ffi_create_*_from_signature`) create an
+ * arena, use it for the entire parsing and trampoline generation process, and then
+ * destroy the arena in a single call, freeing all associated memory at once.
+ *
+ * ### Error Handling
+ * The parser uses a "sticky" error flag within the `parser_state_t` struct.
+ * If any parsing function encounters a syntax error, it sets `state->error`
+ * and returns `NULL`. All other parsing functions check this flag at entry and
+ * will immediately return `NULL` if it is set, preventing cascading error
+ * messages and ensuring a clean, fast failure.
  */
 
+#include <ctype.h>
 #include <infix.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/** @internal Consumes whitespace characters from the input stream. */
-static void consume_whitespace(parser_context_t * ctx) {
-    while (*ctx->current == ' ' || *ctx->current == '\t' || *ctx->current == '\n') {
-        ctx->current++;
-    }
-}
-
-/** @internal Sets an error message and returns NULL to halt parsing. */
-static void * parse_error(parser_context_t * ctx, const char * message) {
-    if (!ctx->error_message) {  // Only record the first error encountered.
-        ctx->error_message = message;
-    }
-    return NULL;
-}
+//================================================================================
+// Internal Parser State and Helpers
+//================================================================================
 
 /**
  * @internal
- * @brief Parses a function pointer type signature for validation.
- * @details This function is called when a '(' is encountered. It recursively parses
- *          the argument and return types of the function pointer to ensure the
- *          syntax is valid and to advance the parser's cursor correctly.
- *          It does not need to build a complex ffi_type, as all function pointers
- *          are treated as a single `void*` by the ABI.
- * @return `ffi_type_create_pointer()` on success, or NULL on error.
+ * @brief Holds the state of the parser as it consumes the signature string.
+ * @details This struct is passed by pointer to all parsing functions, allowing
+ * them to advance through the input string and share state (like the arena
+ * and a sticky error flag) without using global variables.
  */
-static ffi_type * parse_function_pointer(parser_context_t * ctx) {
-    ctx->current++;  // Consume '('
+typedef struct {
+    const char * current;  ///< A pointer to the current character being processed in the signature string.
+    arena_t * arena;       ///< The arena from which all `ffi_type` objects for this parse will be allocated.
+    ffi_status error;  ///< A sticky error flag. If set, subsequent parsing functions will immediately return `NULL`.
+} parser_state_t;
 
-    // Parse argument types for validation
-    while (*ctx->current != '=' && *ctx->current != '\0') {
-        if (*ctx->current == ')')
-            break;  // End of arguments for a function with no return value (e.g. in a struct)
-        if (!parse_type(ctx))
-            return NULL;  // Propagate error
-    }
+// Forward declarations for recursive parsing functions
+static ffi_type * parse_type(parser_state_t * state);
+static ffi_type * parse_primitive(parser_state_t * state);
+static ffi_type * parse_aggregate(parser_state_t * state, char open, char close, bool is_union);
+static ffi_type * parse_packed_struct(parser_state_t * state);
+static ffi_type * parse_array(parser_state_t * state);
+static ffi_type * parse_function_pointer(parser_state_t * state);
 
-    if (*ctx->current == '=') {
-        if (*(++ctx->current) != '>')
-            return parse_error(ctx, "Expected '=>' in function pointer");
-        ctx->current++;  // Consume '>'
-
-        // Parse return type for validation
-        if (!parse_type(ctx))
-            return NULL;
-    }
-
-    if (*ctx->current != ')')
-        return parse_error(ctx, "Unterminated function pointer signature");
-    ctx->current++;  // Consume ')'
-
-    // All function pointers are treated as a generic pointer by the FFI.
-    return ffi_type_create_pointer();
-}
-
-// Recursive-Descent Parser
-
-/**
- * @internal
- * @brief Parses a primitive type from a single character in the signature.
- * @return A pointer to the static `ffi_type` for the primitive, or NULL on error.
- */
-static ffi_type * parse_primitive(parser_context_t * ctx) {
-    char c = *ctx->current++;
-    switch (c) {
-    case 'v':
-        return ffi_type_create_void();
-    case 'b':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_BOOL);
-    case 'c':  // char is signed by default on many platforms
-    case 'a':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8);
-    case 'h':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT8);
-    case 's':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT16);
-    case 't':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT16);
-    case 'i':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    case 'j':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32);
-    case 'l':  // Assume 64-bit long on modern POSIX, which matches long long.
-    case 'x':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64);
-    case 'm':  // Assume 64-bit unsigned long
-    case 'y':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64);
-    case 'f':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT);
-    case 'd':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-    case 'e':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_LONG_DOUBLE);
-#if !defined(FFI_COMPILER_MSVC)
-    case 'n':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT128);
-    case 'o':
-        return ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT128);
-#endif
-    default:
-        return parse_error(ctx, "Invalid primitive type character");
+/** @internal @brief Advances the parser's cursor past any leading whitespace. */
+static void skip_whitespace(parser_state_t * state) {
+    while (isspace((unsigned char)*state->current)) {
+        state->current++;
     }
 }
 
 /**
  * @internal
- * @brief A generic parser for aggregates (structs and unions), including packed structs.
- * @return An arena-allocated `ffi_type*` for the aggregate, or NULL on error.
+ * @brief Consumes the next non-whitespace character if it matches `expected`.
+ * @return `true` if the character was found and consumed, `false` otherwise.
  */
-static ffi_type * parse_aggregate(
-    parser_context_t * ctx, char start_delim, char end_delim, ffi_type_category category, bool is_packed) {
-    size_t packed_size = 0;
-    size_t packed_align = 0;
-
-    if (is_packed) {
-        if (*ctx->current != '(')
-            return parse_error(ctx, "Expected '(size,align)' after 'p'");
-        ctx->current++;  // Consume '('
-
-        char * end_ptr;
-        packed_size = strtoul(ctx->current, &end_ptr, 10);
-        if (end_ptr == ctx->current)
-            return parse_error(ctx, "Invalid packed struct size");
-        ctx->current = end_ptr;
-
-        if (*ctx->current != ',')
-            return parse_error(ctx, "Expected ',' separator in '(size,align)'");
-        ctx->current++;  // Consume ','
-
-        packed_align = strtoul(ctx->current, &end_ptr, 10);
-        if (end_ptr == ctx->current)
-            return parse_error(ctx, "Invalid packed struct alignment");
-        ctx->current = end_ptr;
-
-        if (*ctx->current != ')')
-            return parse_error(ctx, "Expected ')' to close '(size,align)'");
-        ctx->current++;  // Consume ')'
+static bool consume(parser_state_t * state, char expected) {
+    skip_whitespace(state);
+    if (*state->current == expected) {
+        state->current++;
+        return true;
     }
-
-    if (*ctx->current != start_delim)
-        return parse_error(ctx, "Expected aggregate start delimiter");
-    ctx->current++;  // Consume start delimiter
-
-    ffi_struct_member * members = arena_alloc(ctx->arena, sizeof(ffi_struct_member) * 32, _Alignof(ffi_struct_member));
-    if (!members)
-        return parse_error(ctx, "Arena allocation failed for members");
-
-    size_t num_members = 0;
-    size_t current_offset = 0;  // Needed for non-packed layout calculation
-
-    while (*ctx->current != end_delim && *ctx->current != '\0') {
-        if (num_members >= 32)
-            return parse_error(ctx, "Exceeded maximum number of aggregate members (32)");
-
-        members[num_members].type = parse_type(ctx);
-        if (!members[num_members].type)
-            return NULL;
-
-        members[num_members].name = NULL;
-
-        // Member names are now parsed for all struct types.
-        consume_whitespace(ctx);
-        if (*ctx->current == '\'') {
-            ctx->current++;  // Consume opening quote
-            const char * name_start = ctx->current;
-            while (*ctx->current != '\'' && *ctx->current != '\0') {
-                ctx->current++;
-            }
-            if (*ctx->current == '\'') {
-                size_t name_len = ctx->current - name_start;
-                char * name_buf = arena_alloc(ctx->arena, name_len + 1, 1);
-                if (name_buf) {
-                    memcpy(name_buf, name_start, name_len);
-                    name_buf[name_len] = '\0';
-                    members[num_members].name = name_buf;
-                }
-                ctx->current++;  // Consume closing quote
-            }
-        }
-        else
-            members[num_members].name = NULL;
-
-        if (is_packed) {
-            if (*ctx->current != ':')
-                return parse_error(ctx, "Packed struct members must have a ':offset'");
-            ctx->current++;  // Consume ':'
-            char * end_ptr;
-            members[num_members].offset = strtoul(ctx->current, &end_ptr, 10);
-            if (end_ptr == ctx->current)
-                return parse_error(ctx, "Invalid member offset");
-            ctx->current = end_ptr;
-        }
-        else {
-            // For standard structs, we must calculate the offset.
-            if (category == FFI_TYPE_STRUCT) {
-                // Align the current offset up to the member's alignment requirement.
-                size_t alignment = members[num_members].type->alignment;
-                if (alignment > 0) {
-                    current_offset = (current_offset + alignment - 1) & ~(alignment - 1);
-                }
-                members[num_members].offset = current_offset;
-                current_offset += members[num_members].type->size;
-            }
-            else  // For unions, offset is always 0.
-                members[num_members].offset = 0;
-        }
-
-        num_members++;
-
-        consume_whitespace(ctx);
-        if (*ctx->current == ';')
-            ctx->current++;
-        else if (*ctx->current != end_delim)
-            return parse_error(ctx, "Expected ';' or end delimiter");
-    }
-
-    if (*ctx->current != end_delim)
-        return parse_error(ctx, "Unterminated aggregate");
-    ctx->current++;  // Consume end delimiter
-
-    ffi_type * agg_type = NULL;
-    ffi_status status;
-
-    if (is_packed)
-        status =
-            ffi_type_create_packed_struct_arena(ctx->arena, &agg_type, packed_size, packed_align, members, num_members);
-    else if (category == FFI_TYPE_STRUCT)
-        status = ffi_type_create_struct_arena(ctx->arena, &agg_type, members, num_members);
-    else
-        status = ffi_type_create_union_arena(ctx->arena, &agg_type, members, num_members);
-
-    if (status != FFI_SUCCESS)
-        return parse_error(ctx, "Failed to create aggregate type layout");
-    return agg_type;
+    return false;
 }
 
 /**
  * @internal
- * @brief The main recursive parsing function. Dispatches to other parsers and handles postfix operators.
- * @return An `ffi_type*` (either static or arena-allocated), or NULL on error.
+ * @brief Parses an unsigned integer from the string and advances the cursor.
+ * @return `true` on success, `false` on parsing failure.
  */
-ffi_type * parse_type(parser_context_t * ctx) {
-    consume_whitespace(ctx);
+static bool parse_size_t(parser_state_t * state, size_t * out_val) {
+    skip_whitespace(state);
+    char * end;
+    // Use strtoull for C89 compatibility and portability with 64-bit size_t.
+    unsigned long long val = strtoull(state->current, &end, 10);
+    if (end == state->current) {  // No digits were parsed
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return false;
+    }
+    *out_val = (size_t)val;
+    state->current = end;
+    return true;
+}
+
+/**
+ * @internal
+ * @brief Parses a C-style identifier (e.g., for a struct field name).
+ *        An identifier must start with a letter or underscore, and may be
+ *        followed by letters, numbers, or underscores.
+ * @return A pointer to a null-terminated string allocated within the arena,
+ *         or `NULL` if a valid identifier is not found at the current position.
+ */
+static const char * parse_identifier(parser_state_t * state) {
+    skip_whitespace(state);
+    const char * start = state->current;
+    if (!isalpha((unsigned char)*start) && *start != '_') {
+        return NULL;  // Not a valid start for an identifier.
+    }
+    while (isalnum((unsigned char)*state->current) || *state->current == '_') {
+        state->current++;
+    }
+    const char * end = state->current;
+    size_t len = end - start;
+    if (len == 0)
+        return NULL;
+
+    // Allocate space in the arena for the identifier and copy it.
+    char * name = arena_alloc(state->arena, len + 1, 1);
+    if (!name) {
+        state->error = FFI_ERROR_ALLOCATION_FAILED;
+        return NULL;
+    }
+    memcpy(name, start, len);
+    name[len] = '\0';
+    return name;
+}
+
+
+//================================================================================
+// Core Parsing Logic
+//================================================================================
+
+/**
+ * @internal
+ * @brief The main dispatcher for parsing a single type. It handles prefix
+ *        constructs (like `[`, `{`, `p`) and then checks for any postfix
+ *        modifiers (like `*` for pointers). This recursive structure allows
+ *        it to handle arbitrarily complex nested types like `[10]{i,d*}*`.
+ * @param state The current state of the parser.
+ * @return A pointer to the parsed `ffi_type`, or `NULL` on failure.
+ */
+static ffi_type * parse_type(parser_state_t * state) {
+    // If a previous parsing step failed, abort immediately.
+    if (state->error)
+        return NULL;
+    skip_whitespace(state);
 
     ffi_type * base_type = NULL;
 
-    if (*ctx->current == '(')
-        base_type = parse_function_pointer(ctx);
-    else if (*ctx->current == '{')
-        base_type = parse_aggregate(ctx, '{', '}', FFI_TYPE_STRUCT, false);
-    else if (*ctx->current == '<')
-        base_type = parse_aggregate(ctx, '<', '>', FFI_TYPE_UNION, false);
-    else if (*ctx->current == 'p') {
-        ctx->current++;  // Consume 'p'
-        base_type = parse_aggregate(ctx, '{', '}', FFI_TYPE_STRUCT, true);
+    // Dispatch to a specialized parsing function based on the next character.
+    if (isalpha((unsigned char)*state->current)) {
+        if (*state->current == 'p') {
+            base_type = parse_packed_struct(state);
+        }
+        else {
+            base_type = parse_primitive(state);
+        }
     }
-    else
-        base_type = parse_primitive(ctx);
+    else if (*state->current == '{') {
+        base_type = parse_aggregate(state, '{', '}', false);
+    }
+    else if (*state->current == '<') {
+        base_type = parse_aggregate(state, '<', '>', true);
+    }
+    else if (*state->current == '[') {
+        base_type = parse_array(state);
+    }
+    else if (*state->current == '(') {
+        base_type = parse_function_pointer(state);
+    }
+    else {
+        // If the character doesn't start a known type, it's a syntax error.
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
 
+    // If the base type failed to parse, propagate the failure up.
     if (!base_type)
-        return NULL;  // Error occurred in a sub-parser
+        return NULL;
 
-    // After parsing a base type, check for postfix operators like '*' or '[...]'.
-    while (true) {
-        consume_whitespace(ctx);
-        if (*ctx->current == '*') {
-            ctx->current++;
-            base_type = ffi_type_create_pointer();
+    // After parsing a base type, loop to handle any postfix pointer modifiers.
+    // This correctly handles multiple levels of indirection, e.g., `i**`.
+    while (consume(state, '*')) {
+        ffi_type * ptr_type = arena_alloc(state->arena, sizeof(ffi_type), _Alignof(ffi_type));
+        if (!ptr_type) {
+            state->error = FFI_ERROR_ALLOCATION_FAILED;
+            return NULL;
         }
-        else if (*ctx->current == '[') {
-            ctx->current++;  // Consume '['
-            char * end_ptr;
-            long num_elements = strtol(ctx->current, &end_ptr, 10);
-            if (end_ptr == ctx->current || num_elements <= 0)
-                return parse_error(ctx, "Invalid or non-positive array size");
-
-            ctx->current = end_ptr;
-            if (*ctx->current != ']')
-                return parse_error(ctx, "Unterminated array size");
-
-            ctx->current++;  // Consume ']'
-
-            ffi_type * array_type = NULL;
-            if (ffi_type_create_array_arena(ctx->arena, &array_type, base_type, num_elements) != FFI_SUCCESS)
-                return parse_error(ctx, "Failed to create array type");
-
-            base_type = array_type;
-        }
-        else
-            break;  // No more postfix operators
+        *ptr_type = *ffi_type_create_pointer();  // Copy the static singleton pointer type.
+        ptr_type->is_arena_allocated = true;
+        base_type = ptr_type;  // The new base type is now the pointer type.
     }
 
     return base_type;
@@ -324,271 +218,525 @@ ffi_type * parse_type(parser_context_t * ctx) {
 
 /**
  * @internal
- * @brief Parses a full signature string into its constituent ffi_type parts.
- * @details This is the core parsing engine used by both the forward and reverse
- *          high-level API functions. It handles memory allocation for types
- *          via an arena and populates the output parameters.
- * @return `FFI_SUCCESS` on successful parse, or `FFI_ERROR_INVALID_ARGUMENT`.
+ * @brief Parses a single-character primitive type code from the Itanium ABI mapping.
+ * @param state The current state of the parser.
+ * @return A pointer to the corresponding static primitive `ffi_type`, or `NULL` on failure.
  */
-static ffi_status parse_full_signature(const char * signature,
-                                       arena_t * arena,
-                                       ffi_type ** out_ret_type,
-                                       ffi_type *** out_arg_types,
-                                       size_t * out_num_args,
-                                       size_t * out_num_fixed_args) {
-    const char * ret_sep = strstr(signature, "=>");
-    if (!ret_sep || ret_sep == signature)
-        return FFI_ERROR_INVALID_ARGUMENT;
-
-    parser_context_t ctx = {.current = NULL, .arena = arena, .error_message = NULL};
-
-    // Parse Return Type
-    ctx.current = ret_sep + 2;
-    *out_ret_type = parse_type(&ctx);
-    consume_whitespace(&ctx);
-    if (!*out_ret_type || *ctx.current != '\0')
-        return FFI_ERROR_INVALID_ARGUMENT;
-
-    // Parse Argument Types
-    *out_arg_types = arena_alloc(arena, sizeof(ffi_type *) * 64, _Alignof(ffi_type *));
-    if (!*out_arg_types)
-        return FFI_ERROR_ALLOCATION_FAILED;
-
-    *out_num_args = 0;
-    *out_num_fixed_args = 0;
-    bool in_variadic_part = false;
-    ctx.current = signature;
-
-    while (ctx.current < ret_sep) {
-        consume_whitespace(&ctx);
-        if (ctx.current >= ret_sep)
-            break;
-
-        if (*ctx.current == '.') {
-            if (in_variadic_part)
-                return FFI_ERROR_INVALID_ARGUMENT;
-            in_variadic_part = true;
-            *out_num_fixed_args = *out_num_args;
-            ctx.current++;
-            continue;
-        }
-
-        if (*out_num_args >= 64)
-            return FFI_ERROR_INVALID_ARGUMENT;
-
-        ffi_type * arg_type = parse_type(&ctx);
-        if (!arg_type)
-            return FFI_ERROR_INVALID_ARGUMENT;
-
-        if (in_variadic_part) {
-            if (arg_type->category == FFI_TYPE_PRIMITIVE) {
-                if (arg_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_FLOAT)
-                    arg_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-                else if (arg_type->size < sizeof(int))
-                    arg_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
+static ffi_type * parse_primitive(parser_state_t * state) {
+    if (state->error)
+        return NULL;
+    ffi_primitive_type_id id;
+    switch (*state->current++) {
+    case 'v':
+        return ffi_type_create_void();
+    case 'b':
+        id = FFI_PRIMITIVE_TYPE_BOOL;
+        break;
+    case 'a':
+        id = FFI_PRIMITIVE_TYPE_SINT8;
+        break;
+    case 'c':
+        {
+            // `char` is special; its signedness is implementation-defined.
+            // This compile-time check resolves it to the correct concrete type for the target platform.
+            char x = -1;
+            if (x < 0) {
+                id = FFI_PRIMITIVE_TYPE_SINT8;
             }
-        }
-
-        if (arg_type->category == FFI_TYPE_VOID) {
-            consume_whitespace(&ctx);
-            if (*out_num_args > 0 || ctx.current < ret_sep)
-                return FFI_ERROR_INVALID_ARGUMENT;
+            else {
+                id = FFI_PRIMITIVE_TYPE_UINT8;
+            }
             break;
         }
-        else
-            (*out_arg_types)[(*out_num_args)++] = arg_type;
+    case 'h':
+        id = FFI_PRIMITIVE_TYPE_UINT8;
+        break;
+    case 's':
+        id = FFI_PRIMITIVE_TYPE_SINT16;
+        break;
+    case 't':
+        id = FFI_PRIMITIVE_TYPE_UINT16;
+        break;
+    case 'i':
+        id = FFI_PRIMITIVE_TYPE_SINT32;
+        break;
+    case 'j':
+        id = FFI_PRIMITIVE_TYPE_UINT32;
+        break;
+    case 'l':
+        id = (sizeof(long) == 8) ? FFI_PRIMITIVE_TYPE_SINT64 : FFI_PRIMITIVE_TYPE_SINT32;
+        break;
+    case 'm':
+        id = (sizeof(unsigned long) == 8) ? FFI_PRIMITIVE_TYPE_UINT64 : FFI_PRIMITIVE_TYPE_UINT32;
+        break;
+    case 'x':
+        id = FFI_PRIMITIVE_TYPE_SINT64;
+        break;
+    case 'y':
+        id = FFI_PRIMITIVE_TYPE_UINT64;
+        break;
+    case 'n':
+        id = FFI_PRIMITIVE_TYPE_SINT128;
+        break;
+    case 'o':
+        id = FFI_PRIMITIVE_TYPE_UINT128;
+        break;
+    case 'f':
+        id = FFI_PRIMITIVE_TYPE_FLOAT;
+        break;
+    case 'd':
+        id = FFI_PRIMITIVE_TYPE_DOUBLE;
+        break;
+    case 'e':
+        id = FFI_PRIMITIVE_TYPE_LONG_DOUBLE;
+        break;
+    default:
+        state->current--;  // Un-consume the invalid character for better error reporting.
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+    return ffi_type_create_primitive(id);
+}
+
+/**
+ * @internal
+ * @brief Parses a standard (non-packed) struct `{...}` or union `<...>`, including support for named fields.
+ * @param state The current state of the parser.
+ * @param open The opening delimiter (`{` or `<`).
+ * @param close The closing delimiter (`}` or `>`).
+ * @param is_union If true, creates a union; otherwise, creates a struct.
+ * @return A pointer to the parsed aggregate `ffi_type`, or `NULL` on failure.
+ */
+static ffi_type * parse_aggregate(parser_state_t * state, char open, char close, bool is_union) {
+    if (!consume(state, open)) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
     }
 
-    if (!in_variadic_part)
-        *out_num_fixed_args = *out_num_args;
+    // Members are first parsed into a temporary on-stack array for efficiency.
+    ffi_struct_member temp_members[64];
+    size_t num_members = 0;
 
-    if (ctx.error_message)
-        return FFI_ERROR_INVALID_ARGUMENT;
+    skip_whitespace(state);
+    if (*state->current != close) {
+        while (1) {
+            if (num_members >= 64) {
+                state->error = FFI_ERROR_INVALID_ARGUMENT;
+                return NULL;
+            }  // Exceeded max members
 
-    return FFI_SUCCESS;
+            // This is the core lookahead logic to handle optional field names.
+            const char * checkpoint = state->current;  // Save position before trying to parse an identifier.
+            const char * name = parse_identifier(state);
+
+            if (name && consume(state, ':')) {
+                // Success: we parsed "name:", so this is a named field.
+                temp_members[num_members].name = name;
+                temp_members[num_members].type = parse_type(state);
+            }
+            else {
+                // Failure: No ":" found. The identifier we parsed (if any)
+                // must have been the start of a type (e.g., 'i' in "{i,d}").
+                // Rewind the parser to the checkpoint and parse the whole thing as a type.
+                state->current = checkpoint;
+                temp_members[num_members].name = NULL;
+                temp_members[num_members].type = parse_type(state);
+            }
+
+            if (!temp_members[num_members].type)
+                return NULL;                       // Propagate error
+            temp_members[num_members].offset = 0;  // Offsets are calculated by the Core API for standard layouts.
+            num_members++;
+
+            if (!consume(state, ','))
+                break;  // If no comma, this must be the last member.
+        }
+    }
+
+    if (!consume(state, close)) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+
+    // Commit the members to a correctly-sized arena allocation.
+    ffi_struct_member * members =
+        arena_alloc(state->arena, num_members * sizeof(ffi_struct_member), _Alignof(ffi_struct_member));
+    if (!members && num_members > 0) {
+        state->error = FFI_ERROR_ALLOCATION_FAILED;
+        return NULL;
+    }
+    memcpy(members, temp_members, num_members * sizeof(ffi_struct_member));
+
+    // Create the final ffi_type using the arena-aware Core API functions.
+    ffi_type * agg_type = NULL;
+    ffi_status status = is_union ? ffi_type_create_union_arena(state->arena, &agg_type, members, num_members)
+                                 : ffi_type_create_struct_arena(state->arena, &agg_type, members, num_members);
+    if (status != FFI_SUCCESS) {
+        state->error = status;
+        return NULL;
+    }
+    return agg_type;
 }
 
 /**
- * @brief Generates a forward-call trampoline from a signature string.
- *
- * @details This is the primary function of the high-level API. It parses a signature
- *          string, constructs the necessary `ffi_type` objects internally using a
- *          memory arena, generates the trampoline, and then automatically cleans
- *          up all intermediate type descriptions. The resulting trampoline is
- *          self-contained, performance-optimized, and ready for immediate use.
- *
- * @param[out] out_trampoline On success, this will be populated with a pointer to the
- *                            handle for the new trampoline. The handle must be freed
- *                            by the caller.
- * @param[in] signature A null-terminated string describing the function signature.
- *                      The format is `"arg_types... => ret_type"`. For details on the
- *                      signature language, including the advanced syntax for packed
- *                      structs (`p(size,align){type:offset;...}`), please see the
- *                      Signature Language Reference in the project's `README.md`.
- *
- * @return `FFI_SUCCESS` on success.
- * @return `FFI_ERROR_INVALID_ARGUMENT` if `out_trampoline` is NULL, `signature` is NULL,
- *         or the signature string is malformed.
- * @return `FFI_ERROR_ALLOCATION_FAILED` if an internal memory allocation fails.
- * @return Other `ffi_status` codes on ABI-specific layout or code generation failures.
- *
- * @note The returned trampoline must be freed with `ffi_trampoline_free`.
+ * @internal
+ * @brief Parses a packed struct with explicit layout: `p(size,align){type@offset,...}`.
+ * @param state The current state of the parser.
+ * @return A pointer to the parsed packed struct `ffi_type`, or `NULL` on failure.
  */
-ffi_status ffi_create_forward_trampoline_from_signature(ffi_trampoline_t ** out_trampoline, const char * signature) {
-    if (!out_trampoline || !signature)
-        return FFI_ERROR_INVALID_ARGUMENT;
+static ffi_type * parse_packed_struct(parser_state_t * state) {
+    if (!consume(state, 'p') || !consume(state, '(')) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+    size_t total_size, alignment;
+    if (!parse_size_t(state, &total_size) || !consume(state, ',') || !parse_size_t(state, &alignment) ||
+        !consume(state, ')')) {
+        return NULL;
+    }
+    if (!consume(state, '{')) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
 
-    arena_t * arena = arena_create(4096);
-    if (!arena)
-        return FFI_ERROR_ALLOCATION_FAILED;
+    ffi_struct_member temp_members[64];
+    size_t num_members = 0;
 
-    ffi_type * ret_type = NULL;
-    ffi_type ** arg_types = NULL;
-    size_t num_args = 0;
-    size_t num_fixed_args = 0;
+    skip_whitespace(state);
+    if (*state->current != '}') {
+        while (1) {
+            if (num_members >= 64) {
+                state->error = FFI_ERROR_INVALID_ARGUMENT;
+                return NULL;
+            }
 
-    ffi_status status = parse_full_signature(signature, arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
-    if (status == FFI_SUCCESS)
-        status = generate_forward_trampoline(out_trampoline, ret_type, arg_types, num_args, num_fixed_args);
+            const char * checkpoint = state->current;
+            const char * name = parse_identifier(state);
+            if (name && consume(state, ':')) {
+                temp_members[num_members].name = name;
+                temp_members[num_members].type = parse_type(state);
+            }
+            else {
+                state->current = checkpoint;
+                temp_members[num_members].name = NULL;
+                temp_members[num_members].type = parse_type(state);
+            }
 
-    arena_destroy(arena);
-    return status;
+            if (!temp_members[num_members].type)
+                return NULL;
+            // The "@offset" part is mandatory for every member of a packed struct.
+            if (!consume(state, '@') || !parse_size_t(state, &temp_members[num_members].offset)) {
+                return NULL;
+            }
+            num_members++;
+
+            if (!consume(state, ','))
+                break;
+        }
+    }
+
+    if (!consume(state, '}')) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+
+    ffi_struct_member * members =
+        arena_alloc(state->arena, num_members * sizeof(ffi_struct_member), _Alignof(ffi_struct_member));
+    if (!members && num_members > 0) {
+        state->error = FFI_ERROR_ALLOCATION_FAILED;
+        return NULL;
+    }
+    memcpy(members, temp_members, num_members * sizeof(ffi_struct_member));
+
+    ffi_type * packed_type = NULL;
+    ffi_status status =
+        ffi_type_create_packed_struct_arena(state->arena, &packed_type, total_size, alignment, members, num_members);
+    if (status != FFI_SUCCESS) {
+        state->error = status;
+        return NULL;
+    }
+    return packed_type;
 }
 
 /**
- * @brief Generates a reverse-call trampoline (callback) from a signature string.
- *
- * @details This function parses a signature string to create a native, C-callable function
- *          pointer that invokes the provided user handler. It simplifies the creation
- *          of callbacks by managing the underlying `ffi_type` objects automatically,
- *          making it the ideal way to interface with C libraries that require callbacks.
- *
- * @param[out] out_context On success, will be populated with a pointer to the new
- *                         reverse trampoline context. This context owns the executable
- *                         code and must be kept alive as long as the callback is in use.
- * @param[in] signature A null-terminated string describing the callback's signature.
- *                      See the Signature Language Reference in the `README.md` for details.
- * @param[in] user_callback_fn A function pointer to the user's C callback handler.
- *                             Its signature must logically match the one described
- *                             in the string.
- * @param[in] user_data An arbitrary, user-defined pointer for passing state to the
- *                      handler. This pointer is stored in the trampoline's context and can
- *                      be retrieved within the handler via the `ffi_reverse_trampoline_t*`
- *                      context passed to the internal dispatcher.
- *
- * @return `FFI_SUCCESS` on success.
- * @return `FFI_ERROR_INVALID_ARGUMENT` if any parameters are invalid or the signature
- *         string is malformed.
- * @return `FFI_ERROR_ALLOCATION_FAILED` if an internal memory allocation fails.
- *
- * @note The returned context must be freed with `ffi_reverse_trampoline_free`. The
- *       context must remain alive for as long as the native function pointer might
- *       be called by external code.
+ * @internal
+ * @brief Parses a fixed-size array `[size]type`. This handles nested arrays
+ *        by recursively calling `parse_type` for the element type.
+ * @param state The current state of the parser.
+ * @return A pointer to the parsed array `ffi_type`, or `NULL` on failure.
  */
-ffi_status ffi_create_reverse_trampoline_from_signature(ffi_reverse_trampoline_t ** out_context,
-                                                        const char * signature,
-                                                        void * user_callback_fn,
-                                                        void * user_data) {
-    if (!out_context || !signature)
-        return FFI_ERROR_INVALID_ARGUMENT;
+static ffi_type * parse_array(parser_state_t * state) {
+    if (!consume(state, '[')) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+    size_t num_elements;
+    if (!parse_size_t(state, &num_elements) || !consume(state, ']')) {
+        return NULL;
+    }
 
-    arena_t * arena = arena_create(4096);
-    if (!arena)
-        return FFI_ERROR_ALLOCATION_FAILED;
+    // Recursively call the main type parser for the element type.
+    // This allows for complex types like arrays of structs or arrays of pointers.
+    ffi_type * element_type = parse_type(state);
+    if (!element_type)
+        return NULL;
 
-    ffi_type * ret_type = NULL;
-    ffi_type ** arg_types = NULL;
-    size_t num_args = 0;
-    size_t num_fixed_args = 0;
-
-    ffi_status status = parse_full_signature(signature, arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
-    if (status == FFI_SUCCESS)
-        status = generate_reverse_trampoline(
-            out_context, ret_type, arg_types, num_args, num_fixed_args, user_callback_fn, user_data);
-
-    arena_destroy(arena);
-    return status;
+    ffi_type * array_type = NULL;
+    ffi_status status = ffi_type_create_array_arena(state->arena, &array_type, element_type, num_elements);
+    if (status != FFI_SUCCESS) {
+        state->error = status;
+        return NULL;
+    }
+    return array_type;
 }
 
 /**
- * @brief Parses a full function signature string into its constituent ffi_type parts.
- * @details This function provides direct access to the signature parser. It creates a
- *          dedicated arena to hold the resulting `ffi_type` object graph for the
- *          entire function signature. This is an advanced function for callers who
- *          need to inspect the type information before or after generating a
- *          trampoline, or for those who wish to use the lower-level
- *          `generate_forward_trampoline` function directly.
+ * @internal
+ * @brief Parses a function pointer type `(...)`.
+ * @note This is currently a placeholder implementation. It validates the parenthesis
+ *       balancing but does not perform a deep parse of the inner signature. From
+ *       an ABI perspective, all function pointers are treated as generic `void*`,
+ *       so this is sufficient for correct code generation.
+ * @param state The current state of the parser.
+ * @return A pointer to a generic pointer `ffi_type`, or `NULL` on failure.
  */
+static ffi_type * parse_function_pointer(parser_state_t * state) {
+    // These variables are marked as maybe_unused because this function currently
+    // only validates and consumes the syntax. A future implementation could
+    // perform a deep parse of the inner signature to create a more descriptive
+    // ffi_type for reflection purposes.
+    c23_maybe_unused ffi_type * ret_type_inner = NULL;
+    c23_maybe_unused ffi_type ** arg_types_inner = NULL;
+    c23_maybe_unused size_t num_args_inner = 0, num_fixed_inner = 0;
+
+    if (!consume(state, '(')) {
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+
+    // Scan ahead to find the matching closing parenthesis, correctly handling nested parentheses.
+    int open_paren = 1;
+    while (*state->current && open_paren > 0) {
+        if (*state->current == '(')
+            open_paren++;
+        if (*state->current == ')') {
+            open_paren--;
+            if (open_paren == 0)
+                break;  // Found the match
+        }
+        state->current++;
+    }
+    if (open_paren > 0) {  // Unmatched parenthesis
+        state->error = FFI_ERROR_INVALID_ARGUMENT;
+        return NULL;
+    }
+
+    // For now, we just consume the content without a deep parse.
+    state->current++;  // Consume the final ')'
+
+    // From an ABI perspective, all function pointers are treated as a generic `void*`.
+    // Therefore, we return the singleton pointer type.
+    ffi_type * func_ptr_type = arena_alloc(state->arena, sizeof(ffi_type), _Alignof(ffi_type));
+    if (!func_ptr_type) {
+        state->error = FFI_ERROR_ALLOCATION_FAILED;
+        return NULL;
+    }
+    *func_ptr_type = *ffi_type_create_pointer();
+    func_ptr_type->is_arena_allocated = true;
+    return func_ptr_type;
+}
+
+//================================================================================
+// Public API Implementation
+//================================================================================
+
 ffi_status ffi_signature_parse(const char * signature,
                                arena_t ** out_arena,
                                ffi_type ** out_ret_type,
                                ffi_type *** out_arg_types,
                                size_t * out_num_args,
                                size_t * out_num_fixed_args) {
-    // Validate all output pointers.
-    if (!signature || !out_arena || !out_ret_type || !out_arg_types || !out_num_args || !out_num_fixed_args)
+    if (!signature || !out_arena || !out_ret_type || !out_arg_types || !out_num_args || !out_num_fixed_args) {
         return FFI_ERROR_INVALID_ARGUMENT;
+    }
 
-    // Create a dedicated arena for this parse operation.
-    arena_t * arena = arena_create(4096);
-    if (!arena) {
-        *out_arena = NULL;
+    *out_arena = arena_create(65536);
+    if (!*out_arena) {
         return FFI_ERROR_ALLOCATION_FAILED;
     }
 
-    // Call the internal parsing engine.
-    ffi_status status =
-        parse_full_signature(signature, arena, out_ret_type, out_arg_types, out_num_args, out_num_fixed_args);
+    parser_state_t state = {.current = signature, .arena = *out_arena, .error = FFI_SUCCESS};
 
-    // Handle success or failure.
-    if (status != FFI_SUCCESS) {
-        // If parsing failed, destroy the arena we created and nullify the output.
-        arena_destroy(arena);
+    ffi_type * temp_args[256];
+    size_t num_args = 0;
+    size_t num_fixed = 0;
+    bool in_variadic_part = false;
+
+    // A valid signature MUST contain the return type separator "=>".
+    const char * ret_sep = strstr(signature, "=>");
+    if (!ret_sep) {
+        arena_destroy(*out_arena);
         *out_arena = NULL;
-        // The other out-params are assumed to be garbage at this point.
+        return FFI_ERROR_INVALID_ARGUMENT;
     }
-    else
-        // On success, transfer ownership of the arena to the caller.
-        *out_arena = arena;
 
+    skip_whitespace(&state);
+
+    // Check if there are any arguments to parse before the "=>".
+    if (state.current < ret_sep) {
+        // Handle the edge case of a variadic-only function, e.g., ";i=>v"
+        if (*state.current == ';') {
+            in_variadic_part = true;
+            num_fixed = 0;
+            state.current++;
+            skip_whitespace(&state);
+            // It's a syntax error if there's nothing between ';' and '=>'.
+            if (state.current >= ret_sep) {
+                state.error = FFI_ERROR_INVALID_ARGUMENT;
+                goto cleanup_fail;
+            }
+        }
+
+        // Main loop for parsing comma- or semicolon-separated arguments.
+        while (state.current < ret_sep) {
+            if (num_args >= 256) {
+                state.error = FFI_ERROR_INVALID_ARGUMENT;
+                goto cleanup_fail;
+            }
+
+            temp_args[num_args++] = parse_type(&state);
+            if (state.error || !temp_args[num_args - 1])
+                goto cleanup_fail;
+
+            skip_whitespace(&state);
+
+            // Check for a separator. ',' is a normal separator.
+            bool has_sep = consume(&state, ',');
+            // ';' is a special separator that marks the transition to variadic args.
+            if (!has_sep && consume(&state, ';')) {
+                if (in_variadic_part) {
+                    state.error = FFI_ERROR_INVALID_ARGUMENT;
+                    goto cleanup_fail;
+                }  // Error: multiple ';'
+                in_variadic_part = true;
+                num_fixed = num_args;
+                has_sep = true;
+            }
+
+            if (!has_sep)
+                break;  // No more separators, must be at the end of the arg list.
+
+            // If we consumed a separator, there MUST be another argument.
+            skip_whitespace(&state);
+            if (state.current >= ret_sep) {
+                state.error = FFI_ERROR_INVALID_ARGUMENT;
+                goto cleanup_fail;
+            }  // Trailing separator
+        }
+    }
+
+    // If we never saw a ';', then all arguments are fixed.
+    if (!in_variadic_part) {
+        num_fixed = num_args;
+    }
+
+    // The cursor must now be at the return separator. Advance past it.
+    state.current = ret_sep + 2;
+    *out_ret_type = parse_type(&state);
+    if (state.error || !*out_ret_type)
+        goto cleanup_fail;
+
+    // After parsing the return type, we must be at the end of the string.
+    skip_whitespace(&state);
+    if (*state.current != '\0') {
+        state.error = FFI_ERROR_INVALID_ARGUMENT;  // Trailing junk characters
+        goto cleanup_fail;
+    }
+
+    // Success. Finalize the output parameters.
+    *out_num_args = num_args;
+    *out_num_fixed_args = num_fixed;
+    *out_arg_types = arena_alloc(state.arena, num_args * sizeof(ffi_type *), sizeof(void *));
+    if (!*out_arg_types && num_args > 0) {
+        state.error = FFI_ERROR_ALLOCATION_FAILED;
+        goto cleanup_fail;
+    }
+    if (num_args > 0) {
+        memcpy(*out_arg_types, temp_args, num_args * sizeof(ffi_type *));
+    }
+
+    return FFI_SUCCESS;
+
+cleanup_fail:
+    // This is the single cleanup point for all failure modes. It ensures the
+    // arena is always destroyed on error, preventing memory leaks.
+    arena_destroy(*out_arena);
+    *out_arena = NULL;
+    return state.error;
+}
+
+ffi_status ffi_type_from_signature(ffi_type ** out_type, arena_t ** out_arena, const char * signature) {
+    if (!out_type || !out_arena || !signature) {
+        return FFI_ERROR_INVALID_ARGUMENT;
+    }
+
+    *out_arena = arena_create(16384);
+    if (!*out_arena) {
+        return FFI_ERROR_ALLOCATION_FAILED;
+    }
+
+    parser_state_t state = {.current = signature, .arena = *out_arena, .error = FFI_SUCCESS};
+    *out_type = parse_type(&state);
+
+    skip_whitespace(&state);
+    // For a single type, we must have consumed the entire string.
+    if (state.error != FFI_SUCCESS || *state.current != '\0' || !*out_type) {
+        arena_destroy(*out_arena);
+        *out_arena = NULL;
+        return (state.error != FFI_SUCCESS) ? state.error : FFI_ERROR_INVALID_ARGUMENT;
+    }
+    return FFI_SUCCESS;
+}
+
+ffi_status ffi_create_forward_trampoline_from_signature(ffi_trampoline_t ** out_trampoline, const char * signature) {
+    arena_t * arena = NULL;
+    ffi_type * ret_type = NULL;
+    ffi_type ** arg_types = NULL;
+    size_t num_args, num_fixed_args;
+
+    // Step 1: Parse the signature string. This creates the arena and all ffi_type objects.
+    ffi_status status = ffi_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
+    if (status != FFI_SUCCESS) {
+        return status;  // On failure, ffi_signature_parse has already cleaned up the arena.
+    }
+
+    // Step 2: Generate the trampoline using the parsed types.
+    status = generate_forward_trampoline(out_trampoline, ret_type, arg_types, num_args, num_fixed_args);
+
+    // Step 3: Destroy the arena and all the temporary ffi_type objects it contains.
+    // The generated trampoline is now self-contained and does not depend on them.
+    arena_destroy(arena);
     return status;
 }
 
-/**
- * @brief Parses a signature string representing a single data type.
- * @details This is a specialized version of the parser for use cases like data
- *          marshalling, serialization, or dynamic type inspection, where you need
- *          to describe a single data type rather than a full function signature.
- *          It creates a dedicated arena to hold the resulting `ffi_type` object
- *          graph for the specified type.
- */
-ffi_status ffi_type_from_signature(ffi_type ** out_type, arena_t ** out_arena, const char * signature) {
-    if (!out_type || !out_arena || !signature)
-        return FFI_ERROR_INVALID_ARGUMENT;
+ffi_status ffi_create_reverse_trampoline_from_signature(ffi_reverse_trampoline_t ** out_context,
+                                                        const char * signature,
+                                                        void * user_callback_fn,
+                                                        void * user_data) {
+    arena_t * arena = NULL;
+    ffi_type * ret_type = NULL;
+    ffi_type ** arg_types = NULL;
+    size_t num_args, num_fixed_args;
 
-    // Create and manage the arena internally.
-    arena_t * arena = arena_create(4096);
-    if (!arena)
-        return FFI_ERROR_ALLOCATION_FAILED;
-
-    // Set up the internal parser context. The user never sees this.
-    parser_context_t ctx = {.current = signature, .arena = arena, .error_message = NULL};
-
-    // Call the internal, "unsafe" parse function.
-    ffi_type * parsed_type = parse_type(&ctx);
-
-    // Crucially, perform robust error checking
-    consume_whitespace(&ctx);
-    if (ctx.error_message || !parsed_type || *ctx.current != '\0') {
-        // If there's a parser error OR the entire string wasn't consumed, it's an error.
-        arena_destroy(arena);  // Clean up on failure.
-        *out_type = NULL;
-        *out_arena = NULL;
-        return FFI_ERROR_INVALID_ARGUMENT;
+    // The flow is identical to the forward trampoline version.
+    ffi_status status = ffi_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
+    if (status != FFI_SUCCESS) {
+        return status;
     }
 
-    // On success, transfer ownership of the results to the caller.
-    *out_type = parsed_type;
-    *out_arena = arena;
-    return FFI_SUCCESS;
+    status = generate_reverse_trampoline(
+        out_context, ret_type, arg_types, num_args, num_fixed_args, user_callback_fn, user_data);
+
+    arena_destroy(arena);
+    return status;
 }

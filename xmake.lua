@@ -25,36 +25,70 @@ target("infix")
     -- Expose only the public 'include' directory to consumers of this library
     add_includedirs("include", {public = true})
 
-    -- Define the test targets.
-    for _, test_file in ipairs(os.files("t/**/*.c")) do
-        local target_name = path.basename(test_file)
+-- Define the test targets.
+for _, test_file in ipairs(os.files("t/**/*.c")) do
+    local target_name = path.basename(test_file)
+
+    target(target_name)
+        set_kind("binary")
+        set_default(false)
+
+        add_files(test_file)
+        add_deps("infix")
+        set_targetdir("bin")
+
+        add_includedirs("t/include", "third_party/double_tap")
+        add_defines("DBLTAP_ENABLE=1")
+        add_tests(target_name)
+
+        -- Add platform-specific system libraries for tests
+        on_config(function(target)
+            if is_plat("linux") then
+            -- Always need pthread and dl on Linux for tests
+                target:add("syslinks", "pthread", "dl")
+                -- Check if shm_open requires linking librt
+                if target:has_cfuncs("shm_open_in_rt", {includes = "sys/mman.h", trylinks="rt"}) then
+                    target:add("defines", "HAVE_LIBRT") -- For kicks
+                end
+            elseif is_plat("posix") then
+                target:add_syslinks("dl")
+            end
+         end)
+end
+
+-- Define the fuzzing harness targets
+-- This will automatically create targets for fuzz_types, fuzz_trampoline, and fuzz_signature
+for _, fuzz_harness in ipairs(os.files("fuzz/fuzz_*.c")) do
+    -- Exclude the helper file from being a main target
+    if not fuzz_harness:endswith("helpers.c") then
+        local target_name = path.basename(fuzz_harness):gsub("%.c", "")
 
         target(target_name)
             set_kind("binary")
             set_default(false)
+            set_targetdir("bin") -- Place fuzzers in the same output dir as tests
 
-            add_files(test_file)
+            add_files(fuzz_harness)
+            -- All fuzzers need the helpers and the main library
+            add_files("fuzz/fuzz_helpers.c")
             add_deps("infix")
-            set_targetdir("bin")
 
-            add_includedirs("t/include", "third_party/double_tap")
-            add_defines("DBLTAP_ENABLE=1")
-            add_tests(target_name)
+            add_includedirs("fuzz")
 
-            -- Add platform-specific system libraries for tests
-            on_config(function(target)
-                if is_plat("linux") then
-                -- Always need pthread and dl on Linux for tests
-                    target:add("syslinks", "pthread", "dl")
-                    -- Check if shm_open requires linking librt
-                    if target:has_cfuncs("shm_open_in_rt", {includes = "sys/mman.h", trylinks="rt"}) then
-                        target:add("defines", "HAVE_LIBRT") -- For kicks
-                    end
-                elseif is_plat("posix") then
-                    target:add_syslinks("dl")
+            -- Add fuzzer-specific flags
+            -- This requires the user to configure the toolchain appropriately,
+            -- e.g., 'xmake f -c clang' for sanitizers.
+            on_load(function (target)
+                if target:toolchain("clang") then
+                    target:add("cxflags", "-g", "-fsanitize=fuzzer,address,undefined")
+                    target:add("ldflags", "-fsanitize=fuzzer,address,undefined")
+                elseif target:toolchain("gcc") then
+                    -- For AFL++, the user should set the compiler via `xmake f --cc=afl-gcc`
+                    target:add("defines", "USE_AFL=1")
                 end
-             end)
+            end)
     end
+end
 
 --~ xmake test
 --~ xmake f --toolchain=gcc -c

@@ -77,12 +77,13 @@ typedef struct {
  * @brief Enumerates the fundamental categories of types supported by the FFI system.
  */
 typedef enum {
-    FFI_TYPE_PRIMITIVE,  ///< A built-in type like `int`, `float`, `double`.
-    FFI_TYPE_POINTER,    ///< A generic `void*` pointer type.
-    FFI_TYPE_STRUCT,     ///< A user-defined structure (`struct`).
-    FFI_TYPE_UNION,      ///< A user-defined union (`union`).
-    FFI_TYPE_ARRAY,      ///< A fixed-size array.
-    FFI_TYPE_VOID        ///< The `void` type, used for function returns with no value.
+    FFI_TYPE_PRIMITIVE,           ///< A built-in type like `int`, `float`, `double`.
+    FFI_TYPE_POINTER,             ///< A generic `void*` pointer type.
+    FFI_TYPE_STRUCT,              ///< A user-defined structure (`struct`).
+    FFI_TYPE_UNION,               ///< A user-defined union (`union`).
+    FFI_TYPE_ARRAY,               ///< A fixed-size array.
+    FFI_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
+    FFI_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
 } ffi_type_category;
 
 /**
@@ -146,6 +147,13 @@ typedef struct ffi_type_t {
             struct ffi_type_t * element_type;  ///< The type of elements in the array.
             size_t num_elements;               ///< The number of elements in the array.
         } array_info;
+        /** @brief For `FFI_TYPE_REVERSE_TRAMPOLINE`. */
+        struct {
+            struct ffi_type_t * return_type;  ///< Reverse trampoline return value.
+            struct ffi_type_t ** arg_types;   ///< Arg list
+            size_t num_args;                  ///< The total number of fixed and variadic arguments.
+            size_t num_fixed_args;            ///< The number of non-variadic arguments.
+        } func_ptr_info;
     } meta;
 } ffi_type;
 
@@ -1160,7 +1168,7 @@ void emit_int64(code_buffer * buf, int64_t value);
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
- *                  Format: "arg1,arg2.variadic_arg=>ret_type". See cookbook for details.
+ *                  Format: "arg1,arg2;variadic_arg=>ret_type". See cookbook for details.
  *                  Supports packed structs with the syntax: p(size,align){type@offset;...}
  * @return `FFI_SUCCESS` on success, or an error code on failure. `FFI_ERROR_INVALID_ARGUMENT`
  *         is returned for parsing errors.
@@ -1178,29 +1186,11 @@ c23_nodiscard ffi_status ffi_create_forward_trampoline_from_signature(ffi_trampo
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
- *                  Format: "arg1,arg2.variadic_arg=>ret_type". Supports packed structs.
+ *                  Format: "arg1,arg2;variadic_arg=>ret_type". Supports packed structs.
  * @param user_callback_fn A function pointer to the user's C callback handler.
  *                         Its signature must match the one described in the string.
  * @param user_data A user-defined pointer for passing state to the handler,
  *                  accessible inside the handler via the context.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note The returned context must be freed with `ffi_reverse_trampoline_free`.
- */
-c23_nodiscard ffi_status ffi_create_reverse_trampoline_from_signature(ffi_reverse_trampoline_t ** out_context,
-                                                                      const char * signature,
-                                                                      void * user_callback_fn,
-                                                                      void * user_data);
-
-/**
- * @brief Generates a reverse-call trampoline (callback) from a signature string.
- *
- * This function parses a signature string to create a native, C-callable function
- * pointer that invokes the provided user handler.
- *
- * @param[out] out_context On success, will point to the new reverse trampoline context.
- * @param signature A null-terminated string describing the callback's signature.
- * @param user_callback_fn A function pointer to the user's C callback handler.
- * @param user_data A user-defined pointer for passing state to the handler.
  * @return `FFI_SUCCESS` on success, or an error code on failure.
  * @note The returned context must be freed with `ffi_reverse_trampoline_free`.
  */
@@ -1274,18 +1264,3 @@ ffi_status ffi_signature_parse(const char * signature,
  */
 c23_nodiscard ffi_status ffi_type_from_signature(ffi_type ** out_type, arena_t ** out_arena, const char * signature);
 /** @} */  // End of high_level_api group
-
-/**
- * @internal
- * @struct parser_context_t
- * @brief Holds the state of the parser as it walks the signature string.
- */
-typedef struct {
-    const char * current;        // The parser's current position in the string.
-    arena_t * arena;             // An arena for all temporary allocations.
-    const char * error_message;  // If an error occurs, this will point to a message.
-} parser_context_t;
-
-// Forward declaration is required for recursive parsing (e.g., structs containing arrays).
-/** @internal */
-ffi_type * parse_type(parser_context_t * ctx);

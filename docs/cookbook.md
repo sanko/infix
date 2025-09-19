@@ -1,4 +1,3 @@
-
 # infix FFI Cookbook: Advanced Usage Recipes
 
 Welcome to the infix Cookbook! This guide provides practical, real-world examples to help you solve common problems and leverage the full power of the infix FFI library. Whether you're calling a simple C function or wrapping a complex C++ class, this document provides the patterns you need.
@@ -15,12 +14,10 @@ Welcome to the infix Cookbook! This guide provides practical, real-world example
     *   [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
     *   [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
     *   [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
-    *   [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
     *   [Recipe: Working with Packed Structs via the Signature API](#recipe-working-with-packed-structs-via-the-signature-api)
     *   [Recipe: Working with Unions](#recipe-working-with-unions)
 *   **Chapter 3: The Power of Callbacks (Reverse Calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
-    *   [Recipe: Creating a Stateless Callback for `qsort` via the Signature API](#recipe-creating-a-stateless-callback-for-qsort-via-the-signature-api)
     *   [Recipe: Callbacks with State (The `user_data` Pattern)](#recipe-callbacks-with-state-the-user_data-pattern)
 *   **Chapter 4: Advanced Techniques**
     *   [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
@@ -57,7 +54,7 @@ Welcome to the infix Cookbook! This guide provides practical, real-world example
     *   [Mistake: Incorrect `num_fixed_args` for Variadic Functions](#mistake-incorrect-num_fixed_args-for-variadic-functions)
 *   **Chapter 10: Building Language Bindings**
     *   [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
-    *  [The Two Paths: Core API vs. Signature API](#the-two-paths-core-api-vs.-signature-api)
+    *   [The Two Paths: Core API vs. Signature API](#the-two-paths-core-api-vs-signature-api)
 
 ---
 
@@ -67,7 +64,7 @@ Welcome to the infix Cookbook! This guide provides practical, real-world example
 
 **Problem**: You want to call a standard C function, like `int add(int, int);`.
 
-**Solution**: Describe the function's signature using `ffi_type` objects, generate a forward trampoline, prepare the arguments, and make the call.
+**Solution**: Describe the function's signature using the Signature API, prepare the arguments, and make the call.
 
 ```c
 #include <infix.h>
@@ -77,15 +74,11 @@ int add_ints(int a, int b) { return a + b; }
 
 int main() {
     // 1. Describe the signature: int(int, int)
-    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type* arg_types[] = {
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)
-    };
+    const char* signature = "i,i=>i";
 
     // 2. Generate the trampoline.
     ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
     // 3. Prepare arguments. The args array holds *pointers* to the values.
     int a = 40, b = 2;
@@ -108,7 +101,7 @@ int main() {
 
 **Problem**: You need to call a C function that takes pointers as arguments, like `void swap(int* a, int* b);`.
 
-**Solution**: Use `ffi_type_create_pointer()` to describe the arguments. The values you pass in the `args` array will be the addresses of your pointer variables.
+**Solution**: Use the `*` modifier in the signature string. The values you pass in the `args` array will be the addresses of your pointer variables.
 
 ```c
 #include <infix.h>
@@ -122,12 +115,11 @@ void swap_ints(int* a, int* b) {
 
 int main() {
     // 1. Describe the signature: void(int*, int*)
-    ffi_type* ret_type = ffi_type_create_void();
-    ffi_type* arg_types[] = { ffi_type_create_pointer(), ffi_type_create_pointer() };
+    const char* signature = "i*,i*=>v";
 
     // 2. Generate the trampoline.
     ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
     // 3. Prepare arguments.
     int x = 10, y = 20;
@@ -155,9 +147,7 @@ int main() {
 
 **Problem**: You need to interact with a C library that uses opaque pointers (or "handles") where the internal structure is hidden from you.
 
-**Discussion**: This is a very common and safe C API design pattern. The library gives you a pointer to a struct whose definition you don't have (an incomplete type). All you can do is pass this handle back to other functions in the library. From an FFI perspective, this is the simplest case: an opaque pointer is just a pointer.
-
-**Solution**: Use `ffi_type_create_pointer()` for all handles, both as arguments and return values.
+**Solution**: Use the `c*` signature for `void*` or any other opaque pointer type. This is the canonical representation for a generic handle.
 
 #### The C "Library" (`handle_lib.h`/`.c`)
 ```c
@@ -177,22 +167,18 @@ int get_handle_value(my_handle_t* handle);
 #include "handle_lib.h"
 
 int main() {
-    // 1. The opaque handle is just a pointer.
-    ffi_type* handle_type = ffi_type_create_pointer();
-    ffi_type* s32_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-
-    // 2. Create trampolines for the C API.
+    // 1. Create trampolines for the C API using signatures.
     ffi_trampoline_t *t_create, *t_destroy, *t_get;
-    generate_forward_trampoline(&t_create, handle_type, &s32_type, 1, 1);
-    generate_forward_trampoline(&t_destroy, ffi_type_create_void(), &handle_type, 1, 1);
-    generate_forward_trampoline(&t_get, s32_type, &handle_type, 1, 1);
+    ffi_create_forward_trampoline_from_signature(&t_create, "i=>c*");
+    ffi_create_forward_trampoline_from_signature(&t_destroy, "c*=>v");
+    ffi_create_forward_trampoline_from_signature(&t_get, "c*=>i");
 
-    // 3. Use the API through the trampolines.
+    // 2. Use the API through the trampolines.
     my_handle_t* handle = NULL;
     int initial_val = 123;
     void* create_args[] = { &initial_val };
     ((ffi_cif_func)ffi_trampoline_get_code(t_create))((void*)create_handle, &handle, create_args);
-    printf("Created handle: %p\n", handle);
+    printf("Created handle: %p\n", (void*)handle);
 
     int value = 0;
     void* handle_arg[] = { &handle };
@@ -202,7 +188,7 @@ int main() {
     ((ffi_cif_func)ffi_trampoline_get_code(t_destroy))((void*)destroy_handle, NULL, handle_arg);
     printf("Handle destroyed.\n");
 
-    // 4. Clean up.
+    // 3. Clean up.
     ffi_trampoline_free(t_create);
     ffi_trampoline_free(t_destroy);
     ffi_trampoline_free(t_get);
@@ -212,53 +198,41 @@ int main() {
 
 ### Recipe: Working with Fixed-Size Arrays
 
-**Problem**: You need to call a function that operates on a fixed-size array, like `long sum_array(long arr[4]);`. On many ABIs, small arrays are passed by value, similar to how structs are passed.
+**Problem**: You need to call a function that operates on a fixed-size array, like `long long sum_array(long long arr[4]);`.
 
-**Discussion**: This is a subtle but important concept in C. When you write a function signature like `long fn(long arr[4])`, the C compiler automatically converts it to `long fn(long* arr)`. This is called "array-to-pointer decay". While the C function *implementation* sees a pointer, the calling convention (ABI) for the original signature might be different from that of a simple pointer argument. For example, the ABI might require passing the entire array on the stack or in multiple registers.
-
-**Solution**: To ensure infix generates the correct code, you must describe the *original* array type using `ffi_type_create_array`. This gives the FFI engine the information it needs to respect the ABI rules for passing an array by value, even though your C code will ultimately receive a pointer.
+**Solution**: Use the `[N]T` prefix syntax to describe the array. infix will handle the ABI rules correctly for passing the array by value or by reference as required.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
 
-// Note: Even though the signature can be written as `long arr[4]`,
-// it decays to a pointer. The implementation must treat it as such.
-long sum_array_elements(const long* arr) {
-    long sum = 0;
-    for(int i = 0; i < 4; ++i) {
-        sum += arr[i];
-    }
+// This C function receives a pointer due to array-to-pointer decay.
+long long sum_array_elements(const long long* arr) {
+    long long sum = 0;
+    for(int i = 0; i < 4; ++i) sum += arr[i];
     return sum;
 }
 
 int main() {
-    // 1. Describe the array type: long. This tells infix the
-    //    argument is a block of 4 longs, not just a pointer.
-    ffi_type* element_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64);
-    ffi_type* array_type = NULL;
-    ffi_type_create_array(&array_type, element_type, 4);
+    // 1. Describe the signature: long long(long long[4])
+    const char* signature = "[4]x=>x";
 
-    // 2. Generate the trampoline for the function signature.
-    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64);
+    // 2. Generate the trampoline.
     ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, ret_type, &array_type, 1, 1);
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
     // 3. Prepare arguments.
-    long my_array = { 10, 20, 30, 40 };
-    // We pass a pointer to the entire array object.
-    void* args[] = { &my_array };
-    long result = 0;
+    long long my_array[4] = { 10, 20, 30, 40 };
+    void* args[] = { &my_array }; // Pass a pointer to the array object.
+    long long result = 0;
 
-    // 4. Call the function via the trampoline.
-    ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
-    cif_func((void*)sum_array_elements, &result, args);
+    // 4. Call the function.
+    ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)sum_array_elements, &result, args);
 
-    printf("Sum of array is: %ld\n", result); // Expected: 100
+    printf("Sum of array is: %lld\n", result); // Expected: 100
 
     // 5. Clean up.
     ffi_trampoline_free(trampoline);
-    ffi_type_destroy(array_type); // Destroy the dynamically created array type.
     return 0;
 }
 ```
@@ -269,19 +243,9 @@ int main() {
 
 ### Recipe: Dynamic Struct Marshalling with the Signature Parser
 
-**Problem**: You have data in a high-level form (like a dictionary or map) and you need to pack it into a raw memory buffer that matches a C `struct`'s layout. You want to do this dynamically using a signature string, without hardcoding offsets or sizes in your code.
+**Problem**: You have data in a high-level form (like a key-value map) and need to pack it into a C `struct` layout dynamically.
 
-**Discussion**: This is a powerful pattern for language bindings and serialization tools. The `ffi_type_from_signature` function is the perfect tool for this job. It acts as a "schema parser," turning a signature string into a detailed `ffi_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information you need to correctly write data into a C-compatible memory buffer.
-
-**Solution**:
-1.  Define the target C struct layout with a signature string.
-2.  Call `ffi_type_from_signature` to parse it. This gives you an `arena_t*` and the root `ffi_type*`.
-3.  Allocate a raw memory buffer of `ffi_type->size`.
-4.  Iterate through the `ffi_type->meta.aggregate_info.members` array.
-5.  For each member, get its name, type, and offset. Use this information to find the corresponding data in your high-level data structure and `memcpy` it to the correct location in the buffer.
-6.  Remember to `arena_destroy` the arena when you're done with the type information.
-
-**Example**: A C function that simulates a key-value store to represent high-level data, and a marshalling function that packs this data into a C struct.
+**Solution**: Use `ffi_type_from_signature` to parse a signature string into a detailed `ffi_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
 ```c
 #include <infix.h>
@@ -290,18 +254,12 @@ int main() {
 #include <stddef.h>
 
 // The target C struct we want to pack data into.
-typedef struct {
-    int32_t user_id;
-    double score;
-    char name;
-} UserProfile;
+typedef struct { int32_t user_id; double score; char name[16]; } UserProfile;
 
-// --- Simulation of a high-level key-value data source ---
+// --- Simulation of a key-value data source ---
 typedef struct { const char* key; void* value; } KeyValue;
 void* find_value(KeyValue* data, size_t count, const char* key) {
-    for (size_t i = 0; i < count; ++i) {
-        if (strcmp(data[i].key, key) == 0) return data[i].value;
-    }
+    for (size_t i = 0; i < count; ++i) if (strcmp(data[i].key, key) == 0) return data[i].value;
     return NULL;
 }
 // --- End Simulation ---
@@ -311,30 +269,21 @@ void marshal_from_kv(void* dest_buffer, const char* signature, KeyValue* data, s
     ffi_type* struct_type = NULL;
     arena_t* arena = NULL;
 
-    // 1. Parse the signature to get the layout blueprint.
     if (ffi_type_from_signature(&struct_type, &arena, signature) != FFI_SUCCESS) {
         fprintf(stderr, "Failed to parse signature!\n");
         return;
     }
 
-    // 2. Clear the destination buffer.
     memset(dest_buffer, 0, struct_type->size);
 
-    // 3. Iterate through the struct members defined in the blueprint.
     for (size_t i = 0; i < struct_type->meta.aggregate_info.num_members; ++i) {
         ffi_struct_member* member = &struct_type->meta.aggregate_info.members[i];
-
-        // Find the corresponding data in our key-value source.
         void* value_ptr = find_value(data, data_count, member->name);
         if (value_ptr) {
-            // Copy the data to the correct offset in the buffer.
             memcpy((char*)dest_buffer + member->offset, value_ptr, member->type->size);
-            printf("Marshalled member '%s' (size %zu) to offset %zu\n",
-                   member->name, member->type->size, member->offset);
+            printf("Marshalled member '%s' to offset %zu\n", member->name, member->offset);
         }
     }
-
-    // 4. The type graph is no longer needed. Clean it up.
     arena_destroy(arena);
 }
 
@@ -342,25 +291,27 @@ int main() {
     // Our high-level data.
     int32_t id_val = 123;
     double score_val = 98.6;
-    char name_val = "Sanko";
-    KeyValue my_data[] = {
-        { "score", &score_val }, // Out of order to prove it works
-        { "user_id", &id_val },
-        { "name", &name_val }
-    };
+    char name_val[16] = "Sanko";
+    KeyValue my_data[] = { { "score", &score_val }, { "user_id", &id_val }, { "name", &name_val } };
 
-    // The signature string for the UserProfile struct.
-    // We must manually add member names for the lookup to work.
-    const char* profile_sig = "{i@0'user_id';d@8'score';c@16'name'}";
+    // The signature string for the UserProfile struct, with member names.
+    // NOTE: Named fields in signatures are not yet implemented in the parser.
+    // This recipe relies on a hypothetical future version or a custom parser.
+    // For now, we use an unnamed signature and match by order.
+    const char* profile_sig = "{i,d,[16]c}"; // This will be improved when named fields are parsed.
 
-    // Allocate a buffer and marshal the data into it.
     UserProfile profile_buffer;
-    marshal_from_kv(&profile_buffer, profile_sig, my_data, 3);
+    // We would need to modify marshal_from_kv to not rely on names for now.
+    // This example illustrates the concept.
 
-    printf("\nResulting C struct:\n");
-    printf("  user_id: %d\n", profile_buffer.user_id);
-    printf("  score:   %f\n", profile_buffer.score);
-    printf("  name:    %s\n", profile_buffer.name);
+    // Manual marshalling for demonstration:
+    memcpy((char*)&profile_buffer + offsetof(UserProfile, user_id), &id_val, sizeof(id_val));
+    memcpy((char*)&profile_buffer + offsetof(UserProfile, score), &score_val, sizeof(score_val));
+    memcpy((char*)&profile_buffer + offsetof(UserProfile, name), &name_val, sizeof(name_val));
+
+
+    printf("\nResulting C struct:\n  user_id: %d\n  score:   %f\n  name:    %s\n",
+           profile_buffer.user_id, profile_buffer.score, profile_buffer.name);
 
     return 0;
 }
@@ -370,31 +321,21 @@ int main() {
 
 **Problem**: You need to call a function that takes a small `struct` that the ABI passes in registers.
 
-**Solution**: Use `ffi_type_create_struct`. infix will automatically consult the ABI-specific logic to determine if the struct should be passed in GPRs, XMM/VPRs, or a combination.
+**Solution**: Use the `{}` syntax in the signature string. infix will automatically determine the correct ABI passing convention.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
-#include <stddef.h> // For offsetof
 
 typedef struct { double x; double y; } Point;
-
 double process_point(Point p) { return p.x + p.y; }
 
 int main() {
-    // 1. Describe the Point struct.
-    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 2);
-    members = ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
-    members = ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
-    ffi_type* point_type = NULL;
-    ffi_type_create_struct(&point_type, members, 2);
+    const char* signature = "{d,d}=>d";
 
-    // 2. Generate the trampoline for double(Point)
-    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
     ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, ret_type, &point_type, 1, 1);
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
-    // 3. Prepare arguments and call.
     Point p = { 1.5, 2.5 };
     void* args[] = { &p };
     double result = 0;
@@ -402,9 +343,7 @@ int main() {
 
     printf("Result is: %f\n", result); // Expected: 4.0
 
-    // 4. Clean up.
     ffi_trampoline_free(trampoline);
-    ffi_type_destroy(point_type); // This recursively frees the members array.
     return 0;
 }
 ```
@@ -413,13 +352,12 @@ int main() {
 
 **Problem**: A function takes a struct that is too large to fit in registers.
 
-**Solution**: The process is identical to the small struct example. infix's ABI logic will detect that the struct is large and automatically pass it by reference (i.e., pass a pointer to a copy) as required by the platform's calling convention.
+**Solution**: The process is identical. infix's ABI logic will detect that the struct is large and automatically pass it by reference.
 
 ```c
-// ... assume LargeStruct is defined, with size > 16 bytes ...
-// ... assume ffi_type *large_struct_type is created for it ...
-
-// The infix code remains the same.
+// Assume LargeStruct has size > 16 bytes.
+// The signature would be, for example: "{x,x,x,x}" for a struct of 4 long longs.
+// The infix C code remains the same pattern as the small struct example.
 LargeStruct data = { /* ... initial values ... */ };
 void* args[] = { &data };
 // ... call the trampoline ...
@@ -429,152 +367,62 @@ void* args[] = { &data };
 
 **Problem**: You need to call a function that *returns* a struct by value.
 
-**Solution**: Simply use the struct's `ffi_type` as the return type when generating the trampoline. infix will automatically handle the ABI specifics, such as returning the struct in multiple registers (System V) or via a hidden pointer argument (Windows and for large structs everywhere).
+**Solution**: Simply use the struct signature as the return type.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
-#include <stddef.h>
 
 typedef struct { double x; double y; } Point;
-
 Point create_point() { return (Point){ 100.0, 200.0 }; }
 
 int main() {
-    // 1. Describe the Point struct. (Same as before)
-    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 2);
-    members = ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
-    members = ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
-    ffi_type* point_type = NULL;
-    ffi_type_create_struct(&point_type, members, 2);
-
-    // 2. Generate a trampoline for Point(void).
     ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, point_type, NULL, 0, 0);
+    ffi_create_forward_trampoline_from_signature(&trampoline, "=>{d,d}");
 
-    // 3. Prepare a buffer for the return value and call.
     Point result_point;
     ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)create_point, &result_point, NULL);
 
     printf("Returned point: (%f, %f)\n", result_point.x, result_point.y);
 
-    // 4. Clean up.
     ffi_trampoline_free(trampoline);
-    ffi_type_destroy(point_type);
-    return 0;
-}
-```
-
-### Recipe: Working with Packed Structs
-
-**Problem**: A C function uses a struct defined with `#pragma pack(1)` or `__attribute__((packed))`, which has a non-standard memory layout.
-
-**Solution**: Use `ffi_type_create_packed_struct`. You **must** provide the exact `sizeof`, `_Alignof`, and member `offsetof` values from your C compiler, as infix cannot calculate the non-standard layout itself.
-
-```c
-#include <infix.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stddef.h>
-
-#pragma pack(push, 1)
-typedef struct { char a; uint64_t b; } PackedStruct;
-#pragma pack(pop)
-
-int process_packed(PackedStruct p) {
-    return (p.a == 'X' && p.b == 0xDEADBEEFCAFEBABE) ? 42 : -1;
-}
-
-int main() {
-    // 1. Describe members using compiler's offsetof.
-    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 2);
-    members = ffi_struct_member_create("a", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8), offsetof(PackedStruct, a));
-    members = ffi_struct_member_create("b", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64), offsetof(PackedStruct, b));
-
-    // 2. Create the packed ffi_type, providing the exact layout.
-    ffi_type* packed_type = NULL;
-    ffi_type_create_packed_struct(&packed_type, sizeof(PackedStruct), _Alignof(PackedStruct), members, 2);
-
-    // 3. Generate trampoline and call.
-    ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), &packed_type, 1, 1);
-
-    PackedStruct data = { 'X', 0xDEADBEEFCAFEBABE };
-    int result = 0;
-    ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)process_packed, &result, &data);
-
-    printf("Packed struct result: %d\n", result); // Expected: 42
-
-    ffi_trampoline_free(trampoline);
-    ffi_type_destroy(packed_type);
     return 0;
 }
 ```
 
 ### Recipe: Working with Packed Structs via the Signature API
 
-**Problem**: You need to call a C function that takes a packed struct (one with non-standard alignment and padding), and you want to use the high-level signature API.
+**Problem**: You need to call a C function that takes a packed struct using the signature API.
 
-**Discussion**: This is an advanced use case that highlights a key feature of the infix signature language. A simple string like `p{c;x}` isn't enough, because the parser can't know the exact, compiler-specific layout details (`sizeof`, `_Alignof`, `offsetof`).
-
-**Solution**: infix solves this by extending the signature language. You provide the layout metadata *inside* the string itself, allowing you to define any C layout in a self-contained way.
-
-The syntax is: **`p(size,align){member_type:offset;...}`**
+**Solution**: Use the `p(size,align){type@offset,...}` signature syntax, providing the exact layout metadata from your C compiler.
 
 #### The C "Library"
 ```c
-#include <stdio.h>
 #include <stdint.h>
-
 #pragma pack(push, 1)
-typedef struct {
-    char a;      // offset 0
-    uint64_t b;  // offset 1
-} PackedStruct;  // Total size: 9 bytes, Alignment: 1
+typedef struct { char a; uint64_t b; } PackedStruct; // size=9, align=1
 #pragma pack(pop)
-
-// A native C function that expects the packed layout.
-int process_packed(PackedStruct p) {
-    if (p.a == 'X' && p.b == 0xDEADBEEFCAFEBABE) {
-        return 42;
-    }
-    return -1;
-}
+int process_packed(PackedStruct p) { if (p.a == 'X' && p.b == 0x1122334455667788ULL) return 42; return -1; }
 ```
 
-### The infix C Code
-
+#### The infix C Code
 ```c
-#include "infix.h"
+#include <infix.h>
 #include <stdio.h>
-#include <stddef.h> // For offsetof
+#include <stddef.h>
+#include <stdint.h>
 #include "your_library.h"
 
 int main() {
-    // 1. Get the layout metadata from your C compiler.
-    size_t total_size = sizeof(PackedStruct); // Should be 9
-    size_t alignment = _Alignof(PackedStruct); // Should be 1
-    size_t offset_a = offsetof(PackedStruct, a); // Should be 0
-    size_t offset_b = offsetof(PackedStruct, b); // Should be 1
+    char signature[128];
+    snprintf(signature, sizeof(signature), "p(%zu,%zu){c@%zu,x@%zu}=>i",
+             sizeof(PackedStruct), _Alignof(PackedStruct),
+             offsetof(PackedStruct, a), offsetof(PackedStruct, b));
 
-// 2. Construct the signature string using this metadata.
-    char signature;
-    snprintf(signature, sizeof(signature), "p(%zu,%zu){c:%zu;y:%zu} => i",
-             total_size, alignment, offset_a, offset_b);
-
-    printf("Generated Signature String: \"%s\"\n", signature);
-
-    // 3. Generate the trampoline from the self-contained signature.
     ffi_trampoline_t* trampoline = NULL;
-    ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, signature);
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
-    if (status != FFI_SUCCESS) {
-        fprintf(stderr, "Failed to create packed struct trampoline.\n");
-        return 1;
-    }
-
-    // 4. Prepare arguments and call as usual.
-    PackedStruct data = { 'X', 0xDEADBEEFCAFEBABE };
+    PackedStruct data = { 'X', 0x1122334455667788ULL };
     int result = 0;
     void* args[] = { &data };
     ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)process_packed, &result, args);
@@ -590,106 +438,28 @@ int main() {
 
 **Problem**: You need to call a function that passes or returns a `union`.
 
-**Discussion**: Unions are one of the most interesting cases for an FFI library. The way a union is passed is determined by the combination of *all* its members, not just the one that is currently active. For example, a `union { int i; double d; }` will almost always be passed in a floating-point register on platforms like System V x64, because the presence of the `double` member forces it into the `SSE` classification. infix's ABI logic handles this classification automatically.
+**Solution**: Use the `<>` syntax to describe the union. infix will automatically classify it based on all its members.
 
-**Solution**: Use `ffi_type_create_union`, describing all of its members. Then, use the resulting `ffi_type` as you would a struct.
-
-#### The C "Library"
-```c
-#include <stdio.h>
-
-// A union that can hold different numeric types.
-typedef union {
-    int i;
-    double d;
-} Number;
-
-// This function assumes the union holds an integer.
-int process_number_as_int(Number n) {
-    return n.i * 2;
-}
-
-// This function assumes the union holds a double.
-double process_number_as_double(Number n) {
-    return n.d + 10.0;
-}
-
-// This function returns a union.
-Number create_number(int type) {
-    Number n;
-    if (type == 0) {
-        n.i = 100;
-    } else {
-        n.d = 42.5;
-    }
-    return n;
-}
-```
-
-#### The infix C Code
 ```c
 #include <infix.h>
 #include <stdio.h>
-#include <stddef.h> // for offsetof
-#include "your_library.h" // contains the Number union and function definitions
+
+typedef union { int i; double d; } Number;
+int process_number_as_int(Number n) { return n.i * 2; }
 
 int main() {
-    // 1. Describe the Number union. All members are at offset 0.
-    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 2);
-    members = ffi_struct_member_create("i", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), 0);
-    members = ffi_struct_member_create("d", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), 0);
-    ffi_type* number_type = NULL;
-    ffi_type_create_union(&number_type, members, 2);
+    const char* signature = "<i,d>=>i";
+    ffi_trampoline_t* trampoline = NULL;
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
-    // --- Part 1: Passing a union AS AN ARGUMENT ---
-
-    // Trampoline for int(Number)
-    ffi_trampoline_t* t_as_int = NULL;
-    generate_forward_trampoline(&t_as_int, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), &number_type, 1, 1);
-
-    // Trampoline for double(Number)
-    ffi_trampoline_t* t_as_double = NULL;
-    generate_forward_trampoline(&t_as_double, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), &number_type, 1, 1);
-
-    // Call process_number_as_int
     Number n1;
     n1.i = 21;
     int int_result = 0;
-    ((ffi_cif_func)ffi_trampoline_get_code(t_as_int))((void*)process_number_as_int, &int_result, &n1);
-    printf("process_number_as_int(21) returned: %d\n", int_result); // Expected: 42
+    void* args[] = { &n1 };
+    ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)process_number_as_int, &int_result, args);
+    printf("Result: %d\n", int_result); // Expected: 42
 
-    // Call process_number_as_double
-    Number n2;
-    n2.d = 5.5;
-    double dbl_result = 0.0;
-    ((ffi_cif_func)ffi_trampoline_get_code(t_as_double))((void*)process_number_as_double, &dbl_result, &n2);
-    printf("process_number_as_double(5.5) returned: %f\n", dbl_result); // Expected: 15.5
-
-    ffi_trampoline_free(t_as_int);
-    ffi_trampoline_free(t_as_double);
-
-    // --- Part 2: Receiving a union AS A RETURN VALUE ---
-
-    // Trampoline for Number(int)
-    ffi_trampoline_t* t_create = NULL;
-    generate_forward_trampoline(&t_create, number_type, &ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), 1, 1);
-
-    // Call create_number to get an int-filled union
-    Number ret_n1;
-    int type_int = 0;
-    ((ffi_cif_func)ffi_trampoline_get_code(t_create))((void*)create_number, &ret_n1, &type_int);
-    printf("create_number(0) returned union with int: %d\n", ret_n1.i); // Expected: 100
-
-    // Call create_number to get a double-filled union
-    Number ret_n2;
-    int type_double = 1;
-    ((ffi_cif_func)ffi_trampoline_get_code(t_create))((void*)create_number, &ret_n2, &type_double);
-    printf("create_number(1) returned union with double: %f\n", ret_n2.d); // Expected: 42.5
-
-    ffi_trampoline_free(t_create);
-
-    // --- Cleanup ---
-    ffi_type_destroy(number_type); // This frees the members array
+    ffi_trampoline_free(trampoline);
     return 0;
 }
 ```
@@ -698,132 +468,38 @@ int main() {
 
 ## Chapter 3: The Power of Callbacks (Reverse Calls)
 
-A "reverse call" or "callback" is when you create a native C function pointer that, when called by C code, executes a handler you've written. This is essential for event-driven systems, custom allocators, comparison functions, and countless other C library patterns. infix makes this process safe and efficient.
-
 ### Recipe: Creating a Stateless Callback for `qsort`
-
-**Problem**: You need to sort an array using C's `qsort`, which requires a function pointer for the comparison logic. This is a classic FFI use case that combines a reverse trampoline (for the comparison logic) with a forward trampoline (to call `qsort` itself).
-
-**Discussion**: The `qsort` function needs to be able to call back into our code to compare two elements. We provide this by creating a reverse trampoline from our `compare_ints_handler`. The C `qsort` function then calls this trampoline as if it were a normal C function pointer.
-
-```mermaid
-graph TD
-    A[Main C Code] --> B{generate_reverse_trampoline};
-    B --> C[Native Cmp Func Ptr];
-    A --> D{generate_forward_trampoline};
-    D --> E[Native qsort Func Ptr];
-    A --> F[Call qsort via FFI];
-    F -- Pass C as argument --> E;
-    E -- Calls back --> C;
-    C --> G[infix JIT Stub];
-    G --> H[C comparison_handler];
-    H --> G;
-    G --> C;
-    C --> E;
-    E --> F;
-    F --> A;
-```
-
-```c
-#include <infix.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-// 1. Our custom comparison logic. This is the "handler".
-int compare_ints_handler(const void* a, const void* b) {
-    int int_a = *(const int*)a;
-    int int_b = *(const int*)b;
-    if (int_a < int_b) return -1;
-    if (int_a > int_b) return 1;
-    return 0;
-}
-
-int main() {
-    // 2. Create the reverse trampoline for the comparison function.
-    ffi_type* rt_ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type* rt_arg_types[] = { ffi_type_create_pointer(), ffi_type_create_pointer() };
-    ffi_reverse_trampoline_t* rt = NULL;
-    generate_reverse_trampoline(&rt, rt_ret_type, rt_arg_types, 2, 2,
-                                (void*)compare_ints_handler, NULL);
-
-    // This is the native, callable function pointer for our handler.
-    void* comparison_func_ptr = rt->exec_code.rx_ptr;
-
-    // 3. Create the forward trampoline for qsort itself.
-    // Signature: void qsort(void* base, size_t num, size_t size, int (*compar)(const void*, const void*));
-    ffi_type* ft_arg_types[] = {
-        ffi_type_create_pointer(),
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64), // size_t
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64), // size_t
-        ffi_type_create_pointer()  // The function pointer
-    };
-    ffi_trampoline_t* ft = NULL;
-    generate_forward_trampoline(&ft, ffi_type_create_void(), ft_arg_types, 4, 4);
-
-    // 4. Prepare arguments and call qsort through the FFI.
-    int numbers[] = { 5, 2, 8, 1, 9 };
-    size_t num_elements = 5;
-    size_t element_size = sizeof(int);
-    void* qsort_args[] = { &numbers, &num_elements, &element_size, &comparison_func_ptr };
-
-    ((ffi_cif_func)ffi_trampoline_get_code(ft))((void*)qsort, NULL, qsort_args);
-
-    printf("Sorted numbers: ");
-    for (int i = 0; i < 5; ++i) printf("%d ", numbers[i]);
-    printf("\n");
-
-    // 5. Clean up everything.
-    ffi_trampoline_free(ft);
-    ffi_reverse_trampoline_free(rt);
-    return 0;
-}
-```
-
-### Recipe: Creating a Stateless Callback for `qsort` via the Signature API
-
-Whew! That was **verbose**! Let's try it again with our signature feature...
 
 **Problem**: You need to sort an array using C's `qsort`, which requires a function pointer for the comparison logic.
 
-**Solution**: With the signature API, this becomes remarkably simple. You generate the callback using a reverse trampoline, and then call `qsort` using a forward trampoline whose signature includes the function pointer type.
+**Solution**: Use the Signature API. Generate the callback using a reverse trampoline, and then call `qsort` using a forward trampoline whose signature includes the function pointer type.
 
 **The `qsort` Signature**: `void qsort(void* base, size_t num, size_t size, int (*compar)(const void*, const void*));`
-**infix Signature**: `c*yy(c*c*=>i) => v`
-*   `c*`: for `void* base` (`c*` is the canonical void pointer)
-*   `y`: for `size_t num` (`unsigned long long` is a safe choice)
-*   `y`: for `size_t size`
-*   `(c*c*=>i)`: for the function pointer `int (*)(const void*, const void*)`
-*   `=> v`: for the `void` return type
+**infix Signature**: `c*,y,y,(c*,c*=>i)=>v`
 
 ```c
 #include <infix.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-// 1. Our custom comparison logic (the handler).
 int compare_ints_handler(const void* a, const void* b) {
-    int int_a = *(const int*)a;
-    int int_b = *(const int*)b;
-    if (int_a < int_b) return -1;
-    if (int_a > int_b) return 1;
-    return 0;
+    int int_a = *(const int*)a; int int_b = *(const int*)b;
+    if (int_a < int_b) return -1; if (int_a > int_b) return 1; return 0;
 }
 
 int main() {
-    // 2. Create the reverse trampoline for the comparison function from its signature.
+    // 1. Create the reverse trampoline for the comparison function.
     ffi_reverse_trampoline_t* rt = NULL;
-    ffi_create_reverse_trampoline_from_signature(&rt, "c*c* => i", (void*)compare_ints_handler, NULL);
-
+    ffi_create_reverse_trampoline_from_signature(&rt, "c*,c*=>i", (void*)compare_ints_handler, NULL);
     void* comparison_func_ptr = rt->exec_code.rx_ptr;
 
-    // 3. Create the forward trampoline for qsort using its signature.
+    // 2. Create the forward trampoline for qsort.
     ffi_trampoline_t* ft = NULL;
-    ffi_create_forward_trampoline_from_signature(&ft, "c*yy(c*c*=>i) => v");
+    ffi_create_forward_trampoline_from_signature(&ft, "c*,y,y,(c*,c*=>i)=>v");
 
-    // 4. Prepare arguments and call qsort.
+    // 3. Prepare arguments and call qsort.
     int numbers[] = { 5, 2, 8, 1, 9 };
-    size_t num_elements = 5;
-    size_t element_size = sizeof(int);
+    size_t num_elements = 5; size_t element_size = sizeof(int);
     void* qsort_args[] = { &numbers, &num_elements, &element_size, &comparison_func_ptr };
 
     ((ffi_cif_func)ffi_trampoline_get_code(ft))((void*)qsort, NULL, qsort_args);
@@ -832,7 +508,7 @@ int main() {
     for (int i = 0; i < 5; ++i) printf("%d ", numbers[i]);
     printf("\n");
 
-    // 5. Clean up.
+    // 4. Clean up.
     ffi_trampoline_free(ft);
     ffi_reverse_trampoline_free(rt);
     return 0;
@@ -841,154 +517,56 @@ int main() {
 
 ### Recipe: Callbacks with State (The `user_data` Pattern)
 
-**Problem**: A callback handler often needs access to application state without using global variables. How do you pass context to a callback?
+**Problem**: A callback handler needs access to application state without using global variables.
 
-**Discussion**: The `user_data` parameter in `generate_reverse_trampoline` is the key. It associates an arbitrary pointer with a specific callback instance. This is essential for object-oriented style programming in C or for managing state in event-driven systems.
+**Solution**: Use the `user_data` parameter in `ffi_create_reverse_trampoline_from_signature`. This associates an arbitrary pointer with a callback instance. The special "bridge" handler function signature allows you to access this data.
 
-There are two primary patterns for this. The correct one to use depends on the signature of the callback defined by the C library you are using.
+**The Bridge Handler Signature**: `void handler(ffi_reverse_trampoline_t* context, void* return_buffer, void** args_array)`
 
-#### Pattern 1: Explicit Context (The Standard C Method)
-
-Many well-designed C libraries provide a `void*` context argument in their callback signatures specifically for this purpose.
-
-**Scenario**: A simple GUI library where you can register an `on_click` handler for a button. The library passes a pointer to the button back to the handler.
-
+#### The C "Library"
 ```c
-// Pretend C GUI Library
-typedef struct { const char* id; int click_count; } Button;
-typedef void (*on_click_t)(Button* button_clicked);
-void simulate_click(Button* button, on_click_t handler) {
-    printf("Native C: Button '%s' was clicked.\n", button->id);
-    handler(button); // Pass the context pointer back to the handler.
-}
-```
-
-**Solution**: Your handler's signature matches the native one. You don't need infix's `user_data` parameter because the native library handles passing the context for you.
-
-```c
-#include <infix.h>
-#include <stdio.h>
-// ... include Button definition ...
-
-// Our handler directly receives the Button context.
-void my_button_handler(Button* button) {
-    button->click_count++;
-    printf("Handler: Button '%s' has been clicked %d times.\n", button->id, button->click_count);
-}
-
-int main() {
-    // 1. Create the reverse trampoline for our handler.
-    ffi_type* arg_types[] = { ffi_type_create_pointer() };
-    ffi_reverse_trampoline_t* rt = NULL;
-    // The user_data parameter is not needed here.
-    generate_reverse_trampoline(&rt, ffi_type_create_void(), arg_types, 1, 1, (void*)my_button_handler, NULL);
-
-    void* callback_ptr = rt->exec_code.rx_ptr;
-
-    // 2. Create a forward trampoline to call `simulate_click`.
-    ffi_trampoline_t* ft = NULL;
-    generate_forward_trampoline(&ft, ffi_type_create_void(), arg_types, 2, 2);
-
-    // 3. Call the native function, passing our button and our new callback.
-    Button my_button = { "LoginButton", 0 };
-    void* forward_args[] = { &my_button, &callback_ptr };
-    ((ffi_cif_func)ffi_trampoline_get_code(ft))((void*)simulate_click, NULL, forward_args);
-    ((ffi_cif_func)ffi_trampoline_get_code(ft))((void*)simulate_click, NULL, forward_args);
-
-    printf("Final click count: %d\n", my_button.click_count); // Expected: 2
-
-    ffi_reverse_trampoline_free(rt);
-    ffi_trampoline_free(ft);
-    return 0;
-}
-```
-
-#### Pattern 2: Implicit Context (Using infix `user_data`)
-
-**Problem**: The native C library's callback signature does **not** provide a `void*` argument (e.g., `void (*signal_handler_t)(int signum)`). How can the handler know which state it's associated with?
-
-**Solution**: This is a powerful pattern where `user_data` truly shines. We create a "bridge" handler whose signature matches the C library. Inside the bridge, we retrieve our state from the `user_data` pointer provided by infix and call our real, stateful handler.
-
-##### The C "Library"
-```c
-// A simple iterator function that takes a callback.
-// Note: This signature is common, but doesn't have a user_data parameter of its own.
+// An iterator that takes a callback without an explicit context parameter.
 typedef void (*item_processor_t)(int item_value);
-
 void process_list(int* items, int count, item_processor_t process_func) {
-    for (int i = 0; i < count; ++i) {
-        process_func(items[i]);
-    }
+    for (int i = 0; i < count; ++i) process_func(items[i]);
 }
 ```
 
-##### The infix C Code
+#### The infix C Code
 ```c
 #include <infix.h>
 #include <stdio.h>
 
-// This struct holds the state we need in our callback.
-typedef struct {
-    const char* list_name;
-    int items_processed;
-    int sum;
-} ProcessingContext;
+typedef struct { const char* name; int sum; } Context;
 
-// The ACTUAL logic we want to run. Its signature is NOT compatible
-// with the C library's expected callback.
-void stateful_handler(ProcessingContext* ctx, int item_value) {
-    printf("Handler for '%s': processing item %d\n", ctx->list_name, item_value);
-    ctx->items_processed++;
+// This is the "bridge" handler that infix calls directly.
+void bridge_handler(ffi_reverse_trampoline_t* context, void* ret, void** args) {
+    // The arguments passed by the native caller are in the `args` array.
+    int item_value = *(int*)args[0];
+
+    // Retrieve our state from the user_data pointer!
+    Context* ctx = (Context*)context->user_data;
+
+    // Now we can use the state.
+    printf("Handler for '%s' processing %d\n", ctx->name, item_value);
     ctx->sum += item_value;
 }
 
-// THE BRIDGE: A handler whose signature MATCHES the C library's expectation.
-// It will be called by the reverse trampoline.
-void bridge_handler(ffi_reverse_trampoline_t* context, void* ret, void** args) {
-    // 1. Get the item_value from the normalized arguments.
-    int item_value = **(int**)args;
-
-    // 2. Retrieve our context from the user_data pointer!
-    ProcessingContext* ctx = (ProcessingContext*)context->user_data;
-
-    // 3. Call the real, stateful handler.
-    stateful_handler(ctx, item_value);
-}
-
 int main() {
-    // Create two separate contexts.
-    ProcessingContext ctx1 = { "List A", 0, 0 };
-    ProcessingContext ctx2 = { "List B", 0, 0 };
+    Context ctx = { "My List", 0 };
 
-    // Describe the signature: void(int)
-    ffi_type* arg_types[] = { ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32) };
+    // 1. Create a reverse trampoline, passing our context struct as user_data.
+    ffi_reverse_trampoline_t* rt = NULL;
+    // NOTE: The handler we pass is the BRIDGE, not our final logic.
+    ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)bridge_handler, &ctx);
+    item_processor_t processor = (item_processor_t)rt->exec_code.rx_ptr;
 
-    // Create a reverse trampoline for the FIRST context.
-    ffi_reverse_trampoline_t* rt1 = NULL;
-    generate_reverse_trampoline(&rt1, ffi_type_create_void(), arg_types, 1, 1, (void*)bridge_handler, &ctx1);
+    int list[] = { 10, 20, 30 };
+    process_list(list, 3, processor);
 
-    // Create a second, independent reverse trampoline for the SECOND context.
-    ffi_reverse_trampoline_t* rt2 = NULL;
-    generate_reverse_trampoline(&rt2, ffi_type_create_void(), arg_types, 1, 1, (void*)bridge_handler, &ctx2);
+    printf("Context '%s' has final sum: %d\n", ctx.name, ctx.sum); // Expected: 60
 
-    // Get the callable function pointers.
-    item_processor_t processor1 = (item_processor_t)rt1->exec_code.rx_ptr;
-    item_processor_t processor2 = (item_processor_t)rt2->exec_code.rx_ptr;
-
-    int list_a[] = { 1, 2, 3 };
-    int list_b[] = { 10, 20, 30 };
-
-    printf("--- Processing List A ---\n");
-    process_list(list_a, 3, processor1);
-    printf("Result for '%s': %d items, sum = %d\n\n", ctx1.list_name, ctx1.items_processed, ctx1.sum);
-
-    printf("--- Processing List B ---\n");
-    process_list(list_b, 3, processor2);
-    printf("Result for '%s': %d items, sum = %d\n", ctx2.list_name, ctx2.items_processed, ctx2.sum);
-
-    ffi_reverse_trampoline_free(rt1);
-    ffi_reverse_trampoline_free(rt2);
-
+    ffi_reverse_trampoline_free(rt);
     return 0;
 }
 ```
@@ -999,32 +577,24 @@ int main() {
 
 ### Recipe: Calling Variadic Functions like `printf`
 
-**Problem**: You need to call a function with a variable number of arguments, like `printf`.
+**Problem**: You need to call a function with a variable number of arguments.
 
-**Solution**: When generating the trampoline, provide the types for *all* the arguments you intend to pass, and use the `num_fixed_args` parameter to tell infix where the variadic `...` part begins.
+**Solution**: Provide the types for *all* arguments you intend to pass and use a semicolon `;` to mark where the variadic part begins.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
 
 int main() {
-    // 1. Describe the specific signature we want to call:
-    // int printf(const char* format, int, double);
-    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type* arg_types[] = {
-        ffi_type_create_pointer(),                           // const char*
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),// variadic int
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE) // variadic double
-    };
+    // 1. Describe the specific signature: int printf(const char* format, int, double);
+    // The semicolon after 'c*' indicates the start of the variadic part.
+    const char* signature = "c*;i,d=>i";
 
-    // 2. Generate trampoline. `printf` has 1 fixed argument, the rest are variadic.
     ffi_trampoline_t* trampoline = NULL;
-    generate_forward_trampoline(&trampoline, ret_type, arg_types, 3, 1);
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
 
-    // 3. Prepare arguments and call.
     const char* fmt = "Number: %d, Pi: %.2f\n";
-    int val = 123;
-    double pi = 3.14;
+    int val = 123; double pi = 3.14;
     void* args[] = { &fmt, &val, &pi };
     int result = 0;
 
@@ -1039,44 +609,30 @@ int main() {
 
 **Problem**: You need to create a native function pointer for a handler that is itself variadic.
 
-**Solution**: The process is identical to a normal reverse trampoline. Define the types for all fixed arguments, and set `num_fixed_args` accordingly. Your C handler function will use `<stdarg.h>` to access the variadic arguments.
+**Solution**: Define the signature for a specific, concrete instance of the variadic call. Your C handler will use `<stdarg.h>` to access the arguments.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
 #include <stdarg.h>
 
-// 1. The variadic C handler.
 void my_logger(const char* level, const char* format, ...) {
     printf("[%s] ", level);
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
+    va_list args; va_start(args, format); vprintf(format, args); va_end(args);
 }
 
-// 2. A native C function that expects a variadic callback.
 typedef void (*log_func_t)(const char*, const char*, ...);
 void run_logger(log_func_t logger) {
     logger("INFO", "User logged in with ID %d\n", 42);
-    logger("ERROR", "File '%s' not found!\n", "config.txt");
 }
 
 int main() {
-    // 3. Describe the SIGNATURE of the callback, including the variadic parts.
-    ffi_type* ret_type = ffi_type_create_void();
-    ffi_type* arg_types[] = {
-        ffi_type_create_pointer(), // level
-        ffi_type_create_pointer(), // format
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-        ffi_type_create_pointer()
-    };
+    // 1. Describe the concrete signature of the call being made inside run_logger.
+    const char* signature = "c*,c*;i=>v";
 
-    // 4. Generate trampoline. The first 2 args are fixed.
     ffi_reverse_trampoline_t* rt = NULL;
-    generate_reverse_trampoline(&rt, ret_type, arg_types, 4, 2, (void*)my_logger, NULL);
+    ffi_create_reverse_trampoline_from_signature(&rt, signature, (void*)my_logger, NULL);
 
-    // 5. Call the harness with our generated callback.
     run_logger((log_func_t)rt->exec_code.rx_ptr);
 
     ffi_reverse_trampoline_free(rt);
@@ -1086,215 +642,96 @@ int main() {
 
 ### Recipe: Proving Reentrancy with Nested FFI Calls
 
-**Problem**: You need to call a C function that takes a callback, and inside that callback handler, you need to call *another* C function using infix. This requires re-entering the FFI system before the first call has completed.
+**Problem**: You need to call a C function that takes a callback, and inside that callback handler, you need to call *another* C function using infix.
 
-**Solution**: infix is fully reentrant. You can create all the trampolines you need upfront and use them in a nested fashion. The key is that trampolines are stateless, so they can be used safely in this way.
+**Solution**: infix is fully reentrant. Create all trampolines upfront.
 
-```mermaid
-graph TD
-    subgraph FFI Client
-        A[main]
-        H[my_event_handler]
-    end
-
-    subgraph Native C Library
-        D[run_event_loop]
-        F[log_event]
-    end
-
-    A -- "Calls via Forward Trampoline 1" --> D;
-    D -- "Invokes registered callback" --> G[Reverse Trampoline];
-    G -- "Calls C handler" --> H;
-    H -- "Calls via Forward Trampoline 2" --> F;
-
-    F -- "Returns" --> H;
-    H -- "Returns" --> G;
-    G -- "Returns" --> D;
-    D -- "Returns" --> A;
-
-```
-
-#### Part 1: The Native C "Library" (`event_system.h`/`.c`)
-```c
-// event_system.h
-#pragma once
-#include <stdio.h>
-
-typedef void (*event_handler_t)(int event_code, const char* data);
-void register_event_handler(event_handler_t handler);
-void run_event_loop();
-void log_event(const char* message);
-
-// event_system.c
-#include "event_system.h"
-static event_handler_t g_handler = NULL;
-
-void register_event_handler(event_handler_t handler) {
-    g_handler = handler;
-}
-
-void run_event_loop() {
-    printf("C Library: Event loop starting.\n");
-    if (g_handler) {
-        printf("C Library: Firing 'UserLogin' event.\n");
-        g_handler(101, "user_id:42");
-    }
-    printf("C Library: Event loop finished.\n");
-}
-
-void log_event(const char* message) {
-    printf("C Library Log: %s\n", message);
-}
-```
-
-#### Part 2: The Reentrant FFI Client (`main.c`)
 ```c
 #include <infix.h>
 #include <stdio.h>
-#include "event_system.h" // Our pretend C library
 
-// Globals to hold our trampolines for easy access from the handler.
-// In a real app, you might pass these via the callback's user_data.
+// --- Mock C Library ---
+static void (*g_handler)(int) = NULL;
+void log_event(const char* msg) { printf("C Log: %s\n", msg); }
+void register_handler(void (*h)(int)) { g_handler = h; }
+void run_loop() { if (g_handler) g_handler(42); }
+// --- End Mock ---
+
 static ffi_trampoline_t* g_log_trampoline = NULL;
 
-// 1. This is our handler. It will be called from C's run_event_loop.
-void my_event_handler(int event_code, const char* data) {
-    printf("Handler: Received event %d with data '%s'.\n", event_code, data);
-    printf("Handler: Now re-entering FFI to call log_event().\n");
-
-    // 2. Use the pre-made forward trampoline to call back into C.
-    const char* log_message = "Event processed successfully by handler.";
-    void* log_args[] = { &log_message };
+void my_handler(int event_code) {
+    printf("Handler: Received event %d.\n", event_code);
+    const char* log_msg = "Event processed.";
+    void* log_args[] = { &log_msg };
     ((ffi_cif_func)ffi_trampoline_get_code(g_log_trampoline))((void*)log_event, NULL, log_args);
 }
 
 int main() {
-    // 3. SETUP PHASE: Create all required trampolines.
+    // Create all trampolines upfront.
+    ffi_create_forward_trampoline_from_signature(&g_log_trampoline, "c*=>v");
 
-    // Trampoline for log_event(const char*), used inside the handler.
-    ffi_type* log_arg_types[] = { ffi_type_create_pointer() };
-    generate_forward_trampoline(&g_log_trampoline, ffi_type_create_void(), log_arg_types, 1, 1);
-
-    // Reverse trampoline for our handler, void(int, const char*).
-    ffi_type* handler_arg_types[] = { ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), ffi_type_create_pointer() };
     ffi_reverse_trampoline_t* rt = NULL;
-    generate_reverse_trampoline(&rt, ffi_type_create_void(), handler_arg_types, 2, 2, (void*)my_event_handler, NULL);
+    ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)my_handler, NULL);
     void* handler_ptr = rt->exec_code.rx_ptr;
 
-    // Forward trampoline for register_event_handler(event_handler_t).
     ffi_trampoline_t* t_register = NULL;
-    generate_forward_trampoline(&t_register, ffi_type_create_void(), &ffi_type_create_pointer(), 1, 1);
+    ffi_create_forward_trampoline_from_signature(&t_register, "(i=>v)*=>v");
 
-    // Forward trampoline for run_event_loop(void).
     ffi_trampoline_t* t_run = NULL;
-    generate_forward_trampoline(&t_run, ffi_type_create_void(), NULL, 0, 0);
+    ffi_create_forward_trampoline_from_signature(&t_run, "=>v");
 
-    // 4. EXECUTION PHASE
+    // Execute the nested call.
+    ((ffi_cif_func)ffi_trampoline_get_code(t_register))((void*)register_handler, NULL, &handler_ptr);
+    ((ffi_cif_func)ffi_trampoline_get_code(t_run))((void*)run_loop, NULL, NULL);
 
-    // Register our callback with the C library.
-    void* register_args[] = { &handler_ptr };
-    ((ffi_cif_func)ffi_trampoline_get_code(t_register))((void*)register_event_handler, NULL, register_args);
-
-    // Start the event loop. This will trigger the nested calls.
-    ((ffi_cif_func)ffi_trampoline_get_code(t_run))((void*)run_event_loop, NULL, NULL);
-
-    // 5. CLEANUP
+    // Cleanup.
     ffi_trampoline_free(g_log_trampoline);
     ffi_reverse_trampoline_free(rt);
     ffi_trampoline_free(t_register);
     ffi_trampoline_free(t_run);
-
     return 0;
 }
 ```
 
-**Explanation**: The ability to call a forward trampoline (`log_event`) from within the handler of a reverse trampoline (`my_event_handler`) demonstrates that the library is reentrant. The internal state of the first FFI call is not corrupted by the second, nested FFI call. This is possible because infix trampolines are stateless and thread-safe by design.
-
 ### Recipe: Receiving and Calling a Function Pointer
 
-**Problem**: You need to call a "factory" function that returns a pointer to another function, which you then need to call.
+**Problem**: You need to call a factory function that returns a pointer to another function, which you then need to call.
 
-**Solution**: This requires a two-step FFI process. First, you create a trampoline to call the factory function. Then, you create a *second* trampoline that matches the signature of the functions the factory *returns*.
+**Solution**: Create two trampolines: one for the factory's signature and one for the worker's signature.
 
-```mermaid
-graph TD
-    subgraph NativeCLibrary
-        Factory["get_operation()"]
-        WorkerAdd["add()"]
-        WorkerMul["multiply()"]
-    end
-    subgraph FFIClient
-        A[main]
-        T1[Trampoline for Factory]
-        T2[Trampoline for Worker]
-    end
-
-    A -- "Calls via T1" --> Factory;
-    Factory -- "Returns func ptr" --> A;
-    A -- "Calls returned ptr via T2" --> WorkerAdd;
-    WorkerAdd -- "Returns result" --> A;
-```
-
-#### The C "Library"
-```c
-#include <string.h>
-// The function signature for the workers.
-typedef int (*math_op_t)(int, int);
-
-int add_op(int a, int b) { return a + b; }
-int mul_op(int a, int b) { return a * b; }
-
-// The factory function.
-math_op_t get_operation(const char* name) {
-    if (strcmp(name, "add") == 0) return add_op;
-    if (strcmp(name, "mul") == 0) return mul_op;
-    return NULL;
-}
-```
-
-#### The infix C Code
 ```c
 #include <infix.h>
 #include <stdio.h>
-// ... include C library headers ...
+#include <string.h>
+
+typedef int (*math_op_t)(int, int);
+int add_op(int a, int b) { return a + b; }
+math_op_t get_operation(const char* name) { return add_op; }
 
 int main() {
-    // 1. Describe the signature of the WORKER functions: int(int, int)
-    ffi_type* s32_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type* worker_args[] = { s32_type, s32_type };
-
-    // 2. Describe the signature of the FACTORY function: math_op_t(const char*)
-    // The return type is a function pointer, which is just a generic pointer.
-    ffi_type* ptr_type = ffi_type_create_pointer();
-
-    // 3. Generate trampolines for BOTH signatures.
+    // 1. Generate trampolines for BOTH signatures.
     ffi_trampoline_t *t_factory, *t_worker;
-    generate_forward_trampoline(&t_factory, ptr_type, &ptr_type, 1, 1);
-    generate_forward_trampoline(&t_worker, s32_type, worker_args, 2, 2);
+    ffi_create_forward_trampoline_from_signature(&t_factory, "c*=>(i,i=>i)*");
+    ffi_create_forward_trampoline_from_signature(&t_worker, "i,i=>i");
 
-    ffi_cif_func call_factory = (ffi_cif_func)ffi_trampoline_get_code(t_factory);
-    ffi_cif_func call_worker = (ffi_cif_func)ffi_trampoline_get_code(t_worker);
-
-    // 4. Call the factory to get a function pointer.
+    // 2. Call the factory to get a function pointer.
     math_op_t received_func_ptr = NULL;
-    const char* op_name = "mul";
-    void* factory_args[] = { &op_name };
-    call_factory((void*)get_operation, &received_func_ptr, factory_args);
-    printf("Factory returned function pointer: %p\n", received_func_ptr);
+    const char* op_name = "add";
+    ((ffi_cif_func)ffi_trampoline_get_code(t_factory))((void*)get_operation, &received_func_ptr, &op_name);
 
-    // 5. Use the worker trampoline to call the returned function pointer.
-    int a = 7, b = 6;
-    void* worker_args_vals[] = { &a, &b };
-    int result = 0;
-    call_worker((void*)received_func_ptr, &result, worker_args_vals);
-    printf("Result of returned function: %d\n", result); // Expected: 42
+    // 3. Use the worker trampoline to call the returned function pointer.
+    int a = 7, b = 6, result = 0;
+    void* worker_args[] = { &a, &b };
+    ((ffi_cif_func)ffi_trampoline_get_code(t_worker))((void*)received_func_ptr, &result, worker_args);
 
-    // 6. Clean up.
+    printf("Result: %d\n", result); // Expected: 13
+
     ffi_trampoline_free(t_factory);
     ffi_trampoline_free(t_worker);
     return 0;
 }
 ```
+
 ## Chapter 5: Interoperability with Other Languages
 
 ### The Universal Principle: The C ABI
@@ -2451,7 +1888,7 @@ For building language bindings, the Signature API is almost always the right too
 
 ---
 
-# License and Leval
+# License and Legal
 
 Copyright (c) 2025 Sanko Robinson
 

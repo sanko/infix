@@ -9,6 +9,84 @@ The library is built on three pillars:
 2.  **Performance:** Generate efficient machine code with minimal overhead. The public API is designed to separate the one-time setup cost (trampoline generation) from the per-call cost.
 3.  **Abstraction:** Isolate platform- and ABI-specific logic behind a clean internal interface, allowing for easier maintenance and extension.
 
+## Architectural Overview
+
+The library can be broken down into five main layers:
+
+1.  **Public API Layer (`infix.h`, `signature.c`)**: The user-facing interface, providing both a high-level Signature API and a low-level Core API.
+2.  **Type System (`types.c`)**: Describes the data types used in function signatures.
+3.  **Executable Memory Manager (`executor.c`)**: Handles the allocation and protection of memory for JIT-compiled code.
+4.  **ABI Abstraction Layer (`ffi_forward_abi_spec`, `ffi_reverse_abi_spec`)**: A pair of v-table interfaces that define how to handle a specific calling convention.
+5.  **Trampoline Generator (`trampoline.c`)**: The core engine that uses the other layers to build the final machine code.
+
+### 1. API Layers: Core vs. Signature
+
+`infix` provides two distinct APIs for creating trampolines. Understanding their trade-offs is key to using the library effectively.
+
+#### The Core API (`ffi_type_create_*`, `generate_forward_trampoline`)
+
+This is the foundational, low-level API. It offers maximum power and flexibility at the cost of verbosity.
+
+*   **Purpose**: To programmatically construct C types at runtime. This is essential for dynamic environments where type information is not known until the program is running (e.g., a language binding introspecting a C header file).
+*   **Mechanism**: The user acts as a "builder," creating `ffi_type` objects for primitives and composing them into more complex aggregates like structs, unions, and arrays.
+*   **Memory Management**: The user is responsible for managing the lifecycle of dynamically created `ffi_type` objects. Any type created with `ffi_type_create_struct`, `_union`, or `_array` must be explicitly freed with `ffi_type_destroy`. This is a powerful but error-prone model.
+
+**Core API Example: Describing a Packed Struct**
+```c
+#pragma pack(push, 1)
+typedef struct { uint16_t id; char name[10]; uint32_t flags; } PackedData;
+#pragma pack(pop)
+
+// To describe this with the Core API:
+ffi_type* create_packed_data_type() {
+    // 1. Create the inner array type first.
+    ffi_type* char_array_type = NULL;
+    ffi_type_create_array(&char_array_type, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8), 10);
+
+    // 2. Create the list of members.
+    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 3);
+    members[0] = ffi_struct_member_create(NULL, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT16), offsetof(PackedData, id));
+    members[1] = ffi_struct_member_create(NULL, char_array_type, offsetof(PackedData, name));
+    members[2] = ffi_struct_member_create(NULL, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32), offsetof(PackedData, flags));
+
+    // 3. Create the final packed struct type, providing layout metadata from the C compiler.
+    ffi_type* packed_type = NULL;
+    ffi_type_create_packed_struct(&packed_type, sizeof(PackedData), _Alignof(PackedData), members, 3);
+
+    return packed_type; // The caller is now responsible for calling ffi_type_destroy() on this.
+}
+```
+
+#### The Signature API (`ffi_create_*_from_signature`)
+
+This is the high-level API, designed for convenience, readability, and safety. It is the recommended choice for over 99% of use cases.
+
+*   **Purpose**: To create trampolines from a concise, declarative string when the C function's signature is known at compile-time or can be determined from configuration.
+*   **Mechanism**: It uses a self-contained mini-language to describe C types. The `ffi_signature_parse` and `ffi_type_from_signature` functions implement a robust recursive-descent parser that translates this string into the required `ffi_type` object graph.
+*   **Memory Management**: **Automatic**. The parser allocates all necessary `ffi_type` objects from a temporary arena. The high-level `ffi_create_*_from_signature` functions create this arena, use it to generate the trampoline, and then immediately destroy the arena, freeing all the blueprint objects. The user never has to call `ffi_type_destroy`.
+
+**Signature API Example: Describing the Same Packed Struct**
+
+```c
+#include <infix.h>
+#include <stdio.h>
+
+// To describe the same struct with the Signature API:
+char* create_packed_data_signature() {
+    static char signature[128];
+    // Note the primitive codes: t=ushort, c=char, j=uint
+    snprintf(signature, sizeof(signature), "p(%zu,%zu){t@%zu,[10]c@%zu,j@%zu}",
+             sizeof(PackedData), _Alignof(PackedData),
+             offsetof(PackedData, id), offsetof(PackedData, name), offsetof(PackedData, flags));
+    return signature;
+}
+
+// A trampoline can then be created in one line:
+// ffi_create_forward_trampoline_from_signature(&t, create_packed_data_signature());
+```
+
+The comparison clearly shows that the Signature API is far more productive and less error-prone for any signature that can be expressed as a string.
+
 ---
 
 ## infix ABI Internals
@@ -600,7 +678,7 @@ By using these techniques, you can demystify the JIT compilation process and eff
 
 ---
 
-# License and Leval
+# License and Legal
 
 Copyright (c) 2025 Sanko Robinson
 
