@@ -264,7 +264,7 @@ All tests should pass. Pay special attention to tests for aggregate passing (`10
 
 ---
 
-# License and Leval
+# License and Legal
 
 Copyright (c) 2025 Sanko Robinson
 

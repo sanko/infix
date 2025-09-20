@@ -11,6 +11,7 @@ use File::Spec;
 use File::Temp   qw[tempfile];
 use Getopt::Long qw[GetOptions];
 use List::Util   qw[uniq];
+use FindBin;
 $|++;
 
 # Argument Parsing
@@ -27,9 +28,23 @@ my %git_info;
 my $is_fuzz_build     = ( $command =~ /^fuzz/ );
 my $is_coverage_build = ( $command eq 'coverage' );
 my %config            = (
-    sources =>
-        [ 'src/core/executor.c', 'src/core/trampoline.c', 'src/core/types.c', 'src/core/arena.c', 'src/core/utility.c', 'src/core/signature.c', ],
-    include_dirs => [ 'include', 'src', 'src/arch/x64/', 'src/arch/aarch64', 'third_party/double_tap', 't/include' ],
+    sources => [
+        $FindBin::Bin . '/src/core/executor.c',
+        $FindBin::Bin . '/src/core/trampoline.c',
+        $FindBin::Bin . '/src/core/types.c',
+        $FindBin::Bin . '/src/core/arena.c',
+        $FindBin::Bin . '/src/core/utility.c',
+        $FindBin::Bin . '/src/core/signature.c'
+    ],
+    include_dirs => [
+        File::Spec->catdir( $FindBin::Bin, 'include' ),
+        File::Spec->catdir( $FindBin::Bin, 'src' ),
+        File::Spec->catdir( $FindBin::Bin, 'src/core' ),
+        File::Spec->catdir( $FindBin::Bin, 'src/arch/x64/' ),
+        File::Spec->catdir( $FindBin::Bin, 'src/arch/aarch64' ),
+        File::Spec->catdir( $FindBin::Bin, 'third_party/double_tap' ),
+        File::Spec->catdir( $FindBin::Bin, 't/include' ),
+    ],
     lib_dir      => 'build_lib',
     lib_name     => 'infix',
     coverage_dir => 'coverage'
@@ -180,13 +195,12 @@ elsif ( $command eq 'memtest:arena' ) {
 elsif ( $command eq 'helgrindtest' ) {
     my %helgrind_config = %config;
     @{ $helgrind_config{cflags} } = @{ $config{cflags} };
-    push @{ $helgrind_config{cflags} }, '-DDBLTAP_ENABLE=1', '-DFFI_DEBUG_ENABLED=1';
+    push @{ $helgrind_config{cflags} }, '-DDBLTAP_ENABLE=1';
     $final_status = run_valgrind_test( \%helgrind_config, $obj_suffix, '800_security/820_threading_helgrind', 'helgrind' );
 }
 elsif ( $command eq 'helgrindtest:bare' ) {
     my %bare_config = %config;
     @{ $bare_config{cflags} } = @{ $config{cflags} };
-    push @{ $bare_config{cflags} }, '-DFFI_DEBUG_ENABLED=1';
     $final_status = run_valgrind_test( \%bare_config, $obj_suffix, '800_security/821_threading_bare', 'helgrind' );
 }
 elsif ( $command =~ /^fuzz(?::(\w+))?$/ ) {
@@ -208,7 +222,6 @@ else {
 exit $final_status;
 
 sub clean {
-    my (%config) = @_;
     rmtree( $config{lib_dir},      { verbose => 0 } );
     rmtree( $config{coverage_dir}, { verbose => 0 } );
     rmtree( 'build_tools',         { verbose => 0 } );
@@ -244,7 +257,7 @@ sub show_help {
       helgrindtest       Runs the threading stress test under Valgrind/Helgrind.
       helgrindtest:bare  Runs a "barebones" Helgrind test with no testing framework.
       clean              Removes all build and coverage artifacts.
-      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline).
+      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi).
 
     Options:
       --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'clang').
@@ -354,19 +367,29 @@ sub compile_and_run_tests {
             print "# INFO: Skipping '821_threading_bare.c' in regular test run. Use 'helgrindtest:bare' to run it.\n";
             next;
         }
+        my @source_files = ($test_c);
+        my @local_cflags = @{ $config->{cflags} };
+        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+            print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
+            push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
+            push @local_cflags, '-Ifuzz';
+        }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
         push @test_executables, $exe_path;
-        my @cflags  = @{ $config->{cflags} };
         my @ldflags = @{ $config->{ldflags} };
         if ( $config->{compiler} eq 'msvc' ) {
-            my $obj_path = $test_c;
-            $obj_path =~ s/\.c$/.obj/;
-            run_command( $config->{cc}, @cflags,           '-c',      '-Fo' . $obj_path, $test_c );
-            run_command( $config->{cc}, '-Fe' . $exe_path, $obj_path, $static_lib_path,  @ldflags );
+            my @obj_paths;
+            for my $src (@source_files) {
+                my $obj_path = $src;
+                $obj_path =~ s/\.c$/.obj/i;
+                run_command( $config->{cc}, @local_cflags, '-c', '-Fo' . $obj_path, $src );
+                push @obj_paths, $obj_path;
+            }
+            run_command( $config->{cc}, '-Fe' . $exe_path, @obj_paths, $static_lib_path, @ldflags );
         }
         else {
-            my @compile_cmd = ( $config->{cc}, @cflags, '-o', $exe_path, $test_c, $static_lib_path, @ldflags );
+            my @compile_cmd = ( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, $static_lib_path, @ldflags );
             run_command(@compile_cmd);
         }
     }
@@ -411,66 +434,10 @@ sub run_coverage_individually {
         $status = run_coverage_msvc( $config, $obj_suffix, $test_names_ref );
     }
     else {
-        $status = run_coverage_gcc_clang( $config, $obj_suffix, $test_names_ref );
+        $status = run_coverage_gcov( $config, $obj_suffix, $test_names_ref );
     }
     upload_to_codecov($config) if $status == 0;
     return $status;
-}
-
-sub run_coverage_gcc_clang {
-    my ( $config, $obj_suffix, $test_names_ref ) = @_;
-
-    #~ if ( $config->{compiler} eq 'clang' ) {
-    #~ return run_coverage_llvm( $config, $obj_suffix, $test_names_ref );
-    #~ }
-    #~ else {
-    return run_coverage_gcov( $config, $obj_suffix, $test_names_ref );
-
-    #~ }
-}
-
-sub run_coverage_llvm {
-    my ( $config, $obj_suffix, $test_names_ref ) = @_;
-    print "\nBuilding for LLVM source-based coverage...\n";
-    my $failed_tests = 0;
-    my $cov_obj_dir  = File::Spec->catdir( $config->{lib_dir}, 'coverage_objects' );
-    make_path($cov_obj_dir);
-    my @lib_obj_files = compile_objects( $config, $obj_suffix, $cov_obj_dir );
-    my @test_c_files  = get_test_files($test_names_ref);
-    my @test_executables;
-    my @profraw_files;
-    print "\nCompiling and running tests to generate coverage data...\n";
-
-    for my $i ( 0 .. $#test_c_files ) {
-        my $test_c = $test_c_files[$i];
-        if ( $test_c =~ m{800_security[/\\]82\d_} ) { next; }
-        my $exe_path = $test_c;
-        $exe_path =~ s/\.c$/$Config{_exe}/;
-        push @test_executables, $exe_path;
-        run_command( $config->{cc}, @{ $config->{cflags} }, '-o', $exe_path, $test_c, @lib_obj_files, @{ $config->{ldflags} } );
-        my $profraw_file = "test_$i.profraw";
-        push @profraw_files, $profraw_file;
-        local $ENV{LLVM_PROFILE_FILE} = $profraw_file;
-
-        if ( run_command($exe_path) != 0 ) {
-            $failed_tests++;
-            print "# WARNING: Test '$exe_path' failed.\n";
-        }
-    }
-    print "\nMerging LLVM profile data...\n";
-    my $profdata_file = File::Spec->catfile( $config->{coverage_dir}, "coverage.profdata" );
-    run_command( 'llvm-profdata', 'merge', '-sparse', @profraw_files, '-o', $profdata_file );
-    print "\nGenerating LCOV report from profile data...\n";
-    my $report_path  = File::Spec->catfile( $config->{coverage_dir}, "coverage.lcov" );
-    my @llvm_cov_cmd = ( 'llvm-cov', 'export', '-format=lcov', "--instr-profile=$profdata_file", @test_executables );
-    open my $fh, '>', $report_path or return warn "Can't open $report_path for writing: $!";
-    my $pid = open my $pipe, '-|', @llvm_cov_cmd or return warn "Can't run llvm-cov: $!";
-    while (<$pipe>) { print $fh $_; }
-    close $pipe;
-    close $fh;
-    print "Coverage LCOV report generated successfully: $report_path\n";
-    unlink @profraw_files;
-    return $failed_tests;
 }
 
 sub run_coverage_gcov {
@@ -483,9 +450,16 @@ sub run_coverage_gcov {
     my @test_c_files = get_test_files($test_names_ref);
     for my $test_c (@test_c_files) {
         if ( $test_c =~ m{800_security[/\\]82\d_} ) { next; }
+        my @source_files = ($test_c);
+        my @local_cflags = @{ $config->{cflags} };
+        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+            print "# INFO: Adding fuzz_helpers.c to coverage build for regression test.\n";
+            push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
+            push @local_cflags, '-Ifuzz';
+        }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
-        run_command( $config->{cc}, @{ $config->{cflags} }, '-o', $exe_path, $test_c, $lib_path, @{ $config->{ldflags} } );
+        run_command( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, $lib_path, @{ $config->{ldflags} } );
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }
     print "\nGenerating .gcov reports...\n";
@@ -501,54 +475,43 @@ sub run_coverage_gcov {
 sub run_coverage_msvc {
     my ( $config, $obj_suffix, $test_names_ref ) = @_;
     if ( $config->{arch} eq 'arm64' ) {
-        warn "\n# Warning: Skipping OpenCppCoverage on Windows ARM64 as it is unsupported.\n" .
-            "#          Running tests directly to ensure they pass without collecting coverage.\n";
-        my @cflags_no_cov = grep { $_ ne '-Zi' } @{ $config->{cflags} };
-        my %temp_config   = %$config;
-        $temp_config{cflags} = \@cflags_no_cov;
-        my @temp_test_names;
-        return compile_and_run_tests( \%temp_config, $obj_suffix, \@temp_test_names, 0 );
+        warn "\n# Warning: Skipping OpenCppCoverage on Windows ARM64 as it is unsupported.\n";
+        return 0;
     }
     my $tool_path = File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
     warn "Error: OpenCppCoverage not found at '$tool_path'." unless -f $tool_path;
     print "\nBuilding libraries with debug info for coverage (MSVC)\n";
-    my %normal_lib_config = %$config;
-    my $normal_lib_path   = create_static_library( \%normal_lib_config, $obj_suffix );
+    my $normal_lib_path = create_static_library( $config, $obj_suffix );
     die "Failed to build standard library." unless $normal_lib_path && -e $normal_lib_path;
-    my %bare_lib_config = %$config;
-    $bare_lib_config{cflags} = [ grep { $_ ne '-DDBLTAP_ENABLE=1' } @{ $config->{cflags} } ];
-    my $bare_lib_name     = $config->{lib_name} . "_bare";
-    my $bare_lib_filename = "$bare_lib_name.lib";
-    my $bare_lib_path     = File::Spec->catfile( $config->{lib_dir}, $bare_lib_filename );
-    create_static_library( \%bare_lib_config, $obj_suffix, $bare_lib_path );
-    die "Failed to build bare library." unless -e $bare_lib_path;
-    my @test_c_files     = get_test_files($test_names_ref);
-    my $bare_test_c_file = File::Spec->catfile( 't', '800_security', '821_threading_bare.c' );
+    my @test_c_files = get_test_files($test_names_ref);
     my @cov_files;
     my $failed_tests = 0;
     print "\nCompiling and running tests under OpenCppCoverage\n";
 
     for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{800_security[/\\]82\d_} ) { next; }
+        if ( $test_c =~ m{800_security[/\\]821_threading_bare\.c$} ) { next; }
+        my @source_files = ($test_c);
+        my @local_cflags = @{ $config->{cflags} };
+        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+            print "# INFO: Adding fuzz_helpers.c to MSVC coverage build for regression test.\n";
+            push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
+            push @local_cflags, '-Ifuzz';
+        }
+        my @link_objects;
+        for my $src (@source_files) {
+            my $obj_path = $src;
+            $obj_path =~ s/\.c$/.obj/i;
+            run_command( $config->{cc}, @local_cflags, '-c', '-Fo' . $obj_path, $src );
+            push @link_objects, $obj_path;
+        }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
-        my $obj_path = $test_c;
-        $obj_path =~ s/\.c$/.obj/;
-        my ( $lib_to_link, @cflags );
-        if ( $test_c eq $bare_test_c_file ) {
-            $lib_to_link = $bare_lib_path;
-            @cflags      = @{ $bare_lib_config{cflags} };
-        }
-        else {
-            $lib_to_link = $normal_lib_path;
-            @cflags      = @{ $normal_lib_config{cflags} };
-        }
-        run_command( $config->{cc}, @cflags,           '-c',      '-Fo' . $obj_path, $test_c );
-        run_command( $config->{cc}, '-Fe' . $exe_path, $obj_path, $lib_to_link,      @{ $config->{ldflags} } );
+        run_command( $config->{cc}, '-Fe' . $exe_path, @link_objects, $normal_lib_path, @{ $config->{ldflags} } );
         my $cov_file = $exe_path;
         $cov_file =~ s/\.exe$/.cov/;
         push @cov_files, $cov_file;
         my @occ_cmd = ( $tool_path, '--export_type=binary:' . $cov_file, '--cover_children', '--', $exe_path );
+
         if ( run_command(@occ_cmd) != 0 ) {
             $failed_tests++;
             print "# WARNING: Test '$exe_path' failed during coverage run.\n";
@@ -619,7 +582,7 @@ sub run_command {
         my $is_allowed_to_fail = 0;
         $is_allowed_to_fail = 1 if $cmd[0] eq 'prove';
         $is_allowed_to_fail = 1 if $cmd[0] =~ /codecov/;
-        $is_allowed_to_fail = 1 if $cmd[0] =~ /gcov/ || $cmd[0] =~ /llvm-/;    # Allow all gcov and llvm tools to fail
+        $is_allowed_to_fail = 1 if $cmd[0] =~ /gcov/ || $cmd[0] =~ /llvm-/;
         $is_allowed_to_fail = 1
             if $ENV{PROGRAMFILES} && $cmd[0] eq File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
         if ( $is_coverage_build && $cmd[0] =~ m{[\\/]?t[\\/]} && -x $cmd[0] ) {
@@ -715,31 +678,24 @@ sub run_valgrind_test {
     print "\nPreparing for Valgrind Test ($title: $test_name)\n";
     my @test_files = get_test_files( [$test_name] );
     die "Error: Could not find the test file for '$test_name'" unless @test_files;
-    my $test_c = $test_files[0];
-    my %local_config;
-    for my $key ( keys %$config ) {
-        if   ( ref( $config->{$key} ) eq 'ARRAY' ) { $local_config{$key} = [ @{ $config->{$key} } ]; }
-        else                                       { $local_config{$key} = $config->{$key}; }
-    }
-    my $lib_build_config = \%local_config;
-    if ( $test_name =~ /bare/ ) {
-        print "# Note: 'bare' test detected. Building library dependency without test framework linkage.\n";
-        $lib_build_config->{cflags} = [ grep { $_ ne '-DDBLTAP_ENABLE=1' } @{ $local_config{cflags} } ];
-    }
-    my $static_lib_path = create_static_library( $lib_build_config, $obj_suffix );
+    my $test_c          = $test_files[0];
+    my $static_lib_path = create_static_library( $config, $obj_suffix );
     die "Failed to create static library, cannot proceed." unless $static_lib_path && -e $static_lib_path;
     my $exe_path = $test_c;
     $exe_path =~ s/\.c$/$Config{_exe}/;
     print "\nCompiling test executable for Valgrind...\n";
-    my @cflags  = @{ $local_config{cflags} };
-    my @ldflags = @{ $local_config{ldflags} };
+    my @cflags       = @{ $config->{cflags} };
+    my @ldflags      = @{ $config->{ldflags} };
+    my @source_files = ($test_c);
 
-    if ( $test_name =~ /bare/ ) {
-        @cflags = grep { $_ ne '-DDBLTAP_ENABLE=1' } @cflags;
+    if ( $test_c =~ /850_regression_cases\.c$/ ) {
+        print "# INFO: Adding fuzz_helpers.c to Valgrind build for regression test.\n";
+        push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
+        push @cflags,       '-Ifuzz';
     }
     if ( $test_c =~ /fault_injection\.c$/ && $config->{compiler} ne 'msvc' ) { push @cflags, '-Wno-macro-redefined'; }
     if ( $tool eq 'helgrind' && !$config->{is_windows} ) { push @cflags, '-pthread'; push @ldflags, '-pthread'; }
-    my @compile_cmd = ( $local_config{cc}, @cflags, '-o', $exe_path, $test_c, $static_lib_path, @ldflags );
+    my @compile_cmd = ( $config->{cc}, @cflags, '-o', $exe_path, @source_files, $static_lib_path, @ldflags );
     run_command(@compile_cmd);
     print "\nRunning Test with Valgrind ($tool)\n";
     die "Error: 'valgrind' command not found." unless command_exists('valgrind');
@@ -767,6 +723,7 @@ sub run_fuzz_test {
     die "Error: Fuzzing helpers not found at '$fuzz_helpers_c'" unless -f $fuzz_helpers_c;
     print "\nPreparing Fuzzing Build for Harness: $harness_name\n";
     my @fuzz_cflags = @{ $config->{cflags} };
+    push @fuzz_cflags, '-Ifuzz', '-I' . File::Spec->catdir( $FindBin::Bin, 'src/core' );
     @fuzz_cflags = grep { $_ !~ /^-O\d/ } @fuzz_cflags;
     my %fuzz_config = %$config;
     my $fuzz_cc     = $config->{cc};

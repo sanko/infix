@@ -24,6 +24,7 @@ on:
 permissions:
   contents: read
   actions: read # Required to download artifacts in the summary job
+  checks: write
 
 jobs:
   valgrind-memcheck:
@@ -53,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        harness: [types, trampoline]
+        harness: [abi, types, trampoline, signature]
         os: [ubuntu-latest, ubuntu-24.04-arm]
         abi: [FFI_FORCE_ABI_WINDOWS_X64, FFI_FORCE_ABI_SYSV_X64, FFI_FORCE_ABI_AAPCS64]
     uses: ./.github/workflows/debugging-fuzz.yml
@@ -64,10 +65,99 @@ jobs:
       # Pass the duration from the manual input, or use the default 300s for other events.
       fuzz-duration: ${{ github.event.inputs.fuzz_duration || '300' }}
 
+  verify-fuzz-fix:
+    name: Verify Fuzz Crash Regression
+    if: failure()
+    needs: [fuzz]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code with Fix
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang perl
+
+      - name: Download all crash artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: crash-artifact-*
+          path: crash_artifacts/
+          merge-multiple: true
+
+      - name: Build All Fuzzer Harnesses
+        run: |
+          perl build.pl fuzz:types --compiler=clang
+          perl build.pl fuzz:trampoline --compiler=clang
+          perl build.pl fuzz:signature --compiler=clang
+          perl build.pl fuzz:abi --compiler=clang
+
+      - name: Run Regression Test on All Found Crashes
+        id: regression-test
+        run: |
+          set -e # Exit immediately if any command fails
+
+          if [ ! -d "crash_artifacts" ] || [ -z "$(ls -A crash_artifacts)" ]; then
+              echo "No crash artifacts found to verify. This may indicate the failure was not in the fuzzing step itself."
+              exit 0
+          fi
+
+          echo "Verifying that the fix prevents crashes for all found inputs..."
+
+          for dir in crash_artifacts/*; do
+            if [ -d "$dir" ]; then
+              dirname=$(basename "$dir")
+              harness=$(echo "$dirname" | cut -d, -f2)
+
+              echo "--- Verifying crashes from harness: $harness ---"
+              harness_exe="./fuzz_${harness}_harness"
+
+              if [ ! -f "$harness_exe" ]; then
+                echo "::error::Harness executable $harness_exe not found!"
+                exit 1
+              fi
+
+              for crash_file in "$dir"/*; do
+                if [ -f "$crash_file" ]; then
+                  echo "Testing with: $crash_file"
+                  $harness_exe "$crash_file"
+                fi
+              done
+            fi
+          done
+
+          echo "Success! All previously crashing inputs are now handled safely."
+
+      - name: Report Regression Test Status
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            // Get the outcome of the regression test step ('success' or 'failure')
+            const regression_outcome = '${{ steps.regression-test.outcome }}';
+
+            // The 'status' of a check run must be 'completed' to have a conclusion.
+            const check_status = 'completed';
+
+            // The 'conclusion' must be one of the allowed outcome strings.
+            const check_conclusion = regression_outcome;
+
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Fuzzing Regression Test',
+              head_sha: context.sha,
+              status: check_status,
+              conclusion: check_conclusion,
+              output: {
+                title: (check_conclusion === 'success') ? '✅ All fixes verified' : '❌ Regression detected',
+                summary: (check_conclusion === 'success') ? 'All previously crashing inputs are now handled safely by the new code.' : 'A previously found crash is STILL OCCURRING with the new code. The fix is incomplete.'
+              }
+            });
+
   summary:
     name: Summary
     if: always()
-    needs: [valgrind-memcheck, valgrind-fault-injection, valgrind-helgrind, fuzz]
+    needs: [valgrind-memcheck, valgrind-fault-injection, valgrind-helgrind, fuzz, verify-fuzz-fix]
     runs-on: ubuntu-latest
     steps:
       - name: Download all result artifacts

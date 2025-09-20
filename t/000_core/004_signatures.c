@@ -28,164 +28,219 @@
 #define DBLTAP_IMPLEMENTATION
 #include <double_tap.h>
 #include <infix.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <string.h>
 
-// Native C Target Functions
-int add_ints(int a, int b) {
-    return a + b;
-}
-#pragma pack(push, 1)
-typedef struct {
-    char a;
-    uint64_t b;
-} PackedStruct;
-#pragma pack(pop)
-int process_packed_struct(PackedStruct p) {
-    if (p.a == 'X' && p.b == 0xDEADBEEFCAFEBABE)
-        return 42;
-    return -1;
+// This must match the internal definition in signature.c to test the boundary correctly.
+#define MAX_RECURSION_DEPTH 32
+
+// Use preprocessor macros for compile-time constants to ensure MSVC compatibility.
+#define SAFE_NESTING_DEPTH ((MAX_RECURSION_DEPTH / 2) - 1)
+#define OVERFLOW_NESTING_DEPTH (SAFE_NESTING_DEPTH + 1)
+
+/**
+ * @brief Helper subtest to verify that a single type signature string parses correctly.
+ */
+static void test_type_ok(const char * signature, ffi_type_category expected_cat, const char * name) {
+    subtest(name) {
+        plan(2);
+        ffi_type * type = NULL;
+        arena_t * arena = NULL;
+        ffi_status status = ffi_type_from_signature(&type, &arena, signature);
+
+        ok(status == FFI_SUCCESS, "Parsing should succeed for '%s'", signature);
+        if (status == FFI_SUCCESS && type) {
+            ok(type->category == expected_cat, "Type category should be %d (got %d)", expected_cat, type->category);
+        }
+        else {
+            fail("Type category check skipped due to parsing failure");
+        }
+        arena_destroy(arena);
+    }
 }
 
-// Handler and harness for reverse trampoline test
-int multiply_handler(int a, int b) {
-    return a * b;
-}
-void call_int_int_cb(int (*func)(int, int)) {
-    int result = func(10, 5);
-    ok(result == 50, "Callback returned correct result (10 * 5 = 50)");
+/**
+ * @brief Helper subtest to verify that an invalid signature string fails to parse.
+ */
+static void test_type_fail(const char * signature, const char * name) {
+    subtest(name) {
+        plan(1);
+        ffi_type * type = NULL;
+        arena_t * arena = NULL;
+        ffi_status status = ffi_type_from_signature(&type, &arena, signature);
+        ok(status == FFI_ERROR_INVALID_ARGUMENT, "Parsing should fail for invalid signature '%s'", signature);
+        arena_destroy(arena);
+    }
 }
 
 TEST {
-    plan(4);
+    plan(6);
 
-    subtest("Simple and Variadic Signatures") {
-        plan(2);
+    subtest("Valid Single Type Signatures") {
+        plan(15);
+        test_type_ok("i", FFI_TYPE_PRIMITIVE, "Simple primitive");
+        test_type_ok("e", FFI_TYPE_PRIMITIVE, "Long double primitive");
+        test_type_ok("d*", FFI_TYPE_POINTER, "Simple pointer");
+        test_type_ok("h***", FFI_TYPE_POINTER, "Deeply nested pointer");
+        test_type_ok("{i,d}*", FFI_TYPE_POINTER, "Pointer to struct");
+        test_type_ok("[10]s", FFI_TYPE_ARRAY, "Simple array");
+        test_type_ok("[5][10]f", FFI_TYPE_ARRAY, "Nested array");
+        test_type_ok("[2]i*", FFI_TYPE_ARRAY, "Array of pointers");
+        test_type_ok("{i, d, c}", FFI_TYPE_STRUCT, "Simple struct");
+        test_type_ok("<i, d, c>", FFI_TYPE_UNION, "Simple union");
+        test_type_ok("{i, <f, [10]c>}", FFI_TYPE_STRUCT, "Struct with nested union and array");
+        test_type_ok("p(16,8){x@0,x@8}", FFI_TYPE_STRUCT, "Simple packed struct");
+        test_type_ok("(i=>v)*", FFI_TYPE_POINTER, "Simple function pointer");
+        test_type_ok("(i,d;c*=>v)*", FFI_TYPE_POINTER, "Variadic function pointer");
+        test_type_ok("  { i , [ 10 ] d * } * ", FFI_TYPE_POINTER, "Type with extra whitespace");
+    }
 
-        subtest("Simple signature: 'ii => i'") {
-            plan(2);
-            ffi_trampoline_t * trampoline = NULL;
-            ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, "ii => i");
-            ok(status == FFI_SUCCESS, "Trampoline created successfully from 'ii => i'");
-            if (trampoline) {
-                int a = 30, b = 12;
-                int result = 0;
-                void * args[] = {&a, &b};
-                ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)add_ints, &result, args);
-                ok(result == 42, "add_ints(30, 12) returned 42");
+    subtest("Valid Named Field Signatures") {
+        plan(3);
+
+        subtest("Named struct: {id:i, name:c*}") {
+            plan(3);
+            arena_t * arena = NULL;
+            ffi_type * type = NULL;
+            ffi_status status = ffi_type_from_signature(&type, &arena, "{id:i, name:c*}");
+            ok(status == FFI_SUCCESS, "Parsing succeeds");
+            if (status == FFI_SUCCESS && type) {
+                ok(strcmp(type->meta.aggregate_info.members[0].name, "id") == 0, "First member name is correct");
+                ok(strcmp(type->meta.aggregate_info.members[1].name, "name") == 0, "Second member name is correct");
             }
             else {
-                skip(1, "Test skipped due to creation failure");
+                fail("Skipping name checks for struct");
+                fail("Skipping name checks for struct");
             }
-            ffi_trampoline_free(trampoline);
+            arena_destroy(arena);
         }
 
-        subtest("Variadic signature: 'c*.d => i'") {
-            plan(2);
-            ffi_trampoline_t * trampoline = NULL;
-            // Use 'c*' for const char*
-            ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, "c*.d => i");
-            ok(status == FFI_SUCCESS, "Trampoline created successfully from 'c*.d => i'");
-            if (trampoline) {
-                const char * fmt = "Number is %.2f";
-                double val = 3.14;
-                void * args[] = {&fmt, &val};
-                int ret = 0;
-                ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)printf, &ret, args);
-                ok(ret > 0, "Variadic call to printf executed without crashing");
+        subtest("Named packed struct: p(16,8){ptr:c*@0, len:y@8}") {
+            plan(3);
+            arena_t * arena = NULL;
+            ffi_type * type = NULL;
+            ffi_status status = ffi_type_from_signature(&type, &arena, "p(16,8){ptr:c*@0, len:y@8}");
+            ok(status == FFI_SUCCESS, "Parsing succeeds");
+            if (status == FFI_SUCCESS && type) {
+                ok(strcmp(type->meta.aggregate_info.members[0].name, "ptr") == 0 &&
+                       type->meta.aggregate_info.members[0].offset == 0,
+                   "Packed member 1 OK");
+                ok(strcmp(type->meta.aggregate_info.members[1].name, "len") == 0 &&
+                       type->meta.aggregate_info.members[1].offset == 8,
+                   "Packed member 2 OK");
             }
             else {
-                skip(1, "Test skipped due to creation failure");
+                fail("Skipping name checks for packed struct");
+                fail("Skipping name checks for packed struct");
             }
-            ffi_trampoline_free(trampoline);
+            arena_destroy(arena);
         }
+
+        test_type_fail("{name:}", "Named field with no type should fail");
     }
 
-    subtest("Packed Struct Signature") {
+    subtest("Invalid Single Type Signatures") {
+        plan(12);
+        test_type_fail("{i,d", "Unmatched brace");
+        test_type_fail("[10f]", "Invalid array syntax (no closing bracket for size)");
+        test_type_fail("p(1,1){i@}", "Packed struct member missing offset");
+        test_type_fail("i@", "Stray at-symbol");
+        test_type_fail("z", "Invalid primitive character");
+        test_type_fail("[10]i[5]", "Invalid postfix array specifier");
+        test_type_fail("{i,}", "Trailing comma in struct");
+        test_type_fail("p(a,b){i@0}", "Non-numeric size/align in packed struct");
+        test_type_fail("i*d", "Junk after valid type");
+        test_type_fail("=>v", "Function sig element in type context");
+        test_type_fail("", "Empty string");
+        test_type_fail("{,i}", "Leading comma in struct");
+    }
+
+    subtest("Valid Full Function Signatures") {
+        plan(6);
+// Helper lambda for repetitive tests
+#define TEST_SIG(name, sig_str, n_args, n_fixed, ret_cat)                                                             \
+    subtest(name) {                                                                                                   \
+        plan(4);                                                                                                      \
+        arena_t * a = NULL;                                                                                           \
+        ffi_type * rt = NULL;                                                                                         \
+        ffi_type ** at = NULL;                                                                                        \
+        size_t na, nf;                                                                                                \
+        ffi_status s = ffi_signature_parse(sig_str, &a, &rt, &at, &na, &nf);                                          \
+        ok(s == FFI_SUCCESS, "Parsing succeeds");                                                                     \
+        ok(na == n_args, "num_args should be %llu, was %llu", (unsigned long long)n_args, (unsigned long long)na);    \
+        ok(nf == n_fixed, "num_fixed should be %llu, was %llu", (unsigned long long)n_fixed, (unsigned long long)nf); \
+        if (rt)                                                                                                       \
+            ok(rt->category == ret_cat, "Return type category should be %d", ret_cat);                                \
+        else                                                                                                          \
+            fail("Return type was null");                                                                             \
+        arena_destroy(a);                                                                                             \
+    }
+
+        TEST_SIG("Simple function", "i, d => v", 2, 2, FFI_TYPE_VOID);
+        TEST_SIG("Variadic function", "a*;i,d=>j", 3, 1, FFI_TYPE_PRIMITIVE);
+        TEST_SIG("No-arg function", "=>v", 0, 0, FFI_TYPE_VOID);
+        TEST_SIG("Variadic only function", ";i,d=>v", 2, 0, FFI_TYPE_VOID);
+        TEST_SIG("Kitchen sink function", "{i,d}*, [10]c; p(1,1){c@0} => (i=>v)*", 3, 2, FFI_TYPE_POINTER);
+        TEST_SIG("Function with whitespace", "  i , d  =>  v  ", 2, 2, FFI_TYPE_VOID);
+    }
+
+    subtest("Invalid Full Function Signatures") {
+        plan(5);
+        arena_t * arena = NULL;
+        ffi_type * ret_type = NULL;
+        ffi_type ** arg_types = NULL;
+        size_t num_args, num_fixed;
+
+        ok(ffi_signature_parse("i,d v", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Signature without '=>' should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("i,d=>", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Signature with no return type should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("i;d;v=>i", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Multiple variadic separators should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("i,=>v", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Trailing comma before '=>' should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("i,d=>v junk", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Trailing junk after signature should fail");
+        arena_destroy(arena);
+    }
+
+    subtest("Parser Security Hardening") {
         plan(2);
 
-        size_t total_size = sizeof(PackedStruct);
-        size_t alignment = _Alignof(PackedStruct);
-        size_t offset_a = offsetof(PackedStruct, a);
-        size_t offset_b = offsetof(PackedStruct, b);
+        // Build a deeply nested signature string that is JUST UNDER the limit.
+        // For each level of nesting (e.g., `{...}`), the parser calls `parse_type`,
+        // which then calls `parse_aggregate`, so the effective depth is ~2N.
+        // The guard is `depth > 32`, so the max allowed depth is 32.
+        // Therefore, the max nesting level is (32 / 2) - 1 = 15.
+        char deep_sig[SAFE_NESTING_DEPTH * 2 + 2];
+        char * p = deep_sig;
+        for (int i = 0; i < SAFE_NESTING_DEPTH; ++i)
+            *p++ = '{';
+        *p++ = 'i';
+        for (int i = 0; i < SAFE_NESTING_DEPTH; ++i)
+            *p++ = '}';
+        *p = '\0';
 
-        char signature[256];
-        snprintf(signature,
-                 sizeof(signature),
-                 "p(%llu,%llu){c:%llu;y:%llu} => i",
-                 (unsigned long long)total_size,
-                 (unsigned long long)alignment,
-                 (unsigned long long)offset_a,
-                 (unsigned long long)offset_b);
+        test_type_ok(deep_sig, FFI_TYPE_STRUCT, "Type nested to a safe depth should pass");
 
-        note("Testing with generated signature: %s", signature);
+        // Build a signature that is one level too deep.
+        char overflow_sig[OVERFLOW_NESTING_DEPTH * 2 + 2];
+        p = overflow_sig;
+        for (int i = 0; i < OVERFLOW_NESTING_DEPTH; ++i)
+            *p++ = '{';
+        *p++ = 'i';
+        for (int i = 0; i < OVERFLOW_NESTING_DEPTH; ++i)
+            *p++ = '}';
+        *p = '\0';
 
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, signature);
-        ok(status == FFI_SUCCESS, "Trampoline created successfully from packed struct signature");
-
-        if (trampoline) {
-            PackedStruct data = {'X', 0xDEADBEEFCAFEBABE};
-            int result = 0;
-            void * args[] = {&data};
-            ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)process_packed_struct, &result, args);
-            ok(result == 42, "Packed struct passed and processed correctly");
-        }
-        else {
-            skip(1, "Test skipped due to creation failure");
-        }
-        ffi_trampoline_free(trampoline);
-    }
-
-
-    subtest("Reverse Trampoline Signatures") {
-        plan(2);
-
-        const char * signature = "ii => i";
-        ffi_reverse_trampoline_t * rt = NULL;
-        ffi_status status =
-            ffi_create_reverse_trampoline_from_signature(&rt, signature, (void *)multiply_handler, NULL);
-
-        ok(status == FFI_SUCCESS && rt != NULL, "Reverse trampoline created successfully from signature");
-
-        if (rt) {
-            typedef int (*native_func_ptr)(int, int);
-            native_func_ptr func_ptr = (native_func_ptr)rt->exec_code.rx_ptr;
-            call_int_int_cb(func_ptr);
-        }
-        else {
-            skip(1, "Test skipped due to creation failure");
-        }
-
-        ffi_reverse_trampoline_free(rt);
-    }
-
-    subtest("Signature Parsing Error Handling") {
-        const char * bad_signatures[] = {"i =>",
-                                         "=> i",
-                                         "i => z",
-                                         "ii > i",
-                                         "{i;j => i",
-                                         "p{i:0;j:4} => v",
-                                         "p(8,4){i:0;j} => v",
-                                         "p(8,4){i:0:j:4} => v",
-                                         "i[abc] => v",
-                                         "i[] => v",
-                                         NULL};
-
-        int num_tests = 0;
-        for (const char ** s = bad_signatures; *s != NULL; ++s)
-            num_tests++;
-        plan(num_tests);
-
-        for (int i = 0; bad_signatures[i] != NULL; ++i) {
-            ffi_trampoline_t * trampoline = NULL;
-            ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, bad_signatures[i]);
-            ok(status == FFI_ERROR_INVALID_ARGUMENT && trampoline == NULL,
-               "Correctly failed to parse invalid signature: \"%s\"",
-               bad_signatures[i]);
-            ffi_trampoline_free(trampoline);
-        }
+        test_type_fail(overflow_sig, "Type nested beyond the safe depth should fail");
     }
 }

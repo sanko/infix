@@ -40,20 +40,18 @@ static void FuzzTest(fuzzer_input in) {
 
     // Phase 1: Generate a pool of complex types to build signatures from.
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
-        ffi_type * new_type = generate_random_type(&in, 0);
-        if (new_type) {
+        size_t total_fields = 0;  // Initialize counter for each new type
+        ffi_type * new_type = generate_random_type(&in, 0, &total_fields);
+        if (new_type)
             type_pool[type_count++] = new_type;
-        }
-        else {
+        else
             // Stop if we run out of fuzzer data or hit a generation failure.
             break;
-        }
     }
 
-    if (type_count == 0) {
+    if (type_count == 0)
         // If we couldn't even generate one type, there's nothing to test.
         return;
-    }
 
     // Phase 2: Fuzz the trampoline generators using the generated type pool.
     uint8_t arg_count_byte;
@@ -72,26 +70,23 @@ static void FuzzTest(fuzzer_input in) {
             consume_uint8_t(&in, &idx_byte);  // Use one more byte to randomize selection.
             ffi_type * return_type = type_pool[idx_byte % type_count];
 
-            for (size_t i = 0; i < num_args; ++i) {
+            for (size_t i = 0; i < num_args; ++i)
                 // Reuse types from the pool to create interesting signatures.
                 arg_types[i] = type_pool[i % type_count];
-            }
 
             // Fuzz the forward trampoline generator.
             ffi_trampoline_t * trampoline = NULL;
             if (generate_forward_trampoline(&trampoline, return_type, arg_types, num_args, num_fixed_args) ==
-                FFI_SUCCESS) {
+                FFI_SUCCESS)
                 // On success, we must free the object to check for memory leaks.
                 ffi_trampoline_free(trampoline);
-            }
 
             // Fuzz the reverse trampoline generator.
             // Note: `user_callback_fn` is NULL, which is fine for testing generation logic.
             ffi_reverse_trampoline_t * reverse_trampoline = NULL;
             if (generate_reverse_trampoline(
-                    &reverse_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, NULL) == FFI_SUCCESS) {
+                    &reverse_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, NULL) == FFI_SUCCESS)
                 ffi_reverse_trampoline_free(reverse_trampoline);
-            }
 
             free(arg_types);
         }
@@ -99,9 +94,8 @@ static void FuzzTest(fuzzer_input in) {
 
     // Phase 3: Final Cleanup.
     // We must destroy all types successfully generated in the pool to prevent leaks.
-    for (int i = 0; i < type_count; ++i) {
+    for (int i = 0; i < type_count; ++i)
         ffi_type_destroy(type_pool[i]);
-    }
 }
 
 // libFuzzer Entry Point

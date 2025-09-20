@@ -77,12 +77,13 @@ typedef struct {
  * @brief Enumerates the fundamental categories of types supported by the FFI system.
  */
 typedef enum {
-    FFI_TYPE_PRIMITIVE,  ///< A built-in type like `int`, `float`, `double`.
-    FFI_TYPE_POINTER,    ///< A generic `void*` pointer type.
-    FFI_TYPE_STRUCT,     ///< A user-defined structure (`struct`).
-    FFI_TYPE_UNION,      ///< A user-defined union (`union`).
-    FFI_TYPE_ARRAY,      ///< A fixed-size array.
-    FFI_TYPE_VOID        ///< The `void` type, used for function returns with no value.
+    FFI_TYPE_PRIMITIVE,           ///< A built-in type like `int`, `float`, `double`.
+    FFI_TYPE_POINTER,             ///< A generic `void*` pointer type.
+    FFI_TYPE_STRUCT,              ///< A user-defined structure (`struct`).
+    FFI_TYPE_UNION,               ///< A user-defined union (`union`).
+    FFI_TYPE_ARRAY,               ///< A fixed-size array.
+    FFI_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
+    FFI_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
 } ffi_type_category;
 
 /**
@@ -132,7 +133,7 @@ typedef struct ffi_type_t {
     size_t size;                 ///< The total size of the type in bytes, per `sizeof`.
     size_t alignment;            ///< The alignment requirement of the type in bytes, per `_Alignof`.
     bool is_arena_allocated;  ///< If true, this type was allocated from an arena and should not be individually freed.
-    /** @brief Type-specific metadata. */
+                              /** @brief Type-specific metadata. */
     union {
         /** @brief For `FFI_TYPE_PRIMITIVE`. */
         ffi_primitive_type_id primitive_id;
@@ -146,6 +147,13 @@ typedef struct ffi_type_t {
             struct ffi_type_t * element_type;  ///< The type of elements in the array.
             size_t num_elements;               ///< The number of elements in the array.
         } array_info;
+        /** @brief For `FFI_TYPE_REVERSE_TRAMPOLINE`. */
+        struct {
+            struct ffi_type_t * return_type;  ///< Reverse trampoline return value.
+            struct ffi_type_t ** arg_types;   ///< Arg list
+            size_t num_args;                  ///< The total number of fixed and variadic arguments.
+            size_t num_fixed_args;            ///< The number of non-variadic arguments.
+        } func_ptr_info;
     } meta;
 } ffi_type;
 
@@ -1146,9 +1154,58 @@ void emit_int64(code_buffer * buf, int64_t value);
  * @details This API is the recommended way for most users to interact with infix.
  *          It provides a simple, readable, and powerful way to generate FFI
  *          trampolines without needing to manually construct `ffi_type` objects.
- *          The implementation for these functions is in `infix_signature.c`.
+ *          The implementation for these functions is in `src/core/signature.c`.
  * @{
  */
+/**
+ * @defgroup signature_specifiers Signature Format Specifiers
+ * @brief Defines for characters used in the high-level signature string format.
+ * @details These macros provide symbolic names for the characters used to define
+ *          types in a signature string, making programmatic string construction
+ *          safer and more readable than using magic character literals.
+ * @{
+ */
+
+// Primitive Types
+#define FFI_SIG_VOID 'v'
+#define FFI_SIG_BOOL 'b'
+#define FFI_SIG_CHAR 'c'
+#define FFI_SIG_SINT8 'a'
+#define FFI_SIG_UINT8 'h'
+#define FFI_SIG_SINT16 's'
+#define FFI_SIG_UINT16 't'
+#define FFI_SIG_SINT32 'i'
+#define FFI_SIG_UINT32 'j'
+#define FFI_SIG_LONG 'l'
+#define FFI_SIG_ULONG 'm'
+#define FFI_SIG_SINT64 'x'
+#define FFI_SIG_UINT64 'y'
+#define FFI_SIG_SINT128 'n'
+#define FFI_SIG_UINT128 'o'
+#define FFI_SIG_FLOAT 'f'
+#define FFI_SIG_DOUBLE 'd'
+#define FFI_SIG_LONG_DOUBLE 'e'
+
+// Type Modifiers and Constructs
+#define FFI_SIG_POINTER '*'
+#define FFI_SIG_STRUCT_START '{'
+#define FFI_SIG_STRUCT_END '}'
+#define FFI_SIG_UNION_START '<'
+#define FFI_SIG_UNION_END '>'
+#define FFI_SIG_ARRAY_START '['
+#define FFI_SIG_ARRAY_END ']'
+#define FFI_SIG_PACKED_STRUCT 'p'
+#define FFI_SIG_FUNC_PTR_START '('
+#define FFI_SIG_FUNC_PTR_END ')'
+
+// Delimiters
+#define FFI_SIG_MEMBER_SEPARATOR ','
+#define FFI_SIG_VARIADIC_SEPARATOR ';'
+#define FFI_SIG_OFFSET_SEPARATOR '@'
+#define FFI_SIG_NAME_SEPARATOR ':'
+#define FFI_SIG_RETURN_SEPARATOR "=>"
+
+/** @} */  // End of signature_specifiers group
 
 /**
  * @brief Generates a forward-call trampoline from a signature string.
@@ -1160,7 +1217,7 @@ void emit_int64(code_buffer * buf, int64_t value);
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
- *                  Format: "arg1,arg2.variadic_arg=>ret_type". See cookbook for details.
+ *                  Format: "arg1,arg2;variadic_arg=>ret_type". See cookbook for details.
  *                  Supports packed structs with the syntax: p(size,align){type@offset;...}
  * @return `FFI_SUCCESS` on success, or an error code on failure. `FFI_ERROR_INVALID_ARGUMENT`
  *         is returned for parsing errors.
@@ -1178,7 +1235,7 @@ c23_nodiscard ffi_status ffi_create_forward_trampoline_from_signature(ffi_trampo
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
- *                  Format: "arg1,arg2.variadic_arg=>ret_type". Supports packed structs.
+ *                  Format: "arg1,arg2;variadic_arg=>ret_type". Supports packed structs.
  * @param user_callback_fn A function pointer to the user's C callback handler.
  *                         Its signature must match the one described in the string.
  * @param user_data A user-defined pointer for passing state to the handler,
@@ -1192,20 +1249,67 @@ c23_nodiscard ffi_status ffi_create_reverse_trampoline_from_signature(ffi_revers
                                                                       void * user_data);
 
 /**
- * @brief Generates a reverse-call trampoline (callback) from a signature string.
+ * @brief Parses a full function signature string into its constituent ffi_type parts.
+ * @details This function provides direct access to the signature parser. It creates a
+ *          dedicated arena to hold the resulting `ffi_type` object graph for the
+ *          entire function signature. This is an advanced function for callers who
+ *          need to inspect the type information before or after generating a
+ *          trampoline, or for those who wish to use the lower-level
+ *          `generate_forward_trampoline` function directly.
  *
- * This function parses a signature string to create a native, C-callable function
- * pointer that invokes the provided user handler.
+ * @param[in]  signature A null-terminated string describing the function signature.
+ *                       See the project's documentation for the full signature language.
+ * @param[out] out_arena On success, this will be populated with a pointer to the new
+ *                       arena that owns the entire parsed type graph. The caller is
+ *                       responsible for destroying this arena with `arena_destroy()`.
+ * @param[out] out_ret_type On success, will point to the `ffi_type` for the return value.
+ *                          This pointer is valid for the lifetime of the arena.
+ * @param[out] out_arg_types On success, will point to an array of `ffi_type*` for the
+ *                           arguments. This array is also allocated within the arena.
+ * @param[out] out_num_args On success, will be set to the total number of arguments.
+ * @param[out] out_num_fixed_args On success, will be set to the number of non-variadic arguments.
  *
- * @param[out] out_context On success, will point to the new reverse trampoline context.
- * @param signature A null-terminated string describing the callback's signature.
- * @param user_callback_fn A function pointer to the user's C callback handler.
- * @param user_data A user-defined pointer for passing state to the handler.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note The returned context must be freed with `ffi_reverse_trampoline_free`.
+ * @return Returns `FFI_SUCCESS` if parsing is successful.
+ * @return Returns `FFI_ERROR_INVALID_ARGUMENT` if any parameters are null or the
+ *         signature string is malformed.
+ * @return Returns `FFI_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
+ *
+ * @note **Memory Management:** On success, this function transfers ownership of the newly
+ *       created arena to the caller. A single call to `arena_destroy(*out_arena)` is
+ *       sufficient to free all memory associated with the parsed types. If the
+ *       function fails, `*out_arena` will be set to `NULL`.
  */
-c23_nodiscard ffi_status ffi_create_reverse_trampoline_from_signature(ffi_reverse_trampoline_t ** out_context,
-                                                                      const char * signature,
-                                                                      void * user_callback_fn,
-                                                                      void * user_data);
+ffi_status ffi_signature_parse(const char * signature,
+                               arena_t ** out_arena,
+                               ffi_type ** out_ret_type,
+                               ffi_type *** out_arg_types,
+                               size_t * out_num_args,
+                               size_t * out_num_fixed_args);
+
+/**
+ * @brief Parses a signature string representing a single data type.
+ * @details This is a specialized version of the parser for use cases like data
+ *          marshalling, serialization, or dynamic type inspection, where you need
+ *          to describe a single data type rather than a full function signature.
+ *          It creates a dedicated arena to hold the resulting `ffi_type` object
+ *          graph for the specified type.
+ *
+ * @param[out] out_type On success, will point to the newly created `ffi_type`. This
+ *                      pointer is valid for the lifetime of the returned arena.
+ * @param[out] out_arena On success, will point to the new arena that owns the type
+ *                       object graph. The caller is responsible for destroying this
+ *                       arena with `arena_destroy()`.
+ * @param[in]  signature A string describing the data type (e.g., "i", "d*", "{s@0;i@4}").
+ *
+ * @return Returns `FFI_SUCCESS` if parsing is successful.
+ * @return Returns `FFI_ERROR_INVALID_ARGUMENT` if any parameters are null or the
+ *         signature string is malformed or contains trailing characters.
+ * @return Returns `FFI_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
+ *
+ * @note **Memory Management:** On success, the caller takes ownership of the arena
+ *       returned in `*out_arena` and is responsible for its destruction. This
+ *       function is the ideal tool for creating the `ffi_type` descriptors needed
+ *       for pinning variables or for manually constructing aggregate types.
+ */
+c23_nodiscard ffi_status ffi_type_from_signature(ffi_type ** out_type, arena_t ** out_arena, const char * signature);
 /** @} */  // End of high_level_api group

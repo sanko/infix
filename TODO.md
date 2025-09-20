@@ -56,13 +56,13 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** This is an internal optimization. A benchmark must show a measurable speedup in the trampoline generation phase (the one-time setup cost). Trampoline generation is now ~50x faster for complex signatures.
     *   **Possible Roadblocks:** Requires careful changes to internal APIs to pass the allocator context around; potential for subtle memory management bugs during implementation.
 
-- [ ] **Profile Code Generation and Execution**
+- [x] **Profile Code Generation and Execution**
     *   **Context:** Before optimizing, we need to identify performance bottlenecks. We need to measure both the one-time cost of generating a trampoline and the per-call overhead of executing it.
     *   **Idea:** Use platform-specific profiling tools (Valgrind/Callgrind, Instruments, VTune) to measure trampoline generation and execution overhead.
     *   **Goal:** A new document, `docs/performance.md`, is created to summarize the findings and guide future optimization work.
     *   **Possible Roadblocks:** Profiling JIT'd code can be complex, as symbols may not be easily visible in standard profilers.
 
-- [ ] **Implement Packed Argument Trampolines**
+- [x] **Implement Packed Argument Trampolines**
     *   **Context:** The current `void** args` API requires pointer indirection. A "packed" API would improve cache performance by passing arguments in a single contiguous block of memory.
     *   **Idea:** Implement `generate_packed_forward_trampoline`, where the JIT'd code reads arguments from offsets relative to a single pointer.
     *   **Goal:** A benchmark demonstrates a significant performance improvement for calls with many arguments compared to the standard trampoline.
@@ -120,7 +120,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The library source code (`src/`) has no includes of `double_tap.h`. Internal debug messages are printed to `stderr` when `FFI_DEBUG_ENABLED` is active.
     *   **Possible Roadblocks:** Minimal; this is a straightforward refactoring task.
 
-- [ ] **Investigate and Fix Read-Only Context on macOS**
+- [x] **Investigate and Fix Read-Only Context on macOS**
     *   **Context:** The read-only hardening for reverse trampoline contexts does not currently work on macOS due to platform-specific memory protection behavior.
     *   **Idea:** Research the correct combination of `mmap` flags and/or other system calls required to create a reliably read-only data page on macOS.
     *   **Goal:** The "Writing to a hardened reverse trampoline context causes a crash" test passes successfully on macOS.

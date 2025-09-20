@@ -20,7 +20,9 @@ on:
 
 permissions:
   contents: read
-  actions: read # Required to download artifacts in the summary job
+  actions: read
+  # NEW: Allow writing checks for the regression test summary
+  checks: write
 
 jobs:
   fuzz:
@@ -43,13 +45,12 @@ jobs:
         if: steps.test-execution.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
+          # The artifact name now embeds the harness name, which is key for the re-test job
           name: crash-artifact,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}
           path: |
             crash-*
             leak-*
             oom-*
-            findings/crashes/*
-            findings/hangs/*
           retention-days: 7
 
       - name: Record Build Status
@@ -64,3 +65,9 @@ jobs:
           name: result-artifact-fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
           path: fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
           retention-days: 1
+
+      - name: Check for Fuzzing Failures
+        if: steps.test-execution.outcome == 'failure'
+        run: |
+          echo "Fuzzer found a crash! Failing the workflow."
+          exit 1

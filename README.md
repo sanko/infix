@@ -1,393 +1,108 @@
-# infix: A Lightweight FFI Code Generation Library for C
 
-**infix** is a minimal, dependency-free, Just-in-Time (JIT) powered Foreign Function Interface (FFI) library for modern C. It allows you to dynamically create function calls and callbacks at runtime by generating machine code on the fly.
+# infix: A Modern, JIT-Powered FFI Library for C
 
-The entire project is written from scratch in C17 and serves as a practical example of how low-level code generation, ABI-specific logic, and memory management work together.
+**`infix`** is a lightweight, dependency-free Foreign Function Interface (FFI) library for C17. It uses Just-In-Time (JIT) compilation to dynamically generate machine code "trampolines," allowing you to call functions and create callbacks for any C-compatible ABI without writing a single line of assembly.
 
-### Features
+At its core, `infix` provides two powerful APIs: a low-level Core API for fine-grained control over type definitions, and a high-level Signature API that can parse a human-readable string like `"{i;d*},c*=>i"` into a fully functional FFI call. This makes it an ideal tool for embedding scripting languages, creating plugin systems, or simply simplifying complex C interoperability tasks.
 
-*   **Convenient String-Based API**: Define complex C function signatures, including packed structs and function pointers, using a simple, human-readable string.
-*   **Forward Calls:** Dynamically generate and call any C function pointer, even for functions with complex signatures and variadic arguments.
-*   **Reverse Calls (Callbacks):** Generate native, callable C function pointers that wrap a custom handler function. The callback mechanism is **thread-safe**, re-entrant, and supports variadic function signatures.
-*   **Cross-Platform & Cross-Compiler ABI Support:** Correctly handles calling conventions across multiple platforms and compilers:
-    *   **x86-64:** System V (Linux, macOS, BSD) and Windows x64 (MSVC, GCC, and Clang).
-    *   **ARM64 (AArch64):** AAPCS64 (Linux, macOS, Windows, BSD), including correct handling of Apple-specific variadic rules.
-*   **Rich Type System:** Supports a comprehensive set of C types, including primitives, pointers, structs, unions, and fixed-size arrays.
-*   **Performance Optimized:** The one-time cost of trampoline generation is significantly accelerated by an internal arena allocator, which replaces thousands of small `malloc` calls with simple pointer bumps.
-*   **Secure by Design:** Adheres to strict security principles, validated through extensive testing:
-    *   **W^X (Write XOR Execute):** Enforces that memory is never writable and executable at the same time.
-    *   **Overflow Hardened:** The type system is protected against integer overflows from malformed or malicious user input.
-    *   **Use-After-Free Protection:** Freed trampolines are converted into guard pages, ensuring calls to dangling pointers result in a safe, immediate crash.
-    *   **Read-Only Contexts:** Callback context data is made read-only after creation to protect against runtime memory corruption attacks.
-*   **Simple Integration**: Add `infix.h` to your includes and compile with your project to get started.
 
-## API Quick Reference
+##  Features
 
-infix provides two API layers: a convenient high-level Signature API and a powerful low-level Core API.
+`infix` is engineered around three core principles: **Power**, **Security**, and **Simplicity**.
 
-#### 1. The Signature API
+#### Core Capabilities
+*   **Forward Calls:** Call any C function pointer dynamically, with full support for complex arguments (structs, unions, arrays) and variadic functions. The library correctly marshals arguments according to the target ABI.
+*   **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe, re-entrant, and fully supports variadic function signatures, making it suitable for high-performance asynchronous systems.
+*   **Rich Type System:** Provides comprehensive support for all standard C types, including primitives (`int`, `double`), pointers, structs, unions, and fixed-size arrays.
 
-This API uses simple strings to define function signatures, making it easy to use and read.
+#### High-Level Abstraction
+*   **Convenient Signature API:** Define entire C function signatures—including nested structs, packed layouts, and function pointers—using a simple and expressive string-based language.
+*   **Powerful Parser:** The signature parser can be used directly for advanced applications beyond FFI, such as data marshalling, serialization, or dynamic type inspection.
 
-```c
-#include <infix.h>
+#### Security & Performance
+*   **Secure by Design:** `infix` adheres to strict security principles, validated through extensive testing:
+    *   **W^X (Write XOR Execute):** Enforces that memory pages are never writable and executable simultaneously.
+    *   **Overflow Hardening:** The type system and parser are protected against integer overflows from malformed or malicious inputs.
+    *   **Use-After-Free Protection:** Freed trampolines are converted into inaccessible guard pages, ensuring calls to dangling pointers result in a safe, immediate crash.
+    *   **Read-Only Contexts:** Callback context data is made read-only after initialization to protect against runtime memory corruption attacks.
+*   **Performance Optimized:** A custom arena allocator minimizes the overhead of trampoline generation by replacing thousands of potential `malloc` calls with simple, contiguous pointer bumps.
 
-// Generate a forward trampoline for `int add(int, int)`
-ffi_trampoline_t* t;
-ffi_create_forward_trampoline_from_signature(&t, "ii => i");
+#### Portability & Integration
+*   **Cross-Platform ABI Support:** Correctly handles calling conventions across multiple architectures and operating systems:
+    *   **x86-64:** System V (Linux, macOS, BSD) and Windows x64.
+    *   **AArch64 (ARM64):** Standard AAPCS64 (Linux, BSD, Android/Termux), including specific variants for Apple and Windows on ARM.
+    * Other architectures should be easy to integrate. See [internals.md](docs/internals.md).
+*   **Zero Dependencies & Simple Integration:** As a single-header library, integration is trivial. Add `infix.h` to your project's includes and compile the core `.c` files.
 
-// Generate a reverse trampoline (callback) for `void handler(char*)`
-ffi_reverse_trampoline_t* rt;
-ffi_create_reverse_trampoline_from_signature(&rt, "c* => v", my_handler, NULL);
-```
+##  Quick Start: Calling `printf`
 
-#### 2. The Core API (Recommended for Advanced Control)
-
-This API gives you fine-grained control by requiring you to build type descriptions manually. It's more verbose but powerful for programmatically constructing types.
+This example demonstrates how to call the standard library's `printf` function, which has a variadic signature, using the Signature API.
 
 ```c
 #include <infix.h>
+#include <stdio.h> // For the real printf
 
-// Describe the signature `int(int, int)` manually
-ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-ffi_type* arg_types[] = { ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                          ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32) };
-
-// Generate the trampoline
-ffi_trampoline_t* t;
-generate_forward_trampoline(&t, ret_type, arg_types, 2, 2);
-```
-
-## Getting Started Example
-
-This example uses the **Signature API** to call the standard C `printf` function.
-
-```c
-#include <infix.h>
-#include <stdio.h>
-
-int main(void) {
-    // 1. Describe the function signature as a string.
-    // Signature: int printf(const char* format, ...);
-    // We will call it with an int and a double.
-    // 'c*' = const char*, '.' = variadic separator, 'i' = int, 'd' = double
-    const char* signature = "c*.id => i";
-
-    // 2. Generate the trampoline from the signature.
+int main() {
     ffi_trampoline_t* trampoline = NULL;
+    // The C signature is `int printf(const char* format, ...)`
+    // The infix signature uses a semicolon ';' to separate fixed and variadic arguments.
+    const char* signature = "c*;i=>i";
+
+    // 1. Create the FFI trampoline from the signature.
+    // The '1' indicates there is one fixed argument before the variadic part.
     ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, signature);
-    if (status != FFI_SUCCESS) return 1;
-
-    // 3. Prepare the arguments.
-    const char* format_str = "Hello! The number is %d and the double is %.2f\n";
-    int my_int = 42;
-    double my_double = 3.14;
-    void* args[] = { &format_str, &my_int, &my_double };
-
-    // 4. Get the callable function pointer and invoke it.
-    ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
-    int printf_ret = 0;
-    cif_func((void*)printf, &printf_ret, args);
-
-    printf("printf returned: %d\n", printf_ret);
-
-    // 5. Clean up.
-    ffi_trampoline_free(trampoline);
-    return 0;
-}
-```
-
-## Signature Language Reference
-
-The signature string is a powerful mini-language for describing C types. The format is `arg1_type arg2_type ... => return_type`.
-
-### Primitives
-
-| Code | C Type                 |
-| :--- | :--------------------- |
-| `v`  | `void`                 |
-| `b`  | `bool`                 |
-| `a`  | `signed char`          |
-| `c`  | `char`                 |
-| `h`  | `unsigned char`        |
-| `s`  | `short`                |
-| `t`  | `unsigned short`       |
-| `i`  | `int`                  |
-| `j`  | `unsigned int`         |
-| `l`  | `long`                 |
-| `m`  | `unsigned long`        |
-| `x`  | `long long`            |
-| `y`  | `unsigned long long`   |
-| `n`  | `__int128_t`           |
-| `o`  | `__uint128_t`          |
-| `f`  | `float`                |
-| `d`  | `double`               |
-| `e`  | `long double`          |
-
-### Composites
-
-| Syntax                                     | C Equivalent                                     |
-| ------------------------------------------ | ------------------------------------------------ |
-| `T*`                                       | `T*` (e.g., `i*` is `int*`)                     |
-| `T**`                                      | `T**` (e.g., `c**` is `char**`)                 |
-| `T[N]`                                     | `T[N]` (e.g., `f[16]` is `float[16]`)           |
-| `{member1;member2}`                        | `struct { T1 member1; T2 member2; }`             |
-| `<member1;member2>`                        | `union { T1 member1; T2 member2; }`              |
-| `p(size,align){type1:off1;...}`             | A packed struct with explicit layout             |
-| `(args...=>ret)`                           | A function pointer, e.g., `(i=>v)` for `void (*)(int)` |
-
-### Delimiters
-
-| Delimiter | Purpose                                                     |
-| :-------- | :---------------------------------------------------------- |
-| `=>`      | **Required.** Separates arguments from the return type.     |
-| `.`       | **Optional.** Separates fixed arguments from variadic ones. |
-| `;`       | **Required.** Separates members inside `{...}` and `<...>` lists. |
-| `:`       | **Required.** Separates type from offset in packed structs. |
-
-### Examples
-
-| Signature String                 | Corresponding C Function Signature                               |
-| -------------------------------- | ------------------------------------------------------------------ |
-| `ii => i`                        | `int function(int, int);`                                        |
-| `c* => v`                        | `void function(char*);` (Also used for `void*`)                  |
-| `(i=>v) => v`                    | `void function(void (*callback)(int));`                          |
-| `{i;f}c* => v`                   | `void function(struct { int a; float b; }, char*);`               |
-| `c*.if => i`                     | `int function(const char*, int, float, ...);`                     |
-| `p(9,1){c:0;y:1} => i`           | `int function(PackedStruct);` (where `PackedStruct` is `char a; uint64_t b;` packed to 1-byte alignment) |
-
-
-### Project Structure
-
-```.
-├── include/              # Public API header (infix.h) and compatibility headers
-├── src/                  # All implementation files
-│   ├── arch/             # Architecture-specific implementations (x64, aarch64)
-│   └── core/             # Core implementation files (executor.c, types.c, etc.)
-├── t/                    # Test files
-├── fuzz/                 # Fuzzing harness
-├── docs/                 # Detailed documentation
-│   ├── cookbook.md       # Practical recipes and examples
-│   └── internals.md      # Deep dive into the architecture
-└── README.md             # This file
-```
-
-### API Concepts
-
-The infix API is built around a few core concepts. Understanding them is key to using the library effectively.
-
-#### 1. The Type System (`ffi_type`)
-
-Before you can call a function or create a callback, you must describe its signature to the library. This is done using `ffi_type` pointers.
-
-*   **Static Types:** For basic C types, you use singleton instances provided by the library. You **never** need to free these.
-    *   `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)` for `int`.
-    *   `ffi_type_create_pointer()` for any pointer type (`char*`, `void*`, `MyStruct*`).
-    *   `ffi_type_create_void()` for functions that return `void`.
-*   **Dynamic Types:** For complex types like structs, unions, and arrays, you must build them dynamically. These **must** be freed with `ffi_type_destroy` when you are done with them.
-    *   `ffi_type_create_struct()`: Takes an array of `ffi_struct_member` that describes the layout of the struct.
-    *   `ffi_type_create_array()`: Describes a fixed-size array of another `ffi_type`.
-
-#### 2. Forward Calls (`generate_forward_trampoline`)
-
-A "forward call" is when your code calls a C function. To do this, you generate a **trampoline**. A trampoline is a small, JIT-compiled function stub that bridges the gap between the library's generic calling convention and the target function's specific, native ABI.
-
-The process is:
-1.  Describe the function's return type and argument types using an array of `ffi_type*`.
-2.  Call `generate_forward_trampoline()` with this signature.
-3.  This returns a `ffi_trampoline_t*` handle. Get the executable code pointer from it by calling `ffi_trampoline_get_code()`.
-4.  Cast this pointer to `ffi_cif_func`.
-5.  Call the `ffi_cif_func`, passing it the target function's address, a pointer to a buffer for the return value, and an array of pointers to the arguments.
-6.  Free the trampoline with `ffi_trampoline_free()`.
-
-#### 3. Reverse Calls / Callbacks (`generate_reverse_trampoline`)
-
-A "reverse call" is when you create a native C function pointer that, when called by external code, executes a C function handler that you provide. This is used to implement callbacks.
-
-The process is:
-1.  Describe the desired signature of your callback using `ffi_type*`.
-2.  Call `generate_reverse_trampoline()`, passing it the signature, a pointer to your C handler function, and an optional `void* user_data` pointer to maintain state.
-3.  This returns a `ffi_reverse_trampoline_t*` handle.
-4.  The native function pointer is located in `rt->exec_code.rx_ptr`. Cast this pointer to the appropriate function pointer type.
-5.  You can now pass this function pointer to any C API that expects a callback.
-6.  The `ffi_reverse_trampoline_t*` handle **must** remain alive for as long as the native function pointer is in use. Free it with `ffi_reverse_trampoline_free()` when the callback is no longer needed.
-
-#### 4. Error Handling (`ffi_status`)
-
-Nearly all API functions that can fail return an `ffi_status` enum. Always check the return value of these functions.
-
-```c
-ffi_trampoline_t* trampoline = NULL;
-ffi_status status = generate_forward_trampoline(&trampoline, ...);
-if (status != FFI_SUCCESS) {
-    // Handle the error
-}
-```
-
-#### 5. Memory Management
-
-*   **If you `create` it, you `destroy` it.** Any `ffi_type` from `ffi_type_create_struct`, `_union`, or `_array` must be freed with `ffi_type_destroy()`. Destruction is recursive.
-*   **The caller owns input on failure.** If `ffi_type_create_struct` fails, you are still responsible for freeing the `members` array you passed in.
-*   **Do not free static types.** Return values from `ffi_type_create_primitive()`, `_pointer()`, and `_void()` must not be destroyed.
-*   **Trampolines must be freed.** Always call `ffi_trampoline_free()` and `ffi_reverse_trampoline_free()`.
-
-### How It Works
-
-`infix` generates raw machine code at runtime and writes it into a W^X executable memory block.
-
-1.  **ABI Specification:** An `ffi_abi_spec` v-table provides function pointers to an implementation for the target ABI.
-2.  **Trampoline Generation:** The library consults the ABI spec to create a `ffi_call_frame_layout` blueprint that maps each argument to its destination (register or stack).
-3.  **JIT Execution:** The core engine uses this blueprint to emit machine code into a memory buffer, which is then made executable using platform-specific APIs.
-
-For a deeper dive into the architecture, see [docs/internals.md](./docs/internals.md).
-
-### Example 1: Forward Call (Calling a C function)
-
-This example shows how to dynamically call the function `int add(int a, int b)`.
-
-```c
-#include "infix.h"
-#include <stdio.h>
-
-// The C function we want to call
-int add(int a, int b) {
-    return a + b;
-}
-
-int main(void) {
-    // 1. Describe the function signature as a string.
-    // Signature: int printf(const char* format, ...);
-    // We will call it with an int and a double.
-    // 'c*' = const char*, '.' = variadic separator, 'i' = int, 'd' = double
-    const char* signature = "c*.id => i";
-
-    // 2. Generate the trampoline from the signature.
-    ffi_trampoline_t* trampoline = NULL;
-    ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, signature);
-
     if (status != FFI_SUCCESS) {
-        fprintf(stderr, "Failed to generate trampoline from signature.\n");
+        fprintf(stderr, "Failed to create trampoline!\n");
         return 1;
     }
 
-    // 3. Prepare the arguments.
-    const char* format_str = "Hello from a signature! The number is %d and the double is %.2f\\n";
-    int my_int = 42;
-    double my_double = 3.14;
-    void* args[] = { &format_str, &my_int, &my_double };
-
-    // 4. Get the callable function pointer and invoke it.
+    // 2. Get the callable function pointer.
     ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
-    int printf_ret = 0;
-    cif_func((void*)printf, &printf_ret, args);
 
-    printf("printf returned: %d\\n", printf_ret);
+    // 3. Prepare the arguments.
+    const char* my_string = "The answer is %d\n";
+    int my_int = 42;
+    void* args[] = { &my_string, &my_int };
+    int return_value;
 
-    // 5. Clean up.
+    // 4. Call printf via the trampoline.
+    cif_func((void*)printf, &return_value, args);
+
+    printf("printf returned: %d\n", return_value); // Will print the number of chars written.
     ffi_trampoline_free(trampoline);
     return 0;
 }
 ```
+##  Building the Project
 
-### Example 2: Calling a Variadic Function
+The project uses [**xmake**](https://xmake.io/) as its build system.
 
-Calling a function like `snprintf` requires specifying how many arguments are part of the fixed signature before the `...`. For `snprintf(buf, size, format, ...)`, there are 3 fixed arguments.
+### Prerequisites
+*   A C17-compatible compiler (GCC, Clang, or MSVC).
+*   [xmake](https://xmake.io/#/guide/installation) installed on your system.
 
-```c
-#include "infix.h"
-#include <stdio.h>
-#include <string.h>
+### Commands
 
-void test_variadic_call() {
-    // Target signature: int snprintf(char*, size_t, const char*, ...);
-    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type* arg_types[] = {
-        ffi_type_create_pointer(),                             // Fixed: char* buffer
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64),  // Fixed: size_t size
-        ffi_type_create_pointer(),                             // Fixed: const char* format
-        ffi_type_create_pointer(),                             // Variadic: const char* "hello"
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),  // Variadic: int 123
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE)   // Variadic: double 3.14
-    };
+1.  **Build the static library:**
+    ```bash
+    xmake
+    ```
+    This will compile the `libinfix.a` (or `infix.lib`) library into the `build/` directory.
 
-    // Generate the trampoline: Total arguments = 6. Fixed arguments = 3.
-    ffi_trampoline_t* trampoline = NULL;
-    ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 6, 3);
-    if (status != FFI_SUCCESS) {
-        fprintf(stderr, "Failed to generate variadic trampoline: %d\n", status);
-        return;
-    }
-    ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+2.  **Run the test suite:**
+    ```bash
+    xmake test
+    ```
 
-    char buffer;
-    size_t buf_size = sizeof(buffer);
-    const char* format = "Variadic call: %s %d %.2f";
-    const char* str_arg = "hello";
-    int int_arg = 123;
-    double dbl_arg = 3.14;
-    void* args[] = { &buffer, &buf_size, &format, &str_arg, &int_arg, &dbl_arg };
-    int chars_written = 0;
+3.  **Build the fuzzing harnesses (requires Clang):**
+    ```bash
+    xmake f -c clang # Configure the project to use the Clang toolchain
+    xmake build fuzz_signature fuzz_trampoline # Build specific fuzzer targets
+    ```
 
-    cif_func((void*)snprintf, &chars_written, args);
-    printf("'%s' (%d chars)\n", buffer, chars_written); // Prints "'Variadic call: hello 123 3.14' (31 chars)"
+### Using Perl
 
-    ffi_trampoline_free(trampoline);
-}
-```
-
-### Example 3: Reverse Call (Creating a Callback)
-
-This example creates a C function pointer that, when called, will execute our `my_int_callback_handler`.
-
-```c
-#include "infix.h"
-#include <stdio.h>
-
-// Our custom handler that will be called by the trampoline
-int my_int_callback_handler(int a, int b) {
-    return a * b;
-}
-
-void test_reverse_call() {
-    // 1. Describe the signature of the callback
-    ffi_type *ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type *arg_types[] = {
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)
-    };
-
-    // 2. Generate the reverse trampoline, linking it to our handler.
-    ffi_reverse_trampoline_t *rt = NULL;
-    ffi_status status = generate_reverse_trampoline(
-        &rt, ret_type, arg_types, 2, 2, (void *)my_int_callback_handler, NULL
-    );
-    if (status != FFI_SUCCESS) {
-        fprintf(stderr, "Failed to generate reverse trampoline: %d\n", status);
-        return;
-    }
-
-    // 3. Get a native, callable function pointer from the trampoline
-    typedef int (*my_func_ptr)(int, int);
-    my_func_ptr func_ptr = (my_func_ptr)rt->exec_code.rx_ptr;
-
-    // 4. Call the generated pointer as if it were a normal C function
-    int result = func_ptr(7, 6);
-    printf("Result of callback(7, 6): %d\n", result); // Prints 42
-
-    // 5. Clean up
-    ffi_reverse_trampoline_free(rt);
-}
-```
-
-### Building the Project
-
-**Prerequisites:**
-*   A C17-compatible compiler like GCC, Clang, or MSVC.
-*   `perl` (recommended, cross-platform).
-
-#### Using Perl
-
-The included Perl script can build the library, run tests, and manage other tasks.
+The included Perl script can build the library, run tests, and manage other tasks. Until I port everything to xmake, this is what I use to develop `infix`.
 
 ```bash
 # Seek help
@@ -416,25 +131,490 @@ perl build.pl fuzz
 ./fuzz_types_harness -max_total_time=300 corpus/
 ```
 
-### Integrating infix Into Your Project
+##  Integrating `infix` Into Your Project
 
-To use infix in your own application:
+`infix` is designed to be easy to integrate. You only need to link against the static library and include one header.
 
-1.  Run `perl build.pl build` to produce the static library (`libinfix.a` or `infix.lib`).
-2.  Copy the static library and the `include/` directory into your project's source tree.
-3.  Include the main header in your code: `#include "infix.h"`
-4.  When compiling your application, tell the compiler where to find the header files and how to link the library.
+### Method 1: Using xmake (Recommended)
 
-**Example GCC/Clang link command:**
-```bash
-gcc src/main.c -Ipath/to/infix/include -Lpath/to/infix/lib -linfix -o my_app
+If your project already uses xmake, add `infix` as a dependency.
+
+```lua
+-- your_project/xmake.lua
+add_requires("infix", {git = "https://github.com/sanko/infix.git"})
+
+target("my_app")
+    set_kind("binary")
+    add_files("src/*.c")
+    add_packages("infix")
 ```
 
-### Learn More
+### Method 2: Using CMake
+
+You can integrate `infix` into a CMake project using `add_subdirectory`.
+
+1.  Add `infix` as a submodule or copy it into your project (e.g., under `third_party/`).
+2.  Add the following to your `CMakeLists.txt`:
+
+```cmake
+# your_project/CMakeLists.txt
+cmake_minimum_required(VERSION 3.15)
+project(MyProject C)
+
+set(CMAKE_C_STANDARD 17)
+
+# Add the infix subdirectory to the build
+add_subdirectory(third_party/infix)
+
+add_executable(my_app src/main.c)
+
+# Link your target against infix
+target_link_libraries(my_app PRIVATE infix)
+
+# Expose infix's public include directory to your target
+target_include_directories(my_app PRIVATE
+    $<TARGET_PROPERTY:infix,INTERFACE_INCLUDE_DIRECTORIES>
+)
+```
+
+### Method 3: Manual Integration
+
+1.  Build the `infix` static library as described above.
+2.  In your project's build process, add the following flags:
+    *   **Compiler Flags:** `-I/path/to/infix/include`
+    *   **Linker Flags:** `-L/path/to/infix/build/your-platform/release -linfix`
+
+##  API Deep Dive & Examples
+
+`infix` offers two distinct APIs for creating trampolines, allowing you to choose between convenience and control.
+
+### The Signature API (High-Level)
+
+This is the simplest and most common way to use `infix`. You describe the entire function signature in a single string, and the library handles all the parsing and type creation internally.
+
+```c
+// int add(int a, int b) { return a + b; }
+ffi_trampoline_t* trampoline = NULL;
+ffi_create_forward_trampoline_from_signature(&trampoline, "i,i=>i");
+
+// ... use the trampoline ...
+
+ffi_trampoline_free(trampoline);
+```
+
+The signature language provides a powerful and concise way to describe C types and function signatures.
+
+#### Primitive Types
+
+| Char | C Type                | Notes                             |
+| :--- | :-------------------- | :-------------------------------- |
+| `v`  | `void`                | Return type only.                 |
+| `b`  | `bool`                |                                   |
+| `c`  | `char`                | Signedness is platform-dependent. |
+| `a`  | `signed char`         |                                   |
+| `h`  | `unsigned char`       |                                   |
+| `s`  | `short`               |                                   |
+| `t`  | `unsigned short`      |                                   |
+| `i`  | `int`                 |                                   |
+| `j`  | `unsigned int`        |                                   |
+| `l`  | `long`                |                                   |
+| `m`  | `unsigned long`       |                                   |
+| `x`  | `long long`           |                                   |
+| `y`  | `unsigned long long`  |                                   |
+| `f`  | `float`               |                                   |
+| `d`  | `double`              |                                   |
+| `e`  | `long double`         |                                   |
+| `n`  | `__int128_t`          | GCC/Clang only.                   |
+| `o`  | `__uint128_t`         | GCC/Clang only.                   |
+
+#### Constructs
+
+| Construct       | Signature Example                          | C Equivalent                                                   |
+| :-------------- | :----------------------------------------- | :------------------------------------------------------------- |
+| Pointer         | `i*`                                       | `int*`                                                         |
+| Array           | `[10]d`                                    | `double[10]`                                                   |
+| Struct          | `{i;d}`                                    | `struct { int f1; double f2; }`                                |
+| Union           | `<i;d>`                                    | `union { int f1; double f2; }`                                 |
+| Named Fields    | `{count:i; name:c*}`                       | `struct { int count; char* name; }`                            |
+| Packed Struct   | `p(5,1){c@0;i@1}`                          | `struct S { char c; int i; } __attribute__((packed));`          |
+| Function Pointer| `(i=>j)`                                   | `unsigned int (*)(int)`                                        |
+
+### The Core API (Low-Level)
+
+For programmatic type construction or when type information is only available at runtime, the Core API gives you full control. It requires you to build up each type description manually.
+
+The central concept is the `ffi_type` struct, which holds the size, alignment, and category of any C type.
+
+**Core API Type Reference:**
+
+| C Type / Construct       | `ffi_primitive_type_id`          | Core API Function Call                               |
+| :----------------------- | :------------------------------- | :--------------------------------------------------- |
+| `void`                   | N/A                              | `ffi_type_create_void()`                             |
+| Pointer Type             | N/A                              | `ffi_type_create_pointer()`                          |
+| `bool`                   | `FFI_PRIMITIVE_TYPE_BOOL`        | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_BOOL)` |
+| `signed char`            | `FFI_PRIMITIVE_TYPE_SINT8`       | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8)`|
+| `unsigned char`          | `FFI_PRIMITIVE_TYPE_UINT8`       | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT8)`|
+| `short`                  | `FFI_PRIMITIVE_TYPE_SINT16`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT16)`|
+| `unsigned short`         | `FFI_PRIMITIVE_TYPE_UINT16`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT16)`|
+| `int`                    | `FFI_PRIMITIVE_TYPE_SINT32`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)`|
+| `unsigned int`           | `FFI_PRIMITIVE_TYPE_UINT32`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32)`|
+| `long long`              | `FFI_PRIMITIVE_TYPE_SINT64`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64)`|
+| `unsigned long long`     | `FFI_PRIMITIVE_TYPE_UINT64`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64)`|
+| `__int128_t`             | `FFI_PRIMITIVE_TYPE_SINT128`     | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT128)`|
+| `__uint128_t`            | `FFI_PRIMITIVE_TYPE_UINT128`     | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT128)`|
+| `float`                  | `FFI_PRIMITIVE_TYPE_FLOAT`       | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT)`|
+| `double`                 | `FFI_PRIMITIVE_TYPE_DOUBLE`      | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE)`|
+| `long double`            | `FFI_PRIMITIVE_TYPE_LONG_DOUBLE` | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_LONG_DOUBLE)`|
+| `struct`                 | N/A                              | `ffi_type_create_struct()`                           |
+| `union`                  | N/A                              | `ffi_type_create_union()`                            |
+| `array`                  | N/A                              | `ffi_type_create_array()`                            |
+| Packed `struct`          | N/A                              | `ffi_type_create_packed_struct()`                    |
+
+#### **1. Primitive Types**
+
+Primitives are created by referencing static, built-in types.
+
+```c
+// Get a pointer to the static ffi_type for a signed 32-bit integer.
+ffi_type* int_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
+```
+
+These return pointers to global instances. **Do not free them.**
+
+#### **2. Aggregate Types (Structs, Unions, Arrays)**
+
+Complex types are built dynamically from their constituent parts.
+
+-   **Structs:** `ffi_type_create_struct()` requires an array of `ffi_struct_member` objects. You must use the `offsetof` macro to provide the correct memory layout.
+-   **Unions:** `ffi_type_create_union()` is similar to the struct creator.
+-   **Arrays:** `ffi_type_create_array()` takes an element type and a count.
+
+These functions dynamically allocate memory. The returned `ffi_type` **must** be freed with `ffi_type_destroy()`. This will recursively free all nested dynamic types.
+
+#### **Core API Example: Building a Struct**
+Here is how to create a trampoline for `Point create_point(Point p1, Point p2)` using the Core API.
+
+```c
+typedef struct { double x; double y; } Point;
+
+// 1. Describe the primitive member type (double).
+ffi_type* double_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
+
+// 2. Describe the members of the Point struct using their offsets.
+ffi_struct_member point_members[] = {
+    ffi_struct_member_create("x", double_type, offsetof(Point, x)),
+    ffi_struct_member_create("y", double_type, offsetof(Point, y))
+};
+
+// 3. Create the ffi_type for the Point struct.
+ffi_type* point_type = NULL;
+ffi_type_create_struct(&point_type, point_members, 2);
+
+// 4. Define the function signature: two Point args, one Point return.
+ffi_type* arg_types[] = { point_type, point_type };
+ffi_trampoline_t* trampoline = NULL;
+generate_forward_trampoline(&trampoline, point_type, arg_types, 2, 2);
+
+// ... use the trampoline ...
+
+ffi_trampoline_free(trampoline);
+// 5. Clean up the dynamically created ffi_type for the struct.
+ffi_type_destroy(point_type);
+```
+
+### Advanced Example: Creating a Callback
+
+Create a C-callable function pointer from a custom handler. This is essential for plugins or asynchronous libraries.
+
+```c
+// Our custom handler that will be called by C code.
+int my_handler(int x) {
+    printf("My callback was called with: %d\n", x);
+    return x * 2;
+}
+
+// A C function that accepts a function pointer.
+void run_callback(int (*fn_ptr)(int)) {
+    int result = fn_ptr(21);
+    printf("Callback returned %d to the C caller.\n", result);
+}
+
+ffi_reverse_trampoline_t* reverse_trampoline = NULL;
+const char* signature = "i=>i";
+
+// 1. Create the reverse trampoline.
+ffi_create_reverse_trampoline_from_signature(
+    &reverse_trampoline,
+    signature,
+    (void*)my_handler, // Pointer to our handler
+    NULL               // Optional user data
+);
+
+// 2. Get the native, C-callable function pointer.
+int (*native_fn_ptr)(int) = (int (*)(int))reverse_trampoline->exec_code.rx_ptr;
+
+// 3. Pass the function pointer to C code.
+run_callback(native_fn_ptr);
+
+ffi_reverse_trampoline_free(reverse_trampoline);
+```
+
+## API Examples: Signature vs. Core
+
+The best way to understand the two APIs is to see them side-by-side.
+
+### Example 1: Simple Function Call
+
+**Goal**: Call `int add(int a, int b);`
+
+#### Using the Signature API (Recommended)
+
+```c
+#include <infix.h>
+#include <stdio.h>
+
+int add_ints(int a, int b) { return a + b; }
+
+int main() {
+    ffi_trampoline_t* t = NULL;
+    ffi_create_forward_trampoline_from_signature(&t, "i,i=>i");
+
+    int a = 40, b = 2, result = 0;
+    void* args[] = { &a, &b };
+    ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)add_ints, &result, args);
+
+    printf("Result: %d\n", result);
+    ffi_trampoline_free(t);
+    return 0;
+}
+```
+
+#### Using the Core API
+
+```c
+#include <infix.h>
+#include <stdio.h>
+
+int add_ints(int a, int b) { return a + b; }
+
+int main() {
+    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
+    ffi_type* arg_types[] = {
+        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
+        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)
+    };
+
+    ffi_trampoline_t* t = NULL;
+    generate_forward_trampoline(&t, ret_type, arg_types, 2, 2);
+
+    int a = 40, b = 2, result = 0;
+    void* args[] = { &a, &b };
+    ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)add_ints, &result, args);
+
+    printf("Result: %d\n", result);
+    ffi_trampoline_free(t);
+    return 0;
+}
+```
+
+### Example 2: Function with Structs and Pointers
+
+**Goal**: Call `Point* create_point(double x, double y);` where `Point` is `struct { double x, y; }`.
+
+#### Using the Signature API (Recommended)
+
+```c
+#include <infix.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct { double x; double y; } Point;
+Point* create_point(double x, double y) {
+    Point* p = malloc(sizeof(Point));
+    p->x = x; p->y = y;
+    return p;
+}
+
+int main() {
+    ffi_trampoline_t* t = NULL;
+    // Signature: takes two doubles, returns a pointer to a struct of two doubles
+    ffi_create_forward_trampoline_from_signature(&t, "d,d=>{d,d}*");
+
+    double x = 1.5, y = 2.5;
+    Point* result = NULL;
+    void* args[] = { &x, &y };
+    ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)create_point, &result, args);
+
+    if (result) {
+        printf("Created point at %p with values (%f, %f)\n", result, result->x, result->y);
+        free(result);
+    }
+
+    ffi_trampoline_free(t);
+    return 0;
+}
+```
+
+#### Using the Core API
+
+```c
+#include <infix.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+
+typedef struct { double x; double y; } Point;
+Point* create_point(double x, double y) { /* same as above */ }
+
+int main() {
+    // 1. Manually describe the Point struct type.
+    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 2);
+    members[0] = ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
+    members[1] = ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
+    ffi_type* point_type = NULL;
+    ffi_type_create_struct(&point_type, members, 2);
+
+    // 2. Describe the function signature.
+    // The return type is a generic pointer. The ABI doesn't need to know what it points to.
+    ffi_type* ret_type = ffi_type_create_pointer();
+    ffi_type* arg_types[] = {
+        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE),
+        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE)
+    };
+
+    // 3. Generate the trampoline.
+    ffi_trampoline_t* t = NULL;
+    generate_forward_trampoline(&t, ret_type, arg_types, 2, 2);
+
+    // 4. Call and cleanup.
+    double x = 1.5, y = 2.5;
+    Point* result = NULL;
+    void* args[] = { &x, &y };
+    ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)create_point, &result, args);
+
+    if (result) { /* print and free */ }
+
+    ffi_trampoline_free(t);
+    ffi_type_destroy(point_type); // IMPORTANT: Must free the dynamic struct type.
+    return 0;
+}
+```
+
+### Example 3: Function with Packed Struct and Arrays
+
+**Goal**: Call `uint64_t checksum(const PackedData* data);` where `PackedData` is a complex, packed struct.
+
+```c
+#pragma pack(push, 1)
+typedef struct {
+    uint16_t id;    // offset 0, size 2
+    char name[10];  // offset 2, size 10
+    uint32_t flags; // offset 12, size 4
+} PackedData;       // total size 16, align 1
+#pragma pack(pop)
+
+uint64_t checksum(const PackedData* data) { /* ... */ }
+```
+
+#### Using the Signature API (Recommended)
+
+```c
+#include <infix.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stddef.h>
+
+// PackedData struct definition and checksum function
+
+int main() {
+    // 1. Construct the signature string with layout metadata.
+    char signature[128];
+    snprintf(signature, sizeof(signature), "p(%zu,%zu){t@%zu,[10]c@%zu,j@%zu}*=>y",
+             sizeof(PackedData), _Alignof(PackedData),
+             offsetof(PackedData, id), offsetof(PackedData, name), offsetof(PackedData, flags));
+
+    // 2. Generate and call.
+    ffi_trampoline_t* t = NULL;
+    ffi_create_forward_trampoline_from_signature(&t, signature);
+
+    PackedData data = { 101, "test_data", 0xABCD };
+    const PackedData* ptr_data = &data;
+    uint64_t result = 0;
+    ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)checksum, &result, &ptr_data);
+
+    // use result
+    ffi_trampoline_free(t);
+    return 0;
+}
+```
+#### Using the Core API
+
+```c
+#include <infix.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stddef.h>
+
+// PackedData struct definition and checksum function
+
+int main() {
+    // 1. Manually build the ffi_type for the char[10] array.
+    // Note: Core API requires ownershp transfer; we must not free `char_type` ourselves.
+    ffi_type* char_array_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8);
+    ffi_type_create_array(&char_array_type, char_type, 10);
+
+    // 2. Manually describe the packed struct members.
+    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 3);
+    members[0] = ffi_struct_member_create("id", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT16), offsetof(PackedData, id));
+    members[1] = ffi_struct_member_create("name", char_array_type, offsetof(PackedData, name));
+    members[2] = ffi_struct_member_create("flags", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32), offsetof(PackedData, flags));
+
+    // 3. Create the packed struct type, providing layout metadata.
+    ffi_type* packed_type = NULL;
+    ffi_type_create_packed_struct(&packed_type, sizeof(PackedData), _Alignof(PackedData), members, 3);
+
+    // 4. Describe the function signature: uint64_t(PackedData*)
+    ffi_type* ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64);
+    ffi_type* arg_type = ffi_type_create_pointer();
+
+    // 5. Generate and call.
+    ffi_trampoline_t* t = NULL;
+    generate_forward_trampoline(&t, ret_type, &arg_type, 1, 1);
+
+    // call is identical to signature example
+
+    ffi_trampoline_free(t);
+    ffi_type_destroy(packed_type); // This frees the struct, its members array, and the char array type.
+    return 0;
+}
+```
+
+## Project Structure
+
+```.
+├── include/              # Public API header (infix.h) and compatibility headers
+├── src/                  # All implementation files
+│   ├── arch/             # Architecture-specific implementations (x64, aarch64)
+│   └── core/             # Core implementation files (executor.c, types.c, etc.)
+├── t/                    # Test files
+├── fuzz/                 # Fuzzing harness
+├── docs/                 # Detailed documentation
+│   ├── cookbook.md       # Practical recipes and examples
+│   └── internals.md      # Deep dive into the architecture
+└── README.md             # This file
+```
+
+## Learn More
 
 *   **[Cookbook](./docs/cookbook.md):** Practical, copy-pasteable recipes for common FFI tasks.
 *   **[Internals](./docs/internals.md):** A deep dive into the library's architecture for maintainers and contributors.
 *   **[Porting Guide](./docs/porting.md):** A brief document with basic instructions to add new architectures.
+
+##  Contributing
+
+Contributions are welcome! Please feel free to open an issue or submit a pull request.
+
+Check [CONTRIBUTING.md](CONTRIBUTING.md) for more!
 
 ## License & Legal
 

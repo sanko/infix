@@ -78,6 +78,8 @@ static const arm64_vpr VPR_ARGS[] = {V0_REG, V1_REG, V2_REG, V3_REG, V4_REG, V5_
 #define NUM_GPR_ARGS 8
 /** @brief The total number of VPRs available for argument passing. */
 #define NUM_VPR_ARGS 8
+/** @brief A safe limit on the number of fields to classify to prevent DoS from exponential complexity. */
+#define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
 
 // Forward Declarations
 static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
@@ -168,19 +170,25 @@ static ffi_type * get_hfa_base_type(ffi_type * type) {
  * @param base_type The required base type (e.g., `float`) to check against.
  * @return `true` if all constituent members of `type` are of `base_type`, `false` otherwise.
  */
-static bool is_hfa_recursive_check(ffi_type * type, ffi_type * base_type) {
+static bool is_hfa_recursive_check(ffi_type * type, ffi_type * base_type, size_t * field_count) {
+    // Limit the number of fields we are willing to inspect for a single aggregate.
+    if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY)
+        return false;
+
     // Base case: A primitive must match the base type.
-    if (is_float(type) || is_double(type))
+    if (is_float(type) || is_double(type)) {
+        (*field_count)++;
         return type == base_type;
+    }
     // Recursive step for arrays.
     if (type->category == FFI_TYPE_ARRAY)
-        return is_hfa_recursive_check(type->meta.array_info.element_type, base_type);
+        return is_hfa_recursive_check(type->meta.array_info.element_type, base_type, field_count);
     // Recursive step for structs: check every member.
     if (type->category == FFI_TYPE_STRUCT) {
         if (type->meta.aggregate_info.num_members == 0)
             return false;
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-            if (!is_hfa_recursive_check(type->meta.aggregate_info.members[i].type, base_type))
+            if (!is_hfa_recursive_check(type->meta.aggregate_info.members[i].type, base_type, field_count))
                 return false;
         }
         return true;
@@ -203,23 +211,27 @@ static bool is_hfa_recursive_check(ffi_type * type, ffi_type * base_type) {
 static bool is_hfa(ffi_type * type, ffi_type ** out_base_type) {
     if (type->category != FFI_TYPE_STRUCT && type->category != FFI_TYPE_ARRAY)
         return false;
+
     if (type->size == 0 || type->size > 64)
         return false;
 
-    // 1. Find the base float/double type of the first primitive element.
+    // Find the base float/double type of the first primitive element.
     ffi_type * base = get_hfa_base_type(type);
     if (base == nullptr)
         return false;  // Not composed of floating-point types.
 
-    // 2. Check that the total size is a multiple of the base type, with 1 to 4 elements.
+    // Check that the total size is a multiple of the base type, with 1 to 4 elements.
     size_t num_elements = type->size / base->size;
     if (num_elements < 1 || num_elements > 4)
         return false;
     if (type->size != num_elements * base->size)
         return false;
 
-    // 3. Verify that ALL members recursively conform to this single base type.
-    if (!is_hfa_recursive_check(type, base))
+    // Initialize a counter for the recursive check to prevent DoS.
+    size_t field_count = 0;
+
+    // Verify that ALL members recursively conform to this single base type.
+    if (!is_hfa_recursive_check(type, base, &field_count))
         return false;
 
     if (out_base_type)

@@ -25,6 +25,7 @@
  */
 
 #include <infix.h>
+#include <infix_internals.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -35,11 +36,12 @@
 // Configuration Constants
 // These values control the complexity and depth of the generated types to
 // prevent excessively long or deep recursion, which could slow down fuzzing.
-#define MAX_RECURSION_DEPTH 4
+#define MAX_RECURSION_DEPTH 32
 #define MAX_MEMBERS 16
 #define MAX_ARRAY_ELEMENTS 128
 #define MAX_TYPES_IN_POOL 16
 #define MAX_ARGS_IN_SIGNATURE 16
+#define MAX_TOTAL_FUZZ_FIELDS 256  // Prevents DoS in the generator itself.
 
 // Fuzzer Input Management
 
@@ -102,6 +104,7 @@ DEFINE_CONSUME_T(size_t)
  *
  * @param in A pointer to the fuzzer input buffer.
  * @param depth The current recursion depth (used to prevent stack overflows).
+ * @param total_fields [in,out] A pointer to a counter for the total fields generated for this one type.
  * @return A new, dynamically-allocated `ffi_type*`, or NULL on failure or if data runs out.
  */
-ffi_type * generate_random_type(fuzzer_input * in, int depth);
+ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fields);
