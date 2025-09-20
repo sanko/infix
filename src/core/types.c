@@ -44,14 +44,19 @@
  *          that the type descriptors are correct for the compilation target.
  * @internal
  */
-#define FFI_TYPE_INIT(id, T) {FFI_TYPE_PRIMITIVE, sizeof(T), _Alignof(T), false, .meta.primitive_id = id}
+#define FFI_TYPE_INIT(id, T) {FFI_TYPE_PRIMITIVE, sizeof(T), _Alignof(T), false, false, .meta.primitive_id = id}
 
 // Statically allocated, singleton instances for all fundamental types.
 // This is a performance optimization that avoids dynamic allocation and deallocation
 // for common types. It allows them to be used without needing to be manually freed,
 // simplifying the user's code.
-static ffi_type _ffi_type_void = {FFI_TYPE_VOID, 0, 0, false, {0}};
-static ffi_type _ffi_type_pointer = {FFI_TYPE_POINTER, sizeof(void *), _Alignof(void *), false, {0}};
+static ffi_type _ffi_type_void = {
+    .category = FFI_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .meta = {0}};
+static ffi_type _ffi_type_pointer = {.category = FFI_TYPE_POINTER,
+                                     .size = sizeof(void *),
+                                     .alignment = _Alignof(void *),
+                                     .is_arena_allocated = false,
+                                     .meta = {0}};
 static ffi_type _ffi_type_bool = FFI_TYPE_INIT(FFI_PRIMITIVE_TYPE_BOOL, bool);
 static ffi_type _ffi_type_uint8 = FFI_TYPE_INIT(FFI_PRIMITIVE_TYPE_UINT8, uint8_t);
 static ffi_type _ffi_type_sint8 = FFI_TYPE_INIT(FFI_PRIMITIVE_TYPE_SINT8, int8_t);

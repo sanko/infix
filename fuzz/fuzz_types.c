@@ -36,16 +36,15 @@ static void FuzzTest(fuzzer_input in) {
     // The entire test is to attempt to generate one maximally complex type
     // and then successfully destroy it without AddressSanitizer (or other tools)
     // finding any memory corruption, leaks, or crashes.
-    ffi_type * generated_type = generate_random_type(&in, 0);
+    size_t total_fields = 0;  // Initialize counter
+    ffi_type * generated_type = generate_random_type(&in, 0, &total_fields);
 
-    if (generated_type) {
+    if (generated_type)
         // If we successfully created a complex type, the most important part of
         // the test is to ensure it can be destroyed without ASan finding any leaks,
         // use-after-frees, or double-frees.
         ffi_type_destroy(generated_type);
-    }
 }
-
 
 // libFuzzer Entry Point
 #ifndef USE_AFL
@@ -76,9 +75,8 @@ int main(void) {
     // restarting the process for every single input.
     while (__AFL_LOOP(10000)) {  // Process up to 10000 inputs before a clean restart.
         ssize_t len = read(STDIN_FILENO, buf, sizeof(buf));
-        if (len < 0) {
+        if (len < 0)
             return 1;
-        }
 
         fuzzer_input in = {(const uint8_t *)buf, (size_t)len};
         FuzzTest(in);

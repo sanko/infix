@@ -133,7 +133,7 @@ typedef struct ffi_type_t {
     size_t size;                 ///< The total size of the type in bytes, per `sizeof`.
     size_t alignment;            ///< The alignment requirement of the type in bytes, per `_Alignof`.
     bool is_arena_allocated;  ///< If true, this type was allocated from an arena and should not be individually freed.
-    /** @brief Type-specific metadata. */
+                              /** @brief Type-specific metadata. */
     union {
         /** @brief For `FFI_TYPE_PRIMITIVE`. */
         ffi_primitive_type_id primitive_id;

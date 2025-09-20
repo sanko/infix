@@ -44,7 +44,8 @@ static void FuzzTest(fuzzer_input in) {
 
     // Phase 1: Generate a pool of complex types to build signatures from.
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
-        ffi_type * new_type = generate_random_type(&in, 0);
+        size_t total_fields = 0;  // Initialize counter for each new type
+        ffi_type * new_type = generate_random_type(&in, 0, &total_fields);
         if (new_type)
             type_pool[type_count++] = new_type;
         else
@@ -73,7 +74,7 @@ static void FuzzTest(fuzzer_input in) {
         for (size_t i = 0; i < num_args; ++i)
             arg_types[i] = type_pool[i % type_count];
 
-        // --- Target 1: Fuzz the forward call ABI classifier ---
+        // Target 1: Fuzz the forward call ABI classifier
         const ffi_forward_abi_spec * fwd_spec = get_current_forward_abi_spec();
         if (fwd_spec) {
             arena_t * fwd_arena = arena_create(16384);

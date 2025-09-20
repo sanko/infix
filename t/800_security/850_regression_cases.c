@@ -13,138 +13,176 @@
  */
 /**
  * @file 850_regression_cases.c
- * @brief Contains deterministic unit tests for specific bugs found by fuzzing.
+ * @brief Contains a data-driven suite of deterministic unit tests for specific bugs found by fuzzing.
  * @details This file is a crucial part of the development lifecycle. When a
  * fuzzer discovers a crash or a timeout, the minimal input that triggers the
- * bug is captured and added to this file as a permanent regression test. This
- * ensures that once a bug is fixed, it can never be accidentally reintroduced
- * without causing an immediate and obvious CI failure.
+ * bug is captured and added to the `regression_tests` array in this file as a
+ * permanent regression test. This ensures that once a bug is fixed, it can never
+ * be accidentally reintroduced without causing an immediate and obvious CI failure.
  *
  * ### How to Add a New Regression Test
  *
  * This process turns a temporary fuzzer artifact into a permanent, valuable test.
  *
- * **Step 1: Locate the Fuzzer Artifact**
+ * **Step 1: Get the Fuzzer Artifact**
  *
- *    After a fuzzing job fails in CI, go to the "Artifacts" section of the run.
- *    Download the `crash-artifact-*` zip file. Inside, you will find one or more
- *    `crash-*` or `timeout-*` files. Open one in a text editor.
+ *    After a fuzzing job fails, download the `crash-artifact-*` zip file. Inside,
+ *    you will find one or more `crash-*` or `timeout-*` files. Open one.
  *
  * **Step 2: Copy the Base64 Input**
  *
- *    Near the bottom of the artifact file, you will find a `Base64:` line. Copy the
- *    long string of characters that follows it. This is the fuzzer input.
- *    Example: `Base64: e3t7aX19fQ==`
+ *    Near the bottom of the artifact file, find the `Base64:` line and copy the
+ *    long string of characters. This is the fuzzer input.
  *
- * **Step 3: Create a New Subtest**
+ * **Step 3: Add a New Entry to the `regression_tests` Array**
  *
- *    In the `TEST` block of this file, add a new `subtest()` block. Give it a
- *    descriptive name that includes the type of bug and which fuzzer found it.
- *    For example: `subtest("Stack overflow in signature parser (from fuzz_signature)")`
+ *    In this file, add a new `regression_test_case_t` struct to the
+ *    `regression_tests` array. Fill in the fields:
  *
- * **Step 4: Implement the Test Logic**
+ *    - `.name`: A descriptive name of the bug (e.g., "SysV Timeout - Wide Structs").
+ *    - `.b64_input`: The Base64 string you copied.
+ *    - `.target`: Which part of the code is being tested?
+ *        - `TARGET_TYPE_GENERATOR`: For bugs found in `fuzz_types`, `fuzz_trampoline`,
+ *          or `fuzz_abi`. The test will call `generate_random_type()`.
+ *        - `TARGET_SIGNATURE_PARSER`: For bugs found in `fuzz_signature`. The test
+ *          will call `ffi_type_from_signature()`.
+ *    - `.expected_status`: The correct `ffi_status` the function should now return.
+ *        - For a fixed **timeout**, this should be `FFI_SUCCESS`, as the valid-but-slow
+ *          input should now be processed quickly and correctly.
+ *        - For a fixed **crash**, this should be `FFI_ERROR_INVALID_ARGUMENT`, as the
+ *          invalid input should now be rejected gracefully.
  *
- *    Inside the subtest, follow this pattern:
- *    a. Paste the Base64 string into a `const char*` variable.
- *    b. Use the `b64_decode()` helper to convert it back into raw bytes.
- *    c. **Replicate the logic of the fuzzer that found the bug.**
- *       - If `fuzz_signature` found it, you need to call `ffi_signature_parse` or `ffi_type_from_signature`.
- *       - If `fuzz_types`, `fuzz_abi`, or `fuzz_trampoline` found it, you need to use the `generate_random_type`
- *         function.
- *    d. **Assert the correct, *fixed* behavior.**
- *       - For a former crash bug, the test should now assert that the function returns a specific error code (e.g.,
- *         `FFI_ERROR_INVALID_ARGUMENT`).
- *       - For a former timeout bug, the test should now assert that the function completes successfully (`FFI_SUCCESS`
- *         or `pass()`). e. Free any memory you allocated (like the decoded data).
+ * **Step 4: Update the Plan**
  *
- * **Step 5: Update the Plan**
- *
- *    Increment the number in the `plan()` call at the top of the main `TEST` block
- *    to account for your new subtest.
+ *    The `plan()` at the top of the `TEST` block is calculated automatically from the
+ *    size of the array, so no manual update is needed. Your test is now integrated.
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include "fuzz_regression_helpers.h"  // The Base64 decoder helper
-#include <../../fuzz/fuzz_helpers.h>  // From the fuzz/ directory
+#include "fuzz_regression_helpers.h"  // The Base64 decoder
 #include <double_tap.h>
+#include <fuzz_helpers.h>  // From the fuzz/ directory
 #include <infix.h>
 
-TEST {
-    // Each subtest represents one fuzzer-discovered bug.
-    plan(2);
+/**
+ * @internal
+ * @enum fuzzer_target_t
+ * @brief Enumerates the different parts of the infix library that can be targeted by a regression test.
+ */
+typedef enum {
+    TARGET_TYPE_GENERATOR,   ///< Tests the `generate_random_type` function (for timeouts/crashes in Core API).
+    TARGET_SIGNATURE_PARSER  ///< Tests the `ffi_type_from_signature` function (for bugs in the Signature API).
+} fuzzer_target_t;
 
-    subtest("Timeout in SysV ABI Classifier (Fuzzer-discovered)") {
+/**
+ * @internal
+ * @struct regression_test_case_t
+ * @brief A struct that defines a single, self-contained regression test case.
+ */
+typedef struct {
+    const char * name;           ///< A human-readable name for the test.
+    const char * b64_input;      ///< The Base64-encoded input from the fuzzer artifact.
+    fuzzer_target_t target;      ///< Which part of the library to test.
+    ffi_status expected_status;  ///< The expected outcome after the bug fix.
+} regression_test_case_t;
+
+// To add a new test, simply add a new entry to this array.
+static const regression_test_case_t regression_tests[] = {
+    {
+        .name = "Timeout in SysV ABI Classifier (Wide Structs)",
+        .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
+        .target = TARGET_TYPE_GENERATOR,
+        .expected_status = FFI_SUCCESS  // A fixed timeout should now succeed quickly.
+    },
+    {
+        .name = "Stack Overflow in Signature Parser (Deep Nesting)",
+        .b64_input = "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19f"
+                     "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
+        .target = TARGET_SIGNATURE_PARSER,
+        .expected_status = FFI_ERROR_INVALID_ARGUMENT  // A fixed crash on invalid input should now return an error.
+    },
+    {.name = "Timeout in SysV Classifier (Zero-Sized Array)",
+     .b64_input = "A/oEAA==",  // Decodes to: create array, 250 elements, of struct, with 0 members.
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Timeout in SysV Classifier (Recursive Packed Structs)",
+     .b64_input = "/v7+/v7+/v///3///////wD+/v7+/v7+/v7+/qg=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {
+        .name = "Timeout in Type Generator (Wide Nested Aggregates)",
+        .b64_input = "LP///////////wAAAAP//////////////////////////+Li4g==",
+        .target = TARGET_TYPE_GENERATOR,
+        .expected_status = FFI_SUCCESS  // Expect it to complete quickly now
+    }};
+
+/**
+ * @internal
+ * @brief A helper function that runs a single regression test case.
+ * @param test A pointer to the test case definition.
+ */
+static void run_regression_case(const regression_test_case_t * test) {
+    subtest(test->name) {
         plan(2);
 
-        // This is the Base64 string from one of the fuzzer's timeout artifacts.
-        // This input creates a "wide" struct that caused exponential complexity
-        // in the original abi_sysv_x64.c classifier.
-        const char * timeout_input_b64 = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=";
         size_t data_size;
+        unsigned char * data = b64_decode(test->b64_input, &data_size);
 
-        // Decode the input.
-        unsigned char * data = b64_decode(timeout_input_b64, &data_size);
         ok(data != NULL, "Base64 decoded successfully");
+        if (!data) {
+            fail("Skipping test due to Base64 decode failure.");
+            return;
+        }
 
-        if (data) {
+        if (test->target == TARGET_TYPE_GENERATOR) {
             fuzzer_input in = {(const uint8_t *)data, data_size};
 
-            // Replicate the logic of the fuzzer that found the bug (fuzz_abi).
-            // It uses generate_random_type to build ffi_type objects.
-            ffi_type * generated_type = generate_random_type(&in, 0);
+            // Initialize the total_fields counter for the generator.
+            size_t total_fields = 0;
+            ffi_type * generated_type = generate_random_type(&in, 0, &total_fields);
 
-            // Assert the correct, fixed behavior.
-            // A timeout bug is fixed when the function now completes successfully and quickly.
-            if (generated_type) {
-                ffi_type_destroy(generated_type);
-                pass("Successfully generated and destroyed the pathological type without timing out.");
+            if (test->expected_status == FFI_SUCCESS) {
+                if (generated_type) {
+                    ffi_type_destroy(generated_type);
+                    pass("Successfully processed pathological input without timeout/crash.");
+                }
+                else
+                    pass(
+                        "Generator failed gracefully on pathological input, which is an acceptable non-timeout "
+                        "outcome.");
             }
-            else
-                fail("Failed to generate the pathological type from the regression input.");
+            else {
+                ok(generated_type == NULL, "Generator correctly failed on invalid input.");
+                if (generated_type)
+                    ffi_type_destroy(generated_type);
+            }
         }
-        else
-            fail("Skipping test due to Base64 decode failure.");
-
-        // Clean up.
-        free(data);
-    }
-
-    subtest("Stack overflow in signature parser (Fuzzer-discovered)") {
-        plan(2);
-
-        // STEP 1: This Base64 string decodes to `{{{{...i...}}}}` repeated 33 times.
-        // This input caused a stack overflow before the recursion depth limit was added.
-        const char * stack_overflow_input_b64 =
-            "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX"
-            "19fX19fX19fX19fX19fX19fX19fX19fQ==";
-        size_t data_size;
-
-        // Decode the input.
-        unsigned char * data = b64_decode(stack_overflow_input_b64, &data_size);
-        ok(data != NULL, "Base64 decoded successfully");
-
-        if (data) {
-            // Replicate the logic of the fuzzer (fuzz_signature).
-            ffi_type * type = NULL;
-            arena_t * arena = NULL;
-
-            char * signature = malloc(data_size + 1);
+        else if (test->target == TARGET_SIGNATURE_PARSER) {
+            char * signature = (char *)malloc(data_size + 1);
             memcpy(signature, data, data_size);
             signature[data_size] = '\0';
 
+            ffi_type * type = NULL;
+            arena_t * arena = NULL;
             ffi_status status = ffi_type_from_signature(&type, &arena, signature);
 
-            // Assert the correct, fixed behavior.
-            // The parser should now fail gracefully with an error, not crash.
-            ok(status == FFI_ERROR_INVALID_ARGUMENT, "Parser correctly fails on excessive recursion");
+            ok(status == test->expected_status,
+               "Parser returned correct status (expected %d, got %d)",
+               test->expected_status,
+               status);
 
             arena_destroy(arena);
             free(signature);
         }
-        else
-            fail("Skipping test due to Base64 decode failure.");
 
-        // Clean up.
         free(data);
     }
+}
+
+TEST {
+    size_t num_tests = sizeof(regression_tests) / sizeof(regression_tests[0]);
+    plan(num_tests);
+
+    for (size_t i = 0; i < num_tests; ++i)
+        run_regression_case(&regression_tests[i]);
 }

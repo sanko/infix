@@ -27,7 +27,15 @@
 // fuzzer data and recursively calling itself to create nested members. Its memory
 // management is critical: it must not leak on any internal failure path, otherwise
 // it could lead to false positives from AddressSanitizer.
-ffi_type * generate_random_type(fuzzer_input * in, int depth) {
+ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fields) {
+    // Check total fields and recursion depth at the start of every call.
+    if (depth >= MAX_RECURSION_DEPTH || *total_fields >= MAX_TOTAL_FUZZ_FIELDS) {
+        // Force a simple type if we're too deep or complex.
+        uint8_t prim_byte;
+        if (!consume_uint8_t(in, &prim_byte))
+            return NULL;
+        return ffi_type_create_primitive((ffi_primitive_type_id)(prim_byte % (FFI_PRIMITIVE_TYPE_LONG_DOUBLE + 1)));
+    }
     uint8_t type_choice;
     if (!consume_uint8_t(in, &type_choice))
         return NULL;
@@ -61,7 +69,7 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth) {
             size_t num_elements = num_elements_byte % MAX_ARRAY_ELEMENTS;
 
             // Recursively generate the element type for the array.
-            ffi_type * element_type = generate_random_type(in, depth + 1);
+            ffi_type * element_type = generate_random_type(in, depth + 1, total_fields);
             if (!element_type)
                 return NULL;
 
@@ -91,7 +99,15 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth) {
                 return NULL;
 
             for (size_t i = 0; i < num_members; ++i) {
-                ffi_type * member_type = generate_random_type(in, depth + 1);
+                // Check complexity limit inside the loop before recursing.
+                if (*total_fields >= MAX_TOTAL_FUZZ_FIELDS) {
+                    // Abort generation of this aggregate if it's too complex.
+                    for (size_t j = 0; j < i; ++j)
+                        ffi_type_destroy(members[j].type);
+                    free(members);
+                    return NULL;
+                }
+                ffi_type * member_type = generate_random_type(in, depth + 1, total_fields);
                 if (!member_type) {
                     // If a nested type creation fails, we must clean up everything created so far.
                     for (size_t j = 0; j < i; ++j)

@@ -156,11 +156,15 @@ static bool classify_recursive(
         return true;
     }
 
-    // Unaligned fields force MEMORY classification.
-    if (offset % type->alignment != 0) {
+    // The ABI requires natural alignment. If a fuzzer creates a type with an unaligned
+    // member, it must be passed in memory. A zero alignment would cause a crash.
+    if (type->alignment != 0 && offset % type->alignment != 0) {
         classes[0] = MEMORY;
         return true;
     }
+    // If a struct is packed, its layout is explicit and should not be inferred
+    // by recursive classification. Treat it as an opaque block of memory.
+    // For classification purposes, this is equivalent to an integer array.
 
     if (type->category == FFI_TYPE_PRIMITIVE) {
         (*field_count)++;
@@ -190,7 +194,16 @@ static bool classify_recursive(
         return false;
     }
     if (type->category == FFI_TYPE_ARRAY) {
-        // Recursively classify each element of the array.
+        // If the array elements have no size, iterating over them is pointless
+        // and can cause a timeout if num_elements is large, as the offset never advances.
+        // We only need to classify the element type once at the starting offset.
+        if (type->meta.array_info.element_type->size == 0) {
+            if (type->meta.array_info.num_elements > 0)
+                // Classify the zero-sized element just once.
+                return classify_recursive(type->meta.array_info.element_type, offset, classes, depth + 1, field_count);
+            return false;  // An empty array of zero-sized structs has no effect on classification.
+        }
+
         for (size_t i = 0; i < type->meta.array_info.num_elements; ++i) {
             // Check count *before* each recursive call inside the loop.
             if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY) {
@@ -629,12 +642,25 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             // Load pointer to argument data into r15.
             emit_mov_reg_mem(buf, R15_REG, R14_REG, i * sizeof(void *));  // r15 = args_array[i]
 
+            size_t size = arg_types[i]->size;
+            size_t offset = 0;
+
             // Copy the argument data from the user-provided buffer to the stack, 8 bytes at a time.
-            for (size_t offset = 0; offset < arg_types[i]->size; offset += 8) {
+            for (; offset + 8 <= size; offset += 8) {
                 // mov rax, [r15 + offset] (load 8 bytes into scratch register)
                 emit_mov_reg_mem(buf, RAX_REG, R15_REG, offset);
                 // mov [rsp + stack_offset], rax (store 8 bytes onto the stack)
                 emit_mov_mem_reg(buf, RSP_REG, layout->arg_locations[i].stack_offset + offset, RAX_REG);
+            }
+            // Handle any remaining bytes (1 to 7).
+            if (offset < size) {
+                // A simple and effective way to handle the remainder is byte by byte.
+                for (; offset < size; ++offset) {
+                    // movzx rax, byte ptr [r15 + offset] (using movzx to get a byte into al)
+                    emit_movzx_reg64_mem8(buf, RAX_REG, R15_REG, (int32_t)offset);
+                    // mov [rsp + stack_offset], al
+                    emit_mov_mem_reg8(buf, RSP_REG, (int32_t)(layout->arg_locations[i].stack_offset + offset), RAX_REG);
+                }
             }
         }
     }
