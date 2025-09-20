@@ -1157,6 +1157,55 @@ void emit_int64(code_buffer * buf, int64_t value);
  *          The implementation for these functions is in `src/core/signature.c`.
  * @{
  */
+/**
+ * @defgroup signature_specifiers Signature Format Specifiers
+ * @brief Defines for characters used in the high-level signature string format.
+ * @details These macros provide symbolic names for the characters used to define
+ *          types in a signature string, making programmatic string construction
+ *          safer and more readable than using magic character literals.
+ * @{
+ */
+
+// Primitive Types
+#define FFI_SIG_VOID 'v'
+#define FFI_SIG_BOOL 'b'
+#define FFI_SIG_CHAR 'c'
+#define FFI_SIG_SINT8 'a'
+#define FFI_SIG_UINT8 'h'
+#define FFI_SIG_SINT16 's'
+#define FFI_SIG_UINT16 't'
+#define FFI_SIG_SINT32 'i'
+#define FFI_SIG_UINT32 'j'
+#define FFI_SIG_LONG 'l'
+#define FFI_SIG_ULONG 'm'
+#define FFI_SIG_SINT64 'x'
+#define FFI_SIG_UINT64 'y'
+#define FFI_SIG_SINT128 'n'
+#define FFI_SIG_UINT128 'o'
+#define FFI_SIG_FLOAT 'f'
+#define FFI_SIG_DOUBLE 'd'
+#define FFI_SIG_LONG_DOUBLE 'e'
+
+// Type Modifiers and Constructs
+#define FFI_SIG_POINTER '*'
+#define FFI_SIG_STRUCT_START '{'
+#define FFI_SIG_STRUCT_END '}'
+#define FFI_SIG_UNION_START '<'
+#define FFI_SIG_UNION_END '>'
+#define FFI_SIG_ARRAY_START '['
+#define FFI_SIG_ARRAY_END ']'
+#define FFI_SIG_PACKED_STRUCT 'p'
+#define FFI_SIG_FUNC_PTR_START '('
+#define FFI_SIG_FUNC_PTR_END ')'
+
+// Delimiters
+#define FFI_SIG_MEMBER_SEPARATOR ','
+#define FFI_SIG_VARIADIC_SEPARATOR ';'
+#define FFI_SIG_OFFSET_SEPARATOR '@'
+#define FFI_SIG_NAME_SEPARATOR ':'
+#define FFI_SIG_RETURN_SEPARATOR "=>"
+
+/** @} */  // End of signature_specifiers group
 
 /**
  * @brief Generates a forward-call trampoline from a signature string.

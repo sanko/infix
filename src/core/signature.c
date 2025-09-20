@@ -194,18 +194,18 @@ static ffi_type * parse_type(parser_state_t * state, int depth) {
 
     // Dispatch to a specialized parsing function based on the next character.
     if (isalpha((unsigned char)*state->current)) {
-        if (*state->current == 'p')
+        if (*state->current == FFI_SIG_PACKED_STRUCT)
             base_type = parse_packed_struct(state, depth + 1);
         else
             base_type = parse_primitive(state);
     }
-    else if (*state->current == '{')
-        base_type = parse_aggregate(state, '{', '}', false, depth + 1);
-    else if (*state->current == '<')
-        base_type = parse_aggregate(state, '<', '>', true, depth + 1);
-    else if (*state->current == '[')
+    else if (*state->current == FFI_SIG_STRUCT_START)
+        base_type = parse_aggregate(state, FFI_SIG_STRUCT_START, FFI_SIG_STRUCT_END, false, depth + 1);
+    else if (*state->current == FFI_SIG_UNION_START)
+        base_type = parse_aggregate(state, FFI_SIG_UNION_START, FFI_SIG_UNION_END, true, depth + 1);
+    else if (*state->current == FFI_SIG_ARRAY_START)
         base_type = parse_array(state, depth + 1);
-    else if (*state->current == '(')
+    else if (*state->current == FFI_SIG_FUNC_PTR_START)
         base_type = parse_function_pointer(state, depth + 1);
     else {
         // If the character doesn't start a known type, it's a syntax error.
@@ -219,7 +219,7 @@ static ffi_type * parse_type(parser_state_t * state, int depth) {
 
     // After parsing a base type, loop to handle any postfix pointer modifiers.
     // This correctly handles multiple levels of indirection, e.g., `i**`.
-    while (consume(state, '*')) {
+    while (consume(state, FFI_SIG_POINTER)) {
         ffi_type * ptr_type = arena_alloc(state->arena, sizeof(ffi_type), _Alignof(ffi_type));
         if (!ptr_type) {
             state->error = FFI_ERROR_ALLOCATION_FAILED;
@@ -244,15 +244,15 @@ static ffi_type * parse_primitive(parser_state_t * state) {
         return NULL;
     ffi_primitive_type_id id;
     switch (*state->current++) {
-    case 'v':
+    case FFI_SIG_VOID:
         return ffi_type_create_void();
-    case 'b':
+    case FFI_SIG_BOOL:
         id = FFI_PRIMITIVE_TYPE_BOOL;
         break;
-    case 'a':
+    case FFI_SIG_SINT8:
         id = FFI_PRIMITIVE_TYPE_SINT8;
         break;
-    case 'c':
+    case FFI_SIG_CHAR:
         {
             // `char` is special; its signedness is implementation-defined.
             // This compile-time check resolves it to the correct concrete type for the target platform.
@@ -265,46 +265,46 @@ static ffi_type * parse_primitive(parser_state_t * state) {
             }
             break;
         }
-    case 'h':
+    case FFI_SIG_UINT8:
         id = FFI_PRIMITIVE_TYPE_UINT8;
         break;
-    case 's':
+    case FFI_SIG_SINT16:
         id = FFI_PRIMITIVE_TYPE_SINT16;
         break;
-    case 't':
+    case FFI_SIG_UINT16:
         id = FFI_PRIMITIVE_TYPE_UINT16;
         break;
-    case 'i':
+    case FFI_SIG_SINT32:
         id = FFI_PRIMITIVE_TYPE_SINT32;
         break;
-    case 'j':
+    case FFI_SIG_UINT32:
         id = FFI_PRIMITIVE_TYPE_UINT32;
         break;
-    case 'l':
+    case FFI_SIG_LONG:
         id = (sizeof(long) == 8) ? FFI_PRIMITIVE_TYPE_SINT64 : FFI_PRIMITIVE_TYPE_SINT32;
         break;
-    case 'm':
+    case FFI_SIG_ULONG:
         id = (sizeof(unsigned long) == 8) ? FFI_PRIMITIVE_TYPE_UINT64 : FFI_PRIMITIVE_TYPE_UINT32;
         break;
-    case 'x':
+    case FFI_SIG_SINT64:
         id = FFI_PRIMITIVE_TYPE_SINT64;
         break;
-    case 'y':
+    case FFI_SIG_UINT64:
         id = FFI_PRIMITIVE_TYPE_UINT64;
         break;
-    case 'n':
+    case FFI_SIG_SINT128:
         id = FFI_PRIMITIVE_TYPE_SINT128;
         break;
-    case 'o':
+    case FFI_SIG_UINT128:
         id = FFI_PRIMITIVE_TYPE_UINT128;
         break;
-    case 'f':
+    case FFI_SIG_FLOAT:
         id = FFI_PRIMITIVE_TYPE_FLOAT;
         break;
-    case 'd':
+    case FFI_SIG_DOUBLE:
         id = FFI_PRIMITIVE_TYPE_DOUBLE;
         break;
-    case 'e':
+    case FFI_SIG_LONG_DOUBLE:
         id = FFI_PRIMITIVE_TYPE_LONG_DOUBLE;
         break;
     default:
@@ -351,7 +351,7 @@ static ffi_type * parse_aggregate(parser_state_t * state, char open, char close,
             const char * checkpoint = state->current;  // Save position before trying to parse an identifier.
             const char * name = parse_identifier(state);
 
-            if (name && consume(state, ':')) {
+            if (name && consume(state, FFI_SIG_NAME_SEPARATOR)) {
                 // Success: we parsed "name:", so this is a named field.
                 temp_members[num_members].name = name;
                 temp_members[num_members].type = parse_type(state, depth + 1);
@@ -370,7 +370,7 @@ static ffi_type * parse_aggregate(parser_state_t * state, char open, char close,
             temp_members[num_members].offset = 0;  // Offsets are calculated by the Core API for standard layouts.
             num_members++;
 
-            if (!consume(state, ','))
+            if (!consume(state, FFI_SIG_MEMBER_SEPARATOR))
                 break;  // If no comma, this must be the last member.
         }
     }
@@ -412,16 +412,16 @@ static ffi_type * parse_packed_struct(parser_state_t * state, int depth) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
-    if (!consume(state, 'p') || !consume(state, '(')) {
+    if (!consume(state, FFI_SIG_PACKED_STRUCT) || !consume(state, FFI_SIG_FUNC_PTR_START)) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
     size_t total_size, alignment;
-    if (!parse_size_t(state, &total_size) || !consume(state, ',') || !parse_size_t(state, &alignment) ||
-        !consume(state, ')')) {
+    if (!parse_size_t(state, &total_size) || !consume(state, FFI_SIG_MEMBER_SEPARATOR) || !parse_size_t(state, &alignment) ||
+        !consume(state, FFI_SIG_FUNC_PTR_END)) {
         return NULL;
     }
-    if (!consume(state, '{')) {
+    if (!consume(state, FFI_SIG_STRUCT_START)) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
@@ -430,7 +430,7 @@ static ffi_type * parse_packed_struct(parser_state_t * state, int depth) {
     size_t num_members = 0;
 
     skip_whitespace(state);
-    if (*state->current != '}') {
+    if (*state->current != FFI_SIG_STRUCT_END) {
         while (1) {
             if (num_members >= 64) {
                 state->error = FFI_ERROR_INVALID_ARGUMENT;
@@ -439,7 +439,7 @@ static ffi_type * parse_packed_struct(parser_state_t * state, int depth) {
 
             const char * checkpoint = state->current;
             const char * name = parse_identifier(state);
-            if (name && consume(state, ':')) {
+            if (name && consume(state, FFI_SIG_NAME_SEPARATOR)) {
                 temp_members[num_members].name = name;
                 temp_members[num_members].type = parse_type(state, depth + 1);
             }
@@ -452,17 +452,17 @@ static ffi_type * parse_packed_struct(parser_state_t * state, int depth) {
             if (!temp_members[num_members].type)
                 return NULL;
             // The "@offset" part is mandatory for every member of a packed struct.
-            if (!consume(state, '@') || !parse_size_t(state, &temp_members[num_members].offset))
+            if (!consume(state, FFI_SIG_OFFSET_SEPARATOR) || !parse_size_t(state, &temp_members[num_members].offset))
                 return NULL;
 
             num_members++;
 
-            if (!consume(state, ','))
+            if (!consume(state, FFI_SIG_MEMBER_SEPARATOR))
                 break;
         }
     }
 
-    if (!consume(state, '}')) {
+    if (!consume(state, FFI_SIG_STRUCT_END)) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
@@ -498,12 +498,12 @@ static ffi_type * parse_array(parser_state_t * state, int depth) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
-    if (!consume(state, '[')) {
+    if (!consume(state, FFI_SIG_ARRAY_START)) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
     size_t num_elements;
-    if (!parse_size_t(state, &num_elements) || !consume(state, ']'))
+    if (!parse_size_t(state, &num_elements) || !consume(state, FFI_SIG_ARRAY_END))
         return NULL;
 
     // Recursively call the main type parser for the element type.
@@ -538,8 +538,7 @@ static ffi_type * parse_function_pointer(parser_state_t * state, int depth) {
         return NULL;
     }
 
-
-    if (!consume(state, '(')) {
+    if (!consume(state, FFI_SIG_FUNC_PTR_START)) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return NULL;
     }
@@ -548,9 +547,9 @@ static ffi_type * parse_function_pointer(parser_state_t * state, int depth) {
     const char * start = state->current;
     int open_paren = 1;
     while (*state->current && open_paren > 0) {
-        if (*state->current == '(')
+        if (*state->current == FFI_SIG_FUNC_PTR_START)
             open_paren++;
-        if (*state->current == ')') {
+        if (*state->current == FFI_SIG_FUNC_PTR_END) {
             open_paren--;
             if (open_paren == 0)
                 break;  // Found the match
@@ -627,7 +626,7 @@ static bool parse_signature_content(parser_state_t * state,
     size_t num_fixed = 0;
     bool in_variadic_part = false;
 
-    const char * ret_sep = strstr(state->current, "=>");
+    const char * ret_sep = strstr(state->current, FFI_SIG_RETURN_SEPARATOR);
     if (!ret_sep || ret_sep > end_delimiter) {
         state->error = FFI_ERROR_INVALID_ARGUMENT;
         return false;
@@ -636,7 +635,7 @@ static bool parse_signature_content(parser_state_t * state,
     skip_whitespace(state);
 
     if (state->current < ret_sep) {
-        if (*state->current == ';') {
+        if (*state->current == FFI_SIG_VARIADIC_SEPARATOR) {
             in_variadic_part = true;
             num_fixed = 0;
             state->current++;
@@ -658,8 +657,8 @@ static bool parse_signature_content(parser_state_t * state,
 
             skip_whitespace(state);
 
-            bool has_sep = consume(state, ',');
-            if (!has_sep && consume(state, ';')) {
+            bool has_sep = consume(state, FFI_SIG_MEMBER_SEPARATOR);
+            if (!has_sep && consume(state, FFI_SIG_VARIADIC_SEPARATOR)) {
                 if (in_variadic_part) {
                     state->error = FFI_ERROR_INVALID_ARGUMENT;
                     return false;
@@ -680,9 +679,8 @@ static bool parse_signature_content(parser_state_t * state,
         }
     }
 
-    if (!in_variadic_part) {
+    if (!in_variadic_part)
         num_fixed = num_args;
-    }
 
     state->current = ret_sep + 2;
     *out_ret_type = parse_type(state, depth + 1);
@@ -696,9 +694,8 @@ static bool parse_signature_content(parser_state_t * state,
         state->error = FFI_ERROR_ALLOCATION_FAILED;
         return false;
     }
-    if (num_args > 0) {
+    if (num_args > 0)
         memcpy(*out_arg_types, temp_args, num_args * sizeof(ffi_type *));
-    }
 
     return true;
 }
@@ -728,7 +725,7 @@ ffi_status ffi_signature_parse(const char * signature,
     bool in_variadic_part = false;
 
     // A valid signature MUST contain the return type separator "=>".
-    const char * ret_sep = strstr(signature, "=>");
+    const char * ret_sep = strstr(signature, FFI_SIG_RETURN_SEPARATOR);
     if (!ret_sep) {
         arena_destroy(*out_arena);
         *out_arena = NULL;
@@ -740,7 +737,7 @@ ffi_status ffi_signature_parse(const char * signature,
     // Check if there are any arguments to parse before the "=>".
     if (state.current < ret_sep) {
         // Handle the edge case of a variadic-only function, e.g., ";i=>v"
-        if (*state.current == ';') {
+        if (*state.current == FFI_SIG_VARIADIC_SEPARATOR) {
             in_variadic_part = true;
             num_fixed = 0;
             state.current++;
@@ -766,9 +763,9 @@ ffi_status ffi_signature_parse(const char * signature,
             skip_whitespace(&state);
 
             // Check for a separator. ',' is a normal separator.
-            bool has_sep = consume(&state, ',');
+            bool has_sep = consume(&state, FFI_SIG_MEMBER_SEPARATOR);
             // ';' is a special separator that marks the transition to variadic args.
-            if (!has_sep && consume(&state, ';')) {
+            if (!has_sep && consume(&state, FFI_SIG_VARIADIC_SEPARATOR)) {
                 if (in_variadic_part) {
                     state.error = FFI_ERROR_INVALID_ARGUMENT;
                     goto cleanup_fail;

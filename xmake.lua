@@ -13,7 +13,6 @@ after_load(function (target)
     if target:toolchain("msvc") then
         target:add("cxflags", "/experimental:c11atomics")
     end
-    target:add("defines", "FFI_DEBUG_ENABLED=1")
 end)
 
 -- Define the static library target "infix"
@@ -24,6 +23,8 @@ target("infix")
     add_files("src/core/*.c")
     -- Expose only the public 'include' directory to consumers of this library
     add_includedirs("include", {public = true})
+    -- Be noisy
+--~     add_defines("FFI_DEBUG_ENABLED=1")
 
 -- Define the test targets.
 for _, test_file in ipairs(os.files("t/**/*.c")) do
@@ -34,6 +35,7 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         set_default(false)
 
         add_files(test_file)
+        add_defines("FFI_DEBUG_ENABLED=1")
 
         -- Add dependencies for the special regression test case
         if test_file:endswith("850_regression_cases.c") then
@@ -82,7 +84,7 @@ for _, fuzz_harness in ipairs(os.files("fuzz/fuzz_*.c")) do
             -- All fuzzers need the helpers and the main library
             add_files("fuzz/fuzz_helpers.c")
             add_deps("infix")
-
+            set_policy("build.sanitizer.address", true)
             add_includedirs("fuzz", "src/core") -- Add src/core for internals.h
 
             -- Add fuzzer-specific flags
