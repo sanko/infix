@@ -1,6 +1,113 @@
 #pragma once
 /**
- * Copyright (c) 2025 Sanko Robinson
+ * @file infix.h
+ * @brief The main public header for the infix FFI library.
+ * @copyright Copyright (c) 2025 Sanko Robinson
+ *
+ * @mainpage Infix FFI Library
+ *
+ * @section intro_sec Introduction
+ *
+ * Welcome to the documentation for **infix**, a powerful and flexible Foreign Function
+ * Interface (FFI) library for C. Infix simplifies the process of calling C functions
+ * from other environments and creating C-callable function pointers from foreign handlers.
+ *
+ * The core of the library is a Just-in-Time (JIT) compiler that generates small,
+ * highly-optimized "trampoline" functions at runtime. These trampolines correctly
+ * handle the low-level Application Binary Interface (ABI) for the target platform,
+ * ensuring seamless interoperability.
+ *
+ * This file, `infix.h`, is the only header you need to include to use the library.
+ * It contains the entire public API, type system, and platform-detection logic.
+ *
+ * @section features_sec Key Features
+ *
+ * - **Forward Calls:** Call any C function dynamically by providing a function pointer
+ *   and its arguments at runtime. The library generates a trampoline that correctly
+ *   places arguments in registers and on the stack according to the platform's ABI.
+ *
+ * - **Reverse Calls (Callbacks):** Create native C function pointers from your own
+ *   handlers (e.g., functions from an embedded scripting language). These pointers
+ *   can be passed to C libraries that require callbacks. When the C code invokes the
+ *   pointer, the infix trampoline marshals the arguments and passes them to your handler.
+ *
+ * - **High-Level Signature API:** Define complex function signatures, including
+ *   structs, unions, arrays, and variadic arguments, using a simple and readable
+ *   string format. This is the recommended way to interact with the library.
+ *
+ * - **Manual Type System:** For advanced use cases, provides a complete set of
+ *   functions to manually construct `ffi_type` descriptors for any C data type.
+ *
+ * - **Cross-Platform and Cross-Architecture:** Designed to be portable, with
+ *   initial support for x86-64 (System V and Windows x64) and AArch64 (AAPCS64).
+ *
+ * - **Security-Conscious Design:** Enforces Write XOR Execute (W^X) memory policies
+ *   for JIT-compiled code to mitigate security vulnerabilities.
+ *
+ * - **Customizable Memory Management:** Allows users to override `malloc`, `free`,
+ *   etc., to integrate the library with custom memory allocators or pools.
+ *
+ * @section concepts_sec Core Concepts
+ *
+ * - **`ffi_type`:** The central data structure that describes any C type, from a
+ *   simple `int` to a complex, nested `struct`. The library uses this metadata to
+ *   understand how to handle data according to ABI rules.
+ *
+ * - **Trampoline:** A small piece of machine code JIT-compiled by infix. It acts as
+ *   a bridge between a generic calling convention and a specific, native C function
+ *   signature.
+ *
+ * - **Forward Trampoline (`ffi_trampoline_t`):** Enables calls *from* a generic
+ *   environment *into* a specific C function. You invoke it with a standard
+ *   interface (`target_function`, `return_value`, `args_array`), and it executes a
+ *   native call.
+ *
+ * - **Reverse Trampoline (`ffi_reverse_trampoline_t`):** A C function pointer that
+ *   wraps a foreign handler. When called by native C code, it translates the native
+ *   arguments into a generic format and calls your handler.
+ *
+ * - **Arena Allocator (`arena_t`):** An efficient memory allocator used internally,
+ *   especially by the high-level signature parser, to manage the memory for complex
+ *   `ffi_type` object graphs with a single `free` operation. It is also exposed as
+ *   part of the public API for performance-critical applications.
+ *
+ * @section usage_sec Basic Usage
+ *
+ * The easiest way to use infix is with the high-level signature API.
+ *
+ * **Example: Creating a forward trampoline to call `printf`**
+ * ```c
+ * #include <stdio.h>
+ * #include "infix.h"
+ *
+ * int main() {
+ *     ffi_trampoline_t* trampoline = NULL;
+ *     const char* signature = "i*,i=>i"; // const char*, int => int
+ *
+ *     ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, signature);
+ *     if (status != FFI_SUCCESS) {
+ *         // Handle error
+ *         return 1;
+ *     }
+ *
+ *     ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+ *
+ *     const char* my_string = "Hello, Infix! The number is %d\n";
+ *     int my_int = 42;
+ *     int printf_ret;
+ *
+ *     void* args[] = { &my_string, &my_int };
+ *
+ *     cif(&printf, &printf_ret, args);
+ *
+ *     printf("printf returned: %d\n", printf_ret); // Should match the number of chars printed
+ *
+ *     ffi_trampoline_free(trampoline);
+ *     return 0;
+ * }
+ * ```
+ *
+ * @section license_sec Licensing
  *
  * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
  * You may choose to use this code under the terms of either license.
@@ -11,23 +118,6 @@
  * Creative Commons Attribution 4.0 International License (CC BY 4.0).
  *
  * SPDX-License-Identifier: CC-BY-4.0
- */
-
-/**
- * @file infix.h
- * @brief The main public header for the infix FFI library.
- * @details This file contains all the necessary definitions for the public API,
- * including the type system, trampoline generation functions, and platform-detection logic.
- *
- * It is designed to be the single header file a user needs to include to use the library.
- * This approach simplifies integration into other projects by avoiding complex include paths.
- * The entire library's public interface, as well as the structures necessary for
- * its operation, are defined or declared herein. The library provides a powerful
- * Foreign Function Interface (FFI) capability by Just-In-Time (JIT) compiling small
- * "trampoline" functions that correctly handle the Application Binary Interface (ABI)
- * for a given platform. This allows for calling C functions from other environments
- * (forward calls) and creating C-callable function pointers from other handlers
- * (reverse calls or callbacks).
  */
 
 /**

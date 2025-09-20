@@ -417,8 +417,8 @@ static ffi_type * parse_packed_struct(parser_state_t * state, int depth) {
         return NULL;
     }
     size_t total_size, alignment;
-    if (!parse_size_t(state, &total_size) || !consume(state, FFI_SIG_MEMBER_SEPARATOR) || !parse_size_t(state, &alignment) ||
-        !consume(state, FFI_SIG_FUNC_PTR_END)) {
+    if (!parse_size_t(state, &total_size) || !consume(state, FFI_SIG_MEMBER_SEPARATOR) ||
+        !parse_size_t(state, &alignment) || !consume(state, FFI_SIG_FUNC_PTR_END)) {
         return NULL;
     }
     if (!consume(state, FFI_SIG_STRUCT_START)) {
