@@ -17,8 +17,8 @@
  * @brief Implements the high-level FFI signature parsing API.
  * @details This file contains a recursive-descent parser that translates a
  * human-readable signature string into the `ffi_type` object graph required
- * by the core trampoline generator. The parser is designed to be robust,
- * handling complex nested types, variadic arguments, and packed structs.
+ * by the core trampoline generator. The parser is designed to handle complex
+ * nested types, variadic arguments, and packed structs.
  *
  * ### Parser Strategy
  * The parser follows a classic recursive-descent approach. The main entry point

@@ -436,18 +436,18 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
                         layout->arg_locations[i].reg_index2 = gpr_count + 1;
                     }
                     else if (classes[0] == SSE && classes[1] == SSE) {
-                        layout->arg_locations[i].type =
-                            ARG_LOCATION_GPR_SSE_PAIR;  // Name is misleading, this is SSE_SSE
+                        layout->arg_locations[i].type = ARG_LOCATION_SSE_SSE_PAIR;
                         layout->arg_locations[i].reg_index = xmm_count;
                         layout->arg_locations[i].reg_index2 = xmm_count + 1;
                     }
                     else {  // Mixed GPR and SSE
-                        layout->arg_locations[i].type = ARG_LOCATION_GPR_SSE_PAIR;
                         if (classes[0] == INTEGER) {
+                            layout->arg_locations[i].type = ARG_LOCATION_INTEGER_SSE_PAIR;
                             layout->arg_locations[i].reg_index = gpr_count;
                             layout->arg_locations[i].reg_index2 = xmm_count;
                         }
                         else {
+                            layout->arg_locations[i].type = ARG_LOCATION_SSE_INTEGER_PAIR;
                             layout->arg_locations[i].reg_index = xmm_count;
                             layout->arg_locations[i].reg_index2 = gpr_count;
                         }
@@ -559,77 +559,61 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
         // r15 = args_array[i]
         emit_mov_reg_mem(buf, R15_REG, R14_REG, i * sizeof(void *));
 
-        if (loc->type == ARG_LOCATION_GPR) {
-            ffi_type * current_type = arg_types[i];
-
-            bool is_signed = current_type->category == FFI_TYPE_PRIMITIVE &&
-                (current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT8 ||
-                 current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT16 ||
-                 current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32);
-
-            if (is_signed) {
-                switch (current_type->size) {
-                case 1:  // signed char
-                    emit_movsx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
-                case 2:  // signed short
-                    emit_movsx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
-                case 4:  // signed int
-                    emit_movsxd_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
-                default:  // 64-bit+ integers do not get promoted
-                    emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
+        switch (loc->type) {
+        case ARG_LOCATION_GPR:
+            {
+                ffi_type * current_type = arg_types[i];
+                bool is_signed = current_type->category == FFI_TYPE_PRIMITIVE &&
+                    (current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT8 ||
+                     current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT16 ||
+                     current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32);
+                if (is_signed) {
+                    if (current_type->size == 1)
+                        emit_movsx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else if (current_type->size == 2)
+                        emit_movsx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else
+                        emit_movsxd_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
                 }
-            }
-            else {  // Unsigned integers, pointers, bools
-                switch (current_type->size) {
-                case 1:  // unsigned char, bool
-                    emit_movzx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
-                case 2:  // unsigned short
-                    emit_movzx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
-                case 4:  // unsigned int
-                    emit_mov_reg32_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
-                default:  // Pointers and 64-bit+ integers
-                    emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    break;
+                else {
+                    if (current_type->size == 1)
+                        emit_movzx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else if (current_type->size == 2)
+                        emit_movzx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else if (current_type->size == 4)
+                        emit_mov_reg32_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else
+                        emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
                 }
+                break;
             }
-        }
-        else if (loc->type == ARG_LOCATION_XMM) {
+        case ARG_LOCATION_XMM:
             if (is_float(arg_types[i]))
                 // movss xmm_reg, [r15] (Move Scalar Single-Precision)
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
                 // movsd xmm_reg, [r15] (Move Scalar Double-Precision)
                 emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
-        }
-        else if (loc->type == ARG_LOCATION_GPR_PAIR) {
-            emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);   // mov reg1, [r15]
-            emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index2], R15_REG, 8);  // mov reg2, [r15 + 8]
-        }
-        else if (loc->type == ARG_LOCATION_GPR_SSE_PAIR) {
-            arg_class_t classes[2];
-            size_t num_classes;
-            classify_aggregate_sysv(arg_types[i], classes, &num_classes);
-            if (num_classes > 1) {
-                if (classes[0] == INTEGER && classes[1] == SSE) {
-                    emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);     // mov gpr, [r15]
-                    emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index2], R15_REG, 8);  // movsd xmm, [r15 + 8]
-                }
-                else if (classes[0] == SSE && classes[1] == INTEGER) {
-                    emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);  // movsd xmm, [r15]
-                    emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index2], R15_REG, 8);   // mov gpr, [r15 + 8]
-                }
-                else if (classes[0] == SSE && classes[1] == SSE) {
-                    emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);   // movsd xmm1, [r15]
-                    emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index2], R15_REG, 8);  // movsd xmm2, [r15 + 8]
-                }
-            }
+            break;
+        case ARG_LOCATION_GPR_PAIR:
+            emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);   // mov gpr, [r15]
+            emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index2], R15_REG, 8);  // movsd xmm, [r15 + 8]
+            break;
+        case ARG_LOCATION_INTEGER_SSE_PAIR:
+            emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);     // mov gpr, [r15]
+            emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index2], R15_REG, 8);  // movsd xmm2, [r15 + 8]
+            break;
+        case ARG_LOCATION_SSE_INTEGER_PAIR:
+            emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);  // movsd xmm, [r15]
+            emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index2], R15_REG, 8);   // mov gpr, [r15 + 8]
+            break;
+        case ARG_LOCATION_SSE_SSE_PAIR:
+            emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);   // movsd xmm1, [r15]
+            emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index2], R15_REG, 8);  // movsd xmm2, [r15 + 8]
+            break;
+        default:
+            // Should be unreachable if layout is correct.
+            break;
         }
     }
 
@@ -643,24 +627,12 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             emit_mov_reg_mem(buf, R15_REG, R14_REG, i * sizeof(void *));  // r15 = args_array[i]
 
             size_t size = arg_types[i]->size;
-            size_t offset = 0;
-
             // Copy the argument data from the user-provided buffer to the stack, 8 bytes at a time.
-            for (; offset + 8 <= size; offset += 8) {
+            for (size_t offset = 0; offset < size; offset += 8) {
                 // mov rax, [r15 + offset] (load 8 bytes into scratch register)
                 emit_mov_reg_mem(buf, RAX_REG, R15_REG, offset);
                 // mov [rsp + stack_offset], rax (store 8 bytes onto the stack)
                 emit_mov_mem_reg(buf, RSP_REG, layout->arg_locations[i].stack_offset + offset, RAX_REG);
-            }
-            // Handle any remaining bytes (1 to 7).
-            if (offset < size) {
-                // A simple and effective way to handle the remainder is byte by byte.
-                for (; offset < size; ++offset) {
-                    // movzx rax, byte ptr [r15 + offset] (using movzx to get a byte into al)
-                    emit_movzx_reg64_mem8(buf, RAX_REG, R15_REG, (int32_t)offset);
-                    // mov [rsp + stack_offset], al
-                    emit_mov_mem_reg8(buf, RSP_REG, (int32_t)(layout->arg_locations[i].stack_offset + offset), RAX_REG);
-                }
             }
         }
     }
@@ -889,9 +861,8 @@ static ffi_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * b
         bool is_from_stack = false;
 
         // Determine if the argument is in registers or on the stack.
-        if (classes[0] == MEMORY) {
+        if (classes[0] == MEMORY)
             is_from_stack = true;
-        }
         else if (num_classes == 1) {
             if (classes[0] == SSE) {
                 if (xmm_idx < NUM_XMM_ARGS)
@@ -1025,19 +996,16 @@ static ffi_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                 arg_class_t ret_classes[2];
                 size_t num_ret_classes;
                 classify_aggregate_sysv(ret_type, ret_classes, &num_ret_classes);
-                if (num_ret_classes > 0 && ret_classes[0] == MEMORY) {
+                if (num_ret_classes > 0 && ret_classes[0] == MEMORY)
                     return_in_memory = true;
-                }
             }
         }
-        if (is_long_double(ret_type)) {
+        if (is_long_double(ret_type))
             return_in_memory = false;
-        }
 
         // Now, handle the return value based on the correct classification.
-        if (is_long_double(context->return_type)) {
+        if (is_long_double(context->return_type))
             emit_fldt_mem(buf, RBP_REG, layout->return_buffer_offset);
-        }
         else if (return_in_memory) {
             // The return value was written directly via the hidden pointer.
             // The ABI requires this pointer to be returned in RAX.
@@ -1056,17 +1024,14 @@ static ffi_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                     else
                         emit_movsd_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                 }
-                else {  // INTEGER
+                else  // INTEGER
                     emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
-                }
             }
             if (num_classes == 2) {  // Second eightbyte
-                if (classes[1] == SSE) {
+                if (classes[1] == SSE)
                     emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
-                }
-                else {  // INTEGER
+                else  // INTEGER
                     emit_mov_reg_mem(buf, RDX_REG, RBP_REG, layout->return_buffer_offset + 8);
-                }
             }
         }
     }

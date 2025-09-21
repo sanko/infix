@@ -74,7 +74,7 @@ ffi_type* create_packed_data_type() {
 This is the high-level API, designed for convenience, readability, and safety. It is the recommended choice for over 99% of use cases.
 
 *   **Purpose**: To create trampolines from a concise, declarative string when the C function's signature is known at compile-time or can be determined from configuration.
-*   **Mechanism**: It uses a self-contained mini-language to describe C types. The `ffi_signature_parse` and `ffi_type_from_signature` functions implement a robust recursive-descent parser that translates this string into the required `ffi_type` object graph.
+*   **Mechanism**: It uses a self-contained mini-language to describe C types. The `ffi_signature_parse` and `ffi_type_from_signature` functions implement a recursive-descent parser that translates this string into the required `ffi_type` object graph.
 *   **Memory Management**: **Automatic**. The parser allocates all necessary `ffi_type` objects from a temporary arena. The high-level `ffi_create_*_from_signature` functions create this arena, use it to generate the trampoline, and then immediately destroy the arena, freeing all the blueprint objects. The user never has to call `ffi_type_destroy`.
 
 **Signature API Example: Describing the Same Packed Struct**

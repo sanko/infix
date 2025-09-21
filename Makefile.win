@@ -24,7 +24,7 @@ LIB_NAME = infix.lib
 # Includes the necessary flags for C11 atomics and all required include paths.
 CFLAGS = /std:c11 /W4 /Zi /nologo /experimental:c11atomics /DFFI_DEBUG_ENABLED=1 /I$(INC_DIR) /Isrc /Isrc\arch\x64 /Isrc\arch\aarch64
 
-# --- Source & Object Files (Listed on one line for robustness) ---
+# --- Source & Object Files ---
 LIB_OBJECTS = $(OBJ_DIR)\arena.obj $(OBJ_DIR)\executor.obj $(OBJ_DIR)\trampoline.obj $(OBJ_DIR)\types.obj $(OBJ_DIR)\utility.obj $(OBJ_DIR)\signature.obj
 
 # --- Main Targets ---

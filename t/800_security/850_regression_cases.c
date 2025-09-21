@@ -88,19 +88,15 @@ typedef struct {
 
 // To add a new test, simply add a new entry to this array.
 static const regression_test_case_t regression_tests[] = {
-    {
-        .name = "Timeout in SysV ABI Classifier (Wide Structs)",
-        .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
-        .target = TARGET_TYPE_GENERATOR,
-        .expected_status = FFI_SUCCESS  // A fixed timeout should now succeed quickly.
-    },
-    {
-        .name = "Stack Overflow in Signature Parser (Deep Nesting)",
-        .b64_input = "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19f"
-                     "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
-        .target = TARGET_SIGNATURE_PARSER,
-        .expected_status = FFI_ERROR_INVALID_ARGUMENT  // A fixed crash on invalid input should now return an error.
-    },
+    {.name = "Timeout in SysV ABI Classifier (Wide Structs)",
+     .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Stack Overflow in Signature Parser (Deep Nesting)",
+     .b64_input = "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19f"
+                  "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
+     .target = TARGET_SIGNATURE_PARSER,
+     .expected_status = FFI_ERROR_INVALID_ARGUMENT},
     {.name = "Timeout in SysV Classifier (Zero-Sized Array)",
      .b64_input = "A/oEAA==",  // Decodes to: create array, 250 elements, of struct, with 0 members.
      .target = TARGET_TYPE_GENERATOR,
@@ -109,12 +105,41 @@ static const regression_test_case_t regression_tests[] = {
      .b64_input = "/v7+/v7+/v///3///////wD+/v7+/v7+/v7+/qg=",
      .target = TARGET_TYPE_GENERATOR,
      .expected_status = FFI_SUCCESS},
-    {
-        .name = "Timeout in Type Generator (Wide Nested Aggregates)",
-        .b64_input = "LP///////////wAAAAP//////////////////////////+Li4g==",
-        .target = TARGET_TYPE_GENERATOR,
-        .expected_status = FFI_SUCCESS  // Expect it to complete quickly now
-    }};
+    {.name = "Timeout in Type Generator (Wide Nested Aggregates)",
+     .b64_input = "LP///////////wAAAAP//////////////////////////+Li4g==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (SSE/SSE case)",
+     .b64_input = "zgAAzwDP////////////////////////////////////////////////////////T08PT09PT0////8POuJNT08=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (Mixed GPR/SSE case)",
+     .b64_input = "LQAAAAAAAM8AQ/////////////////////////////////////////////////////////////////////////////////"
+                  "////////////////////9DQ0MAAAA=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM index bug)",
+     .b64_input = "////////p6X/D36lAAAAAAABAAAAAAAAAEoAAAAAAAAIAAAAAAAAAP85AI4A/z//"
+                  "KQA6AAAAAAAAvgAAAAAAVAAAAH4AAAAAAAAAAAAAAAAAAACnYP8PfqUAAAAAAAAAAAAAAAAAAAAAAOObggMAAAAAAAAAcB46JDjM"
+                  "AQAAAAAAAAAAAAAAAAAAAAAAAAAQUwAAAP///wD//+np5+l6AA==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (SSE/INTEGER pair bug)",
+     .b64_input = "Hh4eOh4eHh8AAABWHh4eHh4eAgs=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (Mixed pair bug 2)",
+     .b64_input = "JCUlJSUlJQFNTaUl29qy/wAATU0vJRQA957pPwAuCQ==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds)",
+     .b64_input = "qqqqqrgcCgAwUAAAqqo6FxcXLKqqLQCMAg==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM out of bounds 2)",
+     .b64_input = "ojQ6Ojo6AAAAAAAAEQA6Ojo6Ojo6Ojo=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS}};
 
 /**
  * @internal

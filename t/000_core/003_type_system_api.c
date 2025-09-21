@@ -15,10 +15,10 @@
  * @file 003_type_system_api.c
  * @brief Tests the ffi_type_* API functions for correctness and error handling.
  *
- * @details This test suite focuses on the internal consistency and robustness of
- * the type system's public API, rather than its use in FFI calls. It ensures
- * that the functions for creating structs, unions, and arrays behave as expected
- * under both normal and exceptional conditions.
+ * @details This test suite focuses on the internal consistency of the type system's
+ * public API, rather than its use in FFI calls. It ensures that the functions for
+ * creating structs, unions, and arrays behave as expected under both normal and
+ * exceptional conditions.
  *
  * The tests verify:
  * 1.  **Correctness:** That `ffi_type_create_struct`, `_union`, and `_array`

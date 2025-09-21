@@ -6,7 +6,6 @@ use File::Basename;
 # Define the complete set of primitive type characters based on the Itanium ABI.
 my $primitive_chars = 'vabchstijlmxynofde';
 
-# A robust, hand-rolled tokenizer that correctly handles nesting and member separators.
 sub tokenize {
     my ( $string, $line_num ) = @_;
     my @tokens;

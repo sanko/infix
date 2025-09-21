@@ -380,7 +380,7 @@ static size_t get_page_size() {
  * @brief Generates a reverse-call trampoline (callback) for a given function signature.
  * @details This function creates a native, C-callable function pointer that, when invoked,
  *          calls back into a user-provided handler. The process is highly optimized and
- *          follows a robust, multi-stage generation process with proper error handling.
+ *          follows a multi-stage generation process with proper error handling.
  *
  * @param[out] out_context On success, will point to the context for the new reverse trampoline.
  * @param return_type The `ffi_type` of the callback's return value.

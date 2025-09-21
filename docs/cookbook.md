@@ -1592,7 +1592,7 @@ ffi_type* safe_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64);
 
 **Discussion**: While infix is a C library, its primary purpose is to enable communication between different programming ecosystems. A common and powerful use case is to build a "language binding"—a library that allows a high-level language like Python, Ruby, Lua, or JavaScript (via Node.js) to call C functions. infix provides the low-level FFI engine; the binding provides the crucial "glue" to the high-level language's runtime.
 
-This chapter provides a high-level blueprint for how you would use infix to build such a binding. Here, we outline the core architectural patterns and responsibilities that any robust language binding must implement. It will compare the two main infix APIs—the Core API and the Signature API—and demonstrate why the **Signature API is a massive accelerator for this task** when dealing with function signatures that are known at either compile- or runtime.
+This chapter provides a high-level blueprint for how you would use infix to build such a binding. Here, we outline the core architectural patterns and responsibilities that any language binding must implement. It will compare the two main infix APIs—the Core API and the Signature API—and demonstrate why the **Signature API is a massive accelerator for this task** when dealing with function signatures that are known at either compile- or runtime.
 
 ### The Four Pillars of a Language Binding
 

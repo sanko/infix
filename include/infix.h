@@ -585,9 +585,12 @@ typedef enum {
     ARG_LOCATION_GPR_REFERENCE,  ///< A pointer to the argument is passed in a GPR.
     ARG_LOCATION_VPR_HFA,        ///< Argument is a Homogeneous Floating-point Aggregate passed in VPRs.
 #else                            // x86-64 ABIs
-    ARG_LOCATION_GPR_SSE_PAIR,  ///< A struct passed with one half in GPR, one in XMM (SysV only).
-    ARG_LOCATION_XMM,           ///< Argument is passed in an XMM (SSE) register.
-    ARG_LOCATION_GPR_PAIR,      ///< A struct passed in two GPRs (SysV only).
+    ARG_LOCATION_XMM,               ///< Argument is passed in an XMM (SSE) register.
+    ARG_LOCATION_GPR_PAIR,          ///< A struct passed in two GPRs (SysV only).
+    ARG_LOCATION_SSE_SSE_PAIR,      ///< A struct passed in two XMM registers (SysV only).
+    ARG_LOCATION_INTEGER_SSE_PAIR,  ///< A struct passed with one half in a GPR and the second in an XMM register (SysV
+                                    ///< only).
+    ARG_LOCATION_SSE_INTEGER_PAIR,  ///< A struct passed with one half in an XMM and the second in a GPR (SysV only).
 #endif
     ARG_LOCATION_STACK  ///< Argument is passed on the stack.
 } ffi_arg_location_type;

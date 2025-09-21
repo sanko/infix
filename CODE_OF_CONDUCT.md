@@ -10,7 +10,7 @@ In the interest of fostering a professional and productive open source community
 
 Examples of behavior that contributes to a positive and productive environment include:
 *   **Focusing on Technical Substance**: Keeping conversations centered on the technical merits of the topic at hand.
-*   **Being Open to Constructive Criticism**: FFI and ABI details are complex. We value robust technical debate and the ability to accept and provide constructive feedback gracefully.
+*   **Being Open to Constructive Criticism**: FFI and ABI details are complex. We value technical debate and the ability to accept and provide constructive feedback gracefully.
 *   **Showing Respect for Differing Viewpoints**: Acknowledging that there can be multiple valid approaches to solving a technical problem.
 *   **Clearly Articulating Ideas**: Providing context, code examples, and clear reasoning for proposals, bug reports, and pull requests. We welcome contributions of all sizes, but those that are well-researched and clearly communicated are the most likely to be addressed and integrated successfully.
 
