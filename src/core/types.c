@@ -44,7 +44,12 @@
  *          that the type descriptors are correct for the compilation target.
  * @internal
  */
-#define FFI_TYPE_INIT(id, T) {FFI_TYPE_PRIMITIVE, sizeof(T), _Alignof(T), false, false, .meta.primitive_id = id}
+#define FFI_TYPE_INIT(id, T)                                  \
+    {                                                         \
+        .category = FFI_TYPE_PRIMITIVE,                       \
+        .size = sizeof(T), .alignment = _Alignof(T),          \
+        .is_arena_allocated = false, .meta.primitive_id = id, \
+    }
 
 // Statically allocated, singleton instances for all fundamental types.
 // This is a performance optimization that avoids dynamic allocation and deallocation
