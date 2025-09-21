@@ -72,7 +72,7 @@ void * helgrind_thread_worker(void * arg) {
         ffi_status status =
             generate_reverse_trampoline(&rt, ret_type, arg_types, 2, 2, (void *)helgrind_test_handler, NULL);
         if (status != FFI_SUCCESS)
-        // Return a failure status that the main thread can check.
+// Return a failure status that the main thread can check.
 #if defined(_WIN32)
             return 1;
 #else
@@ -80,9 +80,7 @@ void * helgrind_thread_worker(void * arg) {
 #endif
 
         // Get and invoke the callable function pointer.
-        // Note: The public API does not provide a direct ffi_reverse_trampoline_get_code,
-        // so we access the internal struct member for this test.
-        my_func_ptr callable_func = (my_func_ptr)rt->exec_code.rx_ptr;
+        my_func_ptr callable_func = (my_func_ptr)ffi_reverse_trampoline_get_code(rt);
         if (callable_func)
             callable_func(i, i + 1);
 

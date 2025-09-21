@@ -491,7 +491,7 @@ int main() {
     // 1. Create the reverse trampoline for the comparison function.
     ffi_reverse_trampoline_t* rt = NULL;
     ffi_create_reverse_trampoline_from_signature(&rt, "c*,c*=>i", (void*)compare_ints_handler, NULL);
-    void* comparison_func_ptr = rt->exec_code.rx_ptr;
+    void* comparison_func_ptr = ffi_reverse_trampoline_get_code(rt);
 
     // 2. Create the forward trampoline for qsort.
     ffi_trampoline_t* ft = NULL;
@@ -545,7 +545,7 @@ void bridge_handler(ffi_reverse_trampoline_t* context, void* ret, void** args) {
     int item_value = *(int*)args[0];
 
     // Retrieve our state from the user_data pointer!
-    Context* ctx = (Context*)context->user_data;
+    Context* ctx = (Context*)ffi_reverse_trampoline_get_user_data(context);
 
     // Now we can use the state.
     printf("Handler for '%s' processing %d\n", ctx->name, item_value);
@@ -559,7 +559,7 @@ int main() {
     ffi_reverse_trampoline_t* rt = NULL;
     // NOTE: The handler we pass is the BRIDGE, not our final logic.
     ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)bridge_handler, &ctx);
-    item_processor_t processor = (item_processor_t)rt->exec_code.rx_ptr;
+    item_processor_t processor = (item_processor_t)ffi_reverse_trampoline_get_code(rt);
 
     int list[] = { 10, 20, 30 };
     process_list(list, 3, processor);
@@ -633,7 +633,7 @@ int main() {
     ffi_reverse_trampoline_t* rt = NULL;
     ffi_create_reverse_trampoline_from_signature(&rt, signature, (void*)my_logger, NULL);
 
-    run_logger((log_func_t)rt->exec_code.rx_ptr);
+    run_logger((log_func_t)ffi_reverse_trampoline_get_code(rt));
 
     ffi_reverse_trampoline_free(rt);
     return 0;
@@ -672,7 +672,7 @@ int main() {
 
     ffi_reverse_trampoline_t* rt = NULL;
     ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)my_handler, NULL);
-    void* handler_ptr = rt->exec_code.rx_ptr;
+    void* handler_ptr = ffi_reverse_trampoline_get_code(rt);
 
     ffi_trampoline_t* t_register = NULL;
     ffi_create_forward_trampoline_from_signature(&t_register, "(i=>v)*=>v");
@@ -717,7 +717,8 @@ int main() {
     // 2. Call the factory to get a function pointer.
     math_op_t received_func_ptr = NULL;
     const char* op_name = "add";
-    ((ffi_cif_func)ffi_trampoline_get_code(t_factory))((void*)get_operation, &received_func_ptr, &op_name);
+    void* factory_args[] = {&op_name};
+    ((ffi_cif_func)ffi_trampoline_get_code(t_factory))((void*)get_operation, &received_func_ptr, factory_args);
 
     // 3. Use the worker trampoline to call the returned function pointer.
     int a = 7, b = 6, result = 0;
@@ -1343,6 +1344,7 @@ int main() { return 0; }
 #include <infix.h>
 #include <stdio.h>
 #include <dlfcn.h>
+#include <unistd.h> // For HOST_NAME_MAX
 
 int main() {
     // 1. Load libraries and function pointers.
@@ -1494,7 +1496,7 @@ This is the "setup" cost incurred when you call `generate_forward_trampoline` or
 
 **This is the "expensive" part of the process.** To make it as fast as possible, infix uses an internal arena allocator (`arena.c`) for all temporary data needed during generation. This avoids thousands of small `malloc` calls, making the process much faster than a naive implementation.
 
-You can measure this cost by running the benchmark in `tests/903_generation_benchmark.c`, which creates and destroys thousands of trampolines in a loop.
+You can measure this cost by running the benchmark in `t/900_benchmarks/903_generation_benchmark.c`, which creates and destroys thousands of trampolines in a loop.
 
 #### 2. Call Time
 
@@ -1502,7 +1504,7 @@ This is the recurring cost of actually *invoking* a function through an already-
 
 The overhead of calling through the trampoline versus calling the C function directly is extremely low. It consists of just a few extra instructions to load arguments from the `void** args` array into the correct registers before making the final native `call` or `blr` instruction.
 
-This overhead is typically measured in **single-digit nanoseconds** on modern hardware. You can measure this for your specific platform by running the microbenchmark in `tests/901_call_overhead.c`.
+This overhead is typically measured in **single-digit nanoseconds** on modern hardware. You can measure this for your specific platform by running the microbenchmark in `t/900_benchmarks/901_call_overhead.c`.
 
 ### Best Practice: Caching Trampolines
 
@@ -1523,7 +1525,7 @@ for (int i = 0; i < 1000000; ++i) {
 // Correct Pattern: Generate once, use many times.
 ffi_trampoline_t* t;
 generate_forward_trampoline(&t, ...);
-ffi_cif_func cif_func = ffi_trampoline_get_code(t);
+ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(t);
 
 for (int i = 0; i < 1000000; ++i) {
     // VERY FAST: Re-using the same highly-optimized trampoline.
@@ -1549,8 +1551,8 @@ By amortizing the one-time generation cost over millions of calls, the FFI overh
 ```c
 // WRONG:
 int my_int = 42;
-void* args[] = { (void*)my_int }; // This passes the value 42 as if it were a memory
-                                 // address, which will almost certainly crash.
+void* args[] = { (void*)(intptr_t)my_int }; // This passes the value 42 as if it were a memory
+                                           // address, which will almost certainly crash.
 
 // CORRECT:
 int my_int = 42;
@@ -1644,7 +1646,7 @@ ffi_type* map_hll_type_to_ffi_type(HLL_TypeObject* hll_type) {
 **Pseudo-code for a Trampoline Cache:**
 ```c
 // A global hash map or dictionary.
-// Key: A string representing the function signature (e.g., "i(pd)").
+// Key: A string representing the function signature (e.g., "i,p,d=>i").
 // Value: The ffi_trampoline_t*.
 static TrampolineCache* g_trampoline_cache = create_cache();
 
@@ -1709,7 +1711,7 @@ void python_callback_bridge(ffi_reverse_trampoline_t* context, void* ret_ptr, vo
     PyGILState_STATE gstate = PyGILState_Ensure();
 
     // 2. Retrieve the Python function object from user_data.
-    PyObject* py_callback = (PyObject*)context->user_data;
+    PyObject* py_callback = (PyObject*)ffi_reverse_trampoline_get_user_data(context);
 
     // 3. Convert the C arguments from the `args` array into Python objects (PyObject*).
     PyObject* py_args = convert_c_args_to_python_tuple(context->arg_types, context->num_args, args);
@@ -1785,8 +1787,8 @@ Now, let's achieve the exact same result with the Signature API.
 // --- Using the Signature API ---
 
 // 1. Describe the ENTIRE signature in one readable string.
-// c* = void*, y = size_t (uint64), (c*c*=>i) = the function pointer
-const char* signature = "c*yy(c*c*=>i) => v";
+// c* = void*, y = size_t (uint64), (c*,c*=>i) = the function pointer
+const char* signature = "c*,y,y,(c*,c*=>i)=>v";
 
 // 2. Generate the trampoline.
 ffi_trampoline_t* ft = NULL;
@@ -1824,11 +1826,11 @@ def _get_signature_string_from_ctypes(restype, argtypes):
 
     ret_part = type_map.get(restype, 'v')
 
-    return f"{' '.join(arg_parts)} => {ret_part}"
+    return f"{','.join(arg_parts)}=>{ret_part}"
 
 # Example Usage:
 # signature = _get_signature_string_from_ctypes(ctypes.c_int, [ctypes.c_int, ctypes.c_int])
-# print(signature)  # Output: "i i => i"
+# print(signature)  # Output: "i,i=>i"
 ```
 
 #### Pillar 2: Trampoline Caching
@@ -1838,7 +1840,7 @@ def _get_signature_string_from_ctypes(restype, argtypes):
 **The Signature API Solution**: The signature string itself becomes the perfect, human-readable key for your trampoline cache.
 
 **Conceptual C/C++ Binding Code:**
-```c
+```c++
 #include <map>
 #include <string>
 #include "infix.h"

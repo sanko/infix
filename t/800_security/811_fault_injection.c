@@ -46,6 +46,7 @@
 #include <double_tap.h>
 #include <infix.h>
 #include <stddef.h>
+#include <stdlib.h>
 // Platform-specific headers for thread-safe locking
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
@@ -96,17 +97,15 @@ void * test_malloc(size_t size) {
     void * r = NULL;
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
-        if (allocation_counter >= allocation_countdown) {
+        if (allocation_counter >= allocation_countdown)
             fault_triggered = true;  // Fail this allocation
-        }
         else {
             allocation_counter++;
             r = malloc(size);
         }
     }
-    else {
+    else
         r = malloc(size);
-    }
     ALLOCATOR_UNLOCK();
     return r;
 }
@@ -114,17 +113,15 @@ void * test_calloc(size_t num, size_t size) {
     void * r = NULL;
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
-        if (allocation_counter >= allocation_countdown) {
+        if (allocation_counter >= allocation_countdown)
             fault_triggered = true;
-        }
         else {
             allocation_counter++;
             r = calloc(num, size);
         }
     }
-    else {
+    else
         r = calloc(num, size);
-    }
     ALLOCATOR_UNLOCK();
     return r;
 }
@@ -135,25 +132,23 @@ void * test_realloc(void * ptr, size_t new_size) {
     void * r = NULL;
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
-        if (allocation_counter >= allocation_countdown) {
+        if (allocation_counter >= allocation_countdown)
             fault_triggered = true;
-        }
         else {
             allocation_counter++;
             r = realloc(ptr, new_size);
         }
     }
-    else {
+    else
         r = realloc(ptr, new_size);
-    }
     ALLOCATOR_UNLOCK();
     return r;
 }
+
 // Dummy handler for trampoline generation.
 void fault_injection_handler(int a) {
     (void)a;
 }
-
 
 TEST {
     plan(2);
@@ -175,25 +170,23 @@ TEST {
             ffi_status status =
                 generate_reverse_trampoline(&rt, ret_type, arg_types, 1, 1, (void *)fault_injection_handler, NULL);
 
-            if (fault_triggered) {
+            if (fault_triggered)
                 ok(status == FFI_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
-            }
             else {
                 // If we get here, it means we succeeded without triggering a fault.
                 // We have now found the exact number of allocations required.
                 // We can now skip the remaining tests in this loop.
                 success_was_reached = true;
                 pass("Successfully created trampoline with %d allocations.", i);
-                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j) {
+                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found, skipping further fault injections.");
-                }
+
                 ffi_reverse_trampoline_free(rt);
                 break;
             }
         }
-        if (!success_was_reached) {
+        if (!success_was_reached)
             fail("Test loop finished without ever succeeding, which may indicate an issue.");
-        }
         reset_fault_injector();
     }
 
@@ -248,14 +241,13 @@ TEST {
             success_was_reached = true;
             pass("Successfully created complex type with %d allocations.", i);
             ffi_type_destroy(final_type);
-            for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j) {
+            for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                 skip(1, "Success point found.");
-            }
             break;
         }
-        if (!success_was_reached) {
+        if (!success_was_reached)
             fail("Type creation test loop finished without ever succeeding.");
-        }
+
         reset_fault_injector();
     }
 }

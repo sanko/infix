@@ -29,7 +29,7 @@
  * ownership model to prevent leaks in error-handling paths.
  */
 
-#include <infix.h>
+#include <infix_internals.h>
 #include <limits.h>  // For SIZE_MAX
 #include <stdio.h>
 #include <stdlib.h>

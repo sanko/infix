@@ -25,7 +25,7 @@
  * for use with potentially untrusted inputs from the fuzzing harnesses.
  */
 
-#include <infix.h>
+#include <infix_internals.h>
 #include <stdint.h>  // For uintptr_t
 #include <stdlib.h>
 #include <string.h>  // For memset

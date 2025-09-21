@@ -282,7 +282,7 @@ TEST {
 
         if (rt) {
             typedef int (*ManyArgsCallback)(int, double, int, const char *, Point, float);
-            execute_many_args_callback((ManyArgsCallback)rt->exec_code.rx_ptr);
+            execute_many_args_callback((ManyArgsCallback)ffi_reverse_trampoline_get_code(rt));
         }
         else {
             skip(1, "Test skipped");

@@ -1118,9 +1118,9 @@ sub generate_tap_test_case {
             ", (void *)" .
             $target_func_name .
             ", NULL);\n";
-        $harness_c .= "        ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, \"Reverse trampoline created\");\n\n";
-        $harness_c .= "        if (rt && rt->exec_code.rx_ptr) {\n";
-        $harness_c .= "            " . $func_ptr_decl_str . " = (" . $func_ptr_cast_str . ")rt->exec_code.rx_ptr;\n";
+        $harness_c .= "        ok(status == FFI_SUCCESS && rt, \"Reverse trampoline created\");\n\n";
+        $harness_c .= "        if (rt) {\n";
+        $harness_c .= "            " . $func_ptr_decl_str . " = (" . $func_ptr_cast_str . ")ffi_reverse_trampoline_get_code(rt);\n";
         $harness_c .= "            caller_func_" . $index . "(func_ptr);\n";
         $harness_c .= "        }\n";
         $harness_c .= "        else {\n";

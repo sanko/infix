@@ -40,7 +40,6 @@
 #endif
 
 #include <assert.h>
-#include <infix.h>
 #include <infix_internals.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,9 +64,10 @@
  * JIT-compiled trampoline code. It is defined here in the implementation file
  * to keep it opaque in the public API (`infix.h`).
  */
-struct ffi_trampoline_handle_t {
-    ffi_executable_t exec;
-};
+// This was removed because it is already defined in infix_internals.h
+// struct ffi_trampoline_handle_t {
+//    ffi_executable_t exec;
+// };
 
 // ABI Specification Declarations
 // These extern declarations link to the ABI-specific v-tables defined in files
@@ -180,24 +180,6 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
     }
     infix_memcpy(buf->code + buf->size, data, len);
     buf->size += len;
-}
-
-/**
- * @brief Frees the memory allocated for a code buffer.
- * @details Since the buffer is allocated from an arena, this becomes a no-op. The
- *          arena's destruction will handle cleanup. The function is kept for API
- *          consistency.
- * @param buf A pointer to the `code_buffer` to free.
- */
-void code_buffer_free(code_buffer * buf) {
-    // No-op: memory is managed by the arena.
-    if (buf) {
-        buf->code = nullptr;
-        buf->size = 0;
-        buf->capacity = 0;
-        buf->error = false;
-        buf->arena = nullptr;
-    }
 }
 
 /**
@@ -497,16 +479,16 @@ c23_nodiscard ffi_status generate_reverse_trampoline(ffi_reverse_trampoline_t **
         goto cleanup;
     }
 
-    context->exec_code = ffi_executable_alloc(buf.size);
-    if (context->exec_code.rw_ptr == nullptr) {
+    context->exec = ffi_executable_alloc(buf.size);
+    if (context->exec.rw_ptr == nullptr) {
         status = FFI_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
 
-    infix_memcpy(context->exec_code.rw_ptr, buf.code, buf.size);
+    infix_memcpy(context->exec.rw_ptr, buf.code, buf.size);
     size_t code_size = buf.size;
 
-    if (!ffi_executable_make_executable(context->exec_code)) {
+    if (!ffi_executable_make_executable(context->exec)) {
         status = FFI_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -517,7 +499,7 @@ c23_nodiscard ffi_status generate_reverse_trampoline(ffi_reverse_trampoline_t **
     }
 
     FFI_DEBUG_PRINTF("Hardened reverse trampoline context at %p to be read-only.", (void *)context);
-    DumpHex(context->exec_code.rx_ptr, code_size, "Reverse Trampoline Machine Code");
+    DumpHex(context->exec.rx_ptr, code_size, "Reverse Trampoline Machine Code");
 
     *out_context = context;
 
@@ -532,6 +514,28 @@ cleanup:
 }
 
 /**
+ * @brief Retrieves the executable code pointer from a reverse trampoline.
+ * @param trampoline A handle to a previously created reverse trampoline.
+ * @return A callable function pointer of type `ffi_cif_func`. Returns `nullptr` if the handle is invalid.
+ */
+c23_nodiscard void * ffi_reverse_trampoline_get_code(const ffi_reverse_trampoline_t * reverse_trampoline) {
+    if (reverse_trampoline == nullptr)
+        return nullptr;
+    return reverse_trampoline->exec.rx_ptr;
+}
+
+/**
+ * @brief Retrieves the user_data stored with a reverse trampoline.
+ * @param trampoline A handle to opaque user_data.
+ * @return Opaque pointer. Returns `nullptr` if the handle is invalid.
+ */
+c23_nodiscard void * ffi_reverse_trampoline_get_user_data(const ffi_reverse_trampoline_t * reverse_trampoline) {
+    if (reverse_trampoline == nullptr)
+        return nullptr;
+    return reverse_trampoline->user_data;
+}
+
+/**
  * @brief Frees a reverse trampoline, its JIT-compiled stub, and its context.
  * @details This function safely cleans up all resources associated with a reverse
  *          trampoline, including the cached forward trampoline, the executable stub,
@@ -543,7 +547,7 @@ void ffi_reverse_trampoline_free(ffi_reverse_trampoline_t * reverse_trampoline) 
         return;
     if (reverse_trampoline->cached_forward_trampoline)
         ffi_trampoline_free(reverse_trampoline->cached_forward_trampoline);
-    ffi_executable_free(reverse_trampoline->exec_code);
+    ffi_executable_free(reverse_trampoline->exec);
     ffi_protected_free(reverse_trampoline->protected_ctx);
 }
 

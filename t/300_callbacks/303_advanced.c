@@ -98,7 +98,6 @@ int call_returned_callback_harness(callback_provider provider, int val) {
     return worker_cb(val);
 }
 
-
 TEST {
     plan(3);
 
@@ -113,11 +112,11 @@ TEST {
 
         if (rt) {
             int my_value = 100;
-            execute_pointer_modify_callback((void (*)(int *))rt->exec_code.rx_ptr, &my_value);
+            execute_pointer_modify_callback((void (*)(int *))ffi_reverse_trampoline_get_code(rt), &my_value);
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
+
         ffi_reverse_trampoline_free(rt);
     }
 
@@ -138,14 +137,13 @@ TEST {
 
         // 3. Execute the call
         if (inner_rt && fwd_trampoline) {
-            void * callback_ptr_arg = inner_rt->exec_code.rx_ptr;
+            void * callback_ptr_arg = ffi_reverse_trampoline_get_code(inner_rt);
             void * args[] = {&callback_ptr_arg};
             ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(fwd_trampoline);
             cif((void *)execute_callback_as_arg_harness, NULL, args);
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
 
         ffi_reverse_trampoline_free(inner_rt);
         ffi_trampoline_free(fwd_trampoline);
@@ -169,18 +167,18 @@ TEST {
         // 2. Create the provider callback: void*(void)
         // Store the function pointer of the inner callback in the provider's user_data.
         ffi_reverse_trampoline_t * provider_t = NULL;
-        void * user_data_ptr = inner_t ? inner_t->exec_code.rx_ptr : NULL;
+        void * user_data_ptr = inner_t ? ffi_reverse_trampoline_get_code(inner_t) : NULL;
         status = generate_reverse_trampoline(&provider_t, ffi_type_create_pointer(), NULL, 0, 0, NULL, user_data_ptr);
         ok(status == FFI_SUCCESS, "Provider callback created");
 
         // 3. Call the harness that uses the provider
         if (inner_t && provider_t) {
-            int result = call_returned_callback_harness((callback_provider)provider_t->exec_code.rx_ptr, 7);
+            int result =
+                call_returned_callback_harness((callback_provider)ffi_reverse_trampoline_get_code(provider_t), 7);
             ok(result == 70, "Callback returned from another callback works correctly (7 * 10 = 70)");
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
 
         ffi_reverse_trampoline_free(provider_t);
         ffi_reverse_trampoline_free(inner_t);

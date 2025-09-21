@@ -58,7 +58,7 @@
 
 #include <abi_x64_common.h>
 #include <abi_x64_emitters.h>
-#include <infix.h>
+#include <infix_internals.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <utility.h>
@@ -407,7 +407,7 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
         }
 
         // If classification resulted in MEMORY, it must go on the stack.
-        if (!(num_classes == 1 && classes[0] == MEMORY)) {
+        if (num_classes > 0 && classes[0] != MEMORY) {
             // Step 2: Check for available registers
             size_t gpr_needed = 0, xmm_needed = 0;
             for (size_t j = 0; j < num_classes; ++j) {

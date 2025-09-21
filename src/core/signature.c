@@ -51,7 +51,7 @@
  */
 
 #include <ctype.h>
-#include <infix.h>
+#include <infix_internals.h>
 #include <stdlib.h>
 #include <string.h>
 

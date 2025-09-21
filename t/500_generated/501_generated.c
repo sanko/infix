@@ -4339,10 +4339,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_0, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                int (*func_ptr)(int) = (int (*)(int))rt->exec_code.rx_ptr;
+            if (rt) {
+                int (*func_ptr)(int) = (int (*)(int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_0(func_ptr);
             }
             else {
@@ -4400,10 +4400,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_1, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                double (*func_ptr)(double) = (double (*)(double))rt->exec_code.rx_ptr;
+            if (rt) {
+                double (*func_ptr)(double) = (double (*)(double))ffi_reverse_trampoline_get_code(rt);
                 caller_func_1(func_ptr);
             }
             else {
@@ -4461,10 +4461,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_2, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                float (*func_ptr)(float) = (float (*)(float))rt->exec_code.rx_ptr;
+            if (rt) {
+                float (*func_ptr)(float) = (float (*)(float))ffi_reverse_trampoline_get_code(rt);
                 caller_func_2(func_ptr);
             }
             else {
@@ -4522,10 +4522,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_3, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                char (*func_ptr)(char) = (char (*)(char))rt->exec_code.rx_ptr;
+            if (rt) {
+                char (*func_ptr)(char) = (char (*)(char))ffi_reverse_trampoline_get_code(rt);
                 caller_func_3(func_ptr);
             }
             else {
@@ -4583,10 +4583,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_4, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                short (*func_ptr)(short) = (short (*)(short))rt->exec_code.rx_ptr;
+            if (rt) {
+                short (*func_ptr)(short) = (short (*)(short))ffi_reverse_trampoline_get_code(rt);
                 caller_func_4(func_ptr);
             }
             else {
@@ -4644,10 +4644,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_5, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                long long (*func_ptr)(long long) = (long long (*)(long long))rt->exec_code.rx_ptr;
+            if (rt) {
+                long long (*func_ptr)(long long) = (long long (*)(long long))ffi_reverse_trampoline_get_code(rt);
                 caller_func_5(func_ptr);
             }
             else {
@@ -4705,10 +4705,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_6, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned int (*func_ptr)(unsigned int) = (unsigned int (*)(unsigned int))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned int (*func_ptr)(unsigned int) =
+                    (unsigned int (*)(unsigned int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_6(func_ptr);
             }
             else {
@@ -4766,10 +4767,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_7, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned char (*func_ptr)(unsigned char) = (unsigned char (*)(unsigned char))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned char (*func_ptr)(unsigned char) =
+                    (unsigned char (*)(unsigned char))ffi_reverse_trampoline_get_code(rt);
                 caller_func_7(func_ptr);
             }
             else {
@@ -4827,10 +4829,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_8, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned short (*func_ptr)(unsigned short) = (unsigned short (*)(unsigned short))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned short (*func_ptr)(unsigned short) =
+                    (unsigned short (*)(unsigned short))ffi_reverse_trampoline_get_code(rt);
                 caller_func_8(func_ptr);
             }
             else {
@@ -4888,11 +4891,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_9, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 unsigned long long (*func_ptr)(unsigned long long) =
-                    (unsigned long long (*)(unsigned long long))rt->exec_code.rx_ptr;
+                    (unsigned long long (*)(unsigned long long))ffi_reverse_trampoline_get_code(rt);
                 caller_func_9(func_ptr);
             }
             else {
@@ -4950,10 +4953,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_10, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned long (*func_ptr)(unsigned long) = (unsigned long (*)(unsigned long))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned long (*func_ptr)(unsigned long) =
+                    (unsigned long (*)(unsigned long))ffi_reverse_trampoline_get_code(rt);
                 caller_func_10(func_ptr);
             }
             else {
@@ -5011,10 +5015,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_11, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                signed char (*func_ptr)(signed char) = (signed char (*)(signed char))rt->exec_code.rx_ptr;
+            if (rt) {
+                signed char (*func_ptr)(signed char) =
+                    (signed char (*)(signed char))ffi_reverse_trampoline_get_code(rt);
                 caller_func_11(func_ptr);
             }
             else {
@@ -5072,10 +5077,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_12, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                long double (*func_ptr)(long double) = (long double (*)(long double))rt->exec_code.rx_ptr;
+            if (rt) {
+                long double (*func_ptr)(long double) =
+                    (long double (*)(long double))ffi_reverse_trampoline_get_code(rt);
                 caller_func_12(func_ptr);
             }
             else {
@@ -5133,10 +5139,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_13, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                bool (*func_ptr)(bool) = (bool (*)(bool))rt->exec_code.rx_ptr;
+            if (rt) {
+                bool (*func_ptr)(bool) = (bool (*)(bool))ffi_reverse_trampoline_get_code(rt);
                 caller_func_13(func_ptr);
             }
             else {
@@ -5214,10 +5220,10 @@ TEST {
             _ffi_type_0 = ffi_type_create_void();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_0, NULL, 0, 0, (void *)reverse_target_func_16, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(void) = (void (*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(void) = (void (*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_16(func_ptr);
             }
             else {
@@ -5277,10 +5283,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_17, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(int) = (void (*)(int))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(int) = (void (*)(int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_17(func_ptr);
             }
             else {
@@ -5334,10 +5340,10 @@ TEST {
             _ffi_type_0 = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_0, NULL, 0, 0, (void *)reverse_target_func_18, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                int (*func_ptr)(void) = (int (*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                int (*func_ptr)(void) = (int (*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_18(func_ptr);
             }
             else {
@@ -5399,10 +5405,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_19, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                char * (*func_ptr)(char *) = (char * (*)(char *))rt->exec_code.rx_ptr;
+            if (rt) {
+                char * (*func_ptr)(char *) = (char * (*)(char *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_19(func_ptr);
             }
             else {
@@ -5464,10 +5470,10 @@ TEST {
             _ffi_type_2 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_2, NULL, 0, 0, (void *)reverse_target_func_20, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                int ** (*func_ptr)(void) = (int ** (*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                int ** (*func_ptr)(void) = (int ** (*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_20(func_ptr);
             }
             else {
@@ -5533,10 +5539,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_2, arg_types, 1, 1, (void *)reverse_target_func_21, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                long long ** (*func_ptr)(long long **) = (long long ** (*)(long long **))rt->exec_code.rx_ptr;
+            if (rt) {
+                long long ** (*func_ptr)(long long **) =
+                    (long long ** (*)(long long **))ffi_reverse_trampoline_get_code(rt);
                 caller_func_21(func_ptr);
             }
             else {
@@ -5604,10 +5611,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_22, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(void ***) = (void (*)(void ***))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(void ***) = (void (*)(void ***))ffi_reverse_trampoline_get_code(rt);
                 caller_func_22(func_ptr);
             }
             else {
@@ -5665,10 +5672,10 @@ TEST {
             _ffi_type_1 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_1, NULL, 0, 0, (void *)reverse_target_func_23, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                signed char * (*func_ptr)(void) = (signed char * (*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                signed char * (*func_ptr)(void) = (signed char * (*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_23(func_ptr);
             }
             else {
@@ -5738,10 +5745,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_24, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                short * (*func_ptr)(bool *) = (short * (*)(bool *))rt->exec_code.rx_ptr;
+            if (rt) {
+                short * (*func_ptr)(bool *) = (short * (*)(bool *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_24(func_ptr);
             }
             else {
@@ -5811,11 +5818,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_25, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 unsigned char * (*func_ptr)(unsigned short *) =
-                    (unsigned char * (*)(unsigned short *))rt->exec_code.rx_ptr;
+                    (unsigned char * (*)(unsigned short *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_25(func_ptr);
             }
             else {
@@ -5885,10 +5892,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_26, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                int * (*func_ptr)(unsigned int *) = (int * (*)(unsigned int *))rt->exec_code.rx_ptr;
+            if (rt) {
+                int * (*func_ptr)(unsigned int *) = (int * (*)(unsigned int *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_26(func_ptr);
             }
             else {
@@ -5958,10 +5965,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_27, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned long * (*func_ptr)(long *) = (unsigned long * (*)(long *))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned long * (*func_ptr)(long *) = (unsigned long * (*)(long *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_27(func_ptr);
             }
             else {
@@ -6031,11 +6038,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_28, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 unsigned long long * (*func_ptr)(long long *) =
-                    (unsigned long long * (*)(long long *))rt->exec_code.rx_ptr;
+                    (unsigned long long * (*)(long long *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_28(func_ptr);
             }
             else {
@@ -6118,10 +6125,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_30, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                double * (*func_ptr)(float *) = (double * (*)(float *))rt->exec_code.rx_ptr;
+            if (rt) {
+                double * (*func_ptr)(float *) = (double * (*)(float *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_30(func_ptr);
             }
             else {
@@ -6191,10 +6198,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_31, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void * (*func_ptr)(long double *) = (void * (*)(long double *))rt->exec_code.rx_ptr;
+            if (rt) {
+                void * (*func_ptr)(long double *) = (void * (*)(long double *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_31(func_ptr);
             }
             else {
@@ -6288,11 +6295,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_2, arg_types, 1, 1, (void *)reverse_target_func_32, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_c_s_ (*func_ptr)(_struct_t_struct_i_j_) =
-                    (_struct_t_struct_c_s_(*)(_struct_t_struct_i_j_))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_c_s_(*)(_struct_t_struct_i_j_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_32(func_ptr);
             }
             else {
@@ -6389,11 +6396,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_33, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_d_d_d_d_ (*func_ptr)(_struct_t_struct_x_x_x_x_) =
-                    (_struct_t_struct_d_d_d_d_(*)(_struct_t_struct_x_x_x_x_))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_d_d_d_d_(*)(_struct_t_struct_x_x_x_x_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_33(func_ptr);
             }
             else {
@@ -6495,11 +6502,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_3, arg_types, 1, 1, (void *)reverse_target_func_34, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_c_s_ * (*func_ptr)(_struct_t_struct_i_j_ *) =
-                    (_struct_t_struct_c_s_ * (*)(_struct_t_struct_i_j_ *)) rt->exec_code.rx_ptr;
+                    (_struct_t_struct_c_s_ * (*)(_struct_t_struct_i_j_ *)) ffi_reverse_trampoline_get_code(rt);
                 caller_func_34(func_ptr);
             }
             else {
@@ -6592,10 +6599,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_35, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_i__d_x__) = (void (*)(_struct_t_struct_i__d_x__))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_i__d_x__) =
+                    (void (*)(_struct_t_struct_i__d_x__))ffi_reverse_trampoline_get_code(rt);
                 caller_func_35(func_ptr);
             }
             else {
@@ -6693,11 +6701,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Struct type '{c;{i;j[2]};s}' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_6, NULL, 0, 0, (void *)reverse_target_func_36, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_c__i_j_2___s_ (*func_ptr)(void) =
-                    (_struct_t_struct_c__i_j_2___s_(*)(void))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_c__i_j_2___s_(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_36(func_ptr);
             }
             else {
@@ -6797,11 +6805,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_37, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void * (*func_ptr)(_struct_t_struct_i__c___ *) =
-                    (void * (*)(_struct_t_struct_i__c___ *))rt->exec_code.rx_ptr;
+                    (void * (*)(_struct_t_struct_i__c___ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_37(func_ptr);
             }
             else {
@@ -6888,10 +6896,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_38, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_i_4__c__) = (void (*)(_struct_t_struct_i_4__c__))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_i_4__c__) =
+                    (void (*)(_struct_t_struct_i_4__c__))ffi_reverse_trampoline_get_code(rt);
                 caller_func_38(func_ptr);
             }
             else {
@@ -6971,10 +6980,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Struct type '{d[2];j*}' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_4, NULL, 0, 0, (void *)reverse_target_func_39, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                _struct_t_struct_d_2__j__ (*func_ptr)(void) = (_struct_t_struct_d_2__j__(*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                _struct_t_struct_d_2__j__ (*func_ptr)(void) =
+                    (_struct_t_struct_d_2__j__(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_39(func_ptr);
             }
             else {
@@ -7072,11 +7082,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_40, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 int (*func_ptr)(_struct_t_struct_i_j_8__c___ *) =
-                    (int (*)(_struct_t_struct_i_j_8__c___ *))rt->exec_code.rx_ptr;
+                    (int (*)(_struct_t_struct_i_j_8__c___ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_40(func_ptr);
             }
             else {
@@ -7160,11 +7170,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_41, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_c_i_) =
-                    (void (*)(_packed_struct_t_packed_struct_c_i_))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_c_i_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_41(func_ptr);
             }
             else {
@@ -7242,11 +7252,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Packed_struct type 'p{c;x}' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_2, NULL, 0, 0, (void *)reverse_target_func_42, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _packed_struct_t_packed_struct_c_x_ (*func_ptr)(void) =
-                    (_packed_struct_t_packed_struct_c_x_(*)(void))rt->exec_code.rx_ptr;
+                    (_packed_struct_t_packed_struct_c_x_(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_42(func_ptr);
             }
             else {
@@ -7360,12 +7370,12 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_5, arg_types, 1, 1, (void *)reverse_target_func_43, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _packed_struct_t_packed_struct_c_s_i_l_x_ (*func_ptr)(_packed_struct_t_packed_struct_c_s_i_l_x_) =
                     (_packed_struct_t_packed_struct_c_s_i_l_x_(*)(
-                        _packed_struct_t_packed_struct_c_s_i_l_x_))rt->exec_code.rx_ptr;
+                        _packed_struct_t_packed_struct_c_s_i_l_x_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_43(func_ptr);
             }
             else {
@@ -7453,11 +7463,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_44, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_c_i_ *) =
-                    (void (*)(_packed_struct_t_packed_struct_c_i_ *))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_c_i_ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_44(func_ptr);
             }
             else {
@@ -7539,11 +7549,11 @@ TEST {
             _ffi_type_3 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_3, NULL, 0, 0, (void *)reverse_target_func_45, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _packed_struct_t_packed_struct_c_x_ * (*func_ptr)(void) =
-                    (_packed_struct_t_packed_struct_c_x_ * (*)(void)) rt->exec_code.rx_ptr;
+                    (_packed_struct_t_packed_struct_c_x_ * (*)(void)) ffi_reverse_trampoline_get_code(rt);
                 caller_func_45(func_ptr);
             }
             else {
@@ -7664,11 +7674,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_46, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_s_p_c_i__h_) =
-                    (void (*)(_packed_struct_t_packed_struct_s_p_c_i__h_))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_s_p_c_i__h_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_46(func_ptr);
             }
             else {
@@ -7774,11 +7784,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Packed_struct type 'p{c;p{s;d}}' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_4, NULL, 0, 0, (void *)reverse_target_func_47, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _packed_struct_t_packed_struct_c_p_s_d__ (*func_ptr)(void) =
-                    (_packed_struct_t_packed_struct_c_p_s_d__(*)(void))rt->exec_code.rx_ptr;
+                    (_packed_struct_t_packed_struct_c_p_s_d__(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_47(func_ptr);
             }
             else {
@@ -7891,11 +7901,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_48, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_c__i_d__s_) =
-                    (void (*)(_packed_struct_t_packed_struct_c__i_d__s_))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_c__i_d__s_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_48(func_ptr);
             }
             else {
@@ -8002,11 +8012,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_49, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_struct_t_struct_i_p_c_s__j_) =
-                    (void (*)(_struct_t_struct_i_p_c_s__j_))rt->exec_code.rx_ptr;
+                    (void (*)(_struct_t_struct_i_p_c_s__j_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_49(func_ptr);
             }
             else {
@@ -8088,11 +8098,11 @@ TEST {
             _ffi_type_3 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_3, NULL, 0, 0, (void *)reverse_target_func_50, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _packed_struct_t_packed_struct_j_d_ * (*func_ptr)(void) =
-                    (_packed_struct_t_packed_struct_j_d_ * (*)(void)) rt->exec_code.rx_ptr;
+                    (_packed_struct_t_packed_struct_j_d_ * (*)(void)) ffi_reverse_trampoline_get_code(rt);
                 caller_func_50(func_ptr);
             }
             else {
@@ -8184,11 +8194,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_51, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_c_s_ **) =
-                    (void (*)(_packed_struct_t_packed_struct_c_s_ **))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_c_s_ **))ffi_reverse_trampoline_get_code(rt);
                 caller_func_51(func_ptr);
             }
             else {
@@ -8294,11 +8304,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_3, arg_types, 1, 1, (void *)reverse_target_func_52, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _union_t_union_l_x_e_ (*func_ptr)(_union_t_union_i_f_d_) =
-                    (_union_t_union_l_x_e_(*)(_union_t_union_i_f_d_))rt->exec_code.rx_ptr;
+                    (_union_t_union_l_x_e_(*)(_union_t_union_i_f_d_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_52(func_ptr);
             }
             else {
@@ -8412,11 +8422,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_4, arg_types, 1, 1, (void *)reverse_target_func_53, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _union_t_union_l_x_e_ * (*func_ptr)(_union_t_union_i_f_d_ *) =
-                    (_union_t_union_l_x_e_ * (*)(_union_t_union_i_f_d_ *)) rt->exec_code.rx_ptr;
+                    (_union_t_union_l_x_e_ * (*)(_union_t_union_i_f_d_ *)) ffi_reverse_trampoline_get_code(rt);
                 caller_func_53(func_ptr);
             }
             else {
@@ -8508,10 +8518,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_54, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_union_t_union__i_j__d_) = (void (*)(_union_t_union__i_j__d_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_union_t_union__i_j__d_) =
+                    (void (*)(_union_t_union__i_j__d_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_54(func_ptr);
             }
             else {
@@ -8591,10 +8602,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Union type '<i[4];c*>' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_4, NULL, 0, 0, (void *)reverse_target_func_55, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                _union_t_union_i_4__c__ (*func_ptr)(void) = (_union_t_union_i_4__c__(*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                _union_t_union_i_4__c__ (*func_ptr)(void) =
+                    (_union_t_union_i_4__c__(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_55(func_ptr);
             }
             else {
@@ -8714,11 +8726,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_56, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_union_t_union_p_c_i___d_f__ *) =
-                    (void (*)(_union_t_union_p_c_i___d_f__ *))rt->exec_code.rx_ptr;
+                    (void (*)(_union_t_union_p_c_i___d_f__ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_56(func_ptr);
             }
             else {
@@ -8793,10 +8805,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_57, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_arr_wrap_t_i_10_) = (void (*)(_arr_wrap_t_i_10_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_arr_wrap_t_i_10_) = (void (*)(_arr_wrap_t_i_10_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_57(func_ptr);
             }
             else {
@@ -8856,10 +8868,10 @@ TEST {
             ok(status == FFI_SUCCESS, "Array type 'd[4]' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_1, NULL, 0, 0, (void *)reverse_target_func_58, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                _arr_wrap_t_d_4_ (*func_ptr)(void) = (_arr_wrap_t_d_4_(*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                _arr_wrap_t_d_4_ (*func_ptr)(void) = (_arr_wrap_t_d_4_(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_58(func_ptr);
             }
             else {
@@ -8923,11 +8935,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_59, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _arr_wrap_t_e_2_ (*func_ptr)(_arr_wrap_t_e_2_) =
-                    (_arr_wrap_t_e_2_(*)(_arr_wrap_t_e_2_))rt->exec_code.rx_ptr;
+                    (_arr_wrap_t_e_2_(*)(_arr_wrap_t_e_2_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_59(func_ptr);
             }
             else {
@@ -8997,10 +9009,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_60, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_arr_wrap_t_i_10_ *) = (void (*)(_arr_wrap_t_i_10_ *))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_arr_wrap_t_i_10_ *) =
+                    (void (*)(_arr_wrap_t_i_10_ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_60(func_ptr);
             }
             else {
@@ -9064,10 +9077,11 @@ TEST {
             _ffi_type_2 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_2, NULL, 0, 0, (void *)reverse_target_func_61, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                _arr_wrap_t_d_4_ * (*func_ptr)(void) = (_arr_wrap_t_d_4_ * (*)(void)) rt->exec_code.rx_ptr;
+            if (rt) {
+                _arr_wrap_t_d_4_ * (*func_ptr)(void) =
+                    (_arr_wrap_t_d_4_ * (*)(void)) ffi_reverse_trampoline_get_code(rt);
                 caller_func_61(func_ptr);
             }
             else {
@@ -9153,11 +9167,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_62, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_arr_wrap_t_struct_i_j__4_) =
-                    (void (*)(_arr_wrap_t_struct_i_j__4_))rt->exec_code.rx_ptr;
+                    (void (*)(_arr_wrap_t_struct_i_j__4_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_62(func_ptr);
             }
             else {
@@ -9231,10 +9245,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Array type '{c*}[2]' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_3, NULL, 0, 0, (void *)reverse_target_func_63, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                _arr_wrap_t_struct_c___2_ (*func_ptr)(void) = (_arr_wrap_t_struct_c___2_(*)(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                _arr_wrap_t_struct_c___2_ (*func_ptr)(void) =
+                    (_arr_wrap_t_struct_c___2_(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_63(func_ptr);
             }
             else {
@@ -9332,11 +9347,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_64, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_arr_wrap_t_packed_struct_c_i__8_) =
-                    (void (*)(_arr_wrap_t_packed_struct_c_i__8_))rt->exec_code.rx_ptr;
+                    (void (*)(_arr_wrap_t_packed_struct_c_i__8_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_64(func_ptr);
             }
             else {
@@ -9420,11 +9435,11 @@ TEST {
             ok(status == FFI_SUCCESS, "Array type 'p{c;x}[4]' created");
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_3, NULL, 0, 0, (void *)reverse_target_func_65, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _arr_wrap_t_packed_struct_c_x__4_ (*func_ptr)(void) =
-                    (_arr_wrap_t_packed_struct_c_x__4_(*)(void))rt->exec_code.rx_ptr;
+                    (_arr_wrap_t_packed_struct_c_x__4_(*)(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_65(func_ptr);
             }
             else {
@@ -9519,11 +9534,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_66, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_arr_wrap_t_packed_struct_c_i___4_) =
-                    (void (*)(_arr_wrap_t_packed_struct_c_i___4_))rt->exec_code.rx_ptr;
+                    (void (*)(_arr_wrap_t_packed_struct_c_i___4_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_66(func_ptr);
             }
             else {
@@ -9591,10 +9606,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_67, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(unsigned int (*)(int)) = (void (*)(unsigned int (*)(int)))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(unsigned int (*)(int)) =
+                    (void (*)(unsigned int (*)(int)))ffi_reverse_trampoline_get_code(rt);
                 caller_func_67(func_ptr);
             }
             else {
@@ -9652,10 +9668,10 @@ TEST {
             _ffi_type_1 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_1, NULL, 0, 0, (void *)reverse_target_func_68, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*(*func_ptr)(void))(void) = (void (*(*)(void))(void))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*(*func_ptr)(void))(void) = (void (*(*)(void))(void))ffi_reverse_trampoline_get_code(rt);
                 caller_func_68(func_ptr);
             }
             else {
@@ -9725,11 +9741,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_69, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 int (*(*func_ptr)(unsigned int (*)(unsigned int)))(int) =
-                    (int (*(*)(unsigned int (*)(unsigned int)))(int))rt->exec_code.rx_ptr;
+                    (int (*(*)(unsigned int (*)(unsigned int)))(int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_69(func_ptr);
             }
             else {
@@ -9829,11 +9845,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_70, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_struct_t_struct_c_h_ (*)(_struct_t_struct_i_j_)) =
-                    (void (*)(_struct_t_struct_c_h_ (*)(_struct_t_struct_i_j_)))rt->exec_code.rx_ptr;
+                    (void (*)(_struct_t_struct_c_h_ (*)(_struct_t_struct_i_j_)))ffi_reverse_trampoline_get_code(rt);
                 caller_func_70(func_ptr);
             }
             else {
@@ -9927,11 +9943,11 @@ TEST {
             _ffi_type_6 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_6, NULL, 0, 0, (void *)reverse_target_func_71, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned int * (*(*func_ptr)(void))(_packed_struct_t_packed_struct_c_s_ *) =
-                    (unsigned int * (*(*)(void))(_packed_struct_t_packed_struct_c_s_ *))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned int * (*(*func_ptr)(void))(_packed_struct_t_packed_struct_c_s_ *) = (unsigned int * (
+                    *(*)(void))(_packed_struct_t_packed_struct_c_s_ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_71(func_ptr);
             }
             else {
@@ -10040,14 +10056,14 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_8, arg_types, 1, 1, (void *)reverse_target_func_72, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_c_h_ * (*(*func_ptr)(_struct_t_struct_c_h_ * (*)(_struct_t_struct_i_j_ *)))(
                     _struct_t_struct_i_j_ *) =
                     (_struct_t_struct_c_h_ *
                      (*(*)(_struct_t_struct_c_h_ * (*)(_struct_t_struct_i_j_ *)))(_struct_t_struct_i_j_ *))
-                        rt->exec_code.rx_ptr;
+                        ffi_reverse_trampoline_get_code(rt);
                 caller_func_72(func_ptr);
             }
             else {
@@ -10113,10 +10129,11 @@ TEST {
             _ffi_type_3 = ffi_type_create_pointer();
             ffi_reverse_trampoline_t * rt = NULL;
             status = generate_reverse_trampoline(&rt, _ffi_type_3, NULL, 0, 0, (void *)reverse_target_func_73, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                unsigned int (**(*func_ptr)(void))(int) = (unsigned int (**(*)(void))(int))rt->exec_code.rx_ptr;
+            if (rt) {
+                unsigned int (**(*func_ptr)(void))(int) =
+                    (unsigned int (**(*)(void))(int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_73(func_ptr);
             }
             else {
@@ -10210,11 +10227,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_74, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_struct_t_struct_i__d___v___j_) =
-                    (void (*)(_struct_t_struct_i__d___v___j_))rt->exec_code.rx_ptr;
+                    (void (*)(_struct_t_struct_i__d___v___j_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_74(func_ptr);
             }
             else {
@@ -10291,10 +10308,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 4, 1, (void *)reverse_target_func_75, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                int (*func_ptr)(char *, ...) = (int (*)(char *, ...))rt->exec_code.rx_ptr;
+            if (rt) {
+                int (*func_ptr)(char *, ...) = (int (*)(char *, ...))ffi_reverse_trampoline_get_code(rt);
                 caller_func_75(func_ptr);
             }
             else {
@@ -10369,10 +10386,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 4, 2, (void *)reverse_target_func_76, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(int, float, ...) = (void (*)(int, float, ...))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(int, float, ...) = (void (*)(int, float, ...))ffi_reverse_trampoline_get_code(rt);
                 caller_func_76(func_ptr);
             }
             else {
@@ -10467,10 +10484,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 4, 1, (void *)reverse_target_func_77, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(int, ...) = (void (*)(int, ...))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(int, ...) = (void (*)(int, ...))ffi_reverse_trampoline_get_code(rt);
                 caller_func_77(func_ptr);
             }
             else {
@@ -10568,10 +10585,10 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 3, 1, (void *)reverse_target_func_78, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(long, ...) = (void (*)(long, ...))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(long, ...) = (void (*)(long, ...))ffi_reverse_trampoline_get_code(rt);
                 caller_func_78(func_ptr);
             }
             else {
@@ -10639,11 +10656,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_79, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_f_ (*func_ptr)(_struct_t_struct_f_) =
-                    (_struct_t_struct_f_(*)(_struct_t_struct_f_))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_f_(*)(_struct_t_struct_f_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_79(func_ptr);
             }
             else {
@@ -10713,11 +10730,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_80, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_f_f_ (*func_ptr)(_struct_t_struct_f_f_) =
-                    (_struct_t_struct_f_f_(*)(_struct_t_struct_f_f_))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_f_f_(*)(_struct_t_struct_f_f_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_80(func_ptr);
             }
             else {
@@ -10787,11 +10804,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_81, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_d_d_ (*func_ptr)(_struct_t_struct_d_d_) =
-                    (_struct_t_struct_d_d_(*)(_struct_t_struct_d_d_))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_d_d_(*)(_struct_t_struct_d_d_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_81(func_ptr);
             }
             else {
@@ -10867,10 +10884,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_82, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_f_f_f_f_) = (void (*)(_struct_t_struct_f_f_f_f_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_f_f_f_f_) =
+                    (void (*)(_struct_t_struct_f_f_f_f_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_82(func_ptr);
             }
             else {
@@ -10946,10 +10964,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_83, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_d_d_d_d_) = (void (*)(_struct_t_struct_d_d_d_d_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_d_d_d_d_) =
+                    (void (*)(_struct_t_struct_d_d_d_d_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_83(func_ptr);
             }
             else {
@@ -11023,11 +11042,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_2, arg_types, 1, 1, (void *)reverse_target_func_84, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _struct_t_struct_i_f_ (*func_ptr)(_struct_t_struct_i_f_) =
-                    (_struct_t_struct_i_f_(*)(_struct_t_struct_i_f_))rt->exec_code.rx_ptr;
+                    (_struct_t_struct_i_f_(*)(_struct_t_struct_i_f_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_84(func_ptr);
             }
             else {
@@ -11103,10 +11122,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_85, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_f_i_) = (void (*)(_struct_t_struct_f_i_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_f_i_) =
+                    (void (*)(_struct_t_struct_f_i_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_85(func_ptr);
             }
             else {
@@ -11182,10 +11202,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_86, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_c_x_) = (void (*)(_struct_t_struct_c_x_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_c_x_) =
+                    (void (*)(_struct_t_struct_c_x_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_86(func_ptr);
             }
             else {
@@ -11261,10 +11282,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_87, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(_struct_t_struct_x_c_) = (void (*)(_struct_t_struct_x_c_))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(_struct_t_struct_x_c_) =
+                    (void (*)(_struct_t_struct_x_c_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_87(func_ptr);
             }
             else {
@@ -11349,11 +11371,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_88, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_c_x_) =
-                    (void (*)(_packed_struct_t_packed_struct_c_x_))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_c_x_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_88(func_ptr);
             }
             else {
@@ -11438,11 +11460,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 1, 1, (void *)reverse_target_func_89, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(_packed_struct_t_packed_struct_x_c_) =
-                    (void (*)(_packed_struct_t_packed_struct_x_c_))rt->exec_code.rx_ptr;
+                    (void (*)(_packed_struct_t_packed_struct_x_c_))ffi_reverse_trampoline_get_code(rt);
                 caller_func_89(func_ptr);
             }
             else {
@@ -11507,11 +11529,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 6, 6, (void *)reverse_target_func_90, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(int, int, int, int, int, int) =
-                    (void (*)(int, int, int, int, int, int))rt->exec_code.rx_ptr;
+                    (void (*)(int, int, int, int, int, int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_90(func_ptr);
             }
             else {
@@ -11579,11 +11601,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 7, 7, (void *)reverse_target_func_91, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(int, int, int, int, int, int, int) =
-                    (void (*)(int, int, int, int, int, int, int))rt->exec_code.rx_ptr;
+                    (void (*)(int, int, int, int, int, int, int))ffi_reverse_trampoline_get_code(rt);
                 caller_func_91(func_ptr);
             }
             else {
@@ -11652,11 +11674,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 6, 6, (void *)reverse_target_func_92, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(char *, char *, char *, char *, char *, char *) =
-                    (void (*)(char *, char *, char *, char *, char *, char *))rt->exec_code.rx_ptr;
+                    (void (*)(char *, char *, char *, char *, char *, char *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_92(func_ptr);
             }
             else {
@@ -11728,11 +11750,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 7, 7, (void *)reverse_target_func_93, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(char *, char *, char *, char *, char *, char *, char *) =
-                    (void (*)(char *, char *, char *, char *, char *, char *, char *))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(char *, char *, char *, char *, char *, char *, char *) = (void (*)(
+                    char *, char *, char *, char *, char *, char *, char *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_93(func_ptr);
             }
             else {
@@ -11801,11 +11823,11 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 8, 8, (void *)reverse_target_func_94, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(double, double, double, double, double, double, double, double) =
-                    (void (*)(double, double, double, double, double, double, double, double))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(double, double, double, double, double, double, double, double) = (void (*)(
+                    double, double, double, double, double, double, double, double))ffi_reverse_trampoline_get_code(rt);
                 caller_func_94(func_ptr);
             }
             else {
@@ -11889,11 +11911,12 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 9, 9, (void *)reverse_target_func_95, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
-                void (*func_ptr)(double, double, double, double, double, double, double, double, double) = (void (*)(
-                    double, double, double, double, double, double, double, double, double))rt->exec_code.rx_ptr;
+            if (rt) {
+                void (*func_ptr)(double, double, double, double, double, double, double, double, double) =
+                    (void (*)(double, double, double, double, double, double, double, double, double))
+                        ffi_reverse_trampoline_get_code(rt);
                 caller_func_95(func_ptr);
             }
             else {
@@ -12024,9 +12047,9 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_0, arg_types, 16, 16, (void *)reverse_target_func_96, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 void (*func_ptr)(int,
                                  int,
                                  int,
@@ -12057,7 +12080,7 @@ TEST {
                                                      float,
                                                      double,
                                                      double,
-                                                     double))rt->exec_code.rx_ptr;
+                                                     double))ffi_reverse_trampoline_get_code(rt);
                 caller_func_96(func_ptr);
             }
             else {
@@ -12212,12 +12235,12 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_1, arg_types, 1, 1, (void *)reverse_target_func_97, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _packed_struct_t_packed_struct_d_d_ (*func_ptr)(_struct_t_struct_i__p_c_s__4___v__v___ *) =
                     (_packed_struct_t_packed_struct_d_d_(*)(
-                        _struct_t_struct_i__p_c_s__4___v__v___ *))rt->exec_code.rx_ptr;
+                        _struct_t_struct_i__p_c_s__4___v__v___ *))ffi_reverse_trampoline_get_code(rt);
                 caller_func_97(func_ptr);
             }
             else {
@@ -12337,12 +12360,12 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_4, arg_types, 1, 1, (void *)reverse_target_func_98, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _arr_wrap_t_struct_x_y__4_ * (*func_ptr)(void (*)(_packed_struct_t_packed_struct_c_i_)) =
                     (_arr_wrap_t_struct_x_y__4_ * (*)(void (*)(_packed_struct_t_packed_struct_c_i_)))
-                        rt->exec_code.rx_ptr;
+                        ffi_reverse_trampoline_get_code(rt);
                 caller_func_98(func_ptr);
             }
             else {
@@ -12635,13 +12658,13 @@ TEST {
             ffi_reverse_trampoline_t * rt = NULL;
             status =
                 generate_reverse_trampoline(&rt, _ffi_type_21, arg_types, 1, 1, (void *)reverse_target_func_99, NULL);
-            ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+            ok(status == FFI_SUCCESS && rt, "Reverse trampoline created");
 
-            if (rt && rt->exec_code.rx_ptr) {
+            if (rt) {
                 _union_t_union__v__p_i_j_____c_d_e_f_p_a_b_h_s_t_i_j_l_m__2___ * (*func_ptr)(
                     _packed_struct_t_packed_struct_c_i_2___ *) =
                     (_union_t_union__v__p_i_j_____c_d_e_f_p_a_b_h_s_t_i_j_l_m__2___ *
-                     (*)(_packed_struct_t_packed_struct_c_i_2___ *)) rt->exec_code.rx_ptr;
+                     (*)(_packed_struct_t_packed_struct_c_i_2___ *)) ffi_reverse_trampoline_get_code(rt);
                 caller_func_99(func_ptr);
             }
             else {

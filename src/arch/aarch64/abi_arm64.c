@@ -61,9 +61,10 @@
  *     into five distinct steps for clarity and maintainability.
  */
 
+#include <infix_internals.h>
+//
 #include <abi_arm64_common.h>
-#include <assert.h>
-#include <infix.h>
+#include <abi_arm64_emitters.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

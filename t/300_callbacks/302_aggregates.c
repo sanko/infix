@@ -120,7 +120,7 @@ TEST {
         ok(status == FFI_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_point_callback((Point(*)(Point))rt->exec_code.rx_ptr, (Point){10.0, -5.0});
+            execute_point_callback((Point(*)(Point))ffi_reverse_trampoline_get_code(rt), (Point){10.0, -5.0});
         else
             skip(1, "Test skipped");
 
@@ -150,7 +150,7 @@ TEST {
         ok(status == FFI_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_large_struct_pass_callback((int (*)(LargeStruct))rt->exec_code.rx_ptr,
+            execute_large_struct_pass_callback((int (*)(LargeStruct))ffi_reverse_trampoline_get_code(rt),
                                                (LargeStruct){100, 0, 0, 0, 0, 25});
         else
             skip(1, "Test skipped");
@@ -181,7 +181,7 @@ TEST {
         ok(status == FFI_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_large_struct_return_callback((LargeStruct(*)(int))rt->exec_code.rx_ptr, 50);
+            execute_large_struct_return_callback((LargeStruct(*)(int))ffi_reverse_trampoline_get_code(rt), 50);
         else
             skip(1, "Test skipped");
 
@@ -216,7 +216,8 @@ TEST {
         ok(status == FFI_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_vector4_callback((int (*)(Vector4))rt->exec_code.rx_ptr, (Vector4){{4.0f, 6.0f, 8.0f, 12.0f}}, 30);
+            execute_vector4_callback(
+                (int (*)(Vector4))ffi_reverse_trampoline_get_code(rt), (Vector4){{4.0f, 6.0f, 8.0f, 12.0f}}, 30);
         else
             skip(1, "Test skipped");
 
@@ -245,7 +246,7 @@ TEST {
         ok(status == FFI_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_number_union_return_callback((Number(*)(float))rt->exec_code.rx_ptr, 3.14f);
+            execute_number_union_return_callback((Number(*)(float))ffi_reverse_trampoline_get_code(rt), 3.14f);
         else
             skip(1, "Test skipped");
 

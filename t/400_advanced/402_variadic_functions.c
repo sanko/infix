@@ -137,7 +137,6 @@ double win_variadic_float_checker(int fixed_arg, ...) {
 }
 #endif
 
-
 TEST {
     plan(4);
 
@@ -189,13 +188,12 @@ TEST {
 
         if (rt) {
             typedef int (*VariadicLogFunc)(const char *, ...);
-            VariadicLogFunc func_ptr = (VariadicLogFunc)rt->exec_code.rx_ptr;
+            VariadicLogFunc func_ptr = (VariadicLogFunc)ffi_reverse_trampoline_get_code(rt);
             int result = func_ptr("LOG", 42, 3.14, "Done");
             ok(result == 45, "Variadic callback returned correct sum (42 + 3)");
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
 
         ffi_reverse_trampoline_free(rt);
     }

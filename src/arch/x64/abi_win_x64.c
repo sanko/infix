@@ -44,9 +44,10 @@
 #pragma warning(disable : 4267)  // conversion from 'size_t' to 'int32_t'
 #endif
 
+#include <infix_internals.h>
+//
 #include <abi_x64_common.h>
 #include <abi_x64_emitters.h>
-#include <infix.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <utility.h>
@@ -103,6 +104,27 @@ const ffi_reverse_abi_spec g_win_x64_reverse_spec = {
     .generate_reverse_epilogue = generate_reverse_epilogue_win_x64};
 
 /**
+ * @internal
+ * @brief Determines if a return value should be passed by reference (via hidden pointer)
+ *        according to the Windows x64 ABI.
+ * @param type The ffi_type of the return value.
+ * @return `true` if the type should be returned by reference, `false` otherwise.
+ */
+static bool return_value_is_by_reference(ffi_type * type) {
+    if (type->category == FFI_TYPE_STRUCT || type->category == FFI_TYPE_UNION || type->category == FFI_TYPE_ARRAY) {
+        // According to the Microsoft x64 ABI, aggregates are returned by reference
+        // if their size is NOT 1, 2, 4, or 8 bytes. This correctly includes 16-byte structs.
+        return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
+    }
+#if defined(FFI_COMPILER_GCC)
+    // GCC/Clang have a special case for returning long double by reference on Windows.
+    if (is_long_double(type))
+        return true;
+#endif
+    return false;
+}
+
+/**
  * @brief Analyzes a function signature and determines the argument passing layout for Windows x64.
  * @details This is the primary classification function for the Windows x64 ABI. It iterates
  *          through each argument and assigns it to a register or stack location.
@@ -149,7 +171,7 @@ static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
         *out_layout = nullptr;
         return FFI_ERROR_ALLOCATION_FAILED;
     }
-    layout->return_value_in_memory = return_uses_hidden_pointer_abi(ret_type);
+    layout->return_value_in_memory = return_value_is_by_reference(ret_type);
     size_t arg_position = 0;
     if (layout->return_value_in_memory)
         arg_position++;  // The hidden return pointer consumes the first slot (RCX).
@@ -514,7 +536,7 @@ static ffi_status generate_reverse_argument_marshalling_win_x64(code_buffer * bu
     emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 16, XMM2_REG);
     emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 16, XMM3_REG);
 
-    size_t arg_pos_offset = return_uses_hidden_pointer_abi(context->return_type) ? 1 : 0;
+    size_t arg_pos_offset = return_value_is_by_reference(context->return_type) ? 1 : 0;
     size_t stack_slot_offset = 0;
 
     for (size_t i = 0; i < context->num_args; i++) {
@@ -584,7 +606,7 @@ static ffi_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
     EMIT_BYTES(buf, 0x48, 0xB9);  // mov rcx, #context
     emit_int64(buf, (int64_t)context);
 
-    if (return_uses_hidden_pointer_abi(context->return_type)) {
+    if (return_value_is_by_reference(context->return_type)) {
         emit_mov_reg_mem(buf, RDX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
     }
     else {
@@ -615,7 +637,7 @@ static ffi_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                                                     ffi_reverse_trampoline_t * context) {
     // Handle the return value after the dispatcher returns.
     if (context->return_type->category != FFI_TYPE_VOID) {
-        if (return_uses_hidden_pointer_abi(context->return_type)) {
+        if (return_value_is_by_reference(context->return_type)) {
             emit_mov_reg_mem(buf, RAX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
         }
 #if !defined(FFI_COMPILER_MSVC)

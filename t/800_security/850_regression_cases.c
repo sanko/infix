@@ -139,7 +139,20 @@ static const regression_test_case_t regression_tests[] = {
     {.name = "Global buffer overflow in SysV classifier (XMM out of bounds 2)",
      .b64_input = "ojQ6Ojo6AAAAAAAAEQA6Ojo6Ojo6Ojo=",
      .target = TARGET_TYPE_GENERATOR,
-     .expected_status = FFI_SUCCESS}};
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds 2)",
+     .b64_input = "qwEeHh4eHh4eAAEDAB4eHh4eHh4eHiT//w==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds 3)",
+     .b64_input = "gAAASABPT09PT08VAAAAAAACEQAAAABPT08=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds 4)",
+     .b64_input = "AQgB29vbATuIAIDb29vb2wAA29vb29s=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = FFI_SUCCESS}
+};
 
 /**
  * @internal

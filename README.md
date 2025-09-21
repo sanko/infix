@@ -1,10 +1,8 @@
-
 # infix: A Modern, JIT-Powered FFI Library for C
 
 **`infix`** is a lightweight, dependency-free Foreign Function Interface (FFI) library for C17. It uses Just-In-Time (JIT) compilation to dynamically generate machine code "trampolines," allowing you to call functions and create callbacks for any C-compatible ABI without writing a single line of assembly.
 
-At its core, `infix` provides two powerful APIs: a low-level Core API for fine-grained control over type definitions, and a high-level Signature API that can parse a human-readable string like `"{i;d*},c*=>i"` into a fully functional FFI call. This makes it an ideal tool for embedding scripting languages, creating plugin systems, or simply simplifying complex C interoperability tasks.
-
+At its core, `infix` provides two powerful APIs: a low-level Core API for fine-grained control over type definitions, and a high-level Signature API that can parse a human-readable string like `"{i,d*},c*=>i"` into a fully functional FFI call. This makes it an ideal tool for embedding scripting languages, creating plugin systems, or simply simplifying complex C interoperability tasks.
 
 ##  Features
 
@@ -73,6 +71,7 @@ int main() {
     return 0;
 }
 ```
+
 ##  Building the Project
 
 The project uses [**xmake**](https://xmake.io/) as its build system.
@@ -202,7 +201,7 @@ ffi_create_forward_trampoline_from_signature(&trampoline, "i,i=>i");
 ffi_trampoline_free(trampoline);
 ```
 
-The signature language provides a powerful and concise way to describe C types and function signatures.
+The signature language provides a powerful and concise way to describe C types and function signatures. The format is `arg1_type, arg2_type ... => return_type`.
 
 #### Primitive Types
 
@@ -227,6 +226,27 @@ The signature language provides a powerful and concise way to describe C types a
 | `n`  | `__int128_t`          | GCC/Clang only.                   |
 | `o`  | `__uint128_t`         | GCC/Clang only.                   |
 
+#### Composites
+
+| Syntax                                     | C Equivalent                                     |
+| ------------------------------------------ | ------------------------------------------------ |
+| `T*`                                       | `T*` (e.g., `i*` is `int*`)                     |
+| `T**`                                      | `T**` (e.g., `c**` is `char**`)                 |
+| `[N]T`                                     | `[N]T` (e.g., `[16]f` is `[16]float`)           |
+| `{member1;member2}`                        | `struct { T1 member1; T2 member2; }`             |
+| `<member1;member2>`                        | `union { T1 member1; T2 member2; }`              |
+| `p(size,align){type1:off1;...}`             | A packed struct with explicit layout             |
+| `(args...=>ret)`                           | A function pointer, e.g., `(i=>v)` for `void (*)(int)` |
+
+### Delimiters
+
+| Delimiter | Purpose                                                     |
+| :-------- | :---------------------------------------------------------- |
+| `=>`      | **Required.** Separates arguments from the return type.     |
+| `.`       | **Optional.** Separates fixed arguments from variadic ones. |
+| `;`       | **Required.** Separates members inside `{...}` and `<...>` lists. |
+| `:`       | **Required.** Separates type from offset in packed structs. |
+
 #### Constructs
 
 | Construct       | Signature Example                          | C Equivalent                                                   |
@@ -235,9 +255,21 @@ The signature language provides a powerful and concise way to describe C types a
 | Array           | `[10]d`                                    | `double[10]`                                                   |
 | Struct          | `{i;d}`                                    | `struct { int f1; double f2; }`                                |
 | Union           | `<i;d>`                                    | `union { int f1; double f2; }`                                 |
-| Named Fields    | `{count:i; name:c*}`                       | `struct { int count; char* name; }`                            |
+| Named Fields    | `{i:count; c*:name}`                       | `struct { int count; char* name; }`                            |
 | Packed Struct   | `p(5,1){c@0;i@1}`                          | `struct S { char c; int i; } __attribute__((packed));`          |
 | Function Pointer| `(i=>j)`                                   | `unsigned int (*)(int)`                                        |
+| Variadic Function | `(v*;i,d=>j)`                            | `unsigned int (*)(void*,...) varargs...`                                        |
+
+#### Examples
+
+| Signature String                 | Corresponding C Function Signature                               |
+| -------------------------------- | ------------------------------------------------------------------ |
+| `ii => i`                        | `int function(int, int);`                                        |
+| `c* => v`                        | `void function(char*);` (Also used for `void*`)                  |
+| `(i=>v) => v`                    | `void function(void (*callback)(int));`                          |
+| `{i;f}c* => v`                   | `void function(struct { int a; float b; }, char*);`               |
+| `c*.if => i`                     | `int function(const char*, int, float, ...);`                     |
+| `p(9,1){c:0;y:1} => i`           | `int function(PackedStruct);` (where `PackedStruct` is `char a; uint64_t b;` packed to 1-byte alignment) |
 
 ### The Core API (Low-Level)
 
@@ -351,7 +383,7 @@ ffi_create_reverse_trampoline_from_signature(
 );
 
 // 2. Get the native, C-callable function pointer.
-int (*native_fn_ptr)(int) = (int (*)(int))reverse_trampoline->exec_code.rx_ptr;
+int (*native_fn_ptr)(int) = (int (*)(int))ffi_reverse_trampoline_get_code(reverse_trampoline);
 
 // 3. Pass the function pointer to C code.
 run_callback(native_fn_ptr);
@@ -446,7 +478,7 @@ int main() {
     ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)create_point, &result, args);
 
     if (result) {
-        printf("Created point at %p with values (%f, %f)\n", result, result->x, result->y);
+        printf("Created point at %p with values (%f, %f)\n", (void*)result, result->x, result->y);
         free(result);
     }
 

@@ -38,7 +38,7 @@
 
 #define DBLTAP_IMPLEMENTATION
 #include <double_tap.h>
-#include <infix.h>
+#include <infix_internals.h>
 #include <limits.h>  // For SIZE_MAX
 
 // Platform-specific headers for process/exception management
@@ -115,7 +115,7 @@ TEST {
                 generate_reverse_trampoline(&rt, ffi_type_create_void(), NULL, 0, 0, (void *)dummy_handler_func, NULL);
             if (status != FFI_SUCCESS)
                 exit(2);
-            void (*f)() = (void (*)())rt->exec_code.rx_ptr;
+            void (*f)() = (void (*)())ffi_reverse_trampoline_get_code(rt);
             ffi_reverse_trampoline_free(rt);
             f();
         }
@@ -176,7 +176,7 @@ TEST {
                 generate_reverse_trampoline(&rt, ffi_type_create_void(), NULL, 0, 0, (void *)dummy_handler_func, NULL);
             if (status != FFI_SUCCESS)
                 bail_out("Failed to create reverse trampoline for UAF test");
-            void (*dangling_ptr)() = (void (*)())rt->exec_code.rx_ptr;
+            void (*dangling_ptr)() = (void (*)())ffi_reverse_trampoline_get_code(rt);
             pid_t pid = fork();
             if (pid == 0) {
                 ffi_reverse_trampoline_free(rt);

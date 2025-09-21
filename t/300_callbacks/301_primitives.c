@@ -94,15 +94,13 @@ TEST {
         ffi_reverse_trampoline_t * rt = NULL;
         ffi_status status =
             generate_reverse_trampoline(&rt, ret_type, arg_types, 2, 2, (void *)int_callback_handler, NULL);
-        ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+        ok(status == FFI_SUCCESS && rt && ffi_reverse_trampoline_get_code(rt), "Reverse trampoline created");
 
         // 3. Cast the executable code to the correct native type and execute.
-        if (rt && rt->exec_code.rx_ptr) {
-            execute_int_callback((int (*)(int, int))rt->exec_code.rx_ptr, 7, 6);
-        }
-        else {
+        if (rt && ffi_reverse_trampoline_get_code(rt))
+            execute_int_callback((int (*)(int, int))ffi_reverse_trampoline_get_code(rt), 7, 6);
+        else
             skip(1, "Test skipped due to creation failure");
-        }
 
         ffi_reverse_trampoline_free(rt);
     }
@@ -117,14 +115,12 @@ TEST {
         ffi_reverse_trampoline_t * rt = NULL;
         ffi_status status =
             generate_reverse_trampoline(&rt, ret_type, arg_types, 2, 2, (void *)float_callback_handler, NULL);
-        ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+        ok(status == FFI_SUCCESS && rt && ffi_reverse_trampoline_get_code(rt), "Reverse trampoline created");
 
-        if (rt && rt->exec_code.rx_ptr) {
-            execute_float_callback((float (*)(float, float))rt->exec_code.rx_ptr, 10.5f, 20.0f);
-        }
-        else {
+        if (rt && ffi_reverse_trampoline_get_code(rt))
+            execute_float_callback((float (*)(float, float))ffi_reverse_trampoline_get_code(rt), 10.5f, 20.0f);
+        else
             skip(1, "Test skipped due to creation failure");
-        }
 
         ffi_reverse_trampoline_free(rt);
     }
@@ -138,14 +134,12 @@ TEST {
         ffi_reverse_trampoline_t * rt = NULL;
         ffi_status status =
             generate_reverse_trampoline(&rt, ret_type, arg_types, 1, 1, (void *)void_callback_handler, NULL);
-        ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, "Reverse trampoline created");
+        ok(status == FFI_SUCCESS && rt && ffi_reverse_trampoline_get_code(rt), "Reverse trampoline created");
 
-        if (rt && rt->exec_code.rx_ptr) {
-            execute_void_callback((void (*)(int))rt->exec_code.rx_ptr, 1337);
-        }
-        else {
+        if (rt && ffi_reverse_trampoline_get_code(rt))
+            execute_void_callback((void (*)(int))ffi_reverse_trampoline_get_code(rt), 1337);
+        else
             skip(1, "Test skipped due to creation failure");
-        }
 
         ffi_reverse_trampoline_free(rt);
     }

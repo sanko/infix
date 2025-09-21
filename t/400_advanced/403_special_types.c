@@ -136,7 +136,7 @@ TEST {
         status = generate_reverse_trampoline(&rt, bool_type, &s128_type, 1, 1, (void *)s128_callback_handler, NULL);
         if (ok(status == FFI_SUCCESS, "Reverse trampoline created for __int128_t")) {
             typedef bool (*s128_harness_fn)(__int128_t);
-            s128_harness_fn harness = (s128_harness_fn)rt->exec_code.rx_ptr;
+            s128_harness_fn harness = (s128_harness_fn)ffi_reverse_trampoline_get_code(rt);
             bool cb_result = harness(S128_CONSTANT);
             ok(cb_result, "Reverse call: __int128_t passed to handler correctly");
         }

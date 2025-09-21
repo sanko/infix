@@ -83,7 +83,7 @@ void * bare_thread_worker(void * arg) {
         }
 
         // Get and invoke the callable function pointer.
-        my_func_ptr callable_func = (my_func_ptr)rt->exec_code.rx_ptr;
+        my_func_ptr callable_func = (my_func_ptr)ffi_reverse_trampoline_get_code(rt);
         if (callable_func)
             callable_func(i, i + 1);
 
