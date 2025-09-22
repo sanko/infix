@@ -1,15 +1,6 @@
-Of course. You are absolutely right, and I apologize for the repeated redactions. Providing a complete and final document is essential for your review. My previous responses were trying to be concise, but that is not what you asked for. You need the full file to be confident in its state.
-
-Let's get this right. Here is the complete, final, and unredacted version of `internals.md`. It has been fully updated to include the sections on the API layers and the parser's security hardening, and all content has been reviewed to ensure it accurately reflects the final state of the code.
-
----
-
-### Complete and Final `internals.md`
-
---- START OF FILE internals.md ---
 # infix FFI: Internals Documentation
 
-This document provides a deep dive into the architecture and internal workings of `infix`. It is intended for maintainers and developers looking to contribute or understand the library's design philosophy.
+This document provides a deep dive into the architecture and internal workings of `infix`. It's a little disorganized but is intended for maintainers and developers looking to contribute or understand the library's design philosophy.
 
 ## Core Design Philosophy
 
@@ -322,7 +313,7 @@ This is the most powerful method. It allows you to step through the JIT'd code o
 
 Let's say you've found a failure that you think is a bug in infix itself. Let's imagine a trampoline that wraps `int(int, int)` is failing. The arguments seem to be corrupted. These are the steps I would take:
 
-    1.  **Get the Address**: Print the address of the executable code right after it's generated.
+1.  **Get the Address**: Print the address of the executable code right after it's generated.
 
         ```c
         ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
@@ -330,9 +321,9 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
         fflush(stdout);
         ```
 
-    2.  **Run Under GDB**: `gdb ./my_test_executable`
+2.  **Run Under GDB**: `gdb ./my_test_executable`
 
-    3.  **Set Breakpoint**:  Use the address you printed in step 1 to set a breakpoint. The `*` is crucial—it tells GDB to set a breakpoint on the memory address itself, not on a symbol.
+3.  **Set Breakpoint**:  Use the address you printed in step 1 to set a breakpoint. The `*` is crucial—it tells GDB to set a breakpoint on the memory address itself, not on a symbol.
 
         ```gdb
         (gdb) run
@@ -343,7 +334,7 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
         (gdb) b *0x7ffff7fde000
         Breakpoint 1 at 0x7ffff7fde000
         ```
-    4.  **Trigger and Disassemble**: Run the program. When it breaks, use `disassemble` to view the JIT code.
+4.  **Trigger and Disassemble**: Run the program. When it breaks, use `disassemble` to view the JIT code.
 
         ```gdb
         # After the cif_func() is called in your C code...
@@ -357,7 +348,7 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
         End of assembler dump.
         ```
 
-    5.  **Step and Verify**: Use `stepi` (step instruction) and `info registers` to walk through the code and check register values before the `call` instruction. At that point, all the argument registers (`rdi`, `rsi`, `xmm0`, etc.) should contain the correct values you passed in.
+5.  **Step and Verify**: Use `stepi` (step instruction) and `info registers` to walk through the code and check register values before the `call` instruction. At that point, all the argument registers (`rdi`, `rsi`, `xmm0`, etc.) should contain the correct values you passed in.
 
         ```gdb
         (gdb) # ... stepi until you are right before the call ...
@@ -372,11 +363,11 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
 
 The process on Windows is conceptually identical but uses different commands (`bp` to set breakpoint, `u` to unassemble, `r` to view registers, `t` to trace/step).
 
-    1.  **Get the Address**: Same as with GDB, print the address of the trampoline.
+1.  **Get the Address**: Same as with GDB, print the address of the trampoline.
 
-    2.  **Run Under WinDbg**: `windbg.exe my_failing_test.exe`
+2.  **Run Under WinDbg**: `windbg.exe my_failing_test.exe`
 
-    3.  **Set a Breakpoint**: Use the `bp` command.
+3.  **Set a Breakpoint**: Use the `bp` command.
 
         ```
         0:000> g ; Go until the address is printed
@@ -384,9 +375,9 @@ The process on Windows is conceptually identical but uses different commands (`b
         0:000> bp 0x1ff0a70000
         ```
 
-    4.  **Trigger the Trampoline**: Let the program continue with `g`. It will break at your JIT code's entry point.
+4.  **Trigger the Trampoline**: Let the program continue with `g`. It will break at your JIT code's entry point.
 
-    5.  **Unassemble and Inspect**: Use `u` (unassemble) to view the code and `r` (registers) to view the CPU state.
+5.  **Unassemble and Inspect**: Use `u` (unassemble) to view the code and `r` (registers) to view the CPU state.
 
         ```
         0:000> u .
@@ -398,9 +389,10 @@ The process on Windows is conceptually identical but uses different commands (`b
         rax=... rcx=... rdx=...
         ```
 
-    6.  **Step**: Use `t` (trace) to step through one instruction at a time. Check the argument registers (`rcx`, `rdx`, `r8`, `r9`, `xmm0-3`) right before the final `call` instruction.
+6.  **Step**: Use `t` (trace) to step through one instruction at a time. Check the argument registers (`rcx`, `rdx`, `r8`, `r9`, `xmm0-3`) right before the final `call` instruction.
 
 By using these techniques, you can demystify the JIT compilation process and effectively debug even the most complex ABI and code generation issues.
+
 ---
 
 ## External ABI Documentation
@@ -414,6 +406,61 @@ The current `infix` implementations are based on the official ABI documents for 
 *   **ARM 64-bit (AArch64) ABI (AAPCS64):**
     *   [Official ARM Developer Documentation](https://github.com/ARM-software/abi-aa/releases/download/2025Q1/aapcs32.pdf)
     *   [Writing ARM64 code for Apple platforms](https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms)
+
+### A Cross-Language Type Reference
+
+Getting the types right is the most critical part of FFI. A mismatch between the `ffi_type` you describe and the actual type used by the library function can lead to stack corruption, crashes, or silent data corruption.
+
+**The Golden Rule**: Always use explicit, fixed-width types when possible. `<stdint.h>` in C is your best friend. Relying on types like `long` is risky, as it can be 32-bit on some 64-bit platforms (like Windows) and 64-bit on others (like Linux).
+
+The following table maps infix's primitive type enums to their corresponding types in C and other common languages.
+
+| infix `ffi_primitive_type_id`    | C (`<stdint.h>`) | C++         | Rust                | Go (`import "C"`)  | Swift       | Zig         | Fortran (`iso_c_binding`) |
+| -------------------------------- | ---------------- | ----------- | ------------------- | ------------------ | ----------- | ----------- | ------------------------- |
+| `FFI_PRIMITIVE_TYPE_BOOL`        | `_Bool`          | `bool`      | `bool`              | `C.bool`           | `CBool`     | `bool`      | `logical(c_bool)`         |
+| `FFI_PRIMITIVE_TYPE_SINT8`       | `int8_t`         | `int8_t`    | `i8`                | `C.schar`          | `CChar`     | `i8`        | `integer(c_signed_char)`  |
+| `FFI_PRIMITIVE_TYPE_UINT8`       | `uint8_t`        | `uint8_t`   | `u8`                | `C.uchar`          | `CUnsignedChar` | `u8`      | `integer(c_char)`         |
+| `FFI_PRIMITIVE_TYPE_SINT16`      | `int16_t`        | `int16_t`   | `i16`               | `C.short`          | `CShort`    | `i16`       | `integer(c_short)`        |
+| `FFI_PRIMITIVE_TYPE_UINT16`      | `uint16_t`       | `uint16_t`  | `u16`               | `C.ushort`         | `CUnsignedShort` | `u16`     | `integer(c_unsigned_short)` |
+| `FFI_PRIMITIVE_TYPE_SINT32`      | `int32_t`        | `int32_t`   | `i32`               | `C.int`            | `CInt`      | `i32`       | `integer(c_int)`          |
+| `FFI_PRIMITIVE_TYPE_UINT32`      | `uint32_t`       | `uint32_t`  | `u32`               | `C.uint`           | `CUnsignedInt` | `u32`     | `integer(c_unsigned_int)` |
+| `FFI_PRIMITIVE_TYPE_SINT64`      | `int64_t`        | `int64_t`   | `i64`               | `C.longlong`       | `CLongLong` | `i64`       | `integer(c_long_long)`    |
+| `FFI_PRIMITIVE_TYPE_UINT64`      | `uint64_t`       | `uint64_t`  | `u64`               | `C.ulonglong`      | `CUnsignedLongLong` | `u64`   | `integer(c_unsigned_long_long)` |
+| `FFI_PRIMITIVE_TYPE_SINT128`Â¹    | `__int128_t`     | `__int128_t`| `i128`              | **N/A**            | **N/A**     | `i128`      | **N/A**                   |
+| `FFI_PRIMITIVE_TYPE_UINT128`Â¹    | `__uint128_t`    | `__uint128_t`| `u128`             | **N/A**            | **N/A**     | `u128`      | **N/A**                   |
+| `FFI_PRIMITIVE_TYPE_FLOAT`       | `float`          | `float`     | `f32`               | `C.float`          | `CFloat`    | `f32`       | `real(c_float)`           |
+| `FFI_PRIMITIVE_TYPE_DOUBLE`      | `double`         | `double`    | `f64`               | `C.double`         | `CDouble`   | `f64`       | `real(c_double)`          |
+| `FFI_PRIMITIVE_TYPE_LONG_DOUBLE`Â²| `long double`    | `long double`| **N/A**            | `C.longdouble`     | `CLongDouble` | `f80`/`f128`| `real(c_long_double)`     |
+| **Pointer Type**                 | `void*`          | `void*`     | `*mut T` / `*const T` | `unsafe.Pointer` | `UnsafeMutableRawPointer` | `*T` | `type(c_ptr)` |
+
+#### Common Windows Type Definitions
+
+The Windows API uses a large number of `typedef`s for C primitives. This table helps map them to the correct infix types. All types are for 64-bit Windows.
+
+| Windows Type  | Underlying C Type         | Recommended infix `ffi_type`                             | Notes                                                              |
+| ------------- | ------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------ |
+| `HANDLE`      | `void*`                   | `ffi_type_create_pointer()`                              | Base type for most OS objects (files, processes, etc.).            |
+| `HMODULE`     | `HANDLE`                  | `ffi_type_create_pointer()`                              | Handle to a loaded DLL.                                            |
+| `HWND`        | `HANDLE`                  | `ffi_type_create_pointer()`                              | Handle to a window.                                                |
+| `HCALL`       | `HANDLE`                  | `ffi_type_create_pointer()`                              | A generic handle type.                                             |
+| `DWORD`       | `unsigned long` (32-bit)  | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32)`   | A 32-bit unsigned integer.                                         |
+| `UINT`        | `unsigned int` (32-bit)   | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32)`   | A 32-bit unsigned integer.                                         |
+| `HRESULT`     | `long` (32-bit)           | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)`   | A 32-bit signed integer for success/failure codes.                 |
+| `SIZE_T`      | `unsigned __int64` (64-bit) | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64)` | The native unsigned integer for sizes.                             |
+| `LPCSTR`      | `const char*`             | `ffi_type_create_pointer()`                              | Pointer to a null-terminated 8-bit ANSI string.                    |
+| `LPCWSTR`     | `const wchar_t*`          | `ffi_type_create_pointer()`                              | Pointer to a null-terminated 16-bit UTF-16 string.                 |
+| `UINT128`     | `struct { uint64_t, uint64_t }` | `ffi_type` for a struct of two `UINT64`s.                | This is **not** a primitive. It must be described as a struct. |
+
+**Notes & Pitfalls:**
+
+1.  **128-bit Integers**: `__int128_t` is a non-standard compiler extension, primarily available in GCC and Clang. It is not supported by MSVC. Many other languages do not have a C-compatible 128-bit integer type.
+2.  **`long double`**: This is the most dangerous type for FFI. Its size and representation vary wildly:
+    *   On x86-64 Linux, it's typically an 80-bit extended-precision float.
+    *   On AArch64 Linux, it's a 128-bit quadruple-precision float.
+    *   On Windows (MSVC and Clang), it is simply an alias for `double` (64 bits).
+    *   On macOS (x86-64 and AArch64), it is also just an alias for `double`.
+    infix's `ffi_type_create_primitive` correctly aliases it to `DOUBLE` on platforms where they are the same, but you must be certain the library you are calling uses a distinct `long double` type.
+3.  **Variadic `float`**: When you call a variadic C function (one with `...`), any `float` argument is automatically **promoted** to a `double`. You must use `FFI_PRIMITIVE_TYPE_DOUBLE` in your infix type signature for that argument.
 
 ---
 
