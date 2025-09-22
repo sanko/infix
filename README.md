@@ -1,40 +1,12 @@
-# infix: A Modern, JIT-Powered FFI Library for C
+# infix: JIT-Powered FFI
 
-**`infix`** is a lightweight, dependency-free Foreign Function Interface (FFI) library for C17. It uses Just-In-Time (JIT) compilation to dynamically generate machine code "trampolines," allowing you to call functions and create callbacks for any C-compatible ABI without writing a single line of assembly.
+**`infix`** is a lightweight, dependency-free Foreign Function Interface (FFI) library for C17. It uses Just-In-Time (JIT) compilation to dynamically generate incredibly fast machine code "trampolines," allowing you to call functions and create callbacks for any C-compatible ABI without writing a single line of assembly.
 
-At its core, `infix` provides two powerful APIs: a low-level Core API for fine-grained control over type definitions, and a high-level Signature API that can parse a human-readable string like `"{i,d*},c*=>i"` into a fully functional FFI call. This makes it an ideal tool for embedding scripting languages, creating plugin systems, or simply simplifying complex C interoperability tasks.
+At its core, `infix` provides two powerful APIs: a low-level Manual API for fine-grained control, and a high-level Signature API that can parse a human-readable string like "`{i,d*},c*=>i`" into a fully functional FFI call. This makes it an ideal tool for embedding scripting languages, creating plugin systems, or simplifying complex C interoperability tasks.
 
-##  Features
+## Quick Start: Hello, World
 
-`infix` is engineered around three core principles: **Power**, **Security**, and **Simplicity**.
-
-#### Core Capabilities
-*   **Forward Calls:** Call any C function pointer dynamically, with full support for complex arguments (structs, unions, arrays) and variadic functions. The library correctly marshals arguments according to the target ABI.
-*   **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe, re-entrant, and fully supports variadic function signatures, making it suitable for high-performance asynchronous systems.
-*   **Rich Type System:** Provides comprehensive support for all standard C types, including primitives (`int`, `double`), pointers, structs, unions, and fixed-size arrays.
-
-#### High-Level Abstraction
-*   **Convenient Signature API:** Define entire C function signatures—including nested structs, packed layouts, and function pointers—using a simple and expressive string-based language.
-*   **Powerful Parser:** The signature parser can be used directly for advanced applications beyond FFI, such as data marshalling, serialization, or dynamic type inspection.
-
-#### Security & Performance
-*   **Secure by Design:** `infix` adheres to strict security principles, validated through extensive testing:
-    *   **W^X (Write XOR Execute):** Enforces that memory pages are never writable and executable simultaneously.
-    *   **Overflow Hardening:** The type system and parser are protected against integer overflows from malformed or malicious inputs.
-    *   **Use-After-Free Protection:** Freed trampolines are converted into inaccessible guard pages, ensuring calls to dangling pointers result in a safe, immediate crash.
-    *   **Read-Only Contexts:** Callback context data is made read-only after initialization to protect against runtime memory corruption attacks.
-*   **Performance Optimized:** A custom arena allocator minimizes the overhead of trampoline generation by replacing thousands of potential `malloc` calls with simple, contiguous pointer bumps.
-
-#### Portability & Integration
-*   **Cross-Platform ABI Support:** Correctly handles calling conventions across multiple architectures and operating systems:
-    *   **x86-64:** System V (Linux, macOS, BSD) and Windows x64.
-    *   **AArch64 (ARM64):** Standard AAPCS64 (Linux, BSD, Android/Termux), including specific variants for Apple and Windows on ARM.
-    * Other architectures should be easy to integrate. See [internals.md](docs/internals.md).
-*   **Zero Dependencies & Simple Integration:** As a single-header library, integration is trivial. Add `infix.h` to your project's includes and compile the core `.c` files.
-
-##  Quick Start: Calling `printf`
-
-This example demonstrates how to call the standard library's `printf` function, which has a variadic signature, using the Signature API.
+Here is a complete example of calling the standard C library function `puts` to print a message.
 
 ```c
 #include <infix.h>
@@ -72,124 +44,223 @@ int main() {
 }
 ```
 
-##  Building the Project
+## Features
 
-The project uses [**xmake**](https://xmake.io/) as its build system.
+-  **Forward Calls:** Call any C function pointer dynamically, with full support for complex arguments (structs, unions, arrays) and variadic functions. The library correctly marshals arguments according to the target ABI.
+-  **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe, re-entrant, and fully supports variadic function signatures, making it suitable for high-performance asynchronous systems.
+-  **Rich Type System:** Comprehensive support for all standard C types, including primitives (`int`, `double`), pointers, structs, unions, and fixed-size arrays.
+- **High-Level Abstraction**
+  -  **Convenient Signature API:** Define entire C function signatures—including nested structs, packed layouts, and function pointers—using a simple and expressive string-based language.
+  -  **Powerful Introspection:** The signature parser can be used directly for advanced applications beyond FFI, such as data marshalling, serialization, or dynamic type inspection.
+-  **Secure by Design:**  infix adheres to strict security principles, validated through extensive fuzzing:
+    -  **W^X (Write XOR Execute):** Enforces that memory pages are never writable and executable simultaneously.
+      -  **Overflow Hardening:** The type system and parser are protected against integer overflows from malformed or malicious inputs.
+      -  **Use-After-Free Protection:** Freed trampolines are converted into inaccessible guard pages, ensuring calls to dangling pointers result in a safe, immediate crash.
+      - **Read-Only Contexts**: Callback context data is made read-only after initialization to protect against runtime memory corruption attacks.
+  -   **Performance Optimized:** A custom arena allocator minimizes the overhead of trampoline generation by replacing thousands of potential malloc calls with simple, contiguous pointer bumps.
+-   **Customizable Memory Management:** Allows users to override `malloc`, `free`, etc., to integrate with custom memory allocators.
+-  **Portability & Integration**
+
+[](https://github.com/sanko/infix/tree/dev#portability--integration)
+
+-   **Cross-Platform ABI Support:**  Correctly handles calling conventions across multiple architectures and operating systems:
+    -   **x86-64:**  System V (Linux, macOS, BSD) and Windows x64.
+    -   **AArch64 (ARM64):**  Standard AAPCS64 (Linux, BSD, Android/Termux), including specific variants for Apple and Windows on ARM.
+    -   Other architectures should be easy to integrate. See  [internals.md](https://github.com/sanko/infix/blob/dev/docs/internals.md).
+   -  **Zero Dependencies & Simple Integration:**  As a single-header library, integration is trivial. Add  `infix.h`  to your project's includes and compile the core  `.c`  files.
+    -
+## Platform Compatibility
+
+| Operating System | Architecture | ABI | Status |
+| :--- | :--- | :--- | :--- |
+| Windows | x86-64 | Windows x64 | Supported |
+| Linux | x86-64 | System V AMD64 | Supported |
+| macOS | x86-64 | System V AMD64 | Supported |
+| Linux | AArch64 | AAPCS64 | Supported |
+| macOS | AArch64 (Apple Silicon) | AAPCS64 (Apple Variant) | Supported |
+
+## Building the Project
+
+The project uses **XMake** for its primary build system. A separate Perl script is provided for advanced tasks like building the fuzzing harnesses.
 
 ### Prerequisites
-*   A C17-compatible compiler (GCC, Clang, or MSVC).
-*   [xmake](https://xmake.io/#/guide/installation) installed on your system.
 
-### Commands
+-   [XMake](https://xmake.io/)
+-   A C17-compatible compiler (GCC, Clang, or MSVC).
+-   Perl (for running the fuzzing build script).
 
-1.  **Build the static library:**
+### Common Build Commands
+
+-   **Configure and Build the Library:**
     ```bash
     xmake
     ```
-    This will compile the `libinfix.a` (or `infix.lib`) library into the `build/` directory.
 
-2.  **Run the test suite:**
+-   **Run All Tests:**
     ```bash
     xmake test
     ```
 
-3.  **Build the fuzzing harnesses (requires Clang):**
+-   **Build Fuzzing Harnesses (Clang/AFL++):**
+    The fuzzing harnesses must be built using the provided Perl script, which correctly configures the compiler flags for sanitizers and fuzzer integration.
+
     ```bash
-    xmake f -c clang # Configure the project to use the Clang toolchain
-    xmake build fuzz_signature fuzz_trampoline # Build specific fuzzer targets
-    ```
+	# Build the static library (libinfix.a or infix.lib)
+	perl build.pl build
 
-### Using Perl
+	# Specify a compiler (msvc, gcc, clang):
+	perl build.pl build --compiler=clang
 
-The included Perl script can build the library, run tests, and manage other tasks. Until I port everything to xmake, this is what I use to develop `infix`.
+	# Run all standard tests
+	perl build.pl test
 
-```bash
-# Seek help
-perl build.pl help
+	# Run the memory stress test under Valgrind (on Linux)
+	perl build.pl memtest
 
-# Build the static library (libinfix.a or infix.lib)
-perl build.pl build
+	# Build a fuzzer (requires Clang for libFuzzer or AFL-GCC for AFL++)
+	perl build.pl fuzz:signature --cc=clang
+	```
 
-# To specify a compiler (msvc, gcc, clang):
-perl build.pl --compiler=clang build
+## Integrating `infix` into Your Project
 
-# Run all standard tests
-perl build.pl test
+You can integrate `infix` into your own projects using several methods, depending on your build system.
 
-# Run the memory stress test under Valgrind (on Linux)
-perl build.pl memtest
+### Using XMake (Recommended)
 
-# Run the fault injection memory test under Valgrind (on Linux)
-perl build.pl memtest:fault
+If your project already uses XMake, this is the simplest method.
 
-# Run the threading test with ThreadSanitizer (on a compatible toolchain)
-perl build.pl test 800_threading
-
-# Build and run the fuzzer (requires Clang)
-perl build.pl fuzz
-./fuzz_types_harness -max_total_time=300 corpus/
-```
-
-##  Integrating `infix` Into Your Project
-
-`infix` is designed to be easy to integrate. You only need to link against the static library and include one header.
-
-### Method 1: Using xmake (Recommended)
-
-If your project already uses xmake, add `infix` as a dependency.
+In your project's `xmake.lua`, use `add_subdirs()` to include the `infix` build script and `add_deps()` to link your target against it.
 
 ```lua
--- your_project/xmake.lua
-add_requires("infix", {git = "https://github.com/sanko/infix.git"})
+    -- Your project's xmake.lua
+    set_project("my_awesome_app")
+    set_version("1.0.0")
+    set_languages("c17")
 
-target("my_app")
-    set_kind("binary")
-    add_files("src/*.c")
-    add_packages("infix")
+    -- 1. Tell XMake where to find the infix project
+    add_requires("infix", {git = "https://github.com/sankorobinson/infix.git"})
+
+    -- Define your application's target
+    target("my_awesome_app")
+        set_kind("binary")
+        add_files("src/*.c")
+
+        -- 2. Link against the "infix" static library target
+        add_deps("infix")
 ```
 
-### Method 2: Using CMake
+Now, you can simply include the header (`#include <infix.h>`) in your source files and build your project with `xmake`.
 
-You can integrate `infix` into a CMake project using `add_subdirectory`.
+### Manual Integration (CMake, Make, etc.)
 
-1.  Add `infix` as a submodule or copy it into your project (e.g., under `third_party/`).
-2.  Add the following to your `CMakeLists.txt`:
+If you use a different build system like Make or want to compile manually, you can build `infix` as a static library first and then link it.
 
-```cmake
-# your_project/CMakeLists.txt
-cmake_minimum_required(VERSION 3.15)
-project(MyProject C)
+#### Step 1: Build the Static Library
 
-set(CMAKE_C_STANDARD 17)
+You can use either XMake or the provided Perl script to build the library.
 
-# Add the infix subdirectory to the build
-add_subdirectory(third_party/infix)
+-   **Using XMake:**
+    ```bash
+    # This will build the static library
+    xmake
+    ```
+    The library will be located in the `build/` directory, typically at a path like `build/windows/x64/release/infix.lib` (Windows) or `build/linux/x86_64/release/libinfix.a` (Linux).
 
-add_executable(my_app src/main.c)
+-   **Using the Perl Script:**
 
-# Link your target against infix
-target_link_libraries(my_app PRIVATE infix)
+    ```bash
+    perl build.pl build
+    ```
+    The library will be created in the `build_lib/` directory as `infix.lib` (Windows) or `libinfix.a` (Linux/macOS).
 
-# Expose infix's public include directory to your target
-target_include_directories(my_app PRIVATE
-    $<TARGET_PROPERTY:infix,INTERFACE_INCLUDE_DIRECTORIES>
-)
-```
+#### Step 2: Link the Library in Your Project
 
-### Method 3: Manual Integration
+You now need to tell your compiler where to find the `infix` header files and the static library you just built.
 
-1.  Build the `infix` static library as described above.
-2.  In your project's build process, add the following flags:
-    *   **Compiler Flags:** `-I/path/to/infix/include`
-    *   **Linker Flags:** `-L/path/to/infix/build/your-platform/release -linfix`
+-   **For GCC/Clang:**
+    Use the `-I` flag for the include directory, `-L` for the library directory, and `-l` to link the library.
 
-##  API Deep Dive & Examples
+    ```bash
+    # Assuming infix was built with the Perl script
+    gcc my_app.c \
+        -I/path/to/infix/include \
+        -L/path/to/infix/build_lib \
+        -linfix \
+        -o my_app
+    ```
 
-`infix` offers two distinct APIs for creating trampolines, allowing you to choose between convenience and control.
+-   **For MSVC:**
+    In your IDE (like Visual Studio), add the `infix/include` directory to your project's "Additional Include Directories" and the directory containing `infix.lib` to your "Additional Library Directories". Then, add `infix.lib` to your "Additional Dependencies".
 
-### The Signature API (High-Level)
+### Using CMake
 
-This is the simplest and most common way to use `infix`. You describe the entire function signature in a single string, and the library handles all the parsing and type creation internally.
+While `infix` does not ship with a `CMakeLists.txt`, you can easily integrate the pre-built static library into your CMake project.
+
+1.  **Add `infix` as a Git Submodule** (same as above).
+
+2.  **Build the `infix` Static Library** using one of the manual methods described above.
+
+3.  **Update Your `CMakeLists.txt`**
+
+    Use `add_library` with the `IMPORTED` option to create a CMake target for `infix`. This makes it easy to manage the dependency.
+
+    ```cmake
+    # Your project's CMakeLists.txt
+    cmake_minimum_required(VERSION 3.15)
+    project(my_awesome_app C)
+
+    # Path to the infix submodule
+    set(INFIX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/infix)
+
+    # 1. Create an IMPORTED target for the pre-built infix library
+    add_library(infix STATIC IMPORTED)
+
+    # 2. Tell CMake where to find the library file and header files
+    set_target_properties(infix PROPERTIES
+        IMPORTED_LOCATION "${INFIX_DIR}/build_lib/libinfix.a" # Or .lib on Windows
+        INTERFACE_INCLUDE_DIRECTORIES "${INFIX_DIR}/include"
+    )
+
+    # 3. Define your application executable
+    add_executable(my_awesome_app src/main.c)
+
+    # 4. Link your app against the infix target. CMake handles the rest.
+    target_link_libraries(my_awesome_app PRIVATE infix)
+    ```
+## API Overview
+
+`infix` provides two distinct APIs for creating trampolines: a high-level **Signature API** and a low
+-level **Manual API**.
+
+### Core Concepts
+
+-   **`ffi_type`**: The central data structure that describes any C type.
+-   **Trampoline**: A small piece of machine code JIT-compiled by `infix` that bridges calling conventions.
+-   **`ffi_cif_func`**: A generic function pointer for invoking a forward trampoline: `void (*ffi_cif_func)(void* target_function, void* return_value, void** args);`
+
+### Arena Memory Allocator
+
+For performance-critical applications and internal parsing, `infix` exposes an efficient arena allocator. An arena pre-allocates a single large block of memory and serves subsequent allocation requests by simply "bumping" a pointer.
+
+-   **Speed:** Replaces thousands of `malloc` calls with cheap pointer increments.
+-   **Simplicity:** Frees all memory allocated within the arena with a single `arena_destroy()` call, eliminating complex cleanup logic.
+
+The high-level Signature API uses an arena internally to manage all `ffi_type` objects created during parsing.
+
+### Introspection and Type Parsing
+
+`infix` provides powerful functions for parsing signature strings without creating a trampoline. This is useful for dynamic type inspection, data marshalling, or building C structs in allocated memory at runtime.
+
+-   **`ffi_signature_parse()`**: Parses a full function signature string into its constituent parts: a return `ffi_type`, an array of argument `ffi_type*`, and argument counts.
+-   **`ffi_type_from_signature()`**: Parses a string representing a single data type (e.g., a struct or array).
+
+Both functions allocate the resulting `ffi_type` object graph from a new arena and return a pointer to it, giving the caller full ownership. You can then traverse the `ffi_type` structure to learn about its size, alignment, and members.
+
+---
+
+## The Signature API (Recommended)
+
+This is the simplest and most common way to use infix. You describe the entire function signature in a single string, and the library handles all the parsing and type creation internally.
 
 ```c
 // int add(int a, int b) { return a + b; }
@@ -200,76 +271,67 @@ ffi_create_forward_trampoline_from_signature(&trampoline, "i,i=>i");
 
 ffi_trampoline_free(trampoline);
 ```
-
 The signature language provides a powerful and concise way to describe C types and function signatures. The format is `arg1_type, arg2_type ... => return_type`.
 
-#### Primitive Types
+#### Primitive Type Specifiers
 
-| Char | C Type                | Notes                             |
-| :--- | :-------------------- | :-------------------------------- |
-| `v`  | `void`                | Return type only.                 |
-| `b`  | `bool`                |                                   |
-| `c`  | `char`                | Signedness is platform-dependent. |
-| `a`  | `signed char`         |                                   |
-| `h`  | `unsigned char`       |                                   |
-| `s`  | `short`               |                                   |
-| `t`  | `unsigned short`      |                                   |
-| `i`  | `int`                 |                                   |
-| `j`  | `unsigned int`        |                                   |
-| `l`  | `long`                |                                   |
-| `m`  | `unsigned long`       |                                   |
-| `x`  | `long long`           |                                   |
-| `y`  | `unsigned long long`  |                                   |
-| `f`  | `float`               |                                   |
-| `d`  | `double`              |                                   |
-| `e`  | `long double`         |                                   |
-| `n`  | `__int128_t`          | GCC/Clang only.                   |
-| `o`  | `__uint128_t`         | GCC/Clang only.                   |
+| Specifier | C Type | Description |
+| :--- | :--- | :--- |
+| `v` | `void` | Used exclusively for return types. |
+| `b` | `bool` | |
+| `c` | `char` | Correctly resolves to `signed` or `unsigned` depending on the platform. |
+| `a` | `int8_t` / `signed char` | |
+| `h` | `uint8_t` / `unsigned char` | |
+| `s` | `int16_t` / `short` | |
+| `t` | `uint16_t` / `unsigned short` | |
+| `i` | `int32_t` / `int` | |
+| `j` | `uint32_t` / `unsigned int` | |
+| `l` | `long` | |
+| `m` | `unsigned long` | |
+| `x` | `int64_t` / `long long` | |
+| `y` | `uint64_t` / `unsigned long long` | |
+| `f` | `float` | |
+| `d` | `double` | |
+| `e` | `long double`| |
+| `n` | `__int128_t`| GCC/Clang only. |
+| `o` | `__uint128_t`| GCC/Clang only. |
 
-#### Composites
+#### Structural and Delimiter Specifiers
 
-| Syntax                                     | C Equivalent                                     |
-| ------------------------------------------ | ------------------------------------------------ |
-| `T*`                                       | `T*` (e.g., `i*` is `int*`)                     |
-| `T**`                                      | `T**` (e.g., `c**` is `char**`)                 |
-| `[N]T`                                     | `[N]T` (e.g., `[16]f` is `[16]float`)           |
-| `{member1;member2}`                        | `struct { T1 member1; T2 member2; }`             |
-| `<member1;member2>`                        | `union { T1 member1; T2 member2; }`              |
-| `p(size,align){type1:off1;...}`             | A packed struct with explicit layout             |
-| `(args...=>ret)`                           | A function pointer, e.g., `(i=>v)` for `void (*)(int)` |
+-   `*`: Postfix modifier for a **pointer** (e.g., `i*` is `int*`).
+-   `{...}`: Defines a **struct** (e.g., `{i,d}`).
+-   `<...>`: Defines a **union** (e.g., `<i,d>`).
+-   `[...]`: Defines an **array** (e.g., `[10]i` is `int[10]`).
+-   `p(...)`: Defines a **packed struct** with explicit layout: `p(size,align){type@offset;...}`.
+-   `(...)`: Defines a **function pointer** type.
+-   `,`: Separates regular arguments.
+-   `;`: Separates fixed arguments from variadic arguments.
+-   `=>`: Separates arguments from the return type.
+-   `@`: Separates a packed struct member from its byte offset.
+-   `:`: Separates a member name from its type.
 
-### Delimiters
+### Signature Examples
 
-| Delimiter | Purpose                                                     |
-| :-------- | :---------------------------------------------------------- |
-| `=>`      | **Required.** Separates arguments from the return type.     |
-| `.`       | **Optional.** Separates fixed arguments from variadic ones. |
-| `;`       | **Required.** Separates members inside `{...}` and `<...>` lists. |
-| `:`       | **Required.** Separates type from offset in packed structs. |
+| C Function Signature | Signature String | Explanation |
+| :--- | :--- | :--- |
+| `int max(int a, int b);` | `i,i=>i` | Two `int` args, `int` return. |
+| `void print_point(const Point* p);` <br> `struct Point { int x; double y; }` | `{i,d}*=>v` | A pointer `*` to a struct `{i,d}` as an argument, `void` return. |
+| `int printf(const char* format, ...);` | `c*;=>i` | A `char*` (`c*`), then variadic args (indicated by `;`), `int` return. |
+| `uint64_t checksum(const PackedData* data);` <br> `struct __attribute__((packed)) { char c; int i; }` | `p(5,1){c@0;i@1}*=>y` | A pointer `*` to a packed struct `p(5,1){...}` as an argument, `uint64_t` (`y`) return. |
+| `void register_callback(void (*cb)(int));` | `(i=>v)*=>v` | The argument is a pointer `*` to a function `(i=>v)`. The main function returns `void`. |
+| `User** find_users(int* count);` <br> `struct User { const char* name; int id; }` | `i*=>{c*,i}**` | An `int*` argument. Returns a pointer-to-a-pointer `**` to a struct `{c*,i}`. |
 
-#### Constructs
+---
 
-| Construct       | Signature Example                          | C Equivalent                                                   |
-| :-------------- | :----------------------------------------- | :------------------------------------------------------------- |
-| Pointer         | `i*`                                       | `int*`                                                         |
-| Array           | `[10]d`                                    | `double[10]`                                                   |
-| Struct          | `{i;d}`                                    | `struct { int f1; double f2; }`                                |
-| Union           | `<i;d>`                                    | `union { int f1; double f2; }`                                 |
-| Named Fields    | `{i:count; c*:name}`                       | `struct { int count; char* name; }`                            |
-| Packed Struct   | `p(5,1){c@0;i@1}`                          | `struct S { char c; int i; } __attribute__((packed));`          |
-| Function Pointer| `(i=>j)`                                   | `unsigned int (*)(int)`                                        |
-| Variadic Function | `(v*;i,d=>j)`                            | `unsigned int (*)(void*,...) varargs...`                                        |
+## The Manual API (Advanced)
 
-#### Examples
+This API gives you fine-grained control by requiring you to manually build the `ffi_type` object graph for a function signature.
 
-| Signature String                 | Corresponding C Function Signature                               |
-| -------------------------------- | ------------------------------------------------------------------ |
-| `ii => i`                        | `int function(int, int);`                                        |
-| `c* => v`                        | `void function(char*);` (Also used for `void*`)                  |
-| `(i=>v) => v`                    | `void function(void (*callback)(int));`                          |
-| `{i;f}c* => v`                   | `void function(struct { int a; float b; }, char*);`               |
-| `c*.if => i`                     | `int function(const char*, int, float, ...);`                     |
-| `p(9,1){c:0;y:1} => i`           | `int function(PackedStruct);` (where `PackedStruct` is `char a; uint64_t b;` packed to 1-byte alignment) |
+### Memory Ownership Model
+
+-   **Caller Owns**: You are responsible for freeing any `ffi_type` created with `ffi_type_create_struct`, `_union`, or `_array` by calling `ffi_type_destroy`. You are also responsible for freeing any trampoline handle (`ffi_trampoline_t` or `ffi_reverse_trampoline_t`) with its corresponding `_free` function.
+-   **Library Owns**: The library takes ownership of the `members` array passed to `ffi_type_create_struct` *only on success*. On failure, you must free it.
+-   **Static Types**: Types created with `ffi_type_create_primitive`, `_pointer`, or `_void` are static singletons and **must not** be freed. `ffi_type_destroy` will safely ignore them.
 
 ### The Core API (Low-Level)
 
@@ -301,6 +363,81 @@ The central concept is the `ffi_type` struct, which holds the size, alignment, a
 | `union`                  | N/A                              | `ffi_type_create_union()`                            |
 | `array`                  | N/A                              | `ffi_type_create_array()`                            |
 | Packed `struct`          | N/A                              | `ffi_type_create_packed_struct()`                    |
+
+### Manual API Function List
+
+These functions provide direct access to the `infix` core.
+
+#### Type System API
+-   `ffi_type_create_primitive()`: Gets a static descriptor for a C primitive.
+-   `ffi_type_create_pointer()`: Gets the static descriptor for a pointer.
+-   `ffi_type_create_void()`: Gets the static descriptor for `void`.
+-   `ffi_type_create_struct()`: Creates a new struct type from an array of members.
+-   `ffi_type_create_packed_struct()`: Creates a struct type with a specific, non-standard memory layout.
+-   `ffi_type_create_union()`: Creates a new union type.
+-   `ffi_type_create_array()`: Creates a new fixed-size array type.
+-   `ffi_type_destroy()`: Frees a dynamically-created `ffi_type` and its members.
+
+#### Trampoline Generation API
+-   `generate_forward_trampoline()`: JIT-compiles a forward call trampoline from manual `ffi_type`s.
+-   `generate_reverse_trampoline()`: JIT-compiles a reverse call (callback) trampoline.
+
+#### Trampoline Management API
+-   `ffi_trampoline_get_code()`: Retrieves the executable code pointer from a forward trampoline.
+-   `ffi_trampoline_free()`: Frees a forward trampoline.
+-   `ffi_reverse_trampoline_get_code()`: Retrieves the executable code pointer from a reverse trampoline.
+-   `ffi_reverse_trampoline_get_user_data()`: Retrieves the user data associated with a callback.
+-   `ffi_reverse_trampoline_free()`: Frees a reverse trampoline.
+
+---
+
+## Advanced Topics
+
+### Customizable Memory Management
+
+You can redirect all of `infix`'s internal memory allocations by defining the following macros before including `infix.h`:   `infix_malloc`, `infix_calloc`, `infix_realloc`, `infix_free`, `infix_memcpy`, `infix_memset`
+
+**Why?**
+-   **Integration:** To integrate `infix` into a larger application or game engine that has its own global memory manager.
+-   **Performance:** To use a custom, high-performance allocator (like a memory pool) for FFI-related objects.
+-   **Debugging:** To route allocations through a custom wrapper for leak detection or memory tracking.
+
+```c
+// Example: Using a custom allocator
+#define infix_malloc my_custom_malloc
+#define infix_free my_custom_free
+#include "infix.h"
+```
+
+### Error Handling
+
+Most `infix` API functions return an `ffi_status` enum. A successful operation will always return `FFI_SUCCESS`. Any other value indicates an error.
+
+```c
+ffi_trampoline_t* trampoline = NULL;
+ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, "invalid signature");
+
+if (status != FFI_SUCCESS) {
+    // Handle the error. For example:
+    if (status == FFI_ERROR_INVALID_ARGUMENT) {
+        fprintf(stderr, "Error: The signature string was malformed.\n");
+    } else if (status == FFI_ERROR_ALLOCATION_FAILED) {
+        fprintf(stderr, "Error: A memory allocation failed.\n");
+    }
+    // ...
+}
+```
+
+### Platform Detection Macros
+
+`infix.h` automatically detects the build environment and defines a set of preprocessor macros that you can use for platform-specific code.
+
+-   **`FFI_OS_*`**: (`FFI_OS_WINDOWS`, `FFI_OS_MACOS`, `FFI_OS_LINUX`, etc.) for the operating system.
+-   **`FFI_ARCH_*`**: (`FFI_ARCH_X64`, `FFI_ARCH_AARCH64`) for the CPU architecture.
+-   **`FFI_ABI_*`**: (`FFI_ABI_WINDOWS_X64`, `FFI_ABI_SYSV_X64`, `FFI_ABI_AAPCS64`) for the Application Binary Interface.
+-   **`FFI_COMPILER_*`**: (`FFI_COMPILER_MSVC`, `FFI_COMPILER_CLANG`, `FFI_COMPILER_GCC`) for the compiler.
+-   **`FFI_ENV_*`**: (`FFI_ENV_POSIX`, `FFI_ENV_MINGW`) for specific build environments.
+
 
 #### **1. Primitive Types**
 
@@ -383,7 +520,7 @@ ffi_create_reverse_trampoline_from_signature(
 );
 
 // 2. Get the native, C-callable function pointer.
-int (*native_fn_ptr)(int) = (int (*)(int))ffi_reverse_trampoline_get_code(reverse_trampoline);
+int (*native_fn_ptr)(int) = (int (*)(int))reverse_trampoline->exec_code.rx_ptr;
 
 // 3. Pass the function pointer to C code.
 run_callback(native_fn_ptr);
@@ -478,7 +615,7 @@ int main() {
     ((ffi_cif_func)ffi_trampoline_get_code(t))((void*)create_point, &result, args);
 
     if (result) {
-        printf("Created point at %p with values (%f, %f)\n", (void*)result, result->x, result->y);
+        printf("Created point at %p with values (%f, %f)\n", result, result->x, result->y);
         free(result);
     }
 
