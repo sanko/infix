@@ -172,6 +172,8 @@ if ( $command eq 'clean' ) {
     clean(%config);
 }
 elsif ( $command eq 'build' ) {
+    push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $config{cflags} }, '-DFFI_DEBUG_ENABLED=1' if $opts{verbose};
     my $lib_path = create_static_library( \%config, $obj_suffix );
     print "\nStatic library '$lib_path' built successfully.\n";
 }

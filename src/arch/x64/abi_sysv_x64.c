@@ -173,12 +173,24 @@ static bool classify_recursive(
             classes[0] = MEMORY;
             return true;
         }
-        // Determine which eightbyte this primitive falls into.
-        size_t index = offset / 8;
-        if (index < 2) {
-            // Classify based on whether it's a floating-point or integer type.
-            arg_class_t new_class = (is_float(type) || is_double(type)) ? SSE : INTEGER;
 
+        // Consider all eightbytes that the primitive occupies, not just the starting offset.
+        size_t start_offset = offset;
+        // Check for overflow before calculating end_offset
+        if (type->size == 0)
+            return false;
+        if (start_offset > SIZE_MAX - (type->size - 1)) {
+            classes[0] = MEMORY;
+            return true;
+        }
+        size_t end_offset = start_offset + type->size - 1;
+
+        size_t start_eightbyte = start_offset / 8;
+        size_t end_eightbyte = end_offset / 8;
+
+        arg_class_t new_class = (is_float(type) || is_double(type)) ? SSE : INTEGER;
+
+        for (size_t index = start_eightbyte; index <= end_eightbyte && index < 2; ++index) {
             // Merge the new class with the existing class for this eightbyte.
             // The rule is: if an eightbyte contains both SSE and INTEGER parts, it is classified as INTEGER.
             if (classes[index] != new_class)

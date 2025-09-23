@@ -165,6 +165,31 @@ static const char * parse_identifier(parser_state_t * state) {
     return name;
 }
 
+/**
+ * @internal
+ * @brief Finds the main "=>" return separator, correctly ignoring any separators
+ *        nested inside function pointer parentheses.
+ * @param signature The full signature string.
+ * @return A pointer to the main "=>" separator, or NULL if not found.
+ */
+static const char * find_main_return_separator(const char * signature) {
+    int paren_level = 0;
+    const char * s = signature;
+    while (*s) {
+        if (*s == FFI_SIG_FUNC_PTR_START)
+            paren_level++;
+        else if (*s == FFI_SIG_FUNC_PTR_END) {
+            if (paren_level > 0)
+                paren_level--;
+        }
+        else if (s[0] == '=' && s[1] == '>') {
+            if (paren_level == 0)
+                return s;  // Found the main separator
+        }
+        s++;
+    }
+    return NULL;  // No top-level separator found
+}
 //================================================================================
 // Core Parsing Logic
 //================================================================================
@@ -703,7 +728,7 @@ static bool parse_signature_content(parser_state_t * state,
 //================================================================================
 // Public API Implementation
 //================================================================================
-
+/* @brief Parses a full function signature string into its constituent ffi_type parts. */
 ffi_status ffi_signature_parse(const char * signature,
                                arena_t ** out_arena,
                                ffi_type ** out_ret_type,
@@ -724,8 +749,8 @@ ffi_status ffi_signature_parse(const char * signature,
     size_t num_fixed = 0;
     bool in_variadic_part = false;
 
-    // A valid signature MUST contain the return type separator "=>".
-    const char * ret_sep = strstr(signature, FFI_SIG_RETURN_SEPARATOR);
+    const char * ret_sep = find_main_return_separator(signature);  // NEW CORRECT LINE
+
     if (!ret_sep) {
         arena_destroy(*out_arena);
         *out_arena = NULL;
