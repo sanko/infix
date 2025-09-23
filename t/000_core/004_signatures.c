@@ -20,8 +20,10 @@
  * 1.  Happy Paths: Correctly parsing and generating trampolines for simple
  *     primitive, pointer, and variadic function signatures.
  * 2.  Advanced Packed Structs: Verifying the parsing of the complex
- *     `p(size,align){type:offset;...}` syntax.
- * 3.  Error Handling: Ensuring the parser correctly rejects a wide variety of
+ *     `p(size,align){type@offset...}` syntax.
+ * 3.  Detailed Function Pointers: Verifying that function pointer types are
+ *     parsed recursively into detailed `FFI_TYPE_REVERSE_TRAMPOLINE` types.
+ * 4.  Error Handling: Ensuring the parser correctly rejects a wide variety of
  *     malformed and invalid signature strings.
  */
 
@@ -51,9 +53,8 @@ static void test_type_ok(const char * signature, ffi_type_category expected_cat,
         if (status == FFI_SUCCESS && type) {
             ok(type->category == expected_cat, "Type category should be %d (got %d)", expected_cat, type->category);
         }
-        else {
+        else
             fail("Type category check skipped due to parsing failure");
-        }
         arena_destroy(arena);
     }
 }
@@ -73,10 +74,11 @@ static void test_type_fail(const char * signature, const char * name) {
 }
 
 TEST {
-    plan(6);
+    plan(9);
 
     subtest("Valid Single Type Signatures") {
-        plan(15);
+        plan(18);
+        test_type_ok("v", FFI_TYPE_VOID, "Simple void");
         test_type_ok("i", FFI_TYPE_PRIMITIVE, "Simple primitive");
         test_type_ok("e", FFI_TYPE_PRIMITIVE, "Long double primitive");
         test_type_ok("d*", FFI_TYPE_POINTER, "Simple pointer");
@@ -85,13 +87,45 @@ TEST {
         test_type_ok("[10]s", FFI_TYPE_ARRAY, "Simple array");
         test_type_ok("[5][10]f", FFI_TYPE_ARRAY, "Nested array");
         test_type_ok("[2]i*", FFI_TYPE_ARRAY, "Array of pointers");
+        test_type_ok("([10]i)*", FFI_TYPE_POINTER, "Pointer to array");
         test_type_ok("{i, d, c}", FFI_TYPE_STRUCT, "Simple struct");
         test_type_ok("<i, d, c>", FFI_TYPE_UNION, "Simple union");
         test_type_ok("{i, <f, [10]c>}", FFI_TYPE_STRUCT, "Struct with nested union and array");
         test_type_ok("p(16,8){x@0,x@8}", FFI_TYPE_STRUCT, "Simple packed struct");
-        test_type_ok("(i=>v)*", FFI_TYPE_POINTER, "Simple function pointer");
-        test_type_ok("(i,d;c*=>v)*", FFI_TYPE_POINTER, "Variadic function pointer");
+        // A raw function pointer is now its own category.
+        test_type_ok("(i=>v)", FFI_TYPE_REVERSE_TRAMPOLINE, "Simple function pointer");
+        // A pointer TO a function pointer is still a regular pointer.
+        test_type_ok("(i,d;c*=>v)*", FFI_TYPE_POINTER, "Pointer to variadic function pointer");
         test_type_ok("  { i , [ 10 ] d * } * ", FFI_TYPE_POINTER, "Type with extra whitespace");
+        test_type_ok("([2](i*))*", FFI_TYPE_POINTER, "Pointer to array of pointers");
+    }
+
+    subtest("Detailed Function Pointer Parsing") {
+        plan(6);
+        const char * signature = "(i,d*=>{c,s})";
+        ffi_type * type = NULL;
+        arena_t * arena = NULL;
+        ffi_status status = ffi_type_from_signature(&type, &arena, signature);
+
+        ok(status == FFI_SUCCESS, "Parsing function pointer type succeeds");
+        if (status != FFI_SUCCESS || !type) {
+            fail("Skipping detail checks due to parse failure");
+            fail("Skipping detail checks");
+            fail("Skipping detail checks");
+            fail("Skipping detail checks");
+            fail("Skipping detail checks");
+        } else {
+            ok(type->category == FFI_TYPE_REVERSE_TRAMPOLINE, "Category is REVERSE_TRAMPOLINE");
+
+            ffi_type* ret_type = type->meta.func_ptr_info.return_type;
+            ffi_type** arg_types = type->meta.func_ptr_info.arg_types;
+
+            ok(type->meta.func_ptr_info.num_args == 2, "Has correct number of arguments (2)");
+            ok(ret_type && ret_type->category == FFI_TYPE_STRUCT, "Return type is correct (struct)");
+            ok(arg_types && arg_types[0] && arg_types[0]->category == FFI_TYPE_PRIMITIVE, "Arg 1 is correct (primitive)");
+            ok(arg_types && arg_types[1] && arg_types[1]->category == FFI_TYPE_POINTER, "Arg 2 is correct (pointer)");
+        }
+        arena_destroy(arena);
     }
 
     subtest("Valid Named Field Signatures") {
@@ -139,7 +173,7 @@ TEST {
     }
 
     subtest("Invalid Single Type Signatures") {
-        plan(12);
+        plan(14);
         test_type_fail("{i,d", "Unmatched brace");
         test_type_fail("[10f]", "Invalid array syntax (no closing bracket for size)");
         test_type_fail("p(1,1){i@}", "Packed struct member missing offset");
@@ -152,6 +186,8 @@ TEST {
         test_type_fail("=>v", "Function sig element in type context");
         test_type_fail("", "Empty string");
         test_type_fail("{,i}", "Leading comma in struct");
+        test_type_fail("([10]i", "Unmatched grouping parenthesis");
+        test_type_fail("[10]i)", "Stray closing parenthesis");
     }
 
     subtest("Valid Full Function Signatures") {
@@ -165,7 +201,7 @@ TEST {
         ffi_type ** at = NULL;                                                                                        \
         size_t na, nf;                                                                                                \
         ffi_status s = ffi_signature_parse(sig_str, &a, &rt, &at, &na, &nf);                                          \
-        ok(s == FFI_SUCCESS, "Parsing succeeds");                                                                     \
+        ok(s == FFI_SUCCESS, "Parsing succeeds for '%s'", sig_str);                                                   \
         ok(na == n_args, "num_args should be %llu, was %llu", (unsigned long long)n_args, (unsigned long long)na);    \
         ok(nf == n_fixed, "num_fixed should be %llu, was %llu", (unsigned long long)n_fixed, (unsigned long long)nf); \
         if (rt)                                                                                                       \
@@ -240,7 +276,76 @@ TEST {
         for (int i = 0; i < OVERFLOW_NESTING_DEPTH; ++i)
             *p++ = '}';
         *p = '\0';
-
         test_type_fail(overflow_sig, "Type nested beyond the safe depth should fail");
+    }
+
+    subtest("Complex and Edge Case Signatures") {
+        plan(7);
+        test_type_ok("(([10]([5]i*))*)**", FFI_TYPE_POINTER, "Deeply nested mixed pointer/array types");
+        test_type_ok("{i,(i=>v)*}", FFI_TYPE_STRUCT, "Struct with function pointer member");
+        test_type_ok("[3]p(9,1){c@0,x@1}", FFI_TYPE_ARRAY, "Array of packed structs");
+        test_type_ok("([3]p(9,1){c@0,x@1})*", FFI_TYPE_POINTER, "Pointer to array of packed structs");
+
+        TEST_SIG("Whitespace torture test",
+                 "  ( [2] { i, d* } )*  * , [5]< a , b > ;  p(1,1){c@0}  => v  ",
+                 3,
+                 2,
+                 FFI_TYPE_VOID);
+        TEST_SIG("Empty argument list but valid", "=>v", 0, 0, FFI_TYPE_VOID);
+
+        subtest("Function with function pointer argument: (i=>i),i=>i") {
+            plan(6);
+            arena_t * a = NULL;
+            ffi_type * rt = NULL;
+            ffi_type ** at = NULL;
+            size_t na, nf;
+            ffi_status s = ffi_signature_parse("(i=>i),i=>i", &a, &rt, &at, &na, &nf);
+            ok(s == FFI_SUCCESS, "Parsing succeeds");
+            if (s == FFI_SUCCESS) {
+                ok(na == 2, "Has 2 arguments");
+                ok(nf == 2, "Has 2 fixed arguments");
+                ok(rt && rt->category == FFI_TYPE_PRIMITIVE, "Return type is primitive");
+                ok(at[0] && at[0]->category == FFI_TYPE_REVERSE_TRAMPOLINE, "Arg 1 is a function pointer");
+                ok(at[1] && at[1]->category == FFI_TYPE_PRIMITIVE, "Arg 2 is a primitive");
+            }
+            else {
+                fail("Skipping detail checks due to parse failure");
+                fail("Skipping detail checks due to parse failure");
+                fail("Skipping detail checks due to parse failure");
+                fail("Skipping detail checks due to parse failure");
+                fail("Skipping detail checks due to parse failure");
+            }
+            arena_destroy(a);
+        }
+    }
+
+    subtest("Invalid Edge Case Signatures") {
+        plan(9);
+        test_type_fail("()", "Empty grouping");
+        test_type_fail("p(1,1){}", "Empty packed struct members");
+        test_type_fail("(i=>v", "Unmatched parens in function pointer");
+        test_type_fail("[10 junk]i", "Junk inside array specifier");
+        test_type_fail("{i@4}", "Offset on non-packed member");
+
+        arena_t * arena = NULL;
+        ffi_type * ret_type = NULL;
+        ffi_type ** arg_types = NULL;
+        size_t num_args, num_fixed;
+        ok(ffi_signature_parse("i;;d=>v", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Double variadic separator should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("i,;d=>v", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Variadic separator in wrong place should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("p(1,1)=>v", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Incomplete packed struct should fail");
+        arena_destroy(arena);
+        ok(ffi_signature_parse("name:i=>v", &arena, &ret_type, &arg_types, &num_args, &num_fixed) ==
+               FFI_ERROR_INVALID_ARGUMENT,
+           "Named primitive argument should fail");
+        arena_destroy(arena);
     }
 }

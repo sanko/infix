@@ -18,6 +18,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
     *   [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
     *   [Recipe: Working with Packed Structs via the Signature API](#recipe-working-with-packed-structs-via-the-signature-api)
     *   [Recipe: Working with Unions](#recipe-working-with-unions)
+    *   [Recipe: Working with Pointers to Arrays](#recipe-working-with-pointers-to-arrays)
 *   **Chapter 3: The Power of Callbacks (Reverse Calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
     *   [Recipe: Callbacks with State (Adapting to a Stateless C API)](#recipe-callbacks-with-state-adapting-to-a-stateless-c-api)
@@ -409,6 +410,49 @@ int main() {
 
     ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)process_number_as_int, &result, args);
     printf("Result: %d\n", result); // Expected: 42
+
+    ffi_trampoline_free(trampoline);
+    return 0;
+}
+```
+
+### Recipe: Working with Pointers to Arrays
+
+**Problem**: You need to call a function that takes a pointer to a fixed-size array, like `void process_matrix(int (*matrix)[4]);`. This is different from an array of pointers.
+
+**Solution**: Use grouping parentheses `()` around the array type before adding the `*` pointer modifier. This overrides the default precedence.
+
+| C Declaration       | Meaning                      | `infix` Signature |
+| ------------------- | ---------------------------- | ----------------- |
+| `int* arr[4]`       | Array of 4 `int*`            | `[4]i*`           |
+| `int (*ptr_arr)[4]` | Pointer to array of 4 `int`s | `([4]i)*`         |
+
+```c
+#include <infix.h>
+#include <stdio.h>
+
+// This function expects a pointer to an array of 4 integers.
+void process_matrix_row(int (*row_ptr)[4]) {
+    printf("Processing row: ");
+    for (int i = 0; i < 4; ++i)
+        printf("%d ", (*row_ptr)[i]);
+    printf("\n");
+}
+
+int main() {
+    // 1. Signature for void(int(*)[4])
+    const char* signature = "([4]i)*=>v"; // Take note of the grouping!
+    ffi_trampoline_t* trampoline = NULL;
+    ffi_create_forward_trampoline_from_signature(&trampoline, signature);
+
+    // 2. Prepare arguments
+    int matrix[2][4] = { {1, 2, 3, 4}, {5, 6, 7, 8} };
+    int (*ptr_to_first_row)[4] = &matrix[0]; // This is the argument type.
+
+    void* args[] = { &ptr_to_first_row };
+
+    // 3. Call the function
+    ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void*)process_matrix_row, NULL, args);
 
     ffi_trampoline_free(trampoline);
     return 0;

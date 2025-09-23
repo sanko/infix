@@ -285,6 +285,9 @@ This API generates trampolines from a simple string: `"arg1,arg2;variadic_arg=>r
     -   `[10]i` corresponds to `int[10]`.
     -   `[5]{i,d}` corresponds to `struct { int; double; }[5]`.
 
+-   **Grouping (`(...)`)**: Overrides the default precedence to group a type before applying modifiers. This is essential for declaring pointers to arrays.
+    -   `([10]i)*` corresponds to `int (*)[10]`.
+
 -   **Struct (`{...}`) and Union (`<...>`):** A comma-separated list of member types.
     -   `{i,d}` corresponds to `struct { int; double; }`.
     -   `<f,y>` corresponds to `union { float; uint64_t; }`.
