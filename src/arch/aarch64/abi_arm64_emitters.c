@@ -29,12 +29,9 @@
  */
 
 #include "abi_arm64_emitters.h"
-
-#include <assert.h>
+#include "common/utility.h"
 #include <stdio.h>
 #include <string.h>
-#include <utility.h>
-
 /**
  * @brief Emits an AArch64 `LDR` (immediate) instruction.
  * @details Encodes the `LDR <Wt|Xt>, [<Xn|SP>, #pimm]` instruction. This loads

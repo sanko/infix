@@ -13,7 +13,7 @@
  */
 /**
  * @file fuzz_helpers.c
- * @brief Implementation of the shared recursive ffi_type generator for fuzzing.
+ * @brief Implementation of the shared recursive infix_type generator for fuzzing.
  *
  * @details This file contains the implementation of the `generate_random_type` function,
  * which is the core of the fuzzing strategy. It is designed to be compiled and linked
@@ -24,17 +24,16 @@
 #include "fuzz_helpers.h"
 
 // This is the core of the fuzzing logic. It builds complex types by consuming
-// fuzzer data and recursively calling itself to create nested members. Its memory
-// management is critical: it must not leak on any internal failure path, otherwise
-// it could lead to false positives from AddressSanitizer.
-ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fields) {
+// fuzzer data and recursively calling itself to create nested members.
+// All allocations are now made from the provided arena.
+infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int depth, size_t * total_fields) {
     // Check total fields and recursion depth at the start of every call.
     if (depth >= MAX_RECURSION_DEPTH || *total_fields >= MAX_TOTAL_FUZZ_FIELDS) {
         // Force a simple type if we're too deep or complex.
         uint8_t prim_byte;
         if (!consume_uint8_t(in, &prim_byte))
             return NULL;
-        return ffi_type_create_primitive((ffi_primitive_type_id)(prim_byte % (FFI_PRIMITIVE_TYPE_LONG_DOUBLE + 1)));
+        return infix_type_create_primitive((infix_primitive_type_id)(prim_byte % (INFIX_PRIMITIVE_LONG_DOUBLE + 1)));
     }
     uint8_t type_choice;
     if (!consume_uint8_t(in, &type_choice))
@@ -54,12 +53,12 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fie
             uint8_t prim_byte;
             if (!consume_uint8_t(in, &prim_byte))
                 return NULL;
-            ffi_primitive_type_id prim_id = (ffi_primitive_type_id)(prim_byte % (FFI_PRIMITIVE_TYPE_LONG_DOUBLE + 1));
+            infix_primitive_type_id prim_id = (infix_primitive_type_id)(prim_byte % (INFIX_PRIMITIVE_LONG_DOUBLE + 1));
             // Primitives are static singletons, so this is a safe, non-leaking call.
-            return ffi_type_create_primitive(prim_id);
+            return infix_type_create_primitive(prim_id);
         }
     case 2:  // Pointer
-        return ffi_type_create_pointer();
+        return infix_type_create_pointer();
 
     case 3:  // Array
         {
@@ -69,21 +68,14 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fie
             size_t num_elements = num_elements_byte % MAX_ARRAY_ELEMENTS;
 
             // Recursively generate the element type for the array.
-            ffi_type * element_type = generate_random_type(in, depth + 1, total_fields);
+            infix_type * element_type = generate_random_type(arena, in, depth + 1, total_fields);
             if (!element_type)
                 return NULL;
 
-            ffi_type * array_type = NULL;
-            ffi_status status = ffi_type_create_array(&array_type, element_type, num_elements);
+            infix_type * array_type = NULL;
+            (void)infix_type_create_array(arena, &array_type, element_type, num_elements);
 
-            if (status != FFI_SUCCESS) {
-                // Per the API contract, on failure, the caller retains ownership of element_type.
-                // We must destroy it to prevent a memory leak in the fuzzer.
-                ffi_type_destroy(element_type);
-                return NULL;
-            }
-            // On success, the new array_type takes ownership of the element_type.
-            return array_type;
+            return array_type;  // On failure, array_type is NULL, which is the correct return.
         }
     case 4:  // Struct
     case 5:  // Union
@@ -94,27 +86,23 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fie
                 return NULL;
             size_t num_members = (num_members_byte % MAX_MEMBERS) + 1;  // Ensure at least 1 member.
 
-            ffi_struct_member * members = (ffi_struct_member *)calloc(num_members, sizeof(ffi_struct_member));
+            infix_struct_member * members =
+                infix_arena_alloc(arena, num_members * sizeof(infix_struct_member), _Alignof(infix_struct_member));
+
             if (!members)
-                return NULL;
+                return nullptr;
 
             for (size_t i = 0; i < num_members; ++i) {
-                // Check complexity limit inside the loop before recursing.
-                if (*total_fields >= MAX_TOTAL_FUZZ_FIELDS) {
-                    // Abort generation of this aggregate if it's too complex.
-                    for (size_t j = 0; j < i; ++j)
-                        ffi_type_destroy(members[j].type);
-                    free(members);
-                    return NULL;
-                }
-                ffi_type * member_type = generate_random_type(in, depth + 1, total_fields);
-                if (!member_type) {
-                    // If a nested type creation fails, we must clean up everything created so far.
-                    for (size_t j = 0; j < i; ++j)
-                        ffi_type_destroy(members[j].type);
-                    free(members);
-                    return NULL;
-                }
+                // Abort generation of this aggregate if it's too complex.
+                if (*total_fields >= MAX_TOTAL_FUZZ_FIELDS)
+                    return nullptr;
+
+                infix_type * member_type = generate_random_type(arena, in, depth + 1, total_fields);
+
+                // If a nested type creation fails, we must clean up everything created so far.
+                if (!member_type)
+                    return nullptr;
+
                 members[i].name = "fuzz";
                 members[i].type = member_type;
 
@@ -127,8 +115,7 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fie
                     members[i].offset = fuzz_offset;
             }
 
-            ffi_type * agg_type = NULL;
-            ffi_status status;
+            infix_type * agg_type = NULL;
 
             if (type_choice == 6) {  // Handle Packed Struct case
                 size_t total_size;
@@ -144,22 +131,17 @@ ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fie
                 // Ensure alignment is not zero, which is invalid.
                 size_t alignment = (alignment_byte % 8) + 1;
 
-                status = ffi_type_create_packed_struct(&agg_type, total_size, alignment, members, num_members);
+                (void)infix_type_create_packed_struct(arena, &agg_type, total_size, alignment, members, num_members);
             }
-            else  // Handle regular Struct and Union
-                status = (type_choice == 4) ? ffi_type_create_struct(&agg_type, members, num_members)
-                                            : ffi_type_create_union(&agg_type, members, num_members);
-
-            if (status != FFI_SUCCESS) {
-                // On failure, we own and must clean up all created member types and the members array.
-                for (size_t i = 0; i < num_members; ++i)
-                    ffi_type_destroy(members[i].type);
-                free(members);
-                return NULL;
+            else {  // Handle regular Struct and Union
+                if (type_choice == 4)
+                    (void)infix_type_create_struct(arena, &agg_type, members, num_members);
+                else
+                    (void)infix_type_create_union(arena, &agg_type, members, num_members);
             }
             // On success, the new aggregate type takes ownership of the members array and its sub-types.
             return agg_type;
         }
     }
-    return NULL;
+    return nullptr;
 }

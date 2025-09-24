@@ -32,7 +32,7 @@
  *       executable views of the same physical memory, which is necessary for some hardened systems.
  *
  * 2.  **Callback Dispatching:** It contains the high-level C function
- *     (`ffi_internal_dispatch_callback_fn_impl`) that is called by the
+ *     (`infix_internal_dispatch_callback_fn_impl`) that is called by the
  *     low-level assembly of a reverse trampoline. This function acts as the final
  *     bridge to invoke the user's C callback with the correctly marshalled arguments.
  */
@@ -43,14 +43,14 @@
 #define _POSIX_C_SOURCE 200809L
 #endif
 
-#include <infix_internals.h>
+#include "common/infix_internals.h"
+#include "common/utility.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <utility.h>
 
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else  // Linux, macOS, BSDs
 #include <errno.h>
@@ -62,13 +62,13 @@
 
 // Portability shim for mmap anonymous flag. Most modern systems (especially BSDs)
 // use MAP_ANON. Some older or Linux-specific code uses MAP_ANONYMOUS.
-#if defined(FFI_ENV_POSIX) && !defined(FFI_OS_WINDOWS)
+#if defined(INFIX_ENV_POSIX) && !defined(INFIX_OS_WINDOWS)
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
 #define MAP_ANON MAP_ANONYMOUS
 #endif
 #endif
 
-#if !defined(FFI_OS_WINDOWS) && !defined(FFI_OS_MACOS) && !defined(FFI_OS_TERMUX) && !defined(FFI_OS_OPENBSD)
+#if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_TERMUX) && !defined(INFIX_OS_OPENBSD)
 #include <fcntl.h>   // For O_RDONLY
 #include <stdint.h>  // For uint64_t
 /**
@@ -138,15 +138,15 @@ static int shm_open_anonymous() {
  *            satisfying strict security policies found on some hardened systems.
  *
  * @param size The number of bytes to allocate. Will be rounded up to the nearest page size.
- * @return An `ffi_executable_t` handle. On failure, the `size` member of the returned struct will be 0.
+ * @return An `infix_executable_t` handle. On failure, the `size` member of the returned struct will be 0.
  */
-c23_nodiscard ffi_executable_t ffi_executable_alloc(size_t size) {
-    ffi_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0};
+c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
+    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0};
     if (size == 0) {
         return exec;
     }
 
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     // Windows: Single Mapping (VirtualAlloc).
     void * code = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (code == nullptr)
@@ -155,14 +155,14 @@ c23_nodiscard ffi_executable_t ffi_executable_alloc(size_t size) {
     exec.rw_ptr = code;
     exec.rx_ptr = code;
 
-#elif defined(FFI_OS_MACOS) || defined(FFI_OS_TERMUX) || defined(FFI_OS_OPENBSD) || defined(FFI_OS_DRAGONFLY)
+#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     // Single Mapping (mmap). This simpler approach is more reliable on these platforms.
     // - macOS/OpenBSD: Avoids issues with shm + fork.
     // - termux: https://github.com/termux/libandroid-shmem/issues/10
     void * code = MAP_FAILED;
 #if defined(MAP_ANON)
     int flags = MAP_PRIVATE | MAP_ANON;
-#if defined(FFI_OS_MACOS)
+#if defined(INFIX_OS_MACOS)
     flags |= MAP_JIT;
 #endif
     code = mmap(nullptr, size, PROT_READ | PROT_WRITE, flags, -1, 0);
@@ -201,12 +201,12 @@ c23_nodiscard ffi_executable_t ffi_executable_alloc(size_t size) {
             munmap(exec.rx_ptr, size);
         close(exec.shm_fd);
         // Reset all fields to indicate failure.
-        return (ffi_executable_t){.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
+        return (infix_executable_t){.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
     }
 #endif
 
     exec.size = size;
-    FFI_DEBUG_PRINTF("Allocated JIT memory. RW at %p, RX at %p", exec.rw_ptr, exec.rx_ptr);
+    INFIX_DEBUG_PRINTF("Allocated JIT memory. RW at %p, RX at %p", exec.rw_ptr, exec.rx_ptr);
     return exec;
 }
 
@@ -219,20 +219,20 @@ c23_nodiscard ffi_executable_t ffi_executable_alloc(size_t size) {
  *          stale or unrelated data. After arming the guard, it then releases the
  *          underlying memory resources.
  *
- * @param exec The `ffi_executable_t` handle to the memory to be freed.
+ * @param exec The `infix_executable_t` handle to the memory to be freed.
  */
-void ffi_executable_free(ffi_executable_t exec) {
+void infix_executable_free(infix_executable_t exec) {
     if (exec.size == 0)
         return;
 
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     if (exec.rw_ptr) {
         // Turn the page into a guard page by revoking all access.
         VirtualProtect(exec.rw_ptr, exec.size, PAGE_NOACCESS, &(DWORD){0});
         // Now, release the memory reservation.
         VirtualFree(exec.rw_ptr, 0, MEM_RELEASE);
     }
-#elif defined(FFI_OS_MACOS) || defined(FFI_OS_TERMUX) || defined(FFI_OS_OPENBSD) || defined(FFI_OS_DRAGONFLY)
+#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     if (exec.rw_ptr) {
         // On single-map platforms, rw_ptr == rx_ptr
         // Turn the page into a guard page.
@@ -258,7 +258,7 @@ void ffi_executable_free(ffi_executable_t exec) {
 /**
  * @brief Makes a memory block executable and finalizes it for use.
  * @details This is the final step in the JIT process. After machine code has been
- *          written to the `rw_ptr` of an `ffi_executable_t` handle, this function
+ *          written to the `rw_ptr` of an `infix_executable_t` handle, this function
  *          makes the `rx_ptr` executable.
  *
  *          Platform-specific actions:
@@ -273,14 +273,14 @@ void ffi_executable_free(ffi_executable_t exec) {
  *            is a separate mapping that was already created with `PROT_EXEC`. The function's
  *            only job on these platforms is to perform the necessary cache flush on ARM.
  *
- * @param exec The `ffi_executable_t` handle to the memory block.
+ * @param exec The `infix_executable_t` handle to the memory block.
  * @return `true` on success, `false` on failure (e.g., if `mprotect` fails).
  */
-c23_nodiscard bool ffi_executable_make_executable(ffi_executable_t exec) {
+c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     if (exec.rw_ptr == nullptr || exec.size == 0)
         return false;
 
-#if defined(FFI_ARCH_AARCH64)
+#if defined(INFIX_ARCH_AARCH64)
     // On all ARM64 platforms, the instruction cache must be flushed before execution.
 // This is done *before* changing memory permissions to ensure the writes are visible.
 #if defined(_MSC_VER)
@@ -292,10 +292,10 @@ c23_nodiscard bool ffi_executable_make_executable(ffi_executable_t exec) {
 #endif
 
     bool result = false;
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     // For single-map on Windows, we change the protection from RW to RX.
     result = VirtualProtect(exec.rw_ptr, exec.size, PAGE_EXECUTE_READ, &(DWORD){0});
-#elif defined(FFI_OS_MACOS) || defined(FFI_OS_TERMUX) || defined(FFI_OS_OPENBSD) || defined(FFI_OS_DRAGONFLY)
+#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     // For single-map on these POSIX systems, we also change protection from RW to RX.
     result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
 #else
@@ -303,7 +303,7 @@ c23_nodiscard bool ffi_executable_make_executable(ffi_executable_t exec) {
 #endif
 
     if (result)
-        FFI_DEBUG_PRINTF("Memory at %p is ready for execution.", exec.rx_ptr);
+        INFIX_DEBUG_PRINTF("Memory at %p is ready for execution.", exec.rx_ptr);
     return result;
 }
 
@@ -312,14 +312,14 @@ c23_nodiscard bool ffi_executable_make_executable(ffi_executable_t exec) {
  * @internal This is used to allocate the context structure for reverse trampolines.
  *           The memory can later be made read-only for security hardening.
  * @param size The number of bytes to allocate.
- * @return An `ffi_protected_t` handle. `rw_ptr` will be `nullptr` on failure.
+ * @return An `infix_protected_t` handle. `rw_ptr` will be `nullptr` on failure.
  */
-c23_nodiscard ffi_protected_t ffi_protected_alloc(size_t size) {
-    ffi_protected_t prot = {.rw_ptr = nullptr, .size = 0};
+c23_nodiscard infix_protected_t infix_protected_alloc(size_t size) {
+    infix_protected_t prot = {.rw_ptr = nullptr, .size = 0};
     if (size == 0)
         return prot;
 
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     prot.rw_ptr = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 #else  // POSIX platforms
 #if defined(MAP_ANON)
@@ -347,11 +347,11 @@ c23_nodiscard ffi_protected_t ffi_protected_alloc(size_t size) {
  * @internal Used to clean up the memory allocated for a reverse trampoline context.
  * @param prot The handle to the memory to be freed.
  */
-void ffi_protected_free(ffi_protected_t prot) {
+void infix_protected_free(infix_protected_t prot) {
     if (prot.size == 0)
         return;
 
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     VirtualFree(prot.rw_ptr, 0, MEM_RELEASE);
 #else
     munmap(prot.rw_ptr, prot.size);
@@ -368,15 +368,15 @@ void ffi_protected_free(ffi_protected_t prot) {
  * @param prot The handle to the memory block.
  * @return `true` on success, `false` otherwise.
  */
-c23_nodiscard bool ffi_protected_make_readonly(ffi_protected_t prot) {
+c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
     if (prot.size == 0)
         return false;
 
     bool result = false;
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     // On Linux and BSDs, this works as expected.
     result = VirtualProtect(prot.rw_ptr, prot.size, PAGE_READONLY, &(DWORD){0});
-#elif !defined(FFI_OS_MACOS)
+#elif !defined(INFIX_OS_MACOS)
     // On Linux and BSDs, this works as expected.
     result = (mprotect(prot.rw_ptr, prot.size, PROT_READ) == 0);
 #else
@@ -395,7 +395,7 @@ c23_nodiscard bool ffi_protected_make_readonly(ffi_protected_t prot) {
  *          of `void*`) and is responsible for invoking the user's actual C callback handler.
  *
  *          The process is as follows:
- *          1.  It receives the `ffi_reverse_trampoline_t` context and the `args_array`
+ *          1.  It receives the `infix_reverse_t` context and the `args_array`
  *              from the JIT-compiled assembly stub.
  *          2.  It constructs a **new, augmented argument array** on the stack.
  *          3.  The **first element** of this new array is set to a pointer to the `context`.
@@ -412,16 +412,13 @@ c23_nodiscard bool ffi_protected_make_readonly(ffi_protected_t prot) {
  * @param args_array An array of pointers from the JIT stub, where each element points
  *                   to an argument's data from the native caller.
  */
-void ffi_internal_dispatch_callback_fn_impl(ffi_reverse_trampoline_t * context,
-                                            void * return_value_ptr,
-                                            void ** args_array) {
-    FFI_DEBUG_PRINTF("In ffi_internal_dispatch_callback_fn_impl");
-    FFI_DEBUG_PRINTF("  Context: %p, User Callback: %p, NumArgs: %llu",
-                     (void *)context,
-                     context->user_callback_fn,
-                     (unsigned long long)context->num_args);
-
-    ffi_trampoline_t * trampoline = context->cached_forward_trampoline;
+void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * return_value_ptr, void ** args_array) {
+    INFIX_DEBUG_PRINTF("In infix_internal_dispatch_callback_fn_impl");
+    INFIX_DEBUG_PRINTF("  Context: %p, User Callback: %p, NumArgs: %llu",
+                       (void *)context,
+                       context->user_callback_fn,
+                       (unsigned long long)context->num_args);
+    infix_forward_t * trampoline = context->cached_forward_trampoline;
     if (trampoline == nullptr) {
         // This is a fatal internal error. We can't propagate an error from here,
         // but we can prevent a crash by zeroing the return buffer if it exists.
@@ -430,16 +427,20 @@ void ffi_internal_dispatch_callback_fn_impl(ffi_reverse_trampoline_t * context,
         return;
     }
 
-    ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
-
+    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
     /// For all other function signatures, use the cached forward trampoline
     // to call the user's C callback handler with the correct native ABI.
 
     // The cached_forward_trampoline was generated to expect `num_args + 1` arguments,
-    // with the first one being the `ffi_reverse_trampoline_t*` context.
+    // with the first one being the `infix_reverse_t*` context.
     // We must construct a new argument array that reflects this.
+#if defined(INFIX_COMPILER_MSVC)
+    // MSVC does not support VLAs, so we use its intrinsic `_alloca` for stack allocation.
+    void ** callback_args = (void **)_alloca(sizeof(void *) * (context->num_args + 1));
+#else
     void * callback_args[context->num_args + 1];
+#endif
 
     // The first argument to the user's handler is the context pointer itself.
     // The args array needs a pointer to this value.
@@ -452,6 +453,5 @@ void ffi_internal_dispatch_callback_fn_impl(ffi_reverse_trampoline_t * context,
     // Call the user's handler through the trampoline with the complete, prepended argument list.
     cif_func(context->user_callback_fn, return_value_ptr, callback_args);
 
-
-    FFI_DEBUG_PRINTF("Exiting ffi_internal_dispatch_callback_fn_impl");
+    INFIX_DEBUG_PRINTF("Exiting infix_internal_dispatch_callback_fn_impl");
 }

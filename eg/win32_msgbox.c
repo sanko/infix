@@ -24,22 +24,18 @@ int main() {
     if (!user32)
         return 1;
 
-    int (*MessageBoxW_ptr)(HWND, LPCWSTR, LPCWSTR, UINT) = (void *)GetProcAddress(user32, "MessageBoxW");
+    void * MessageBoxW_ptr = (void *)GetProcAddress(user32, "MessageBoxW");
     if (!MessageBoxW_ptr)
         return 1;
 
-    // 2. Describe the function signature.
-    ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type * arg_types[] = {
-        ffi_type_create_pointer(),                            // HWND hWnd (handle is a pointer)
-        ffi_type_create_pointer(),                            // LPCWSTR lpText (wide string is a pointer)
-        ffi_type_create_pointer(),                            // LPCWSTR lpCaption
-        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32)  // UINT uType
-    };
+    // 2. Describe the function signature using the high-level string API.
+    // Signature for int(HWND, LPCWSTR, LPCWSTR, UINT)
+    // HWND and LPCWSTR are pointer types (v*), and UINT is a 32-bit uint (j).
+    const char * signature = "v*,v*,v*,j=>i";
 
-    // 3. Generate the trampoline.
-    ffi_trampoline_t * trampoline = NULL;
-    (void)generate_forward_trampoline(&trampoline, ret_type, arg_types, 4, 4);
+    // 3. Generate the trampoline from the signature.
+    infix_forward_t * trampoline = NULL;
+    infix_forward_create(&trampoline, signature);
 
     // 4. Prepare arguments. Windows uses UTF-16 for wide strings, so we use the L"" prefix.
     HWND hwnd = NULL;  // No owner window
@@ -51,11 +47,11 @@ int main() {
     int result = 0;
 
     // 5. Call the function.
-    ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)MessageBoxW_ptr, &result, args);
+    ((infix_cif_func)infix_forward_get_code(trampoline))((void *)MessageBoxW_ptr, &result, args);
     printf("MessageBoxW returned: %d\n", result);
 
     // 6. Clean up.
-    ffi_trampoline_free(trampoline);
+    infix_forward_destroy(trampoline);
     FreeLibrary(user32);
 
     return 0;

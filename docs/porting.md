@@ -32,33 +32,33 @@ If you can answer these questions, you're well on your way to implementing the n
 
 The first step is to teach the library how to recognize the new platform. Open `infix.h` and locate the "Host Platform and Architecture Detection" section.
 
-1.  **Add Architecture Macro**: Add a new `#define FFI_ARCH_*` macro. The standard compiler macro for RISC-V is `__riscv`, and the bit width is checked with `__riscv_xlen`.
+1.  **Add Architecture Macro**: Add a new `#define INFIX_ARCH_*` macro. The standard compiler macro for RISC-V is `__riscv`, and the bit width is checked with `__riscv_xlen`.
 
     ```c
     // In infix.h, after the x86-64 and AArch64 checks...
     #elif defined(__riscv) && __riscv_xlen == 64
-    #define FFI_ARCH_RISCV64
+    #define INFIX_ARCH_RISCV64
     #else
     #error "Unsupported architecture."
     #endif
     ```
 
-2.  **Add ABI Macro**: In the "Target ABI Logic Selection" section, define a new `FFI_ABI_*` macro based on the combination of OS and architecture. For RISC-V 64-bit, the standard ABI is LP64D.
+2.  **Add ABI Macro**: In the "Target ABI Logic Selection" section, define a new `INFIX_ABI_*` macro based on the combination of OS and architecture. For RISC-V 64-bit, the standard ABI is LP64D.
 
     ```c
-    // In infix.h, inside the #ifndef FFI_ABI_FORCED block...
-    #if defined(FFI_ARCH_AARCH64)
+    // In infix.h, inside the #ifndef INFIX_ABI_FORCED block...
+    #if defined(INFIX_ARCH_AARCH64)
       // ...
-    #elif defined(FFI_ARCH_RISCV64)
-      #define FFI_ABI_LP64D
-    #elif defined(FFI_ARCH_X64)
+    #elif defined(INFIX_ARCH_RISCV64)
+      #define INFIX_ABI_LP64D
+    #elif defined(INFIX_ARCH_X64)
       // ...
     #endif
     ```
 
 ## Step 2: Implement the ABI Specification
 
-This is the core of the porting effort. You must provide a concrete implementation of the two ABI "specification" structs: `ffi_forward_abi_spec` and `ffi_reverse_abi_spec`.
+This is the core of the porting effort. You must provide a concrete implementation of the two ABI "specification" structs: `infix_forward_abi_spec` and `infix_reverse_abi_spec`.
 
 1.  **Create New Files**: In the `abi/riscv/` directory, create the necessary files:
     *   `abi_riscv64.c`
@@ -110,28 +110,28 @@ typedef enum {
 // Forward Declarations for all required functions
 
 // Forward Spec
-static ffi_status prepare_forward_call_frame_riscv(/*...*/>);
-static ffi_status generate_forward_prologue_riscv(/*...*/>);
-static ffi_status generate_forward_argument_moves_riscv(/*...*/>);
-static ffi_status generate_forward_epilogue_riscv(/*...*/>);
+static infix_status prepare_forward_call_frame_riscv(/*...*/>);
+static infix_status generate_forward_prologue_riscv(/*...*/>);
+static infix_status generate_forward_argument_moves_riscv(/*...*/>);
+static infix_status generate_forward_epilogue_riscv(/*...*/>);
 
 // Reverse Spec
-static ffi_status prepare_reverse_call_frame_riscv(/*...*/>);
-static ffi_status generate_reverse_prologue_riscv(/*...*/>);
-static ffi_status generate_reverse_argument_marshalling_riscv(/*...*/>);
-static ffi_status generate_reverse_dispatcher_call_riscv(/*...*/>);
-static ffi_status generate_reverse_epilogue_riscv(/*...*/>);
+static infix_status prepare_reverse_call_frame_riscv(/*...*/>);
+static infix_status generate_reverse_prologue_riscv(/*...*/>);
+static infix_status generate_reverse_argument_marshalling_riscv(/*...*/>);
+static infix_status generate_reverse_dispatcher_call_riscv(/*...*/>);
+static infix_status generate_reverse_epilogue_riscv(/*...*/>);
 
 // ABI Specification Instances
 
-const ffi_forward_abi_spec g_riscv_forward_spec = {
+const infix_forward_abi_spec g_riscv_forward_spec = {
     .prepare_forward_call_frame      = prepare_forward_call_frame_riscv,
     .generate_forward_prologue       = generate_forward_prologue_riscv,
     .generate_forward_argument_moves = generate_forward_argument_moves_riscv,
     .generate_forward_epilogue       = generate_forward_epilogue_riscv
 };
 
-const ffi_reverse_abi_spec g_riscv_reverse_spec = {
+const infix_reverse_abi_spec g_riscv_reverse_spec = {
     .prepare_reverse_call_frame            = prepare_reverse_call_frame_riscv,
     .generate_reverse_prologue             = generate_reverse_prologue_riscv,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_riscv,
@@ -141,12 +141,12 @@ const ffi_reverse_abi_spec g_riscv_reverse_spec = {
 
 // Implementation Skeletons
 
-static ffi_status prepare_forward_call_frame_riscv(/*...*/) {
+static infix_status prepare_forward_call_frame_riscv(/*...*/) {
     // This is the core classification logic.
-    // 1. Allocate the ffi_call_frame_layout struct.
+    // 1. Allocate the infix_call_frame_layout struct.
     // 2. Check if the return type is a large aggregate passed by reference. If so,
     //    the first argument register (a0) is now consumed by a hidden pointer.
-    // 3. Iterate through each argument ffi_type:
+    // 3. Iterate through each argument infix_type:
     //    - Classify it as integer, float, or aggregate.
     //    - If there are available registers (a0-a7, fa0-fa7), assign the argument
     //      to one and increment the corresponding register counter.
@@ -155,7 +155,7 @@ static ffi_status prepare_forward_call_frame_riscv(/*...*/) {
     // 5. Populate and return the completed layout struct.
 }
 
-static ffi_status generate_forward_prologue_riscv(code_buffer* buf, /*...*/) {
+static infix_status generate_forward_prologue_riscv(code_buffer* buf, /*...*/) {
     // Emit RISC-V assembly for:
     // 1. `addi sp, sp, -stack_size` (allocate stack frame)
     // 2. `sd ra, offset(sp)` (save return address)
@@ -202,7 +202,7 @@ void emit_riscv_addi(code_buffer* buf, riscv_gpr rd, riscv_gpr rs1, int16_t imm)
     emit_int32(buf, instruction);
 }
 
-void emit_riscv64_ld(code_buffer* buf, riscv64_gpr rd, riscv64_gpr rs1, int16_t offset) {
+void emit_riscv64_ld(code_buffer* buf, riscv_gpr rd, riscv_gpr rs1, int16_t offset) {
     // I-Type format: | imm[11:0] | rs1 | funct3 | rd | opcode |
     uint32_t instruction = 0;
     instruction |= ((uint32_t)offset & 0xFFF) << 20; // imm[11:0]
@@ -217,23 +217,23 @@ You will need to create similar emitters for `sd` (store), `jalr` (jump and link
 
 ## Step 4: Integrate the New ABI
 
-1.  **Declare Extern Specs**: In `trampoline.c`, add an `extern` declaration for your new spec structs inside a new `#if defined(FFI_ABI_LP64D)` block.
+1.  **Declare Extern Specs**: In `trampoline.c`, add an `extern` declaration for your new spec structs inside a new `#if defined(INFIX_ABI_LP64D)` block.
 2.  **Update `get_current_*_abi_spec()`**: In `trampoline.c`, add your new ABI to the `get_current_forward_abi_spec()` and `get_current_reverse_abi_spec()` functions.
 
     ```c
     // In trampoline.c
     // Add extern declarations at the top of the file
-    #if defined(FFI_ABI_RISCV64)
-    extern const ffi_forward_abi_spec g_riscv_forward_spec;
-    extern const ffi_reverse_abi_spec g_riscv_reverse_spec;
+    #if defined(INFIX_ABI_RISCV64)
+    extern const infix_forward_abi_spec g_riscv_forward_spec;
+    extern const infix_reverse_abi_spec g_riscv_reverse_spec;
     #endif
 
     // Update the get_current_forward_abi_spec function
-    static const ffi_forward_abi_spec * get_current_forward_abi_spec() {
+    static const infix_forward_abi_spec * get_current_forward_abi_spec() {
         // ...
-    #elif defined(FFI_ABI_AAPCS64)
+    #elif defined(INFIX_ABI_AAPCS64)
         return &g_arm64_forward_spec;
-    #elif defined(FFI_ABI_RISCV64)
+    #elif defined(INFIX_ABI_RISCV64)
         return &g_riscv_forward_spec;
     #else
         return NULL;
@@ -245,7 +245,7 @@ You will need to create similar emitters for `sd` (store), `jalr` (jump and link
 3.  **Unity Build**: At the bottom of `trampoline.c`, add an `#include` for your new `.c` files.
 
     ```c
-    #elif defined(FFI_ABI_LP64D)
+    #elif defined(INFIX_ABI_LP64D)
     #include "abi_riscv64.c"
     #include "abi_riscv64_emitters.c"
     #endif

@@ -15,7 +15,7 @@
  * @file abi_sysv_x64.c
  * @brief Implements the FFI logic for the System V AMD64 ABI.
  *
- * @details This file provides the concrete implementation of the `ffi_abi_spec`
+ * @details This file provides the concrete implementation of the `infix_abi_spec`
  * for the System V x86-64 ABI, which is the standard calling convention for
  * Linux, macOS, BSD, and other UNIX-like operating systems on this architecture.
  *
@@ -56,12 +56,12 @@
  *     `va_list` for floating-point arguments.
  */
 
+#include "common/infix_internals.h"
+#include "common/utility.h"
 #include <abi_x64_common.h>
 #include <abi_x64_emitters.h>
-#include <infix_internals.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <utility.h>
 
 /** @brief An array of GPRs used for passing the first 6 integer/pointer arguments, in order. */
 static const x64_gpr GPR_ARGS[] = {RDI_REG, RSI_REG, RDX_REG, RCX_REG, R8_REG, R9_REG};
@@ -91,40 +91,43 @@ typedef enum {
 } arg_class_t;
 
 // Forward Declarations
-static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
-                                                      ffi_call_frame_layout ** out_layout,
-                                                      ffi_type * ret_type,
-                                                      ffi_type ** arg_types,
-                                                      size_t num_args,
-                                                      size_t num_fixed_args);
-static ffi_status generate_forward_prologue_sysv_x64(code_buffer * buf, ffi_call_frame_layout * layout);
-static ffi_status generate_forward_argument_moves_sysv_x64(
-    code_buffer * buf, ffi_call_frame_layout * layout, ffi_type ** arg_types, size_t num_args, size_t num_fixed_args);
-static ffi_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
-                                                     ffi_call_frame_layout * layout,
-                                                     ffi_type * ret_type);
-static ffi_status prepare_reverse_call_frame_sysv_x64(arena_t * arena,
-                                                      ffi_reverse_call_frame_layout ** out_layout,
-                                                      ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_prologue_sysv_x64(code_buffer * buf, ffi_reverse_call_frame_layout * layout);
-static ffi_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * buf,
-                                                                 ffi_reverse_call_frame_layout * layout,
-                                                                 ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
-                                                            ffi_reverse_call_frame_layout * layout,
-                                                            ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
-                                                     ffi_reverse_call_frame_layout * layout,
-                                                     ffi_reverse_trampoline_t * context);
+static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
+                                                        infix_call_frame_layout ** out_layout,
+                                                        infix_type * ret_type,
+                                                        infix_type ** arg_types,
+                                                        size_t num_args,
+                                                        size_t num_fixed_args);
+static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_call_frame_layout * layout);
+static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
+                                                             infix_call_frame_layout * layout,
+                                                             infix_type ** arg_types,
+                                                             size_t num_args,
+                                                             size_t num_fixed_args);
+static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
+                                                       infix_call_frame_layout * layout,
+                                                       infix_type * ret_type);
+static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
+                                                        infix_reverse_call_frame_layout ** out_layout,
+                                                        infix_reverse_t * context);
+static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout);
+static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * buf,
+                                                                   infix_reverse_call_frame_layout * layout,
+                                                                   infix_reverse_t * context);
+static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
+                                                              infix_reverse_call_frame_layout * layout,
+                                                              infix_reverse_t * context);
+static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
+                                                       infix_reverse_call_frame_layout * layout,
+                                                       infix_reverse_t * context);
 
 /** @brief The v-table of System V x64 functions for generating forward trampolines. */
-const ffi_forward_abi_spec g_sysv_x64_forward_spec = {.prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
-                                                      .generate_forward_prologue = generate_forward_prologue_sysv_x64,
-                                                      .generate_forward_argument_moves =
-                                                          generate_forward_argument_moves_sysv_x64,
-                                                      .generate_forward_epilogue = generate_forward_epilogue_sysv_x64};
+const infix_forward_abi_spec g_sysv_x64_forward_spec = {
+    .prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
+    .generate_forward_prologue = generate_forward_prologue_sysv_x64,
+    .generate_forward_argument_moves = generate_forward_argument_moves_sysv_x64,
+    .generate_forward_epilogue = generate_forward_epilogue_sysv_x64};
 /** @brief The v-table of System V x64 functions for generating reverse trampolines. */
-const ffi_reverse_abi_spec g_sysv_x64_reverse_spec = {
+const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_sysv_x64,
     .generate_reverse_prologue = generate_reverse_prologue_sysv_x64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_sysv_x64,
@@ -141,7 +144,7 @@ const ffi_reverse_abi_spec g_sysv_x64_reverse_spec = {
  * field within a struct is not aligned to its natural boundary (e.g., a uint64_t at offset 1),
  * the entire struct must be classified as MEMORY.
  *
- * @param type The ffi_type of the current member/element being examined.
+ * @param type The infix_type of the current member/element being examined.
  * @param offset The byte offset of this member from the start of the aggregate.
  * @param[in,out] classes An array of two `arg_class_t` that is updated during classification.
  * @param depth The current recursion depth.
@@ -149,7 +152,7 @@ const ffi_reverse_abi_spec g_sysv_x64_reverse_spec = {
  * @return `true` if an unaligned field was found (forcing MEMORY classification), `false` otherwise.
  */
 static bool classify_recursive(
-    ffi_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
+    infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
     // Abort classification if the type is excessively complex or too deep. Give up and pass in memory.
     if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY || depth > MAX_CLASSIFY_DEPTH) {
         classes[0] = MEMORY;
@@ -166,7 +169,7 @@ static bool classify_recursive(
     // by recursive classification. Treat it as an opaque block of memory.
     // For classification purposes, this is equivalent to an integer array.
 
-    if (type->category == FFI_TYPE_PRIMITIVE) {
+    if (type->category == INFIX_TYPE_PRIMITIVE) {
         (*field_count)++;
         // `long double` is a special case. It is passed in memory on the stack, not x87 registers.
         if (is_long_double(type)) {
@@ -198,14 +201,14 @@ static bool classify_recursive(
         }
         return false;
     }
-    if (type->category == FFI_TYPE_POINTER) {
+    if (type->category == INFIX_TYPE_POINTER) {
         (*field_count)++;
         size_t index = offset / 8;
         if (index < 2 && classes[index] != INTEGER)
             classes[index] = INTEGER;  // Pointers are always INTEGER class. Merge with existing class.
         return false;
     }
-    if (type->category == FFI_TYPE_ARRAY) {
+    if (type->category == INFIX_TYPE_ARRAY) {
         // If the array elements have no size, iterating over them is pointless
         // and can cause a timeout if num_elements is large, as the offset never advances.
         // We only need to classify the element type once at the starting offset.
@@ -234,7 +237,7 @@ static bool classify_recursive(
         }
         return false;
     }
-    if (type->category == FFI_TYPE_STRUCT || type->category == FFI_TYPE_UNION) {
+    if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION) {
         // Recursively classify each member of the struct/union.
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             // Check count *before* each recursive call inside the loop.
@@ -242,7 +245,7 @@ static bool classify_recursive(
                 classes[0] = MEMORY;
                 return true;
             }
-            ffi_struct_member * member = &type->meta.aggregate_info.members[i];
+            infix_struct_member * member = &type->meta.aggregate_info.members[i];
             size_t member_offset = offset + member->offset;
             // If this member starts at or after the 16-byte boundary,
             // it cannot influence register classification, so we can skip it.
@@ -268,7 +271,7 @@ static bool classify_recursive(
  *                     classification for the first and second eightbytes.
  * @param[out] num_classes A pointer that will be set to the number of valid classes (1 or 2).
  */
-static void classify_aggregate_sysv(ffi_type * type, arg_class_t classes[2], size_t * num_classes) {
+static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], size_t * num_classes) {
     // Initialize to a clean state.
     classes[0] = NO_CLASS;
     classes[1] = NO_CLASS;
@@ -307,39 +310,40 @@ static void classify_aggregate_sysv(ffi_type * type, arg_class_t classes[2], siz
  * @details This is the primary classification function for the System V ABI. It is responsible for
  *          iterating through a function's arguments and return type to determine precisely where
  *          each piece of data must be placed (in which registers or on the stack) for a native
- *          call. It allocates and populates an `ffi_call_frame_layout` structure that contains all
+ *          call. It allocates and populates an `infix_call_frame_layout` structure that contains all
  *          the information the code generator needs to emit a valid trampoline.
  *
- * @param[out] out_layout On success, this will point to a newly allocated `ffi_call_frame_layout`
+ * @param[out] out_layout On success, this will point to a newly allocated `infix_call_frame_layout`
  *                        structure containing the blueprint for the function call. The caller is
  *                        responsible for freeing this structure.
- * @param ret_type The `ffi_type` describing the function's return value.
- * @param arg_types An array of `ffi_type` pointers for the function's arguments.
+ * @param ret_type The `infix_type` describing the function's return value.
+ * @param arg_types An array of `infix_type` pointers for the function's arguments.
  * @param num_args The total number of arguments in the `arg_types` array.
  * @param num_fixed_args The number of non-variadic arguments.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
-                                                      ffi_call_frame_layout ** out_layout,
-                                                      ffi_type * ret_type,
-                                                      ffi_type ** arg_types,
-                                                      size_t num_args,
-                                                      size_t num_fixed_args) {
+static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
+                                                        infix_call_frame_layout ** out_layout,
+                                                        infix_type * ret_type,
+                                                        infix_type ** arg_types,
+                                                        size_t num_args,
+                                                        size_t num_fixed_args) {
     if (out_layout == nullptr)
-        return FFI_ERROR_INVALID_ARGUMENT;
+        return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Allocate the layout struct that will hold our results.
-    ffi_call_frame_layout * layout =
-        arena_calloc(arena, 1, sizeof(ffi_call_frame_layout), _Alignof(ffi_call_frame_layout));
+    infix_call_frame_layout * layout =
+        infix_arena_calloc(arena, 1, sizeof(infix_call_frame_layout), _Alignof(infix_call_frame_layout));
     if (layout == nullptr) {
         *out_layout = nullptr;
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     }
     layout->is_variadic = num_args > num_fixed_args;
-    layout->arg_locations = arena_calloc(arena, num_args, sizeof(ffi_arg_location), _Alignof(ffi_arg_location));
+    layout->arg_locations =
+        infix_arena_calloc(arena, num_args, sizeof(infix_arg_location), _Alignof(infix_arg_location));
     if (layout->arg_locations == nullptr && num_args > 0) {
         *out_layout = nullptr;
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
     // gpr_count and xmm_count track the next available GPR and XMM argument registers.
@@ -347,8 +351,8 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
     size_t gpr_count = 0, xmm_count = 0, current_stack_offset = 0;
 
     // Determine if the return value requires a hidden pointer argument passed in RDI.
-    bool ret_is_aggregate = (ret_type->category == FFI_TYPE_STRUCT || ret_type->category == FFI_TYPE_UNION ||
-                             ret_type->category == FFI_TYPE_ARRAY);
+    bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                             ret_type->category == INFIX_TYPE_ARRAY);
 
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
     layout->return_value_in_memory = (ret_is_aggregate && ret_type->size > 16);
@@ -377,12 +381,12 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
 
     // Main Argument Classification Loop
     for (size_t i = 0; i < num_args; ++i) {
-        ffi_type * type = arg_types[i];
+        infix_type * type = arg_types[i];
 
         // Security: Reject excessively large types before they reach the code generator.
-        if (type->size > FFI_MAX_ARG_SIZE) {
+        if (type->size > INFIX_MAX_ARG_SIZE) {
             *out_layout = NULL;
-            return FFI_ERROR_LAYOUT_FAILED;
+            return INFIX_ERROR_LAYOUT_FAILED;
         }
 
         // Step 1: Classify the argument type
@@ -395,8 +399,8 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
             continue;  // Go to next argument
         }
 
-        bool is_aggregate =
-            type->category == FFI_TYPE_STRUCT || type->category == FFI_TYPE_UNION || type->category == FFI_TYPE_ARRAY;
+        bool is_aggregate = type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
+            type->category == INFIX_TYPE_ARRAY;
         arg_class_t classes[2] = {NO_CLASS, NO_CLASS};
         size_t num_classes = 0;
         bool placed_in_register = false;
@@ -487,13 +491,13 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
     layout->total_stack_alloc = (current_stack_offset + 15) & ~15;
 
     // Safety check against excessive stack allocation.
-    if (layout->total_stack_alloc > FFI_MAX_STACK_ALLOC) {
+    if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
         *out_layout = nullptr;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
 
     *out_layout = layout;
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -504,9 +508,9 @@ static ffi_status prepare_forward_call_frame_sysv_x64(arena_t * arena,
  *
  * @param buf The code buffer where the machine code bytes will be written.
  * @param layout The call frame layout containing total stack allocation information.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_forward_prologue_sysv_x64(code_buffer * buf, ffi_call_frame_layout * layout) {
+static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_call_frame_layout * layout) {
     // Standard Function Prologue
     emit_byte(buf, 0x55);               // push rbp
     EMIT_BYTES(buf, 0x48, 0x89, 0xE5);  // mov rbp, rsp
@@ -533,7 +537,7 @@ static ffi_status generate_forward_prologue_sysv_x64(code_buffer * buf, ffi_call
         EMIT_BYTES(buf, 0x48, 0x81, 0xEC);  // sub rsp, imm32
         emit_int32(buf, layout->total_stack_alloc);
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -545,16 +549,16 @@ static ffi_status generate_forward_prologue_sysv_x64(code_buffer * buf, ffi_call
  *
  * @param buf The code buffer to which the machine code will be written.
  * @param layout The call frame layout blueprint that specifies where each argument must go.
- * @param arg_types The array of `ffi_type` pointers for the function's arguments.
+ * @param arg_types The array of `infix_type` pointers for the function's arguments.
  * @param num_args The total number of arguments.
  * @param num_fixed_args The number of fixed (non-variadic) arguments.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
-                                                           ffi_call_frame_layout * layout,
-                                                           ffi_type ** arg_types,
-                                                           size_t num_args,
-                                                           c23_maybe_unused size_t num_fixed_args) {
+static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
+                                                             infix_call_frame_layout * layout,
+                                                             infix_type ** arg_types,
+                                                             size_t num_args,
+                                                             c23_maybe_unused size_t num_fixed_args) {
     // If returning a large struct, the hidden pointer (stored in r13) must be moved to RDI.
     if (layout->return_value_in_memory)
         emit_mov_reg_reg(buf, GPR_ARGS[0], R13_REG);  // mov rdi, r13
@@ -562,7 +566,7 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
     // Marshall Register Arguments
     // Loop over all arguments that are passed in registers.
     for (size_t i = 0; i < num_args; ++i) {
-        ffi_arg_location * loc = &layout->arg_locations[i];
+        infix_arg_location * loc = &layout->arg_locations[i];
         if (loc->type == ARG_LOCATION_STACK)
             continue;  // Handle stack arguments in a separate pass.
 
@@ -574,11 +578,11 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
         switch (loc->type) {
         case ARG_LOCATION_GPR:
             {
-                ffi_type * current_type = arg_types[i];
-                bool is_signed = current_type->category == FFI_TYPE_PRIMITIVE &&
-                    (current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT8 ||
-                     current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT16 ||
-                     current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32);
+                infix_type * current_type = arg_types[i];
+                bool is_signed = current_type->category == INFIX_TYPE_PRIMITIVE &&
+                    (current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
+                     current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
+                     current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT32);
                 if (is_signed) {
                     if (current_type->size == 1)
                         emit_movsx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
@@ -655,7 +659,7 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
         // mov al, num_xmm_args (or mov eax, num_xmm_args)
         emit_mov_reg_imm32(buf, RAX_REG, (int32_t)layout->num_xmm_args);
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -665,15 +669,15 @@ static ffi_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
  *
  * @param buf The code buffer.
  * @param layout The call frame layout.
- * @param ret_type The `ffi_type` of the function's return value.
- * @return `FFI_SUCCESS` on successful code generation.
+ * @param ret_type The `infix_type` of the function's return value.
+ * @return `INFIX_SUCCESS` on successful code generation.
  */
-static ffi_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
-                                                     ffi_call_frame_layout * layout,
-                                                     ffi_type * ret_type) {
+static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
+                                                       infix_call_frame_layout * layout,
+                                                       infix_type * ret_type) {
     // Handle Return Value
     // If the function returns something and it wasn't via a hidden pointer...
-    if (ret_type->category != FFI_TYPE_VOID && !layout->return_value_in_memory) {
+    if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         if (is_long_double(ret_type))
             // `long double` is returned on the x87 FPU stack (st0).
             // We store it into the user's return buffer (pointer held in r13).
@@ -745,7 +749,7 @@ static ffi_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
     EMIT_BYTES(buf, 0x41, 0x5C);  // pop r12
     emit_byte(buf, 0x5D);         // pop rbp
     emit_byte(buf, 0xC3);         // ret
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -758,15 +762,15 @@ static ffi_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
  *
  * @param[out] out_layout The resulting reverse call frame layout blueprint, populated with offsets.
  * @param context The reverse trampoline context with full signature information.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-static ffi_status prepare_reverse_call_frame_sysv_x64(arena_t * arena,
-                                                      ffi_reverse_call_frame_layout ** out_layout,
-                                                      ffi_reverse_trampoline_t * context) {
-    ffi_reverse_call_frame_layout * layout =
-        arena_calloc(arena, 1, sizeof(ffi_reverse_call_frame_layout), _Alignof(ffi_reverse_call_frame_layout));
+static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
+                                                        infix_reverse_call_frame_layout ** out_layout,
+                                                        infix_reverse_t * context) {
+    infix_reverse_call_frame_layout * layout = infix_arena_calloc(
+        arena, 1, sizeof(infix_reverse_call_frame_layout), _Alignof(infix_reverse_call_frame_layout));
     if (!layout)
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
 
     // Calculate space for each component, ensuring 16-byte alignment for safety and simplicity.
     size_t return_size = (context->return_type->size + 15) & ~15;
@@ -775,17 +779,17 @@ static ffi_status prepare_reverse_call_frame_sysv_x64(arena_t * arena,
     for (size_t i = 0; i < context->num_args; ++i)
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
 
-    if (saved_args_data_size > FFI_MAX_ARG_SIZE) {
+    if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
         *out_layout = NULL;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
 
     size_t total_local_space = return_size + args_array_size + saved_args_data_size;
 
     // Safety check against allocating too much stack.
-    if (total_local_space > FFI_MAX_STACK_ALLOC) {
+    if (total_local_space > INFIX_MAX_STACK_ALLOC) {
         *out_layout = NULL;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
 
     // The total allocation for the stack frame must be 16-byte aligned.
@@ -798,7 +802,7 @@ static ffi_status prepare_reverse_call_frame_sysv_x64(arena_t * arena,
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
 
     *out_layout = layout;
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -808,14 +812,14 @@ static ffi_status prepare_reverse_call_frame_sysv_x64(arena_t * arena,
  *
  * @param buf The code buffer.
  * @param layout The blueprint containing the total stack space to allocate.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_prologue_sysv_x64(code_buffer * buf, ffi_reverse_call_frame_layout * layout) {
+static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
     emit_byte(buf, 0x55);                        // push rbp
     EMIT_BYTES(buf, 0x48, 0x89, 0xE5);           // mov rbp, rsp
     EMIT_BYTES(buf, 0x48, 0x81, 0xEC);           // sub rsp, imm32
     emit_int32(buf, layout->total_stack_alloc);  // Allocate our calculated space.
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 /**
  * @brief Stage 3: Generates code to marshal arguments into the generic `void**` array.
@@ -827,18 +831,18 @@ static ffi_status generate_reverse_prologue_sysv_x64(code_buffer * buf, ffi_reve
  * @param buf The code buffer.
  * @param layout The blueprint containing stack offsets.
  * @param context The context containing the argument type information for the callback.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * buf,
-                                                                 ffi_reverse_call_frame_layout * layout,
-                                                                 ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * buf,
+                                                                   infix_reverse_call_frame_layout * layout,
+                                                                   infix_reverse_t * context) {
     size_t gpr_idx = 0, xmm_idx = 0, current_saved_data_offset = 0;
 
     // Correctly determine if the return value uses a hidden pointer by performing a full ABI classification.
     bool return_in_memory = false;
-    ffi_type * ret_type = context->return_type;
-    bool ret_is_aggregate = (ret_type->category == FFI_TYPE_STRUCT || ret_type->category == FFI_TYPE_UNION ||
-                             ret_type->category == FFI_TYPE_ARRAY);
+    infix_type * ret_type = context->return_type;
+    bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                             ret_type->category == INFIX_TYPE_ARRAY);
 
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
@@ -864,7 +868,7 @@ static ffi_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * b
 
     for (size_t i = 0; i < context->num_args; i++) {
         int32_t arg_save_loc = layout->saved_args_offset + current_saved_data_offset;
-        ffi_type * current_type = context->arg_types[i];
+        infix_type * current_type = context->arg_types[i];
 
         arg_class_t classes[2];
         size_t num_classes;
@@ -920,7 +924,7 @@ static ffi_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * b
 
         current_saved_data_offset += (current_type->size + 15) & ~15;
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -933,20 +937,20 @@ static ffi_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * b
  * @param buf The code buffer.
  * @param layout The blueprint containing stack offsets.
  * @param context The context, containing the dispatcher's address.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
-                                                            ffi_reverse_call_frame_layout * layout,
-                                                            ffi_reverse_trampoline_t * context) {
-    // Arg 1 (RDI): The ffi_reverse_trampoline_t context pointer.
+static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
+                                                              infix_reverse_call_frame_layout * layout,
+                                                              infix_reverse_t * context) {
+    // Arg 1 (RDI): The infix_reverse_t context pointer.
     emit_mov_reg_imm64(buf, RDI_REG, (uint64_t)context);  // mov rdi, #context_addr
 
     // Arg 2 (RSI): Pointer to the return buffer.
     // Correctly determine if the hidden pointer was used for the return value.
     bool return_in_memory = false;
-    ffi_type * ret_type = context->return_type;
-    bool ret_is_aggregate = (ret_type->category == FFI_TYPE_STRUCT || ret_type->category == FFI_TYPE_UNION ||
-                             ret_type->category == FFI_TYPE_ARRAY);
+    infix_type * ret_type = context->return_type;
+    bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                             ret_type->category == INFIX_TYPE_ARRAY);
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
             return_in_memory = true;
@@ -975,7 +979,7 @@ static ffi_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
     emit_mov_reg_imm64(buf, RAX_REG, (uint64_t)context->internal_dispatcher);  // mov rax, #dispatcher_addr
 
     EMIT_BYTES(buf, 0xFF, 0xD0);  // call rax
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -988,17 +992,17 @@ static ffi_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
  * @param buf The code buffer.
  * @param layout The blueprint containing the return buffer's offset.
  * @param context The context containing the return type information.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
-                                                     ffi_reverse_call_frame_layout * layout,
-                                                     ffi_reverse_trampoline_t * context) {
-    if (context->return_type->category != FFI_TYPE_VOID) {
+static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
+                                                       infix_reverse_call_frame_layout * layout,
+                                                       infix_reverse_t * context) {
+    if (context->return_type->category != INFIX_TYPE_VOID) {
         // Correctly determine if the return value uses a hidden pointer by performing a full ABI classification.
         bool return_in_memory = false;
-        ffi_type * ret_type = context->return_type;
-        bool ret_is_aggregate = (ret_type->category == FFI_TYPE_STRUCT || ret_type->category == FFI_TYPE_UNION ||
-                                 ret_type->category == FFI_TYPE_ARRAY);
+        infix_type * ret_type = context->return_type;
+        bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                                 ret_type->category == INFIX_TYPE_ARRAY);
 
         if (ret_is_aggregate) {
             if (ret_type->size > 16) {
@@ -1052,5 +1056,5 @@ static ffi_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
     EMIT_BYTES(buf, 0x48, 0x89, 0xEC);  // mov rsp, rbp
     emit_byte(buf, 0x5D);               // pop rbp
     emit_byte(buf, 0xC3);               // ret
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }

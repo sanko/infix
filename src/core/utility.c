@@ -16,7 +16,7 @@
  * @brief Implementation of debugging utility functions.
  *
  * @details This file provides the implementation for debugging helper functions,
- * such as `DumpHex`. The content is conditionally compiled based on FFI_DEBUG_ENABLED.
+ * such as `infix_dump_hex`. The content is conditionally compiled based on INFIX_DEBUG_ENABLED.
  *
  * It is also conditionally aware of DBLTAP_ENABLE. If the test harness is active,
  * it routes its output through the harness's `note()` macro. Otherwise, it falls
@@ -24,13 +24,13 @@
  * use the double_tap framework.
  */
 
-#if defined(FFI_DEBUG_ENABLED) && FFI_DEBUG_ENABLED
+#if defined(INFIX_DEBUG_ENABLED) && INFIX_DEBUG_ENABLED
 
 // Only include and use double_tap if the DBLTAP_IMPLEMENTATION macro is also
 // defined. This prevents the core library from accidentally compiling in a
 // dependency on the test framework's symbols.
 #if defined(DBLTAP_ENABLE) && defined(DBLTAP_IMPLEMENTATION)
-#include <double_tap.h>
+#include "common/double_tap.h"
 #else
 // Otherwise, define a simple printf-based fallback for note().
 #include <stdio.h>
@@ -41,8 +41,8 @@
     } while (0)
 #endif
 
+#include "common/utility.h"
 #include <inttypes.h>
-#include <utility.h>
 
 /**
  * @brief Prints a detailed hexadecimal and ASCII dump of a memory region.
@@ -52,14 +52,14 @@
  * the JIT compiler. The output is formatted into lines of 16 bytes, showing
  * the offset, hexadecimal values, and ASCII representation.
  *
- * @note This function is only available in debug builds (when `FFI_DEBUG_ENABLED`
+ * @note This function is only available in debug builds (when `INFIX_DEBUG_ENABLED`
  * is active).
  *
  * @param data A pointer to the start of the memory block to dump.
  * @param size The number of bytes to dump.
  * @param title A descriptive title to print before and after the hex dump.
  */
-void DumpHex(const void * data, size_t size, const char * title) {
+void infix_dump_hex(const void * data, size_t size, const char * title) {
     const uint8_t * byte = (const uint8_t *)data;
     char line_buf[256];
     char * buf_ptr;
@@ -128,4 +128,4 @@ print_line:
     }
     note("End of %s", title);
 }
-#endif  // FFI_DEBUG_ENABLED
+#endif  // INFIX_DEBUG_ENABLED

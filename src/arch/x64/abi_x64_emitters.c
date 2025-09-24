@@ -27,9 +27,8 @@
  */
 
 #include "abi_x64_emitters.h"
-#include <assert.h>
+#include "common/utility.h"
 #include <string.h>
-#include <utility.h>
 
 /** @internal Helper defines for REX prefix bits. */
 #define REX_W (1 << 3)  // 64-bit operand size

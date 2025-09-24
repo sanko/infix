@@ -15,8 +15,8 @@
  * @file abi_win_x64.c
  * @brief Implements the FFI logic for the Windows x64 calling convention.
  *
- * @details This file provides the concrete implementation of the `ffi_forward_abi_spec`
- * and `ffi_reverse_abi_spec` for the Microsoft x64 calling convention. This ABI is
+ * @details This file provides the concrete implementation of the `infix_forward_abi_spec`
+ * and `infix_reverse_abi_spec` for the Microsoft x64 calling convention. This ABI is
  * used on all 64-bit versions of the Windows operating system.
  *
  * Key features and differences from the System V ABI implemented here:
@@ -37,20 +37,19 @@
  */
 
 // This file performs many safe conversions from size_t to int32_t for instruction
-// offsets. The library's internal limits (FFI_MAX_STACK_ALLOC) ensure these
+// offsets. The library's internal limits (INFIX_MAX_STACK_ALLOC) ensure these
 // conversions do not lose data. We disable the warning to produce a clean build.
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4267)  // conversion from 'size_t' to 'int32_t'
 #endif
 
-#include <infix_internals.h>
-//
+#include "common/infix_internals.h"
+#include "common/utility.h"
 #include <abi_x64_common.h>
 #include <abi_x64_emitters.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <utility.h>
 
 /** @brief An array of GPRs used for passing the first four integer/pointer arguments. */
 static const x64_gpr GPR_ARGS[] = {RCX_REG, RDX_REG, R8_REG, R9_REG};
@@ -64,39 +63,42 @@ static const x64_xmm XMM_ARGS[] = {XMM0_REG, XMM1_REG, XMM2_REG, XMM3_REG};
 #define SHADOW_SPACE 32
 
 // Forward Declarations
-static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
-                                                     ffi_call_frame_layout ** out_layout,
-                                                     ffi_type * ret_type,
-                                                     ffi_type ** arg_types,
-                                                     size_t num_args,
-                                                     size_t num_fixed_args);
-static ffi_status generate_forward_prologue_win_x64(code_buffer * buf, ffi_call_frame_layout * layout);
-static ffi_status generate_forward_argument_moves_win_x64(
-    code_buffer * buf, ffi_call_frame_layout * layout, ffi_type ** arg_types, size_t num_args, size_t num_fixed_args);
-static ffi_status generate_forward_epilogue_win_x64(code_buffer * buf,
-                                                    ffi_call_frame_layout * layout,
-                                                    ffi_type * ret_type);
-static ffi_status prepare_reverse_call_frame_win_x64(arena_t * arena,
-                                                     ffi_reverse_call_frame_layout ** out_layout,
-                                                     ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_prologue_win_x64(code_buffer * buf, ffi_reverse_call_frame_layout * layout);
-static ffi_status generate_reverse_argument_marshalling_win_x64(code_buffer * buf,
-                                                                ffi_reverse_call_frame_layout * layout,
-                                                                ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
-                                                           ffi_reverse_call_frame_layout * layout,
-                                                           ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_epilogue_win_x64(code_buffer * buf,
-                                                    ffi_reverse_call_frame_layout * layout,
-                                                    ffi_reverse_trampoline_t * context);
+static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
+                                                       infix_call_frame_layout ** out_layout,
+                                                       infix_type * ret_type,
+                                                       infix_type ** arg_types,
+                                                       size_t num_args,
+                                                       size_t num_fixed_args);
+static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_call_frame_layout * layout);
+static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
+                                                            infix_call_frame_layout * layout,
+                                                            infix_type ** arg_types,
+                                                            size_t num_args,
+                                                            size_t num_fixed_args);
+static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
+                                                      infix_call_frame_layout * layout,
+                                                      infix_type * ret_type);
+static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
+                                                       infix_reverse_call_frame_layout ** out_layout,
+                                                       infix_reverse_t * context);
+static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout);
+static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * buf,
+                                                                  infix_reverse_call_frame_layout * layout,
+                                                                  infix_reverse_t * context);
+static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
+                                                             infix_reverse_call_frame_layout * layout,
+                                                             infix_reverse_t * context);
+static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
+                                                      infix_reverse_call_frame_layout * layout,
+                                                      infix_reverse_t * context);
 /** @brief The v-table of Windows x64 functions for generating forward trampolines. */
-const ffi_forward_abi_spec g_win_x64_forward_spec = {.prepare_forward_call_frame = prepare_forward_call_frame_win_x64,
-                                                     .generate_forward_prologue = generate_forward_prologue_win_x64,
-                                                     .generate_forward_argument_moves =
-                                                         generate_forward_argument_moves_win_x64,
-                                                     .generate_forward_epilogue = generate_forward_epilogue_win_x64};
+const infix_forward_abi_spec g_win_x64_forward_spec = {.prepare_forward_call_frame = prepare_forward_call_frame_win_x64,
+                                                       .generate_forward_prologue = generate_forward_prologue_win_x64,
+                                                       .generate_forward_argument_moves =
+                                                           generate_forward_argument_moves_win_x64,
+                                                       .generate_forward_epilogue = generate_forward_epilogue_win_x64};
 /** @brief The v-table of Windows x64 functions for generating reverse trampolines. */
-const ffi_reverse_abi_spec g_win_x64_reverse_spec = {
+const infix_reverse_abi_spec g_win_x64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_win_x64,
     .generate_reverse_prologue = generate_reverse_prologue_win_x64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_win_x64,
@@ -107,16 +109,17 @@ const ffi_reverse_abi_spec g_win_x64_reverse_spec = {
  * @internal
  * @brief Determines if a return value should be passed by reference (via hidden pointer)
  *        according to the Windows x64 ABI.
- * @param type The ffi_type of the return value.
+ * @param type The infix_type of the return value.
  * @return `true` if the type should be returned by reference, `false` otherwise.
  */
-static bool return_value_is_by_reference(ffi_type * type) {
-    if (type->category == FFI_TYPE_STRUCT || type->category == FFI_TYPE_UNION || type->category == FFI_TYPE_ARRAY) {
+static bool return_value_is_by_reference(infix_type * type) {
+    if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
+        type->category == INFIX_TYPE_ARRAY) {
         // According to the Microsoft x64 ABI, aggregates are returned by reference
         // if their size is NOT 1, 2, 4, or 8 bytes. This correctly includes 16-byte structs.
         return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
     }
-#if defined(FFI_COMPILER_GCC)
+#if defined(INFIX_COMPILER_GCC)
     // GCC/Clang have a special case for returning long double by reference on Windows.
     if (is_long_double(type))
         return true;
@@ -142,34 +145,35 @@ static bool return_value_is_by_reference(ffi_type * type) {
  *          - **Stack Arguments:** All arguments after the fourth slot are passed on the stack.
  *            The caller is responsible for allocating space for these.
  *
- * @param[out] out_layout On success, will point to a newly allocated `ffi_call_frame_layout`
+ * @param[out] out_layout On success, will point to a newly allocated `infix_call_frame_layout`
  *                        that contains the "blueprint" for the call.
- * @param ret_type The `ffi_type` of the function's return value.
- * @param arg_types An array of `ffi_type` pointers for the arguments.
+ * @param ret_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type` pointers for the arguments.
  * @param num_args The total number of arguments.
  * @param num_fixed_args The number of non-variadic arguments. (Note: Variadic handling is
  *                       the same as non-variadic for register/stack assignment in Win x64).
- * @return `FFI_SUCCESS` on success, or an error code on failure.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
-                                                     ffi_call_frame_layout ** out_layout,
-                                                     ffi_type * ret_type,
-                                                     ffi_type ** arg_types,
-                                                     size_t num_args,
-                                                     size_t num_fixed_args) {
+static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
+                                                       infix_call_frame_layout ** out_layout,
+                                                       infix_type * ret_type,
+                                                       infix_type ** arg_types,
+                                                       size_t num_args,
+                                                       size_t num_fixed_args) {
     if (out_layout == nullptr)
-        return FFI_ERROR_INVALID_ARGUMENT;
-    ffi_call_frame_layout * layout =
-        arena_calloc(arena, 1, sizeof(ffi_call_frame_layout), _Alignof(ffi_call_frame_layout));
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    infix_call_frame_layout * layout =
+        infix_arena_calloc(arena, 1, sizeof(infix_call_frame_layout), _Alignof(infix_call_frame_layout));
     if (layout == nullptr) {
         *out_layout = nullptr;
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     }
     layout->is_variadic = num_args > num_fixed_args;
-    layout->arg_locations = arena_calloc(arena, num_args, sizeof(ffi_arg_location), _Alignof(ffi_arg_location));
+    layout->arg_locations =
+        infix_arena_calloc(arena, num_args, sizeof(infix_arg_location), _Alignof(infix_arg_location));
     if (layout->arg_locations == nullptr && num_args > 0) {
         *out_layout = nullptr;
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     }
     layout->return_value_in_memory = return_value_is_by_reference(ret_type);
     size_t arg_position = 0;
@@ -179,7 +183,7 @@ static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
     size_t current_stack_offset = SHADOW_SPACE;
     layout->num_stack_args = 0;
     for (size_t i = 0; i < num_args; ++i) {
-        ffi_type * current_type = arg_types[i];
+        infix_type * current_type = arg_types[i];
 
         bool is_fp = is_float(current_type) || is_double(current_type);
         bool is_ref = is_passed_by_reference(current_type);
@@ -203,9 +207,9 @@ static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
             size_t arg_stack_space = is_ref ? 8 : ((current_type->size + 7) & ~7);
             current_stack_offset += arg_stack_space;
             // Step 0: Make sure we aren't blowing ourselves up
-            if (current_stack_offset > FFI_MAX_ARG_SIZE) {
+            if (current_stack_offset > INFIX_MAX_ARG_SIZE) {
                 *out_layout = NULL;
-                return FFI_ERROR_LAYOUT_FAILED;
+                return INFIX_ERROR_LAYOUT_FAILED;
             }
         }
     }
@@ -217,13 +221,13 @@ static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
     layout->total_stack_alloc = (SHADOW_SPACE + total_stack_arg_size + 15) & ~15;
 
     // Prevent integer overflow and excessive stack allocation.
-    if (layout->total_stack_alloc > FFI_MAX_STACK_ALLOC) {
-        fprintf(stderr, "Error: Calculated stack allocation exceeds safe limit of %d bytes.\n", FFI_MAX_STACK_ALLOC);
+    if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
+        fprintf(stderr, "Error: Calculated stack allocation exceeds safe limit of %d bytes.\n", INFIX_MAX_STACK_ALLOC);
         *out_layout = nullptr;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
     *out_layout = layout;
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -241,9 +245,9 @@ static ffi_status prepare_forward_call_frame_win_x64(arena_t * arena,
  *
  * @param buf The code buffer to write the assembly into.
  * @param layout The call frame layout containing total stack allocation information.
- * @return `FFI_SUCCESS` on successful code generation.
+ * @return `INFIX_SUCCESS` on successful code generation.
  */
-static ffi_status generate_forward_prologue_win_x64(code_buffer * buf, ffi_call_frame_layout * layout) {
+static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_call_frame_layout * layout) {
     emit_byte(buf, 0x55);               // push rbp
     EMIT_BYTES(buf, 0x48, 0x89, 0xE5);  // mov rbp, rsp
 
@@ -264,12 +268,12 @@ static ffi_status generate_forward_prologue_win_x64(code_buffer * buf, ffi_call_
         EMIT_BYTES(buf, 0x48, 0x81, 0xEC);  // sub rsp, imm32 ...
         emit_int32(buf, (int32_t)layout->total_stack_alloc);
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
  * @brief Generates code to move arguments from the `args_array` into their correct locations.
- * @details This function iterates through the `ffi_call_frame_layout` blueprint and emits
+ * @details This function iterates through the `infix_call_frame_layout` blueprint and emits
  *          the necessary `mov` instructions to place each argument into its assigned
  *          register or stack slot for the upcoming native call.
  *
@@ -289,15 +293,18 @@ static ffi_status generate_forward_prologue_win_x64(code_buffer * buf, ffi_call_
  * @param arg_types The array of argument types.
  * @param num_args The total number of arguments.
  * @param num_fixed_args The number of fixed (non-variadic) arguments.
- * @return `FFI_SUCCESS` on success, or `FFI_ERROR_LAYOUT_FAILED` if the layout is invalid.
+ * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_LAYOUT_FAILED` if the layout is invalid.
  */
-static ffi_status generate_forward_argument_moves_win_x64(
-    code_buffer * buf, ffi_call_frame_layout * layout, ffi_type ** arg_types, size_t num_args, size_t num_fixed_args) {
+static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
+                                                            infix_call_frame_layout * layout,
+                                                            infix_type ** arg_types,
+                                                            size_t num_args,
+                                                            size_t num_fixed_args) {
     if (layout->return_value_in_memory)
         emit_mov_reg_reg(buf, GPR_ARGS[0], R13_REG);
     for (size_t i = 0; i < num_args; ++i) {
-        ffi_type * current_type = arg_types[i];
-        ffi_arg_location * loc = &layout->arg_locations[i];
+        infix_type * current_type = arg_types[i];
+        infix_arg_location * loc = &layout->arg_locations[i];
         bool is_variadic_arg = (i >= num_fixed_args);
         if (loc->type == ARG_LOCATION_STACK)
             continue;
@@ -323,10 +330,10 @@ static ffi_status generate_forward_argument_moves_win_x64(
                 emit_movq_gpr_xmm(buf, gpr_reg, xmm_reg);
             }
             else {
-                bool is_signed = current_type->category == FFI_TYPE_PRIMITIVE &&
-                    (current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT8 ||
-                     current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT16 ||
-                     current_type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32);
+                bool is_signed = current_type->category == INFIX_TYPE_PRIMITIVE &&
+                    (current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
+                     current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
+                     current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT32);
                 if (is_variadic_arg && current_type->size < 4 && is_signed) {
                     if (current_type->size == 1)
                         emit_movsx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
@@ -351,8 +358,8 @@ static ffi_status generate_forward_argument_moves_win_x64(
     for (size_t i = 0; i < num_args; ++i) {
         if (layout->arg_locations[i].type != ARG_LOCATION_STACK)
             continue;
-        ffi_type * current_type = arg_types[i];
-        ffi_arg_location * loc = &layout->arg_locations[i];
+        infix_type * current_type = arg_types[i];
+        infix_arg_location * loc = &layout->arg_locations[i];
         emit_mov_reg_mem(buf, R15_REG, R14_REG, i * sizeof(void *));
         if (is_passed_by_reference(current_type))
             emit_mov_mem_reg(buf, RSP_REG, loc->stack_offset, R15_REG);
@@ -364,7 +371,7 @@ static ffi_status generate_forward_argument_moves_win_x64(
             }
         }
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -383,23 +390,23 @@ static ffi_status generate_forward_argument_moves_win_x64(
  *
  * @param buf The code buffer.
  * @param layout The call frame layout.
- * @param ret_type The `ffi_type` of the function's return value.
- * @return `FFI_SUCCESS` on successful code generation.
+ * @param ret_type The `infix_type` of the function's return value.
+ * @return `INFIX_SUCCESS` on successful code generation.
  */
-static ffi_status generate_forward_epilogue_win_x64(code_buffer * buf,
-                                                    ffi_call_frame_layout * layout,
-                                                    ffi_type * ret_type) {
+static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
+                                                      infix_call_frame_layout * layout,
+                                                      infix_type * ret_type) {
     // Move the result from the return register (RAX/XMM0) into the FFI return buffer.
     // This must be done BEFORE cleaning up the stack.
-    if (ret_type->category != FFI_TYPE_VOID && !layout->return_value_in_memory) {
+    if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         if (is_float(ret_type))
             emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (is_double(ret_type))
             emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
-#if !defined(FFI_COMPILER_MSVC)
+#if !defined(INFIX_COMPILER_MSVC)
         // On GCC/Clang on Windows, 16-byte primitives (__int128_t, long double)
         // are returned in XMM0.
-        else if (ret_type->size == 16 && ret_type->category == FFI_TYPE_PRIMITIVE)
+        else if (ret_type->size == 16 && ret_type->category == INFIX_TYPE_PRIMITIVE)
             // We need to emit 'movups [r13], xmm0'. Opcode: 0F 11.
             EMIT_BYTES(buf, 0x41, 0x0f, 0x11, 0x45, 0x00);  // movups [r13], xmm0
 #endif
@@ -439,7 +446,7 @@ static ffi_status generate_forward_epilogue_win_x64(code_buffer * buf,
     emit_byte(buf, 0x5D);         // pop rbp
     emit_byte(buf, 0xC3);         // ret
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -448,15 +455,15 @@ static ffi_status generate_forward_epilogue_win_x64(code_buffer * buf,
  * This space includes areas to save all incoming argument registers, a buffer for the
  * return value, the `args_array`, and a data area for by-value arguments. It also
  * includes the shadow space the stub must provide for the C dispatcher it calls.
- * @return `FFI_SUCCESS` on success, or `FFI_ERROR_ALLOCATION_FAILED`.
+ * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_ALLOCATION_FAILED`.
  */
-static ffi_status prepare_reverse_call_frame_win_x64(arena_t * arena,
-                                                     ffi_reverse_call_frame_layout ** out_layout,
-                                                     ffi_reverse_trampoline_t * context) {
-    ffi_reverse_call_frame_layout * layout =
-        arena_calloc(arena, 1, sizeof(ffi_reverse_call_frame_layout), _Alignof(ffi_reverse_call_frame_layout));
+static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
+                                                       infix_reverse_call_frame_layout ** out_layout,
+                                                       infix_reverse_t * context) {
+    infix_reverse_call_frame_layout * layout = infix_arena_calloc(
+        arena, 1, sizeof(infix_reverse_call_frame_layout), _Alignof(infix_reverse_call_frame_layout));
     if (!layout)
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     size_t return_size = (context->return_type->size + 15) & ~15;
     size_t args_array_size = context->num_args * sizeof(void *);
     size_t saved_args_data_size = 0;
@@ -465,9 +472,9 @@ static ffi_status prepare_reverse_call_frame_win_x64(arena_t * arena,
             saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
     }
 
-    if (saved_args_data_size > FFI_MAX_ARG_SIZE) {
+    if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
         *out_layout = NULL;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
 
     size_t gpr_reg_save_area_size = NUM_GPR_ARGS * 8;
@@ -477,9 +484,9 @@ static ffi_status prepare_reverse_call_frame_win_x64(arena_t * arena,
 
     // Prevent integer overflow from fuzzer-provided types that are impractically large by ensuring the total required
     // stack space is within a safe limit.
-    if (total_local_space > FFI_MAX_STACK_ALLOC) {
+    if (total_local_space > INFIX_MAX_STACK_ALLOC) {
         *out_layout = NULL;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
     layout->total_stack_alloc = (total_local_space + 15) & ~15;
     layout->return_buffer_offset = SHADOW_SPACE;
@@ -488,7 +495,7 @@ static ffi_status prepare_reverse_call_frame_win_x64(arena_t * arena,
     layout->args_array_offset = layout->xmm_save_area_offset + xmm_reg_save_area_size;
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
     *out_layout = layout;
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -497,9 +504,9 @@ static ffi_status prepare_reverse_call_frame_win_x64(arena_t * arena,
  * saving non-volatile registers, and allocating all necessary local stack space.
  * @param buf The code buffer.
  * @param layout The blueprint containing the total stack space to allocate.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_prologue_win_x64(code_buffer * buf, ffi_reverse_call_frame_layout * layout) {
+static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
     emit_byte(buf, 0x55);               // push rbp
     EMIT_BYTES(buf, 0x48, 0x89, 0xE5);  // mov rbp, rsp
     emit_byte(buf, 0x56);               // push rsi
@@ -509,7 +516,7 @@ static ffi_status generate_reverse_prologue_win_x64(code_buffer * buf, ffi_rever
     EMIT_BYTES(buf, 0x48, 0x81, 0xEC);  // sub rsp, imm32
     emit_int32(buf, layout->total_stack_alloc);
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -521,11 +528,11 @@ static ffi_status generate_reverse_prologue_win_x64(code_buffer * buf, ffi_rever
  * @param buf The code buffer.
  * @param layout The blueprint containing stack offsets.
  * @param context The context containing the argument type information.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_argument_marshalling_win_x64(code_buffer * buf,
-                                                                ffi_reverse_call_frame_layout * layout,
-                                                                ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * buf,
+                                                                  infix_reverse_call_frame_layout * layout,
+                                                                  infix_reverse_t * context) {
     // Save the incoming argument registers into their save area on our stack.
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 0 * 8, RCX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 1 * 8, RDX_REG);
@@ -540,7 +547,7 @@ static ffi_status generate_reverse_argument_marshalling_win_x64(code_buffer * bu
     size_t stack_slot_offset = 0;
 
     for (size_t i = 0; i < context->num_args; i++) {
-        ffi_type * current_type = context->arg_types[i];
+        infix_type * current_type = context->arg_types[i];
         bool is_fp = is_float(current_type) || is_double(current_type);
         bool passed_by_ref = is_passed_by_reference(current_type);
         size_t arg_pos = i + arg_pos_offset;
@@ -588,7 +595,7 @@ static ffi_status generate_reverse_argument_marshalling_win_x64(code_buffer * bu
             stack_slot_offset += (size_on_stack + 7) / 8;
         }
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -597,12 +604,12 @@ static ffi_status generate_reverse_argument_marshalling_win_x64(code_buffer * bu
  * array pointer) into RCX, RDX, and R8, then calls the dispatcher function.
  * @param buf The code buffer.
  * @param layout The blueprint containing stack offsets.
- * @param context The context containing the dispatcher's address.
- * @return `FFI_SUCCESS`.
+ * @param context The context, containing the dispatcher's address.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
-                                                           ffi_reverse_call_frame_layout * layout,
-                                                           ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
+                                                             infix_reverse_call_frame_layout * layout,
+                                                             infix_reverse_t * context) {
     EMIT_BYTES(buf, 0x48, 0xB9);  // mov rcx, #context
     emit_int64(buf, (int64_t)context);
 
@@ -618,7 +625,7 @@ static ffi_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
     emit_int64(buf, (int64_t)context->internal_dispatcher);
     EMIT_BYTES(buf, 0x41, 0xFF, 0xD3);  // call r9
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -630,18 +637,18 @@ static ffi_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
  * @param buf The code buffer.
  * @param layout The blueprint containing the return buffer's offset.
  * @param context The context containing the return type information.
- * @return `FFI_SUCCESS`.
+ * @return `INFIX_SUCCESS`.
  */
-static ffi_status generate_reverse_epilogue_win_x64(code_buffer * buf,
-                                                    ffi_reverse_call_frame_layout * layout,
-                                                    ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
+                                                      infix_reverse_call_frame_layout * layout,
+                                                      infix_reverse_t * context) {
     // Handle the return value after the dispatcher returns.
-    if (context->return_type->category != FFI_TYPE_VOID) {
+    if (context->return_type->category != INFIX_TYPE_VOID) {
         if (return_value_is_by_reference(context->return_type)) {
             emit_mov_reg_mem(buf, RAX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
         }
-#if !defined(FFI_COMPILER_MSVC)
-        else if (context->return_type->size == 16 && context->return_type->category == FFI_TYPE_PRIMITIVE) {
+#if !defined(INFIX_COMPILER_MSVC)
+        else if (context->return_type->size == 16 && context->return_type->category == INFIX_TYPE_PRIMITIVE) {
             // GCC/Clang on Windows returns 128-bit integers and long double in XMM0
             // We need to emit 'movups xmm0, [rsp + layout->return_buffer_offset]'. Opcode 0F 10.
             EMIT_BYTES(buf, 0x0f, 0x10, 0x84, 0x24);  // movups xmm0, [rsp+...]
@@ -664,7 +671,7 @@ static ffi_status generate_reverse_epilogue_win_x64(code_buffer * buf,
     emit_pop_reg(buf, RBP_REG);
     emit_byte(buf, 0xC3);  // ret
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 #ifdef _MSC_VER

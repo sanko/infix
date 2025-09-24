@@ -17,8 +17,8 @@
  *        following the AAPCS64 calling convention, with specific handling for
  *        the Apple and Microsoft variants.
  *
- * @details This file provides the concrete implementation of the `ffi_forward_abi_spec`
- * and `ffi_reverse_abi_spec` for the ARM64 architecture. It handles the nuances
+ * @details This file provides the concrete implementation of the `infix_forward_abi_spec`
+ * and `infix_reverse_abi_spec` for the ARM64 architecture. It handles the nuances
  * of the standard Procedure Call Standard for the ARM 64-bit Architecture (AAPCS64),
  * which is used by Linux, Android, and other non-Windows platforms.
  *
@@ -61,15 +61,14 @@
  *     into five distinct steps for clarity and maintainability.
  */
 
-#include <infix_internals.h>
-//
+#include "common/infix_internals.h"
+#include "common/utility.h"
 #include <abi_arm64_common.h>
 #include <abi_arm64_emitters.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>  // For memcpy
-#include <utility.h>
 
 /** @brief The General-Purpose Registers used for the first 8 integer/pointer arguments. */
 static const arm64_gpr GPR_ARGS[] = {X0_REG, X1_REG, X2_REG, X3_REG, X4_REG, X5_REG, X6_REG, X7_REG};
@@ -83,54 +82,54 @@ static const arm64_vpr VPR_ARGS[] = {V0_REG, V1_REG, V2_REG, V3_REG, V4_REG, V5_
 #define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
 
 // Forward Declarations
-static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
-                                                   ffi_call_frame_layout ** out_layout,
-                                                   ffi_type * ret_type,
-                                                   ffi_type ** arg_types,
-                                                   size_t num_args,
-                                                   size_t num_fixed_args);
-static ffi_status generate_forward_prologue_arm64(code_buffer * buf, ffi_call_frame_layout * layout);
-static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
-                                                        ffi_call_frame_layout * layout,
-                                                        ffi_type ** arg_types,
-                                                        size_t num_args,
-                                                        c23_maybe_unused size_t num_fixed_args);
-static ffi_status generate_forward_epilogue_arm64(code_buffer * buf,
-                                                  ffi_call_frame_layout * layout,
-                                                  ffi_type * ret_type);
-static bool is_hfa(ffi_type * type, ffi_type ** base_type);
+static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
+                                                     infix_call_frame_layout ** out_layout,
+                                                     infix_type * ret_type,
+                                                     infix_type ** arg_types,
+                                                     size_t num_args,
+                                                     size_t num_fixed_args);
+static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout);
+static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
+                                                          infix_call_frame_layout * layout,
+                                                          infix_type ** arg_types,
+                                                          size_t num_args,
+                                                          c23_maybe_unused size_t num_fixed_args);
+static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
+                                                    infix_call_frame_layout * layout,
+                                                    infix_type * ret_type);
+static bool is_hfa(infix_type * type, infix_type ** base_type);
 
-static ffi_status prepare_reverse_call_frame_arm64(arena_t * arena,
-                                                   ffi_reverse_call_frame_layout ** out_layout,
-                                                   ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_prologue_arm64(code_buffer * buf, ffi_reverse_call_frame_layout * layout);
-static ffi_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
-                                                              ffi_reverse_call_frame_layout * layout,
-                                                              ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
-                                                         ffi_reverse_call_frame_layout * layout,
-                                                         ffi_reverse_trampoline_t * context);
-static ffi_status generate_reverse_epilogue_arm64(code_buffer * buf,
-                                                  ffi_reverse_call_frame_layout * layout,
-                                                  ffi_reverse_trampoline_t * context);
+static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
+                                                     infix_reverse_call_frame_layout ** out_layout,
+                                                     infix_reverse_t * context);
+static infix_status generate_reverse_prologue_arm64(code_buffer * buf, infix_reverse_call_frame_layout * layout);
+static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
+                                                                infix_reverse_call_frame_layout * layout,
+                                                                infix_reverse_t * context);
+static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
+                                                           infix_reverse_call_frame_layout * layout,
+                                                           infix_reverse_t * context);
+static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
+                                                    infix_reverse_call_frame_layout * layout,
+                                                    infix_reverse_t * context);
 
 /**
  * @brief The v-table of AArch64-specific functions for generating forward trampolines.
  * @details This structure is passed to the generic trampoline generator in `trampoline.c`,
  * plugging in the platform-specific logic.
  */
-const ffi_forward_abi_spec g_arm64_forward_spec = {.prepare_forward_call_frame = prepare_forward_call_frame_arm64,
-                                                   .generate_forward_prologue = generate_forward_prologue_arm64,
-                                                   .generate_forward_argument_moves =
-                                                       generate_forward_argument_moves_arm64,
-                                                   .generate_forward_epilogue = generate_forward_epilogue_arm64};
+const infix_forward_abi_spec g_arm64_forward_spec = {.prepare_forward_call_frame = prepare_forward_call_frame_arm64,
+                                                     .generate_forward_prologue = generate_forward_prologue_arm64,
+                                                     .generate_forward_argument_moves =
+                                                         generate_forward_argument_moves_arm64,
+                                                     .generate_forward_epilogue = generate_forward_epilogue_arm64};
 
 /**
  * @brief The v-table of AArch64-specific functions for generating reverse trampolines.
  * @details This structure provides the five-stage implementation for creating
  * a native callback stub on AArch64.
  */
-const ffi_reverse_abi_spec g_arm64_reverse_spec = {
+const infix_reverse_abi_spec g_arm64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_arm64,
     .generate_reverse_prologue = generate_reverse_prologue_arm64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_arm64,
@@ -140,23 +139,23 @@ const ffi_reverse_abi_spec g_arm64_reverse_spec = {
 /**
  * @brief (Internal) Recursively finds the first primitive floating-point type in a potential HFA.
  * @details This function traverses a nested aggregate (struct or array) to find the
- *          `ffi_type` of the very first floating-point primitive (`float` or `double`)
+ *          `infix_type` of the very first floating-point primitive (`float` or `double`)
  *          it contains. This is the first step in HFA classification.
  *
  * @param type The type to inspect.
- * @return A pointer to the `ffi_type` of the base element, or `nullptr` if not found.
+ * @return A pointer to the `infix_type` of the base element, or `nullptr` if not found.
  */
-static ffi_type * get_hfa_base_type(ffi_type * type) {
+static infix_type * get_hfa_base_type(infix_type * type) {
     if (type == nullptr)
         return nullptr;
     // Base case: we've found a primitive float or double.
     if (is_float(type) || is_double(type))
         return type;
     // Recursive step for arrays.
-    if (type->category == FFI_TYPE_ARRAY)
+    if (type->category == INFIX_TYPE_ARRAY)
         return get_hfa_base_type(type->meta.array_info.element_type);
     // Recursive step for structs: check the first member.
-    if (type->category == FFI_TYPE_STRUCT && type->meta.aggregate_info.num_members > 0)
+    if (type->category == INFIX_TYPE_STRUCT && type->meta.aggregate_info.num_members > 0)
         return get_hfa_base_type(type->meta.aggregate_info.members[0].type);
     return nullptr;  // Not a float-based type
 }
@@ -171,7 +170,7 @@ static ffi_type * get_hfa_base_type(ffi_type * type) {
  * @param base_type The required base type (e.g., `float`) to check against.
  * @return `true` if all constituent members of `type` are of `base_type`, `false` otherwise.
  */
-static bool is_hfa_recursive_check(ffi_type * type, ffi_type * base_type, size_t * field_count) {
+static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, size_t * field_count) {
     // Limit the number of fields we are willing to inspect for a single aggregate.
     if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY)
         return false;
@@ -182,10 +181,10 @@ static bool is_hfa_recursive_check(ffi_type * type, ffi_type * base_type, size_t
         return type == base_type;
     }
     // Recursive step for arrays.
-    if (type->category == FFI_TYPE_ARRAY)
+    if (type->category == INFIX_TYPE_ARRAY)
         return is_hfa_recursive_check(type->meta.array_info.element_type, base_type, field_count);
     // Recursive step for structs: check every member.
-    if (type->category == FFI_TYPE_STRUCT) {
+    if (type->category == INFIX_TYPE_STRUCT) {
         if (type->meta.aggregate_info.num_members == 0)
             return false;
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
@@ -204,20 +203,20 @@ static bool is_hfa_recursive_check(ffi_type * type, ffi_type * base_type, size_t
  *          floating-point type (`float` or `double`), including nested aggregates.
  *          HFAs are a special case passed directly in consecutive floating-point (V) registers.
  *
- * @param type The `ffi_type` to check.
+ * @param type The `infix_type` to check.
  * @param[out] out_base_type If the type is a valid HFA, this output parameter will be
- *                           set to point to the `ffi_type` of its base element (`float` or `double`).
+ *                           set to point to the `infix_type` of its base element (`float` or `double`).
  * @return `true` if the type is a valid HFA, `false` otherwise.
  */
-static bool is_hfa(ffi_type * type, ffi_type ** out_base_type) {
-    if (type->category != FFI_TYPE_STRUCT && type->category != FFI_TYPE_ARRAY)
+static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
+    if (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_ARRAY)
         return false;
 
     if (type->size == 0 || type->size > 64)
         return false;
 
     // Find the base float/double type of the first primitive element.
-    ffi_type * base = get_hfa_base_type(type);
+    infix_type * base = get_hfa_base_type(type);
     if (base == nullptr)
         return false;  // Not composed of floating-point types.
 
@@ -258,31 +257,32 @@ static bool is_hfa(ffi_type * type, ffi_type ** out_base_type) {
  *          - **Return Value:** Large aggregates (> 16 bytes) are returned via a hidden pointer passed
  *            by the caller in the dedicated register `X8`.
  *
- * @param[out] out_layout On success, will point to a newly allocated `ffi_call_frame_layout`.
- * @param ret_type The `ffi_type` of the function's return value.
- * @param arg_types An array of `ffi_type` pointers for the arguments.
+ * @param[out] out_layout On success, will point to a newly allocated `infix_call_frame_layout`.
+ * @param ret_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type` pointers for the arguments.
  * @param num_args The total number of arguments.
  * @param num_fixed_args The number of non-variadic arguments.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
-                                                   ffi_call_frame_layout ** out_layout,
-                                                   ffi_type * ret_type,
-                                                   ffi_type ** arg_types,
-                                                   size_t num_args,
-                                                   size_t num_fixed_args) {
+static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
+                                                     infix_call_frame_layout ** out_layout,
+                                                     infix_type * ret_type,
+                                                     infix_type ** arg_types,
+                                                     size_t num_args,
+                                                     size_t num_fixed_args) {
     if (out_layout == nullptr)
-        return FFI_ERROR_INVALID_ARGUMENT;
-    ffi_call_frame_layout * layout =
-        arena_calloc(arena, 1, sizeof(ffi_call_frame_layout), _Alignof(ffi_call_frame_layout));
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    infix_call_frame_layout * layout =
+        infix_arena_calloc(arena, 1, sizeof(infix_call_frame_layout), _Alignof(infix_call_frame_layout));
     if (layout == nullptr) {
         *out_layout = nullptr;
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    layout->arg_locations = arena_calloc(arena, num_args, sizeof(ffi_arg_location), _Alignof(ffi_arg_location));
+    layout->arg_locations =
+        infix_arena_calloc(arena, num_args, sizeof(infix_arg_location), _Alignof(infix_arg_location));
     if (layout->arg_locations == nullptr && num_args > 0) {
         *out_layout = nullptr;
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
     size_t gpr_count = 0, vpr_count = 0, stack_offset = 0;
@@ -292,18 +292,18 @@ static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
     layout->return_value_in_memory = return_uses_hidden_pointer_abi(ret_type);
 
     for (size_t i = 0; i < num_args; ++i) {
-        ffi_type * type = arg_types[i];
+        infix_type * type = arg_types[i];
 
         // Step 0: Make sure we aren't blowing ourselves up
-        if (type->size > FFI_MAX_ARG_SIZE) {
+        if (type->size > INFIX_MAX_ARG_SIZE) {
             *out_layout = NULL;
-            return FFI_ERROR_LAYOUT_FAILED;
+            return INFIX_ERROR_LAYOUT_FAILED;
         }
 
         bool placed_in_register = false;
         bool is_variadic_arg = (i >= num_fixed_args);
 
-#if defined(FFI_OS_MACOS)
+#if defined(INFIX_OS_MACOS)
         // Apple's ABI mandates that all variadic arguments are passed on the stack.
         if (layout->is_variadic && is_variadic_arg) {
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
@@ -319,13 +319,13 @@ static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
 #endif
 
         bool pass_fp_in_vpr = is_float(type) || is_double(type) || is_long_double(type);
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI: If the function is variadic, ALL floating-point
         // arguments are passed in general-purpose registers.
         if (layout->is_variadic)
             pass_fp_in_vpr = false;
 #endif
-        ffi_type * hfa_base_type = nullptr;
+        infix_type * hfa_base_type = nullptr;
         // The order of these checks is critical to prevent incorrect classification.
         // Check for HFA first, as it's the most specific aggregate rule.
 
@@ -387,14 +387,14 @@ static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
     layout->num_vpr_args = (uint8_t)vpr_count;
 
     // Prevent integer overflow and excessive stack allocation.
-    if (layout->total_stack_alloc > FFI_MAX_STACK_ALLOC) {
-        fprintf(stderr, "Error: Calculated stack allocation exceeds safe limit of %d bytes.\n", FFI_MAX_STACK_ALLOC);
+    if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
+        fprintf(stderr, "Error: Calculated stack allocation exceeds safe limit of %d bytes.\n", INFIX_MAX_STACK_ALLOC);
         *out_layout = nullptr;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
 
     *out_layout = layout;
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -413,9 +413,9 @@ static ffi_status prepare_forward_call_frame_arm64(arena_t * arena,
  *
  * @param buf The code buffer to write the assembly into.
  * @param layout The call frame layout containing stack allocation information.
- * @return `FFI_SUCCESS` on success.
+ * @return `INFIX_SUCCESS` on success.
  */
-static ffi_status generate_forward_prologue_arm64(code_buffer * buf, ffi_call_frame_layout * layout) {
+static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout) {
     emit_int32(buf, 0xA9BF7BFD);  // stp x29, x30, [sp, #-16]! (Save Frame Pointer and Link Register)
     emit_int32(buf, 0x910003FD);  // mov x29, sp               (Set new Frame Pointer)
     emit_int32(buf, 0xA9BF53F3);  // stp x19, x20, [sp, #-16]! (Save callee-saved regs for our context)
@@ -427,13 +427,13 @@ static ffi_status generate_forward_prologue_arm64(code_buffer * buf, ffi_call_fr
     if (layout->total_stack_alloc > 0)
         emit_arm64_sub_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
  * @brief Generates machine code to move arguments from the generic FFI format into their native locations.
  * @details This function is a critical part of the trampoline generation process. It iterates
- *          through the `ffi_call_frame_layout` blueprint and emits the necessary AArch64
+ *          through the `infix_call_frame_layout` blueprint and emits the necessary AArch64
  *          machine code to place each argument into its assigned register (GPR or VPR) or
  *          stack slot for the upcoming native function call.
  *
@@ -475,16 +475,16 @@ static ffi_status generate_forward_prologue_arm64(code_buffer * buf, ffi_call_fr
  *
  * @param buf The code buffer to which the machine code will be written.
  * @param layout The call frame layout blueprint that specifies where each argument must go.
- * @param arg_types The array of `ffi_type` pointers for the function's arguments.
+ * @param arg_types The array of `infix_type` pointers for the function's arguments.
  * @param num_args The total number of arguments.
  * @param num_fixed_args The number of fixed (non-variadic) arguments.
- * @return `FFI_SUCCESS` on successful code generation.
+ * @return `INFIX_SUCCESS` on successful code generation.
  */
-static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
-                                                        ffi_call_frame_layout * layout,
-                                                        ffi_type ** arg_types,
-                                                        size_t num_args,
-                                                        c23_maybe_unused size_t num_fixed_args) {
+static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
+                                                          infix_call_frame_layout * layout,
+                                                          infix_type ** arg_types,
+                                                          size_t num_args,
+                                                          c23_maybe_unused size_t num_fixed_args) {
     // If returning a large struct, the ABI requires the hidden pointer (our return buffer)
     // to be passed in the indirect result location register, x8.
     if (layout->return_value_in_memory)
@@ -492,7 +492,7 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
 
     // Standard AAPCS64 Quirk: For variadic calls, a GPR must contain the number of VPRs used.
     // This rule does NOT apply to Apple's ABI, so we exclude it for macOS.
-#if !defined(FFI_OS_MACOS)
+#if !defined(INFIX_OS_MACOS)
     else if (layout->is_variadic)
         // Since we don't know the types of variadic arguments at compile time, the ABI
         // states the safest value is 0. A callee like printf will use this to determine
@@ -502,8 +502,8 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
 #endif
 
     for (size_t i = 0; i < num_args; ++i) {
-        ffi_arg_location * loc = &layout->arg_locations[i];
-        ffi_type * type = arg_types[i];
+        infix_arg_location * loc = &layout->arg_locations[i];
+        infix_type * type = arg_types[i];
 
         // Load the pointer to the current argument's data into scratch register x9.
         // x21 holds the base of the void** args_array.
@@ -514,10 +514,10 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
             {
                 // C requires that signed integer types smaller than a full register be
                 // sign-extended when passed. We check for this case here.
-                bool is_signed_lt_64 = type->category == FFI_TYPE_PRIMITIVE && type->size < 8 &&
-                    (type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT8 ||
-                     type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT16 ||
-                     type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32);
+                bool is_signed_lt_64 = type->category == INFIX_TYPE_PRIMITIVE && type->size < 8 &&
+                    (type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
+                     type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
+                     type->meta.primitive_id == INFIX_PRIMITIVE_SINT32);
 
                 if (is_signed_lt_64)
                     // Use Load Register Signed Word to sign-extend a 32-bit value to 64 bits.
@@ -546,7 +546,7 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
             break;
         case ARG_LOCATION_VPR_HFA:
             {
-                ffi_type * base = nullptr;
+                infix_type * base = nullptr;
                 is_hfa(type, &base);
                 for (uint8_t j = 0; j < loc->num_regs; ++j)
                     emit_arm64_ldr_vpr(
@@ -555,13 +555,13 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
             }
         case ARG_LOCATION_STACK:
             {
-#if defined(FFI_OS_MACOS)
+#if defined(INFIX_OS_MACOS)
                 if (layout->is_variadic && i >= num_fixed_args) {
                     // Apple ABI: All variadic arguments are on the stack and promoted to 8 bytes if smaller.
                     const int32_t max_imm_offset = 0xFFF * 8;
 
                     // Handle promotable primitive types first.
-                    if (type->category == FFI_TYPE_PRIMITIVE || type->category == FFI_TYPE_POINTER) {
+                    if (type->category == INFIX_TYPE_PRIMITIVE || type->category == INFIX_TYPE_POINTER) {
                         if (is_float(type) || is_double(type)) {
                             // Floats are promoted to doubles.
                             emit_arm64_ldr_vpr(buf, true, V16_REG, X9_REG, 0);  // Load as double
@@ -573,10 +573,10 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
                             }
                         }
                         else {  // Integer and pointer types
-                            bool is_signed_lt_64 = type->category == FFI_TYPE_PRIMITIVE && type->size < 8 &&
-                                (type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT8 ||
-                                 type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT16 ||
-                                 type->meta.primitive_id == FFI_PRIMITIVE_TYPE_SINT32);
+                            bool is_signed_lt_64 = type->category == INFIX_TYPE_PRIMITIVE && type->size < 8 &&
+                                (type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
+                                 type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
+                                 type->meta.primitive_id == INFIX_PRIMITIVE_SINT32);
 
                             // Load into scratch GPR X10, applying correct promotion.
                             if (type->size >= 8)  // 64-bit integers and pointers
@@ -618,7 +618,7 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
             }
         }
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -638,14 +638,14 @@ static ffi_status generate_forward_argument_moves_arm64(code_buffer * buf,
  *
  * @param buf The code buffer.
  * @param layout The call frame layout.
- * @param ret_type The `ffi_type` of the function's return value.
- * @return `FFI_SUCCESS` on success.
+ * @param ret_type The `infix_type` of the function's return value.
+ * @return `INFIX_SUCCESS` on success.
  */
-static ffi_status generate_forward_epilogue_arm64(code_buffer * buf,
-                                                  ffi_call_frame_layout * layout,
-                                                  ffi_type * ret_type) {
-    if (ret_type->category != FFI_TYPE_VOID && !layout->return_value_in_memory) {
-        ffi_type * hfa_base = nullptr;
+static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
+                                                    infix_call_frame_layout * layout,
+                                                    infix_type * ret_type) {
+    if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
+        infix_type * hfa_base = nullptr;
         // The order of these checks is critical. Handle the most specific cases first.
         if (is_long_double(ret_type))
             // On non-Apple AArch64, long double is 16 bytes and returned in V0.
@@ -690,7 +690,7 @@ static ffi_status generate_forward_epilogue_arm64(code_buffer * buf,
     emit_int32(buf, 0xA8C17BFD);  // ldp x29, x30, [sp], #16
     emit_int32(buf, 0xD65F03C0);  // ret
 
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -703,15 +703,15 @@ static ffi_status generate_forward_epilogue_arm64(code_buffer * buf,
  *
  * @param[out] out_layout The resulting reverse call frame layout blueprint, populated with offsets.
  * @param context The reverse trampoline context with full signature information.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-static ffi_status prepare_reverse_call_frame_arm64(arena_t * arena,
-                                                   ffi_reverse_call_frame_layout ** out_layout,
-                                                   ffi_reverse_trampoline_t * context) {
-    ffi_reverse_call_frame_layout * layout =
-        arena_calloc(arena, 1, sizeof(ffi_reverse_call_frame_layout), _Alignof(ffi_reverse_call_frame_layout));
+static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
+                                                     infix_reverse_call_frame_layout ** out_layout,
+                                                     infix_reverse_t * context) {
+    infix_reverse_call_frame_layout * layout = infix_arena_calloc(
+        arena, 1, sizeof(infix_reverse_call_frame_layout), _Alignof(infix_reverse_call_frame_layout));
     if (!layout)
-        return FFI_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
 
     // The return buffer must be large enough and aligned for any type.
     size_t return_size = (context->return_type->size + 15) & ~15;
@@ -723,18 +723,18 @@ static ffi_status prepare_reverse_call_frame_arm64(arena_t * arena,
         // Ensure each saved argument is 16-byte aligned for simplicity.
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
 
-    if (saved_args_data_size > FFI_MAX_ARG_SIZE) {
+    if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
         *out_layout = NULL;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
 
     size_t total_local_space = return_size + args_array_size + saved_args_data_size;
     // The total stack allocation must be 16-byte aligned.
     // Prevent integer overflow from fuzzer-provided types that are impractically large by ensuring the total
     // required stack space is within a safe limit.
-    if (total_local_space > FFI_MAX_STACK_ALLOC) {
+    if (total_local_space > INFIX_MAX_STACK_ALLOC) {
         *out_layout = nullptr;
-        return FFI_ERROR_LAYOUT_FAILED;
+        return INFIX_ERROR_LAYOUT_FAILED;
     }
     layout->total_stack_alloc = (total_local_space + 15) & ~15;
 
@@ -746,7 +746,7 @@ static ffi_status prepare_reverse_call_frame_arm64(arena_t * arena,
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
 
     *out_layout = layout;
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -758,14 +758,14 @@ static ffi_status prepare_reverse_call_frame_arm64(arena_t * arena,
  *
  * @param buf The code buffer to write to.
  * @param layout The blueprint containing the total stack space to allocate.
- * @return `FFI_SUCCESS` on success.
+ * @return `INFIX_SUCCESS` on success.
  */
-static ffi_status generate_reverse_prologue_arm64(code_buffer * buf, ffi_reverse_call_frame_layout * layout) {
+static infix_status generate_reverse_prologue_arm64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
     emit_int32(buf, 0xA9BF7BFD);  // stp x29, x30, [sp, #-16]!
     emit_int32(buf, 0x910003FD);  // mov x29, sp
     if (layout->total_stack_alloc > 0)
         emit_arm64_sub_imm(buf, true, false, SP_REG, SP_REG, layout->total_stack_alloc);
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -790,12 +790,12 @@ static ffi_status generate_reverse_prologue_arm64(code_buffer * buf, ffi_reverse
  * @param buf The code buffer to which the machine code will be written.
  * @param layout The blueprint containing stack offsets for the save areas and `args_array`.
  * @param context The context containing the full argument type information for the callback.
- * @return `FFI_SUCCESS` on success, or `FFI_ERROR_LAYOUT_FAILED` if any calculated offset
+ * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_LAYOUT_FAILED` if any calculated offset
  *         would violate architectural limits.
  */
-static ffi_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
-                                                              ffi_reverse_call_frame_layout * layout,
-                                                              ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
+                                                                infix_reverse_call_frame_layout * layout,
+                                                                infix_reverse_t * context) {
     // If the return type is a large struct, the caller passes a hidden pointer in X8.
     // We must save this pointer into our return buffer location immediately.
     if (context->return_type->size > 16)
@@ -806,17 +806,17 @@ static ffi_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
     size_t caller_stack_offset = 16;  // Caller args start at [fp, #16]
 
     for (size_t i = 0; i < context->num_args; i++) {
-        ffi_type * type = context->arg_types[i];
+        infix_type * type = context->arg_types[i];
         bool is_variadic_arg = i >= context->num_fixed_args;
         bool is_pass_by_ref = (type->size > 16) && !is_variadic_arg;
         bool is_from_stack = false;
 
         // Determine if the argument is expected in a VPR based on type and platform.
         bool expect_in_vpr = is_float(type) || is_double(type) || is_long_double(type);
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
         if (context->is_variadic)
             expect_in_vpr = false;
-#elif defined(FFI_OS_MACOS)
+#elif defined(INFIX_OS_MACOS)
         // On macOS, all variadic arguments are on the stack.
         if (is_variadic_arg)
             is_from_stack = true;
@@ -847,7 +847,7 @@ static ffi_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
         // Case 2: Argument is passed by value.
         int32_t arg_save_loc = (int32_t)(layout->saved_args_offset + current_saved_data_offset);
 
-        ffi_type * hfa_base_type = NULL;
+        infix_type * hfa_base_type = NULL;
 
         if (!is_from_stack) {
             if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
@@ -942,7 +942,7 @@ static ffi_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
         }
         current_saved_data_offset += (type->size + 15) & ~15;
     }
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -954,11 +954,11 @@ static ffi_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
  * @param buf The code buffer.
  * @param layout The blueprint containing stack offsets.
  * @param context The context, containing the dispatcher's address.
- * @return `FFI_SUCCESS` on success.
+ * @return `INFIX_SUCCESS` on success.
  */
-static ffi_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
-                                                         ffi_reverse_call_frame_layout * layout,
-                                                         ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
+                                                           infix_reverse_call_frame_layout * layout,
+                                                           infix_reverse_t * context) {
     // Arg 1: Load context pointer into X0.
     emit_arm64_load_u64_immediate(buf, X0_REG, (uint64_t)context);
     // Arg 2: Load pointer to return buffer into X1.
@@ -975,7 +975,7 @@ static ffi_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
     // Load the C dispatcher's address into a scratch register (X9) and call it.
     emit_arm64_load_u64_immediate(buf, X9_REG, (uint64_t)context->internal_dispatcher);
     emit_int32(buf, 0xD63F0120);  // blr x9
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }
 
 /**
@@ -988,14 +988,14 @@ static ffi_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
  * @param buf The code buffer.
  * @param layout The blueprint containing the return buffer's offset.
  * @param context The context containing the return type information.
- * @return `FFI_SUCCESS` on success.
+ * @return `INFIX_SUCCESS` on success.
  */
-static ffi_status generate_reverse_epilogue_arm64(code_buffer * buf,
-                                                  ffi_reverse_call_frame_layout * layout,
-                                                  ffi_reverse_trampoline_t * context) {
+static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
+                                                    infix_reverse_call_frame_layout * layout,
+                                                    infix_reverse_t * context) {
     // If the function returns a value and it's not passed via hidden pointer...
-    if (context->return_type->category != FFI_TYPE_VOID && context->return_type->size <= 16) {
-        ffi_type * base = nullptr;
+    if (context->return_type->category != INFIX_TYPE_VOID && context->return_type->size <= 16) {
+        infix_type * base = nullptr;
         if (is_hfa(context->return_type, &base)) {
             size_t num_elements = context->return_type->size / base->size;
             for (size_t i = 0; i < num_elements; ++i)
@@ -1021,5 +1021,5 @@ static ffi_status generate_reverse_epilogue_arm64(code_buffer * buf,
 
     emit_int32(buf, 0xA8C17BFD);  // ldp x29, x30, [sp], #16 (Load pair, post-indexed)
     emit_int32(buf, 0xD65F03C0);  // ret
-    return FFI_SUCCESS;
+    return INFIX_SUCCESS;
 }

@@ -36,9 +36,9 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"  // Test-specific type definitions
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 #include <math.h>  // For fabs
 
 // Native C Target Functions
@@ -70,117 +70,123 @@ TEST {
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(5);
+        infix_arena_t * arena = infix_arena_create(4096);
 
-        // First, create the ffi_type for the Point struct. This will be reused.
-        ffi_struct_member * point_members = infix_malloc(sizeof(ffi_struct_member) * 2);
+        // First, create the infix_type for the Point struct. This will be reused.
+        infix_struct_member * point_members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         point_members[0] =
-            ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
+            infix_struct_member_create("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         point_members[1] =
-            ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
-        ffi_type * point_type = NULL;
-        ffi_status status = ffi_type_create_struct(&point_type, point_members, 2);
-        if (!ok(status == FFI_SUCCESS, "ffi_type for Point created successfully")) {
-            skip(3, "Cannot proceed without Point type");
-            infix_free(point_members);  // On failure, we must free this ourselves.
+            infix_struct_member_create("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+        infix_type * point_type = NULL;
+        infix_status status = infix_type_create_struct(arena, &point_type, point_members, 2);
+        if (!ok(status == INFIX_SUCCESS, "infix_type for Point created successfully")) {
+            skip(4, "Cannot proceed without Point type");
+            infix_arena_destroy(arena);
             return;
         }
 
         // Test 1: Pass Point as an argument
-        ffi_type * arg_ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-        ffi_trampoline_t * arg_trampoline = NULL;
-        status = generate_forward_trampoline(&arg_trampoline, arg_ret_type, &point_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for process_point_by_value created");
+        infix_type * arg_ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+        infix_forward_t * arg_trampoline = NULL;
+        status = infix_forward_create_manual(&arg_trampoline, arg_ret_type, &point_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for process_point_by_value created");
 
-        ffi_cif_func arg_cif = (ffi_cif_func)ffi_trampoline_get_code(arg_trampoline);
+        infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
         Point p_in = {10.5, 20.5};
         double sum_result = 0.0;
         void * arg_args[] = {&p_in};
         arg_cif((void *)process_point_by_value, &sum_result, arg_args);
         ok(fabs(sum_result - 31.0) < 0.001, "Struct passed as argument correctly");
-        ffi_trampoline_free(arg_trampoline);
+        infix_forward_destroy(arg_trampoline);
 
         // Test 2: Return Point as a value
-        ffi_trampoline_t * ret_trampoline = NULL;
-        status = generate_forward_trampoline(&ret_trampoline, point_type, NULL, 0, 0);
-        ok(status == FFI_SUCCESS, "Trampoline for return_point_by_value created");
+        infix_forward_t * ret_trampoline = NULL;
+        status = infix_forward_create_manual(&ret_trampoline, point_type, NULL, 0, 0);
+        ok(status == INFIX_SUCCESS, "Trampoline for return_point_by_value created");
 
-        ffi_cif_func ret_cif = (ffi_cif_func)ffi_trampoline_get_code(ret_trampoline);
+        infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
         Point p_out = {0.0, 0.0};
         ret_cif((void *)return_point_by_value, &p_out, NULL);
         ok(fabs(p_out.x - 100.0) < 0.001 && fabs(p_out.y - 200.0) < 0.001, "Struct returned by value correctly");
-        ffi_trampoline_free(ret_trampoline);
+        infix_forward_destroy(ret_trampoline);
 
-        // Cleanup: this recursively frees the members array as well.
-        ffi_type_destroy(point_type);
+        infix_arena_destroy(arena);
     }
 
     subtest("ABI Specific: System V x64 mixed-register struct") {
-        //~ #if defined(FFI_ABI_SYSV_X64)
         plan(2);
         note("Testing struct { int; double; } passed in GPR and XMM registers.");
+        infix_arena_t * arena = infix_arena_create(4096);
 
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 2);
-        members[0] = ffi_struct_member_create(
-            "i", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), offsetof(MixedIntDouble, i));
-        members[1] = ffi_struct_member_create(
-            "d", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(MixedIntDouble, d));
-        ffi_type * mixed_type = NULL;
-        (void)ffi_type_create_struct(&mixed_type, members, 2);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
+        members[0] = infix_struct_member_create(
+            "i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(MixedIntDouble, i));
+        members[1] = infix_struct_member_create(
+            "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(MixedIntDouble, d));
+        infix_type * mixed_type = NULL;
+        (void)infix_type_create_struct(arena, &mixed_type, members, 2);
 
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(
-            &trampoline, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), &mixed_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for mixed-type struct created");
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(
+            &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for mixed-type struct created");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         MixedIntDouble arg_val = {-500, 3.14};
         int result = 0;
         void * args[] = {&arg_val};
         cif_func((void *)process_mixed_struct, &result, args);
         ok(result == 1, "Mixed-type struct was passed correctly");
 
-        ffi_trampoline_free(trampoline);
-        ffi_type_destroy(mixed_type);
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
     }
 
     subtest("ABI Specific: AArch64 Homogeneous Floating-point Aggregate (HFA)") {
         plan(2);
         note("Testing struct { float v[4]; } as an HFA in V0-V3 registers.");
+        infix_arena_t * arena = infix_arena_create(4096);
 
         // Level 1: Create the inner array type float[4]
-        ffi_type * array_type = NULL;
-        ffi_status status = ffi_type_create_array(&array_type, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT), 4);
-        if (status != FFI_SUCCESS) {
+        infix_type * array_type = NULL;
+        infix_status status =
+            infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 4);
+        if (status != INFIX_SUCCESS) {
             fail("Failed to create HFA inner array type");
             skip(1, "Cannot proceed");
+            infix_arena_destroy(arena);
             return;
         }
 
         // Level 2: Wrap the array in a struct
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member));
-        members[0] = ffi_struct_member_create("v", array_type, offsetof(Vector4, v));
-        ffi_type * struct_type = NULL;
-        status = ffi_type_create_struct(&struct_type, members, 1);
-        if (status != FFI_SUCCESS) {
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
+        members[0] = infix_struct_member_create("v", array_type, offsetof(Vector4, v));
+        infix_type * struct_type = NULL;
+        status = infix_type_create_struct(arena, &struct_type, members, 1);
+        if (status != INFIX_SUCCESS) {
             fail("Failed to create HFA container struct type");
             skip(1, "Cannot proceed");
-            ffi_type_destroy(array_type);
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_trampoline_t * trampoline = NULL;
-        status = generate_forward_trampoline(
-            &trampoline, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT), &struct_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for HFA struct created");
+        infix_forward_t * trampoline = NULL;
+        status = infix_forward_create_manual(
+            &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         Vector4 vec = {{1.5f, 2.5f, 3.5f, 4.5f}};
         float result = 0.0f;
         void * args[] = {&vec};
         cif_func((void *)sum_vector4, &result, args);
         ok(fabs(result - 12.0f) < 0.001, "HFA struct passed correctly");
 
-        ffi_trampoline_free(trampoline);
-        ffi_type_destroy(struct_type);  // Recursively destroys the inner array type
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
     }
 }

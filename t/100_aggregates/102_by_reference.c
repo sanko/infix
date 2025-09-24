@@ -34,9 +34,9 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 
 // Native C Target Functions
 
@@ -71,80 +71,84 @@ TEST {
     plan(2);
 
     subtest("Large struct (>16 bytes) passed and returned by reference/stack") {
-        // 1. Create the ffi_type for LargeStruct. This is used for both tests.
         plan(5);
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 6);
-        ffi_type * s32_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
+        infix_arena_t * arena = infix_arena_create(4096);
+        // 1. Create the infix_type for LargeStruct. This is used for both tests.
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
+        infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         for (int i = 0; i < 6; ++i) {
-            members[i] = ffi_struct_member_create(NULL, s32_type, sizeof(int) * i);
+            members[i] = infix_struct_member_create(NULL, s32_type, sizeof(int) * i);
         }
-        ffi_type * large_struct_type = NULL;
-        ffi_status status = ffi_type_create_struct(&large_struct_type, members, 6);
-        if (!ok(status == FFI_SUCCESS, "ffi_type for LargeStruct created successfully")) {
-            skip(3, "Cannot proceed without LargeStruct type");
-            infix_free(members);  // On failure, we must free this ourselves.
+        infix_type * large_struct_type = NULL;
+        infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
+        if (!ok(status == INFIX_SUCCESS, "infix_type for LargeStruct created successfully")) {
+            skip(4, "Cannot proceed without LargeStruct type");
+            infix_arena_destroy(arena);
             return;
         }
 
         // Test 1: Passing LargeStruct as an argument
-        ffi_trampoline_t * arg_trampoline = NULL;
-        status = generate_forward_trampoline(
-            &arg_trampoline, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), &large_struct_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for process_large_struct created");
+        infix_forward_t * arg_trampoline = NULL;
+        status = infix_forward_create_manual(
+            &arg_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &large_struct_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for process_large_struct created");
 
-        ffi_cif_func arg_cif = (ffi_cif_func)ffi_trampoline_get_code(arg_trampoline);
+        infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
         LargeStruct s_in = {10, 20, 30, 40, 50, 60};
         int result = 0;
         void * arg_args[] = {&s_in};
         arg_cif((void *)process_large_struct, &result, arg_args);
         ok(result == 70, "Large struct passed as argument correctly");
-        ffi_trampoline_free(arg_trampoline);
+        infix_forward_destroy(arg_trampoline);
 
         // Test 2: Returning LargeStruct by value
-        ffi_trampoline_t * ret_trampoline = NULL;
-        ffi_type * ret_arg_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        status = generate_forward_trampoline(&ret_trampoline, large_struct_type, &ret_arg_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for return_large_struct created");
-        ffi_cif_func ret_cif = (ffi_cif_func)ffi_trampoline_get_code(ret_trampoline);
+        infix_forward_t * ret_trampoline = NULL;
+        infix_type * ret_arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        status = infix_forward_create_manual(&ret_trampoline, large_struct_type, &ret_arg_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for return_large_struct created");
+        infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
         LargeStruct s_out;
         int base_val = 100;
         void * ret_args[] = {&base_val};
         ret_cif((void *)return_large_struct, &s_out, ret_args);
         ok(s_out.a == 100 && s_out.f == 105, "Large struct returned via hidden pointer correctly");
-        ffi_trampoline_free(ret_trampoline);
-        ffi_type_destroy(large_struct_type);
+        infix_forward_destroy(ret_trampoline);
+        infix_arena_destroy(arena);
     }
 
     subtest("Non-power-of-two sized struct") {
         plan(3);
         note("Testing 12-byte struct passed by reference.");
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 3);
-        ffi_type * s32_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        members[0] = ffi_struct_member_create("a", s32_type, offsetof(NonPowerOfTwoStruct, a));
-        members[1] = ffi_struct_member_create("b", s32_type, offsetof(NonPowerOfTwoStruct, b));
-        members[2] = ffi_struct_member_create("c", s32_type, offsetof(NonPowerOfTwoStruct, c));
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 3, _Alignof(infix_struct_member));
+        infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        members[0] = infix_struct_member_create("a", s32_type, offsetof(NonPowerOfTwoStruct, a));
+        members[1] = infix_struct_member_create("b", s32_type, offsetof(NonPowerOfTwoStruct, b));
+        members[2] = infix_struct_member_create("c", s32_type, offsetof(NonPowerOfTwoStruct, c));
 
-        ffi_type * npot_type = NULL;
-        ffi_status status = ffi_type_create_struct(&npot_type, members, 3);
-        if (!ok(status == FFI_SUCCESS, "ffi_type for NonPowerOfTwoStruct created")) {
+        infix_type * npot_type = NULL;
+        infix_status status = infix_type_create_struct(arena, &npot_type, members, 3);
+        if (!ok(status == INFIX_SUCCESS, "infix_type for NonPowerOfTwoStruct created")) {
             skip(2, "Cannot proceed");
-            infix_free(members);
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_trampoline_t * trampoline = NULL;
-        status = generate_forward_trampoline(
-            &trampoline, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), &npot_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for non-power-of-two struct created");
+        infix_forward_t * trampoline = NULL;
+        status = infix_forward_create_manual(
+            &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &npot_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for non-power-of-two struct created");
 
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         NonPowerOfTwoStruct s_in = {10, 20, 30};
         int result = 0;
         void * args[] = {&s_in};
         cif((void *)process_npot_struct, &result, args);
         ok(result == 60, "Non-power-of-two struct passed by reference correctly");
 
-        ffi_trampoline_free(trampoline);
-        ffi_type_destroy(npot_type);
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
     }
 }
