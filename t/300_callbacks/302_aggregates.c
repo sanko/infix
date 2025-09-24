@@ -39,30 +39,35 @@
 #include <math.h>
 
 /** @brief Handler for Point(Point) signature. Doubles the coordinates. */
-Point point_callback_handler(Point p) {
+Point point_callback_handler(ffi_reverse_trampoline_t * context, Point p) {
+    (void)context;
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     return (Point){p.x * 2.0, p.y * 2.0};
 }
 
 /** @brief Handler for int(LargeStruct) signature. Processes a large struct. */
-int large_struct_pass_handler(LargeStruct s) {
+int large_struct_pass_handler(ffi_reverse_trampoline_t * context, LargeStruct s) {
+    (void)context;
     note("large_struct_pass_handler received s.a=%d, s.f=%d", s.a, s.f);
     return s.a - s.f;
 }
 
 /** @brief Handler for LargeStruct(int) signature. Returns a large struct. */
-LargeStruct large_struct_return_handler(int a) {
+LargeStruct large_struct_return_handler(ffi_reverse_trampoline_t * context, int a) {
+    (void)context;
     note("large_struct_return_handler called with a=%d", a);
     return (LargeStruct){a, a + 1, a + 2, a + 3, a + 4, a + 5};
 }
 
 /** @brief Handler for int(Vector4) signature. Sums the vector elements. */
-int vector4_callback_handler(Vector4 v) {
+int vector4_callback_handler(ffi_reverse_trampoline_t * context, Vector4 v) {
+    (void)context;
     return (int)(v.v[0] + v.v[1] + v.v[2] + v.v[3]);
 }
 
 /** @brief Handler for Number(float) signature. Returns a union. */
-Number number_union_return_handler(float f) {
+Number number_union_return_handler(ffi_reverse_trampoline_t * context, float f) {
+    (void)context;
     Number n;
     n.f = f * 10.0f;
     return n;
@@ -268,7 +273,7 @@ TEST {
             ffi_type_create_packed_struct(&packed_type, sizeof(PackedStruct), _Alignof(PackedStruct), members, 2);
 
         if (!ok(status == FFI_SUCCESS, "Packed struct ffi_type created")) {
-            skip(2, "Test skipped");
+            skip(4, "Test skipped");
             infix_free(members);
             return;
         }

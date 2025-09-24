@@ -62,7 +62,8 @@ bool check_u128(__uint128_t val) {
 __int128_t return_s128(void) {
     return S128_CONSTANT;
 }
-bool s128_callback_handler(__int128_t val) {
+bool s128_callback_handler(void * context, __int128_t val) {
+    (void)context;
     note("s128_callback_handler received value.");
     return val == S128_CONSTANT;
 }

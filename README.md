@@ -4,7 +4,6 @@
 
 At its core, this is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code that wraps all the low-level details of the target platform's calling convention in a uniform API. This makes `infix` a powerful tool for embedding scripting languages, building plugin systems, and simplifying complex C interoperability.
 
-
 ## Quick Start: Calling a Shared Library
 
 This example demonstrates a core FFI use case: dynamically loading a shared library (`.dll` or `.so`), retrieving a function pointer from it, and calling that function.
@@ -77,12 +76,10 @@ int main() {
 }
 ```
 
-
-
 ## Features
 
 -   **Forward Calls:** Call any C function pointer dynamically, with full support for complex arguments and variadic functions.
--   **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe and re-entrant.
+-   **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe, re-entrant, and **passes a context pointer as the first argument to your handler**, enabling powerful stateful callbacks.
 -   **Expressive Signature API:** Define entire C function signatures—including nested structs and packed layouts—using a simple string-based language.
 -   **Powerful Introspection:** Parse signature strings to get detailed type information at runtime, ideal for data marshalling or serialization.
 -   **Secure by Design:** `infix` adheres to strict security principles, validated through extensive fuzzing:
@@ -100,6 +97,7 @@ int main() {
 
 -   **`ffi_type`**: The central data structure that describes any C type.
 -   **`ffi_cif_func`**: A generic function pointer for invoking a forward trampoline: `void (*ffi_cif_func)(void* target_function, void* return_value, void** args);`
+-   **`ffi_reverse_trampoline_t`**: An opaque handle to a callback's context. A pointer to this context is **always passed as the first argument** to your C callback handler, allowing you to access user data and other metadata.
 
 ### Arena Memory Allocator
 
@@ -367,6 +365,60 @@ if (status != FFI_SUCCESS) {
     else if (status == FFI_ERROR_ALLOCATION_FAILED)
         fprintf(stderr, "Error: A memory allocation failed.\n");
     // ...
+}
+```
+
+### Callbacks (Reverse Calls)
+
+A key feature of `infix` is the ability to create C function pointers from your own C functions. This is essential for interfacing with libraries that use callbacks.
+
+**Your C handler's signature will always receive the `ffi_reverse_trampoline_t*` context as its first argument.** The subsequent arguments will match the signature string you provide.
+
+**Example: A Stateful Callback for a C Library**
+
+Imagine a simple C library that processes a list of numbers but doesn't provide a way to pass user state to the callback.
+
+```c
+// The C library's required callback type
+typedef void (*item_processor_t)(int item_value);
+// The C library's function
+void process_list(int* items, int count, item_processor_t func);
+```
+
+With `infix`, you can easily adapt a stateful handler to this stateless API.
+
+```c
+#include <infix.h>
+#include <stdio.h>
+
+// Your application state
+typedef struct { int total; } AppState;
+
+// Your C handler. Note the `context` parameter.
+void my_handler(ffi_reverse_trampoline_t* context, int item) {
+    // Retrieve your state from the context
+    AppState* state = (AppState*)ffi_reverse_trampoline_get_user_data(context);
+    state->total += item;
+    printf("Handler processed item %d, new total is %d\n", item, state->total);
+}
+
+int main() {
+    AppState my_app_state = {0};
+
+    // 1. Create the reverse trampoline for the signature the library expects: "i=>v"
+    //    Pass your handler and a pointer to your state.
+    ffi_reverse_trampoline_t* rt = NULL;
+    ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)my_handler, &my_app_state);
+
+    // 2. Get the native function pointer and pass it to the C library.
+    item_processor_t callback_ptr = (item_processor_t)ffi_reverse_trampoline_get_code(rt);
+    int items[] = {10, 20, 30};
+    process_list(items, 3, callback_ptr);
+
+    printf("Final total from AppState: %d\n", my_app_state.total); // Expected: 60
+
+    ffi_reverse_trampoline_free(rt);
+    return 0;
 }
 ```
 

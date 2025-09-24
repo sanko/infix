@@ -629,21 +629,42 @@ void ffi_type_destroy(ffi_type *);
  */
 c23_nodiscard ffi_status generate_forward_trampoline(ffi_trampoline_t **, ffi_type *, ffi_type **, size_t, size_t);
 
+
 /**
  * @brief Generates a reverse-call trampoline (a native callable function pointer for a callback).
  * @details Creates a native C function pointer that, when called, will invoke a user-provided
- *          C handler function, marshalling the arguments correctly. This single function
- *          handles both non-variadic and variadic callbacks.
+ *          C handler function, marshalling the arguments correctly.
+ *
+ *          **CRITICAL**: The C handler function you provide (`user_callback_fn`) will **always**
+ *          receive a pointer to its `ffi_reverse_trampoline_t` context as its **first argument**.
+ *          The subsequent arguments will match the types described in the signature string. This
+ *          context-passing mechanism allows you to create stateful callbacks.
+ *
+ * ### Handler Signature Example
+ * If your `infix` signature string is `"i,d*=>v"`, which corresponds to a C type of
+ * `void (*)(int, double*)`, your C handler function **must** have the following signature:
+ * ```c
+ * void my_c_handler(ffi_reverse_trampoline_t * context, void * return_value_ptr, void ** args_array);
+ * ```
+ * You can then retrieve your state within the handler by calling:
+ * ```c
+ * my_state_t* state = (my_state_t*)ffi_reverse_trampoline_get_user_data(context);
+ * ```
+ * And you'd retrieve your arguments like this:
+ * ```c
+ * int arg1 = *(int*)args_array[0];
+ * double arg2 = *(double*)args[1];
+ *```
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
- * @param return_type The return type of the callback.
- * @param arg_types An array of `ffi_type` pointers for ALL callback arguments (fixed and variadic).
- * @param num_args The TOTAL number of arguments (fixed + variadic).
+ * @param return_type The return type of the callback as seen by the *native C caller*.
+ * @param arg_types An array of `ffi_type` pointers for the callback's arguments, *not including*
+ *                  the implicit initial context pointer.
+ * @param num_args The TOTAL number of arguments in `arg_types`.
  * @param num_fixed_args The number of fixed arguments that appear before a potential '...'.
- *        - **For non-variadic functions**, set `num_fixed_args` equal to `num_args`.
- *        - **For variadic functions**, set this to the number of arguments before the ellipsis.
- * @param user_callback_fn A function pointer to the user's C callback handler. Its signature must
- *        match the concrete signature described by `arg_types`.
+ * @param user_callback_fn A function pointer to your C callback handler. Its signature must
+ *                         start with `ffi_reverse_trampoline_t*` followed by the types
+ *                         described in `arg_types`.
  * @param user_data A user-defined pointer for passing state to the handler.
  * @return `FFI_SUCCESS` on success, or an error code on failure.
  * @note The returned context must be freed with `ffi_reverse_trampoline_free`.

@@ -188,6 +188,7 @@ graph TD
 ```
 
 ##### Reverse Call Trampoline (Callbacks)
+
 ```mermaid
 graph TD
     subgraph "Setup Phase: generate_reverse_trampoline()"
@@ -209,7 +210,7 @@ graph TD
         N --> O[Prologue: Set up stack];
         O --> P[Marshal Arguments: Save native args to generic `void**` array on stub's stack];
         P --> Q["call ffi_internal_dispatch_callback_fn_impl"];
-        Q --> R["C Dispatcher uses CACHED forward trampoline to call user's C handler"];
+        Q --> R["C Dispatcher prepares a new arg list with the context* pointer and uses the CACHED forward trampoline to call the user's C handler"];
         R --> S[Return from user handler];
         S --> T[Unmarshal Return Value: Load value from buffer into native return registers];
         T --> U[Epilogue: Restore stack];

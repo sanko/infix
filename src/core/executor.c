@@ -394,27 +394,23 @@ c23_nodiscard bool ffi_protected_make_readonly(ffi_protected_t prot) {
  *          a reverse trampoline. It receives arguments in a normalized format (an array
  *          of `void*`) and is responsible for invoking the user's actual C callback handler.
  *
- *          Thanks to a caching strategy, this execution path is extremely fast,
- *          re-entrant, and thread-safe. All expensive operations (JIT compilation of a
- *          forward trampoline, memory allocation) are performed once when the reverse
- *          trampoline is first created, not during the callback invocation itself.
- *
  *          The process is as follows:
- *          1.  It receives the `ffi_reverse_trampoline_t` context, which contains all
- *              necessary information, including a pointer to a pre-generated forward
- *              trampoline that matches the user callback's signature.
- *          2.  It retrieves this `cached_forward_trampoline`.
- *          3.  It gets a callable function pointer (`ffi_cif_func`) from the cached trampoline.
- *          4.  It uses this function pointer to call the `user_callback_fn` from the
- *              context, passing it the return value buffer and the normalized argument array.
- *              This final step transparently handles the ABI translation from our generic
- *              format back to the native C calling convention required by the user's code.
+ *          1.  It receives the `ffi_reverse_trampoline_t` context and the `args_array`
+ *              from the JIT-compiled assembly stub.
+ *          2.  It constructs a **new, augmented argument array** on the stack.
+ *          3.  The **first element** of this new array is set to a pointer to the `context`.
+ *          4.  The pointers from the original `args_array` are copied into the rest of the
+ *              new array.
+ *          5.  It retrieves the `cached_forward_trampoline` from the context (which was generated
+ *              to expect this augmented argument list).
+ *          6.  It calls the user's C handler through this trampoline, transparently passing
+ *              the context as the first argument.
  *
- * @param context A pointer to the callback's context structure, which holds the
- *                cached forward trampoline and user data.
+ * @param context A pointer to the callback's context structure.
  * @param return_value_ptr A pointer to a buffer on the trampoline's stack where the
  *                         return value should be stored.
- * @param args_array An array of pointers, where each element points to an argument's data.
+ * @param args_array An array of pointers from the JIT stub, where each element points
+ *                   to an argument's data from the native caller.
  */
 void ffi_internal_dispatch_callback_fn_impl(ffi_reverse_trampoline_t * context,
                                             void * return_value_ptr,
@@ -436,19 +432,26 @@ void ffi_internal_dispatch_callback_fn_impl(ffi_reverse_trampoline_t * context,
 
     ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
 
-    // Special Case: A callback with a NULL handler, zero arguments, and a pointer
-    // return is an explicit request to retrieve the `user_data` pointer from the
-    // context. This is a powerful feature for creating stateful callbacks that can,
-    // for example, return a pointer to another dynamically generated function.
-    if (context->user_callback_fn == NULL && context->num_args == 0 &&
-        context->return_type->category == FFI_TYPE_POINTER) {
-        infix_memcpy(return_value_ptr, &context->user_data, sizeof(void *));
-    }
-    else {
-        // For all other function signatures, use the cached forward trampoline
-        // to call the user's C callback handler with the correct native ABI.
-        cif_func(context->user_callback_fn, return_value_ptr, args_array);
-    }
+
+    /// For all other function signatures, use the cached forward trampoline
+    // to call the user's C callback handler with the correct native ABI.
+
+    // The cached_forward_trampoline was generated to expect `num_args + 1` arguments,
+    // with the first one being the `ffi_reverse_trampoline_t*` context.
+    // We must construct a new argument array that reflects this.
+    void * callback_args[context->num_args + 1];
+
+    // The first argument to the user's handler is the context pointer itself.
+    // The args array needs a pointer to this value.
+    callback_args[0] = &context;
+
+    // Copy the original argument pointers into the rest of the new array.
+    if (context->num_args > 0)
+        infix_memcpy(&callback_args[1], args_array, context->num_args * sizeof(void *));
+
+    // Call the user's handler through the trampoline with the complete, prepended argument list.
+    cif_func(context->user_callback_fn, return_value_ptr, callback_args);
+
 
     FFI_DEBUG_PRINTF("Exiting ffi_internal_dispatch_callback_fn_impl");
 }

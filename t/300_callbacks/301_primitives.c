@@ -21,15 +21,16 @@
  * primitive C types.
  *
  * For each signature, the test performs these steps:
- * 1.  Defines a C "handler" function (e.g., `int_callback_handler`).
- * 2.  Creates the `ffi_type` definitions for the handler's signature.
+ * 1.  Defines a C "handler" function (e.g., `int_callback_handler`). This handler's
+ *     first argument is now always `ffi_reverse_trampoline_t* context`.
+ * 2.  Creates the `ffi_type` definitions for the handler's public signature.
  * 3.  Calls `generate_reverse_trampoline` to create a native function pointer.
  * 4.  Defines a C "harness" function that takes a function pointer of the
  *     native type as an argument.
  * 5.  Calls the harness, passing it the generated function pointer.
  * 6.  Inside the harness, the generated function pointer is called. This triggers
- *     the JIT-compiled assembly stub, which marshals the arguments and invokes
- *     the original C handler.
+ *     the JIT-compiled assembly stub, which marshals the arguments, prepends the
+ *     context, and invokes the original C handler.
  * 7.  The test asserts that the value returned by the callback is correct.
  *
  * This validates the entire reverse call chain: native call -> JIT stub ->
@@ -44,19 +45,22 @@
 // Native C Handlers
 
 /** @brief A simple callback handler that multiplies two integers. */
-int int_callback_handler(int a, int b) {
+int int_callback_handler(ffi_reverse_trampoline_t * context, int a, int b) {
+    (void)context;  // Context is unused in this stateless handler.
     note("int_callback_handler received: a=%d, b=%d", a, b);
     return a * b;
 }
 
 /** @brief A callback handler that adds two floats. */
-float float_callback_handler(float a, float b) {
+float float_callback_handler(ffi_reverse_trampoline_t * context, float a, float b) {
+    (void)context;
     note("float_callback_handler received: a=%.2f, b=%.2f", a, b);
     return a + b;
 }
 
 /** @brief A callback handler with a void return type that checks its argument. */
-void void_callback_handler(int check_val) {
+void void_callback_handler(ffi_reverse_trampoline_t * context, int check_val) {
+    (void)context;
     note("void_callback_handler received check_val = %d", check_val);
     ok(check_val == 1337, "void(int) callback received the correct value");
 }

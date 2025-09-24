@@ -1,5 +1,3 @@
-
-
 # The `infix` FFI Cookbook
 
 This guide provides practical, real-world examples to help you solve common FFI problems and leverage the full power of the `infix` library. Where the `README.md` covers concepts, this cookbook provides the code.
@@ -21,7 +19,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
     *   [Recipe: Working with Pointers to Arrays](#recipe-working-with-pointers-to-arrays)
 *   **Chapter 3: The Power of Callbacks (Reverse Calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
-    *   [Recipe: Callbacks with State (Adapting to a Stateless C API)](#recipe-callbacks-with-state-adapting-to-a-stateless-c-api)
+    *   [Recipe: Creating a Stateful Callback (The Modern Way)](#recipe-creating-a-stateful-callback-the-modern-way)
 *   **Chapter 4: Advanced Techniques**
     *   [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
     *   [Recipe: Creating a Variadic Callback](#recipe-creating-a-variadic-callback)
@@ -467,76 +465,74 @@ int main() {
 
 **Problem**: You need to sort an array using C's `qsort`, which requires a function pointer for the comparison logic.
 
-**Solution**: Use a reverse trampoline to create a native function pointer for your comparison handler.
+**Solution**: Use a reverse trampoline to create a native function pointer for your comparison handler. For a simple, stateless callback like this, the handler's signature matches the C library's expectation exactly.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int compare_ints_handler(const void* a, const void* b) {
-    int int_a = *(const int*)a; int int_b = *(const int*)b;
-    if (int_a < int_b) return -1; if (int_a > int_b) return 1; return 0;
+// This is our C handler. Its signature is what qsort expects.
+int compare_ints_handler(ffi_reverse_trampoline_t* context, const void* a, const void* b) {
+    (void)context; // Unused in this stateless example
+    int int_a = *(const int*)a;
+    int int_b = *(const int*)b;
+    if (int_a < int_b) return -1;
+    if (int_a > int_b) return 1;
+    return 0;
 }
 
 int main() {
-    // 1. Create the reverse trampoline for the comparison function.
+    // 1. Describe the signature qsort expects: int(const void*, const void*)
+    const char* qsort_compare_sig = "v*,v*=>i";
     ffi_reverse_trampoline_t* rt = NULL;
-    ffi_create_reverse_trampoline_from_signature(&rt, "v*,v*=>i", (void*)compare_ints_handler, NULL);
+    ffi_create_reverse_trampoline_from_signature(&rt, qsort_compare_sig, (void*)compare_ints_handler, NULL);
+
+    // This is a native, callable function pointer.
     int (*comparison_func_ptr)(const void*, const void*) = ffi_reverse_trampoline_get_code(rt);
 
-    // 2. Create the forward trampoline for qsort itself.
-    // Note the function pointer signature: (v*,v*=>i)*
-    ffi_trampoline_t* ft = NULL;
-    ffi_create_forward_trampoline_from_signature(&ft, "v*,y,y,(v*,v*=>i)*=>v");
-
-    // 3. Prepare arguments and call qsort.
+    // 2. Call qsort with our generated function pointer.
     int numbers[] = { 5, 2, 8, 1, 9 };
-    size_t num_elements = 5; size_t element_size = sizeof(int);
-    void* qsort_args[] = { numbers, &num_elements, &element_size, &comparison_func_ptr };
-
-    ((ffi_cif_func)ffi_trampoline_get_code(ft))((void*)qsort, NULL, qsort_args);
+    qsort(numbers, 5, sizeof(int), comparison_func_ptr);
 
     printf("Sorted numbers: ");
-    for (size_t i = 0; i < num_elements; ++i) printf("%d ", numbers[i]);
+    for (size_t i = 0; i < 5; ++i) printf("%d ", numbers[i]);
     printf("\n");
 
-    // 4. Clean up.
-    ffi_trampoline_free(ft);
+    // 3. Clean up.
     ffi_reverse_trampoline_free(rt);
     return 0;
 }
 ```
 
-### Recipe: Callbacks with State (Adapting to a Stateless C API)
 
-**Problem**: A callback handler needs access to application state, but the C library API doesn't provide a `void* user_data` parameter.
+### Recipe: Creating a Stateful Callback (The Modern Way)
 
-**Solution**: Use a special "bridge" handler that `infix` calls. This bridge can retrieve state from the `user_data` associated with the reverse trampoline and then call your real logic. This powerful pattern adapts a stateful handler to a stateless C API.
+**Problem**: A callback handler needs access to application state, but the C library API you're using doesn't provide a `void* user_data` parameter in its callback signature.
 
-#### The C "Library"
+**Solution**: `infix` automatically passes a pointer to the `ffi_reverse_trampoline_t` context as the **first argument** to every C callback handler. This allows your handler to be "self-aware." You can retrieve your application state from the context's `user_data` field, adapting a stateful handler to a stateless C API.
+
+#### The C "Library" (Stateless API)
 ```c
 // An iterator that takes a callback without a context parameter.
 typedef void (*item_processor_t)(int item_value);
 void process_list(int* items, int count, item_processor_t process_func) {
     for (int i = 0; i < count; ++i) process_func(items[i]);
-}
-```
+}```
 
 #### The `infix` C Code
 ```c
 #include <infix.h>
 #include <stdio.h>
 
-typedef struct { const char* name; int sum; } Context;
+typedef struct { const char* name; int sum; } AppContext;
 
-// This is the "bridge" handler that infix calls directly.
-void bridge_handler(ffi_reverse_trampoline_t* context, void* ret_val, void** args) {
-    // The arguments passed by the native caller are in the `args` array.
-    int item_value = *(int*)args[0];
-
-    // Retrieve our state from the user_data pointer!
-    Context* ctx = (Context*)ffi_reverse_trampoline_get_user_data(context);
+// This is our C handler. Notice its signature:
+// The FIRST argument is the infix context.
+// The SUBSEQUENT arguments match the signature string "i=>v".
+void my_stateful_handler(ffi_reverse_trampoline_t* context, int item_value) {
+    // Retrieve our application's state from the user_data pointer!
+    AppContext* ctx = (AppContext*)ffi_reverse_trampoline_get_user_data(context);
 
     // Now we can use the state.
     printf("Handler for '%s' processing %d\n", ctx->name, item_value);
@@ -544,15 +540,18 @@ void bridge_handler(ffi_reverse_trampoline_t* context, void* ret_val, void** arg
 }
 
 int main() {
-    Context ctx = { "My List", 0 };
+    AppContext ctx = { "My List", 0 };
 
-    // 1. Create a reverse trampoline, passing our context struct as user_data.
+    // 1. Create a reverse trampoline for the signature the C library expects: void(int).
+    //    We pass our context struct as the user_data.
     ffi_reverse_trampoline_t* rt = NULL;
-    ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)bridge_handler, &ctx);
-    item_processor_t processor = (item_processor_t)ffi_reverse_trampoline_get_code(rt);
+    ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)my_stateful_handler, &ctx);
 
+    item_processor_t processor_ptr = (item_processor_t)ffi_reverse_trampoline_get_code(rt);
+
+    // 2. Call the C library. It is completely unaware of our state management.
     int list[] = { 10, 20, 30 };
-    process_list(list, 3, processor);
+    process_list(list, 3, processor_ptr);
 
     printf("Context '%s' has final sum: %d\n", ctx.name, ctx.sum); // Expected: 60
 
@@ -691,37 +690,71 @@ int main() {
 
 **Problem**: You need to call a factory function that returns a pointer to another function, which you then need to call.
 
-**Solution**: Create two trampolines: one for the factory's signature and one for the worker's signature.
+**Solution**: This advanced pattern uses two reverse trampolines and one forward trampoline.
+1.  The "worker" callback is created first.
+2.  A "provider" callback is created. The function pointer to the "worker" is stored in the provider's `user_data`.
+3.  The provider's C handler is a simple function that retrieves the pointer from its `user_data` and returns it.
+4.  A forward trampoline is used to call a C "harness" that orchestrates the test.
 
 ```c
 #include <infix.h>
 #include <stdio.h>
 
-typedef int (*math_op_t)(int, int);
-int add_op(int a, int b) { return a + b; }
-math_op_t get_operation(const char* name) { return add_op; }
+// 1. The innermost C handler that will be returned and ultimately called.
+int final_multiply_handler(ffi_reverse_trampoline_t* context, int val) {
+    (void)context;
+    return val * 10;
+}
+
+// 2. The handler for the "provider" callback. Its only job is to return
+//    the function pointer we stored in its user_data.
+void* callback_provider_handler(ffi_reverse_trampoline_t* context) {
+    printf("Provider callback called, returning worker function pointer...\n");
+    return ffi_reverse_trampoline_get_user_data(context);
+}
+
+// 3. A C harness function that demonstrates the pattern.
+// It takes a function pointer to our provider.
+typedef int (*worker_func_t)(int);
+typedef worker_func_t (*provider_func_t)(void);
+
+int call_harness(provider_func_t provider, int input_val) {
+    // Call the provider to get the actual worker callback.
+    worker_func_t worker = provider();
+    // Call the worker and return its result.
+    return worker(input_val);
+}
 
 int main() {
-    // 1. Generate trampolines for BOTH signatures.
-    ffi_trampoline_t *t_factory, *t_worker;
-    ffi_create_forward_trampoline_from_signature(&t_factory, "c*=>(i,i=>i)*");
-    ffi_create_forward_trampoline_from_signature(&t_worker, "i,i=>i");
+    // Step A: Create the inner "worker" trampoline: int(int)
+    ffi_reverse_trampoline_t* worker_rt = NULL;
+    ffi_create_reverse_trampoline_from_signature(&worker_rt, "i=>i", (void*)final_multiply_handler, NULL);
 
-    // 2. Call the factory to get a function pointer.
-    math_op_t received_func_ptr = NULL;
-    const char* op_name = "add";
-    void* factory_args[] = { &op_name };
-    ((ffi_cif_func)ffi_trampoline_get_code(t_factory))((void*)get_operation, &received_func_ptr, factory_args);
+    // Step B: Create the "provider" trampoline: void*(void)
+    ffi_reverse_trampoline_t* provider_rt = NULL;
+    void* worker_ptr = ffi_reverse_trampoline_get_code(worker_rt);
+    ffi_create_reverse_trampoline_from_signature(&provider_rt, "=>v*", (void*)callback_provider_handler, worker_ptr);
 
-    // 3. Use the worker trampoline to call the returned function pointer.
-    int a = 7, b = 6, result = 0;
-    void* worker_args[] = { &a, &b };
-    ((ffi_cif_func)ffi_trampoline_get_code(t_worker))((void*)received_func_ptr, &result, worker_args);
+    // Step C: Create a forward trampoline to call the C harness.
+    // Signature: int( void*(*)(void), int ) => "()=>v*,i=>i"
+    ffi_trampoline_t* harness_ft = NULL;
+    ffi_create_forward_trampoline_from_signature(&harness_ft, "()=>v*,i=>i");
 
-    printf("Result: %d\n", result); // Expected: 13
+    // Step D: Execute the call chain.
+    provider_func_t provider_ptr = (provider_func_t)ffi_reverse_trampoline_get_code(provider_rt);
+    int input = 7;
+    int result = 0;
+    void* harness_args[] = { &provider_ptr, &input };
 
-    ffi_trampoline_free(t_factory);
-    ffi_trampoline_free(t_worker);
+    ((ffi_cif_func)ffi_trampoline_get_code(harness_ft))((void*)call_harness, &result, &harness_args);
+
+    printf("Final result: %d\n", result); // Expected: 70
+
+    // Step E: Clean up all trampolines.
+    ffi_trampoline_free(harness_ft);
+    ffi_reverse_trampoline_free(provider_rt);
+    ffi_reverse_trampoline_free(worker_rt);
+
     return 0;
 }
 ```
@@ -1265,6 +1298,7 @@ def _get_signature_string_from_ctypes(restype, argtypes):
 Generating a trampoline is a one-time setup cost. The binding **must** implement a global, persistent cache for trampolines, using the signature string as the key.
 
 **Conceptual C++ Binding Code:**
+
 ```cpp
 #include <map>
 #include <string>
@@ -1294,25 +1328,35 @@ This is often the hardest part of FFI. The high-level language has a garbage col
 
 #### 4. Implementing the Callback Bridge
 
-When a C library invokes a reverse trampoline, the JIT-compiled stub calls a C handler. This "bridge" handler must then transfer control back to the high-level language's runtime.
+When a C library invokes a reverse trampoline, the JIT-compiled stub calls a C handler. This "bridge" handler must then transfer control back to the high-level language's runtime. The new context-passing mechanism makes this much cleaner.
 
 **Conceptual Python Callback Bridge:**
+
 ```c
 #include <Python.h> // Example for Python
 
 // This C function is the handler given to infix.
-void python_callback_bridge(ffi_reverse_trampoline_t* context, void* ret_ptr, void** args) {
+void python_callback_bridge(ffi_reverse_trampoline_t* context, /* original C args... */) {
     PyGILState_STATE gstate = PyGILState_Ensure(); // 1. Acquire the GIL.
-    PyObject* py_callback = (PyObject*)ffi_reverse_trampoline_get_user_data(context); // 2. Get Python func.
-    PyObject* py_args = convert_c_args_to_python_tuple(context, args); // 3. Convert args.
-    PyObject* py_result = PyObject_CallObject(py_callback, py_args); // 4. Call Python func.
+
+    // 2. Get the Python function handle from user_data via the context.
+    PyObject* py_callback = (PyObject*)ffi_reverse_trampoline_get_user_data(context);
+
+    // 3. Convert the original C arguments into a Python tuple.
+    //    (The raw `void** args` array is no longer directly available here,
+    //    but the bridge function knows the types from its own signature).
+    PyObject* py_args = convert_c_args_to_python_tuple(/* ... */);
+
+    // 4. Call the Python function.
+    PyObject* py_result = PyObject_CallObject(py_callback, py_args);
 
     if (py_result != NULL) {
-        convert_python_result_to_c(py_result, context->return_type, ret_ptr); // 5. Convert return.
+        // 5. Convert the Python result back to C and store it in the return buffer.
+        convert_python_result_to_c(py_result, context->return_type, /* ... */);
         Py_DECREF(py_result);
-    } else {
-        PyErr_Print(); // Handle exceptions.
     }
+    else
+        PyErr_Print(); // Handle exceptions.
 
     Py_DECREF(py_args);
     PyGILState_Release(gstate); // 6. Release the GIL.

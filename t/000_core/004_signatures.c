@@ -114,15 +114,17 @@ TEST {
             fail("Skipping detail checks");
             fail("Skipping detail checks");
             fail("Skipping detail checks");
-        } else {
+        }
+        else {
             ok(type->category == FFI_TYPE_REVERSE_TRAMPOLINE, "Category is REVERSE_TRAMPOLINE");
 
-            ffi_type* ret_type = type->meta.func_ptr_info.return_type;
-            ffi_type** arg_types = type->meta.func_ptr_info.arg_types;
+            ffi_type * ret_type = type->meta.func_ptr_info.return_type;
+            ffi_type ** arg_types = type->meta.func_ptr_info.arg_types;
 
             ok(type->meta.func_ptr_info.num_args == 2, "Has correct number of arguments (2)");
             ok(ret_type && ret_type->category == FFI_TYPE_STRUCT, "Return type is correct (struct)");
-            ok(arg_types && arg_types[0] && arg_types[0]->category == FFI_TYPE_PRIMITIVE, "Arg 1 is correct (primitive)");
+            ok(arg_types && arg_types[0] && arg_types[0]->category == FFI_TYPE_PRIMITIVE,
+               "Arg 1 is correct (primitive)");
             ok(arg_types && arg_types[1] && arg_types[1]->category == FFI_TYPE_POINTER, "Arg 2 is correct (pointer)");
         }
         arena_destroy(arena);

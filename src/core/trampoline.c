@@ -362,7 +362,9 @@ static size_t get_page_size() {
  * @brief Generates a reverse-call trampoline (callback) for a given function signature.
  * @details This function creates a native, C-callable function pointer that, when invoked,
  *          calls back into a user-provided handler. The process is highly optimized and
- *          follows a multi-stage generation process with proper error handling.
+ *          follows a multi-stage generation process. A key part of this process is
+ *          creating a **cached forward trampoline** that is used internally to call the
+ *          user's C handler with the correct ABI.
  *
  * @param[out] out_context On success, will point to the context for the new reverse trampoline.
  * @param return_type The `ffi_type` of the callback's return value.
@@ -423,33 +425,44 @@ c23_nodiscard ffi_status generate_reverse_trampoline(ffi_reverse_trampoline_t **
     context->user_data = user_data;
     context->internal_dispatcher = ffi_internal_dispatch_callback_fn_impl;
 
-    ffi_type ** promoted_arg_types = arg_types;
-
-    if (context->is_variadic) {
-        promoted_arg_types = arena_alloc(arena, num_args * sizeof(ffi_type *), sizeof(void *));
-        if (promoted_arg_types == NULL) {
-            status = FFI_ERROR_ALLOCATION_FAILED;
-            goto cleanup;
-        }
-
-        for (size_t i = 0; i < num_args; ++i) {
-            if (i >= num_fixed_args) {
-                // Apply C's default argument promotions for the variadic part.
-                if (is_float(arg_types[i]))
-                    promoted_arg_types[i] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-                else if (arg_types[i]->category == FFI_TYPE_PRIMITIVE && arg_types[i]->size < sizeof(int))
-                    promoted_arg_types[i] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-
-                else
-                    promoted_arg_types[i] = arg_types[i];
-            }
-            else
-                promoted_arg_types[i] = arg_types[i];
-        }
+    // The user's callback handler expects the `ffi_reverse_trampoline_t*` context
+    // as its FIRST argument. We must create a new argument type list that reflects this.
+    // The new list will have `1 (for context) + num_args` elements.
+    ffi_type ** callback_arg_types = arena_alloc(arena, (1 + num_args) * sizeof(ffi_type *), _Alignof(ffi_type *));
+    if (callback_arg_types == NULL) {
+        status = FFI_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
     }
 
+    // The first argument is the context pointer.
+    callback_arg_types[0] = ffi_type_create_pointer();
+
+    // Now, copy and promote the original user-defined arguments into the rest of the array.
+    if (context->is_variadic) {
+        for (size_t i = 0; i < num_args; ++i) {
+            ffi_type * current_type = arg_types[i];
+            if (i >= num_fixed_args) {  // Apply default argument promotions for variadic part.
+                if (is_float(current_type))
+                    callback_arg_types[i + 1] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
+                else if (current_type->category == FFI_TYPE_PRIMITIVE && current_type->size < sizeof(int))
+                    callback_arg_types[i + 1] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
+                else
+                    callback_arg_types[i + 1] = current_type;
+            }
+            else
+                callback_arg_types[i + 1] = current_type;
+        }
+    }
+    else {
+        // For non-variadic functions, just copy the original types.
+        if (num_args > 0)
+            infix_memcpy(&callback_arg_types[1], arg_types, num_args * sizeof(ffi_type *));
+    }
+
+    // Generate the cached forward trampoline with the *correct, prepended* argument list.
+    // The total number of arguments and fixed arguments are each increased by one.
     status = generate_forward_trampoline(
-        &context->cached_forward_trampoline, return_type, promoted_arg_types, num_args, num_fixed_args);
+        &context->cached_forward_trampoline, return_type, callback_arg_types, num_args + 1, num_fixed_args + 1);
 
     if (status != FFI_SUCCESS)
         goto cleanup;

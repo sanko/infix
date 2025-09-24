@@ -85,7 +85,8 @@ int forward_variadic_checker(char * buffer, size_t size, const char * format, ..
 }
 
 /** @brief A handler for a reverse trampoline with a variadic signature. */
-int variadic_reverse_handler(const char * topic, ...) {
+int variadic_reverse_handler(ffi_reverse_trampoline_t * context, const char * topic, ...) {
+    (void)context;
     va_list args;
     va_start(args, topic);
     int count = va_arg(args, int);

@@ -123,7 +123,8 @@ double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) {
 // Native C Handler and Harness for Reverse Call Test
 
 /** @brief A callback handler that takes a mix of register and stack arguments. */
-int many_args_callback_handler(int a, double b, int c, const char * d, Point e, float f) {
+int many_args_callback_handler(void * context, int a, double b, int c, const char * d, Point e, float f) {
+    (void)context;
     subtest("Inside many_args_callback_handler") {
         plan(6);
         ok(a == 10, "Arg 1 (int) is correct");
@@ -175,9 +176,9 @@ TEST {
                 ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)sum_max_reg_doubles, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for max register args");
             }
-            else {
+            else
                 skip(1, "Test skipped");
-            }
+
             ffi_trampoline_free(trampoline);
         }
 
@@ -206,9 +207,9 @@ TEST {
                 ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)sum_one_stack_double, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for one stack arg");
             }
-            else {
+            else
                 skip(1, "Test skipped");
-            }
+
             ffi_trampoline_free(trampoline);
         }
 
@@ -246,9 +247,8 @@ TEST {
                    result,
                    expected_result);
             }
-            else {
+            else
                 skip(1, "Test skipped");
-            }
             ffi_trampoline_free(trampoline);
         }
     }
@@ -284,9 +284,8 @@ TEST {
             typedef int (*ManyArgsCallback)(int, double, int, const char *, Point, float);
             execute_many_args_callback((ManyArgsCallback)ffi_reverse_trampoline_get_code(rt));
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
 
         ffi_reverse_trampoline_free(rt);
         ffi_type_destroy(point_type);
