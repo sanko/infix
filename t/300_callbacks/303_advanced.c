@@ -34,14 +34,14 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 
 // Scenario 1: Modify Data Via Pointer
 
 /** @brief Handler that dereferences a pointer and writes a new value. */
-void pointer_modify_handler(ffi_reverse_trampoline_t * context, int * p) {
+void pointer_modify_handler(infix_context_t * context, int * p) {
     (void)context;
     note("pointer_modify_handler received pointer p=%p", (void *)p);
     if (p)
@@ -57,7 +57,7 @@ void execute_pointer_modify_callback(void (*func_ptr)(int *), int * p) {
 // Scenario 2: Callback as an Argument
 
 /** @brief The inner callback that will be passed as an argument. */
-void inner_callback_handler(ffi_reverse_trampoline_t * context, int val) {
+void inner_callback_handler(infix_context_t * context, int val) {
     (void)context;
     note("inner_callback_handler received val=%d", val);
     ok(val == 42, "Inner callback received the correct value from the harness");
@@ -72,7 +72,7 @@ void execute_callback_as_arg_harness(void (*cb)(int)) {
 // Scenario 3: Callback Returning a Callback
 
 /** @brief The innermost handler that will be returned and ultimately called. */
-int final_multiply_handler(ffi_reverse_trampoline_t * context, int val) {
+int final_multiply_handler(infix_context_t * context, int val) {
     (void)context;
     return val * 10;
 }
@@ -81,9 +81,9 @@ int final_multiply_handler(ffi_reverse_trampoline_t * context, int val) {
  * @details This handler leverages the `user_data` to return another function pointer.
  * It retrieves the function pointer from its own context and returns it.
  */
-void * callback_provider_handler(ffi_reverse_trampoline_t * context) {
+void * callback_provider_handler(infix_context_t * context) {
     note("Provider callback called, returning function pointer from user_data.");
-    return ffi_reverse_trampoline_get_user_data(context);
+    return infix_reverse_get_user_data(context);
 }
 
 /** @brief A harness that receives the provider, calls it to get the real callback, and then calls that. */
@@ -100,79 +100,78 @@ TEST {
 
     subtest("Callback modifies data via pointer") {
         plan(2);
-        ffi_type * ret_type = ffi_type_create_void();
-        ffi_type * arg_types[] = {ffi_type_create_pointer()};
-        ffi_reverse_trampoline_t * rt = NULL;
-        ffi_status status =
-            generate_reverse_trampoline(&rt, ret_type, arg_types, 1, 1, (void *)pointer_modify_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline for pointer modification created");
+        infix_type * ret_type = infix_type_create_void();
+        infix_type * arg_types[] = {infix_type_create_pointer()};
+        infix_reverse_t * rt = NULL;
+        infix_status status =
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 1, 1, (void *)pointer_modify_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Reverse trampoline for pointer modification created");
 
         if (rt) {
             int my_value = 100;
-            execute_pointer_modify_callback((void (*)(int *))ffi_reverse_trampoline_get_code(rt), &my_value);
+            execute_pointer_modify_callback((void (*)(int *))infix_reverse_get_code(rt), &my_value);
         }
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(rt);
+        infix_reverse_destroy(rt);
     }
 
     subtest("Callback passed as an argument") {
         plan(3);
-        ffi_reverse_trampoline_t * inner_rt = NULL;
-        ffi_type * inner_arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
-        ffi_status status = generate_reverse_trampoline(
-            &inner_rt, ffi_type_create_void(), inner_arg_types, 1, 1, (void *)inner_callback_handler, NULL);
-        ok(status == FFI_SUCCESS, "Inner reverse trampoline (the argument) created");
+        infix_reverse_t * inner_rt = NULL;
+        infix_type * inner_arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
+        infix_status status = infix_reverse_create_manual(
+            &inner_rt, infix_type_create_void(), inner_arg_types, 1, 1, (void *)inner_callback_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Inner reverse trampoline (the argument) created");
 
         // The harness takes a `void (*)(int)` which is a pointer.
-        ffi_trampoline_t * fwd_trampoline = NULL;
-        ffi_type * fwd_arg_types[] = {ffi_type_create_pointer()};
-        status = generate_forward_trampoline(&fwd_trampoline, ffi_type_create_void(), fwd_arg_types, 1, 1);
-        ok(status == FFI_SUCCESS, "Forward trampoline (for the harness) created");
+        infix_forward_t * fwd_trampoline = NULL;
+        infix_type * fwd_arg_types[] = {infix_type_create_pointer()};
+        status = infix_forward_create_manual(&fwd_trampoline, infix_type_create_void(), fwd_arg_types, 1, 1);
+        ok(status == INFIX_SUCCESS, "Forward trampoline (for the harness) created");
 
         if (inner_rt && fwd_trampoline) {
-            void * callback_ptr_arg = ffi_reverse_trampoline_get_code(inner_rt);
+            void * callback_ptr_arg = infix_reverse_get_code(inner_rt);
             void * args[] = {&callback_ptr_arg};
-            ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(fwd_trampoline);
+            infix_cif_func cif = (infix_cif_func)infix_forward_get_code(fwd_trampoline);
             cif((void *)execute_callback_as_arg_harness, NULL, args);
         }
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(inner_rt);
-        ffi_trampoline_free(fwd_trampoline);
+        infix_reverse_destroy(inner_rt);
+        infix_forward_destroy(fwd_trampoline);
     }
 
     subtest("Callback returns a function pointer (via user_data)") {
         plan(3);
 
-        ffi_reverse_trampoline_t * inner_t = NULL;
-        ffi_type * inner_arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
-        ffi_status status = generate_reverse_trampoline(&inner_t,
-                                                        ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                                        inner_arg_types,
-                                                        1,
-                                                        1,
-                                                        (void *)final_multiply_handler,
-                                                        NULL);
-        ok(status == FFI_SUCCESS, "Inner callback created");
+        infix_reverse_t * inner_t = NULL;
+        infix_type * inner_arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
+        infix_status status = infix_reverse_create_manual(&inner_t,
+                                                          infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                                          inner_arg_types,
+                                                          1,
+                                                          1,
+                                                          (void *)final_multiply_handler,
+                                                          NULL);
+        ok(status == INFIX_SUCCESS, "Inner callback created");
 
-        ffi_reverse_trampoline_t * provider_t = NULL;
-        void * user_data_ptr = inner_t ? ffi_reverse_trampoline_get_code(inner_t) : NULL;
-        status = generate_reverse_trampoline(
-            &provider_t, ffi_type_create_pointer(), NULL, 0, 0, (void *)callback_provider_handler, user_data_ptr);
-        ok(status == FFI_SUCCESS, "Provider callback created");
+        infix_reverse_t * provider_t = NULL;
+        void * user_data_ptr = inner_t ? infix_reverse_get_code(inner_t) : NULL;
+        status = infix_reverse_create_manual(
+            &provider_t, infix_type_create_pointer(), NULL, 0, 0, (void *)callback_provider_handler, user_data_ptr);
+        ok(status == INFIX_SUCCESS, "Provider callback created");
 
         if (inner_t && provider_t) {
-            int result =
-                call_returned_callback_harness((callback_provider)ffi_reverse_trampoline_get_code(provider_t), 7);
+            int result = call_returned_callback_harness((callback_provider)infix_reverse_get_code(provider_t), 7);
             ok(result == 70, "Callback returned from another callback works correctly (7 * 10 = 70)");
         }
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(provider_t);
-        ffi_reverse_trampoline_free(inner_t);
+        infix_reverse_destroy(provider_t);
+        infix_reverse_destroy(inner_t);
     }
 }

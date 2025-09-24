@@ -28,9 +28,9 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"  // For the definition of PointerStruct
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 #include <string.h>  // For strcmp
 
 // Native C Target Function
@@ -56,28 +56,32 @@ int process_pointer_struct(PointerStruct ps) {
 TEST {
     plan(3);  // One for type creation, one for trampoline, one for the final result.
 
-    // 1. Define the ffi_type for PointerStruct
-    ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 2);
-    members[0] = ffi_struct_member_create("val_ptr", ffi_type_create_pointer(), offsetof(PointerStruct, val_ptr));
-    members[1] = ffi_struct_member_create("str_ptr", ffi_type_create_pointer(), offsetof(PointerStruct, str_ptr));
-    ffi_type * struct_type = NULL;
-    ffi_status status = ffi_type_create_struct(&struct_type, members, 2);
+    // 1. Create an arena to hold the type definitions for this test.
+    infix_arena_t * arena = infix_arena_create(4096);
 
-    if (!ok(status == FFI_SUCCESS, "ffi_type for PointerStruct created successfully")) {
-        fail("Cannot proceed with test without a valid ffi_type.");
+    // 2. Define the infix_type for PointerStruct using the arena.
+    infix_struct_member * members =
+        infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
+    members[0] = infix_struct_member_create("val_ptr", infix_type_create_pointer(), offsetof(PointerStruct, val_ptr));
+    members[1] = infix_struct_member_create("str_ptr", infix_type_create_pointer(), offsetof(PointerStruct, str_ptr));
+    infix_type * struct_type = NULL;
+    infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
+
+    if (!ok(status == INFIX_SUCCESS, "infix_type for PointerStruct created successfully")) {
+        fail("Cannot proceed with test without a valid infix_type.");
         skip(2, "Skipping remaining tests");
-        infix_free(members);  // On failure, we must free this.
+        infix_arena_destroy(arena);
         return;
     }
 
-    // 2. Generate the trampoline for `int(PointerStruct)`
-    ffi_type * return_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_trampoline_t * trampoline = NULL;
-    status = generate_forward_trampoline(&trampoline, return_type, &struct_type, 1, 1);
-    ok(status == FFI_SUCCESS, "Trampoline created successfully");
+    // 3. Generate the trampoline for `int(PointerStruct)`
+    infix_type * return_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+    infix_forward_t * trampoline = NULL;
+    status = infix_forward_create_manual(&trampoline, return_type, &struct_type, 1, 1);
+    ok(status == INFIX_SUCCESS, "Trampoline created successfully");
 
-    // 3. Prepare data and execute the FFI call
-    ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+    // 4. Prepare data and execute the FFI call
+    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
     int value_to_point_to = 500;
     const char * string_to_point_to = "Hello Pointers";
@@ -88,11 +92,11 @@ TEST {
 
     cif_func((void *)process_pointer_struct, &result, args);
 
-    // 4. Verify the result
+    // 5. Verify the result
     ok(result == 550, "Struct with pointer members passed correctly");
     diag("Function returned: %d (expected 550)", result);
 
-    // 5. Cleanup
-    ffi_trampoline_free(trampoline);
-    ffi_type_destroy(struct_type);  // Recursively frees the members array.
+    // 6. Cleanup
+    infix_forward_destroy(trampoline);
+    infix_arena_destroy(arena);  // Frees all type-related memory.
 }

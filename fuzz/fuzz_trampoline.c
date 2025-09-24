@@ -17,17 +17,12 @@
  *        focused on the infix FFI trampoline generation API.
  *
  * @details This harness uses the shared recursive generator (`fuzz_helpers.h`) to
- * create a pool of complex `ffi_type` objects. It then uses these types to construct
- * randomized function signatures which are passed to `generate_forward_trampoline`
- * and `generate_reverse_trampoline`.
+ * create a pool of complex `infix_type` objects within a memory arena. It then uses
+ * these types to construct randomized function signatures which are passed to
+ * `infix_forward_create_manual` and `infix_reverse_create_manual`.
  *
- * The goal is to find bugs in the ABI classification and JIT code generation stages:
- *  - Crashes or assertion failures in the ABI classification logic (`abi_*.c` files).
- *  - Memory errors in the trampoline generator's complex error-handling paths.
- *  - Generation of invalid machine code from edge-case types.
- *
- * This harness is compiled in either libFuzzer mode or AFL++ mode, controlled by
- * the `USE_AFL` macro from the build script.
+ * The goal is to find bugs in the ABI classification and JIT code generation stages.
+ * This harness now tests the fully arena-based workflow.
  */
 
 #include "fuzz_helpers.h"
@@ -35,23 +30,28 @@
 // Fuzzing Logic Core
 // This function contains the actual test logic, shared by both entry points.
 static void FuzzTest(fuzzer_input in) {
-    ffi_type * type_pool[MAX_TYPES_IN_POOL] = {0};
+    infix_type * type_pool[MAX_TYPES_IN_POOL] = {0};
     int type_count = 0;
+
+    // Create a single arena for the entire type pool.
+    infix_arena_t * arena = infix_arena_create(65536);
+    if (!arena)
+        return;
 
     // Phase 1: Generate a pool of complex types to build signatures from.
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
         size_t total_fields = 0;  // Initialize counter for each new type
-        ffi_type * new_type = generate_random_type(&in, 0, &total_fields);
+        infix_type * new_type = generate_random_type(arena, &in, 0, &total_fields);
         if (new_type)
             type_pool[type_count++] = new_type;
         else
-            // Stop if we run out of fuzzer data or hit a generation failure.
             break;
     }
 
-    if (type_count == 0)
-        // If we couldn't even generate one type, there's nothing to test.
+    if (type_count == 0) {
+        infix_arena_destroy(arena);
         return;
+    }
 
     // Phase 2: Fuzz the trampoline generators using the generated type pool.
     uint8_t arg_count_byte;
@@ -60,46 +60,42 @@ static void FuzzTest(fuzzer_input in) {
 
         uint8_t fixed_arg_byte = 0;
         consume_uint8_t(&in, &fixed_arg_byte);
-        // Ensure num_fixed_args is always <= num_args.
-        size_t num_fixed_args = num_args > 0 ? (fixed_arg_byte % num_args) : 0;
+        size_t num_fixed_args = num_args > 0 ? (fixed_arg_byte % (num_args + 1)) : 0;
 
-        ffi_type ** arg_types = (ffi_type **)calloc(num_args, sizeof(ffi_type *));
+        // Note: arg_types is allocated on the heap because the trampoline generator
+        // doesn't take ownership of it, and it's simpler than using the arena here.
+        infix_type ** arg_types = (infix_type **)calloc(num_args, sizeof(infix_type *));
         if (arg_types) {
-            // Pick a return type and argument types by indexing into our generated pool.
             uint8_t idx_byte = 0;
-            consume_uint8_t(&in, &idx_byte);  // Use one more byte to randomize selection.
-            ffi_type * return_type = type_pool[idx_byte % type_count];
+            consume_uint8_t(&in, &idx_byte);
+            infix_type * return_type = type_pool[idx_byte % type_count];
 
             for (size_t i = 0; i < num_args; ++i)
-                // Reuse types from the pool to create interesting signatures.
                 arg_types[i] = type_pool[i % type_count];
 
             // Fuzz the forward trampoline generator.
-            ffi_trampoline_t * trampoline = NULL;
-            if (generate_forward_trampoline(&trampoline, return_type, arg_types, num_args, num_fixed_args) ==
-                FFI_SUCCESS)
-                // On success, we must free the object to check for memory leaks.
-                ffi_trampoline_free(trampoline);
+            infix_forward_t * trampoline = NULL;
+            if (infix_forward_create_manual(&trampoline, return_type, arg_types, num_args, num_fixed_args) ==
+                INFIX_SUCCESS)
+                infix_forward_destroy(trampoline);
 
             // Fuzz the reverse trampoline generator.
-            // Note: `user_callback_fn` is NULL, which is fine for testing generation logic.
-            ffi_reverse_trampoline_t * reverse_trampoline = NULL;
-            if (generate_reverse_trampoline(
-                    &reverse_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, NULL) == FFI_SUCCESS)
-                ffi_reverse_trampoline_free(reverse_trampoline);
+            infix_reverse_t * reverse_trampoline = NULL;
+            if (infix_reverse_create_manual(
+                    &reverse_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, NULL) == INFIX_SUCCESS)
+                infix_reverse_destroy(reverse_trampoline);
 
             free(arg_types);
         }
     }
 
     // Phase 3: Final Cleanup.
-    // We must destroy all types successfully generated in the pool to prevent leaks.
-    for (int i = 0; i < type_count; ++i)
-        ffi_type_destroy(type_pool[i]);
+    // A single call destroys the arena and all types created within it.
+    infix_arena_destroy(arena);
 }
 
-// libFuzzer Entry Point
 #ifndef USE_AFL
+// libFuzzer Entry Point
 /**
  * @brief The entry point called by the libFuzzer engine.
  */
@@ -108,10 +104,8 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     FuzzTest(in);
     return 0;  // Return value is unused.
 }
-#endif  // NOT USE_AFL
-
+#else  // NOT USE_AFL
 // AFL++ Entry Point
-#ifdef USE_AFL
 #include <AFL-fuzz-init.h>
 #include <unistd.h>  // For read()
 
@@ -132,4 +126,4 @@ int main(void) {
 
     return 0;
 }
-#endif  // USE_AFL
+#endif               // USE_AFL

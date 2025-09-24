@@ -28,21 +28,13 @@ my %git_info;
 my $is_fuzz_build     = ( $command =~ /^fuzz/ );
 my $is_coverage_build = ( $command eq 'coverage' );
 my %config            = (
-    sources => [
-        $FindBin::Bin . '/src/core/executor.c',
-        $FindBin::Bin . '/src/core/trampoline.c',
-        $FindBin::Bin . '/src/core/types.c',
-        $FindBin::Bin . '/src/core/arena.c',
-        $FindBin::Bin . '/src/core/utility.c',
-        $FindBin::Bin . '/src/core/signature.c'
-    ],
+    sources      => [ $FindBin::Bin . '/src/infix.c' ],
     include_dirs => [
         File::Spec->catdir( $FindBin::Bin, 'include' ),
         File::Spec->catdir( $FindBin::Bin, 'src' ),
         File::Spec->catdir( $FindBin::Bin, 'src/core' ),
         File::Spec->catdir( $FindBin::Bin, 'src/arch/x64/' ),
         File::Spec->catdir( $FindBin::Bin, 'src/arch/aarch64' ),
-        File::Spec->catdir( $FindBin::Bin, 'third_party/double_tap' ),
         File::Spec->catdir( $FindBin::Bin, 't/include' ),
     ],
     lib_dir      => 'build_lib',
@@ -56,8 +48,8 @@ my @base_cflags;
 
 # Enable verbose/debug mode if requested
 #~ if ( $opts{verbose} ) {
-#~ print "# Verbose mode enabled. Compiling with FFI_DEBUG_ENABLED.\n";
-#~ push @base_cflags, '-DFFI_DEBUG_ENABLED=1';
+#~ print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
+#~ push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
 #~ }
 # Environment Detection
 $config{arch} = 'x64';
@@ -86,13 +78,13 @@ if ( $opts{abi} ) {
     my $forced_abi = lc( $opts{abi} );
     print "User is forcing ABI to: $forced_abi (for code generation logic only)\n";
     if ( $forced_abi eq 'windows_x64' ) {
-        push @base_cflags, '-DFFI_FORCE_ABI_WINDOWS_X64';
+        push @base_cflags, '-DINFIX_FORCE_ABI_WINDOWS_X64';
     }
     elsif ( $forced_abi eq 'sysv_x64' ) {
-        push @base_cflags, '-DFFI_FORCE_ABI_SYSV_X64';
+        push @base_cflags, '-DINFIX_FORCE_ABI_SYSV_X64';
     }
     elsif ( $forced_abi eq 'aapcs64' ) {
-        push @base_cflags, '-DFFI_FORCE_ABI_AAPCS64';
+        push @base_cflags, '-DINFIX_FORCE_ABI_AAPCS64';
     }
     else {
         die "Error: Unknown ABI '$forced_abi'. Supported values are: windows_x64, sysv_x64, aapcs64.";
@@ -173,34 +165,34 @@ if ( $command eq 'clean' ) {
 }
 elsif ( $command eq 'build' ) {
     push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $config{cflags} }, '-DFFI_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     my $lib_path = create_static_library( \%config, $obj_suffix );
     print "\nStatic library '$lib_path' built successfully.\n";
 }
 elsif ( $command eq 'test' || $command eq 'coverage' ) {
     push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $config{cflags} }, '-DFFI_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = compile_and_run_tests( \%config, $obj_suffix, \@test_names, $is_coverage_build );
 }
 elsif ( $command eq 'memtest' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $memtest_config{cflags} }, '-DFFI_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/810_memory_stress', 'memcheck' );
 }
 elsif ( $command eq 'memtest:fault' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $memtest_config{cflags} }, '-DFFI_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/811_fault_injection', 'memcheck' );
 }
 elsif ( $command eq 'memtest:arena' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $memtest_config{cflags} }, '-DFFI_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/840_arena_allocator', 'memcheck' );
 }
 elsif ( $command eq 'helgrindtest' ) {
@@ -276,7 +268,7 @@ sub show_help {
       --abi=<s>             Force a specific ABI for code generation. Overrides auto-detection.
                             Supported: windows_x64, sysv_x64, aapcs64
       --codecov=<s>         Specify a Codecov token to upload coverage results (or use CODECOV_TOKEN env var).
-      -v, --verbose         Enable verbose debug output from the library by compiling with -DFFI_DEBUG_ENABLED=1.
+      -v, --verbose         Enable verbose debug output from the library by compiling with -DINFIX_DEBUG_ENABLED=1.
       -h, --help            Show this help message.
     END_HELP
     exit 0;

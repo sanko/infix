@@ -32,18 +32,18 @@ This document outlines the planned development goals for the infix FFI library, 
 - [x] **Use Guard Pages for Freed Trampolines**
     *   **Context:** After a trampoline is freed, its function pointer becomes a dangling pointer. If a user accidentally calls it, a use-after-free vulnerability can be triggered.
     *   **Idea:** Instead of just releasing memory, change its protection to `PROT_NONE` (no read/write/execute). This turns a subtle vulnerability into a safe, immediate, and obvious crash.
-    *   **Goal:** The `ffi_executable_free` function is updated to use `mprotect`/`VirtualProtect`. A new test is created that frees a trampoline and then calls its old function pointer, asserting that the program safely terminates.
+    *   **Goal:** The `infix_executable_free` function is updated to use `mprotect`/`VirtualProtect`. A new test is created that frees a trampoline and then calls its old function pointer, asserting that the program safely terminates.
     *   **Possible Roadblocks:** Testing for an expected crash is non-trivial and may require platform-specific signal handling or process management in the test suite.
 
 - [x] **Add `long double` Support**
     *   **Context:** `long double` was the last major C primitive type not supported by the library.
     *   **Idea:** Add a new primitive type and implement the correct, platform-specific ABI handling for it.
-    *   **Goal:** `long double` is a recognized `ffi_type` and passes correctly in forward and reverse calls on all supported platforms (System V, Windows/GCC, AArch64).
+    *   **Goal:** `long double` is a recognized `infix_type` and passes correctly in forward and reverse calls on all supported platforms (System V, Windows/GCC, AArch64).
 
 - [x] **Read-Only Callback Contexts (RELRO for Callbacks)**
-    *   **Context:** The `ffi_reverse_trampoline_t` struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.
+    *   **Context:** The `infix_reverse_t` struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.
     *   **Idea:** After a callback context is created, use `mprotect`/`VirtualProtect` on the memory page containing it to make it read-only.
-    *   **Goal:** A new optional API (`generate_hardened_reverse_trampoline`) is added. Any attempt to write to a hardened context struct will cause an immediate segmentation fault, preventing the attack.
+    *   **Goal:** The context is hardened by default. Any attempt to write to a hardened context struct will cause an immediate segmentation fault, preventing the attack.
     *   **Possible Roadblocks:** `mprotect` operates on page boundaries, not on individual structs. This requires careful memory management to ensure unrelated writable data is not on the same page, which might make the implementation complex.
 
 ## **Medium Priority: Expansion & Optimization**
@@ -64,7 +64,7 @@ This document outlines the planned development goals for the infix FFI library, 
 
 - [x] **Implement Packed Argument Trampolines**
     *   **Context:** The current `void** args` API requires pointer indirection. A "packed" API would improve cache performance by passing arguments in a single contiguous block of memory.
-    *   **Idea:** Implement `generate_packed_forward_trampoline`, where the JIT'd code reads arguments from offsets relative to a single pointer.
+    *   **Idea:** Implement `infix_forward_create_packed`, where the JIT'd code reads arguments from offsets relative to a single pointer.
     *   **Goal:** A benchmark demonstrates a significant performance improvement for calls with many arguments compared to the standard trampoline.
 
 ## **Low Priority: Advanced Features & Polish**
@@ -87,26 +87,26 @@ This document outlines the planned development goals for the infix FFI library, 
 
 - [ ] **Direct System Call Interface**
     *   **Context:** Some advanced applications need to bypass standard C libraries and make direct calls to the OS kernel, which uses a different, low-level ABI.
-    *   **Idea:** Create a new `generate_syscall_trampoline` API that emits assembly to load registers and execute the `syscall` instruction.
+    *   **Idea:** Create a new `infix_syscall_create` API that emits assembly to load registers and execute the `syscall` instruction.
     *   **Goal:** A user can successfully call a basic OS syscall, such as `write` on Linux, using a generated trampoline.
     *   **Possible Roadblocks:** Extremely high implementation cost. Requires a unique ABI implementation for every supported OS. Testing is very difficult and OS-specific.
 
 - [ ] **Add Exception Handling Boundary**
     *   **Context:** An unhandled C++ or SEH exception that crosses the FFI boundary will crash the program. A robust library should provide a way to handle this.
-    *   **Idea:** Create a `generate_safe_forward_trampoline` function where the JIT code wraps the native call in a `try...catch` or `__try...__except` block.
-    *   **Goal:** If a native function throws an exception, the trampoline catches it, returns `FFI_ERROR_NATIVE_EXCEPTION`, and the program does not crash.
+    *   **Idea:** Create a `infix_forward_create_safe` function where the JIT code wraps the native call in a `try...catch` or `__try...__except` block.
+    *   **Goal:** If a native function throws an exception, the trampoline catches it, returns `INFIX_ERROR_NATIVE_EXCEPTION`, and the program does not crash.
     *   **Possible Roadblocks:** This requires mixing C and C++ or using platform-specific SEH, which adds significant complexity and potential portability issues.
 
 - [ ] **Add Bitfield Support in Structs**
     *   **Context:** C allows structs to have bitfields, but their memory layout is highly compiler-specific. Supporting them is an advanced FFI feature.
-    *   **Idea:** Extend the `ffi_type` system to describe bitfields and implement the packing/unpacking logic for each ABI.
+    *   **Idea:** Extend the `infix_type` system to describe bitfields and implement the packing/unpacking logic for each ABI.
     *   **Goal:** Successfully call a function that takes a struct containing bitfields and get the correct result.
     *   **Possible Roadblocks:** This is a notoriously difficult part of FFI implementation, as bitfield layout rules are often poorly documented and vary even between versions of the same compiler.
 
 - [ ] **Add Type System Builder API**
-    *   **Context:** The current API for creating complex structs is verbose and requires manual memory management for the member array.
-    *   **Idea:** Create a fluent builder pattern API (e.g., `ffi_struct_builder_*` functions) to simplify type creation.
-    *   **Goal:** A user can define a complex struct without manually allocating or managing the `ffi_struct_member` array, reducing boilerplate and potential for errors.
+    *   **Context:** The current Manual API for creating complex structs is verbose and requires manual memory management for the member array within the arena.
+    *   **Idea:** Create a fluent builder pattern API (e.g., `infix_struct_builder_*` functions) to simplify type creation.
+    *   **Goal:** A user can define a complex struct without manually allocating or managing the `infix_struct_member` array, reducing boilerplate and potential for errors.
 
 - [ ] **Add Support for 32-bit Architectures**
     *   **Context:** A major future direction to support legacy or embedded systems.
@@ -115,9 +115,9 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Possible Roadblocks:** This is a very large undertaking, effectively doubling the number of supported ABIs that must be maintained and tested.
 
 - [ ] **Decouple Debug Logging from `double_tap.h`**
-    *   **Context:** The library's internal `FFI_DEBUG_PRINTF` macro should not be tied to the test framework's `note()` function, which improves modularity.
-    *   **Idea:** Refactor `FFI_DEBUG_PRINTF` in `utility.h` to use `fprintf(stderr, ...)` directly.
-    *   **Goal:** The library source code (`src/`) has no includes of `double_tap.h`. Internal debug messages are printed to `stderr` when `FFI_DEBUG_ENABLED` is active.
+    *   **Context:** The library's internal `INFIX_DEBUG_PRINTF` macro should not be tied to the test framework's `note()` function, which improves modularity.
+    *   **Idea:** Refactor `INFIX_DEBUG_PRINTF` in `utility.h` to use `fprintf(stderr, ...)` directly.
+    *   **Goal:** The library source code (`src/`) has no includes of `double_tap.h`. Internal debug messages are printed to `stderr` when `INFIX_DEBUG_ENABLED` is active.
     *   **Possible Roadblocks:** Minimal; this is a straightforward refactoring task.
 
 - [x] **Investigate and Fix Read-Only Context on macOS**
@@ -128,6 +128,6 @@ This document outlines the planned development goals for the infix FFI library, 
 
 - [ ] **Add Support for Advanced C Types (`_Complex` and SIMD)**
     *   **Context:** Modern C and its common extensions include types for complex numbers (`float _Complex`, `double _Complex`) and SIMD vectors (`__m128`, NEON types) that have specific ABI passing rules. Supporting them directly would improve interoperability with scientific and multimedia libraries.
-    *   **Idea:** Extend the `ffi_type` system with new categories or primitives for these types. Implement the corresponding ABI classification and marshalling logic in each backend. For example, `_Complex` types are often passed as if they were a two-element struct of floats/doubles.
-    *   **Goal:** A user can create an `ffi_type` for `double _Complex` and successfully call a function that uses it, with the library handling the ABI rules correctly on all supported platforms.
+    *   **Idea:** Extend the `infix_type` system with new categories or primitives for these types. Implement the corresponding ABI classification and marshalling logic in each backend. For example, `_Complex` types are often passed as if they were a two-element struct of floats/doubles.
+    *   **Goal:** A user can create an `infix_type` for `double _Complex` and successfully call a function that uses it, with the library handling the ABI rules correctly on all supported platforms.
     *   **Possible Roadblocks:** SIMD types in particular have very platform-specific ABI rules that will require careful research for each backend.

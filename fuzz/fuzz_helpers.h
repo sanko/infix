@@ -19,13 +19,12 @@
  *
  * @details This header provides the common infrastructure needed to build fuzzers
  * for the infix library, including a structure for managing fuzzer input and
- * a powerful recursive generator for creating complex, randomized `ffi_type` objects.
+ * a powerful recursive generator for creating complex, randomized `infix_type` objects.
  * By centralizing this logic, individual fuzzing harnesses can be kept clean and
  * focused on their specific targets.
  */
-
-#include <infix.h>
-#include <infix_internals.h>
+#include "common/infix_internals.h"
+#include <infix/infix.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -91,20 +90,14 @@ static inline const uint8_t * consume_bytes(fuzzer_input * in, size_t n) {
 DEFINE_CONSUME_T(uint8_t)
 DEFINE_CONSUME_T(size_t)
 
-// Complex Type Generation
-
 /**
- * @brief Recursively generates a randomized ffi_type from the fuzzer's input data.
+ * @brief Recursively generates a randomized infix_type from the fuzzer's input data,
+ *        allocating all objects from the provided arena.
  *
- * @details This is the core generator used by all harnesses. It can create simple
- * primitives or deeply-nested aggregate types (structs, unions, arrays). It is
- * responsible for its own memory management: if it returns a non-NULL `ffi_type`,
- * the caller owns that type and must eventually call `ffi_type_destroy` on it. If
- * it returns NULL, all intermediate memory will have been cleaned up correctly.
- *
+ * @param arena The arena from which all types and member arrays will be allocated.
  * @param in A pointer to the fuzzer input buffer.
  * @param depth The current recursion depth (used to prevent stack overflows).
- * @param total_fields [in,out] A pointer to a counter for the total fields generated for this one type.
- * @return A new, dynamically-allocated `ffi_type*`, or NULL on failure or if data runs out.
+ * @param total_fields [in,out] A pointer to a counter for the total fields generated.
+ * @return A new `infix_type*` allocated within the arena, or NULL on failure.
  */
-ffi_type * generate_random_type(fuzzer_input * in, int depth, size_t * total_fields);
+infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int depth, size_t * total_fields);

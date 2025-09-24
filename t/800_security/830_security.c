@@ -22,13 +22,13 @@
  * The key areas verified are:
  * 1.  **Use-After-Free Prevention:** Confirms that attempting to call a freed
  *     trampoline results in a safe, immediate crash (e.g., SIGSEGV or Access
- *     Violation) due to the guard page mechanism in `ffi_executable_free`. This
+ *     Violation) due to the guard page mechanism in `infix_executable_free`. This
  *     is tested for both forward and reverse trampolines.
  * 2.  **Read-Only Context Protection:** Verifies that the context for a reverse
  *     trampoline is made read-only after creation. Attempting to write to this
  *     hardened memory should cause a crash, preventing exploits that might
  *     modify callback behavior at runtime.
- * 3.  **API Hardening (Integer Overflows):** Ensures that the `ffi_type_create_*`
+ * 3.  **API Hardening (Integer Overflows):** Ensures that the `infix_type_create_*`
  *     functions are resilient to integer overflow attacks. It passes maliciously
  *     crafted size, offset, or element counts that would cause `size_t` to wrap
  *     around, and confirms that the API rejects these inputs gracefully.
@@ -37,9 +37,11 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include <double_tap.h>
-#include <infix_internals.h>
-#include <limits.h>  // For SIZE_MAX
+#include "common/double_tap.h"
+#include "common/infix_internals.h"
+#include <infix/infix.h>  // Use the public API
+#include <limits.h>       // For SIZE_MAX
+#include <stdlib.h>       // For malloc/free in test scaffolding
 
 // Platform-specific headers for process/exception management
 #if defined(_WIN32)
@@ -49,6 +51,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #endif
+
+// NOTE: The defines and declarations for the internal heap functions have been removed.
+// We will test the public, arena-based API instead.
 
 // Dummy functions for testing
 int dummy_target_func(int a) {
@@ -71,6 +76,7 @@ static bool run_crash_test_as_child(const char * test_name) {
     ZeroMemory(&pi, sizeof(pi));
     si.dwFlags |= STARTF_USESTDHANDLES;
     si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    // Redirect child's stdout/stderr to NUL to keep test output clean.
     si.hStdOutput = CreateFileA("NUL", GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     si.hStdError = si.hStdOutput;
 
@@ -98,36 +104,33 @@ TEST {
     const char * child_test_name = getenv("INFIX_CRASH_TEST_CHILD");
     if (child_test_name != NULL) {
         if (strcmp(child_test_name, "forward_uaf") == 0) {
-            ffi_trampoline_t * t = NULL;
-            ffi_type * s32 = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-            ffi_status status = generate_forward_trampoline(&t, s32, &s32, 1, 1);
-            if (status != FFI_SUCCESS)
+            infix_forward_t * t = NULL;
+            infix_status status = infix_forward_create(&t, "i=>i");
+            if (status != INFIX_SUCCESS)
                 exit(2);
-            ffi_cif_func f = (ffi_cif_func)ffi_trampoline_get_code(t);
-            ffi_trampoline_free(t);
+            infix_cif_func f = (infix_cif_func)infix_forward_get_code(t);
+            infix_forward_destroy(t);
             int a = 5, r = 0;
             void * aa[] = {&a};
-            f((void *)dummy_target_func, &r, aa);
+            f((void *)dummy_target_func, &r, aa);  // This line should crash
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
-            ffi_reverse_trampoline_t * rt = NULL;
-            ffi_status status =
-                generate_reverse_trampoline(&rt, ffi_type_create_void(), NULL, 0, 0, (void *)dummy_handler_func, NULL);
-            if (status != FFI_SUCCESS)
+            infix_reverse_t * rt = NULL;
+            infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+            if (status != INFIX_SUCCESS)
                 exit(2);
-            void (*f)() = (void (*)())ffi_reverse_trampoline_get_code(rt);
-            ffi_reverse_trampoline_free(rt);
-            f();
+            void (*f)() = (void (*)())infix_reverse_get_code(rt);
+            infix_reverse_destroy(rt);
+            f();  // This line should crash
         }
         else if (strcmp(child_test_name, "write_harden") == 0) {
-            ffi_reverse_trampoline_t * rt = NULL;
-            ffi_status status =
-                generate_reverse_trampoline(&rt, ffi_type_create_void(), NULL, 0, 0, (void *)dummy_handler_func, NULL);
-            if (status != FFI_SUCCESS)
+            infix_reverse_t * rt = NULL;
+            infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+            if (status != INFIX_SUCCESS)
                 exit(2);
-            rt->user_data = NULL;
+            rt->user_data = NULL;  // This line should crash
         }
-        exit(1);
+        exit(1);  // Exit with a non-crash code if the crash didn't happen
     }
 #endif
 
@@ -139,22 +142,24 @@ TEST {
             plan(1);
 #if defined(_WIN32)
             ok(run_crash_test_as_child("forward_uaf"), "Child process crashed as expected.");
-#elif defined(FFI_ENV_POSIX)
-            ffi_trampoline_t * trampoline = NULL;
-            ffi_type * s32_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-            ffi_status status = generate_forward_trampoline(&trampoline, s32_type, &s32_type, 1, 1);
-            if (status != FFI_SUCCESS)
-                bail_out("Failed to create trampoline for UAF test");
-            ffi_cif_func dangling_ptr = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+#elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == 0) {
-                ffi_trampoline_free(trampoline);
+            if (pid == -1) {
+                bail_out("fork() failed");
+            }
+            else if (pid == 0) {  // Child process
+                infix_forward_t * trampoline = NULL;
+                infix_status status = infix_forward_create(&trampoline, "i=>i");
+                if (status != INFIX_SUCCESS)
+                    exit(2);  // Exit with error if creation fails
+                infix_cif_func dangling_ptr = (infix_cif_func)infix_forward_get_code(trampoline);
+                infix_forward_destroy(trampoline);
                 int arg = 5, result = 0;
                 void * args[] = {&arg};
-                dangling_ptr((void *)dummy_target_func, &result, args);
-                exit(0);
+                dangling_ptr((void *)dummy_target_func, &result, args);  // Should crash here
+                exit(0);                                                 // Should not be reached
             }
-            else {
+            else {  // Parent process
                 int wstatus;
                 waitpid(pid, &wstatus, 0);
                 ok(WIFSIGNALED(wstatus) && (WTERMSIG(wstatus) == SIGSEGV || WTERMSIG(wstatus) == SIGBUS),
@@ -170,27 +175,28 @@ TEST {
             plan(1);
 #if defined(_WIN32)
             ok(run_crash_test_as_child("reverse_uaf"), "Child process crashed as expected.");
-#elif defined(FFI_ENV_POSIX)
-            ffi_reverse_trampoline_t * rt = NULL;
-            ffi_status status =
-                generate_reverse_trampoline(&rt, ffi_type_create_void(), NULL, 0, 0, (void *)dummy_handler_func, NULL);
-            if (status != FFI_SUCCESS)
-                bail_out("Failed to create reverse trampoline for UAF test");
-            void (*dangling_ptr)() = (void (*)())ffi_reverse_trampoline_get_code(rt);
+#elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == 0) {
-                ffi_reverse_trampoline_free(rt);
-                dangling_ptr();
-                exit(0);
+            if (pid == -1) {
+                bail_out("fork() failed");
             }
-            else {
+            else if (pid == 0) {  // Child process
+                infix_reverse_t * rt = NULL;
+                infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+                if (status != INFIX_SUCCESS)
+                    exit(2);
+                void (*dangling_ptr)() = (void (*)())infix_reverse_get_code(rt);
+                infix_reverse_destroy(rt);
+                dangling_ptr();  // Should crash here
+                exit(0);         // Should not be reached
+            }
+            else {  // Parent process
                 int wstatus;
                 waitpid(pid, &wstatus, 0);
                 ok(WIFSIGNALED(wstatus) && (WTERMSIG(wstatus) == SIGSEGV || WTERMSIG(wstatus) == SIGBUS),
                    "Child crashed with SIGSEGV/SIGBUS as expected.");
                 if (!WIFSIGNALED(wstatus))
                     fail("Child exited normally, but a crash was expected.");
-                ffi_reverse_trampoline_free(rt);
             }
 #else
             skip(1, "Crash test not supported on this platform.");
@@ -200,29 +206,30 @@ TEST {
 
     subtest("Writing to a hardened reverse trampoline context causes a crash") {
         plan(1);
-#if defined(FFI_OS_MACOS)
-        skip(1, "Read-only context hardening disabled on macOS.");
+#if defined(INFIX_OS_MACOS)
+        skip(1, "Read-only context hardening disabled on macOS for stability.");
 #elif defined(_WIN32)
         ok(run_crash_test_as_child("write_harden"), "Child process crashed as expected.");
-#elif defined(FFI_ENV_POSIX)
-        ffi_reverse_trampoline_t * rt = NULL;
-        ffi_status status =
-            generate_reverse_trampoline(&rt, ffi_type_create_void(), NULL, 0, 0, (void *)dummy_handler_func, NULL);
-        if (status != FFI_SUCCESS)
-            bail_out("Failed to create reverse trampoline for write-protection test");
+#elif defined(INFIX_ENV_POSIX)
         pid_t pid = fork();
-        if (pid == 0) {
-            rt->user_data = NULL;
-            exit(0);
+        if (pid == -1) {
+            bail_out("fork() failed");
         }
-        else {
+        else if (pid == 0) {  // Child process
+            infix_reverse_t * rt = NULL;
+            infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+            if (status != INFIX_SUCCESS)
+                exit(2);
+            rt->user_data = NULL;  // This write should trigger a SIGSEGV
+            exit(0);               // Should not be reached
+        }
+        else {  // Parent process
             int status_write;
             waitpid(pid, &status_write, 0);
             ok(WIFSIGNALED(status_write) && WTERMSIG(status_write) == SIGSEGV,
                "Child crashed with SIGSEGV as expected.");
             if (!WIFSIGNALED(status_write))
                 fail("Child exited normally, but a crash was expected.");
-            ffi_reverse_trampoline_free(rt);
         }
 #else
         skip(1, "Write protection test not supported on this platform.");
@@ -231,48 +238,54 @@ TEST {
 
     subtest("API hardening against integer overflows") {
         plan(3);
-        subtest("ffi_type_create_struct overflow") {
+        // Each test now uses a temporary arena.
+        subtest("infix_type_create_struct overflow") {
             plan(2);
-            ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member));
+            infix_arena_t * arena = infix_arena_create(256);
+            infix_struct_member members[1];
             members[0] =
-                ffi_struct_member_create("bad", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64), SIZE_MAX - 4);
-            ffi_type * bad_type = NULL;
-            ffi_status status = ffi_type_create_struct(&bad_type, members, 1);
-            ok(status == FFI_ERROR_INVALID_ARGUMENT, "ffi_type_create_struct returned error on overflow");
+                infix_struct_member_create("bad", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), SIZE_MAX - 4);
+            infix_type * bad_type = NULL;
+            infix_status status = infix_type_create_struct(arena, &bad_type, members, 1);
+            ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_struct returned error on overflow");
             ok(bad_type == NULL, "Output type is NULL on failure");
-            infix_free(members);
+            infix_arena_destroy(arena);
         }
-        subtest("ffi_type_create_array overflow") {
+        subtest("infix_type_create_array overflow") {
             plan(2);
-            ffi_type * element_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64);
+            infix_arena_t * arena = infix_arena_create(256);
+            infix_type * element_type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT64);
             size_t malicious_num_elements = (SIZE_MAX / element_type->size) + 1;
-            ffi_type * bad_type = NULL;
-            ffi_status status = ffi_type_create_array(&bad_type, element_type, malicious_num_elements);
-            ok(status == FFI_ERROR_INVALID_ARGUMENT, "ffi_type_create_array returned error on overflow");
+            infix_type * bad_type = NULL;
+            infix_status status = infix_type_create_array(arena, &bad_type, element_type, malicious_num_elements);
+            ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array returned error on overflow");
             ok(bad_type == NULL, "Output type is NULL on failure");
+            infix_arena_destroy(arena);
         }
-        subtest("ffi_type_create_union overflow") {
+        subtest("infix_type_create_union overflow") {
             plan(2);
-            ffi_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
-            ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member));
-            members[0] = ffi_struct_member_create("bad", &malicious_member_type, 0);
-            ffi_type * bad_type = NULL;
-            ffi_status status = ffi_type_create_union(&bad_type, members, 1);
-            ok(status == FFI_ERROR_INVALID_ARGUMENT, "ffi_type_create_union returned error on overflow");
+            infix_arena_t * arena = infix_arena_create(256);
+            // Create a fake type on the stack just for this test
+            infix_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
+            infix_struct_member members[1];
+            members[0] = infix_struct_member_create("bad", &malicious_member_type, 0);
+            infix_type * bad_type = NULL;
+            infix_status status = infix_type_create_union(arena, &bad_type, members, 1);
+            ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_union returned error on overflow");
             ok(bad_type == NULL, "Output type is NULL on failure");
-            infix_free(members);
+            infix_arena_destroy(arena);
         }
     }
 
     subtest("POSIX hardened allocator (shm_open)") {
         plan(1);
-#if !defined(FFI_OS_WINDOWS) && !defined(FFI_OS_MACOS) && !defined(FFI_OS_TERMUX) && !defined(FFI_OS_OPENBSD) && \
-    !defined(FFI_OS_DRAGONFLY)
+#if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_TERMUX) && \
+    !defined(INFIX_OS_OPENBSD) && !defined(INFIX_OS_DRAGONFLY)
         note("Verifying that dual-mapping allocator works on this platform (e.g., Linux/FreeBSD).");
-        ffi_executable_t exec = ffi_executable_alloc(16);
-        ok(exec.rw_ptr != NULL && exec.rx_ptr != NULL, "ffi_executable_alloc succeeded on hardened POSIX path");
+        infix_executable_t exec = infix_executable_alloc(16);
+        ok(exec.rw_ptr != NULL && exec.rx_ptr != NULL, "infix_executable_alloc succeeded on hardened POSIX path");
         if (exec.size > 0)
-            ffi_executable_free(exec);
+            infix_executable_free(exec);
 #else
         skip(1, "Test is only for specific POSIX platforms that use the dual-mapping strategy.");
 #endif

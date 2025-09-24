@@ -28,13 +28,13 @@
  *
  * This harness tests two key public API functions:
  *
- * 1.  **`ffi_signature_parse()`**: This function parses a full function signature
+ * 1.  **`infix_signature_parse()`**: This function parses a full function signature
  *     (arguments and return type). A successful parse results in a complex graph
- *     of `ffi_type` objects allocated within a dedicated memory arena. The test
+ *     of `infix_type` objects allocated within a dedicated memory arena. The test
  *     verifies that if parsing succeeds, the entire arena can be safely destroyed
  *     without leaking memory.
  *
- * 2.  **`ffi_type_from_signature()`**: This function parses a string representing
+ * 2.  **`infix_type_from_signature()`**: This function parses a string representing
  *     a single data type. It follows the same test-and-destroy pattern as the
  *     full signature parser.
  *
@@ -45,7 +45,7 @@
  * detect memory errors.
  */
 
-#include <infix.h>
+#include <infix/infix.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -72,7 +72,7 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     // a proper C string from it to safely pass it to our parser.
     char * signature = malloc(size + 1);
     if (!signature)  // If malloc fails, we can't proceed.
-        return 0;
+        goto cleanup;
 
     memcpy(signature, data, size);
     signature[size] = '\0';
@@ -80,32 +80,35 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     // Target 1: The full function signature parser
     // This is the most complex target, as it involves parsing multiple types
     // and handling special separators like `=>` and `;`.
-    arena_t * arena = NULL;
-    ffi_type * ret_type = NULL;
-    ffi_type ** arg_types = NULL;
+    infix_arena_t * arena = NULL;
+    infix_type * ret_type = NULL;
+    infix_type ** arg_types = NULL;
     size_t num_args, num_fixed_args;
 
-    ffi_status status = ffi_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
+    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
 
     // The core of the test: If parsing was successful, we must prove that we
-    // can destroy the resulting arena and all the ffi_type objects it contains
+    // can destroy the resulting arena and all the infix_type objects it contains
     // without any memory errors (leaks, double-frees, etc.).
-    if (status == FFI_SUCCESS)
-        arena_destroy(arena);
+    if (status == INFIX_SUCCESS)
+        infix_arena_destroy(arena);
+    else
+        goto cleanup;
 
     // Target 2: The single type signature parser
     // This targets the same underlying parsing logic but through a different
     // entry point, ensuring it handles single types and correctly rejects
     // full function signatures.
-    arena_t * type_arena = NULL;
-    ffi_type * type_only = NULL;
-    status = ffi_type_from_signature(&type_only, &type_arena, signature);
+    infix_arena_t * type_arena = NULL;
+    infix_type * type_only = NULL;
+    status = infix_type_from_signature(&type_only, &type_arena, signature);
 
     // As with the first target, a successful parse must be followed by a clean
     // destruction to pass the test under AddressSanitizer.
-    if (status == FFI_SUCCESS)
-        arena_destroy(type_arena);
+    if (status == INFIX_SUCCESS)
+        infix_arena_destroy(type_arena);
 
+cleanup:
     // Clean up the temporary string we allocated.
     free(signature);
 

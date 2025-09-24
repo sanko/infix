@@ -56,17 +56,17 @@ int main() {
     }
 
     // 3. Create an infix trampoline for the function's signature: void(const char*)
-    ffi_trampoline_t* trampoline = NULL;
-    ffi_create_forward_trampoline_from_signature(&trampoline, "c*=>v");
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, "c*=>v");
 
     // 4. Prepare arguments and call the function via the trampoline.
-    ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+    infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
     const char* name = "World";
     void* args[] = { &name };
     cif(say_hello_ptr, NULL, args); // The return value pointer is NULL for void functions.
 
     // 5. Clean up.
-    ffi_trampoline_free(trampoline);
+    infix_forward_destroy(trampoline);
 #if defined(_WIN32)
     FreeLibrary(lib_handle);
 #else
@@ -95,9 +95,9 @@ int main() {
 
 ### Core Concepts
 
--   **`ffi_type`**: The central data structure that describes any C type.
--   **`ffi_cif_func`**: A generic function pointer for invoking a forward trampoline: `void (*ffi_cif_func)(void* target_function, void* return_value, void** args);`
--   **`ffi_reverse_trampoline_t`**: An opaque handle to a callback's context. A pointer to this context is **always passed as the first argument** to your C callback handler, allowing you to access user data and other metadata.
+-   **`infix_type`**: The central data structure that describes any C type.
+-   **`infix_cif_func`**: A generic function pointer for invoking a forward trampoline: `void (*infix_cif_func)(void* target_function, void* return_value, void** args);`
+-   **`infix_reverse_t`**: An opaque handle to a callback's context. A pointer to this context (`infix_context_t*`) is **always passed as the first argument** to your C callback handler, allowing you to access user data and other metadata.
 
 ### Arena Memory Allocator
 
@@ -107,10 +107,10 @@ int main() {
 
 You can parse signature strings to get detailed information about types at runtime, ideal for data marshalling or building C structs dynamically.
 
--   **`ffi_signature_parse()`**: Parses a full function signature into its `ffi_type` components.
--   **`ffi_type_from_signature()`**: Parses a string representing a single data type.
+-   **`infix_signature_parse()`**: Parses a full function signature into its `infix_type` components.
+-   **`infix_type_from_signature()`**: Parses a string representing a single data type.
 
-Both functions allocate the resulting `ffi_type` graph from an arena and give you ownership. You can then traverse the `ffi_type` struct to inspect its `size`, `alignment`, `category`, and members.
+Both functions allocate the resulting `infix_type` graph from an arena and give you ownership. You can then traverse the `infix_type` struct to inspect its `size`, `alignment`, `category`, and members.
 
 ## Building the Project
 
@@ -313,22 +313,24 @@ This API generates trampolines from a simple string: `"arg1,arg2;variadic_arg=>r
 
 ## The Manual API (Advanced)
 
-This API gives you fine-grained control by requiring you to build the `ffi_type` object graph manually.
+This API gives you fine-grained control by requiring you to build the `infix_type` object graph manually. It is **exclusively arena-based** to ensure memory safety.
 
 ### Memory Ownership Model
 
--   **Caller Owns**: You must free any `ffi_type` created with `ffi_type_create_struct`, `_union`, or `_array` by calling `ffi_type_destroy`. You must also free any trampoline handle with its corresponding `_free` function.
--   **Library Owns**: The library takes ownership of the `members` array passed to `ffi_type_create_struct` *only on success*. On failure, you must free it.
--   **Static Types**: Types from `ffi_type_create_primitive`, `_pointer`, or `_void` are static singletons and **must not** be freed.
+The manual API uses a simple and safe arena-based memory model.
+1.  You create an `infix_arena_t` at the start of your task.
+2.  All `infix_type` objects created with `infix_type_create_struct`, `_union`, or `_array` are allocated from this arena.
+3.  When you are finished with the types and any trampolines created from them, you call `infix_arena_destroy` **once** to free all associated memory.
+4.  You **must not** call a `_destroy` function on individual types created from an arena.
 
 ### Manual API Function List
 
 This is a partial list of the core functions. See [`infix.h`](include/infix.h) for the full documentation.
 
--   `ffi_type_create_primitive()`: Gets a static descriptor for a C primitive.
--   `ffi_type_create_struct()`: Creates a new struct type from an array of members.
--   `generate_forward_trampoline()`: JIT-compiles a forward call trampoline from manual `ffi_type`s.
--   `ffi_trampoline_free()`: Frees a forward trampoline.
+-   `infix_type_create_primitive()`: Gets a static descriptor for a C primitive.
+-   `infix_type_create_struct()`: Creates a new struct type from an array of members, allocating from an arena.
+-   `infix_forward_create_manual()`: JIT-compiles a forward call trampoline from manual `infix_type`s.
+-   `infix_forward_destroy()`: Frees a forward trampoline.
 
 ---
 
@@ -352,17 +354,17 @@ You can redirect all of `infix`'s internal memory allocations by defining the fo
 
 ### Error Handling
 
-Most `infix` API functions return an `ffi_status` enum. A successful operation will always return `FFI_SUCCESS`. Any other value indicates an error.
+Most `infix` API functions return an `infix_status` enum. A successful operation will always return `INFIX_SUCCESS`. Any other value indicates an error.
 
 ```c
-ffi_trampoline_t* trampoline = NULL;
-ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, "invalid signature");
+infix_forward_t* trampoline = NULL;
+infix_status status = infix_forward_create(&trampoline, "invalid signature");
 
-if (status != FFI_SUCCESS) {
+if (status != INFIX_SUCCESS) {
     // Handle the error. For example:
-    if (status == FFI_ERROR_INVALID_ARGUMENT)
+    if (status == INFIX_ERROR_INVALID_ARGUMENT)
         fprintf(stderr, "Error: The signature string was malformed.\n");
-    else if (status == FFI_ERROR_ALLOCATION_FAILED)
+    else if (status == INFIX_ERROR_ALLOCATION_FAILED)
         fprintf(stderr, "Error: A memory allocation failed.\n");
     // ...
 }
@@ -372,7 +374,7 @@ if (status != FFI_SUCCESS) {
 
 A key feature of `infix` is the ability to create C function pointers from your own C functions. This is essential for interfacing with libraries that use callbacks.
 
-**Your C handler's signature will always receive the `ffi_reverse_trampoline_t*` context as its first argument.** The subsequent arguments will match the signature string you provide.
+**Your C handler's signature will always receive the `infix_context_t*` context as its first argument.** The subsequent arguments will match the signature string you provide.
 
 **Example: A Stateful Callback for a C Library**
 
@@ -395,9 +397,9 @@ With `infix`, you can easily adapt a stateful handler to this stateless API.
 typedef struct { int total; } AppState;
 
 // Your C handler. Note the `context` parameter.
-void my_handler(ffi_reverse_trampoline_t* context, int item) {
+void my_handler(infix_context_t* context, int item) {
     // Retrieve your state from the context
-    AppState* state = (AppState*)ffi_reverse_trampoline_get_user_data(context);
+    AppState* state = (AppState*)infix_reverse_get_user_data(context);
     state->total += item;
     printf("Handler processed item %d, new total is %d\n", item, state->total);
 }
@@ -407,17 +409,17 @@ int main() {
 
     // 1. Create the reverse trampoline for the signature the library expects: "i=>v"
     //    Pass your handler and a pointer to your state.
-    ffi_reverse_trampoline_t* rt = NULL;
-    ffi_create_reverse_trampoline_from_signature(&rt, "i=>v", (void*)my_handler, &my_app_state);
+    infix_reverse_t* rt = NULL;
+    infix_reverse_create(&rt, "i=>v", (void*)my_handler, &my_app_state);
 
     // 2. Get the native function pointer and pass it to the C library.
-    item_processor_t callback_ptr = (item_processor_t)ffi_reverse_trampoline_get_code(rt);
+    item_processor_t callback_ptr = (item_processor_t)infix_reverse_get_code(rt);
     int items[] = {10, 20, 30};
     process_list(items, 3, callback_ptr);
 
     printf("Final total from AppState: %d\n", my_app_state.total); // Expected: 60
 
-    ffi_reverse_trampoline_free(rt);
+    infix_reverse_destroy(rt);
     return 0;
 }
 ```
@@ -426,11 +428,11 @@ int main() {
 
 `infix.h` automatically detects the build environment and defines a set of preprocessor macros that you can use for platform-specific code.
 
--   **`FFI_OS_*`**: (`FFI_OS_WINDOWS`, `FFI_OS_MACOS`, `FFI_OS_LINUX`, etc.) for the operating system.
--   **`FFI_ARCH_*`**: (`FFI_ARCH_X64`, `FFI_ARCH_AARCH64`) for the CPU architecture.
--   **`FFI_ABI_*`**: (`FFI_ABI_WINDOWS_X64`, `FFI_ABI_SYSV_X64`, `FFI_ABI_AAPCS64`) for the Application Binary Interface.
--   **`FFI_COMPILER_*`**: (`FFI_COMPILER_MSVC`, `FFI_COMPILER_CLANG`, `FFI_COMPILER_GCC`) for the compiler.
--   **`FFI_ENV_*`**: (`FFI_ENV_POSIX`, `FFI_ENV_MINGW`) for specific build environments.
+-   **`INFIX_OS_*`**: (`INFIX_OS_WINDOWS`, `INFIX_OS_MACOS`, `INFIX_OS_LINUX`, etc.) for the operating system.
+-   **`INFIX_ARCH_*`**: (`INFIX_ARCH_X64`, `INFIX_ARCH_AARCH64`) for the CPU architecture.
+-   **`INFIX_ABI_*`**: (`INFIX_ABI_WINDOWS_X64`, `INFIX_ABI_SYSV_X64`, `INFIX_ABI_AAPCS64`) for the Application Binary Interface.
+-   **`INFIX_COMPILER_*`**: (`INFIX_COMPILER_MSVC`, `INFIX_COMPILER_CLANG`, `INFIX_COMPILER_GCC`) for the compiler.
+-   **`INFIX_ENV_*`**: (`INFIX_ENV_POSIX`, `INFIX_ENV_MINGW`) for specific build environments.
 
 ## Learn More
 

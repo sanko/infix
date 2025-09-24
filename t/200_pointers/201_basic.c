@@ -34,8 +34,8 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include <double_tap.h>
-#include <infix.h>
+#include "common/double_tap.h"
+#include <infix/infix.h>
 #include <math.h>    // Added for fabs()
 #include <string.h>  // For strcmp and strchr
 
@@ -66,13 +66,13 @@ TEST {
 
     subtest("Passing and returning pointers") {
         plan(2);
-        ffi_type * ret_type = ffi_type_create_pointer();
-        ffi_type * arg_types[] = {ffi_type_create_pointer(), ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == FFI_SUCCESS, "Trampoline created successfully");
+        infix_type * ret_type = infix_type_create_pointer();
+        infix_type * arg_types[] = {infix_type_create_pointer(), infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        ok(status == INFIX_SUCCESS, "Trampoline created successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         const char * str = "Hello, FFI World!";
         int char_to_find = 'F';
         const char * result = NULL;
@@ -85,18 +85,18 @@ TEST {
            "find_char_in_string returned the correct pointer offset");
         diag("Returned substring: \"%s\"", result ? result : "(null)");
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("Modifying data via pointer arguments") {
         plan(2);
-        ffi_type * ret_type = ffi_type_create_void();
-        ffi_type * arg_types[] = {ffi_type_create_pointer(), ffi_type_create_pointer()};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == FFI_SUCCESS, "Trampoline created successfully");
+        infix_type * ret_type = infix_type_create_void();
+        infix_type * arg_types[] = {infix_type_create_pointer(), infix_type_create_pointer()};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        ok(status == INFIX_SUCCESS, "Trampoline created successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         int val_a = 1;
         double val_b = 2.0;
         int * ptr_a = &val_a;
@@ -111,18 +111,18 @@ TEST {
         ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Data was correctly modified by the callee via pointers");
         diag("After call: val_a = %d, val_b = %f", val_a, val_b);
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("Passing NULL pointers") {
         plan(3);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_BOOL);
-        ffi_type * arg_types[] = {ffi_type_create_pointer()};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline created successfully");
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
+        infix_type * arg_types[] = {infix_type_create_pointer()};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline created successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
         // Case 1: Pass a NULL pointer
         void * null_ptr = NULL;
@@ -139,6 +139,6 @@ TEST {
         cif_func((void *)check_if_null, &result_is_valid, args_valid);
         ok(result_is_valid == false, "Non-NULL pointer was correctly passed as non-NULL");
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 }

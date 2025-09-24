@@ -36,7 +36,8 @@
  *   string format. This is the recommended way to interact with the library.
  *
  * - **Manual Type System:** For advanced use cases, provides a complete set of
- *   functions to manually construct `ffi_type` descriptors for any C data type.
+ *   functions to manually construct `infix_type` descriptors for any C data type using
+ *   a safe, arena-based memory model.
  *
  * - **Cross-Platform and Cross-Architecture:** Designed to be portable, with
  *   initial support for x86-64 (System V and Windows x64) and AArch64 (AAPCS64).
@@ -49,7 +50,7 @@
  *
  * @section concepts_sec Core Concepts
  *
- * - **`ffi_type`:** The central data structure that describes any C type, from a
+ * - **`infix_type`:** The central data structure that describes any C type, from a
  *   simple `int` to a complex, nested `struct`. The library uses this metadata to
  *   understand how to handle data according to ABI rules.
  *
@@ -57,18 +58,18 @@
  *   a bridge between a generic calling convention and a specific, native C function
  *   signature.
  *
- * - **Forward Trampoline (`ffi_trampoline_t`):** Enables calls *from* a generic
+ * - **Forward Trampoline (`infix_forward_t`):** Enables calls *from* a generic
  *   environment *into* a specific C function. You invoke it with a standard
  *   interface (`target_function`, `return_value`, `args_array`), and it executes a
  *   native call.
  *
- * - **Reverse Trampoline (`ffi_reverse_trampoline_t`):** A C function pointer that
+ * - **Reverse Trampoline (`infix_reverse_t`):** A C function pointer that
  *   wraps a foreign handler. When called by native C code, it translates the native
  *   arguments into a generic format and calls your handler.
  *
- * - **Arena Allocator (`arena_t`):** An efficient memory allocator used internally,
+ * - **Arena Allocator (`infix_arena_t`):** An efficient memory allocator used internally,
  *   especially by the high-level signature parser, to manage the memory for complex
- *   `ffi_type` object graphs with a single `free` operation. It is also exposed as
+ *   `infix_type` object graphs with a single `free` operation. It is also exposed as
  *   part of the public API for performance-critical applications.
  *
  * @section usage_sec Basic Usage
@@ -81,16 +82,16 @@
  * #include "infix.h"
  *
  * int main() {
- *     ffi_trampoline_t* trampoline = NULL;
+ *     infix_forward_t* trampoline = NULL;
  *     const char* signature = "i*,i=>i"; // const char*, int => int
  *
- *     ffi_status status = ffi_create_forward_trampoline_from_signature(&trampoline, signature);
- *     if (status != FFI_SUCCESS) {
+ *     infix_status status = infix_forward_create(&trampoline, signature);
+ *     if (status != INFIX_SUCCESS) {
  *         // Handle error
  *         return 1;
  *     }
  *
- *     ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+ *     infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
  *
  *     const char* my_string = "Hello, Infix! The number is %d\n";
  *     int my_int = 42;
@@ -102,7 +103,7 @@
  *
  *     printf("printf returned: %d\n", printf_ret); // Should match the number of chars printed
  *
- *     ffi_trampoline_free(trampoline);
+ *     infix_forward_destroy(trampoline);
  *     return 0;
  * }
  * ```
@@ -130,9 +131,9 @@
  * @{
  */
 /** @brief The major version of the infix library. Incremented for breaking API changes. */
-#define INFIX_MAJOR 0
+#define INFIX_MAJOR 1
 /** @brief The minor version of the infix library. Incremented for new, backward-compatible features. */
-#define INFIX_MINOR 1
+#define INFIX_MINOR 0
 /** @brief The patch version of the infix library. Incremented for backward-compatible bug fixes. */
 #define INFIX_PATCH 0
 /** @} */
@@ -155,107 +156,106 @@
 #include <stdint.h>
 
 /** @brief The central structure for describing any data type in the FFI system. */
-typedef struct ffi_type_t ffi_type;
+typedef struct infix_type_t infix_type;
 /** @brief Describes a single member of an aggregate type (struct or union). */
-typedef struct ffi_struct_member_t ffi_struct_member;
+typedef struct infix_struct_member_t infix_struct_member;
 /** @brief An opaque handle to a JIT-compiled forward-call trampoline. */
-typedef struct ffi_trampoline_handle_t ffi_trampoline_t;
+typedef struct infix_forward_t infix_forward_t;
 /** @brief An opaque handle to the context of a reverse-call trampoline (callback). */
-typedef struct ffi_reverse_trampoline_t ffi_reverse_trampoline_t;
+typedef struct infix_reverse_t infix_reverse_t;
+/** @brief A clear alias for `infix_reverse_t`, intended for use in callback handler signatures. */
+typedef infix_reverse_t infix_context_t;
 /** @brief An opaque handle to a memory arena for fast, temporary allocations. */
-typedef struct arena_t arena_t;
-
-//~ /** @brief Describes a single member of an aggregate type (struct or union). */
-//~ struct ffi_struct_member_t;
+typedef struct infix_arena_t infix_arena_t;
 
 /**
- * @enum ffi_type_category
+ * @enum infix_type_category
  * @brief Enumerates the fundamental categories of types supported by the FFI system.
  */
 typedef enum {
-    FFI_TYPE_PRIMITIVE,           ///< A built-in type like `int`, `float`, `double`.
-    FFI_TYPE_POINTER,             ///< A generic `void*` pointer type.
-    FFI_TYPE_STRUCT,              ///< A user-defined structure (`struct`).
-    FFI_TYPE_UNION,               ///< A user-defined union (`union`).
-    FFI_TYPE_ARRAY,               ///< A fixed-size array.
-    FFI_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
-    FFI_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
-} ffi_type_category;
+    INFIX_TYPE_PRIMITIVE,           ///< A built-in type like `int`, `float`, `double`.
+    INFIX_TYPE_POINTER,             ///< A generic `void*` pointer type.
+    INFIX_TYPE_STRUCT,              ///< A user-defined structure (`struct`).
+    INFIX_TYPE_UNION,               ///< A user-defined union (`union`).
+    INFIX_TYPE_ARRAY,               ///< A fixed-size array.
+    INFIX_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
+    INFIX_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
+} infix_type_category;
 
 /**
- * @enum ffi_primitive_type_id
+ * @enum infix_primitive_type_id
  * @brief Enumerates the specific primitive C types supported by the FFI system.
  * @see https://en.wikipedia.org/wiki/C_data_types
  */
 typedef enum {
-    FFI_PRIMITIVE_TYPE_BOOL,        ///< `bool` or `_Bool`
-    FFI_PRIMITIVE_TYPE_UINT8,       ///< `unsigned char`, `uint8_t`
-    FFI_PRIMITIVE_TYPE_SINT8,       ///< `signed char`, `int8_t`
-    FFI_PRIMITIVE_TYPE_UINT16,      ///< `unsigned short`, `uint16_t`
-    FFI_PRIMITIVE_TYPE_SINT16,      ///< `signed short`, `int16_t`
-    FFI_PRIMITIVE_TYPE_UINT32,      ///< `unsigned int`, `uint32_t`
-    FFI_PRIMITIVE_TYPE_SINT32,      ///< `signed int`, `int32_t`
-    FFI_PRIMITIVE_TYPE_UINT64,      ///< `unsigned long long`, `uint64_t`
-    FFI_PRIMITIVE_TYPE_SINT64,      ///< `signed long long`, `int64_t`
-    FFI_PRIMITIVE_TYPE_UINT128,     ///< `__uint128_t` (GCC/Clang specific)
-    FFI_PRIMITIVE_TYPE_SINT128,     ///< `__int128_t` (GCC/Clang specific)
-    FFI_PRIMITIVE_TYPE_FLOAT,       ///< `float`
-    FFI_PRIMITIVE_TYPE_DOUBLE,      ///< `double`
-    FFI_PRIMITIVE_TYPE_LONG_DOUBLE  ///< `long double`
-} ffi_primitive_type_id;
+    INFIX_PRIMITIVE_BOOL,        ///< `bool` or `_Bool`
+    INFIX_PRIMITIVE_UINT8,       ///< `unsigned char`, `uint8_t`
+    INFIX_PRIMITIVE_SINT8,       ///< `signed char`, `int8_t`
+    INFIX_PRIMITIVE_UINT16,      ///< `unsigned short`, `uint16_t`
+    INFIX_PRIMITIVE_SINT16,      ///< `signed short`, `int16_t`
+    INFIX_PRIMITIVE_UINT32,      ///< `unsigned int`, `uint32_t`
+    INFIX_PRIMITIVE_SINT32,      ///< `signed int`, `int32_t`
+    INFIX_PRIMITIVE_UINT64,      ///< `unsigned long long`, `uint64_t`
+    INFIX_PRIMITIVE_SINT64,      ///< `signed long long`, `int64_t`
+    INFIX_PRIMITIVE_UINT128,     ///< `__uint128_t` (GCC/Clang specific)
+    INFIX_PRIMITIVE_SINT128,     ///< `__int128_t` (GCC/Clang specific)
+    INFIX_PRIMITIVE_FLOAT,       ///< `float`
+    INFIX_PRIMITIVE_DOUBLE,      ///< `double`
+    INFIX_PRIMITIVE_LONG_DOUBLE  ///< `long double`
+} infix_primitive_type_id;
 
 /**
- * @struct ffi_type
+ * @struct infix_type
  * @brief The central structure for describing any data type in the FFI system.
  *
  * This structure provides the FFI code generator with the necessary metadata
  * (size, alignment, category, and contents) to correctly handle arguments and
  * return values according to the target ABI.
  */
-struct ffi_type_t {
-    ffi_type_category category;  ///< The fundamental category of the type.
-    size_t size;                 ///< The total size of the type in bytes, per `sizeof`.
-    size_t alignment;            ///< The alignment requirement of the type in bytes, per `_Alignof`.
+struct infix_type_t {
+    infix_type_category category;  ///< The fundamental category of the type.
+    size_t size;                   ///< The total size of the type in bytes, per `sizeof`.
+    size_t alignment;              ///< The alignment requirement of the type in bytes, per `_Alignof`.
     bool is_arena_allocated;  ///< If true, this type was allocated from an arena and should not be individually freed.
-                              /** @brief Type-specific metadata. */
+    /** @brief Type-specific metadata. */
     union {
-        /** @brief For `FFI_TYPE_PRIMITIVE`. */
-        ffi_primitive_type_id primitive_id;
-        /** @brief For `FFI_TYPE_STRUCT` and `FFI_TYPE_UNION`. */
+        /** @brief For `INFIX_TYPE_PRIMITIVE`. */
+        infix_primitive_type_id primitive_id;
+        /** @brief For `INFIX_TYPE_STRUCT` and `INFIX_TYPE_UNION`. */
         struct {
-            ffi_struct_member * members;  ///< Array of members for the aggregate.
-            size_t num_members;           ///< Number of members in the aggregate.
+            infix_struct_member * members;  ///< Array of members for the aggregate.
+            size_t num_members;             ///< Number of members in the aggregate.
         } aggregate_info;
-        /** @brief For `FFI_TYPE_ARRAY`. */
+        /** @brief For `INFIX_TYPE_ARRAY`. */
         struct {
-            struct ffi_type_t * element_type;  ///< The type of elements in the array.
-            size_t num_elements;               ///< The number of elements in the array.
+            struct infix_type_t * element_type;  ///< The type of elements in the array.
+            size_t num_elements;                 ///< The number of elements in the array.
         } array_info;
-        /** @brief For `FFI_TYPE_REVERSE_TRAMPOLINE`. */
+        /** @brief For `INFIX_TYPE_REVERSE_TRAMPOLINE`. */
         struct {
-            struct ffi_type_t * return_type;  ///< Reverse trampoline return value.
-            struct ffi_type_t ** arg_types;   ///< Arg list
-            size_t num_args;                  ///< The total number of fixed and variadic arguments.
-            size_t num_fixed_args;            ///< The number of non-variadic arguments.
+            struct infix_type_t * return_type;  ///< Reverse trampoline return value.
+            struct infix_type_t ** arg_types;   ///< Arg list
+            size_t num_args;                    ///< The total number of fixed and variadic arguments.
+            size_t num_fixed_args;              ///< The number of non-variadic arguments.
         } func_ptr_info;
     } meta;
 };
 
 /**
- * @struct ffi_struct_member
+ * @struct infix_struct_member
  * @brief Describes a single member of an aggregate type (struct or union).
  * @details This structure provides the necessary metadata to define the layout of
  * a C struct or union, which is essential for correct ABI classification.
  */
-struct ffi_struct_member_t {
+struct infix_struct_member_t {
     const char * name;  ///< The name of the member (for debugging/reflection).
-    ffi_type * type;    ///< An `ffi_type` describing the member's type.
+    infix_type * type;  ///< An `infix_type` describing the member's type.
     size_t offset;      ///< The byte offset of the member from the start of the aggregate.
 };
 
 // Provides C23 compatibility shims for older language standards.
 // This is included *after* the core types are defined.
-#include <compat_c23.h>
+#include <common/compat_c23.h>
 
 // Configurable Memory Allocators
 #ifndef infix_malloc
@@ -294,7 +294,7 @@ struct ffi_struct_member_t {
 #endif
 #ifndef infix_memcpy
 /**
- * @def infix_free
+ * @def infix_memcpy
  * @brief A macro for the copy memory to a new pointer.
  * @details Defaults to `memcpy`. Can be overridden for custom memory management.
  */
@@ -302,7 +302,7 @@ struct ffi_struct_member_t {
 #endif
 #ifndef infix_memset
 /**
- * @def infix_free
+ * @def infix_memset
  * @brief A macro for the set memory to a value.
  * @details Defaults to `memset`. Can be overridden for custom memory management.
  */
@@ -317,130 +317,123 @@ struct ffi_struct_member_t {
  * The following preprocessor macros will be defined based on the build environment:
  *
  * Operating System:
- * - FFI_OS_WINDOWS:       Microsoft Windows
- * - FFI_OS_MACOS:         Apple macOS
- * - FFI_OS_IOS:           Apple iOS
- * - FFI_OS_LINUX:         Linux (excluding Android)
- * - FFI_OS_ANDROID:       Android
- * - FFI_OS_TERMUX:        Termux on Android
- * - FFI_OS_FREEBSD:       FreeBSD
- * - FFI_OS_OPENBSD:       OpenBSD
- * - FFI_OS_NETBSD:        NetBSD
- * - FFI_OS_DRAGONFLY:     DragonFly BSD
- * - FFI_OS_SOLARIS:       Oracle Solaris
- * - FFI_OS_HAIKU:         Haiku OS
+ * - INFIX_OS_WINDOWS:       Microsoft Windows
+ * - INFIX_OS_MACOS:         Apple macOS
+ * - INFIX_OS_IOS:           Apple iOS
+ * - INFIX_OS_LINUX:         Linux (excluding Android)
+ * - INFIX_OS_ANDROID:       Android
+ * - INFIX_OS_TERMUX:        Termux on Android
+ * - INFIX_OS_FREEBSD:       FreeBSD
+ * - INFIX_OS_OPENBSD:       OpenBSD
+ * - INFIX_OS_NETBSD:        NetBSD
+ * - INFIX_OS_DRAGONFLY:     DragonFly BSD
+ * - INFIX_OS_SOLARIS:       Oracle Solaris
+ * - INFIX_OS_HAIKU:         Haiku OS
  *
  * Processor Architecture:
- * - FFI_ARCH_X64:         x86-64 / AMD64
- * - FFI_ARCH_AARCH64:     ARM64
- * - FFI_ARCH_X86:         x86 (32-bit)
- * - FFI_ARCH_ARM:         ARM (32-bit)
+ * - INFIX_ARCH_X64:         x86-64 / AMD64
+ * - INFIX_ARCH_AARCH64:     ARM64
+ * - INFIX_ARCH_X86:         x86 (32-bit)
+ * - INFIX_ARCH_ARM:         ARM (32-bit)
  *
  * Application Binary Interface (ABI):
- * - FFI_ABI_WINDOWS_X64:  Microsoft x64 Calling Convention
- * - FFI_ABI_SYSV_X64:     System V AMD64 ABI
- * - FFI_ABI_AAPCS64:      ARM 64-bit Procedure Call Standard
+ * - INFIX_ABI_WINDOWS_X64:  Microsoft x64 Calling Convention
+ * - INFIX_ABI_SYSV_X64:     System V AMD64 ABI
+ * - INFIX_ABI_AAPCS64:      ARM 64-bit Procedure Call Standard
  *
  * Compiler:
- * - FFI_COMPILER_MSVC:    Microsoft Visual C++
- * - FFI_COMPILER_CLANG:   Clang
- * - FFI_COMPILER_GCC:     GNU Compiler Collection
- * - FFI_COMPILER_INTEL:   Intel C/C++ Compiler
- * - FFI_COMPILER_IBM:     IBM XL C/C++
- * - FFI_COMPILER_NFI:     Unknown compiler
+ * - INFIX_COMPILER_MSVC:    Microsoft Visual C++
+ * - INFIX_COMPILER_CLANG:   Clang
+ * - INFIX_COMPILER_GCC:     GNU Compiler Collection
+ * - INFIX_COMPILER_INTEL:   Intel C/C++ Compiler
+ * - INFIX_COMPILER_IBM:     IBM XL C/C++
+ * - INFIX_COMPILER_NFI:     Unknown compiler
  *
  * Environment:
- * - FFI_ENV_POSIX:         Defined for POSIX-compliant systems (macOS, Linux, BSDs, etc.)
- * - FFI_ENV_MSYS:         MSYS/MSYS2 build environment
- * - FFI_ENV_CYGWIN:       Cygwin environment
- * - FFI_ENV_MINGW:        MinGW/MinGW-w64 compilers
- * - FFI_ENV_TERMUX:       Termux running on Android or Chrome OS
+ * - INFIX_ENV_POSIX:         Defined for POSIX-compliant systems (macOS, Linux, BSDs, etc.)
+ * - INFIX_ENV_MSYS:         MSYS/MSYS2 build environment
+ * - INFIX_ENV_CYGWIN:       Cygwin environment
+ * - INFIX_ENV_MINGW:        MinGW/MinGW-w64 compilers
+ * - INFIX_ENV_TERMUX:       Termux running on Android or Chrome OS
  *
  */
 
 // Host Platform and Architecture Detection
 // This block ALWAYS detects the native host. It is NOT overridden by the ABI flag.
 #if defined(_WIN32)
-// #warning "OS: Detected _WIN32. Defining FFI_OS_WINDOWS."
-#define FFI_OS_WINDOWS
+#define INFIX_OS_WINDOWS
 #include <windows.h>
 #if defined(__MSYS__)
-/** @def FFI_ENV_MSYS Defined for MSYS/MSYS2 build environments. */
-#define FFI_ENV_MSYS 1
+#define INFIX_ENV_MSYS 1
 #elif defined(__CYGWIN__)
-/** @def FFI_ENV_CYGWIN Defined for the Cygwin environment. */
-#define FFI_ENV_CYGWIN 1
-#define FFI_ENV_POSIX 1
+#define INFIX_ENV_CYGWIN 1
+#define INFIX_ENV_POSIX 1
 #elif defined(__MINGW32__) || defined(__MINGW64__)
-/** @def FFI_ENV_MINGW Defined for MinGW/MinGW-w64 compilers. */
-#define FFI_ENV_MINGW 1
+#define INFIX_ENV_MINGW 1
 #endif
 #elif defined(__TERMUX__)
-// #warning "OS: Detected __TERMUX__. Defining FFI_OS_TERMUX, FFI_OS_ANDROID, FFI_OS_LINUX, FFI_ENV_POSIX."
-#define FFI_OS_TERMUX
-#define FFI_OS_ANDROID  // Container
-#define FFI_OS_LINUX
-#define FFI_ENV_POSIX
-/** @def FFI_ENV_TERMUX Defined for Termux running under Android or Chrome OS. */
-#define FFI_ENV_TERMUX 1
+#define INFIX_OS_TERMUX
+#define INFIX_OS_ANDROID  // Container
+#define INFIX_OS_LINUX
+#define INFIX_ENV_POSIX
+#define INFIX_ENV_TERMUX 1
 #elif defined(__ANDROID__)
-#define FFI_OS_ANDROID
-#define FFI_OS_LINUX  // Android is close enough...
-#define FFI_ENV_POSIX
+#define INFIX_OS_ANDROID
+#define INFIX_OS_LINUX  // Android is close enough...
+#define INFIX_ENV_POSIX
 #elif defined(__APPLE__)
-#define FFI_ENV_POSIX
+#define INFIX_ENV_POSIX
 #define _DARWIN_C_SOURCE
 #include <TargetConditionals.h>
 #include <libkern/OSCacheControl.h>
 #include <pthread.h>
-// TODO: https://developer.apple.com/documentation/apple-silicon/porting-just-in-time-compilers-to-apple-silicon
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-#define FFI_OS_IOS
+#define INFIX_OS_IOS
 #elif TARGET_OS_MAC
-#define FFI_OS_MACOS
+#define INFIX_OS_MACOS
 #else
 #error "Unsupported/unknown Apple platform"
 #endif
 #elif defined(__linux__)
-#define FFI_OS_LINUX
-#define FFI_ENV_POSIX
+#define INFIX_OS_LINUX
+#define INFIX_ENV_POSIX
 #elif defined(__FreeBSD__)
-#define FFI_OS_FREEBSD
-#define FFI_ENV_POSIX
+#define INFIX_OS_FREEBSD
+#define INFIX_ENV_POSIX
 #elif defined(__OpenBSD__)
-#define FFI_OS_OPENBSD
-#define FFI_ENV_POSIX
+#define INFIX_OS_OPENBSD
+#define INFIX_ENV_POSIX
 #elif defined(__NetBSD__)
-#define FFI_OS_NETBSD
-#define FFI_ENV_POSIX
+#define INFIX_OS_NETBSD
+#define INFIX_ENV_POSIX
 #elif defined(__DragonFly__)
-#define FFI_OS_DRAGONFLY
-#define FFI_ENV_POSIX
+#define INFIX_OS_DRAGONFLY
+#define INFIX_ENV_POSIX
 #elif defined(__sun) && defined(__SVR4)
-#define FFI_OS_SOLARIS
-#define FFI_ENV_POSIX
+#define INFIX_OS_SOLARIS
+#define INFIX_ENV_POSIX
 #elif defined(__HAIKU__)
-#define FFI_OS_HAIKU
-#define FFI_ENV_POSIX
+#define INFIX_OS_HAIKU
+#define INFIX_ENV_POSIX
 #else
 #warning "Unsupported/unknown operating system"
 #endif
 
 #if defined(__clang__)
-#define FFI_COMPILER_CLANG
+#define INFIX_COMPILER_CLANG
 #elif defined(_MSC_VER)
-#define FFI_COMPILER_MSVC
+#define INFIX_COMPILER_MSVC
 #elif defined(__GNUC__)
-#define FFI_COMPILER_GCC
+#define INFIX_COMPILER_GCC
 #else
 #warning "Compiler: Unknown compiler detected."
-#define FFI_COMPILER_NFI
+#define INFIX_COMPILER_NFI
 #endif
 
 #if defined(__aarch64__) || defined(_M_ARM64)
-#define FFI_ARCH_AARCH64
+#define INFIX_ARCH_AARCH64
 #elif defined(__x86_64__) || defined(_M_X64)
-#define FFI_ARCH_X64
+#define INFIX_ARCH_X64
 #else
 #error "Unsupported architecture. Only x86-64 and AArch64 are currently supported."
 #endif
@@ -449,166 +442,154 @@ struct ffi_struct_member_t {
 // This block determines which ABI implementation to use. It can be overridden
 // by a compiler flag, which is useful for cross-ABI testing and fuzzing.
 
-#if defined(FFI_FORCE_ABI_WINDOWS_X64)
-#define FFI_ABI_WINDOWS_X64 1
-#define FFI_ABI_FORCED 1
-#elif defined(FFI_FORCE_ABI_SYSV_X64)
-#define FFI_ABI_SYSV_X64 1
-#define FFI_ABI_FORCED 1
-#elif defined(FFI_FORCE_ABI_AAPCS64)
-#define FFI_ABI_AAPCS64 1
-#define FFI_ABI_FORCED 1
+#if defined(INFIX_FORCE_ABI_WINDOWS_X64)
+#define INFIX_ABI_WINDOWS_X64 1
+#define INFIX_ABI_FORCED 1
+#elif defined(INFIX_FORCE_ABI_SYSV_X64)
+#define INFIX_ABI_SYSV_X64 1
+#define INFIX_ABI_FORCED 1
+#elif defined(INFIX_FORCE_ABI_AAPCS64)
+#define INFIX_ABI_AAPCS64 1
+#define INFIX_ABI_FORCED 1
 #endif
 
 // If no ABI was forced, detect it based on the host architecture.
-#ifndef FFI_ABI_FORCED
-#if defined(FFI_ARCH_AARCH64)
-#define FFI_ABI_AAPCS64
-#elif defined(FFI_ARCH_X64)
-#if defined(FFI_OS_WINDOWS)
-#define FFI_ABI_WINDOWS_X64
+#ifndef INFIX_ABI_FORCED
+#if defined(INFIX_ARCH_AARCH64)
+#define INFIX_ABI_AAPCS64
+#elif defined(INFIX_ARCH_X64)
+#if defined(INFIX_OS_WINDOWS)
+#define INFIX_ABI_WINDOWS_X64
 #else
-#define FFI_ABI_SYSV_X64
+#define INFIX_ABI_SYSV_X64
 #endif
 #endif
 #endif
 
 /**
  * @brief The signature for a generic forward-call trampoline, the "Call InterFace" function.
- * @details This is the function pointer type returned by `ffi_trampoline_get_code`.
+ * @details This is the function pointer type returned by `infix_forward_get_code`.
  * It provides a standardized way to invoke any C function for which a trampoline was generated.
  * @param target_function A pointer to the native C function to be called.
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
  */
-typedef void (*ffi_cif_func)(void * target_function, void * return_value, void ** args);
+typedef void (*infix_cif_func)(void * target_function, void * return_value, void ** args);
 
 /**
  * @brief An enumeration of all possible success or failure codes from the public API.
  */
 typedef enum {
-    FFI_SUCCESS = 0,              ///< The operation completed successfully.
-    FFI_ERROR_ALLOCATION_FAILED,  ///< A memory allocation request failed.
-    FFI_ERROR_INVALID_ARGUMENT,   ///< An invalid argument was provided to a function.
-    FFI_ERROR_UNSUPPORTED_ABI,    ///< The current platform/ABI is not supported.
-    FFI_ERROR_LAYOUT_FAILED,      ///< Failed to calculate the call frame layout.
-    FFI_ERROR_PROTECTION_FAILED,  ///< Failed to change memory permissions (e.g., `mprotect` or `VirtualProtect`).
-    FFI_ERROR_                    ///< An unspecified error occurred.
-} ffi_status;
+    INFIX_SUCCESS = 0,              ///< The operation completed successfully.
+    INFIX_ERROR_ALLOCATION_FAILED,  ///< A memory allocation request failed.
+    INFIX_ERROR_INVALID_ARGUMENT,   ///< An invalid argument was provided to a function.
+    INFIX_ERROR_UNSUPPORTED_ABI,    ///< The current platform/ABI is not supported.
+    INFIX_ERROR_LAYOUT_FAILED,      ///< Failed to calculate the call frame layout.
+    INFIX_ERROR_PROTECTION_FAILED,  ///< Failed to change memory permissions (e.g., `mprotect` or `VirtualProtect`).
+    INFIX_ERROR_                    ///< An unspecified error occurred.
+} infix_status;
 
 /**
- * @brief Creates an `ffi_type` descriptor for a primitive C type.
+ * @brief Creates an `infix_type` descriptor for a primitive C type.
  * @details This function returns a pointer to a static, singleton instance for the
  * requested primitive type. These do not need to be freed.
- * @param id The enumerator for the desired primitive type (e.g., `FFI_PRIMITIVE_TYPE_SINT32`).
- * @return A pointer to the static `ffi_type` descriptor. Returns `nullptr` for invalid IDs.
- * @warning The returned pointer must NOT be passed to `ffi_type_destroy`.
+ * @param id The enumerator for the desired primitive type (e.g., `INFIX_PRIMITIVE_SINT32`).
+ * @return A pointer to the static `infix_type` descriptor. Returns `nullptr` for invalid IDs.
+ * @warning The returned pointer must NOT be passed to any deallocation function.
  */
-c23_nodiscard ffi_type * ffi_type_create_primitive(ffi_primitive_type_id);
+c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id);
 
 /**
- * @brief Creates an `ffi_type` descriptor for a generic pointer.
+ * @brief Creates an `infix_type` descriptor for a generic pointer.
  * @details Returns a pointer to the static, singleton instance for `void*`.
- * @return A pointer to the static `ffi_type` descriptor for a pointer.
+ * @return A pointer to the static `infix_type` descriptor for a pointer.
  * @warning Do not free the returned pointer.
  */
-c23_nodiscard ffi_type * ffi_type_create_pointer(void);
+c23_nodiscard infix_type * infix_type_create_pointer(void);
 
 /**
- * @brief Creates an `ffi_type` descriptor for the `void` type.
+ * @brief Creates an `infix_type` descriptor for the `void` type.
  * @details Returns a pointer to the static, singleton instance for `void`, which is
  * used exclusively to describe the return type of functions that return nothing.
- * @return A pointer to the static `ffi_type` for `void`.
+ * @return A pointer to the static `infix_type` for `void`.
  * @warning Do not free the returned pointer.
  */
-c23_nodiscard ffi_type * ffi_type_create_void(void);
+c23_nodiscard infix_type * infix_type_create_void(void);
 
 /**
- * @brief Creates a new, dynamically-allocated `ffi_type` for a struct.
+ * @brief Creates a new `infix_type` for a struct from an arena.
  * @details Calculates the size and alignment of the struct based on its members,
- * adhering to standard C layout rules.
+ * adhering to standard C layout rules. All memory for the new type is allocated
+ * from the provided arena.
  *
- * @param[out] out_type On success, this will point to the newly created `ffi_type`.
- * @param members An array of `ffi_struct_member` describing each member of the struct.
+ * @param arena The arena from which to allocate memory for the new type.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
+ * @param members An array of `infix_struct_member` describing each member of the struct.
  * @param num_members The number of elements in the `members` array.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note On success, the library takes ownership of the `members` array. On failure, the
- *       caller is responsible for freeing it. The `ffi_type` written to `out_type` must
- *       be freed with `ffi_type_destroy`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note All allocated memory is owned by the arena.
  */
-c23_nodiscard ffi_status ffi_type_create_struct(ffi_type **, ffi_struct_member *, size_t);
+c23_nodiscard infix_status infix_type_create_struct(infix_arena_t *, infix_type **, infix_struct_member *, size_t);
 
 /**
- * @brief Creates a new, dynamically-allocated `ffi_type` for a packed struct.
- * @details This function is used for structs defined with attributes like `__attribute__((packed))`
- *          or `#pragma pack(1)`. Unlike `ffi_type_create_struct`, this function does not
- *          calculate the size and alignment itself. Instead, the caller must provide the
- *          exact size and alignment of the packed struct as determined by their compiler,
- *          typically by using `sizeof(my_packed_struct)` and `_Alignof(my_packed_struct)`.
+ * @brief Creates a new `infix_type` for a packed struct from an arena.
+ * @details This function is used for structs with non-standard layouts (e.g., from `__attribute__((packed))`).
+ * The caller must provide the exact size and alignment. All memory for the new type is
+ * allocated from the provided arena.
  *
- * @param[out] out_type On success, this will point to the newly created `ffi_type`.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param total_size The exact size of the packed struct in bytes.
- * @param alignment The alignment of the packed struct in bytes. For most packed structs, this will be 1.
- * @param members An array of `ffi_struct_member` describing each member of the struct. The offsets
- *                within this array must be the correct, packed offsets from `offsetof`.
+ * @param alignment The alignment of the packed struct in bytes (often 1).
+ * @param members An array of `infix_struct_member` describing each member.
  * @param num_members The number of elements in the `members` array.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note The returned `ffi_type` must be freed with `ffi_type_destroy`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note All allocated memory is owned by the arena.
  */
-c23_nodiscard ffi_status ffi_type_create_packed_struct(ffi_type **, size_t, size_t, ffi_struct_member *, size_t);
+c23_nodiscard infix_status
+infix_type_create_packed_struct(infix_arena_t *, infix_type **, size_t, size_t, infix_struct_member *, size_t);
 
 /**
- * @brief Creates a new, dynamically-allocated `ffi_type` for a union.
+ * @brief Creates a new `infix_type` for a union from an arena.
  * @details Calculates the size and alignment of the union based on its members.
- * @param[out] out_type On success, this will point to the newly created `ffi_type`.
- * @param members An array of `ffi_struct_member` describing each member of the union.
+ * All memory for the new type is allocated from the provided arena.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
+ * @param members An array of `infix_struct_member` describing each member of the union.
  * @param num_members The number of elements in the `members` array.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note On success, the library takes ownership of the `members` array. On failure, the
- *       caller is responsible for freeing it. The `ffi_type` written to `out_type` must
- *       be freed with `ffi_type_destroy`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note All allocated memory is owned by the arena.
  */
-c23_nodiscard ffi_status ffi_type_create_union(ffi_type **, ffi_struct_member *, size_t);
+c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type **, infix_struct_member *, size_t);
 
 /**
- * @brief Creates a new, dynamically-allocated `ffi_type` for a fixed-size array.
- * @param[out] out_type On success, this will point to the newly created `ffi_type`.
- * @param element_type An `ffi_type` describing the type of each element in the array.
+ * @brief Creates a new `infix_type` for a fixed-size array from an arena.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
+ * @param element_type An `infix_type` describing the type of each element in the array.
  * @param num_elements The number of elements in the array.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note On success, the library takes ownership of the `element_type`. On failure, the
- *       caller is responsible for freeing it. The `ffi_type` written to `out_type` must
- *       be freed with `ffi_type_destroy`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note All allocated memory is owned by the arena.
  */
-c23_nodiscard ffi_status ffi_type_create_array(ffi_type **, ffi_type *, size_t);
+c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
 
 /**
- * @brief A factory function to create an `ffi_struct_member`.
+ * @brief A factory function to create an `infix_struct_member`.
  * @details This is a convenience helper for populating the `members` array passed to
- * `ffi_type_create_struct` or `ffi_type_create_union`.
+ * `infix_type_create_struct` or `infix_type_create_union`.
  * @param name The member's name (for debugging; can be `nullptr`).
- * @param type A pointer to the member's `ffi_type`.
+ * @param type A pointer to the member's `infix_type`.
  * @param offset The byte offset of the member, obtained via the `offsetof` macro.
- * @return An initialized `ffi_struct_member`.
+ * @return An initialized `infix_struct_member`.
  */
-ffi_struct_member ffi_struct_member_create(const char *, ffi_type *, size_t);
-
-/**
- * @brief Frees a dynamically-allocated `ffi_type` and any nested dynamic types.
- * @details This function safely destroys `ffi_type` objects created with
- * `ffi_type_create_struct`, `_union`, or `_array`. It recursively frees any
- * dynamically-allocated member or element types. It is safe to call this on
- * static types (primitives, pointer, void), in which case it does nothing.
- * @param type The `ffi_type` to destroy. Can be `nullptr`.
- */
-void ffi_type_destroy(ffi_type *);
+infix_struct_member infix_struct_member_create(const char *, infix_type *, size_t);
 
 /**
  * @defgroup high_level_api High-Level Signature API
  * @brief Convenience functions for creating trampolines from a signature string.
  * @details This API is the recommended way for most users to interact with infix.
  *          It provides a simple, readable, and powerful way to generate FFI
- *          trampolines without needing to manually construct `ffi_type` objects.
+ *          trampolines without needing to manually construct `infix_type` objects.
  *          The implementation for these functions is in `src/core/signature.c`.
  * @{
  */
@@ -619,15 +600,15 @@ void ffi_type_destroy(ffi_type *);
  * (`target_function`, `return_value_ptr`, `args_array`) and translates them into a
  * native C call that respects the platform's ABI.
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
- * @param return_type The `ffi_type` of the function's return value.
- * @param arg_types An array of `ffi_type*` for each argument.
+ * @param return_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type*` for each argument.
  * @param num_args The total number of arguments.
  * @param num_fixed_args For variadic functions, the number of non-variadic arguments. For non-variadic functions, this
  * must equal `num_args`.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note The returned trampoline must be freed with `ffi_trampoline_free`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
  */
-c23_nodiscard ffi_status generate_forward_trampoline(ffi_trampoline_t **, ffi_type *, ffi_type **, size_t, size_t);
+c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t);
 
 
 /**
@@ -636,7 +617,7 @@ c23_nodiscard ffi_status generate_forward_trampoline(ffi_trampoline_t **, ffi_ty
  *          C handler function, marshalling the arguments correctly.
  *
  *          **CRITICAL**: The C handler function you provide (`user_callback_fn`) will **always**
- *          receive a pointer to its `ffi_reverse_trampoline_t` context as its **first argument**.
+ *          receive a pointer to its `infix_context_t` context as its **first argument**.
  *          The subsequent arguments will match the types described in the signature string. This
  *          context-passing mechanism allows you to create stateful callbacks.
  *
@@ -644,73 +625,68 @@ c23_nodiscard ffi_status generate_forward_trampoline(ffi_trampoline_t **, ffi_ty
  * If your `infix` signature string is `"i,d*=>v"`, which corresponds to a C type of
  * `void (*)(int, double*)`, your C handler function **must** have the following signature:
  * ```c
- * void my_c_handler(ffi_reverse_trampoline_t * context, void * return_value_ptr, void ** args_array);
+ * void my_c_handler(infix_context_t* context, int arg1, double* arg2);
  * ```
  * You can then retrieve your state within the handler by calling:
  * ```c
- * my_state_t* state = (my_state_t*)ffi_reverse_trampoline_get_user_data(context);
+ * my_state_t* state = (my_state_t*)infix_reverse_get_user_data(context);
  * ```
- * And you'd retrieve your arguments like this:
- * ```c
- * int arg1 = *(int*)args_array[0];
- * double arg2 = *(double*)args[1];
- *```
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param return_type The return type of the callback as seen by the *native C caller*.
- * @param arg_types An array of `ffi_type` pointers for the callback's arguments, *not including*
+ * @param arg_types An array of `infix_type` pointers for the callback's arguments, *not including*
  *                  the implicit initial context pointer.
  * @param num_args The TOTAL number of arguments in `arg_types`.
  * @param num_fixed_args The number of fixed arguments that appear before a potential '...'.
  * @param user_callback_fn A function pointer to your C callback handler. Its signature must
- *                         start with `ffi_reverse_trampoline_t*` followed by the types
+ *                         start with `infix_context_t*` followed by the types
  *                         described in `arg_types`.
  * @param user_data A user-defined pointer for passing state to the handler.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note The returned context must be freed with `ffi_reverse_trampoline_free`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The returned context must be freed with `infix_reverse_destroy`.
  */
-c23_nodiscard ffi_status
-generate_reverse_trampoline(ffi_reverse_trampoline_t **, ffi_type *, ffi_type **, size_t, size_t, void *, void *);
+c23_nodiscard infix_status
+infix_reverse_create_manual(infix_reverse_t **, infix_type *, infix_type **, size_t, size_t, void *, void *);
 
 /**
  * @brief Frees a forward trampoline and its associated executable memory.
  * @param trampoline The trampoline to free. Can be `nullptr`.
  */
-void ffi_trampoline_free(ffi_trampoline_t *);
+void infix_forward_destroy(infix_forward_t *);
 
 /**
  * @brief Frees a reverse trampoline, its JIT-compiled stub, and its context.
  * @param reverse_trampoline The reverse trampoline to free. Can be `nullptr`.
  */
-void ffi_reverse_trampoline_free(ffi_reverse_trampoline_t *);
+void infix_reverse_destroy(infix_reverse_t *);
 
 /**
  * @brief Retrieves the executable code pointer from a forward trampoline.
  * @param trampoline A handle to a previously created forward trampoline.
- * @return A callable function pointer of type `ffi_cif_func`. Returns `nullptr` if the handle is invalid.
+ * @return A callable function pointer of type `infix_cif_func`. Returns `nullptr` if the handle is invalid.
  */
-c23_nodiscard void * ffi_trampoline_get_code(ffi_trampoline_t *);
+c23_nodiscard void * infix_forward_get_code(infix_forward_t *);
 
 /**
  * @brief Retrieves the executable code pointer from a reverse trampoline.
- * @param trampoline A handle to a previously created reverse trampoline.
- * @return A callable function pointer of type `ffi_cif_func`. Returns `nullptr` if the handle is invalid.
+ * @param reverse_trampoline A handle to a previously created reverse trampoline.
+ * @return A callable function pointer. Returns `nullptr` if the handle is invalid.
  */
-c23_nodiscard void * ffi_reverse_trampoline_get_code(const ffi_reverse_trampoline_t *);
+c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *);
 
 /**
  * @brief Retrieves the user_data stored with a reverse trampoline.
- * @param trampoline A handle to opaque user_data.
- * @return Opaque pointer. Returns `nullptr` if the handle is invalid.
+ * @param reverse_trampoline A handle to a reverse trampoline context.
+ * @return The opaque user_data pointer. Returns `nullptr` if the handle is invalid.
  */
-c23_nodiscard void * ffi_reverse_trampoline_get_user_data(const ffi_reverse_trampoline_t *);
+c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *);
 
 /**
  * @defgroup high_level_api High-Level Signature API
  * @brief Convenience functions for creating trampolines from a signature string.
  * @details This API is the recommended way for most users to interact with infix.
  *          It provides a simple, readable, and powerful way to generate FFI
- *          trampolines without needing to manually construct `ffi_type` objects.
+ *          trampolines without needing to manually construct `infix_type` objects.
  *          The implementation for these functions is in `src/core/signature.c`.
  * @{
  */
@@ -718,7 +694,7 @@ c23_nodiscard void * ffi_reverse_trampoline_get_user_data(const ffi_reverse_tram
  * @brief Generates a forward-call trampoline from a signature string.
  *
  * This is the primary function of the high-level API. It parses a signature
- * string, constructs the necessary `ffi_type` objects internally, generates the
+ * string, constructs the necessary `infix_type` objects internally, generates the
  * trampoline, and cleans up all intermediate type descriptions. The resulting
  * trampoline is self-contained and ready for use.
  *
@@ -726,93 +702,90 @@ c23_nodiscard void * ffi_reverse_trampoline_get_user_data(const ffi_reverse_tram
  * @param signature A null-terminated string describing the function signature.
  *                  Format: "arg1,arg2;variadic_arg=>ret_type". See cookbook for details.
  *                  Supports packed structs with the syntax: p(size,align){type@offset;...}
- * @return `FFI_SUCCESS` on success, or an error code on failure. `FFI_ERROR_INVALID_ARGUMENT`
+ * @return `INFIX_SUCCESS` on success, or an error code on failure. `INFIX_ERROR_INVALID_ARGUMENT`
  *         is returned for parsing errors.
- * @note The returned trampoline must be freed with `ffi_trampoline_free`.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
  */
-c23_nodiscard ffi_status ffi_create_forward_trampoline_from_signature(ffi_trampoline_t **, const char *);
+c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *);
 
 /**
  * @brief Generates a reverse-call trampoline (callback) from a signature string.
  *
  * This function parses a signature string to create a native, C-callable function
  * pointer that invokes the provided user handler. It simplifies the creation
- * of callbacks by managing the underlying `ffi_type` objects automatically.
+ * of callbacks by managing the underlying `infix_type` objects automatically.
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
  *                  Format: "arg1,arg2;variadic_arg=>ret_type". Supports packed structs.
  * @param user_callback_fn A function pointer to the user's C callback handler.
- *                         Its signature must match the one described in the string.
+ *                         Its signature must start with `infix_context_t*`, followed
+ *                         by the types described in the signature string.
  * @param user_data A user-defined pointer for passing state to the handler,
- *                  accessible inside the handler via the context.
- * @return `FFI_SUCCESS` on success, or an error code on failure.
- * @note The returned context must be freed with `ffi_reverse_trampoline_free`.
+ *                  accessible inside the handler via `infix_reverse_get_user_data`.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The returned context must be freed with `infix_reverse_destroy`.
  */
-c23_nodiscard ffi_status ffi_create_reverse_trampoline_from_signature(ffi_reverse_trampoline_t **,
-                                                                      const char *,
-                                                                      void *,
-                                                                      void *);
+c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *, void *, void *);
 
 /**
- * @brief Parses a full function signature string into its constituent ffi_type parts.
+ * @brief Parses a full function signature string into its constituent infix_type parts.
  * @details This function provides direct access to the signature parser. It creates a
- *          dedicated arena to hold the resulting `ffi_type` object graph for the
+ *          dedicated arena to hold the resulting `infix_type` object graph for the
  *          entire function signature. This is an advanced function for callers who
  *          need to inspect the type information before or after generating a
  *          trampoline, or for those who wish to use the lower-level
- *          `generate_forward_trampoline` function directly.
+ *          `infix_forward_create_manual` function directly.
  *
  * @param[in]  signature A null-terminated string describing the function signature.
  *                       See the project's documentation for the full signature language.
  * @param[out] out_arena On success, this will be populated with a pointer to the new
  *                       arena that owns the entire parsed type graph. The caller is
- *                       responsible for destroying this arena with `arena_destroy()`.
- * @param[out] out_ret_type On success, will point to the `ffi_type` for the return value.
+ *                       responsible for destroying this arena with `infix_arena_destroy()`.
+ * @param[out] out_ret_type On success, will point to the `infix_type` for the return value.
  *                          This pointer is valid for the lifetime of the arena.
- * @param[out] out_arg_types On success, will point to an array of `ffi_type*` for the
+ * @param[out] out_arg_types On success, will point to an array of `infix_type*` for the
  *                           arguments. This array is also allocated within the arena.
  * @param[out] out_num_args On success, will be set to the total number of arguments.
  * @param[out] out_num_fixed_args On success, will be set to the number of non-variadic arguments.
  *
- * @return Returns `FFI_SUCCESS` if parsing is successful.
- * @return Returns `FFI_ERROR_INVALID_ARGUMENT` if any parameters are null or the
+ * @return Returns `INFIX_SUCCESS` if parsing is successful.
+ * @return Returns `INFIX_ERROR_INVALID_ARGUMENT` if any parameters are null or the
  *         signature string is malformed.
- * @return Returns `FFI_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
+ * @return Returns `INFIX_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
  *
  * @note **Memory Management:** On success, this function transfers ownership of the newly
- *       created arena to the caller. A single call to `arena_destroy(*out_arena)` is
+ *       created arena to the caller. A single call to `infix_arena_destroy(*out_arena)` is
  *       sufficient to free all memory associated with the parsed types. If the
  *       function fails, `*out_arena` will be set to `NULL`.
  */
-c23_nodiscard ffi_status ffi_signature_parse(const char *, arena_t **, ffi_type **, ffi_type ***, size_t *, size_t *);
+c23_nodiscard infix_status
+infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_type ***, size_t *, size_t *);
 
 /**
  * @brief Parses a signature string representing a single data type.
  * @details This is a specialized version of the parser for use cases like data
  *          marshalling, serialization, or dynamic type inspection, where you need
  *          to describe a single data type rather than a full function signature.
- *          It creates a dedicated arena to hold the resulting `ffi_type` object
+ *          It creates a dedicated arena to hold the resulting `infix_type` object
  *          graph for the specified type.
  *
- * @param[out] out_type On success, will point to the newly created `ffi_type`. This
+ * @param[out] out_type On success, will point to the newly created `infix_type`. This
  *                      pointer is valid for the lifetime of the returned arena.
  * @param[out] out_arena On success, will point to the new arena that owns the type
  *                       object graph. The caller is responsible for destroying this
- *                       arena with `arena_destroy()`.
+ *                       arena with `infix_arena_destroy()`.
  * @param[in]  signature A string describing the data type (e.g., "i", "d*", "{s@0;i@4}").
  *
- * @return Returns `FFI_SUCCESS` if parsing is successful.
- * @return Returns `FFI_ERROR_INVALID_ARGUMENT` if any parameters are null or the
+ * @return Returns `INFIX_SUCCESS` if parsing is successful.
+ * @return Returns `INFIX_ERROR_INVALID_ARGUMENT` if any parameters are null or the
  *         signature string is malformed or contains trailing characters.
- * @return Returns `FFI_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
+ * @return Returns `INFIX_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
  *
  * @note **Memory Management:** On success, the caller takes ownership of the arena
- *       returned in `*out_arena` and is responsible for its destruction. This
- *       function is the ideal tool for creating the `ffi_type` descriptors needed
- *       for pinning variables or for manually constructing aggregate types.
+ *       returned in `*out_arena` and is responsible for its destruction.
  */
-c23_nodiscard ffi_status ffi_type_from_signature(ffi_type **, arena_t **, const char *);
+c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *);
 
 /**
  * @defgroup signature_specifiers Signature Format Specifiers
@@ -824,43 +797,43 @@ c23_nodiscard ffi_status ffi_type_from_signature(ffi_type **, arena_t **, const 
  */
 
 // Primitive Types
-#define FFI_SIG_VOID 'v'
-#define FFI_SIG_BOOL 'b'
-#define FFI_SIG_CHAR 'c'
-#define FFI_SIG_SINT8 'a'
-#define FFI_SIG_UINT8 'h'
-#define FFI_SIG_SINT16 's'
-#define FFI_SIG_UINT16 't'
-#define FFI_SIG_SINT32 'i'
-#define FFI_SIG_UINT32 'j'
-#define FFI_SIG_LONG 'l'
-#define FFI_SIG_ULONG 'm'
-#define FFI_SIG_SINT64 'x'
-#define FFI_SIG_UINT64 'y'
-#define FFI_SIG_SINT128 'n'
-#define FFI_SIG_UINT128 'o'
-#define FFI_SIG_FLOAT 'f'
-#define FFI_SIG_DOUBLE 'd'
-#define FFI_SIG_LONG_DOUBLE 'e'
+#define INFIX_SIG_VOID 'v'
+#define INFIX_SIG_BOOL 'b'
+#define INFIX_SIG_CHAR 'c'
+#define INFIX_SIG_SINT8 'a'
+#define INFIX_SIG_UINT8 'h'
+#define INFIX_SIG_SINT16 's'
+#define INFIX_SIG_UINT16 't'
+#define INFIX_SIG_SINT32 'i'
+#define INFIX_SIG_UINT32 'j'
+#define INFIX_SIG_LONG 'l'
+#define INFIX_SIG_ULONG 'm'
+#define INFIX_SIG_SINT64 'x'
+#define INFIX_SIG_UINT64 'y'
+#define INFIX_SIG_SINT128 'n'
+#define INFIX_SIG_UINT128 'o'
+#define INFIX_SIG_FLOAT 'f'
+#define INFIX_SIG_DOUBLE 'd'
+#define INFIX_SIG_LONG_DOUBLE 'e'
 
 // Type Modifiers and Constructs
-#define FFI_SIG_POINTER '*'
-#define FFI_SIG_STRUCT_START '{'
-#define FFI_SIG_STRUCT_END '}'
-#define FFI_SIG_UNION_START '<'
-#define FFI_SIG_UNION_END '>'
-#define FFI_SIG_ARRAY_START '['
-#define FFI_SIG_ARRAY_END ']'
-#define FFI_SIG_PACKED_STRUCT 'p'
-#define FFI_SIG_FUNC_PTR_START '('
-#define FFI_SIG_FUNC_PTR_END ')'
+#define INFIX_SIG_POINTER '*'
+#define INFIX_SIG_STRUCT_START '{'
+#define INFIX_SIG_STRUCT_END '}'
+#define INFIX_SIG_UNION_START '<'
+#define INFIX_SIG_UNION_END '>'
+#define INFIX_SIG_ARRAY_START '['
+#define INFIX_SIG_ARRAY_END ']'
+#define INFIX_SIG_PACKED_STRUCT 'p'
+#define INFIX_SIG_FUNC_PTR_START '('
+#define INFIX_SIG_FUNC_PTR_END ')'
 
 // Delimiters
-#define FFI_SIG_MEMBER_SEPARATOR ','
-#define FFI_SIG_VARIADIC_SEPARATOR ';'
-#define FFI_SIG_OFFSET_SEPARATOR '@'
-#define FFI_SIG_NAME_SEPARATOR ':'
-#define FFI_SIG_RETURN_SEPARATOR "=>"
+#define INFIX_SIG_MEMBER_SEPARATOR ','
+#define INFIX_SIG_VARIADIC_SEPARATOR ';'
+#define INFIX_SIG_OFFSET_SEPARATOR '@'
+#define INFIX_SIG_NAME_SEPARATOR ':'
+#define INFIX_SIG_RETURN_SEPARATOR "=>"
 
 /** @} */  // End of signature_specifiers group
 
@@ -872,9 +845,9 @@ c23_nodiscard ffi_status ffi_type_from_signature(ffi_type **, arena_t **, const 
  *          arena allocations.
  *
  * @param initial_size The total number of bytes to pre-allocate for the arena.
- * @return A pointer to the new `arena_t`, or `nullptr` if the initial allocation fails.
+ * @return A pointer to the new `infix_arena_t`, or `nullptr` if the initial allocation fails.
  */
-c23_nodiscard arena_t * arena_create(size_t);
+c23_nodiscard infix_arena_t * infix_arena_create(size_t);
 
 /**
  * @brief Frees an entire memory arena and all objects allocated within it.
@@ -883,7 +856,7 @@ c23_nodiscard arena_t * arena_create(size_t);
  *
  * @param arena The arena to destroy. Can be `nullptr` (no-op).
  */
-void arena_destroy(arena_t *);
+void infix_arena_destroy(infix_arena_t *);
 
 /**
  * @brief Allocates a block of memory from the arena with a specific alignment.
@@ -897,11 +870,11 @@ void arena_destroy(arena_t *);
  * @return A pointer to the allocated memory, or `nullptr` if the arena is full or
  *         an invalid argument is provided.
  */
-c23_nodiscard void * arena_alloc(arena_t *, size_t, size_t);
+c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t);
 
 /**
  * @brief Allocates a zero-initialized block of memory from the arena.
- * @details A convenience wrapper around `arena_alloc` that also sets the memory
+ * @details A convenience wrapper around `infix_arena_alloc` that also sets the memory
  *          to zero, similar to `calloc`.
  *
  * @param arena The arena to allocate from.
@@ -910,4 +883,4 @@ c23_nodiscard void * arena_alloc(arena_t *, size_t, size_t);
  * @param alignment The required alignment of the returned pointer.
  * @return A pointer to the zero-initialized memory, or `nullptr` on failure.
  */
-c23_nodiscard void * arena_calloc(arena_t *, size_t, size_t, size_t);
+c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t);

@@ -33,40 +33,40 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 #include <math.h>
 
 /** @brief Handler for Point(Point) signature. Doubles the coordinates. */
-Point point_callback_handler(ffi_reverse_trampoline_t * context, Point p) {
+Point point_callback_handler(infix_context_t * context, Point p) {
     (void)context;
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     return (Point){p.x * 2.0, p.y * 2.0};
 }
 
 /** @brief Handler for int(LargeStruct) signature. Processes a large struct. */
-int large_struct_pass_handler(ffi_reverse_trampoline_t * context, LargeStruct s) {
+int large_struct_pass_handler(infix_context_t * context, LargeStruct s) {
     (void)context;
     note("large_struct_pass_handler received s.a=%d, s.f=%d", s.a, s.f);
     return s.a - s.f;
 }
 
 /** @brief Handler for LargeStruct(int) signature. Returns a large struct. */
-LargeStruct large_struct_return_handler(ffi_reverse_trampoline_t * context, int a) {
+LargeStruct large_struct_return_handler(infix_context_t * context, int a) {
     (void)context;
     note("large_struct_return_handler called with a=%d", a);
     return (LargeStruct){a, a + 1, a + 2, a + 3, a + 4, a + 5};
 }
 
 /** @brief Handler for int(Vector4) signature. Sums the vector elements. */
-int vector4_callback_handler(ffi_reverse_trampoline_t * context, Vector4 v) {
+int vector4_callback_handler(infix_context_t * context, Vector4 v) {
     (void)context;
     return (int)(v.v[0] + v.v[1] + v.v[2] + v.v[3]);
 }
 
 /** @brief Handler for Number(float) signature. Returns a union. */
-Number number_union_return_handler(ffi_reverse_trampoline_t * context, float f) {
+Number number_union_return_handler(infix_context_t * context, float f) {
     (void)context;
     Number n;
     n.f = f * 10.0f;
@@ -106,175 +106,189 @@ TEST {
 
     subtest("Callback with small struct: Point(Point)") {
         plan(3);
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 2);
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         members[0] =
-            ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
+            infix_struct_member_create("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         members[1] =
-            ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
-        ffi_type * point_type = NULL;
+            infix_struct_member_create("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+        infix_type * point_type = NULL;
 
-        ffi_status status = ffi_type_create_struct(&point_type, members, 2);
-        if (!ok(status == FFI_SUCCESS, "Point ffi_type created")) {
+        infix_status status = infix_type_create_struct(arena, &point_type, members, 2);
+        if (!ok(status == INFIX_SUCCESS, "Point infix_type created")) {
             skip(2, "Test skipped");
-            infix_free(members);
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_reverse_trampoline_t * rt = NULL;
-        status = generate_reverse_trampoline(&rt, point_type, &point_type, 1, 1, (void *)point_callback_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline created");
+        infix_reverse_t * rt = NULL;
+        status = infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)point_callback_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_point_callback((Point(*)(Point))ffi_reverse_trampoline_get_code(rt), (Point){10.0, -5.0});
+            execute_point_callback((Point(*)(Point))infix_reverse_get_code(rt), (Point){10.0, -5.0});
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(rt);
-        ffi_type_destroy(point_type);
+        infix_reverse_destroy(rt);
+        infix_arena_destroy(arena);
     }
 
     subtest("Callback with large struct argument: int(LargeStruct)") {
         plan(3);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 6);
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         for (int i = 0; i < 6; ++i)
             members[i] =
-                ffi_struct_member_create(NULL, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), sizeof(int) * i);
-        ffi_type * large_struct_type = NULL;
+                infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
+        infix_type * large_struct_type = NULL;
 
-        ffi_status status = ffi_type_create_struct(&large_struct_type, members, 6);
-        if (!ok(status == FFI_SUCCESS, "LargeStruct ffi_type created")) {
+        infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
+        if (!ok(status == INFIX_SUCCESS, "LargeStruct infix_type created")) {
             skip(2, "Test skipped");
-            infix_free(members);
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_reverse_trampoline_t * rt = NULL;
-        status = generate_reverse_trampoline(
+        infix_reverse_t * rt = NULL;
+        status = infix_reverse_create_manual(
             &rt, ret_type, &large_struct_type, 1, 1, (void *)large_struct_pass_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline created");
+        ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_large_struct_pass_callback((int (*)(LargeStruct))ffi_reverse_trampoline_get_code(rt),
+            execute_large_struct_pass_callback((int (*)(LargeStruct))infix_reverse_get_code(rt),
                                                (LargeStruct){100, 0, 0, 0, 0, 25});
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(rt);
-        ffi_type_destroy(large_struct_type);
+        infix_reverse_destroy(rt);
+        infix_arena_destroy(arena);
     }
 
     subtest("Callback returning large struct: LargeStruct(int)") {
         plan(3);
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 6);
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         for (int i = 0; i < 6; ++i)
             members[i] =
-                ffi_struct_member_create(NULL, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), sizeof(int) * i);
-        ffi_type * large_struct_type = NULL;
+                infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
+        infix_type * large_struct_type = NULL;
 
-        ffi_status status = ffi_type_create_struct(&large_struct_type, members, 6);
-        if (!ok(status == FFI_SUCCESS, "LargeStruct ffi_type created")) {
+        infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
+        if (!ok(status == INFIX_SUCCESS, "LargeStruct infix_type created")) {
             skip(2, "Test skipped");
-            infix_free(members);
+            infix_arena_destroy(arena);
             return;
         }
-        ffi_type * arg_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
+        infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
 
-        ffi_reverse_trampoline_t * rt = NULL;
-        status = generate_reverse_trampoline(
+        infix_reverse_t * rt = NULL;
+        status = infix_reverse_create_manual(
             &rt, large_struct_type, &arg_type, 1, 1, (void *)large_struct_return_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline created");
+        ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_large_struct_return_callback((LargeStruct(*)(int))ffi_reverse_trampoline_get_code(rt), 50);
+            execute_large_struct_return_callback((LargeStruct(*)(int))infix_reverse_get_code(rt), 50);
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(rt);
-        ffi_type_destroy(large_struct_type);
+        infix_reverse_destroy(rt);
+        infix_arena_destroy(arena);
     }
 
     subtest("Callback with struct containing array: int(Vector4)") {
         plan(4);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_type * array_type = NULL;
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_type * array_type = NULL;
 
-        ffi_status status = ffi_type_create_array(&array_type, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT), 4);
-        if (!ok(status == FFI_SUCCESS, "Array ffi_type created")) {
+        infix_status status =
+            infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 4);
+        if (!ok(status == INFIX_SUCCESS, "Array infix_type created")) {
             skip(3, "Test skipped");
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member));
-        members[0] = ffi_struct_member_create("v", array_type, offsetof(Vector4, v));
-        ffi_type * struct_type = NULL;
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
+        members[0] = infix_struct_member_create("v", array_type, offsetof(Vector4, v));
+        infix_type * struct_type = NULL;
 
-        status = ffi_type_create_struct(&struct_type, members, 1);
-        if (!ok(status == FFI_SUCCESS, "Vector4 ffi_type created")) {
+        status = infix_type_create_struct(arena, &struct_type, members, 1);
+        if (!ok(status == INFIX_SUCCESS, "Vector4 infix_type created")) {
             skip(2, "Test skipped");
-            ffi_type_destroy(array_type);  // Clean up sub-type
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_reverse_trampoline_t * rt = NULL;
-        status = generate_reverse_trampoline(&rt, ret_type, &struct_type, 1, 1, (void *)vector4_callback_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline created");
+        infix_reverse_t * rt = NULL;
+        status = infix_reverse_create_manual(&rt, ret_type, &struct_type, 1, 1, (void *)vector4_callback_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
             execute_vector4_callback(
-                (int (*)(Vector4))ffi_reverse_trampoline_get_code(rt), (Vector4){{4.0f, 6.0f, 8.0f, 12.0f}}, 30);
+                (int (*)(Vector4))infix_reverse_get_code(rt), (Vector4){{4.0f, 6.0f, 8.0f, 12.0f}}, 30);
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(rt);
-        ffi_type_destroy(struct_type);
+        infix_reverse_destroy(rt);
+        infix_arena_destroy(arena);
     }
 
     subtest("Callback returning union: Number(float)") {
         plan(3);
-        ffi_struct_member * members = infix_malloc(sizeof(ffi_struct_member) * 2);
-        members[0] = ffi_struct_member_create("i", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), 0);
-        members[1] = ffi_struct_member_create("f", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT), 0);
-        ffi_type * union_type = NULL;
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
+        members[0] = infix_struct_member_create("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0);
+        members[1] = infix_struct_member_create("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 0);
+        infix_type * union_type = NULL;
 
-        ffi_status status = ffi_type_create_union(&union_type, members, 2);
-        if (!ok(status == FFI_SUCCESS, "Number union ffi_type created")) {
+        infix_status status = infix_type_create_union(arena, &union_type, members, 2);
+        if (!ok(status == INFIX_SUCCESS, "Number union infix_type created")) {
             skip(2, "Test skipped");
-            infix_free(members);
+            infix_arena_destroy(arena);
             return;
         }
-        ffi_type * arg_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT);
+        infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
 
-        ffi_reverse_trampoline_t * rt = NULL;
+        infix_reverse_t * rt = NULL;
         status =
-            generate_reverse_trampoline(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline created");
+            infix_reverse_create_manual(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
-            execute_number_union_return_callback((Number(*)(float))ffi_reverse_trampoline_get_code(rt), 3.14f);
+            execute_number_union_return_callback((Number(*)(float))infix_reverse_get_code(rt), 3.14f);
         else
             skip(1, "Test skipped");
 
-        ffi_reverse_trampoline_free(rt);
-        ffi_type_destroy(union_type);
+        infix_reverse_destroy(rt);
+        infix_arena_destroy(arena);
     }
 
     subtest("Packed struct") {
         plan(5);
+        infix_arena_t * arena = infix_arena_create(4096);
 
-        ffi_struct_member * members = infix_malloc(2 * sizeof(ffi_struct_member));
-        members[0] = ffi_struct_member_create(
-            "a", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8), offsetof(PackedStruct, a));
-        members[1] = ffi_struct_member_create(
-            "b", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64), offsetof(PackedStruct, b));
+        infix_struct_member * members =
+            infix_arena_alloc(arena, 2 * sizeof(infix_struct_member), _Alignof(infix_struct_member));
+        members[0] = infix_struct_member_create(
+            "a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(PackedStruct, a));
+        members[1] = infix_struct_member_create(
+            "b", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), offsetof(PackedStruct, b));
 
-        ffi_type * packed_type = NULL;
-        ffi_status status =
-            ffi_type_create_packed_struct(&packed_type, sizeof(PackedStruct), _Alignof(PackedStruct), members, 2);
+        infix_type * packed_type = NULL;
+        infix_status status = infix_type_create_packed_struct(
+            arena, &packed_type, sizeof(PackedStruct), _Alignof(PackedStruct), members, 2);
 
-        if (!ok(status == FFI_SUCCESS, "Packed struct ffi_type created")) {
+        if (!ok(status == INFIX_SUCCESS, "Packed struct infix_type created")) {
             skip(4, "Test skipped");
-            infix_free(members);
+            infix_arena_destroy(arena);
             return;
         }
 
@@ -282,11 +296,11 @@ TEST {
         ok(packed_type->alignment == 1, "Packed struct alignment should be 1 byte.");
 
         // Action: Generate and call the trampoline
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_trampoline_t * trampoline = NULL;
-        status = generate_forward_trampoline(&trampoline, ret_type, &packed_type, 1, 1);
-        ok(status == FFI_SUCCESS, "Successfully generated trampoline for packed struct.");
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_forward_t * trampoline = NULL;
+        status = infix_forward_create_manual(&trampoline, ret_type, &packed_type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Successfully generated trampoline for packed struct.");
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
         PackedStruct arg_struct = {'X', 0xDEADBEEFCAFEBABE};
         int result = 0;
@@ -298,7 +312,7 @@ TEST {
         ok(result == 42, "Packed struct was passed and processed correctly.");
 
         // Teardown
-        ffi_trampoline_free(trampoline);
-        ffi_type_destroy(packed_type);
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
     }
 }

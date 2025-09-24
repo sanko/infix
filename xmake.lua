@@ -20,11 +20,11 @@ target("infix")
     set_kind("static")
     -- Only compile the top-level core files. The unity build in trampoline.c
     -- will include the correct arch-specific .c files.
-    add_files("src/core/*.c")
+    add_files("src/infix.c")
     -- Expose only the public 'include' directory to consumers of this library
     add_includedirs("include", {public = true})
     -- Be noisy
---~     add_defines("FFI_DEBUG_ENABLED=1")
+--~     add_defines("INFIX_DEBUG_ENABLED=1")
 
 -- Define the test targets.
 for _, test_file in ipairs(os.files("t/**/*.c")) do
@@ -35,7 +35,7 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         set_default(false)
 
         add_files(test_file)
-        add_defines("FFI_DEBUG_ENABLED=1")
+        add_defines("INFIX_DEBUG_ENABLED=1")
 
         -- Add dependencies for the special regression test case
         if test_file:endswith("850_regression_cases.c") then
@@ -49,7 +49,7 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         add_deps("infix")
         set_targetdir("bin")
 
-        add_includedirs("t/include", "third_party/double_tap")
+        add_includedirs("t/include")
         add_defines("DBLTAP_ENABLE=1")
         add_tests(target_name)
 

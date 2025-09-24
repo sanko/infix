@@ -1,3 +1,4 @@
+
 # infix FFI: Internals Documentation
 
 This document provides a deep dive into the architecture and internal workings of `infix`. It's a little disorganized but is intended for maintainers and developers looking to contribute or understand the library's design philosophy.
@@ -18,55 +19,55 @@ The library can be broken down into five main layers:
 1.  **Public API Layer (`infix.h`, `signature.c`)**: The user-facing interface, providing both a high-level Signature API and a low-level Core API.
 2.  **Type System (`types.c`)**: Describes the data types used in function signatures.
 3.  **Executable Memory Manager (`executor.c`)**: Handles the allocation and protection of memory for JIT-compiled code.
-4.  **ABI Abstraction Layer (`ffi_forward_abi_spec`, `ffi_reverse_abi_spec`)**: A pair of v-table interfaces that define how to handle a specific calling convention.
+4.  **ABI Abstraction Layer (`infix_forward_abi_spec`, `infix_reverse_abi_spec`)**: A pair of v-table interfaces that define how to handle a specific calling convention.
 5.  **Trampoline Generator (`trampoline.c`)**: The core engine that uses the other layers to build the final machine code.
 
 ### 1. API Layers: Core vs. Signature
 
 `infix` provides two distinct APIs for creating trampolines. Understanding their trade-offs is key to using the library effectively.
 
-#### The Core API (`ffi_type_create_*`, `generate_forward_trampoline`)
+#### The Core API (`infix_type_create_*`, `infix_forward_create_manual`)
 
-This is the foundational, low-level API. It offers maximum power and flexibility at the cost of verbosity.
+This is the foundational, low-level API. It offers maximum power and flexibility and is designed for performance-critical applications or dynamic environments where type information is not known until runtime.
 
-*   **Purpose**: To programmatically construct C types at runtime. This is essential for dynamic environments where type information is not known until the program is running (e.g., a language binding introspecting a C header file).
-*   **Mechanism**: The user acts as a "builder," creating `ffi_type` objects for primitives and composing them into more complex aggregates like structs, unions, and arrays.
-*   **Memory Management**: The user is responsible for managing the lifecycle of dynamically created `ffi_type` objects. Any type created with `ffi_type_create_struct`, `_union`, or `_array` must be explicitly freed with `ffi_type_destroy`.
+*   **Purpose**: To programmatically construct C types at runtime. This is essential for language bindings that introspect C headers or for dynamically marshalling data.
+*   **Mechanism**: The user acts as a "builder," creating `infix_type` objects for primitives and composing them into more complex aggregates like structs, unions, and arrays.
+*   **Memory Management**: **Exclusively Arena-Based**. To eliminate a major class of memory management bugs, the Manual API *requires* an `infix_arena_t*`. All `infix_type` objects created for a given task are allocated from this arena. The user is responsible for calling `infix_arena_destroy` once to free all associated memory. The old, error-prone `infix_type_destroy` function is no longer part of the public API.
 
 **Core API Example: Describing a Packed Struct**
+
 ```c
 #pragma pack(push, 1)
-typedef struct { uint16_t id; char name[10]; uint32_t flags; } PackedData;
+typedef struct { uint16_t id; char name; uint32_t flags; } PackedData;
 #pragma pack(pop)
 
 // To describe this with the Core API:
-ffi_type* create_packed_data_type() {
-    // 1. Create the inner array type first.
-    ffi_type* char_array_type = NULL;
-    // NOTE: Core API uses ownership transfer. The primitive type is "consumed".
-    ffi_type_create_array(&char_array_type, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT8), 10);
+infix_type* create_packed_data_type(infix_arena_t* arena) {
+    // 1. Create the inner array type first, from the arena.
+    infix_type* char_array_type = NULL;
+    infix_type_create_array(arena, &char_array_type, infix_type_create_primitive(INFIX_PRIMITIVE_UINT8), 10);
 
-    // 2. Create the list of members.
-    ffi_struct_member* members = malloc(sizeof(ffi_struct_member) * 3);
-    members[0] = ffi_struct_member_create(NULL, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT16), offsetof(PackedData, id));
-    members[1] = ffi_struct_member_create(NULL, char_array_type, offsetof(PackedData, name));
-    members[2] = ffi_struct_member_create(NULL, ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32), offsetof(PackedData, flags));
+    // 2. Allocate the list of members from the arena.
+    infix_struct_member* members = infix_arena_alloc(arena, sizeof(infix_struct_member) * 3, _Alignof(infix_struct_member));
+    members = infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT16), offsetof(PackedData, id));
+    members = infix_struct_member_create(NULL, char_array_type, offsetof(PackedData, name));
+    members = infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT32), offsetof(PackedData, flags));
 
-    // 3. Create the final packed struct type, providing layout metadata from the C compiler.
-    ffi_type* packed_type = NULL;
-    ffi_type_create_packed_struct(&packed_type, sizeof(PackedData), _Alignof(PackedData), members, 3);
+    // 3. Create the final packed struct type, also from the arena.
+    infix_type* packed_type = NULL;
+    infix_type_create_packed_struct(arena, &packed_type, sizeof(PackedData), _Alignof(PackedData), members, 3);
 
-    return packed_type; // The caller is now responsible for calling ffi_type_destroy() on this.
+    return packed_type; // This pointer is valid only for the lifetime of the arena.
 }
 ```
 
-#### The Signature API (`ffi_create_*_from_signature`)
+#### The Signature API (`infix_forward_create`, `infix_reverse_create`)
 
 This is the high-level API, designed for convenience, readability, and safety. It is the recommended choice for over 99% of use cases.
 
 *   **Purpose**: To create trampolines from a concise, declarative string when the C function's signature is known at compile-time or can be determined from configuration.
-*   **Mechanism**: It uses a self-contained mini-language to describe C types. The `ffi_signature_parse` and `ffi_type_from_signature` functions implement a recursive-descent parser that translates this string into the required `ffi_type` object graph.
-*   **Memory Management**: **Automatic**. The parser allocates all necessary `ffi_type` objects from a temporary arena. The high-level `ffi_create_*_from_signature` functions create this arena, use it to generate the trampoline, and then immediately destroy the arena, freeing all the blueprint objects. The user never has to call `ffi_type_destroy`.
+*   **Mechanism**: It uses a self-contained mini-language to describe C types. The `infix_signature_parse` and `infix_type_from_signature` functions implement a recursive-descent parser that translates this string into the required `infix_type` object graph.
+*   **Memory Management**: **Automatic**. The parser allocates all necessary `infix_type` objects from a temporary internal arena. The high-level `infix_forward_create` and `infix_reverse_create` functions create this arena, use it to generate the trampoline, and then immediately destroy the arena, freeing all the blueprint objects. The user never has to manage `infix_type` memory.
 
 **Signature API Example: Describing the Same Packed Struct**
 ```c
@@ -75,16 +76,16 @@ This is the high-level API, designed for convenience, readability, and safety. I
 
 // To describe the same struct with the Signature API:
 char* create_packed_data_signature() {
-    static char signature[128];
+    static char signature;
     // Note the primitive codes: t=ushort, c=char, j=uint
-    snprintf(signature, sizeof(signature), "p(%zu,%zu){t@%zu,[10]c@%zu,j@%zu}",
+    snprintf(signature, sizeof(signature), "p(%zu,%zu){t@%zu,c@%zu,j@%zu}",
              sizeof(PackedData), _Alignof(PackedData),
              offsetof(PackedData, id), offsetof(PackedData, name), offsetof(PackedData, flags));
     return signature;
 }
 
 // A trampoline can then be created in one line for a function taking a pointer to it:
-// ffi_create_forward_trampoline_from_signature(&t, strcat(create_packed_data_signature(), "*=>y"));
+// infix_forward_create(&t, strcat(create_packed_data_signature(), "*=>y"));
 ```
 The comparison clearly shows that the Signature API is far more productive and less error-prone for any signature that can be expressed as a string.
 
@@ -94,6 +95,7 @@ This component is the engine behind the Signature API.
 
 *   **Strategy**: It uses a recursive-descent approach. The main entry point, `parse_type`, acts as a dispatcher based on the current character in the signature string (e.g., `[` calls `parse_array`, `{` calls `parse_aggregate`). This allows for natural handling of complex nested types.
 *   **Named Fields**: The aggregate parsers use a lookahead technique to distinguish between an unnamed type (`{i,d}`) and a named field (`{id:i,val:d}`). It tentatively parses an identifier, then peeks at the next character. If it's a colon (`:`), it's a named field; otherwise, it rewinds and parses the identifier as part of a type.
+*   **Function Pointer Parsing**: When the parser encounters a function pointer signature like `(i=>v)`, it performs a recursive parse. It isolates the inner signature string (`i=>v`) and calls the main `infix_signature_parse` function on that substring. The result is a detailed `infix_type` of category `INFIX_TYPE_REVERSE_TRAMPOLINE`, which contains the full type information for the function pointer's arguments and return value. For ABI purposes, this `infix_type` still has the size and alignment of a standard `void*`.
 
 #### Parser Error Handling and Security
 The parser is a primary attack surface and is hardened accordingly.
@@ -102,11 +104,11 @@ The parser is a primary attack surface and is hardened accordingly.
 
 ### 3. The Type System (`types.c`)
 
-The `ffi_type` struct is the cornerstone of the library. It provides the generator with the metadata (size, alignment, and composition) needed to correctly handle arguments and return values.
+The `infix_type` struct is the cornerstone of the library. It provides the generator with the metadata (size, alignment, and composition) needed to correctly handle arguments and return values.
 
-*   **Static vs. Dynamic Types**: Primitives (`int`, `float`, `void*`) are represented by static, singleton `ffi_type` instances to avoid allocations. Complex types (structs, unions, arrays) are dynamically allocated and must be freed with `ffi_type_destroy`.
+*   **Static vs. Dynamic Types**: Primitives (`int`, `float`, `void*`) are represented by static, singleton `infix_type` instances to avoid allocations. Complex types (structs, unions, arrays) are dynamically allocated from an arena and must not be freed individually.
 *   **Compiler-Specific Nuances**: The type system is aware of compiler-specific type aliases. For example, it knows that `long double` on MSVC and Clang for Windows is an 8-byte alias for `double`, and returns the canonical `double` type to ensure correct ABI classification.
-*   **Security**: The type creation functions (`ffi_type_create_struct`, etc.) contain explicit checks to prevent integer overflows. They also follow a strict ownership model: if a creation function fails, the caller retains ownership of all pointers passed in and is responsible for freeing them.
+*   **Security**: The type creation functions (`infix_type_create_struct`, etc.) contain explicit checks to prevent integer overflows.
 
 ### 4. Executable Memory Management and Security (`executor.c`)
 
@@ -122,7 +124,7 @@ config:
   theme: dark
 ---
 graph
-    A[ffi_executable_alloc] --> B{OS?};
+    A[infix_executable_alloc] --> B{OS?};
     B -->|Windows| C[VirtualAlloc with PAGE_READWRITE];
     B -->|macOS / Termux / OpenBSD| D["mmap with PROT_READ | PROT_WRITE"];
     B -->|Linux / Other BSDs| E[shm_open_anonymous + ftruncate];
@@ -132,7 +134,7 @@ graph
     E --> G[mmap RW view] --> F;
     E --> H[mmap RX view];
 
-    F --> I[ffi_executable_make_executable];
+    F --> I[infix_executable_make_executable];
     I --> J{OS?};
     J -->|Windows| K[VirtualProtect to PAGE_EXECUTE_READ];
     J -->|macOS / Termux / OpenBSD| L["mprotect to PROT_READ | PROT_EXEC"];
@@ -152,21 +154,22 @@ graph
 ```
 
 ##### Guard Pages for Freed Trampolines
-To mitigate use-after-free vulnerabilities, `ffi_executable_free` does not immediately release the memory. Instead, it changes its protection to `PROT_NONE` (no read/write/execute). This turns a subtle vulnerability into a safe, immediate, and obvious crash if a dangling function pointer is ever called.
+To mitigate use-after-free vulnerabilities, `infix_executable_free` does not immediately release the memory. Instead, it changes its protection to `PROT_NONE` (no read/write/execute). This turns a subtle vulnerability into a safe, immediate, and obvious crash if a dangling function pointer is ever called.
 
 ##### Read-Only Callback Contexts
-The `ffi_reverse_trampoline_t` struct contains function pointers that could be targeted by memory corruption attacks. After a callback context is fully initialized, the memory page containing it is made read-only using `mprotect`/`VirtualProtect`.
+The `infix_reverse_t` struct contains function pointers that could be targeted by memory corruption attacks. After a callback context is fully initialized, the memory page containing it is made read-only using `mprotect`/`VirtualProtect`.
 
 ### 5. The ABI Abstraction Layer and Trampoline Generator (`trampoline.c`)
 
-The core of the library's portability is the separation of concerns via two v-table structs: `ffi_forward_abi_spec` and `ffi_reverse_abi_spec`. The `trampoline.c` engine is the consumer of these specs. It orchestrates the entire JIT process, from classifying the signature to emitting the final machine code.
+The core of the library's portability is the separation of concerns via two v-table structs: `infix_forward_abi_spec` and `infix_reverse_abi_spec`. The `trampoline.c` engine is the consumer of these specs. It orchestrates the entire JIT process, from classifying the signature to emitting the final machine code.
 
 #### Trampoline Generation Flow
 
 ##### Forward Call Trampoline
+
 ```mermaid
 graph TD
-    subgraph "Setup Phase (generate_forward_trampoline)"
+    subgraph "Setup Phase (infix_forward_create_manual)"
         A[User calls API] --> B(Get Forward ABI Spec);
         B --> C{prepare_forward_call_frame};
         C --> D[Generate Prologue];
@@ -191,7 +194,7 @@ graph TD
 
 ```mermaid
 graph TD
-    subgraph "Setup Phase: generate_reverse_trampoline()"
+    subgraph "Setup Phase: infix_reverse_create_manual()"
         A[User provides handler & signature] --> B;
         B(Create context struct in protected memory) --> C;
         C[Generate and CACHE a FORWARD trampoline for the user's handler] --> D;
@@ -209,14 +212,24 @@ graph TD
         M[External code calls pointer] --> N[JIT Stub Executes];
         N --> O[Prologue: Set up stack];
         O --> P[Marshal Arguments: Save native args to generic `void**` array on stub's stack];
-        P --> Q["call ffi_internal_dispatch_callback_fn_impl"];
-        Q --> R["C Dispatcher prepares a new arg list with the context* pointer and uses the CACHED forward trampoline to call the user's C handler"];
+        P --> Q["call infix_internal_dispatch_callback_fn_impl"];
+        Q --> R["C Dispatcher prepares a **new arg list** with the context* pointer prepended and uses the CACHED forward trampoline to call the user's C handler"];
         R --> S[Return from user handler];
         S --> T[Unmarshal Return Value: Load value from buffer into native return registers];
         T --> U[Epilogue: Restore stack];
         U --> V[ret to native caller];
     end
 ```
+
+## A Note on the "Unity" Build
+
+`infix` is designed to be built as a single translation unit (a "unity build"). The top-level `src/infix.c` file does not contain logic; it is simply a list of `#include` directives for all the other `.c` files in the `src/core/` directory.
+
+**Why use a unity build?**
+
+1.  **Simplicity of Integration:** It makes compiling the library trivial. A user can simply add `infix.c` and the `include` directory to their project, and it will build without any complex makefiles or build scripts.
+2.  **Potential for Optimization:** Compiling the entire library as a single unit gives the compiler maximum visibility. This can enable more aggressive inlining and interprocedural optimizations, potentially leading to a smaller and faster final library.
+3.  **Encapsulation:** Because all functions can be declared `static` within their respective files (except for the public API), we avoid polluting the global namespace of the final object file. The only symbols exported are the public `infix_*` functions. The `trampoline.c` file is a key part of this, as it includes the ABI-specific `.c` files directly, ensuring their internal functions remain private to the library.
 
 ---
 
@@ -281,22 +294,22 @@ This guide is for library maintainers and advanced contributors who need to debu
 
 Debugging Just-In-Time compiled code can feel like black magic. The code you're stepping through doesn't exist in any source file; it's a raw sequence of bytes in an executable memory page. However, with the right tools and techniques, it's entirely manageable.
 
-This guide covers the two primary methods for inspecting the machine code generated by infix: using the built-in `DumpHex` utility and stepping through the code live with a debugger like GDB or WinDbg.
+This guide covers the two primary methods for inspecting the machine code generated by infix: using the built-in `infix_dump_hex` utility and stepping through the code live with a debugger like GDB or WinDbg.
 
-### Method 1: Static Analysis with `DumpHex`
+### Method 1: Static Analysis with `infix_dump_hex`
 
-The simplest way to see what the JIT is producing is to print it. infix provides a `DumpHex` utility (in `utility.h`) that is enabled in debug builds.
+The simplest way to see what the JIT is producing is to print it. infix provides a `infix_dump_hex` utility (in `utility.h`) that is enabled in debug builds.
 
 After you generate a trampoline, you can access its internal `exec` handle and print the contents of its executable memory region.
 
 ```c
 #include <infix.h>
-#include <utility.h> // Required for DumpHex
+#include <utility.h> // Required for infix_dump_hex
 
 // The handle is opaque in the public API, but for debugging, you can
-// temporarily expose the ffi_trampoline_handle_t struct in infix.h
+// temporarily expose the infix_forward_t struct in infix.h
 if (trampoline) {
-    DumpHex(trampoline->exec.rx_ptr, trampoline->exec.size, "My Trampoline");
+    infix_dump_hex(trampoline->exec.rx_ptr, trampoline->exec.size, "My Trampoline");
 }
 ```
 This will produce a detailed hexdump of the generated machine code, which you can then compare against an instruction set reference for your architecture (e.g., the Intel/AMD developer manuals or the ARM Architecture Reference Manual).
@@ -316,17 +329,17 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
 
 1.  **Get the Address**: Print the address of the executable code right after it's generated.
 
-        ```c
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+       ```c
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         printf("DEBUG: Trampoline generated at address: %p\n", (void*)cif_func);
         fflush(stdout);
-        ```
+       ```
 
 2.  **Run Under GDB**: `gdb ./my_test_executable`
 
 3.  **Set Breakpoint**:  Use the address you printed in step 1 to set a breakpoint. The `*` is crucial—it tells GDB to set a breakpoint on the memory address itself, not on a symbol.
 
-        ```gdb
+       ```gdb
         (gdb) run
         # Your program will run and print the address
         DEBUG: Trampoline generated at address: 0x7ffff7fde000
@@ -334,10 +347,10 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
         # Now, set the breakpoint
         (gdb) b *0x7ffff7fde000
         Breakpoint 1 at 0x7ffff7fde000
-        ```
+       ```
 4.  **Trigger and Disassemble**: Run the program. When it breaks, use `disassemble` to view the JIT code.
 
-        ```gdb
+       ```gdb
         # After the cif_func() is called in your C code...
         Breakpoint 1, 0x00007ffff7fde000 in ?? ()
         (gdb) disassemble
@@ -347,18 +360,18 @@ Let's say you've found a failure that you think is a bug in infix itself. Let's 
            0x00007ffff7fde004:  push   %r12
            ...
         End of assembler dump.
-        ```
+       ```
 
 5.  **Step and Verify**: Use `stepi` (step instruction) and `info registers` to walk through the code and check register values before the `call` instruction. At that point, all the argument registers (`rdi`, `rsi`, `xmm0`, etc.) should contain the correct values you passed in.
 
-        ```gdb
+       ```gdb
         (gdb) # ... stepi until you are right before the call ...
         (gdb) info registers rdi rsi
         rdi            0x2a          42
         rsi            0x64          100
         # If the values here are correct, your trampoline code is likely correct.
         # If they are wrong, you can step backward to see where the wrong value was loaded.
-        ```
+       ```
 
 ### Method 3: Live Debugging with WinDbg (Windows)
 
@@ -370,17 +383,17 @@ The process on Windows is conceptually identical but uses different commands (`b
 
 3.  **Set a Breakpoint**: Use the `bp` command.
 
-        ```
+       ```
         0:000> g ; Go until the address is printed
         DEBUG: Trampoline generated at address: 0x1ff0a70000
         0:000> bp 0x1ff0a70000
-        ```
+       ```
 
 4.  **Trigger the Trampoline**: Let the program continue with `g`. It will break at your JIT code's entry point.
 
 5.  **Unassemble and Inspect**: Use `u` (unassemble) to view the code and `r` (registers) to view the CPU state.
 
-        ```
+       ```
         0:000> u .
         my_failing_test!0x1ff0a70000:
         000001ff`0a700000 55              push    rbp
@@ -388,7 +401,7 @@ The process on Windows is conceptually identical but uses different commands (`b
         ...
         0:000> r
         rax=... rcx=... rdx=...
-        ```
+       ```
 
 6.  **Step**: Use `t` (trace) to step through one instruction at a time. Check the argument registers (`rcx`, `rdx`, `r8`, `r9`, `xmm0-3`) right before the final `call` instruction.
 
@@ -410,47 +423,47 @@ The current `infix` implementations are based on the official ABI documents for 
 
 ### A Cross-Language Type Reference
 
-Getting the types right is the most critical part of FFI. A mismatch between the `ffi_type` you describe and the actual type used by the library function can lead to stack corruption, crashes, or silent data corruption.
+Getting the types right is the most critical part of FFI. A mismatch between the `infix_type` you describe and the actual type used by the library function can lead to stack corruption, crashes, or silent data corruption.
 
 **The Golden Rule**: Always use explicit, fixed-width types when possible. `<stdint.h>` in C is your best friend. Relying on types like `long` is risky, as it can be 32-bit on some 64-bit platforms (like Windows) and 64-bit on others (like Linux).
 
 The following table maps infix's primitive type enums to their corresponding types in C and other common languages.
 
-| infix `ffi_primitive_type_id`    | C (`<stdint.h>`) | C++         | Rust                | Go (`import "C"`)  | Swift       | Zig         | Fortran (`iso_c_binding`) |
+| infix `infix_primitive_type_id`    | C (`<stdint.h>`) | C++         | Rust                | Go (`import "C"`)  | Swift       | Zig         | Fortran (`iso_c_binding`) |
 | -------------------------------- | ---------------- | ----------- | ------------------- | ------------------ | ----------- | ----------- | ------------------------- |
-| `FFI_PRIMITIVE_TYPE_BOOL`        | `_Bool`          | `bool`      | `bool`              | `C.bool`           | `CBool`     | `bool`      | `logical(c_bool)`         |
-| `FFI_PRIMITIVE_TYPE_SINT8`       | `int8_t`         | `int8_t`    | `i8`                | `C.schar`          | `CChar`     | `i8`        | `integer(c_signed_char)`  |
-| `FFI_PRIMITIVE_TYPE_UINT8`       | `uint8_t`        | `uint8_t`   | `u8`                | `C.uchar`          | `CUnsignedChar` | `u8`      | `integer(c_char)`         |
-| `FFI_PRIMITIVE_TYPE_SINT16`      | `int16_t`        | `int16_t`   | `i16`               | `C.short`          | `CShort`    | `i16`       | `integer(c_short)`        |
-| `FFI_PRIMITIVE_TYPE_UINT16`      | `uint16_t`       | `uint16_t`  | `u16`               | `C.ushort`         | `CUnsignedShort` | `u16`     | `integer(c_unsigned_short)` |
-| `FFI_PRIMITIVE_TYPE_SINT32`      | `int32_t`        | `int32_t`   | `i32`               | `C.int`            | `CInt`      | `i32`       | `integer(c_int)`          |
-| `FFI_PRIMITIVE_TYPE_UINT32`      | `uint32_t`       | `uint32_t`  | `u32`               | `C.uint`           | `CUnsignedInt` | `u32`     | `integer(c_unsigned_int)` |
-| `FFI_PRIMITIVE_TYPE_SINT64`      | `int64_t`        | `int64_t`   | `i64`               | `C.longlong`       | `CLongLong` | `i64`       | `integer(c_long_long)`    |
-| `FFI_PRIMITIVE_TYPE_UINT64`      | `uint64_t`       | `uint64_t`  | `u64`               | `C.ulonglong`      | `CUnsignedLongLong` | `u64`   | `integer(c_unsigned_long_long)` |
-| `FFI_PRIMITIVE_TYPE_SINT128`Â¹    | `__int128_t`     | `__int128_t`| `i128`              | **N/A**            | **N/A**     | `i128`      | **N/A**                   |
-| `FFI_PRIMITIVE_TYPE_UINT128`Â¹    | `__uint128_t`    | `__uint128_t`| `u128`             | **N/A**            | **N/A**     | `u128`      | **N/A**                   |
-| `FFI_PRIMITIVE_TYPE_FLOAT`       | `float`          | `float`     | `f32`               | `C.float`          | `CFloat`    | `f32`       | `real(c_float)`           |
-| `FFI_PRIMITIVE_TYPE_DOUBLE`      | `double`         | `double`    | `f64`               | `C.double`         | `CDouble`   | `f64`       | `real(c_double)`          |
-| `FFI_PRIMITIVE_TYPE_LONG_DOUBLE`Â²| `long double`    | `long double`| **N/A**            | `C.longdouble`     | `CLongDouble` | `f80`/`f128`| `real(c_long_double)`     |
+| `INFIX_PRIMITIVE_BOOL`        | `_Bool`          | `bool`      | `bool`              | `C.bool`           | `CBool`     | `bool`      | `logical(c_bool)`         |
+| `INFIX_PRIMITIVE_SINT8`       | `int8_t`         | `int8_t`    | `i8`                | `C.schar`          | `CChar`     | `i8`        | `integer(c_signed_char)`  |
+| `INFIX_PRIMITIVE_UINT8`       | `uint8_t`        | `uint8_t`   | `u8`                | `C.uchar`          | `CUnsignedChar` | `u8`      | `integer(c_char)`         |
+| `INFIX_PRIMITIVE_SINT16`      | `int16_t`        | `int16_t`   | `i16`               | `C.short`          | `CShort`    | `i16`       | `integer(c_short)`        |
+| `INFIX_PRIMITIVE_UINT16`      | `uint16_t`       | `uint16_t`  | `u16`               | `C.ushort`         | `CUnsignedShort` | `u16`     | `integer(c_unsigned_short)` |
+| `INFIX_PRIMITIVE_SINT32`      | `int32_t`        | `int32_t`   | `i32`               | `C.int`            | `CInt`      | `i32`       | `integer(c_int)`          |
+| `INFIX_PRIMITIVE_UINT32`      | `uint32_t`       | `uint32_t`  | `u32`               | `C.uint`           | `CUnsignedInt` | `u32`     | `integer(c_unsigned_int)` |
+| `INFIX_PRIMITIVE_SINT64`      | `int64_t`        | `int64_t`   | `i64`               | `C.longlong`       | `CLongLong` | `i64`       | `integer(c_long_long)`    |
+| `INFIX_PRIMITIVE_UINT64`      | `uint64_t`       | `uint64_t`  | `u64`               | `C.ulonglong`      | `CUnsignedLongLong` | `u64`   | `integer(c_unsigned_long_long)` |
+| `INFIX_PRIMITIVE_SINT128`Â¹    | `__int128_t`     | `__int128_t`| `i128`              | **N/A**            | **N/A**     | `i128`      | **N/A**                   |
+| `INFIX_PRIMITIVE_UINT128`Â¹    | `__uint128_t`    | `__uint128_t`| `u128`             | **N/A**            | **N/A**     | `u128`      | **N/A**                   |
+| `INFIX_PRIMITIVE_FLOAT`       | `float`          | `float`     | `f32`               | `C.float`          | `CFloat`    | `f32`       | `real(c_float)`           |
+| `INFIX_PRIMITIVE_DOUBLE`      | `double`         | `double`    | `f64`               | `C.double`         | `CDouble`   | `f64`       | `real(c_double)`          |
+| `INFIX_PRIMITIVE_LONG_DOUBLE`Â²| `long double`    | `long double`| **N/A**            | `C.longdouble`     | `CLongDouble` | `f80`/`f128`| `real(c_long_double)`     |
 | **Pointer Type**                 | `void*`          | `void*`     | `*mut T` / `*const T` | `unsafe.Pointer` | `UnsafeMutableRawPointer` | `*T` | `type(c_ptr)` |
 
 #### Common Windows Type Definitions
 
 The Windows API uses a large number of `typedef`s for C primitives. This table helps map them to the correct infix types. All types are for 64-bit Windows.
 
-| Windows Type  | Underlying C Type         | Recommended infix `ffi_type`                             | Notes                                                              |
+| Windows Type  | Underlying C Type         | Recommended infix `infix_type`                             | Notes                                                              |
 | ------------- | ------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------ |
-| `HANDLE`      | `void*`                   | `ffi_type_create_pointer()`                              | Base type for most OS objects (files, processes, etc.).            |
-| `HMODULE`     | `HANDLE`                  | `ffi_type_create_pointer()`                              | Handle to a loaded DLL.                                            |
-| `HWND`        | `HANDLE`                  | `ffi_type_create_pointer()`                              | Handle to a window.                                                |
-| `HCALL`       | `HANDLE`                  | `ffi_type_create_pointer()`                              | A generic handle type.                                             |
-| `DWORD`       | `unsigned long` (32-bit)  | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32)`   | A 32-bit unsigned integer.                                         |
-| `UINT`        | `unsigned int` (32-bit)   | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT32)`   | A 32-bit unsigned integer.                                         |
-| `HRESULT`     | `long` (32-bit)           | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)`   | A 32-bit signed integer for success/failure codes.                 |
-| `SIZE_T`      | `unsigned __int64` (64-bit) | `ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64)` | The native unsigned integer for sizes.                             |
-| `LPCSTR`      | `const char*`             | `ffi_type_create_pointer()`                              | Pointer to a null-terminated 8-bit ANSI string.                    |
-| `LPCWSTR`     | `const wchar_t*`          | `ffi_type_create_pointer()`                              | Pointer to a null-terminated 16-bit UTF-16 string.                 |
-| `UINT128`     | `struct { uint64_t, uint64_t }` | `ffi_type` for a struct of two `UINT64`s.                | This is **not** a primitive. It must be described as a struct. |
+| `HANDLE`      | `void*`                   | `infix_type_create_pointer()`                              | Base type for most OS objects (files, processes, etc.).            |
+| `HMODULE`     | `HANDLE`                  | `infix_type_create_pointer()`                              | Handle to a loaded DLL.                                            |
+| `HWND`        | `HANDLE`                  | `infix_type_create_pointer()`                              | Handle to a window.                                                |
+| `HCALL`       | `HANDLE`                  | `infix_type_create_pointer()`                              | A generic handle type.                                             |
+| `DWORD`       | `unsigned long` (32-bit)  | `infix_type_create_primitive(INFIX_PRIMITIVE_UINT32)`   | A 32-bit unsigned integer.                                         |
+| `UINT`        | `unsigned int` (32-bit)   | `infix_type_create_primitive(INFIX_PRIMITIVE_UINT32)`   | A 32-bit unsigned integer.                                         |
+| `HRESULT`     | `long` (32-bit)           | `infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)`   | A 32-bit signed integer for success/failure codes.                 |
+| `SIZE_T`      | `unsigned __int64` (64-bit) | `infix_type_create_primitive(INFIX_PRIMITIVE_UINT64)` | The native unsigned integer for sizes.                             |
+| `LPCSTR`      | `const char*`             | `infix_type_create_pointer()`                              | Pointer to a null-terminated 8-bit ANSI string.                    |
+| `LPCWSTR`     | `const wchar_t*`          | `infix_type_create_pointer()`                              | Pointer to a null-terminated 16-bit UTF-16 string.                 |
+| `UINT128`     | `struct { uint64_t, uint64_t }` | `infix_type` for a struct of two `UINT64`s.                | This is **not** a primitive. It must be described as a struct. |
 
 **Notes & Pitfalls:**
 
@@ -460,8 +473,162 @@ The Windows API uses a large number of `typedef`s for C primitives. This table h
     *   On AArch64 Linux, it's a 128-bit quadruple-precision float.
     *   On Windows (MSVC and Clang), it is simply an alias for `double` (64 bits).
     *   On macOS (x86-64 and AArch64), it is also just an alias for `double`.
-    infix's `ffi_type_create_primitive` correctly aliases it to `DOUBLE` on platforms where they are the same, but you must be certain the library you are calling uses a distinct `long double` type.
-3.  **Variadic `float`**: When you call a variadic C function (one with `...`), any `float` argument is automatically **promoted** to a `double`. You must use `FFI_PRIMITIVE_TYPE_DOUBLE` in your infix type signature for that argument.
+    infix's `infix_type_create_primitive` correctly aliases it to `DOUBLE` on platforms where they are the same, but you must be certain the library you are calling uses a distinct `long double` type.
+3.  **Variadic `float`**: When you call a variadic C function (one with `...`), any `float` argument is automatically **promoted** to a `double`. You must use `INFIX_PRIMITIVE_DOUBLE` in your infix type signature for that argument.
+
+---
+
+## Core Design Philosophy
+
+The architecture of `infix` is not accidental. It is the result of a series of deliberate design choices aimed at balancing performance, security, and developer ergonomics. This section explains the "why" behind some of the most important architectural decisions.
+
+### Guiding Principles
+
+Three high-level principles guide the library's development:
+
+1.  **Security First:** An FFI library, especially one with a JIT engine, is a prime target for security vulnerabilities. We proactively defend against these with a multi-layered approach, including strict W^X memory, hardened integer arithmetic against overflows, guard pages for freed code, and read-only callback contexts. All complex components are subjected to continuous fuzz testing.
+2.  **Performance by Design:** We recognize that FFI overhead must be minimal. The API is intentionally designed to separate the expensive, one-time **generation cost** from the near-zero **call-time cost**. This encourages users to cache trampolines, making the FFI overhead negligible in high-performance applications.
+3.  **Abstraction and Portability:** Platform- and ABI-specific logic is strictly isolated behind a clean internal interface (the "ABI spec" v-tables). This allows the core trampoline engine to remain platform-agnostic, which dramatically simplifies maintenance and makes porting to new architectures a clear, well-defined process.
+
+### API Naming: The `infix_` Prefix
+
+**The Decision:** All public symbols (functions, typedefs, enums, macros) exposed by `infix.h` use the `infix_` or `INFIX_` prefix.
+
+**The Rationale:** This choice is primarily for **safety and responsible ecosystem citizenship**.
+-   **Avoiding Namespace Collisions:** The most popular C FFI library is `libffi`. It is a system-level component on many platforms and is used internally by the runtimes of Python, Ruby, Go, and others. `libffi` uses the `ffi_` prefix for all its symbols (e.g., `ffi_type`, `ffi_prep_cif`). If `infix` also used the `ffi_` prefix, it would create a high risk of name clashes and ODR (One Definition Rule) violations in any project that happened to link against both `infix` and a library that depends on `libffi`. This would lead to subtle, difficult-to-diagnose crashes and stack corruption.
+-   **Clarity and Branding:** Using `infix_` makes the code self-documenting. When a developer sees `infix_forward_create`, they know exactly which library is providing that function. It also enhances discoverability in IDEs with code completion.
+
+**The Trade-off:** The `infix_` prefix is slightly more verbose than a shorter alternative. This is an insignificant cost compared to the enormous benefit of guaranteeing namespace safety.
+
+### Memory Safety by Default: The Arena-Based Manual API
+
+**The Decision:** The low-level, "manual" API for creating `infix_type` objects is **exclusively arena-based**. The old, `malloc`-based functions with their complex ownership semantics have been removed from the public API.
+
+**The Rationale:** The single most dangerous part of a complex C API is manual memory management. The old rule—"the library takes ownership of pointers on success, but the caller owns them on failure"—is a well-known and notorious source of memory leaks and double-frees.
+-   **Eliminating User Error:** By forcing the use of an arena, we eliminate this entire class of bugs. The user's responsibility is simplified to a single pattern: create an arena, perform all type creations, use the types to generate a trampoline, and then destroy the arena. It is no longer possible to leak an individual `infix_type` object.
+-   **Consistency:** This decision makes the manual API's memory model consistent with the high-level Signature API, which already used an arena internally. The entire library now operates on the same, simple memory philosophy.
+-   **Performance:** For creating complex type graphs, arena allocation is significantly faster than repeated calls to `malloc`.
+
+**The Trade-off:** The user must now manage an `infix_arena_t` object. This is a small price to pay for guaranteed memory safety and a simpler API.
+
+### Callbacks: The Power of the Universal Context
+
+**The Decision:** All user-provided C callback handlers **always** receive a pointer to their `infix_reverse_t` (aliased as `infix_context_t`) as their first argument. There is no "stateless" callback mode.
+
+**The Rationale:** This decision prioritizes power and API simplicity over minor syntactic convenience.
+-   **Power by Default:** The context-passing model is a strict superset of a stateless model. It allows every callback to be stateful by default, which is essential for adapting to C libraries that don't provide a `void* user_data` parameter. A stateless handler can be trivially implemented by simply ignoring the context argument.
+-   **API Simplicity and Safety:** Providing a single, consistent pattern for all callbacks is far safer and easier to learn than offering two different modes (`callback` vs. `closure`). A dual API would inevitably lead to users providing the wrong kind of handler for the creation function they called, resulting in guaranteed stack corruption. The universal context pattern eliminates this entire class of bugs.
+-   **Industry Precedent:** This closure-based model is the standard pattern used by all major FFI libraries (`libffi`, `dyncall`, etc.) because it is the only one powerful enough for real-world use cases. `infix`'s choice to pass the context as the *first* argument (rather than last) is a deliberate ergonomic choice that mirrors the `this`/`self` convention in object-oriented programming.
+
+### ABI Dispatch: V-Tables for Cross-Platform Fuzzing
+
+**The Decision:** The core `trampoline.c` engine dispatches to ABI-specific logic via a v-table (a struct of function pointers, `infix_forward_abi_spec`). It does not use `#ifdef` blocks to compile in only one ABI's implementation at a time.
+
+**The Rationale:** While a "true unity build" that uses the preprocessor to select a single implementation of a function like `prepare_forward_call_frame` might seem simpler, it has one massive, deal-breaking drawback: it destroys our ability to easily test all ABIs on a single platform.
+-   **Enabling Cross-Platform Testing:** The v-table design allows us to compile the library on a single Linux machine with the logic for the **Windows x64 ABI**, the **System V AMD64 ABI**, and the **AArch64 ABI** all present in the same binary. Our test suite can then use the `INFIX_FORCE_ABI_*` macros to dynamically select which v-table to use for a given test.
+-   **High-Value Fuzzing:** This means we can run our fuzzers on a Linux CI server and have them continuously test for bugs in the Windows and AArch64 ABI classification and code-generation logic without ever needing to spin up a Windows or ARM build agent. This is an incredibly powerful and efficient way to ensure the entire library is robust and secure across all supported platforms.
+
+**The Trade-off:** This approach adds a single layer of indirection (a function pointer call) in the *trampoline generation* code and makes `trampoline.c` slightly more verbose. This has zero impact on the performance of the final JIT-compiled code and is a tiny price to pay for the massive strategic advantage of comprehensive, multi-platform testing in a single environment.
+
+---
+
+## Design Philosophy: A Stable Public API
+
+A core design goal of `infix` is to provide a stable, clean, and professional public API. A key part of this is the strict separation between the library's **public contract** and its **internal implementation details**.
+
+### Platform Macros: An Internal Affair
+
+In previous versions, the main public header, `infix.h`, contained a large and complex block of preprocessor macros for detecting the operating system, CPU architecture, and compiler (e.g., `INFIX_OS_WINDOWS`, `INFIX_ARCH_X64`).
+
+**This logic has been moved out of the public API and into an internal header, `src/common/infix_config.h`.**
+
+**Rationale:**
+
+1.  **The Public API is a Contract:** The functions and types in `infix.h` are a promise to the user. We guarantee their stability across minor versions. The internal platform-detection macros, however, are an implementation detail. We must reserve the right to change, rename, or refactor them as we discover better detection methods or add new platforms. Exposing them in the public header would effectively make them part of our public contract, making the library brittle and harder to maintain.
+
+2.  **Preventing Tight Coupling:** A user's application should not be dependent on its dependencies' internal logic. If a user needs to write platform-specific code, they should use their own project's detection mechanisms, not piggyback on ours. Forcing them to do so leads to a healthier, more decoupled software ecosystem. For example, a user should never be encouraged to write `#if defined(INFIX_OS_LINUX)` in their own code.
+
+3.  **Minimizing API Surface Area:** A clean public header is easier to read, understand, and use. It should contain only what the consumer of the library needs to know. Hiding hundreds of lines of preprocessor logic makes the API much less intimidating for a new developer.
+
+**For Contributors:**
+
+Library contributors **should** use these internal macros for writing ABI- and platform-specific code. They are made available to all internal `.c` files via the `infix_internals.h` header, which includes `infix_config.h`. The primary macros available are:
+*   **OS:** `INFIX_OS_WINDOWS`, `INFIX_OS_MACOS`, `INFIX_OS_LINUX`, etc.
+*   **Architecture:** `INFIX_ARCH_X64`, `INFIX_ARCH_AARCH64`.
+*   **ABI:** `INFIX_ABI_WINDOWS_X64`, `INFIX_ABI_SYSV_X64`, `INFIX_ABI_AAPCS64`.
+*   **Compiler:** `INFIX_COMPILER_MSVC`, `INFIX_COMPILER_CLANG`, `INFIX_COMPILER_GCC`.
+
+---
+
+## Core Design Philosophy: The JIT Compiler vs. The Call VM
+
+A key architectural choice in `infix` is its use of a Just-in-Time (JIT) compiler to generate trampolines, rather than using a set of pre-compiled assembly stubs, a model often called a "Call VM" or "Interpreter" and used by libraries like `dyncall`. This decision was deliberate and has profound implications for the library's API design, performance characteristics, and intended use cases.
+
+### The Alternative: The Call VM / Interpreter Model (e.g., `dyncall`)
+
+In a Call VM model, the library provides a set of low-level functions to build a function call piece by piece. The process typically looks like this:
+1.  Create a "call virtual machine" object.
+2.  Push arguments one by one (`dcArgInt(...)`, `dcArgDouble(...)`, etc.).
+3.  Execute the call (`dcCallInt(...)`, `dcCallDouble(...)`, etc.).
+4.  Reset the VM so that it's ready for the next call.
+
+**Pros:**
+-   **Simplicity:** The core engine can be smaller and simpler.
+-   **No Executable Memory:** This approach doesn't require allocating memory with `rwx` permissions, which can be an advantage in highly restrictive environments.
+
+**Cons:**
+-   **Per-Call Overhead:** The logic to read the argument list and place values into the correct registers or on the stack is executed **every single time** the function is called. This interpretive overhead can be significant in hot loops.
+-   **The Type System Duplication Problem:** This is the most significant ergonomic drawback. To handle complex types like structs, the user must describe the struct's layout to the FFI library using a series of API calls (e.g., `dcNewAggr`, `dcAggrField`). The user is now forced to maintain **two parallel representations of the same data structure**: the native C `struct` definition in their code, and a description of that `struct` built manually for the FFI library. Keeping these two representations in sync is tedious and a major source of bugs.
+
+### The `infix` Approach: The JIT Compiler Model
+
+`infix` takes a different approach. It uses its `infix_type` system as a **single source of truth**.
+1.  The user describes the *entire* function signature once, either via a signature string or the manual API.
+2.  `infix` analyzes this complete signature and JIT-compiles a tiny, highly-specialized C function—the trampoline—that is purpose-built for that exact signature.
+
+**Pros:**
+-   **Extremely Low Call-Time Overhead:** Once generated, calling an `infix` trampoline is nearly as fast as a direct C function call. All the complex logic for argument placement is compiled into efficient, native machine code. The overhead is paid once, at generation time.
+-   **A Single Source of Truth for Types:** The `infix_type` system is the cornerstone of the entire library. The same `infix_type` graph used to generate the trampoline can also be used for **introspection**. This completely solves the type system duplication problem. A developer can write a single function that takes an `infix_type*` and can use it to:
+    -   Generate a trampoline.
+    -   Dynamically pack data from a scripting language into a C struct buffer.
+    -   Generate a schema for a user interface or a serializer.
+    -   Validate data.
+-   **Ergonomics:** For the end-user, the complexity is hidden behind a single call: `infix_forward_create("i,{d,c*}*=>v", ...)`.
+
+**The Trade-off:** The upfront cost of trampoline generation is higher than a single interpreted call, and it requires allocating executable memory. This makes `infix`'s design philosophy clear: it is optimized for applications where a trampoline is **generated once and called many times**, and for systems that benefit from a **powerful, introspectable type system**.
+
+---
+
+## Code Generation and Emitters
+
+The actual machine code is generated by a set of low-level "emitter" functions, specific to each architecture (e.g., `abi_x64_emitters.c`, `abi_riscv64_emitters.c`).
+
+### Design Philosophy
+
+-   **Encapsulation:** The emitters completely encapsulate the complexity of machine code encoding. The higher-level ABI logic (e.g., `abi_sysv_x64.c`) does not deal with opcodes, ModR/M bytes, or REX prefixes. It thinks in terms of abstract operations like "move this register to memory."
+-   **Clarity:** Emitter function names map directly to the assembly instruction they produce (e.g., `emit_mov_reg_mem` generates `mov r64, [mem]`).
+-   **Safety:** The emitters operate on a `code_buffer` struct, which handles automatic resizing of the memory buffer, preventing buffer overflows during JIT compilation.
+
+**Example: Emitting `mov rax, [rbp - 16]` on x86-64**
+
+```c
+// In the ABI logic (e.g., abi_sysv_x64.c):
+emit_mov_reg_mem(buf, RAX_REG, RBP_REG, -16);
+
+// Inside abi_x64_emitters.c, this function assembles the bytes:
+void emit_mov_reg_mem(code_buffer* buf, x64_gpr dest, x64_gpr src_base, int32_t offset) {
+    // 1. Emit REX prefix for 64-bit operation and extended registers.
+    emit_rex_prefix(buf, 1, dest >= R8_REG, 0, src_base >= R8_REG);
+    // 2. Emit the MOV opcode.
+    emit_byte(buf, 0x8B);
+    // 3. Emit the ModR/M byte to specify the registers and addressing mode.
+    emit_modrm(buf, ...);
+    // 4. Emit the 8-bit or 32-bit displacement (offset).
+    emit_int32(buf, offset);
+}
+```
+
+This separation makes the ABI logic easier to read and allows the low-level encoding details to be managed and verified in one place.
 
 ---
 

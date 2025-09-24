@@ -29,12 +29,12 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include <double_tap.h>
-#include <infix.h>
+#include "common/double_tap.h"
+#include <infix/infix.h>
 #include <stdbool.h>  // For bool type
 
 // Platform-specific headers and definitions for threading
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else
 #include <pthread.h>
@@ -45,14 +45,15 @@
 #define ITERATIONS_PER_THREAD 500
 
 // A simple C callback function. It does nothing, as its purpose is just to be a valid call target.
-void helgrind_test_handler(int a, int b) {
+void helgrind_test_handler(infix_context_t * context, int a, int b) {
+    (void)context;
     (void)a;
     (void)b;
 }
 
 // The main function that will be executed by each worker thread.
 // It returns a status code (0 for success, 1 for failure) in a platform-agnostic way.
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
 DWORD WINAPI helgrind_thread_worker(LPVOID arg) {
 #else
 void * helgrind_thread_worker(void * arg) {
@@ -60,18 +61,18 @@ void * helgrind_thread_worker(void * arg) {
     (void)arg;
 
     // Define the FFI types for the callback signature: void(int, int)
-    ffi_type * ret_type = ffi_type_create_void();
-    ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                              ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
+    infix_type * ret_type = infix_type_create_void();
+    infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
     typedef void (*my_func_ptr)(int, int);
 
     for (int i = 0; i < ITERATIONS_PER_THREAD; ++i) {
-        ffi_reverse_trampoline_t * rt = NULL;
+        infix_reverse_t * rt = NULL;
 
         // Generate the reverse trampoline. This is a critical area for thread-safety.
-        ffi_status status =
-            generate_reverse_trampoline(&rt, ret_type, arg_types, 2, 2, (void *)helgrind_test_handler, NULL);
-        if (status != FFI_SUCCESS)
+        infix_status status =
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)helgrind_test_handler, NULL);
+        if (status != INFIX_SUCCESS)
 // Return a failure status that the main thread can check.
 #if defined(_WIN32)
             return 1;
@@ -80,16 +81,16 @@ void * helgrind_thread_worker(void * arg) {
 #endif
 
         // Get and invoke the callable function pointer.
-        my_func_ptr callable_func = (my_func_ptr)ffi_reverse_trampoline_get_code(rt);
+        my_func_ptr callable_func = (my_func_ptr)infix_reverse_get_code(rt);
         if (callable_func)
             callable_func(i, i + 1);
 
         // Destroy the reverse trampoline. This is also a critical area for thread-safety.
-        ffi_reverse_trampoline_free(rt);
+        infix_reverse_destroy(rt);
     }
 
     // Return a success status.
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
     return 0;
 #else
     return (void *)(intptr_t)0;
@@ -106,7 +107,7 @@ TEST {
 
         bool any_thread_failed = false;
 
-#if defined(FFI_OS_WINDOWS)
+#if defined(INFIX_OS_WINDOWS)
         HANDLE threads[NUM_THREADS] = {0};
         for (int i = 0; i < NUM_THREADS; ++i) {
             threads[i] = CreateThread(NULL, 0, helgrind_thread_worker, NULL, 0, NULL);
