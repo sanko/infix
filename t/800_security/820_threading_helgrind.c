@@ -30,6 +30,7 @@
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
+#include "common/infix_config.h"  // Include the internal platform detection logic.
 #include <infix/infix.h>
 #include <stdbool.h>  // For bool type
 

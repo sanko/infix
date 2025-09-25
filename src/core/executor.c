@@ -43,8 +43,8 @@
 #define _POSIX_C_SOURCE 200809L
 #endif
 
-#include "common/infix_internals.h"
-#include "common/utility.h"
+#include "../common/infix_internals.h"
+#include "../common/utility.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

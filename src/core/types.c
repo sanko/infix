@@ -29,8 +29,8 @@
  * ownership model to prevent leaks in error-handling paths.
  */
 
-#include "common/infix_internals.h"
-#include "common/utility.h"
+#include "../common/infix_internals.h"
+#include "../common/utility.h"
 #include <limits.h>  // For SIZE_MAX
 #include <stdio.h>
 #include <stdlib.h>

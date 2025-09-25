@@ -426,7 +426,7 @@ int main() {
 
 ### Platform Detection Macros
 
-`infix.h` automatically detects the build environment and defines a set of preprocessor macros that you can use for platform-specific code.
+`infix.h` automatically detects the build environment, if you require something similar, include `src/common/infix_config.h` which defines a set of preprocessor macros that you can use for platform-specific code.
 
 -   **`INFIX_OS_*`**: (`INFIX_OS_WINDOWS`, `INFIX_OS_MACOS`, `INFIX_OS_LINUX`, etc.) for the operating system.
 -   **`INFIX_ARCH_*`**: (`INFIX_ARCH_X64`, `INFIX_ARCH_AARCH64`) for the CPU architecture.

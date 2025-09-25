@@ -28,10 +28,11 @@
  *          1.  The program must exit with code 0.
  *          2.  Valgrind/Helgrind must report ZERO errors.
  */
-#include <infix/infix.h>  // The library under test
-#include <stdbool.h>      // For bool type
-#include <stdint.h>       // For intptr_t
-#include <stdio.h>        // For printf
+#include "common/infix_config.h"  // Include the internal platform detection logic.
+#include <infix/infix.h>          // The library under test
+#include <stdbool.h>              // For bool type
+#include <stdint.h>               // For intptr_t
+#include <stdio.h>                // For printf
 
 // Platform-specific headers for threading
 #if defined(INFIX_OS_WINDOWS) || defined(INFIX_ENV_CYGWIN)

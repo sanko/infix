@@ -39,8 +39,8 @@
 #define _POSIX_C_SOURCE 200809L
 #endif
 
-#include "common/infix_internals.h"
-#include "common/utility.h"  // Restored for infix_dump_hex and INFIX_DEBUG_PRINTF
+#include "../common/infix_internals.h"
+#include "../common/utility.h"  // Restored for infix_dump_hex and INFIX_DEBUG_PRINTF
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -561,14 +561,14 @@ void infix_reverse_destroy(infix_reverse_t * reverse_trampoline) {
  */
 
 #if defined(INFIX_ABI_WINDOWS_X64)
-#include "abi_win_x64.c"
-#include "abi_x64_emitters.c"
+#include "../arch/x64/abi_win_x64.c"
+#include "../arch/x64/abi_x64_emitters.c"
 #elif defined(INFIX_ABI_SYSV_X64)
-#include "abi_sysv_x64.c"
-#include "abi_x64_emitters.c"
+#include "../arch/x64/abi_sysv_x64.c"
+#include "../arch/x64/abi_x64_emitters.c"
 #elif defined(INFIX_ABI_AAPCS64)
-#include "abi_arm64.c"
-#include "abi_arm64_emitters.c"
+#include "../arch/aarch64/abi_arm64.c"
+#include "../arch/aarch64/abi_arm64_emitters.c"
 #else
 #error "No supported ABI was selected for the unity build in trampoline.c."
 #endif

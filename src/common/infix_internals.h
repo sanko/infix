@@ -22,6 +22,7 @@
  * of the library, primarily for white-box testing and fuzzing.
  */
 
+#include "common/infix_config.h"  // Include the internal platform detection logic.
 #include <infix/infix.h>
 
 /**
@@ -399,9 +400,9 @@ static inline bool return_uses_hidden_pointer_abi(c23_maybe_unused infix_type * 
 
 // Include architecture-specific instruction emitters for use by ABI implementations.
 #if defined(INFIX_ABI_SYSV_X64) || defined(INFIX_ABI_WINDOWS_X64)
-#include <abi_x64_emitters.h>
+#include "../arch/x64/abi_x64_emitters.h"
 #elif defined(INFIX_ABI_AAPCS64)
-#include <abi_arm64_emitters.h>
+#include "../arch/aarch64/abi_arm64_emitters.h"
 #endif
 
 //=================================================================================================

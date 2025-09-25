@@ -103,10 +103,11 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** Successfully call a function that takes a struct containing bitfields and get the correct result.
     *   **Possible Roadblocks:** This is a notoriously difficult part of FFI implementation, as bitfield layout rules are often poorly documented and vary even between versions of the same compiler.
 
-- [ ] **Add Type System Builder API**
-    *   **Context:** The current Manual API for creating complex structs is verbose and requires manual memory management for the member array within the arena.
-    *   **Idea:** Create a fluent builder pattern API (e.g., `infix_struct_builder_*` functions) to simplify type creation.
-    *   **Goal:** A user can define a complex struct without manually allocating or managing the `infix_struct_member` array, reducing boilerplate and potential for errors.
+- [ ] ~~**Add Type System Builder API**~~
+    *   ~~**Context:** The current Manual API for creating complex structs is verbose and requires manual memory management for the member array within the arena.~~
+    *   ~~**Idea:** Create a fluent builder pattern API (e.g., `infix_struct_builder_*` functions) to simplify type creation.~~
+    *   ~~**Goal:** A user can define a complex struct without manually allocating or managing the `infix_struct_member` array, reducing boilerplate and potential for errors.~~
+    * Supplanted by signature API.
 
 - [ ] **Add Support for 32-bit Architectures**
     *   **Context:** A major future direction to support legacy or embedded systems.
@@ -114,7 +115,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The library compiles and passes the test suite when targeting a 32-bit architecture.
     *   **Possible Roadblocks:** This is a very large undertaking, effectively doubling the number of supported ABIs that must be maintained and tested.
 
-- [ ] **Decouple Debug Logging from `double_tap.h`**
+- [x] **Decouple Debug Logging from `double_tap.h`**
     *   **Context:** The library's internal `INFIX_DEBUG_PRINTF` macro should not be tied to the test framework's `note()` function, which improves modularity.
     *   **Idea:** Refactor `INFIX_DEBUG_PRINTF` in `utility.h` to use `fprintf(stderr, ...)` directly.
     *   **Goal:** The library source code (`src/`) has no includes of `double_tap.h`. Internal debug messages are printed to `stderr` when `INFIX_DEBUG_ENABLED` is active.
