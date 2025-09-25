@@ -155,6 +155,10 @@ static const regression_test_case_t regression_tests[] = {
     {.name = "Global buffer overflow in SysV classifier (XMM index > 7)",
      .b64_input = "aAAAAA8AAAAAAAAAAAAAAAAAAAAgAPkA+f/////////+/////////////////yz//3///+lo",
      .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM index bug)",
+     .b64_input = "AQAAAAAAAAAAAAAAAAAAAAAAAAAQUwAAAP///wD//+np5+l6AA==",
+     .target = TARGET_TYPE_GENERATOR,
      .expected_status = INFIX_SUCCESS}};
 
 /**

@@ -423,29 +423,29 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
         }
 
         // If classification resulted in MEMORY, it must go on the stack.
+        placed_in_register = false;
         if (num_classes > 0 && classes[0] != MEMORY) {
-            // Step 2: Check for available registers
-            size_t gpr_needed = 0, xmm_needed = 0;
-            for (size_t j = 0; j < num_classes; ++j) {
-                if (classes[j] == INTEGER)
-                    gpr_needed++;
-                else if (classes[j] == SSE)
-                    xmm_needed++;
-            }
-
-            // Check if there are enough of BOTH register types available.
-            if (gpr_count + gpr_needed <= NUM_GPR_ARGS && xmm_count + xmm_needed <= NUM_XMM_ARGS) {
-                // Step 3: Assign registers
-                if (num_classes == 1) {
-                    // Argument fits in a single register.
-                    layout->arg_locations[i].type = (classes[0] == INTEGER) ? ARG_LOCATION_GPR : ARG_LOCATION_XMM;
-                    if (classes[0] == INTEGER)
-                        layout->arg_locations[i].reg_index = gpr_count;
-                    else
-                        layout->arg_locations[i].reg_index = xmm_count;
+            if (num_classes == 1) {
+                // Case 1: Argument fits in a single register.
+                // Check for available GPR or XMM registers individually. This is the core of the bug fix.
+                if (classes[0] == INTEGER && gpr_count < NUM_GPR_ARGS) {
+                    layout->arg_locations[i].type = ARG_LOCATION_GPR;
+                    layout->arg_locations[i].reg_index = gpr_count++;
+                    placed_in_register = true;
                 }
-                else {
-                    // Argument is passed in two registers.
+                else if (classes[0] == SSE && xmm_count < NUM_XMM_ARGS) {
+                    layout->arg_locations[i].type = ARG_LOCATION_XMM;
+                    layout->arg_locations[i].reg_index = xmm_count++;
+                    placed_in_register = true;
+                }
+            }
+            else {  // num_classes == 2
+                // Case 2: Argument is passed in two registers.
+                // Here, a combined check is correct, as we must have room for both parts.
+                size_t gpr_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
+                size_t xmm_needed = (classes[0] == SSE) + (classes[1] == SSE);
+
+                if (gpr_count + gpr_needed <= NUM_GPR_ARGS && xmm_count + xmm_needed <= NUM_XMM_ARGS) {
                     if (classes[0] == INTEGER && classes[1] == INTEGER) {
                         layout->arg_locations[i].type = ARG_LOCATION_GPR_PAIR;
                         layout->arg_locations[i].reg_index = gpr_count;
@@ -468,10 +468,10 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                             layout->arg_locations[i].reg_index2 = gpr_count;
                         }
                     }
+                    gpr_count += gpr_needed;
+                    xmm_count += xmm_needed;
+                    placed_in_register = true;
                 }
-                gpr_count += gpr_needed;
-                xmm_count += xmm_needed;
-                placed_in_register = true;
             }
         }
 
