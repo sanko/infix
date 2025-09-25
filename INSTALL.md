@@ -44,17 +44,17 @@ Now, you can simply include the header (`#include <infix.h>`) in your source fil
 
 This is what I use to develop `infix` itself but it might be great for just building the lib without installing cmake or xmake. Perl is everywhere!*
 
-    ```bash
-    # Run the advanced perl based builder
-    perl build.pl help
+```bash
+# Run the advanced perl based builder
+perl build.pl help
 
-    # Build and run valgrind tests
-    perl build.pl --verbose memtest:fault
+# Build and run valgrind tests
+perl build.pl --verbose memtest:fault
 
-    # Build infix for another ABI than the current machine's
-    # Great for fuzzing
-    perl build.pl --abi=sysv_x64 build
-    ```
+# Build infix for another ABI than the current machine's
+# Great for fuzzing
+perl build.pl --abi=sysv_x64 build
+```
 
 ### Using CMake
 
