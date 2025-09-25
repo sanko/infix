@@ -2,7 +2,7 @@
 
 This guide provides practical, real-world examples to help you solve common FFI problems and leverage the full power of the `infix` library. Where the `README.md` covers concepts, this cookbook provides the code.
 
-> **Note:** All examples in this cookbook are standalone, compilable C files located in the [`eg/cookbook/`](eg/cookbook/) directory.
+> **Note:** All examples in this cookbook are standalone, compilable C files located in the [`eg/cookbook/`](/eg/cookbook/) directory.
 
 > For a complete reference on the string format used in these examples (e.g., `"i"`, `"{d,d}"`, `"c*"`), please see the **[Signature Language Reference](docs/signatures.md)**.
 
@@ -82,7 +82,7 @@ int main() {
     return 0;
 }
 ```
-> [View the full code](eg/cookbook/01_simple_call.c)
+> [View the full code](/eg/cookbook/01_simple_call.c)
 
 ### Recipe: Passing and Receiving Pointers
 
@@ -115,7 +115,7 @@ int main() {
     return 0;
 }
 ```
-> [View the full code](eg/cookbook/02_pointers.c)
+> [View the full code](/eg/cookbook/02_pointers.c)
 
 ### Recipe: Working with Opaque Pointers (Incomplete Types)
 
@@ -123,7 +123,7 @@ int main() {
 
 **Solution**: Use the `v*` signature for `void*` or any other opaque pointer type. This is the canonical representation for a generic handle.
 
-> [View the full code](eg/cookbook/03_opaque_pointers.c)
+> [View the full code](/eg/cookbook/03_opaque_pointers.c)
 
 ### Recipe: Working with Fixed-Size Arrays
 
@@ -131,7 +131,7 @@ int main() {
 
 **Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (`"x*=>x"` for `int64_t(const int64_t*)`). `infix` will handle the call correctly.
 
-> [View the full code](eg/cookbook/04_fixed_arrays.c)
+> [View the full code](/eg/cookbook/04_fixed_arrays.c)
 
 ---
 
@@ -143,7 +143,7 @@ int main() {
 
 **Solution**: Use `infix_type_from_signature` to parse a signature string into a detailed `infix_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
-> [View the full code](eg/cookbook/05_dynamic_marshalling.c)
+> [View the full code](/eg/cookbook/05_dynamic_marshalling.c)
 
 ### Recipe: Small Structs Passed by Value
 
@@ -151,7 +151,7 @@ int main() {
 
 **Solution**: Use the `{}` syntax (e.g., `"{d,d}=>d"` for `double(Point)`). `infix` will automatically determine the correct ABI passing convention.
 
-> [View the full code](eg/cookbook/06_small_struct_by_value.c)
+> [View the full code](/eg/cookbook/06_small_struct_by_value.c)
 
 ### Recipe: Large Structs Passed by Reference
 
@@ -159,7 +159,7 @@ int main() {
 
 **Solution**: The process is identical to the small struct example. `infix`'s ABI logic will detect that the struct is large and automatically pass it by reference.
 
-> [View the full code](eg/cookbook/07_large_struct_by_reference.c)
+> [View the full code](/eg/cookbook/07_large_struct_by_reference.c)
 
 ### Recipe: Receiving a Struct from a Function
 
@@ -167,7 +167,7 @@ int main() {
 
 **Solution**: Simply use the struct signature as the return type (e.g., `"=>__{d,d_}_"`).
 
-> [View the full code](eg/cookbook/08_return_struct.c)
+> [View the full code](/eg/cookbook/08_return_struct.c)
 
 ### Recipe: Working with Packed Structs via the Signature API
 
@@ -175,7 +175,7 @@ int main() {
 
 **Solution**: Use the `p(size,align){type@offset,...}` signature syntax, providing the exact layout metadata from your C compiler using `sizeof`, `_Alignof`, and `offsetof`.
 
-> [View the full code](eg/cookbook/09_packed_struct.c)
+> [View the full code](/eg/cookbook/09_packed_struct.c)
 
 ### Recipe: Working with Unions
 
@@ -183,7 +183,7 @@ int main() {
 
 **Solution**: Use the `<...>` syntax to describe the union (e.g., `"<i,f>=>i"`). `infix` will automatically classify it for ABI compliance.
 
-> [View the full code](eg/cookbook/10_unions.c)
+> [View the full code](/eg/cookbook/10_unions.c)
 
 ### Recipe: Working with Pointers to Arrays
 
@@ -191,7 +191,7 @@ int main() {
 
 **Solution**: Use grouping parentheses `()` around the array type before adding the `*` pointer modifier (e.g., `"([4]i)*=>v"`).
 
-> [View the full code](eg/cookbook/11_pointer_to_array.c)
+> [View the full code](/eg/cookbook/11_pointer_to_array.c)
 
 ---
 
@@ -203,7 +203,7 @@ int main() {
 
 **Solution**: Use a reverse trampoline to create a native function pointer for your comparison handler. The handler's signature must accept `infix_context_t*` as its first argument.
 
-> [View the full code](eg/cookbook/12_callback_qsort.c)
+> [View the full code](/eg/cookbook/12_callback_qsort.c)
 
 ### Recipe: Creating a Stateful Callback (The Modern Way)
 
@@ -211,7 +211,7 @@ int main() {
 
 **Solution**: `infix` automatically passes a pointer to the `infix_context_t` as the **first argument** to every C callback handler. Retrieve your application state from the context's `user_data` field.
 
-> [View the full code](eg/cookbook/13_stateful_callback.c)
+> [View the full code](/eg/cookbook/13_stateful_callback.c)
 
 ## Chapter 4: Advanced Techniques
 
@@ -221,7 +221,7 @@ int main() {
 
 **Solution**: Provide the types for *all* arguments you intend to pass in a single call and use a semicolon (`;`) in the signature to mark where the variadic part begins.
 
-> [View the full code](eg/cookbook/14_variadic_printf.c)
+> [View the full code](/eg/cookbook/14_variadic_printf.c)
 
 ### Recipe: Creating a Variadic Callback
 
@@ -229,7 +229,7 @@ int main() {
 
 **Solution**: Your C handler will use `<stdarg.h>`. The `infix` signature must describe a specific, concrete instance of the variadic call you expect the C code to make.
 
-> [View the full code](eg/cookbook/15_variadic_callback.c)
+> [View the full code](/eg/cookbook/15_variadic_callback.c)
 
 ### Recipe: Proving Reentrancy with Nested FFI Calls
 
@@ -237,7 +237,7 @@ int main() {
 
 **Solution**: `infix` is fully reentrant. Create all necessary trampolines upfront and use them as needed.
 
-> [View the full code](eg/cookbook/16_nested_calls.c)
+> [View the full code](/eg/cookbook/16_nested_calls.c)
 
 ### Recipe: Receiving and Calling a Function Pointer
 
@@ -245,7 +245,7 @@ int main() {
 
 **Solution**: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its `user_data`.
 
-> [View the full code](eg/cookbook/17_return_callback.c)
+> [View the full code](/eg/cookbook/17_return_callback.c)
 
 ---
 
@@ -261,7 +261,7 @@ It is possible to call a function written in Rust, Fortran, or C++ from C becaus
 
 **Solution**: The most robust solution is to create a simple C-style API in your C++ code using `extern "C"`. `infix` can then call this clean, predictable API, using `v*` as the opaque handle for the object pointer.
 
-> [View the full code](eg/cookbook/18_cpp_example.c)
+> [View the full code](/eg/cookbook/18_cpp_example.c)
 The Pattern for Other Compiled Languages
 
 The following examples all demonstrate how to export a simple `int add(int, int)` function from a shared library. Notice how the infix C code is nearly identical in every case, highlighting the power of the C ABI as a universal interface.
@@ -449,7 +449,7 @@ The C code would be identical to the previous examples, just loading `libasm_mat
 
 **Solution**: Load the library dynamically, get a function pointer, and use `infix` with the correct signature. The example file contains platform-specific code for Windows, macOS, and Linux.
 
-> [View the full code](eg/cookbook/19_system_libraries.c)
+> [View the full code](/eg/cookbook/19_system_libraries.c)
 
 ---
 
