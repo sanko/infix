@@ -174,8 +174,12 @@ TEST {
                 offset += snprintf(buf + offset, sizeof(buf) - offset, "%02x ", u_in.bytes[i]);
             diag("%s", buf);
             offset = snprintf(buf, sizeof(buf), "Got     : ");
-            for (size_t i = 0; i < sizeof(long double); ++i)
-                offset += snprintf(buf + offset, sizeof(buf) - offset, "%02x ", u_out.bytes[i]);
+            for (size_t i = 0; i < sizeof(long double); ++i) {
+                int n = snprintf(buf + offset, sizeof(buf) - offset, "%02x ", u_out.bytes[i]);
+                if (n < 0 || n >= 1024 - offset)
+                    break;
+                offset += n;
+            }
             diag("%s", buf);
         }
         infix_forward_destroy(trampoline);
