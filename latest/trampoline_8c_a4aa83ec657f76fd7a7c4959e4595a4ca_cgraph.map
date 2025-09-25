@@ -1,0 +1,5 @@
+<map id="code_buffer_init" name="code_buffer_init">
+<area shape="rect" id="Node000001" title="Initializes a code_buffer for use with an arena." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="180,5,312,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,15,166,15,166,21,132,21"/>
+</map>

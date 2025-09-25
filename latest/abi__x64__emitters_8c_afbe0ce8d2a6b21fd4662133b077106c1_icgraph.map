@@ -1,0 +1,21 @@
+<map id="emit_modrm" name="emit_modrm">
+<area shape="rect" id="Node000001" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="257,203,364,228"/>
+<area shape="rect" id="Node000002" href="$abi__x64__emitters_8c.html#a71403e87cc9138ee7fee9c892b2f14f8" title="Emits an x86&#45;64 add r64, imm8 instruction." alt="" coords="29,5,185,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,191,287,157,267,117,241,77,208,44,185,32,187,27,211,40,245,74,272,114,292,155,304,189"/>
+<area shape="rect" id="Node000003" href="$abi__x64__emitters_8c.html#a6487e4953ffbbadd032df97e107e2be6" title="Emits an x86&#45;64 dec r64 instruction." alt="" coords="52,55,163,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="294,192,259,141,235,115,208,94,186,83,162,76,164,71,188,78,211,89,239,111,264,138,298,189"/>
+<area shape="rect" id="Node000004" href="$abi__x64__emitters_8c.html#a8f6e45beb7feceb9737140d329fc82c8" title="Emits an x86&#45;64 mov r64, imm32 instruction." alt="" coords="23,104,192,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="284,195,249,168,208,143,178,132,180,127,210,138,252,163,287,191"/>
+<area shape="rect" id="Node000005" href="$abi__x64__emitters_8c.html#ae185b40fc20f00d00bebd1aaad35cedd" title="Emits an x86&#45;64 movq r64, xmm instruction." alt="" coords="25,153,190,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="246,202,209,193,162,181,163,176,210,187,247,197"/>
+<area shape="rect" id="Node000006" href="$abi__x64__emitters_8c.html#ae351c6af013cfa7ed22367d1839d7a37" title="Emits an x86&#45;64 movq xmm, r64 instruction." alt="" coords="25,203,190,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="244,218,190,218,190,213,244,213"/>
+<area shape="rect" id="Node000007" href="$abi__x64__emitters_8c.html#ae34a082f12409ca1c16e3c01eb3ce325" title="Emits an x86&#45;64 movsx r64, r/m16 instruction." alt="" coords="5,252,209,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="245,234,161,255,160,249,244,229"/>
+<area shape="rect" id="Node000008" href="$abi__x64__emitters_8c.html#a4376537f529432bb9268d9a3d73c0246" title="Emits an x86&#45;64 movsx r64, r/m8 instruction." alt="" coords="9,301,205,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="287,239,252,266,210,291,176,304,174,299,208,286,249,262,284,235"/>
+<area shape="rect" id="Node000009" href="$abi__x64__emitters_8c.html#a37e332ff45fbfe018cfe0da54b153158" title="Emits an x86&#45;64 movzx r64, r/m16 instruction." alt="" coords="5,351,209,376"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="298,241,263,292,239,318,211,340,184,353,181,348,208,336,235,314,259,288,294,238"/>
+<area shape="rect" id="Node000010" href="$abi__x64__emitters_8c.html#af741e4795cba8c938890bb9df45f10f4" title="Emits an x86&#45;64 movzx r64, r/m8 instruction." alt="" coords="9,400,205,425"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="304,242,291,275,272,315,245,356,211,389,188,402,185,398,208,385,241,352,267,313,286,273,299,240"/>
+</map>

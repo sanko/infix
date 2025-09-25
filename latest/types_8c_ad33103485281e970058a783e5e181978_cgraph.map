@@ -1,0 +1,5 @@
+<map id="infix_type_create_packed_struct" name="infix_type_create_packed_struct">
+<area shape="rect" id="Node000001" title="Creates an infix_type for a packed struct, allocating from an arena." alt="" coords="5,5,192,45"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="240,13,372,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,23,226,23,226,28,192,28"/>
+</map>

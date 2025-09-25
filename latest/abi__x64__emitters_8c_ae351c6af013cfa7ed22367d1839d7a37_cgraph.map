@@ -1,0 +1,7 @@
+<map id="emit_movq_xmm_gpr" name="emit_movq_xmm_gpr">
+<area shape="rect" id="Node000001" title="Emits an x86&#45;64 movq xmm, r64 instruction." alt="" coords="5,31,171,56"/>
+<area shape="rect" id="Node000002" href="$abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="227,5,334,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,30,213,24,214,29,171,35"/>
+<area shape="rect" id="Node000003" href="$abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e" title="Emits an x86&#45;64 REX prefix byte." alt="" coords="219,55,343,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,51,205,55,205,61,171,56"/>
+</map>

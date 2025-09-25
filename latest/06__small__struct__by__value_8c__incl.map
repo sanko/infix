@@ -1,0 +1,21 @@
+<map id="eg/cookbook/06_small_struct_by_value.c" name="eg/cookbook/06_small_struct_by_value.c">
+<area shape="rect" id="Node000001" title="Recipe: Small Structs Passed by Value." alt="" coords="84,5,252,45"/>
+<area shape="rect" id="Node000002" href="$eg_2cookbook_2lib_2types_8h.html" title="Defines common data structures used across the cookbook examples." alt="" coords="5,93,96,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,48,81,88,78,84,138,43"/>
+<area shape="rect" id="Node000005" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="121,93,215,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="171,46,171,79,165,79,165,46"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="240,93,307,119"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="195,43,248,83,245,87,192,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="109,240,184,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="44,120,26,154,23,173,28,191,41,207,58,220,97,238,95,242,55,224,37,211,23,193,17,173,21,152,39,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="38,167,109,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="57,118,68,153,63,154,52,120"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="169,120,153,227,148,226,164,119"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="154,121,101,160,98,156,151,117"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="293,240,376,265"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="216,115,312,140,353,153,374,165,380,182,378,199,359,231,354,228,373,198,375,182,370,168,350,158,311,145,215,121"/>
+<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="185,167,359,192"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="186,116,245,156,242,161,183,121"/>
+<area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="253,194,180,235,178,231,251,190"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="284,191,317,228,313,231,280,194"/>
+</map>

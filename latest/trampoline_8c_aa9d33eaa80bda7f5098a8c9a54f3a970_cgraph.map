@@ -1,0 +1,5 @@
+<map id="code_buffer_append" name="code_buffer_append">
+<area shape="rect" id="Node000001" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="5,5,159,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="207,5,339,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,15,193,15,193,21,159,21"/>
+</map>

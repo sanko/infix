@@ -1,0 +1,28 @@
+<map id="src/core/signature.c" name="src/core/signature.c">
+<area shape="rect" id="Node000001" title="Implements the high&#45;level signature string parser." alt="" coords="268,5,417,31"/>
+<area shape="rect" id="Node000002" href="$infix__internals_8h_source.html" title=" " alt="" coords="49,79,236,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="311,33,189,76,187,71,309,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="124,299,206,324"/>
+<area shape="poly" id="edge11_Node000001_Node000005" title=" " alt="" coords="268,26,202,32,133,43,75,59,53,69,39,80,24,102,14,122,9,143,9,163,20,204,46,249,59,264,75,276,112,294,109,299,72,281,55,268,42,252,15,207,3,164,4,142,9,121,19,99,35,77,50,64,73,54,132,38,201,27,267,21"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="260,79,331,104"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="337,32,313,69,309,66,333,30"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="356,79,422,104"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="352,30,376,66,372,69,348,32"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="447,79,518,104"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="366,28,449,70,446,75,364,33"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="542,79,612,104"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="381,28,529,73,528,78,379,33"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="50,152,219,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,105,140,139,135,138,138,104"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="243,152,338,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="167,102,255,144,253,148,165,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="260,180,225,199,193,227,178,256,170,286,165,284,173,254,188,224,222,194,258,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="316,299,390,324"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="329,175,364,194,380,207,393,224,397,241,394,259,377,289,372,286,389,257,392,241,388,227,376,211,361,198,326,180"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="56,225,127,251"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="259,180,138,223,136,218,258,175"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="203,225,378,251"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="293,178,293,212,288,212,288,178"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="272,253,199,294,196,289,269,248"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="303,249,336,286,332,290,299,253"/>
+</map>

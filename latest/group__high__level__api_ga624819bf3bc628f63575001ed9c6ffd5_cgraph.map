@@ -1,0 +1,5 @@
+<map id="infix_arena_calloc" name="infix_arena_calloc">
+<area shape="rect" id="Node000001" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="5,5,144,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="192,5,324,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,15,178,15,178,21,144,21"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="t/800_security/811_fault_injection.c" name="t/800_security/811_fault_injection.c">
+<area shape="rect" id="Node000001" title="An advanced stress test that uses fault injection to find memory leaks in the library&#39;s error&#45;handlin..." alt="" coords="196,5,339,45"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,93,172,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,48,128,90,126,85,223,43"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="279,93,373,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="284,44,311,80,307,84,279,47"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="319,240,394,265"/>
+<area shape="poly" id="edge9_Node000001_Node000005" title=" " alt="" coords="258,47,243,77,230,114,226,154,230,173,238,191,251,207,268,220,307,238,305,242,265,224,247,211,233,193,225,174,221,154,225,113,238,75,253,44"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="397,93,481,119"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="310,43,403,85,401,90,307,48"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="503,240,586,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,114,503,142,558,155,584,165,591,182,588,199,568,231,564,228,583,198,585,182,580,169,556,160,502,147,373,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="331,119,354,226,349,227,326,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="248,167,319,192"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="321,120,299,156,295,154,317,118"/>
+<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="395,167,569,192"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="352,116,445,158,443,163,350,121"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="494,191,527,228,523,231,490,194"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="463,194,390,235,388,231,461,190"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="t/800_security/810_memory_stress.c" name="t/800_security/810_memory_stress.c">
+<area shape="rect" id="Node000001" title="A stress test for detecting memory leaks in the infix FFI library." alt="" coords="196,5,339,45"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,93,172,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,48,128,90,126,85,223,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="196,93,267,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,47,245,82,240,79,256,44"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="404,93,499,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="312,43,413,85,411,90,310,48"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="414,240,489,265"/>
+<area shape="poly" id="edge10_Node000001_Node000006" title=" " alt="" coords="272,45,290,114,307,154,332,190,365,216,402,234,400,239,362,221,328,194,302,157,285,116,267,46"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="598,240,681,265"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="499,110,603,130,649,145,667,154,679,165,685,182,683,199,663,231,659,228,678,197,680,182,674,168,664,159,647,150,601,135,498,116"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="454,119,454,226,449,226,449,119"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="343,167,413,192"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="441,121,402,159,398,155,437,117"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="489,167,664,192"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="473,116,546,157,543,162,470,121"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="589,191,622,228,618,231,585,194"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="558,194,485,235,482,231,555,190"/>
+</map>

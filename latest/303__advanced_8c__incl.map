@@ -1,0 +1,19 @@
+<map id="t/300_callbacks/303_advanced.c" name="t/300_callbacks/303_advanced.c">
+<area shape="rect" id="Node000001" title="Tests advanced reverse trampoline (callback) patterns." alt="" coords="156,5,307,45"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,93,172,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,48,123,89,120,84,196,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="196,93,267,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,46,234,79,229,79,229,46"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="291,93,385,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="259,43,312,83,309,87,256,48"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="166,240,249,265"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="291,120,217,141,185,154,167,168,162,183,165,198,186,229,182,232,160,200,157,182,162,165,183,149,215,136,290,115"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="283,240,358,265"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="384,116,418,128,448,145,459,155,466,167,467,180,462,193,444,213,421,228,373,246,371,241,419,224,440,209,457,191,462,179,461,168,455,159,445,149,416,133,382,121"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="376,167,447,192"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="352,117,391,155,388,159,348,121"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="177,167,352,192"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="328,121,288,159,285,155,324,117"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="257,194,227,231,223,227,253,191"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="276,191,305,228,301,231,272,194"/>
+</map>

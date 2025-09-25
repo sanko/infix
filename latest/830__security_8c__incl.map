@@ -1,0 +1,32 @@
+<map id="t/800_security/830_security.c" name="t/800_security/830_security.c">
+<area shape="rect" id="Node000001" title="A test suite for security hardening and vulnerability prevention." alt="" coords="469,5,612,45"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,93,172,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="469,42,168,94,167,88,469,36"/>
+<area shape="rect" id="Node000003" href="$infix__internals_8h_source.html" title=" " alt="" coords="197,93,383,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="481,48,340,92,339,87,480,43"/>
+<area shape="rect" id="Node000005" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="373,167,468,192"/>
+<area shape="poly" id="edge11_Node000001_Node000005" title=" " alt="" coords="504,48,474,68,448,95,434,124,426,154,421,153,429,122,444,92,471,64,501,43"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="459,93,529,119"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="532,47,510,83,506,80,527,44"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="553,93,624,119"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="555,44,577,80,572,83,550,47"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="648,93,721,119"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="576,43,653,84,650,89,574,48"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="746,93,834,119"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="601,43,741,87,740,92,600,48"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="858,93,933,119"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="613,39,845,90,844,96,612,45"/>
+<area shape="rect" id="Node000004" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="180,167,349,192"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="288,120,276,155,271,153,283,118"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="312,116,389,158,386,162,310,121"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="249,313,331,339"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="374,193,299,214,268,227,250,242,245,256,248,272,269,302,265,305,243,274,239,256,245,238,265,223,298,209,372,188"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="366,313,441,339"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="466,190,499,202,529,218,540,229,547,240,548,253,543,267,525,287,503,302,455,319,453,314,500,297,522,283,538,264,543,252,542,242,536,232,526,223,497,207,464,195"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="459,240,529,265"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="435,190,474,228,470,232,431,194"/>
+<area shape="rect" id="Node000009" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="260,240,435,265"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="410,194,371,232,367,228,407,190"/>
+<area shape="poly" id="edge9_Node000009_Node000006" title=" " alt="" coords="340,267,310,304,306,301,336,264"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="359,264,388,301,384,304,354,267"/>
+</map>

@@ -1,0 +1,19 @@
+<map id="eg/cookbook/15_variadic_callback.c" name="eg/cookbook/15_variadic_callback.c">
+<area shape="rect" id="Node000001" title="Recipe: Creating a Variadic Callback." alt="" coords="202,5,386,45"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="137,93,232,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,48,213,87,210,83,265,43"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="256,93,331,119"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="296,46,296,79,291,79,291,46"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="355,93,422,119"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="318,43,365,82,362,86,315,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,240,95,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="137,112,104,117,70,127,38,144,13,168,8,183,11,198,33,229,28,232,7,200,3,182,9,165,35,139,68,122,103,112,136,107"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="130,240,204,265"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="230,116,264,128,294,145,305,155,312,167,313,180,308,193,290,213,267,228,219,246,217,241,265,224,286,209,303,191,308,179,307,168,301,159,291,149,262,133,228,121"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="222,167,293,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="198,117,238,155,234,159,194,121"/>
+<area shape="rect" id="Node000006" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="24,167,198,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="174,121,135,159,131,155,170,117"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="103,194,74,231,69,227,99,191"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="122,191,151,228,147,231,118,194"/>
+</map>

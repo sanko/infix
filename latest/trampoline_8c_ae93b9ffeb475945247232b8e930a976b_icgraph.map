@@ -1,0 +1,9 @@
+<map id="get_current_reverse_abi_spec" name="get_current_reverse_abi_spec">
+<area shape="rect" id="Node000001" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="411,23,563,63"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,23,363,63"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="397,46,363,46,363,41,397,41"/>
+<area shape="rect" id="Node000003" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,5,158,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,35,158,30,159,25,195,29"/>
+<area shape="rect" id="Node000004" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,55,160,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="195,57,161,61,160,55,194,51"/>
+</map>

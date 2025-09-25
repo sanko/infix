@@ -1,0 +1,13 @@
+<map id="get_current_forward_abi_spec" name="get_current_forward_abi_spec">
+<area shape="rect" id="Node000001" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="613,27,767,67"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="411,27,565,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="600,50,565,50,565,45,600,45"/>
+<area shape="rect" id="Node000003" href="$group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="208,5,363,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="397,37,363,32,364,27,398,32"/>
+<area shape="rect" id="Node000004" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,55,363,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="397,63,364,67,363,62,397,57"/>
+<area shape="rect" id="Node000005" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,37,158,63"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="194,67,158,62,159,57,195,61"/>
+<area shape="rect" id="Node000006" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,87,160,112"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="195,89,161,93,160,87,194,83"/>
+</map>
