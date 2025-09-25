@@ -3,7 +3,10 @@
 
 set_project("infix")
 set_version("0.1.0", {build = "%Y%m%d%H%M", soname = true})
-set_languages("c17")
+set_languages("c17", "cxx17")
+
+-- Config
+option("examples", {showmenu = true, default = true, description = "Build the cookbook example programs."})
 
 -- Add all necessary include directories for the build process.
 add_includedirs("include", "src", "src/core", "src/arch/x64", "src/arch/aarch64")
@@ -102,7 +105,45 @@ for _, fuzz_harness in ipairs(os.files("fuzz/fuzz_*.c")) do
     end
 end
 
+-- The examples, if enabled
+if get_config("examples") then
+    -- Helper library for C++ example
+    target("counter")
+        set_kind("shared")
+        add_files("eg/cookbook/lib/counter.cpp")
+        add_includedirs("eg/cookbook/lib", {public = true})
+        set_default(false)
+
+    -- All example executables
+    for _, example_file in ipairs(os.files("eg/cookbook/*.c")) do
+        local target_name = path.basename(example_file)
+        target(target_name)
+            set_kind("binary")
+            set_default(false)
+            add_files(example_file)
+            add_deps("infix")
+            set_targetdir("bin")
+            add_includedirs("eg/cookbook/lib") -- Add lib dir for all examples
+            if target_name == "03_opaque_pointers" then
+                add_files("eg/cookbook/lib/handle_lib.c")
+            end
+            if target_name == "18_cpp_example" then
+                add_deps("counter")
+            end
+            if target_name == "19_system_libraries" then
+                if is_plat("windows") then
+                    add_syslinks("user32")
+                elseif is_plat("posix") then
+                    add_syslinks("dl")
+                end
+            end
+    end
+end
+
 --~ xmake test
 --~ xmake f --toolchain=gcc -c
 --~ xmake f --toolchain=clang -c
 --~ xmake f --toolchain=msvc -c
+--~ xmake build -a   # build everything
+--~ xmake run 18_cpp_example
+--~ xmake config --examples=true
