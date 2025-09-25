@@ -45,11 +45,11 @@
  *        - `TARGET_TYPE_GENERATOR`: For bugs found in `fuzz_types`, `fuzz_trampoline`,
  *          or `fuzz_abi`. The test will call `generate_random_type()`.
  *        - `TARGET_SIGNATURE_PARSER`: For bugs found in `fuzz_signature`. The test
- *          will call `ffi_type_from_signature()`.
- *    - `.expected_status`: The correct `ffi_status` the function should now return.
- *        - For a fixed **timeout**, this should be `FFI_SUCCESS`, as the valid-but-slow
+ *          will call `infix_type_from_signature()`.
+ *    - `.expected_status`: The correct `infix_status` the function should now return.
+ *        - For a fixed **timeout**, this should be `INFIX_SUCCESS`, as the valid-but-slow
  *          input should now be processed quickly and correctly.
- *        - For a fixed **crash**, this should be `FFI_ERROR_INVALID_ARGUMENT`, as the
+ *        - For a fixed **crash**, this should be `INFIX_ERROR_INVALID_ARGUMENT`, as the
  *          invalid input should now be rejected gracefully.
  *
  * **Step 4: Update the Plan**
@@ -59,10 +59,10 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "fuzz_regression_helpers.h"  // The Base64 decoder
-#include <double_tap.h>
-#include <fuzz_helpers.h>  // From the fuzz/ directory
-#include <infix.h>
+#include <fuzz_helpers.h>             // From the fuzz/ directory
+#include <infix/infix.h>
 
 /**
  * @internal
@@ -71,7 +71,7 @@
  */
 typedef enum {
     TARGET_TYPE_GENERATOR,   ///< Tests the `generate_random_type` function (for timeouts/crashes in Core API).
-    TARGET_SIGNATURE_PARSER  ///< Tests the `ffi_type_from_signature` function (for bugs in the Signature API).
+    TARGET_SIGNATURE_PARSER  ///< Tests the `infix_type_from_signature` function (for bugs in the Signature API).
 } fuzzer_target_t;
 
 /**
@@ -80,41 +80,86 @@ typedef enum {
  * @brief A struct that defines a single, self-contained regression test case.
  */
 typedef struct {
-    const char * name;           ///< A human-readable name for the test.
-    const char * b64_input;      ///< The Base64-encoded input from the fuzzer artifact.
-    fuzzer_target_t target;      ///< Which part of the library to test.
-    ffi_status expected_status;  ///< The expected outcome after the bug fix.
+    const char * name;             ///< A human-readable name for the test.
+    const char * b64_input;        ///< The Base64-encoded input from the fuzzer artifact.
+    fuzzer_target_t target;        ///< Which part of the library to test.
+    infix_status expected_status;  ///< The expected outcome after the bug fix.
 } regression_test_case_t;
 
 // To add a new test, simply add a new entry to this array.
 static const regression_test_case_t regression_tests[] = {
-    {
-        .name = "Timeout in SysV ABI Classifier (Wide Structs)",
-        .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
-        .target = TARGET_TYPE_GENERATOR,
-        .expected_status = FFI_SUCCESS  // A fixed timeout should now succeed quickly.
-    },
-    {
-        .name = "Stack Overflow in Signature Parser (Deep Nesting)",
-        .b64_input = "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19f"
-                     "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
-        .target = TARGET_SIGNATURE_PARSER,
-        .expected_status = FFI_ERROR_INVALID_ARGUMENT  // A fixed crash on invalid input should now return an error.
-    },
+    {.name = "Timeout in SysV ABI Classifier (Wide Structs)",
+     .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Stack Overflow in Signature Parser (Deep Nesting)",
+     .b64_input = "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19f"
+                  "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
+     .target = TARGET_SIGNATURE_PARSER,
+     .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
     {.name = "Timeout in SysV Classifier (Zero-Sized Array)",
      .b64_input = "A/oEAA==",  // Decodes to: create array, 250 elements, of struct, with 0 members.
      .target = TARGET_TYPE_GENERATOR,
-     .expected_status = FFI_SUCCESS},
+     .expected_status = INFIX_SUCCESS},
     {.name = "Timeout in SysV Classifier (Recursive Packed Structs)",
      .b64_input = "/v7+/v7+/v///3///////wD+/v7+/v7+/v7+/qg=",
      .target = TARGET_TYPE_GENERATOR,
-     .expected_status = FFI_SUCCESS},
-    {
-        .name = "Timeout in Type Generator (Wide Nested Aggregates)",
-        .b64_input = "LP///////////wAAAAP//////////////////////////+Li4g==",
-        .target = TARGET_TYPE_GENERATOR,
-        .expected_status = FFI_SUCCESS  // Expect it to complete quickly now
-    }};
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Timeout in Type Generator (Wide Nested Aggregates)",
+     .b64_input = "LP///////////wAAAAP//////////////////////////+Li4g==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (SSE/SSE case)",
+     .b64_input = "zgAAzwDP////////////////////////////////////////////////////////T08PT09PT0////8POuJNT08=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (Mixed GPR/SSE case)",
+     .b64_input = "LQAAAAAAAM8AQ/////////////////////////////////////////////////////////////////////////////////"
+                  "////////////////////9DQ0MAAAA=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM index bug)",
+     .b64_input = "////////p6X/D36lAAAAAAABAAAAAAAAAEoAAAAAAAAIAAAAAAAAAP85AI4A/z//"
+                  "KQA6AAAAAAAAvgAAAAAAVAAAAH4AAAAAAAAAAAAAAAAAAACnYP8PfqUAAAAAAAAAAAAAAAAAAAAAAOObggMAAAAAAAAAcB46JDjM"
+                  "AQAAAAAAAAAAAAAAAAAAAAAAAAAQUwAAAP///wD//+np5+l6AA==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (SSE/INTEGER pair bug)",
+     .b64_input = "Hh4eOh4eHh8AAABWHh4eHh4eAgs=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (Mixed pair bug 2)",
+     .b64_input = "JCUlJSUlJQFNTaUl29qy/wAATU0vJRQA957pPwAuCQ==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds)",
+     .b64_input = "qqqqqrgcCgAwUAAAqqo6FxcXLKqqLQCMAg==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM out of bounds 2)",
+     .b64_input = "ojQ6Ojo6AAAAAAAAEQA6Ojo6Ojo6Ojo=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds 2)",
+     .b64_input = "qwEeHh4eHh4eAAEDAB4eHh4eHh4eHiT//w==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds 3)",
+     .b64_input = "gAAASABPT09PT08VAAAAAAACEQAAAABPT08=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (GPR out of bounds 4)",
+     .b64_input = "AQgB29vbATuIAIDb29vb2wAA29vb29s=",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM index > 7)",
+     .b64_input = "aAAAAA8AAAAAAAAAAAAAAAAAAAAgAPkA+f/////////+/////////////////yz//3///+lo",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Global buffer overflow in SysV classifier (XMM index bug)",
+     .b64_input = "AQAAAAAAAAAAAAAAAAAAAAAAAAAQUwAAAP///wD//+np5+l6AA==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS}};
 
 /**
  * @internal
@@ -136,42 +181,44 @@ static void run_regression_case(const regression_test_case_t * test) {
 
         if (test->target == TARGET_TYPE_GENERATOR) {
             fuzzer_input in = {(const uint8_t *)data, data_size};
+            infix_arena_t * arena = infix_arena_create(65536);
+            if (!arena) {
+                fail("Failed to create arena for type generator test.");
+                free(data);
+                return;
+            }
 
-            // Initialize the total_fields counter for the generator.
             size_t total_fields = 0;
-            ffi_type * generated_type = generate_random_type(&in, 0, &total_fields);
+            infix_type * generated_type = generate_random_type(arena, &in, 0, &total_fields);
 
-            if (test->expected_status == FFI_SUCCESS) {
-                if (generated_type) {
-                    ffi_type_destroy(generated_type);
+            if (test->expected_status == INFIX_SUCCESS) {
+                if (arena->error) {
+                    fail("Type generation failed due to internal arena error, but was expected to succeed.");
+                }
+                else {
                     pass("Successfully processed pathological input without timeout/crash.");
                 }
-                else
-                    pass(
-                        "Generator failed gracefully on pathological input, which is an acceptable non-timeout "
-                        "outcome.");
             }
             else {
-                ok(generated_type == NULL, "Generator correctly failed on invalid input.");
-                if (generated_type)
-                    ffi_type_destroy(generated_type);
+                ok(generated_type == NULL || arena->error, "Generator correctly failed on invalid input.");
             }
+            infix_arena_destroy(arena);
         }
         else if (test->target == TARGET_SIGNATURE_PARSER) {
             char * signature = (char *)malloc(data_size + 1);
             memcpy(signature, data, data_size);
             signature[data_size] = '\0';
 
-            ffi_type * type = NULL;
-            arena_t * arena = NULL;
-            ffi_status status = ffi_type_from_signature(&type, &arena, signature);
+            infix_type * type = NULL;
+            infix_arena_t * arena = NULL;
+            infix_status status = infix_type_from_signature(&type, &arena, signature);
 
             ok(status == test->expected_status,
                "Parser returned correct status (expected %d, got %d)",
                test->expected_status,
                status);
 
-            arena_destroy(arena);
+            infix_arena_destroy(arena);
             free(signature);
         }
 

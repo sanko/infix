@@ -13,17 +13,17 @@ ARFLAGS := rcs
 BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2
 
 # Include directories needed for the LIBRARY
-LIB_INC_DIRS := -Iinclude -Isrc/core -Isrc/arch/x64 -Isrc/arch/aarch64
+LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64
 
 # Flags for compiling the LIBRARY ONLY. No test flags here.
-LIB_CFLAGS   := $(BASE_CFLAGS) $(LIB_INC_DIRS) -DFFI_DEBUG_ENABLED=1
+LIB_CFLAGS   := $(BASE_CFLAGS) $(LIB_INC_DIRS) -DINFIX_DEBUG_ENABLED=1
 
 # Flags for compiling and linking TESTS ONLY.
-TEST_CFLAGS  := $(BASE_CFLAGS) $(LIB_INC_DIRS) -It/include -Ithird_party/double_tap -DDBLTAP_ENABLE=1 -DFFI_DEBUG_ENABLED=1
+TEST_CFLAGS  := $(BASE_CFLAGS) $(LIB_INC_DIRS) -It/include -Ithird_party/double_tap -DDBLTAP_ENABLE=1 -DINFIX_DEBUG_ENABLED=1
 
 # --- Source Files ---
 # The list of library sources is now complete.
-BASE_SRCS := src/core/arena.c src/core/executor.c src/core/trampoline.c src/core/types.c src/core/utility.c src/core/signature.c
+BASE_SRCS := src/infix.c
 
 # OS-Specific Configuration
 ifeq ($(OS),Windows_NT)

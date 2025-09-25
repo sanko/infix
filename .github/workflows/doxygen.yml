@@ -1,0 +1,119 @@
+name: Deploy Doxygen Documentation
+
+on:
+  # Run on pushes to the main branch to update the 'latest' docs
+  push:
+    branches:
+      - main
+  # Run when a new release is published to create versioned docs
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# Grant GITHUB_TOKEN the permissions required to deploy to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-doxygen:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Graphviz is needed for generating diagrams (call graphs, etc.)
+      - name: Install Doxygen and Graphviz
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # This is the core of the versioning logic.
+      # - Pushes to 'main' go to the '/latest' directory.
+      # - Published releases go to a directory named after the tag (e.g., '/v1.2.3').
+      - name: Determine Documentation Version
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            # Use the tag name for releases
+            VERSION=${{ github.ref_name }}
+            echo "DOXYGEN_OUTPUT_PATH=${VERSION}" >> $GITHUB_ENV
+            echo "Publishing docs for version: ${VERSION}"
+          else
+            # Use 'latest' for the main branch
+            echo "DOXYGEN_OUTPUT_PATH=latest" >> $GITHUB_ENV
+            echo "Publishing docs for latest commit on main"
+          fi
+
+      # We create a build directory and use a pipe to override the OUTPUT_DIRECTORY
+      # setting at runtime. This avoids modifying the Doxyfile in the repository.
+      - name: Build Doxygen Documentation
+        run: |
+          mkdir doxygen_build
+          (cat Doxyfile; echo "OUTPUT_DIRECTORY=doxygen_build") | doxygen -
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # The GITHUB_TOKEN is automatically provided by GitHub Actions
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doxygen_build/html
+          destination_dir: ./${{ env.DOXYGEN_OUTPUT_PATH }}
+          # The user who will commit the changes
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'docs: Deploy ${{ env.DOXYGEN_OUTPUT_PATH }} documentation'
+
+      - name: Generate and Push Index Page
+        run: |
+          # Configure git for the commit
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Clone the gh-pages branch into a temporary directory
+          git clone --branch gh-pages --single-branch "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages-clone
+          cd gh-pages-clone
+
+          # Generate the HTML for the list of versions
+          # It finds all directories starting with 'v', sorts them using version sorting (newest first),
+          # and creates a list item for each one.
+          VERSION_LIST=$(find . -maxdepth 1 -type d -name "v*.*.*" | sed 's|./||' | sort -rV | awk '{print "      <li><a href=\"./" $1 "/\">Version " $1 "</a></li>"}' | tr -d '\r')
+
+          # Create the index.html file using a heredoc
+          cat > index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>${{ github.repository }} Documentation</title>
+              <meta http-equiv="refresh" content="0; url=./latest/">
+              <style>
+                  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; line-height: 1.5; padding: 2em; max-width: 800px; margin: 0 auto; color: #333; }
+                  h1, h2 { border-bottom: 1px solid #ddd; padding-bottom: 0.3em; }
+                  a { color: #0969da; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+                  ul { list-style-type: none; padding-left: 0; }
+                  li { margin-bottom: 0.5em; }
+                  .redirect-notice { font-style: italic; color: #555; }
+              </style>
+          </head>
+          <body>
+              <h1>${{ github.repository }} Documentation</h1>
+              <p class="redirect-notice">
+                  You are being redirected to the <a href="./latest/">latest documentation</a>.
+              </p>
+              <hr>
+              <h2>Archived Versions</h2>
+              <ul>
+          ${VERSION_LIST}
+              </ul>
+          </body>
+          </html>
+          EOF
+
+          # Commit and push the new index.html only if it has changed
+          git add index.html
+          if git diff --staged --quiet; then
+            echo "No changes to index.html. Nothing to commit."
+          else
+            git commit -m "docs: Update root index page with version list"
+            git push
+          fi

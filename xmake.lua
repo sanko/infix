@@ -3,7 +3,10 @@
 
 set_project("infix")
 set_version("0.1.0", {build = "%Y%m%d%H%M", soname = true})
-set_languages("c17")
+set_languages("c17", "cxx17")
+
+-- Config
+option("examples", {showmenu = true, default = true, description = "Build the cookbook example programs."})
 
 -- Add all necessary include directories for the build process.
 add_includedirs("include", "src", "src/core", "src/arch/x64", "src/arch/aarch64")
@@ -20,11 +23,11 @@ target("infix")
     set_kind("static")
     -- Only compile the top-level core files. The unity build in trampoline.c
     -- will include the correct arch-specific .c files.
-    add_files("src/core/*.c")
+    add_files("src/infix.c")
     -- Expose only the public 'include' directory to consumers of this library
     add_includedirs("include", {public = true})
     -- Be noisy
---~     add_defines("FFI_DEBUG_ENABLED=1")
+--~     add_defines("INFIX_DEBUG_ENABLED=1")
 
 -- Define the test targets.
 for _, test_file in ipairs(os.files("t/**/*.c")) do
@@ -35,7 +38,7 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         set_default(false)
 
         add_files(test_file)
-        add_defines("FFI_DEBUG_ENABLED=1")
+        add_defines("INFIX_DEBUG_ENABLED=1")
 
         -- Add dependencies for the special regression test case
         if test_file:endswith("850_regression_cases.c") then
@@ -49,7 +52,7 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         add_deps("infix")
         set_targetdir("bin")
 
-        add_includedirs("t/include", "third_party/double_tap")
+        add_includedirs("t/include")
         add_defines("DBLTAP_ENABLE=1")
         add_tests(target_name)
 
@@ -102,7 +105,45 @@ for _, fuzz_harness in ipairs(os.files("fuzz/fuzz_*.c")) do
     end
 end
 
+-- The examples, if enabled
+if get_config("examples") then
+    -- Helper library for C++ example
+    target("counter")
+        set_kind("shared")
+        add_files("eg/cookbook/lib/counter.cpp")
+        add_includedirs("eg/cookbook/lib", {public = true})
+        set_default(false)
+
+    -- All example executables
+    for _, example_file in ipairs(os.files("eg/cookbook/*.c")) do
+        local target_name = path.basename(example_file)
+        target(target_name)
+            set_kind("binary")
+            set_default(false)
+            add_files(example_file)
+            add_deps("infix")
+            set_targetdir("bin")
+            add_includedirs("eg/cookbook/lib") -- Add lib dir for all examples
+            if target_name == "03_opaque_pointers" then
+                add_files("eg/cookbook/lib/handle_lib.c")
+            end
+            if target_name == "18_cpp_example" then
+                add_deps("counter")
+            end
+            if target_name == "19_system_libraries" then
+                if is_plat("windows") then
+                    add_syslinks("user32")
+                elseif is_plat("posix") then
+                    add_syslinks("dl")
+                end
+            end
+    end
+end
+
 --~ xmake test
 --~ xmake f --toolchain=gcc -c
 --~ xmake f --toolchain=clang -c
 --~ xmake f --toolchain=msvc -c
+--~ xmake build -a   # build everything
+--~ xmake run 18_cpp_example
+--~ xmake config --examples=true

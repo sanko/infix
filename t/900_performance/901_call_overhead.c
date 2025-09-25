@@ -35,8 +35,8 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include <double_tap.h>
-#include <infix.h>
+#include "common/double_tap.h"
+#include <infix/infix.h>
 #include <time.h>  // For clock()
 
 #ifdef DYNCALL_BENCHMARK
@@ -57,7 +57,7 @@ TEST {
     volatile int accumulator = 0;
     clock_t start, end;
 
-    diag("FFI Call Overhead Benchmark");
+    diag("Infix Call Overhead Benchmark");
     diag("Iterations: %d", BENCHMARK_ITERATIONS);
     diag("Target function: int(int, int)");
 
@@ -72,15 +72,15 @@ TEST {
     diag("Direct Call Time: %.4f s (%.2f ns/call)", direct_time, direct_ns_per_call);
 
     // Phase 2: infix Trampoline Call
-    ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-    ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                              ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
-    ffi_trampoline_t * trampoline = NULL;
-    ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
-    if (status != FFI_SUCCESS) {
+    infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+    infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
+    infix_forward_t * trampoline = NULL;
+    infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+    if (status != INFIX_SUCCESS) {
         bail_out("Failed to create trampoline for benchmark");
     }
-    ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
@@ -95,7 +95,7 @@ TEST {
     double infix_overhead_ns = trampoline_ns_per_call - direct_ns_per_call;
     diag("infix Time:       %.4f s (%.2f ns/call)", trampoline_time, trampoline_ns_per_call);
     diag("infix Overhead:  ~%.2f ns/call", infix_overhead_ns);
-    ffi_trampoline_free(trampoline);
+    infix_forward_destroy(trampoline);
 
     // Phase 3: Optional Dyncall Comparison
 #ifdef DYNCALL_BENCHMARK

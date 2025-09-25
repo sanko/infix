@@ -14,26 +14,27 @@
 /**
  * @file 811_fault_injection.c
  * @brief An advanced stress test that uses fault injection to find memory leaks
- *        in the library's error-handling code paths.
+ *        in the library's error-handling code paths, adapted for the new arena model.
  *
  * @details This test replaces the standard malloc/calloc/free/realloc functions
  * with a custom, thread-safe allocator that can be programmed to fail after a
  * specific number of successful allocations.
  *
- * By repeatedly attempting to create complex FFI objects and forcing an
- * allocation failure at every possible point, this test rigorously exercises
+ * By repeatedly attempting to create complex FFI objects and forcing a
+ * heap allocation failure at every possible point (e.g., arena creation,
+ * handle creation, executable memory allocation), this test rigorously exercises
  * all error-handling and cleanup code in the library. It is designed to be
  * run under Valgrind's memcheck tool.
  *
  * The test is considered successful if two conditions are met:
  * 1.  The test program itself passes, confirming that the library correctly
- *     propagates `FFI_ERROR_ALLOCATION_FAILED` status codes up the call stack.
+ *     propagates `INFIX_ERROR_ALLOCATION_FAILED` status codes up the call stack.
  * 2.  Valgrind reports ZERO memory leaks, proving that all internal cleanup
  *     paths correctly free any partially allocated resources.
  *
- * This test targets the two most allocation-heavy operations:
- * - `generate_reverse_trampoline`
- * - `ffi_type_create_struct` with nested dynamic types.
+ * This test targets the two most allocation-heavy high-level operations:
+ * - `infix_reverse_create`
+ * - `infix_type_from_signature`
  */
 
 // Override infix's allocators with our custom ones *before* including headers.
@@ -42,9 +43,8 @@
 #define infix_free test_free
 #define infix_realloc test_realloc
 #define DBLTAP_IMPLEMENTATION
-#include "types.h"
-#include <double_tap.h>
-#include <infix.h>
+#include "common/double_tap.h"
+#include <infix/infix.h>
 #include <stddef.h>
 // Platform-specific headers for thread-safe locking
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -92,170 +92,144 @@ void reset_fault_injector() {
     allocation_countdown = -1;
     ALLOCATOR_UNLOCK();
 }
+
 void * test_malloc(size_t size) {
     void * r = NULL;
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
-        if (allocation_counter >= allocation_countdown) {
+        if (allocation_counter >= allocation_countdown)
             fault_triggered = true;  // Fail this allocation
-        }
         else {
             allocation_counter++;
             r = malloc(size);
         }
     }
-    else {
+    else
         r = malloc(size);
-    }
+
     ALLOCATOR_UNLOCK();
     return r;
 }
+
 void * test_calloc(size_t num, size_t size) {
     void * r = NULL;
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
-        if (allocation_counter >= allocation_countdown) {
+        if (allocation_counter >= allocation_countdown)
             fault_triggered = true;
-        }
         else {
             allocation_counter++;
             r = calloc(num, size);
         }
     }
-    else {
+    else
         r = calloc(num, size);
-    }
     ALLOCATOR_UNLOCK();
     return r;
 }
+
 void test_free(void * ptr) {
     free(ptr);
 }
+
 void * test_realloc(void * ptr, size_t new_size) {
     void * r = NULL;
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
-        if (allocation_counter >= allocation_countdown) {
+        if (allocation_counter >= allocation_countdown)
             fault_triggered = true;
-        }
         else {
             allocation_counter++;
             r = realloc(ptr, new_size);
         }
     }
-    else {
+    else
         r = realloc(ptr, new_size);
-    }
+
     ALLOCATOR_UNLOCK();
     return r;
 }
-// Dummy handler for trampoline generation.
-void fault_injection_handler(int a) {
-    (void)a;
-}
 
+// Dummy handler for trampoline generation.
+void fault_injection_handler(void) {}
 
 TEST {
     plan(2);
 
     ALLOCATOR_INIT();  // Initialize mutexes if needed (for Windows)
 
-    subtest("Leak test for reverse trampoline creation failures") {
-        const int MAX_FAILS_TO_TEST = 100;  // A reasonable upper bound on allocations
+    subtest("Leak test for infix_reverse_create failures") {
+        const int MAX_FAILS_TO_TEST = 20;  // A reasonable upper bound on heap allocations
         plan(MAX_FAILS_TO_TEST);
-        note("Testing for leaks when generate_reverse_trampoline fails at every possible allocation.");
+        note("Testing for leaks when infix_reverse_create fails at every possible allocation.");
 
-        ffi_type * ret_type = ffi_type_create_void();
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
+        // A complex signature to exercise the parser and JIT engine.
+        const char * signature = "i*,d,p(1,1){c@0}=>v";
         bool success_was_reached = false;
 
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);  // Fail on the i-th allocation
-            ffi_reverse_trampoline_t * rt = NULL;
-            ffi_status status =
-                generate_reverse_trampoline(&rt, ret_type, arg_types, 1, 1, (void *)fault_injection_handler, NULL);
+            infix_reverse_t * context = NULL;
+            infix_status status = infix_reverse_create(&context, signature, (void *)fault_injection_handler, NULL);
 
             if (fault_triggered) {
-                ok(status == FFI_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
+                ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
+                // On failure, context should be null and no memory should be leaked.
+                ok(context == NULL, "Context handle is NULL on failure");
             }
             else {
                 // If we get here, it means we succeeded without triggering a fault.
                 // We have now found the exact number of allocations required.
-                // We can now skip the remaining tests in this loop.
                 success_was_reached = true;
-                pass("Successfully created trampoline with %d allocations.", i);
-                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j) {
+                pass("Successfully created reverse trampoline with %d allocations.", i);
+                // Since we plan for every test, we must explicitly skip the rest.
+                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found, skipping further fault injections.");
-                }
-                ffi_reverse_trampoline_free(rt);
+
+                infix_reverse_destroy(context);
                 break;
             }
         }
-        if (!success_was_reached) {
-            fail("Test loop finished without ever succeeding, which may indicate an issue.");
-        }
+        if (!success_was_reached)
+            fail(
+                "Test loop finished without ever succeeding, which may indicate an issue or need for a higher "
+                "MAX_FAILS_TO_TEST.");
+
         reset_fault_injector();
     }
 
-    // This second subtest is essentially a duplicate of 901_error_handling_leaks.c, now consolidated.
-    subtest("Leak test for ffi_type creation failures") {
-        const int MAX_FAILS_TO_TEST = 20;
+    subtest("Leak test for infix_type_from_signature failures") {
+        const int MAX_FAILS_TO_TEST = 10;  // This function should have very few heap allocations
         plan(MAX_FAILS_TO_TEST);
-        note("Testing for leaks when creating a complex, nested struct fails.");
+        note("Testing for leaks when creating a complex type from signature fails.");
 
+        const char * signature = "{i, d, [10]{c*, s}}";  // Nested struct/array
         bool success_was_reached = false;
+
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);
-            ffi_type * final_type = NULL;
-            ffi_status status = FFI_SUCCESS;
+            infix_type * final_type = NULL;
+            infix_arena_t * arena = NULL;
 
-            ffi_struct_member * point_members = test_malloc(sizeof(ffi_struct_member) * 2);
-            if (!point_members) {
-                ok(fault_triggered, "Fail #%d: at point_members allocation", i);
-                continue;
-            }
-            point_members[0] =
-                ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
-            point_members[1] =
-                ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
+            infix_status status = infix_type_from_signature(&final_type, &arena, signature);
 
-            ffi_type * point_type = NULL;
-            status = ffi_type_create_struct(&point_type, point_members, 2);
-            if (status != FFI_SUCCESS) {
-                ok(fault_triggered, "Fail #%d: during point_type creation", i);
-                test_free(point_members);
-                continue;
+            if (fault_triggered) {
+                ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
+                ok(arena == NULL && final_type == NULL, "Arena and type are NULL on failure");
             }
+            else {
+                success_was_reached = true;
+                pass("Successfully created complex type with %d allocations.", i);
+                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
+                    skip(1, "Success point found.");
 
-            ffi_struct_member * element_members = test_malloc(sizeof(ffi_struct_member) * 2);
-            if (!element_members) {
-                ok(fault_triggered, "Fail #%d: at element_members allocation", i);
-                ffi_type_destroy(point_type);
-                continue;
+                // Cleanup on success
+                infix_arena_destroy(arena);
+                break;
             }
-            element_members[0] = ffi_struct_member_create(
-                "id", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32), offsetof(Point, x));
-            element_members[1] = ffi_struct_member_create("p", point_type, sizeof(int));
-
-            status = ffi_type_create_struct(&final_type, element_members, 2);
-            if (status != FFI_SUCCESS) {
-                ok(fault_triggered, "Fail #%d: during final_type creation", i);
-                test_free(element_members);
-                ffi_type_destroy(point_type);
-                continue;
-            }
-
-            success_was_reached = true;
-            pass("Successfully created complex type with %d allocations.", i);
-            ffi_type_destroy(final_type);
-            for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j) {
-                skip(1, "Success point found.");
-            }
-            break;
         }
-        if (!success_was_reached) {
+        if (!success_was_reached)
             fail("Type creation test loop finished without ever succeeding.");
-        }
         reset_fault_injector();
     }
 }

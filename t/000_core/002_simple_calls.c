@@ -30,8 +30,8 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include <double_tap.h>
-#include <infix.h>
+#include "common/double_tap.h"
+#include <infix/infix.h>
 #include <math.h>  // For fabs
 
 // Native C Target Functions
@@ -63,65 +63,65 @@ TEST {
 
     subtest("int(int, int)") {
         plan(2);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         int a = 10, b = 25;
         int result = 0;
         void * args[] = {&a, &b};
         cif_func((void *)add_ints, &result, args);
         ok(result == 35, "add_ints(10, 25) returned 35");
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("float(float, float)") {
         plan(2);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT);
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT)};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
+        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT)};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         float a = 2.5f, b = 4.0f;
         float result = 0.0f;
         void * args[] = {&a, &b};
         cif_func((void *)multiply_floats, &result, args);
         ok(fabs(result - 10.0f) < 0.001, "multiply_floats(2.5, 4.0) returned 10.0");
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("void(void)") {
         plan(2);  // One for creation, one for the side-effect `pass()` in the target.
-        ffi_type * ret_type = ffi_type_create_void();
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, NULL, 0, 0);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * ret_type = infix_type_create_void();
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, NULL, 0, 0);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         cif_func((void *)do_nothing, NULL, NULL);
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("Argument Sign-Extension: bool(int)") {
         plan(3);
         note("Verifying that negative integers are correctly sign-extended.");
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_BOOL);
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
+        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
         // Test case 1: Negative number
         int neg_val = -100;
@@ -137,6 +137,6 @@ TEST {
         cif_func((void *)is_negative, &pos_result, pos_args);
         ok(pos_result == false, "is_negative(100) returned false");
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 }

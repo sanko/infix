@@ -14,18 +14,18 @@
 /**
  * @file fuzz_types.c
  * @brief A dual-purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC),
- *        focused on the infix FFI type creation API's integrity.
+ *        focused on the infix FFI type creation API's integrity using arenas.
  *
  * @details This harness uses a shared recursive generator (`fuzz_helpers.h`) to
- * create complex, deeply-nested `ffi_type` objects and immediately destroys them.
- * Its goal is to find memory safety bugs (leaks, overflows, use-after-free) in the
- * type creation (`ffi_type_create_*`) and destruction (`ffi_type_destroy`) logic.
+ * create complex, deeply-nested `infix_type` objects within a memory arena and
+ * then immediately destroys the arena. Its sole goal is to find memory safety
+ * bugs (leaks, overflows, use-after-free) in the arena-based type creation
+ * and destruction logic. This tests the public-facing Manual API.
  *
  * It compiles in one of two modes:
  * - **libFuzzer mode (default)**: Exposes the `LLVMFuzzerTestOneInput` entry point.
  * - **AFL++ mode**: Exposes a `main` function that uses a persistent mode loop.
- *   This is enabled by passing `-DUSE_AFL=1` during compilation, which is handled
- *   automatically by the build script when using GCC.
+ *   This is enabled by passing `-DUSE_AFL=1` during compilation.
  */
 
 #include "fuzz_helpers.h"
@@ -33,17 +33,20 @@
 // Fuzzing Logic Core
 // This function contains the actual test logic, shared by both libFuzzer and AFL++ entry points.
 static void FuzzTest(fuzzer_input in) {
-    // The entire test is to attempt to generate one maximally complex type
-    // and then successfully destroy it without AddressSanitizer (or other tools)
-    // finding any memory corruption, leaks, or crashes.
-    size_t total_fields = 0;  // Initialize counter
-    ffi_type * generated_type = generate_random_type(&in, 0, &total_fields);
+    // The entire test is to attempt to generate one maximally complex type graph
+    // within an arena, and then successfully destroy the arena without any memory
+    // errors being detected by a sanitizer.
+    infix_arena_t * arena = infix_arena_create(65536);  // Use a large arena for complex types.
+    if (!arena)
+        return;
 
-    if (generated_type)
-        // If we successfully created a complex type, the most important part of
-        // the test is to ensure it can be destroyed without ASan finding any leaks,
-        // use-after-frees, or double-frees.
-        ffi_type_destroy(generated_type);
+    size_t total_fields = 0;
+    (void)generate_random_type(arena, &in, 0, &total_fields);
+
+    // If type generation succeeded, the entire graph of objects lives in the arena.
+    // The most important part of the test is to ensure the arena can be destroyed
+    // without ASan finding any leaks, use-after-frees, or double-frees.
+    infix_arena_destroy(arena);
 }
 
 // libFuzzer Entry Point

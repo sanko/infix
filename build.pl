@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use v5.36;
 use Config qw[%Config];
-use Cwd    qw[abs_path];
+use Cwd    qw[abs_path cwd];
 use Data::Dumper;
 use File::Basename qw[basename dirname];
 use File::Copy     qw[copy move];
@@ -16,7 +16,7 @@ $|++;
 
 # Argument Parsing
 my %opts;
-GetOptions( \%opts, 'cc|compiler=s', 'cflags=s', 'h|help', 'codecov=s', 'abi=s' );
+GetOptions( \%opts, 'cc|compiler=s', 'cflags=s', 'h|help', 'codecov=s', 'abi=s', 'verbose|v' );
 show_help() if $opts{help};
 my $command    = lc( shift @ARGV || 'build' );
 my @test_names = @ARGV;
@@ -28,21 +28,13 @@ my %git_info;
 my $is_fuzz_build     = ( $command =~ /^fuzz/ );
 my $is_coverage_build = ( $command eq 'coverage' );
 my %config            = (
-    sources => [
-        $FindBin::Bin . '/src/core/executor.c',
-        $FindBin::Bin . '/src/core/trampoline.c',
-        $FindBin::Bin . '/src/core/types.c',
-        $FindBin::Bin . '/src/core/arena.c',
-        $FindBin::Bin . '/src/core/utility.c',
-        $FindBin::Bin . '/src/core/signature.c'
-    ],
+    sources      => [ $FindBin::Bin . '/src/infix.c' ],
     include_dirs => [
         File::Spec->catdir( $FindBin::Bin, 'include' ),
         File::Spec->catdir( $FindBin::Bin, 'src' ),
         File::Spec->catdir( $FindBin::Bin, 'src/core' ),
         File::Spec->catdir( $FindBin::Bin, 'src/arch/x64/' ),
         File::Spec->catdir( $FindBin::Bin, 'src/arch/aarch64' ),
-        File::Spec->catdir( $FindBin::Bin, 'third_party/double_tap' ),
         File::Spec->catdir( $FindBin::Bin, 't/include' ),
     ],
     lib_dir      => 'build_lib',
@@ -54,6 +46,11 @@ $config{is_windows} = ( $^O =~ /MSWin32|msys|cygwin/i );
 # Base CFLAGS that will be modified by ABI forcing or other options
 my @base_cflags;
 
+# Enable verbose/debug mode if requested
+#~ if ( $opts{verbose} ) {
+#~ print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
+#~ push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
+#~ }
 # Environment Detection
 $config{arch} = 'x64';
 my $host_arch_raw = '';
@@ -81,13 +78,13 @@ if ( $opts{abi} ) {
     my $forced_abi = lc( $opts{abi} );
     print "User is forcing ABI to: $forced_abi (for code generation logic only)\n";
     if ( $forced_abi eq 'windows_x64' ) {
-        push @base_cflags, '-DFFI_FORCE_ABI_WINDOWS_X64';
+        push @base_cflags, '-DINFIX_FORCE_ABI_WINDOWS_X64';
     }
     elsif ( $forced_abi eq 'sysv_x64' ) {
-        push @base_cflags, '-DFFI_FORCE_ABI_SYSV_X64';
+        push @base_cflags, '-DINFIX_FORCE_ABI_SYSV_X64';
     }
     elsif ( $forced_abi eq 'aapcs64' ) {
-        push @base_cflags, '-DFFI_FORCE_ABI_AAPCS64';
+        push @base_cflags, '-DINFIX_FORCE_ABI_AAPCS64';
     }
     else {
         die "Error: Unknown ABI '$forced_abi'. Supported values are: windows_x64, sysv_x64, aapcs64.";
@@ -167,29 +164,35 @@ if ( $command eq 'clean' ) {
     clean(%config);
 }
 elsif ( $command eq 'build' ) {
+    push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     my $lib_path = create_static_library( \%config, $obj_suffix );
     print "\nStatic library '$lib_path' built successfully.\n";
 }
 elsif ( $command eq 'test' || $command eq 'coverage' ) {
-    push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1', '-DFFI_DEBUG_ENABLED=1';
+    push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = compile_and_run_tests( \%config, $obj_suffix, \@test_names, $is_coverage_build );
 }
 elsif ( $command eq 'memtest' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
-    push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1', '-DFFI_DEBUG_ENABLED=1';
+    push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/810_memory_stress', 'memcheck' );
 }
 elsif ( $command eq 'memtest:fault' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
-    push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1', '-DFFI_DEBUG_ENABLED=1';
+    push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/811_fault_injection', 'memcheck' );
 }
 elsif ( $command eq 'memtest:arena' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
-    push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1', '-DFFI_DEBUG_ENABLED=1';
+    push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/840_arena_allocator', 'memcheck' );
 }
 elsif ( $command eq 'helgrindtest' ) {
@@ -265,6 +268,7 @@ sub show_help {
       --abi=<s>             Force a specific ABI for code generation. Overrides auto-detection.
                             Supported: windows_x64, sysv_x64, aapcs64
       --codecov=<s>         Specify a Codecov token to upload coverage results (or use CODECOV_TOKEN env var).
+      -v, --verbose         Enable verbose debug output from the library by compiling with -DINFIX_DEBUG_ENABLED=1.
       -h, --help            Show this help message.
     END_HELP
     exit 0;
@@ -464,9 +468,30 @@ sub run_coverage_gcov {
     }
     print "\nGenerating .gcov reports...\n";
     if ( command_exists('gcov') ) {
-        for my $src ( @{ $config->{sources} } ) {
-            run_command( 'gcov', '-o', $cov_obj_dir, $src );
+
+        # Consolidate all .gcda files into the object directory before running gcov.
+        my @gcda_files;
+        find( sub { push @gcda_files, $File::Find::name if /\.gcda$/ }, '.' );
+        for my $gcda_file (@gcda_files) {
+            my $basename = basename($gcda_file);
+            move( $gcda_file, File::Spec->catfile( $cov_obj_dir, $basename ) ) or warn "Could not move $gcda_file to $cov_obj_dir: $!";
         }
+        my $original_dir = cwd();
+        chdir($cov_obj_dir) or die "Cannot chdir to $cov_obj_dir: $!";
+        for my $src ( @{ $config->{sources} } ) {
+
+            # Run gcov from inside the object directory. It will find .gcno and .gcda files
+            # in the CWD and generate the .c.gcov file here.
+            run_command( 'gcov', abs_path($src) );
+        }
+
+        # Move the generated reports back to the project root for Codecov.
+        my @gcov_files;
+        find( sub { push @gcov_files, $File::Find::name if /\.gcov$/ }, '.' );
+        for my $gcov_file (@gcov_files) {
+            move( $gcov_file, $original_dir ) or warn "Could not move $gcov_file to $original_dir: $!";
+        }
+        chdir($original_dir) or die "Cannot chdir back to $original_dir: $!";
     }
     else { warn "gcov not found" }
     return $failed_tests;

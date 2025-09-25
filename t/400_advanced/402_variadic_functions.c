@@ -37,9 +37,9 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 #include <math.h>
 #include <stdarg.h>  // For va_list
 #include <stdio.h>   // For snprintf (used in older versions, header kept for reference)
@@ -85,7 +85,8 @@ int forward_variadic_checker(char * buffer, size_t size, const char * format, ..
 }
 
 /** @brief A handler for a reverse trampoline with a variadic signature. */
-int variadic_reverse_handler(const char * topic, ...) {
+int variadic_reverse_handler(infix_context_t * context, const char * topic, ...) {
+    (void)context;
     va_list args;
     va_start(args, topic);
     int count = va_arg(args, int);
@@ -103,7 +104,7 @@ int variadic_reverse_handler(const char * topic, ...) {
     return count + (int)value;
 }
 
-#if defined(FFI_OS_MACOS) && defined(FFI_ARCH_AARCH64)
+#if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
 // Test specific to macOS on ARM (Apple Silicon)
 typedef struct {
     long a;
@@ -125,7 +126,7 @@ int macos_variadic_checker(int fixed_arg, ...) {
 }
 #endif
 
-#if defined(FFI_ABI_WINDOWS_X64)
+#if defined(INFIX_ABI_WINDOWS_X64)
 // Test specific to the Windows x64 ABI
 double win_variadic_float_checker(int fixed_arg, ...) {
     va_list args;
@@ -137,27 +138,26 @@ double win_variadic_float_checker(int fixed_arg, ...) {
 }
 #endif
 
-
 TEST {
     plan(4);
 
     subtest("Forward variadic call") {
         plan(3);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_type * arg_types[] = {
-            ffi_type_create_pointer(),                             // char* buffer
-            ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT64),  // size_t size
-            ffi_type_create_pointer(),                             // const char* format
-            ffi_type_create_pointer(),                             // variadic: const char*
-            ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),  // variadic: int
-            ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE)   // variadic: double
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_type * arg_types[] = {
+            infix_type_create_pointer(),                          // char* buffer
+            infix_type_create_primitive(INFIX_PRIMITIVE_UINT64),  // size_t size
+            infix_type_create_pointer(),                          // const char* format
+            infix_type_create_pointer(),                          // variadic: const char*
+            infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),  // variadic: int
+            infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)   // variadic: double
         };
 
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 6, 3);
-        ok(status == FFI_SUCCESS, "Variadic forward trampoline created");
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 6, 3);
+        ok(status == INFIX_SUCCESS, "Variadic forward trampoline created");
 
-        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
 
         char buffer[1] = {0};  // Dummy buffer for signature match
         size_t size = 1;       // Dummy size for signature match
@@ -171,58 +171,59 @@ TEST {
         cif_func((void *)forward_variadic_checker, &result, args);
         ok(result == 1, "Custom variadic checker function returned success");
 
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("Reverse variadic callback") {
         plan(3);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_type * arg_types[] = {ffi_type_create_pointer(),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE),
-                                  ffi_type_create_pointer()};
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_type * arg_types[] = {infix_type_create_pointer(),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                    infix_type_create_pointer()};
 
-        ffi_reverse_trampoline_t * rt = NULL;
-        ffi_status status =
-            generate_reverse_trampoline(&rt, ret_type, arg_types, 4, 1, (void *)variadic_reverse_handler, NULL);
-        ok(status == FFI_SUCCESS, "Variadic reverse trampoline created");
+        infix_reverse_t * rt = NULL;
+        infix_status status =
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 4, 1, (void *)variadic_reverse_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Variadic reverse trampoline created");
 
         if (rt) {
             typedef int (*VariadicLogFunc)(const char *, ...);
-            VariadicLogFunc func_ptr = (VariadicLogFunc)rt->exec_code.rx_ptr;
+            VariadicLogFunc func_ptr = (VariadicLogFunc)infix_reverse_get_code(rt);
             int result = func_ptr("LOG", 42, 3.14, "Done");
             ok(result == 45, "Variadic callback returned correct sum (42 + 3)");
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
 
-        ffi_reverse_trampoline_free(rt);
+        infix_reverse_destroy(rt);
     }
 
     subtest("Platform ABI: macOS AArch64 variadic struct passing") {
-#if defined(FFI_OS_MACOS) && defined(FFI_ARCH_AARCH64)
+#if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
         plan(2);
         note("Testing variadic call with struct argument on macOS/ARM (must go on stack)");
+        infix_arena_t * arena = infix_arena_create(4096);
 
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_struct_member * members = malloc(sizeof(ffi_struct_member) * 2);
-        members[0] = ffi_struct_member_create(
-            "a", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64), offsetof(MacTestStruct, a));
-        members[1] = ffi_struct_member_create(
-            "b", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT64), offsetof(MacTestStruct, b));
-        ffi_type * struct_type = NULL;
-        ffi_type_create_struct(&struct_type, members, 2);
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_struct_member * members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
+        members[0] = infix_struct_member_create(
+            "a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), offsetof(MacTestStruct, a));
+        members[1] = infix_struct_member_create(
+            "b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), offsetof(MacTestStruct, b));
+        infix_type * struct_type = NULL;
+        infix_type_create_struct(arena, &struct_type, members, 2);
 
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE),
-                                  struct_type};
+        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                    struct_type};
 
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 3, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for macOS variadic test created");
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 3, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for macOS variadic test created");
 
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         int fixed_val = 10;
         double dbl_val = 20.0;
         MacTestStruct struct_val = {30, 40};
@@ -231,8 +232,8 @@ TEST {
         cif((void *)macos_variadic_checker, &result, args);
         ok(result == 100, "macOS variadic arguments passed correctly (10+20+30+40)");
 
-        ffi_trampoline_free(trampoline);
-        ffi_type_destroy(struct_type);
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
 #else
         plan(1);
         skip(1, "Test is only for macOS on AArch64");
@@ -240,25 +241,25 @@ TEST {
     }
 
     subtest("Platform ABI: Windows x64 variadic float/double passing") {
-#if defined(FFI_ABI_WINDOWS_X64)
+#if defined(INFIX_ABI_WINDOWS_X64)
         plan(2);
         note("Testing if a variadic double is passed correctly on Windows x64");
 
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE)};
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, ret_type, arg_types, 2, 1);
-        ok(status == FFI_SUCCESS, "Trampoline for Windows variadic test created");
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)};
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline for Windows variadic test created");
 
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         int fixed_val = 100;
         double dbl_val = 123.45;
         void * args[] = {&fixed_val, &dbl_val};
         double result = 0.0;
         cif((void *)win_variadic_float_checker, &result, args);
         ok(fabs(result - 123.45) < 0.001, "Windows variadic double passed correctly");
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
 #else
         plan(1);
         skip(1, "Test is only for the Windows x64 ABI");

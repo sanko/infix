@@ -38,14 +38,14 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
+#include "common/double_tap.h"
 #include "types.h"
-#include <double_tap.h>
-#include <infix.h>
+#include <infix/infix.h>
 #include <math.h>
 #include <string.h>
 
 // Platform-Specific Definitions for Register Limits
-#if defined(FFI_ABI_WINDOWS_X64)
+#if defined(INFIX_ABI_WINDOWS_X64)
 #define MAX_REG_DOUBLES 4
 #else  // System V x64 and AArch64
 #define MAX_REG_DOUBLES 8
@@ -98,7 +98,6 @@ double sum_one_stack_double(double a1,
 }
 
 // Helper macros to define the massive 520-argument function signature.
-// Helper macros to define the massive 520-argument function signature.
 #define ARG(N) c23_maybe_unused double arg##N
 #define LIST10(M, p) M(p##0), M(p##1), M(p##2), M(p##3), M(p##4), M(p##5), M(p##6), M(p##7), M(p##8), M(p##9)
 #define LIST100(M, p)                                                                                     \
@@ -123,7 +122,8 @@ double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) {
 // Native C Handler and Harness for Reverse Call Test
 
 /** @brief A callback handler that takes a mix of register and stack arguments. */
-int many_args_callback_handler(int a, double b, int c, const char * d, Point e, float f) {
+int many_args_callback_handler(infix_context_t * context, int a, double b, int c, const char * d, Point e, float f) {
+    (void)context;
     subtest("Inside many_args_callback_handler") {
         plan(6);
         ok(a == 10, "Arg 1 (int) is correct");
@@ -152,76 +152,76 @@ TEST {
 
         subtest("Call with max register arguments") {
             plan(2);
-            ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-            ffi_type * arg_types[MAX_REG_DOUBLES];
+            infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+            infix_type * arg_types[MAX_REG_DOUBLES];
             double arg_values[MAX_REG_DOUBLES];
             void * args[MAX_REG_DOUBLES];
             double expected_sum = 0.0;
 
             for (int i = 0; i < MAX_REG_DOUBLES; ++i) {
-                arg_types[i] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
+                arg_types[i] = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
                 arg_values[i] = (double)(i + 1);
                 args[i] = &arg_values[i];
                 expected_sum += arg_values[i];
             }
 
-            ffi_trampoline_t * trampoline = NULL;
-            ffi_status status =
-                generate_forward_trampoline(&trampoline, ret_type, arg_types, MAX_REG_DOUBLES, MAX_REG_DOUBLES);
-            ok(status == FFI_SUCCESS, "Trampoline created");
+            infix_forward_t * trampoline = NULL;
+            infix_status status =
+                infix_forward_create_manual(&trampoline, ret_type, arg_types, MAX_REG_DOUBLES, MAX_REG_DOUBLES);
+            ok(status == INFIX_SUCCESS, "Trampoline created");
 
             double result = 0.0;
             if (trampoline) {
-                ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)sum_max_reg_doubles, &result, args);
+                ((infix_cif_func)infix_forward_get_code(trampoline))((void *)sum_max_reg_doubles, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for max register args");
             }
-            else {
+            else
                 skip(1, "Test skipped");
-            }
-            ffi_trampoline_free(trampoline);
+
+            infix_forward_destroy(trampoline);
         }
 
         subtest("Call with one stack argument") {
             plan(2);
-            ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
-            ffi_type * arg_types[ONE_STACK_DOUBLE];
+            infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+            infix_type * arg_types[ONE_STACK_DOUBLE];
             double arg_values[ONE_STACK_DOUBLE];
             void * args[ONE_STACK_DOUBLE];
             double expected_sum = 0.0;
 
             for (int i = 0; i < ONE_STACK_DOUBLE; ++i) {
-                arg_types[i] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
+                arg_types[i] = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
                 arg_values[i] = (double)(i + 1.1);
                 args[i] = &arg_values[i];
                 expected_sum += arg_values[i];
             }
 
-            ffi_trampoline_t * trampoline = NULL;
-            ffi_status status =
-                generate_forward_trampoline(&trampoline, ret_type, arg_types, ONE_STACK_DOUBLE, ONE_STACK_DOUBLE);
-            ok(status == FFI_SUCCESS, "Trampoline created");
+            infix_forward_t * trampoline = NULL;
+            infix_status status =
+                infix_forward_create_manual(&trampoline, ret_type, arg_types, ONE_STACK_DOUBLE, ONE_STACK_DOUBLE);
+            ok(status == INFIX_SUCCESS, "Trampoline created");
 
             double result = 0.0;
             if (trampoline) {
-                ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)sum_one_stack_double, &result, args);
+                ((infix_cif_func)infix_forward_get_code(trampoline))((void *)sum_one_stack_double, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for one stack arg");
             }
-            else {
+            else
                 skip(1, "Test skipped");
-            }
-            ffi_trampoline_free(trampoline);
+
+            infix_forward_destroy(trampoline);
         }
 
         subtest("Call with >4KB homogeneous stack arguments") {
             plan(2);
 #define NUM_LARGE_ARGS 520
-            static ffi_type * arg_types[NUM_LARGE_ARGS];
+            static infix_type * arg_types[NUM_LARGE_ARGS];
             static double arg_values[NUM_LARGE_ARGS];
             static void * args[NUM_LARGE_ARGS];
 
             diag("Preparing %d arguments for large stack test...", NUM_LARGE_ARGS);
             for (int i = 0; i < NUM_LARGE_ARGS; i++) {
-                arg_types[i] = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE);
+                arg_types[i] = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
                 arg_values[i] = (double)i;
                 args[i] = &arg_values[i];
             }
@@ -230,65 +230,65 @@ TEST {
             double expected_result = arg_values[0] + arg_values[519];
             diag("Expected result (arg0 + arg519): %.1f", expected_result);
 
-            ffi_trampoline_t * trampoline = NULL;
-            ffi_status status = generate_forward_trampoline(&trampoline,
-                                                            ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE),
-                                                            arg_types,
-                                                            NUM_LARGE_ARGS,
-                                                            NUM_LARGE_ARGS);
-            ok(status == FFI_SUCCESS, "Trampoline for large stack created");
+            infix_forward_t * trampoline = NULL;
+            infix_status status = infix_forward_create_manual(&trampoline,
+                                                              infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                                              arg_types,
+                                                              NUM_LARGE_ARGS,
+                                                              NUM_LARGE_ARGS);
+            ok(status == INFIX_SUCCESS, "Trampoline for large stack created");
 
             double result = 0.0;
             if (trampoline) {
-                ((ffi_cif_func)ffi_trampoline_get_code(trampoline))((void *)large_stack_callee, &result, args);
+                ((infix_cif_func)infix_forward_get_code(trampoline))((void *)large_stack_callee, &result, args);
                 ok(fabs(result - expected_result) < 0.001,
                    "Large stack call returned correct sum (got %.1f, expected %.1f)",
                    result,
                    expected_result);
             }
-            else {
+            else
                 skip(1, "Test skipped");
-            }
-            ffi_trampoline_free(trampoline);
+            infix_forward_destroy(trampoline);
         }
     }
 
     subtest("Reverse call (callback) with stack arguments") {
         plan(4);
-        ffi_type * ret_type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32);
-        ffi_struct_member * point_members = infix_malloc(sizeof(ffi_struct_member) * 2);
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_struct_member * point_members =
+            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         point_members[0] =
-            ffi_struct_member_create("x", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, x));
+            infix_struct_member_create("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         point_members[1] =
-            ffi_struct_member_create("y", ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE), offsetof(Point, y));
-        ffi_type * point_type = NULL;
-        ffi_status status = ffi_type_create_struct(&point_type, point_members, 2);
-        if (!ok(status == FFI_SUCCESS, "Point ffi_type created")) {
+            infix_struct_member_create("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+        infix_type * point_type = NULL;
+        infix_status status = infix_type_create_struct(arena, &point_type, point_members, 2);
+        if (!ok(status == INFIX_SUCCESS, "Point infix_type created")) {
             skip(3, "Test skipped");
-            infix_free(point_members);
+            infix_arena_destroy(arena);
             return;
         }
 
-        ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_DOUBLE),
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                                  ffi_type_create_pointer(),
-                                  point_type,
-                                  ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_FLOAT)};
+        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                    infix_type_create_pointer(),
+                                    point_type,
+                                    infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT)};
 
-        ffi_reverse_trampoline_t * rt = NULL;
-        status = generate_reverse_trampoline(&rt, ret_type, arg_types, 6, 6, (void *)many_args_callback_handler, NULL);
-        ok(status == FFI_SUCCESS, "Reverse trampoline with stack args created");
+        infix_reverse_t * rt = NULL;
+        status = infix_reverse_create_manual(&rt, ret_type, arg_types, 6, 6, (void *)many_args_callback_handler, NULL);
+        ok(status == INFIX_SUCCESS, "Reverse trampoline with stack args created");
 
         if (rt) {
             typedef int (*ManyArgsCallback)(int, double, int, const char *, Point, float);
-            execute_many_args_callback((ManyArgsCallback)rt->exec_code.rx_ptr);
+            execute_many_args_callback((ManyArgsCallback)infix_reverse_get_code(rt));
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
 
-        ffi_reverse_trampoline_free(rt);
-        ffi_type_destroy(point_type);
+        infix_reverse_destroy(rt);
+        infix_arena_destroy(arena);
     }
 }

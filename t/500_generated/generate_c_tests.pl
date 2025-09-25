@@ -6,7 +6,6 @@ use File::Basename;
 # Define the complete set of primitive type characters based on the Itanium ABI.
 my $primitive_chars = 'vabchstijlmxynofde';
 
-# A robust, hand-rolled tokenizer that correctly handles nesting and member separators.
 sub tokenize {
     my ( $string, $line_num ) = @_;
     my @tokens;
@@ -223,23 +222,23 @@ sub parse_signature {
 
 # Part 2: C Code Generation Logic
 my %primitive_map_infix = (
-    a => 'FFI_PRIMITIVE_TYPE_SINT8',
-    b => 'FFI_PRIMITIVE_TYPE_BOOL',
-    c => 'FFI_PRIMITIVE_TYPE_SINT8',
-    h => 'FFI_PRIMITIVE_TYPE_UINT8',
-    s => 'FFI_PRIMITIVE_TYPE_SINT16',
-    t => 'FFI_PRIMITIVE_TYPE_UINT16',
-    i => 'FFI_PRIMITIVE_TYPE_SINT32',
-    j => 'FFI_PRIMITIVE_TYPE_UINT32',
-    l => 'FFI_PRIMITIVE_TYPE_SINT64',
-    m => 'FFI_PRIMITIVE_TYPE_UINT64',
-    x => 'FFI_PRIMITIVE_TYPE_SINT64',
-    y => 'FFI_PRIMITIVE_TYPE_UINT64',
-    n => 'FFI_PRIMITIVE_TYPE_SINT128',
-    o => 'FFI_PRIMITIVE_TYPE_UINT128',
-    f => 'FFI_PRIMITIVE_TYPE_FLOAT',
-    d => 'FFI_PRIMITIVE_TYPE_DOUBLE',
-    e => 'FFI_PRIMITIVE_TYPE_LONG_DOUBLE',
+    a => 'INFIX_PRIMITIVE_TYPE_SINT8',
+    b => 'INFIX_PRIMITIVE_TYPE_BOOL',
+    c => 'INFIX_PRIMITIVE_TYPE_SINT8',
+    h => 'INFIX_PRIMITIVE_TYPE_UINT8',
+    s => 'INFIX_PRIMITIVE_TYPE_SINT16',
+    t => 'INFIX_PRIMITIVE_TYPE_UINT16',
+    i => 'INFIX_PRIMITIVE_TYPE_SINT32',
+    j => 'INFIX_PRIMITIVE_TYPE_UINT32',
+    l => 'INFIX_PRIMITIVE_TYPE_SINT64',
+    m => 'INFIX_PRIMITIVE_TYPE_UINT64',
+    x => 'INFIX_PRIMITIVE_TYPE_SINT64',
+    y => 'INFIX_PRIMITIVE_TYPE_UINT64',
+    n => 'INFIX_PRIMITIVE_TYPE_SINT128',
+    o => 'INFIX_PRIMITIVE_TYPE_UINT128',
+    f => 'INFIX_PRIMITIVE_TYPE_FLOAT',
+    d => 'INFIX_PRIMITIVE_TYPE_DOUBLE',
+    e => 'INFIX_PRIMITIVE_TYPE_LONG_DOUBLE',
 );
 my %primitive_map_c = (
     v => 'void',
@@ -638,7 +637,7 @@ sub register_all_types {
             $typedef_str = 'typedef ' . ( $keyword eq 'struct' ? 'struct' : 'union' ) . ' {' . $members_str . '} ' . $type_name . ';';
         }
         if ( is_msvc_incompatible($type_hash) ) {
-            $typedef_str = "#if !defined(FFI_COMPILER_MSVC)\n" . $typedef_str . "\n#endif  // !FFI_COMPILER_MSVC";
+            $typedef_str = "#if !defined(INFIX_COMPILER_MSVC)\n" . $typedef_str . "\n#endif  // !INFIX_COMPILER_MSVC";
         }
         push @{ $context->{typedefs} }, $typedef_str;
     }
@@ -650,7 +649,7 @@ sub register_all_types {
         my $full_member_decl = get_c_type_string( $type_hash->{array_info}{element_type}, 'data' . $dims, $context );
         my $typedef_str      = "typedef struct {\n    " . $full_member_decl . ";\n} " . $array_wrapper_name . ';';
         if ( is_msvc_incompatible($type_hash) ) {
-            $typedef_str = "#if !defined(FFI_COMPILER_MSVC)\n" . $typedef_str . "\n#endif  // !FFI_COMPILER_MSVC";
+            $typedef_str = "#if !defined(INFIX_COMPILER_MSVC)\n" . $typedef_str . "\n#endif  // !INFIX_COMPILER_MSVC";
         }
         push @{ $context->{typedefs} }, $typedef_str;
     }
@@ -737,8 +736,8 @@ sub generate_tap_verifiers {
     }
     if ( defined $helper_str ) {
         if ( is_msvc_incompatible($type_hash) ) {
-            $helper_str = "#if !defined(FFI_COMPILER_MSVC)\n" . $helper_str . "\n#endif // !FFI_COMPILER_MSVC";
-            $decl_str   = "#if !defined(FFI_COMPILER_MSVC)\n" . $decl_str . "\n#endif // !FFI_COMPILER_MSVC" if defined $decl_str;
+            $helper_str = "#if !defined(INFIX_COMPILER_MSVC)\n" . $helper_str . "\n#endif // !INFIX_COMPILER_MSVC";
+            $decl_str   = "#if !defined(INFIX_COMPILER_MSVC)\n" . $decl_str . "\n#endif // !INFIX_COMPILER_MSVC" if defined $decl_str;
         }
         push @{ $context->{helpers} },      $helper_str;
         push @{ $context->{helper_decls} }, $decl_str if defined $decl_str;
@@ -808,7 +807,7 @@ sub generate_ffi_type_constructor {
             $creator_args = '&' . $var_name . ', _members_' . $var_name . ', ' . scalar(@members_code);
         }
         $code .= "\n" . '        status = ' . $creator_func . '(' . $creator_args . ");\n";
-        $code .= '        ok(status == FFI_SUCCESS, "' . ucfirst($keyword) . ' type \'' . $key . '\' created");';
+        $code .= '        ok(status == INFIX_SUCCESS, "' . ucfirst($keyword) . ' type \'' . $key . '\' created");';
     }
     elsif ( $type_hash->{base_type} eq 'array' ) {
         $$pcount_ref++;
@@ -816,7 +815,7 @@ sub generate_ffi_type_constructor {
         my $elem_var = $context->{ffi_types}->{$elem_key};
         die "FATAL: FFI type constructor for array element type '$elem_key' was not generated." unless defined $elem_var;
         $code = '        status = ffi_type_create_array(&' . $var_name . ', ' . $elem_var . ', ' . $type_hash->{array_info}{dims}[0] . ");\n";
-        $code .= '        ok(status == FFI_SUCCESS, "Array type \'' . $key . '\' created");';
+        $code .= '        ok(status == INFIX_SUCCESS, "Array type \'' . $key . '\' created");';
     }
     push @$code_ref, $code if $code;
 }
@@ -903,7 +902,7 @@ sub generate_target_function {
     my $body        = "{\n" . $verification_block . $return_stmt . "}";
     my $output      = $target_func_decl . " " . $body;
     if ( $parsed_hash->{is_msvc_incompatible} ) {
-        $output = "#if !defined(FFI_COMPILER_MSVC)\n" . $output . "\n#endif  // !FFI_COMPILER_MSVC";
+        $output = "#if !defined(INFIX_COMPILER_MSVC)\n" . $output . "\n#endif  // !INFIX_COMPILER_MSVC";
     }
     return $output;
 }
@@ -970,7 +969,7 @@ sub generate_caller_function {
     $body .= "\n    }\n}";
     my $output = "void " . $caller_func_name . '(' . $func_ptr_type_str . ") " . $body;
     if ( $parsed_hash->{is_msvc_incompatible} ) {
-        $output = "#if !defined(FFI_COMPILER_MSVC)\n" . $output . "\n#endif // !FFI_COMPILER_MSVC";
+        $output = "#if !defined(INFIX_COMPILER_MSVC)\n" . $output . "\n#endif // !INFIX_COMPILER_MSVC";
     }
     return $output;
 }
@@ -1097,7 +1096,7 @@ sub generate_tap_test_case {
             ( @arg_type_vars ? 'arg_types' : 'NULL' ) . ', ' .
             $total_args . ', ' .
             $num_fixed_args . ");\n";
-        $harness_c .= "        ok(status == FFI_SUCCESS, \"Trampoline created successfully\");\n\n";
+        $harness_c .= "        ok(status == INFIX_SUCCESS, \"Trampoline created successfully\");\n\n";
         $harness_c .= "        ffi_cif_func cif_func = (ffi_cif_func)ffi_trampoline_get_code(trampoline);\n";
         $harness_c .= join( "\n", @main_inits ) . "\n";
         if (@main_arg_pointers) {
@@ -1119,9 +1118,9 @@ sub generate_tap_test_case {
             ", (void *)" .
             $target_func_name .
             ", NULL);\n";
-        $harness_c .= "        ok(status == FFI_SUCCESS && rt && rt->exec_code.rx_ptr, \"Reverse trampoline created\");\n\n";
-        $harness_c .= "        if (rt && rt->exec_code.rx_ptr) {\n";
-        $harness_c .= "            " . $func_ptr_decl_str . " = (" . $func_ptr_cast_str . ")rt->exec_code.rx_ptr;\n";
+        $harness_c .= "        ok(status == INFIX_SUCCESS && rt, \"Reverse trampoline created\");\n\n";
+        $harness_c .= "        if (rt) {\n";
+        $harness_c .= "            " . $func_ptr_decl_str . " = (" . $func_ptr_cast_str . ")ffi_reverse_trampoline_get_code(rt);\n";
         $harness_c .= "            caller_func_" . $index . "(func_ptr);\n";
         $harness_c .= "        }\n";
         $harness_c .= "        else {\n";
@@ -1185,7 +1184,7 @@ sub register_global_var_for_type {
         $decl = get_c_type_string( $type_hash, $safe_name, $context ) . " = " . $val_str . ";";
     }
     if ( is_msvc_incompatible($type_hash) ) {
-        $decl = "#if !defined(FFI_COMPILER_MSVC)\n" . $decl . "\n#endif // !FFI_COMPILER_MSVC";
+        $decl = "#if !defined(INFIX_COMPILER_MSVC)\n" . $decl . "\n#endif // !INFIX_COMPILER_MSVC";
     }
     push @{ $context->{global_var_defs} }, $decl;
 }
@@ -1298,12 +1297,12 @@ for my $sig_info (@signatures) {
     my $parsed = parse_signature( $sig_info->{text}, $sig_info->{line} );
     unless ($parsed) { warn "Skipping signature on line " . $sig_info->{line} . "\n"; next; }
     my $is_incompatible = signature_is_msvc_incompatible($parsed);
-    if ($is_incompatible) { push @forward_declarations, "#if !defined(FFI_COMPILER_MSVC)"; }
+    if ($is_incompatible) { push @forward_declarations, "#if !defined(INFIX_COMPILER_MSVC)"; }
     push @forward_declarations, get_c_func_ptr_type_from_sig( $parsed, "forward_target_func_" . $i, $master_context ) . ";";
     push @forward_declarations, get_c_func_ptr_type_from_sig( $parsed, "reverse_target_func_" . $i, $master_context ) . ";";
     my $caller_ptr_type = get_c_func_ptr_type_from_sig( $parsed, 'func_ptr', $master_context );
     push @forward_declarations, "void caller_func_" . $i . "(" . $caller_ptr_type . ");";
-    if ($is_incompatible) { push @forward_declarations, "#endif // !FFI_COMPILER_MSVC"; }
+    if ($is_incompatible) { push @forward_declarations, "#endif // !INFIX_COMPILER_MSVC"; }
     $i++;
 }
 $i = 0;

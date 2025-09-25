@@ -28,14 +28,14 @@
  *          1.  The program must exit with code 0.
  *          2.  Valgrind/Helgrind must report ZERO errors.
  */
-
-#include <infix.h>    // The library under test
-#include <stdbool.h>  // For bool type
-#include <stdint.h>   // For intptr_t
-#include <stdio.h>    // For printf
+#include "common/infix_config.h"  // Include the internal platform detection logic.
+#include <infix/infix.h>          // The library under test
+#include <stdbool.h>              // For bool type
+#include <stdint.h>               // For intptr_t
+#include <stdio.h>                // For printf
 
 // Platform-specific headers for threading
-#if defined(FFI_OS_WINDOWS) || defined(FFI_ENV_CYGWIN)
+#if defined(INFIX_OS_WINDOWS) || defined(INFIX_ENV_CYGWIN)
 #include <windows.h>
 #else
 #include <pthread.h>
@@ -45,7 +45,8 @@
 #define ITERATIONS_PER_THREAD 500
 
 /** @brief A simple C callback function; its only purpose is to be a valid call target. */
-void bare_helgrind_handler(int a, int b) {
+void bare_helgrind_handler(infix_context_t * context, int a, int b) {
+    (void)context;
     (void)a;
     (void)b;
 }
@@ -55,7 +56,7 @@ void bare_helgrind_handler(int a, int b) {
  * @details Creates, uses, and destroys a reverse trampoline in a tight loop.
  * @return Returns a status code (0 for success, 1 for failure) cast to a void pointer.
  */
-#if defined(FFI_OS_WINDOWS) || defined(__CYGWIN__)
+#if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
 DWORD WINAPI bare_thread_worker(LPVOID arg) {
 #else
 void * bare_thread_worker(void * arg) {
@@ -63,19 +64,19 @@ void * bare_thread_worker(void * arg) {
     (void)arg;
 
     // Define the FFI types for the callback signature: void(int, int)
-    ffi_type * ret_type = ffi_type_create_void();
-    ffi_type * arg_types[] = {ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32),
-                              ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT32)};
+    infix_type * ret_type = infix_type_create_void();
+    infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
     typedef void (*my_func_ptr)(int, int);
 
     for (int i = 0; i < ITERATIONS_PER_THREAD; ++i) {
-        ffi_reverse_trampoline_t * rt = NULL;
+        infix_reverse_t * rt = NULL;
         // Generate the reverse trampoline. This is a critical area for thread-safety.
-        ffi_status status =
-            generate_reverse_trampoline(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler, NULL);
-        if (status != FFI_SUCCESS) {
+        infix_status status =
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler, NULL);
+        if (status != INFIX_SUCCESS) {
             fprintf(stderr, "# Thread failed to generate reverse trampoline.\n");
-#if defined(FFI_OS_WINDOWS) || defined(__CYGWIN__)
+#if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
             return (DWORD)(intptr_t)1;
 #else
             return (void *)(intptr_t)1;
@@ -83,15 +84,15 @@ void * bare_thread_worker(void * arg) {
         }
 
         // Get and invoke the callable function pointer.
-        my_func_ptr callable_func = (my_func_ptr)rt->exec_code.rx_ptr;
+        my_func_ptr callable_func = (my_func_ptr)infix_reverse_get_code(rt);
         if (callable_func)
             callable_func(i, i + 1);
 
         // Destroy the reverse trampoline. This is also a critical area for thread-safety.
-        ffi_reverse_trampoline_free(rt);
+        infix_reverse_destroy(rt);
     }
 
-#if defined(FFI_OS_WINDOWS) || defined(__CYGWIN__)
+#if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
     return (DWORD)(intptr_t)0;
 #else
     return (void *)(intptr_t)0;
@@ -109,7 +110,7 @@ int main(void) {
 
     bool any_thread_failed = false;
 
-#if defined(FFI_OS_WINDOWS) || defined(__CYGWIN__)
+#if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
     HANDLE threads[NUM_THREADS];
     for (int i = 0; i < NUM_THREADS; ++i) {
         threads[i] = CreateThread(NULL, 0, bare_thread_worker, NULL, 0, NULL);

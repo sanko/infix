@@ -25,25 +25,25 @@
  * for use with potentially untrusted inputs from the fuzzing harnesses.
  */
 
-#include <infix.h>
+#include "common/infix_internals.h"
 #include <stdint.h>  // For uintptr_t
 #include <stdlib.h>
 #include <string.h>  // For memset
 
 /**
  * @brief Creates and initializes a new memory arena.
- * @details Allocates two blocks of memory: one for the `arena_t` controller
+ * @details Allocates two blocks of memory: one for the `infix_arena_t` controller
  *          struct itself and a second, larger block for the arena's buffer.
  *          If either allocation fails, it ensures any partially allocated
  *          memory is cleaned up to prevent leaks.
  *
  * @param initial_size The number of bytes to pre-allocate for the arena's main buffer.
- * @return A pointer to the newly created `arena_t`, or `nullptr` if any memory
+ * @return A pointer to the newly created `infix_arena_t`, or `nullptr` if any memory
  *         allocation fails.
  */
-arena_t * arena_create(size_t initial_size) {
+infix_arena_t * infix_arena_create(size_t initial_size) {
     // Allocate the arena controller struct itself.
-    arena_t * arena = infix_malloc(sizeof(arena_t));
+    infix_arena_t * arena = infix_malloc(sizeof(infix_arena_t));
     if (arena == nullptr)
         return nullptr;
 
@@ -64,12 +64,12 @@ arena_t * arena_create(size_t initial_size) {
 /**
  * @brief Frees an entire memory arena and all objects allocated within it.
  * @details This is the primary cleanup function for an arena. It frees the main
- *          memory buffer and then frees the `arena_t` struct itself. It is
+ *          memory buffer and then frees the `infix_arena_t` struct itself. It is
  *          safe to call this function with a `nullptr` argument.
  *
  * @param arena The arena to destroy. Can be `nullptr`, in which case it is a no-op.
  */
-void arena_destroy(arena_t * arena) {
+void infix_arena_destroy(infix_arena_t * arena) {
     if (arena == nullptr)
         return;
 
@@ -96,7 +96,7 @@ void arena_destroy(arena_t * arena) {
  * @return A pointer to the allocated memory, or `nullptr` on failure (out of memory,
  *         overflow, or invalid alignment).
  */
-void * arena_alloc(arena_t * arena, size_t size, size_t alignment) {
+void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
     // Fail immediately if the arena is null or already in an error state.
     if (arena == nullptr || arena->error)
         return nullptr;
@@ -142,9 +142,9 @@ void * arena_alloc(arena_t * arena, size_t size, size_t alignment) {
 
 /**
  * @brief Allocates a zero-initialized block of memory from the arena.
- * @details This is a convenience wrapper around `arena_alloc`. It first calculates
+ * @details This is a convenience wrapper around `infix_arena_alloc`. It first calculates
  *          the total size required (`num * size`), checking for integer overflow.
- *          It then calls `arena_alloc` to get the memory block and, if successful,
+ *          It then calls `infix_arena_alloc` to get the memory block and, if successful,
  *          uses `memset` to zero it out.
  *
  * @param arena The arena to allocate from.
@@ -153,7 +153,7 @@ void * arena_alloc(arena_t * arena, size_t size, size_t alignment) {
  * @param alignment The required alignment of the returned pointer.
  * @return A pointer to the zero-initialized memory block, or `nullptr` on failure.
  */
-void * arena_calloc(arena_t * arena, size_t num, size_t size, size_t alignment) {
+void * infix_arena_calloc(infix_arena_t * arena, size_t num, size_t size, size_t alignment) {
     // Security: Check for integer overflow in the size calculation.
     if (size > 0 && num > SIZE_MAX / size) {
         if (arena)
@@ -162,7 +162,7 @@ void * arena_calloc(arena_t * arena, size_t num, size_t size, size_t alignment) 
     }
 
     size_t total_size = num * size;
-    void * ptr = arena_alloc(arena, total_size, alignment);
+    void * ptr = infix_arena_alloc(arena, total_size, alignment);
 
     // If allocation was successful, zero out the memory.
     if (ptr != nullptr)

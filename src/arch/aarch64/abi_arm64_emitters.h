@@ -26,8 +26,8 @@
  * AAPCS64 ABI rules (like argument classification and stack layout).
  */
 
+#include "common/infix_internals.h"
 #include <abi_arm64_common.h>
-#include <infix.h>
 
 /** @brief Emits an ARM64 `LDR <Wt/Xt>, [Xn, #imm]` instruction (load GPR from memory). */
 void emit_arm64_ldr_imm(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr base, int32_t offset);

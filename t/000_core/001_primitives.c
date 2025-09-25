@@ -21,7 +21,7 @@
  * `__int128_t`).
  *
  * For each type, the test performs the following steps:
- * 1. Defines the `ffi_type` using `ffi_type_create_primitive`.
+ * 1. Defines the `infix_type` using `infix_type_create_primitive`.
  * 2. Generates a forward trampoline for the passthrough function's signature.
  * 3. Calls the native C function through the generated trampoline.
  * 4. Asserts that the value returned from the FFI call is identical to the
@@ -33,8 +33,9 @@
  */
 
 #define DBLTAP_IMPLEMENTATION
-#include <double_tap.h>
-#include <infix.h>
+#include "common/double_tap.h"
+#include "common/infix_config.h"  // Include the internal platform detection logic.
+#include <infix/infix.h>
 #include <inttypes.h>  // Include for portable format specifiers like PRIu64
 
 // Native C Passthrough Functions
@@ -79,7 +80,7 @@ long double passthrough_long_double(long double v) {
 }
 
 // 128-bit integers are a non-standard extension, not supported by MSVC.
-#if !defined(FFI_COMPILER_MSVC)
+#if !defined(INFIX_COMPILER_MSVC)
 __uint128_t passthrough_uint128(__uint128_t v) {
     return v;
 }
@@ -99,23 +100,23 @@ __int128_t passthrough_sint128(__int128_t v) {
  *
  * @param test_name The string name for the subtest.
  * @param c_type The C data type (e.g., `uint8_t`).
- * @param ffi_id The `ffi_primitive_type_id` enum value.
+ * @param infix_id The `infix_primitive_type_id` enum value.
  * @param passthrough_func The name of the native C passthrough function.
  * @param input_val A literal value to use for testing.
  * @param format_specifier A printf format specifier for diagnostic messages.
  */
-#define TEST_PRIMITIVE(test_name, c_type, ffi_id, passthrough_func, input_val, format_specifier)                   \
+#define TEST_PRIMITIVE(test_name, c_type, infix_id, passthrough_func, input_val, format_specifier)                 \
     subtest(test_name) {                                                                                           \
         plan(2);                                                                                                   \
-        ffi_type * type = ffi_type_create_primitive(ffi_id);                                                       \
-        ffi_trampoline_t * trampoline = NULL;                                                                      \
-        ffi_status status = generate_forward_trampoline(&trampoline, type, &type, 1, 1);                           \
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");                                            \
+        infix_type * type = infix_type_create_primitive(infix_id);                                                 \
+        infix_forward_t * trampoline = NULL;                                                                       \
+        infix_status status = infix_forward_create_manual(&trampoline, type, &type, 1, 1);                         \
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");                                          \
                                                                                                                    \
         c_type input = (input_val);                                                                                \
         c_type result = 0;                                                                                         \
         void * args[] = {&input};                                                                                  \
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);                                      \
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);                                   \
         if (cif) {                                                                                                 \
             cif((void *)passthrough_func, &result, args);                                                          \
             ok(result == input, "Value is correct (" format_specifier " == " format_specifier ")", input, result); \
@@ -123,36 +124,36 @@ __int128_t passthrough_sint128(__int128_t v) {
         else {                                                                                                     \
             fail("Trampoline code pointer was NULL");                                                              \
         }                                                                                                          \
-        ffi_trampoline_free(trampoline);                                                                           \
+        infix_forward_destroy(trampoline);                                                                         \
     }
 
 TEST {
     plan(14);  // One subtest for each primitive type.
 
-    TEST_PRIMITIVE("bool", bool, FFI_PRIMITIVE_TYPE_BOOL, passthrough_bool, true, "%d");
-    TEST_PRIMITIVE("uint8_t", uint8_t, FFI_PRIMITIVE_TYPE_UINT8, passthrough_uint8, 255, "%u");
-    TEST_PRIMITIVE("int8_t", int8_t, FFI_PRIMITIVE_TYPE_SINT8, passthrough_sint8, -128, "%d");
-    TEST_PRIMITIVE("uint16_t", uint16_t, FFI_PRIMITIVE_TYPE_UINT16, passthrough_uint16, 65535, "%u");
-    TEST_PRIMITIVE("int16_t", int16_t, FFI_PRIMITIVE_TYPE_SINT16, passthrough_sint16, -32768, "%d");
-    TEST_PRIMITIVE("uint32_t", uint32_t, FFI_PRIMITIVE_TYPE_UINT32, passthrough_uint32, 0xFFFFFFFF, "%u");
-    TEST_PRIMITIVE("int32_t", int32_t, FFI_PRIMITIVE_TYPE_SINT32, passthrough_sint32, -2147483647 - 1, "%d");
-    TEST_PRIMITIVE("uint64_t", uint64_t, FFI_PRIMITIVE_TYPE_UINT64, passthrough_uint64, 0xFFFFFFFFFFFFFFFF, "%" PRIu64);
+    TEST_PRIMITIVE("bool", bool, INFIX_PRIMITIVE_BOOL, passthrough_bool, true, "%d");
+    TEST_PRIMITIVE("uint8_t", uint8_t, INFIX_PRIMITIVE_UINT8, passthrough_uint8, 255, "%u");
+    TEST_PRIMITIVE("int8_t", int8_t, INFIX_PRIMITIVE_SINT8, passthrough_sint8, -128, "%d");
+    TEST_PRIMITIVE("uint16_t", uint16_t, INFIX_PRIMITIVE_UINT16, passthrough_uint16, 65535, "%u");
+    TEST_PRIMITIVE("int16_t", int16_t, INFIX_PRIMITIVE_SINT16, passthrough_sint16, -32768, "%d");
+    TEST_PRIMITIVE("uint32_t", uint32_t, INFIX_PRIMITIVE_UINT32, passthrough_uint32, 0xFFFFFFFF, "%u");
+    TEST_PRIMITIVE("int32_t", int32_t, INFIX_PRIMITIVE_SINT32, passthrough_sint32, -2147483647 - 1, "%d");
+    TEST_PRIMITIVE("uint64_t", uint64_t, INFIX_PRIMITIVE_UINT64, passthrough_uint64, 0xFFFFFFFFFFFFFFFF, "%" PRIu64);
     TEST_PRIMITIVE(
-        "int64_t", int64_t, FFI_PRIMITIVE_TYPE_SINT64, passthrough_sint64, -9223372036854775807LL - 1, "%" PRId64);
-    TEST_PRIMITIVE("float", float, FFI_PRIMITIVE_TYPE_FLOAT, passthrough_float, 3.14159f, "%f");
-    TEST_PRIMITIVE("double", double, FFI_PRIMITIVE_TYPE_DOUBLE, passthrough_double, 2.718281828459045, "%f");
+        "int64_t", int64_t, INFIX_PRIMITIVE_SINT64, passthrough_sint64, -9223372036854775807LL - 1, "%" PRId64);
+    TEST_PRIMITIVE("float", float, INFIX_PRIMITIVE_FLOAT, passthrough_float, 3.14159f, "%f");
+    TEST_PRIMITIVE("double", double, INFIX_PRIMITIVE_DOUBLE, passthrough_double, 2.718281828459045, "%f");
 
     subtest("long double") {
         plan(2);
-        ffi_type * type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_LONG_DOUBLE);
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, type, &type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, type, &type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
         long double input = 1.234567890123456789L;
         long double result = 0.0L;
         void * args[] = {&input};
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         cif((void *)passthrough_long_double, &result, args);
 
         if (result == input) {
@@ -177,40 +178,40 @@ TEST {
                 offset += snprintf(buf + offset, sizeof(buf) - offset, "%02x ", u_out.bytes[i]);
             diag("%s", buf);
         }
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
-#if !defined(FFI_COMPILER_MSVC)
+#if !defined(INFIX_COMPILER_MSVC)
     subtest("__uint128_t") {
         plan(2);
-        ffi_type * type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_UINT128);
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, type, &type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, type, &type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
         __uint128_t input = (((__uint128_t)0xFFFFFFFFFFFFFFFF) << 64) | 0xFFFFFFFFFFFFFFFF;
         __uint128_t result = 0;
         void * args[] = {&input};
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         cif((void *)passthrough_uint128, &result, args);
         ok(result == input, "Value is correct");
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 
     subtest("__int128_t") {
         plan(2);
-        ffi_type * type = ffi_type_create_primitive(FFI_PRIMITIVE_TYPE_SINT128);
-        ffi_trampoline_t * trampoline = NULL;
-        ffi_status status = generate_forward_trampoline(&trampoline, type, &type, 1, 1);
-        ok(status == FFI_SUCCESS, "Trampoline generated successfully");
+        infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT128);
+        infix_forward_t * trampoline = NULL;
+        infix_status status = infix_forward_create_manual(&trampoline, type, &type, 1, 1);
+        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
         __int128_t input = -(((__int128_t)0x7FFFFFFFFFFFFFFF) << 64) - 1;
         __int128_t result = 0;
         void * args[] = {&input};
-        ffi_cif_func cif = (ffi_cif_func)ffi_trampoline_get_code(trampoline);
+        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         cif((void *)passthrough_sint128, &result, args);
         ok(result == input, "Value is correct");
-        ffi_trampoline_free(trampoline);
+        infix_forward_destroy(trampoline);
     }
 #else
     // If MSVC is used, skip the 128-bit integer tests to satisfy the plan.

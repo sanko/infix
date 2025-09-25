@@ -23,7 +23,7 @@
 
 /**
  * @internal
- * @brief A robust, self-contained Base64 decoder.
+ * @brief Self-contained Base64 decoder.
  * @details This function correctly decodes Base64 strings, properly handling
  *          the '=' padding characters. It is used to convert the text-based
  *          crash artifacts from libFuzzer into the raw byte sequences needed

@@ -77,7 +77,7 @@ After `generate_reverse_trampoline` successfully initializes the context, the me
 
 The type creation API (`types.c`) is a potential attack surface. An attacker could provide malicious `size`, `offset`, or `num_elements` values to functions like `ffi_type_create_struct` and `ffi_type_create_array` in an attempt to trigger an integer overflow during layout calculations.
 
-All such calculations in the `infix` library are hardened with checks against `SIZE_MAX` to prevent wrap-around. If a potential overflow is detected, the function will immediately fail with `FFI_ERROR_INVALID_ARGUMENT`, preventing the creation of a malformed `ffi_type` that could lead to memory corruption in later stages.
+All such calculations in the `infix` library are hardened with checks against `SIZE_MAX` to prevent wrap-around. If a potential overflow is detected, the function will immediately fail with `INFIX_ERROR_INVALID_ARGUMENT`, preventing the creation of a malformed `ffi_type` that could lead to memory corruption in later stages.
 
 ### 5. Continuous Security Validation (Fuzzing)
 
