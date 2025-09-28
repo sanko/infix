@@ -50,6 +50,15 @@ This document outlines the planned development goals for the infix FFI library, 
 
 *Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.*
 
+- [ ] **Add `_Complex` Type Support**
+    *   **Context:** The C `_Complex` type is a standard feature used in scientific and engineering domains. Supporting it is a key step towards feature-completeness. The ABI rules for `_Complex` are generally straightforward, often mapping directly to existing logic for two-element structs or Homogeneous Floating-point Aggregates (HFAs).
+    *   **Idea:**
+        1.  Introduce a new `INFIX_TYPE_COMPLEX` category to the `infix_type` system.
+        2.  Add a new signature syntax, such as `complex(f)` for `float _Complex` and `complex(d)` for `double _Complex`.
+        3.  Update the ABI backends to classify this new type. On System V/AArch64, it should be treated like a two-element float/double aggregate. On Windows x64, it will be passed by reference (as its size, 16 bytes, is not a power of two).
+    *   **Goal:** A user can create a trampoline for a function like `double _Complex cadd(double _Complex a, double _Complex b)` using the signature `"complex(d),complex(d)=>complex(d)"` and have it work correctly on all supported platforms.
+    *   **Possible Roadblocks:** Minimal. The logic for this largely exists within the aggregate classifiers already. The main work is in plumbing the new type through the system.
+
 - [x] **Internal Arena Allocator**
     *   **Context:** The JIT generation process involves many small, short-lived memory allocations which can be inefficient and cause fragmentation.
     *   **Idea:** Implement a simple arena/pool allocator for the lifetime of a single trampoline generation to reduce `malloc` overhead.
@@ -70,6 +79,16 @@ This document outlines the planned development goals for the infix FFI library, 
 ## **Low Priority: Advanced Features & Polish**
 
 *These items are valuable but less critical. They can be addressed over time to round out the library's feature set.*
+
+- [ ] **Add SIMD Vector Type Support (Phased)**
+    *   **Context:** High-performance computing, multimedia processing, and cryptography rely heavily on SIMD vector types (`__m128`, NEON types). Direct support for these types is a critical feature for advanced use cases.
+    *   **Idea (Phased Approach):**
+        1.  **Phase 1 (128-bit Vectors):** Add an `INFIX_TYPE_VECTOR` category and a signature syntax like `vector(f, 4)` for `__m128`. Update ABI backends to pass these types in XMM (x64) or VFP (AArch64) registers.
+        2.  **Phase 2 (256/512-bit Vectors):** Extend the x64 backends to be aware of YMM and ZMM registers. Implement new emitters in `abi_x64_emitters.c` for AVX/AVX512 instructions and update classifiers for their unique passing rules.
+    *   **Goal:**
+        *   **Phase 1:** A user can successfully call a function taking `__m128d` on both SysV and Windows x64.
+        *   **Phase 2:** A user can successfully call a function taking `__m256` on an AVX-capable system.
+    *   **Possible Roadblocks:** Phase 2 is a major undertaking. It requires significant changes to the x64 register allocators and new, complex instruction encodings. Testing will require hardware or emulators that support AVX2 and AVX-512.
 
 - [ ] **Implement RISC-V 64-bit ABI**
     *   **Context:** RISC-V is a growing open-source architecture. Adding support would demonstrate the library's portability.
@@ -126,9 +145,3 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** Research the correct combination of `mmap` flags and/or other system calls required to create a reliably read-only data page on macOS.
     *   **Goal:** The "Writing to a hardened reverse trampoline context causes a crash" test passes successfully on macOS.
     *   **Possible Roadblocks:** This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems.
-
-- [ ] **Add Support for Advanced C Types (`_Complex` and SIMD)**
-    *   **Context:** Modern C and its common extensions include types for complex numbers (`float _Complex`, `double _Complex`) and SIMD vectors (`__m128`, NEON types) that have specific ABI passing rules. Supporting them directly would improve interoperability with scientific and multimedia libraries.
-    *   **Idea:** Extend the `infix_type` system with new categories or primitives for these types. Implement the corresponding ABI classification and marshalling logic in each backend. For example, `_Complex` types are often passed as if they were a two-element struct of floats/doubles.
-    *   **Goal:** A user can create an `infix_type` for `double _Complex` and successfully call a function that uses it, with the library handling the ABI rules correctly on all supported platforms.
-    *   **Possible Roadblocks:** SIMD types in particular have very platform-specific ABI rules that will require careful research for each backend.
