@@ -400,7 +400,7 @@ sub compile_and_run_tests {
     my $use_prove = command_exists('prove') && !$opts{abi} && !( $config->{is_windows} && $config->{arch} eq 'arm64' );
     if ($use_prove) {
         print "\nRunning all tests with 'prove'\n";
-        return run_command( 'prove', '-v', @test_executables );
+        return run_command( 'prove', '--verbose', q[--exec=''], @test_executables );
     }
     else {
         if ( $opts{abi} ) {

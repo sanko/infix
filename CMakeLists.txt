@@ -102,12 +102,12 @@ endif()
 enable_testing()
 
 # Define a function to simplify adding test executables
-function(add_infix_test category test_name)
+function(add_infix_test test_name)
     add_executable(
-    "${category}-${test_name}"
-    t/${category}/${test_name}.c)
+    "${test_name}"
+    t/${test_name}.c)
 
-    target_include_directories("${category}-${test_name}"
+    target_include_directories("${test_name}"
         PRIVATE
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -120,52 +120,52 @@ function(add_infix_test category test_name)
     )
 
     if (test_name STREQUAL "850_regression_cases")
-        target_sources("${category}-${test_name}" PRIVATE "fuzz/fuzz_helpers.c")
+        target_sources(${test_name}" PRIVATE "fuzz/fuzz_helpers.c")
     endif()
 
-    target_compile_definitions("${category}-${test_name}" PRIVATE
+    target_compile_definitions(${test_name}" PRIVATE
         DBLTAP_ENABLE=1
         # This should be behind a --verbose gate
         INFIX_DEBUG_ENABLED=1
    )
 
-    target_link_libraries("${category}-${test_name}" PRIVATE infix)
+    target_link_libraries(${test_name}" PRIVATE infix)
 
     add_test(
-        "${category}-${test_name}"
-        "${category}-${test_name}"
+        ${test_name}"
+        ${test_name}"
     )
 endfunction()
 
-add_infix_test(000_core 001_primitives)
-add_infix_test(000_core 002_simple_calls)
-add_infix_test(000_core 003_type_system_api)
-add_infix_test(000_core 004_signatures)
+add_infix_test(001_primitives)
+add_infix_test(002_simple_calls)
+add_infix_test(003_type_system_api)
+add_infix_test(004_signatures)
 
-add_infix_test(100_aggregates 101_by_value)
-add_infix_test(100_aggregates 102_by_reference)
-add_infix_test(100_aggregates 103_unions)
+add_infix_test(101_by_value)
+add_infix_test(102_by_reference)
+add_infix_test(103_unions)
 
-add_infix_test(200_pointers 201_basic)
-add_infix_test(200_pointers 202_in_structs)
+add_infix_test(201_basic)
+add_infix_test(202_in_structs)
 
-add_infix_test(300_callbacks 301_primitives)
-add_infix_test(300_callbacks 302_aggregates)
-add_infix_test(300_callbacks 303_advanced)
+add_infix_test(301_primitives)
+add_infix_test(302_aggregates)
+add_infix_test(303_advanced)
 
-add_infix_test(400_advanced 401_large_stack)
-add_infix_test(400_advanced 402_variadic_functions)
-add_infix_test(400_advanced 403_special_types)
+add_infix_test(401_large_stack)
+add_infix_test(402_variadic_functions)
+add_infix_test(403_special_types)
 
 # add_infix_test(500_generated )
 
-add_infix_test(800_security 811_fault_injection)
-add_infix_test(800_security 820_threading_helgrind)
-add_infix_test(800_security 830_security)
-add_infix_test(800_security 840_arena_allocator)
-add_infix_test(800_security 850_regression_cases)
+add_infix_test(811_fault_injection)
+add_infix_test(820_threading_helgrind)
+add_infix_test(830_security)
+add_infix_test(840_arena_allocator)
+add_infix_test(850_regression_cases)
 
-add_infix_test(900_performance 901_call_overhead)
-add_infix_test(900_performance 903_generation_benchmark)
+add_infix_test(901_call_overhead)
+add_infix_test(903_generation_benchmark)
 
 # cmake -B build ; cmake --build build; ctest --test-dir build

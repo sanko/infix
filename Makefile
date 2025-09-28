@@ -50,7 +50,7 @@ endif
 LIB_SRCS := $(BASE_SRCS)
 LIB_OBJS := $(LIB_SRCS:.c=.o)
 
-TEST_SRCS   := $(wildcard t/**/*.c)
+TEST_SRCS   := $(wildcard t/*.c)
 TEST_TARGETS:= $(patsubst %.c,%$(EXE_EXT),$(TEST_SRCS))
 TEST_RESULTS:= $(patsubst %.c,%.passed,$(TEST_SRCS))
 

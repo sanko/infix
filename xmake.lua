@@ -30,7 +30,7 @@ target("infix")
 --~     add_defines("INFIX_DEBUG_ENABLED=1")
 
 -- Define the test targets.
-for _, test_file in ipairs(os.files("t/**/*.c")) do
+for _, test_file in ipairs(os.files("t/*.c")) do
     local target_name = path.basename(test_file)
 
     target(target_name)
