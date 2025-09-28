@@ -6,6 +6,36 @@ This document outlines the planned development goals for the infix FFI library, 
 
 *These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.*
 
+- [ ] **Design and Implement New Signature Parser (`signature.c`)**
+    *   **Context:** The current single-character signature system is minimal and lacks the expressiveness needed for rich introspection and clarity. The v1.0 specification is the path forward.
+    *   **Idea:** Replace the existing recursive-descent parser in `signature.c` with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.
+    *   **Goal:** The new `infix_signature_parse` can correctly parse all valid examples from the v1.0 specification, including nested structs, unions, and pointers. It must produce a valid `infix_type` graph in an arena. The old parser will be completely removed.
+    *   **Possible Roadblocks:** This is the largest single task. It requires careful implementation to handle all grammatical rules, whitespace, and error conditions correctly.
+
+- [ ] **Update Type System for New Concepts (`types.c`, `infix.h`)**
+    *   **Context:** The v1.0 spec introduces concepts like `enum` that are not present in the current type system.
+    *   **Idea:**
+        1.  Add a new `INFIX_TYPE_ENUM` category to the `infix_type_category` enum.
+        2.  Add a corresponding `enum_info` struct to the `infix_type_t` `meta` union to store the underlying integer type.
+        3.  Implement a new `infix_type_create_enum(arena, &type, underlying_type)` function.
+    *   **Goal:** The type system can fully represent every construct from the v1.0 signature language. The new parser will use these new functions to build the type graph.
+
+- [ ] **Refactor and Test All Examples and Unit Tests**
+    *   **Context:** Every single test file (`t/*.c`) and example file (`eg/**/*.c`) in the project uses the old signature format. They will all be broken by the new parser.
+    *   **Idea:** Go through every `.c` file in the `t/` and `eg/` directories and update all signature strings to the new v1.o format.
+    *   **Goal:** The entire test suite (`xmake test`) and all examples compile and run successfully using the new parser. This is the definition of "done" for the transition.
+    *   **Possible Roadblocks:** This is a tedious but essential task. It will touch dozens of files and is a good opportunity to improve the clarity of existing tests.
+
+- [ ] **Update All Public Documentation (`README.md`, `cookbook.md`, etc.)**
+    *   **Context:** The project's documentation is a key feature. It must be updated to reflect the new, more powerful signature language.
+    *   **Idea:** Replace the existing `signatures.md` with the new v1.0 specification. Update the `README.md`, `cookbook.md`, and all other documentation to use and explain the new syntax.
+    *   **Goal:** All documentation is consistent and accurately describes the v1.0 signature language. All code examples are updated to the new syntax.
+
+- [ ] **Re-evaluate and Implement Variadic API**
+    *   **Context:** The new spec proposes a different model for handling variadic functions. The current implementation uses a single signature with a `;` separator.
+    *   **Idea:** Remove the `num_fixed_args` parameter from the core `infix_forward_create_manual` and `infix_reverse_create_manual` functions. Implement the new high-level API proposed in the spec, `infix_forward_create_variadic`, which will internally construct the final, concrete signature before calling the manual API.
+    *   **Goal:** The library's public API for variadics matches the new specification. The old semicolon logic is completely removed from the parser.
+
 - [x] **Refactor Platform-Specific Emitters**
     *   **Context:** The initial design mixed platform-specific instruction emitters (e.g., for x86-64) into the generic `trampoline.c` and public `infix.h`, breaking the library's architectural abstraction.
     *   **Idea:** Move all platform-specific emitter functions into their own dedicated, internal modules (e.g., `abi_x64_emitters.c`, `abi_arm64_emitters.c`) with non-public headers.
