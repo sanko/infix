@@ -143,6 +143,8 @@ int main() {
 
 **Solution**: Use `infix_type_from_signature` to parse a signature string into a detailed `infix_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
+Before marshalling, a language binding could use the `pointee_type` information from a pointer member to validate that the data from the dynamic language is of the correct underlying type, preventing type-confusion bugs. For example, if the signature is `{name:c*, id:i}`, the binding can inspect the `name` member, see that it's a `pointer_to(char)`, and verify the script is providing a string before writing the pointer.
+
 > [View the full code](/eg/cookbook/05_dynamic_marshalling.c)
 
 ### Recipe: Small Structs Passed by Value

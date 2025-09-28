@@ -108,6 +108,7 @@ The parser is a primary attack surface and is hardened accordingly.
 The `infix_type` struct is the cornerstone of the library. It provides the generator with the metadata (size, alignment, and composition) needed to correctly handle arguments and return values.
 
 *   **Static vs. Dynamic Types**: Primitives (`int`, `float`, `void*`) are represented by static, singleton `infix_type` instances to avoid allocations. Complex types (structs, unions, arrays) are dynamically allocated from an arena and must not be freed individually.
+*   **Rich Pointers**: A pointer type contains a `pointee_type` field, allowing the type system to represent not just a generic pointer, but a `pointer to int` or a `pointer to struct`, which is crucial for introspection.
 *   **Compiler-Specific Nuances**: The type system is aware of compiler-specific type aliases. For example, it knows that `long double` on MSVC and Clang for Windows is an 8-byte alias for `double`, and returns the canonical `double` type to ensure correct ABI classification.
 *   **Security**: The type creation functions (`infix_type_create_struct`, etc.) contain explicit checks to prevent integer overflows.
 

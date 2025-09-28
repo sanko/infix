@@ -63,7 +63,7 @@ static infix_type _infix_type_pointer = {.category = INFIX_TYPE_POINTER,
                                          .size = sizeof(void *),
                                          .alignment = _Alignof(void *),
                                          .is_arena_allocated = false,
-                                         .meta = {0}};
+                                         .meta.pointer_info = {.pointee_type = &_infix_type_void}};
 static infix_type _infix_type_bool = INFIX_TYPE_INIT(INFIX_PRIMITIVE_BOOL, bool);
 static infix_type _infix_type_uint8 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT8, uint8_t);
 static infix_type _infix_type_sint8 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT8, int8_t);
@@ -159,6 +159,38 @@ c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id i
 c23_nodiscard infix_type * infix_type_create_pointer() {
     return &_infix_type_pointer;
 }
+
+/**
+ * @brief Creates an `infix_type` for a pointer to a specific type, allocating from an arena.
+ * @details This function is the designated way to create a pointer type that retains
+ *          introspection information about what it points to.
+ *
+ * @param arena The arena to allocate the new pointer type from.
+ * @param[out] out_type On success, will point to the new `infix_type`.
+ * @param pointee_type The `infix_type` that the new pointer type points to.
+ * @return `INFIX_SUCCESS` on success, `INFIX_ERROR_INVALID_ARGUMENT` if arguments are null,
+ *         or `INFIX_ERROR_ALLOCATION_FAILED` on allocation failure.
+ */
+c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
+                                                        infix_type ** out_type,
+                                                        infix_type * pointee_type) {
+    if (!out_type || !pointee_type)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    if (type == NULL) {
+        *out_type = NULL;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
+    *type = *infix_type_create_pointer();  // Copy base properties from the void* singleton
+    type->is_arena_allocated = true;
+    type->meta.pointer_info.pointee_type = pointee_type;
+    *out_type = type;
+
+    return INFIX_SUCCESS;
+}
+
 
 /**
  * @brief Creates an `infix_type` descriptor for `void`.

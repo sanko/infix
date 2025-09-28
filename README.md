@@ -59,7 +59,7 @@ int main() {
 -   **Forward Calls:** Call any C function pointer dynamically, with full support for complex arguments and variadic functions.
 -   **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe, re-entrant, and **passes a context pointer as the first argument to your handler**, enabling powerful stateful callbacks.
 -   **Expressive Signature API:** Define entire C function signatures—including nested structs and packed layouts—using a simple string-based language.
--   **Powerful Introspection:** Parse signature strings to get detailed type information at runtime, ideal for data marshalling or serialization.
+-   **Powerful Introspection:** Parse signature strings to get detailed type information at runtime—**including what pointers point to**—ideal for data marshalling, code generation, or building language bindings.
 -   **Secure by Design:** `infix` adheres to strict security principles, validated through extensive fuzzing:
     -   **W^X Memory Protection:** JIT-compiled code is never writable and executable at the same time.
     -   **Guard Pages:** Freed trampolines are made inaccessible to prevent use-after-free bugs.

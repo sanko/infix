@@ -44,13 +44,17 @@
 #endif
 
 /**
- * @def static_assert
- * @brief A C17-compatible alias for the C11 `_Static_assert` keyword.
+ * @def static_assert(cond, msg)
+ * @brief A C17/C11-compatible alias for the `_Static_assert` keyword.
  * @details This macro provides the more modern `static_assert` keyword, making
  *          compile-time assertions more readable and consistent with C++. It has
  *          no functional difference from `_Static_assert`.
  */
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || (defined(_MSC_VER) && _MSC_VER >= 1900)
+// On modern compilers, <assert.h> may also define `static_assert` as a macro.
+// We include it here to ensure the system's definition is seen first, which
+// allows our `#ifndef` guard to correctly prevent a redefinition warning.
+#include <assert.h>
 #ifndef static_assert
 #define static_assert(cond, msg) _Static_assert(cond, msg)
 #endif

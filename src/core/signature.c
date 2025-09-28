@@ -497,17 +497,14 @@ static infix_type * parse_type(parser_state * state) {
 
     skip_whitespace(state);
     while (*state->p == INFIX_SIG_POINTER) {
-        infix_type * arena_ptr_type = infix_arena_alloc(state->arena, sizeof(infix_type), _Alignof(infix_type));
-        if (!arena_ptr_type) {
+        // The previously parsed type is the pointee. Wrap it in a new pointer type.
+        infix_type * pointer_type = nullptr;
+        if (infix_type_create_pointer_to(state->arena, &pointer_type, base_type) != INFIX_SUCCESS) {
             state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
             state->depth--;
             return nullptr;
         }
-        // For ABI purposes, all data pointers are identical in size and alignment,
-        // so we just wrap the current type in a generic pointer type.
-        *arena_ptr_type = *infix_type_create_pointer();
-        arena_ptr_type->is_arena_allocated = true;
-        base_type = arena_ptr_type;
+        base_type = pointer_type;  // The new base type is the pointer type we just created.
         state->p++;
         skip_whitespace(state);
     }

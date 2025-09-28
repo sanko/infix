@@ -50,9 +50,8 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
         infix_status status = infix_type_from_signature(&type, &arena, signature);
 
         ok(status == INFIX_SUCCESS, "Parsing should succeed for '%s'", signature);
-        if (status == INFIX_SUCCESS && type) {
+        if (status == INFIX_SUCCESS && type)
             ok(type->category == expected_cat, "Type category should be %d (got %d)", expected_cat, type->category);
-        }
         else
             fail("Type category check skipped due to parsing failure");
         infix_arena_destroy(arena);
@@ -74,7 +73,7 @@ static void test_type_fail(const char * signature, const char * name) {
 }
 
 TEST {
-    plan(9);
+    plan(10);
 
     subtest("Valid Single Type Signatures") {
         plan(18);
@@ -100,6 +99,29 @@ TEST {
         test_type_ok("([2](i*))*", INFIX_TYPE_POINTER, "Pointer to array of pointers");
     }
 
+    subtest("Pointer Introspection") {
+        plan(6);
+        const char * signature = "{i,d}**";
+        infix_type * type = NULL;
+        infix_arena_t * arena = NULL;
+        infix_status status = infix_type_from_signature(&type, &arena, signature);
+
+        ok(status == INFIX_SUCCESS, "Parsing pointer to pointer to struct succeeds");
+        if (type) {
+            ok(type->category == INFIX_TYPE_POINTER, "Top level is a pointer");
+            infix_type * pointee1 = type->meta.pointer_info.pointee_type;
+            ok(pointee1 && pointee1->category == INFIX_TYPE_POINTER, "It points to another pointer");
+            infix_type * pointee2 = pointee1->meta.pointer_info.pointee_type;
+            ok(pointee2 && pointee2->category == INFIX_TYPE_STRUCT, "The final pointee is a struct");
+            ok(pointee2->meta.aggregate_info.num_members == 2, "Struct has correct member count");
+            ok(pointee2->meta.aggregate_info.members[0].type == infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+               "First member is correct");
+        }
+        else
+            skip(5, "Skipping detail checks due to parse failure");
+        infix_arena_destroy(arena);
+    }
+
     subtest("Detailed Function Pointer Parsing") {
         plan(6);
         const char * signature = "(i,d*=>{c,s})";
@@ -108,13 +130,8 @@ TEST {
         infix_status status = infix_type_from_signature(&type, &arena, signature);
 
         ok(status == INFIX_SUCCESS, "Parsing function pointer type succeeds");
-        if (status != INFIX_SUCCESS || !type) {
-            fail("Skipping detail checks due to parse failure");
-            fail("Skipping detail checks");
-            fail("Skipping detail checks");
-            fail("Skipping detail checks");
-            fail("Skipping detail checks");
-        }
+        if (status != INFIX_SUCCESS || !type)
+            skip(5, "Skipping detail checks due to parse failure");
         else {
             ok(type->category == INFIX_TYPE_REVERSE_TRAMPOLINE, "Category is REVERSE_TRAMPOLINE");
 
@@ -143,10 +160,8 @@ TEST {
                 ok(strcmp(type->meta.aggregate_info.members[0].name, "id") == 0, "First member name is correct");
                 ok(strcmp(type->meta.aggregate_info.members[1].name, "name") == 0, "Second member name is correct");
             }
-            else {
-                fail("Skipping name checks for struct");
-                fail("Skipping name checks for struct");
-            }
+            else
+                skip(2, "Skipping name checks for struct");
             infix_arena_destroy(arena);
         }
 
@@ -164,10 +179,8 @@ TEST {
                        type->meta.aggregate_info.members[1].offset == 8,
                    "Packed member 2 OK");
             }
-            else {
-                fail("Skipping name checks for packed struct");
-                fail("Skipping name checks for packed struct");
-            }
+            else
+                skip(2, "Skipping name checks for packed struct");
             infix_arena_destroy(arena);
         }
 
@@ -311,19 +324,15 @@ TEST {
                 ok(at[0] && at[0]->category == INFIX_TYPE_REVERSE_TRAMPOLINE, "Arg 1 is a function pointer");
                 ok(at[1] && at[1]->category == INFIX_TYPE_PRIMITIVE, "Arg 2 is a primitive");
             }
-            else {
-                fail("Skipping detail checks due to parse failure");
-                fail("Skipping detail checks due to parse failure");
-                fail("Skipping detail checks due to parse failure");
-                fail("Skipping detail checks due to parse failure");
-                fail("Skipping detail checks due to parse failure");
-            }
+            else
+                skip(5, "Skipping detail checks due to parse failure");
             infix_arena_destroy(a);
         }
     }
 
     subtest("Invalid Edge Case Signatures") {
         plan(9);
+
         test_type_fail("()", "Empty grouping");
         test_type_fail("p(1,1){}", "Empty packed struct members");
         test_type_fail("(i=>v", "Unmatched parens in function pointer");

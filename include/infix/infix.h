@@ -221,6 +221,10 @@ struct infix_type_t {
     union {
         /** @brief For `INFIX_TYPE_PRIMITIVE`. */
         infix_primitive_type_id primitive_id;
+        /** @brief For `INFIX_TYPE_POINTER`. */
+        struct {
+            struct infix_type_t * pointee_type;  ///< The type this pointer points to.
+        } pointer_info;
         /** @brief For `INFIX_TYPE_STRUCT` and `INFIX_TYPE_UNION`. */
         struct {
             infix_struct_member * members;  ///< Array of members for the aggregate.
@@ -343,12 +347,25 @@ typedef enum {
 c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id);
 
 /**
- * @brief Creates an `infix_type` descriptor for a generic pointer.
- * @details Returns a pointer to the static, singleton instance for `void*`.
+ * @brief Creates an `infix_type` descriptor for a generic `void*` pointer.
+ * @details Returns a pointer to the static, singleton instance for `void*`. This is
+ *          useful for opaque handles or when type information is not needed.
  * @return A pointer to the static `infix_type` descriptor for a pointer.
  * @warning Do not free the returned pointer.
  */
 c23_nodiscard infix_type * infix_type_create_pointer(void);
+
+/**
+ * @brief Creates an `infix_type` for a pointer to a specific type from an arena.
+ * @details This function creates a new pointer type descriptor that retains information
+ *          about the type it points to, which is essential for introspection.
+ *
+ * @param arena The arena from which to allocate memory for the new pointer type.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
+ * @param pointee_type An `infix_type` describing the type the pointer points to.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t *, infix_type **, infix_type *);
 
 /**
  * @brief Creates an `infix_type` descriptor for the `void` type.

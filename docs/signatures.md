@@ -116,7 +116,9 @@ packed(5, 1) struct {
 ### Pointers and Arrays
 
 -   **Pointer (`*`)**: A postfix modifier. The parser creates a rich pointer type, storing what it points to.
--   **Array (`[]`)**: A postfix modifier. `int32[10]`, `int32*[5][10]`.
+-   **Array (`[]`)**: A postfix modifier that can be applied to any type. For example:
+    - `int32[10]`: An array of 10 integers.
+    - `int32*[5][10]`: A 10-element array of 5-element arrays of pointers to integers.
 
 ### Function Pointers
 
