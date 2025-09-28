@@ -49,7 +49,7 @@ typedef union {
 typedef int64_t TestArray[10];
 
 TEST {
-    plan(3);  // One subtest per major API area.
+    plan(4);  // One subtest per major API area.
 
     subtest("infix_type_create_struct API validation") {
         plan(3);
@@ -75,9 +75,8 @@ TEST {
             ok(struct_type->size == sizeof(TestStruct) && struct_type->alignment == (size_t)_Alignof(TestStruct),
                "Struct size and alignment match compiler's layout");
         }
-        else {
+        else
             skip(1, "Cannot verify layout due to creation failure");
-        }
 
         // 2. Error Handling: Pass a NULL member type.
         infix_struct_member * bad_members =
@@ -114,9 +113,8 @@ TEST {
             ok(union_type->size == sizeof(TestUnion) && union_type->alignment == (size_t)_Alignof(TestUnion),
                "Union size and alignment match compiler's layout");
         }
-        else {
+        else
             skip(1, "Cannot verify layout due to creation failure");
-        }
 
         infix_arena_destroy(arena);
     }
@@ -140,14 +138,37 @@ TEST {
             ok(array_type->size == sizeof(TestArray) && array_type->alignment == (size_t)_Alignof(TestArray),
                "Array size and alignment match compiler's layout");
         }
-        else {
+        else
             skip(1, "Cannot verify layout due to creation failure");
-        }
 
         // 2. Error Handling: Pass a NULL element type.
         infix_type * bad_array_type = NULL;
         status = infix_type_create_array(arena, &bad_array_type, NULL, 10);
         ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array rejects NULL element type");
+
+        infix_arena_destroy(arena);
+    }
+
+    subtest("infix_type_create_enum API validation") {
+        plan(3);
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // 1. Happy Path: Verify correct size and alignment.
+        infix_type * underlying_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_type * enum_type = NULL;
+        infix_status status = infix_type_create_enum(arena, &enum_type, underlying_type);
+
+        if (ok(status == INFIX_SUCCESS && enum_type != NULL, "Successfully created a valid enum type"))
+            ok(enum_type->size == sizeof(int32_t) && enum_type->alignment == (size_t)_Alignof(int32_t),
+               "Enum size and alignment match underlying integer type");
+        else
+            skip(1, "Cannot verify layout due to creation failure");
+
+        // 2. Error Handling: Pass a non-integer underlying type.
+        infix_type * bad_underlying_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+        infix_type * bad_enum_type = NULL;
+        status = infix_type_create_enum(arena, &bad_enum_type, bad_underlying_type);
+        ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_enum rejects non-integer underlying type");
 
         infix_arena_destroy(arena);
     }

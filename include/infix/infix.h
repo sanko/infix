@@ -179,6 +179,9 @@ typedef enum {
     INFIX_TYPE_UNION,               ///< A user-defined union (`union`).
     INFIX_TYPE_ARRAY,               ///< A fixed-size array.
     INFIX_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
+    INFIX_TYPE_ENUM,                ///< A C-style enumeration, with an underlying integer type.
+    INFIX_TYPE_COMPLEX,             ///< A `_Complex` number type.
+    INFIX_TYPE_VECTOR,              ///< A SIMD vector type.
     INFIX_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
 } infix_type_category;
 
@@ -242,6 +245,19 @@ struct infix_type_t {
             size_t num_args;                    ///< The total number of fixed and variadic arguments.
             size_t num_fixed_args;              ///< The number of non-variadic arguments.
         } func_ptr_info;
+        /** @brief For `INFIX_TYPE_ENUM`. */
+        struct {
+            struct infix_type_t * underlying_type;  ///< The integer type this enum is based on.
+        } enum_info;
+        /** @brief For `INFIX_TYPE_COMPLEX`. */
+        struct {
+            struct infix_type_t * base_type;  ///< The floating point type of the real and imaginary parts.
+        } complex_info;
+        /** @brief For `INFIX_TYPE_VECTOR`. */
+        struct {
+            struct infix_type_t * element_type;  ///< The type of the elements in the vector.
+            size_t num_elements;                 ///< The number of elements in the vector.
+        } vector_info;
     } meta;
 };
 
@@ -432,6 +448,18 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type *
  * @note All allocated memory is owned by the arena.
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
+
+/**
+ * @brief Creates a new `infix_type` for an enum from an arena.
+ * @details An enum is treated as a semantic alias for its underlying integer type for
+ * ABI purposes. This function creates a type that has the same size and alignment
+ * as its underlying type.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param underlying_type The integer `infix_type` that this enum is based on (e.g., `SINT32`).
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **, infix_type *);
 
 /**
  * @brief A factory function to create an `infix_struct_member`.

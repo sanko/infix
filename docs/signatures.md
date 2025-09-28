@@ -59,6 +59,8 @@ These keywords represent standard C types whose size can vary by platform. The F
 | `float`     | 32 bits             | `float`              | `f32`                       | `ctypes.c_float`           | A 32-bit single-precision floating-point number.                          |
 | `double`    | 64 bits             | `double`             | `f64`                       | `ctypes.c_double`          | A 64-bit double-precision floating-point number.                          |
 
+See https://en.wikipedia.org/wiki/Comparison_of_programming_languages_(basic_instructions) for more languages to compare against.
+
 ### 2.2 Tier 2: Explicit Fixed-Width Types
 
 These keywords are used when the exact size of a type is known and required. This is essential for network protocols, file formats, and fixed-layout APIs.

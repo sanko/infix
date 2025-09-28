@@ -59,6 +59,7 @@
 // simplifying the user's code.
 static infix_type _infix_type_void = {
     .category = INFIX_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .meta = {0}};
+// The generic pointer now explicitly points to void for introspection purposes.
 static infix_type _infix_type_pointer = {.category = INFIX_TYPE_POINTER,
                                          .size = sizeof(void *),
                                          .alignment = _Alignof(void *),
@@ -161,6 +162,18 @@ c23_nodiscard infix_type * infix_type_create_pointer() {
 }
 
 /**
+ * @brief Creates an `infix_type` descriptor for the `void` type.
+ * @details Returns a pointer to the static singleton instance describing the `void` type,
+ *          used exclusively for the return type of a function that returns nothing.
+ *
+ * @return A pointer to the statically-allocated `infix_type` for void.
+ * @warning Do not free the returned pointer.
+ */
+c23_nodiscard infix_type * infix_type_create_void() {
+    return &_infix_type_void;
+}
+
+/**
  * @brief Creates an `infix_type` for a pointer to a specific type, allocating from an arena.
  * @details This function is the designated way to create a pointer type that retains
  *          introspection information about what it points to.
@@ -187,21 +200,7 @@ c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
     type->is_arena_allocated = true;
     type->meta.pointer_info.pointee_type = pointee_type;
     *out_type = type;
-
     return INFIX_SUCCESS;
-}
-
-
-/**
- * @brief Creates an `infix_type` descriptor for `void`.
- * @details Returns a pointer to the static singleton instance describing the `void` type,
- *          used exclusively for the return type of a function that returns nothing.
- *
- * @return A pointer to the statically-allocated `infix_type` for void.
- * @warning Do not free the returned pointer.
- */
-c23_nodiscard infix_type * infix_type_create_void() {
-    return &_infix_type_void;
 }
 
 /**
@@ -370,9 +369,8 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
                                                    infix_type ** out_type,
                                                    infix_struct_member * members,
                                                    size_t num_members) {
-    if (out_type == NULL) {
+    if (out_type == NULL)
         return INFIX_ERROR_INVALID_ARGUMENT;
-    }
 
     // Validate that all member types are non-null before proceeding.
     for (size_t i = 0; i < num_members; ++i) {
@@ -401,12 +399,10 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     // A union's size is determined by its largest member, and its alignment
     // by the strictest alignment of any member.
     for (size_t i = 0; i < num_members; ++i) {
-        if (members[i].type->size > max_size) {
+        if (members[i].type->size > max_size)
             max_size = members[i].type->size;
-        }
-        if (members[i].type->alignment > max_alignment) {
+        if (members[i].type->alignment > max_alignment)
             max_alignment = members[i].type->alignment;
-        }
     }
     type->alignment = max_alignment;
 
@@ -475,6 +471,44 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
     INFIX_DEBUG_PRINTF("Created arena array type. Size: %llu, Alignment: %llu",
                        (unsigned long long)type->size,
                        (unsigned long long)type->alignment);
+
+    *out_type = type;
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @brief Creates a new `infix_type` for an enum from an arena.
+ * @details An enum is treated as a semantic alias for its underlying integer type for
+ * ABI purposes. This function creates a type that has the same size and alignment
+ * as its underlying type.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param underlying_type The integer `infix_type` that this enum is based on (e.g., `SINT32`).
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
+                                                  infix_type ** out_type,
+                                                  infix_type * underlying_type) {
+    if (out_type == NULL || underlying_type == NULL)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // Enums must be based on an integer type.
+    if (underlying_type->category != INFIX_TYPE_PRIMITIVE ||
+        underlying_type->meta.primitive_id > INFIX_PRIMITIVE_SINT128) {
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    if (type == NULL) {
+        *out_type = NULL;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
+    type->is_arena_allocated = true;
+    type->category = INFIX_TYPE_ENUM;
+    type->size = underlying_type->size;
+    type->alignment = underlying_type->alignment;
+    type->meta.enum_info.underlying_type = underlying_type;
 
     *out_type = type;
     return INFIX_SUCCESS;
