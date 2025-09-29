@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: CC-BY-4.0
  */
 
-#include <infix.h>
+#include <infix/infix.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -29,9 +29,9 @@ int main() {
         return 1;
 
     // 2. Describe the function signature using the high-level string API.
-    // Signature for int(HWND, LPCWSTR, LPCWSTR, UINT)
-    // HWND and LPCWSTR are pointer types (v*), and UINT is a 32-bit uint (j).
-    const char * signature = "v*,v*,v*,j=>i";
+    // Signature for int MessageBoxW(HWND hWnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType)
+    // HWND and LPCWSTR are pointer types (*void), and UINT is a 32-bit uint.
+    const char * signature = "(*void, *void, *void, uint) -> int";
 
     // 3. Generate the trampoline from the signature.
     infix_forward_t * trampoline = NULL;

@@ -1,4 +1,3 @@
-
 # infix FFI: Internals Documentation
 
 This document provides a deep dive into the architecture and internal workings of `infix`. It's a little disorganized but is intended for maintainers and developers looking to contribute or understand the library's design philosophy.
@@ -595,7 +594,7 @@ In a Call VM model, the library provides a set of low-level functions to build a
     -   Dynamically pack data from a scripting language into a C struct buffer.
     -   Generate a schema for a user interface or a serializer.
     -   Validate data.
--   **Ergonomics:** For the end-user, the complexity is hidden behind a single call: `infix_forward_create("i,{d,c*}*=>v", ...)`.
+-   **Ergonomics:** For the end-user, the complexity is hidden behind a single call: `infix_forward_create("({int, *double}, *char) -> int", ...)``.
 
 **The Trade-off:** The upfront cost of trampoline generation is higher than a single interpreted call, and it requires allocating executable memory. This makes `infix`'s design philosophy clear: it is optimized for applications where a trampoline is **generated once and called many times**, and for systems that benefit from a **powerful, introspectable type system**.
 

@@ -1,6 +1,6 @@
 # `infix`: A JIT-Powered FFI Library for C
 
-`infix` is a modern FFI library for C that lets you call any C function—or create C callbacks—by describing them in a simple string like `"{i,d*},c*=>i"`.
+`infix` is a modern FFI library for C that lets you call any C function—or create C callbacks—by describing them in a simple, human-readable string like `({int, *double}, *char) -> int`.
 
 At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code wrappers. These "trampolines" handle all the low-level details of the target platform's calling convention (ABI) behind a clean, uniform API. This makes `infix` a powerful tool for embedding scripting languages, building plugin systems, and simplifying complex C interoperability.
 
@@ -35,7 +35,7 @@ int main() {
 
     // 2. Create an infix trampoline for the function's signature: void(const char*)
     infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "c*=>v");
+    infix_forward_create(&trampoline, "(*char) -> void");
 
     // 3. Prepare arguments and call the function via the trampoline.
     infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
@@ -59,7 +59,7 @@ int main() {
 -   **Forward Calls:** Call any C function pointer dynamically, with full support for complex arguments and variadic functions.
 -   **Reverse Calls (Callbacks):** Generate native, C-callable function pointers from custom handlers. The callback mechanism is thread-safe, re-entrant, and **passes a context pointer as the first argument to your handler**, enabling powerful stateful callbacks.
 -   **Expressive Signature API:** Define entire C function signatures—including nested structs and packed layouts—using a simple string-based language.
--   **Powerful Introspection:** Parse signature strings to get detailed type information at runtime—**including what pointers point to**—ideal for data marshalling, code generation, or building language bindings.
+-   **Powerful Introspection:** Parse signature strings to get detailed type information at runtime—**including what pointers point to and member names**—ideal for data marshalling, code generation, or building language bindings.
 -   **Secure by Design:** `infix` adheres to strict security principles, validated through extensive fuzzing:
     -   **W^X Memory Protection:** JIT-compiled code is never writable and executable at the same time.
     -   **Guard Pages:** Freed trampolines are made inaccessible to prevent use-after-free bugs.
@@ -94,14 +94,14 @@ xmake run 01_simple_call
 
 ### The Signature API (Recommended)
 
-This API generates trampolines from a simple string: `"arg1,arg2;variadic_arg=>ret_type"`. It's the easiest and safest way to use the library.
+This API generates trampolines from a simple string: `(arg1, arg2, ...) -> ret_type`. It's the easiest and safest way to use the library.
 
 > **For a complete guide to the signature language, see the [Signature Language Reference](docs/signatures.md).**
 
 **Key Functions:**
--   `infix_forward_create(tramp, "i,i=>i")`: Creates a forward trampoline from a signature string.
--   `infix_reverse_create(ctx, "i=>v", handler, data)`: Creates a callback from a signature string and a C handler.
--   `infix_type_from_signature(type, arena, "{i,d}")`: Parses a single data type signature for introspection.
+-   `infix_forward_create(tramp, "(int, int) -> int")`: Creates a forward trampoline from a signature string.
+-   `infix_reverse_create(ctx, "(int) -> void", handler, data)`: Creates a callback from a signature string and a C handler.
+-   `infix_type_from_signature(type, arena, "{int, double}")`: Parses a single data type signature for introspection.
 -   `infix_signature_parse(...)`: Parses a full function signature for advanced use cases.
 
 ### The Manual API (Advanced)

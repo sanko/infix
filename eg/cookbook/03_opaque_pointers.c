@@ -9,11 +9,11 @@
 
 int main() {
     // 1. Create trampolines for the C API using signatures.
-    //    'v*' is the canonical signature for any opaque pointer or handle.
+    //    `*void` is the canonical signature for any opaque pointer or handle.
     infix_forward_t *t_create, *t_destroy, *t_get;
-    infix_forward_create(&t_create, "i=>v*");   // int -> void*
-    infix_forward_create(&t_destroy, "v*=>v");  // void*(void)
-    infix_forward_create(&t_get, "v*=>i");      // void* -> int
+    infix_forward_create(&t_create, "(int) -> *void");    // create_handle
+    infix_forward_create(&t_destroy, "(*void) -> void");  // destroy_handle
+    infix_forward_create(&t_get, "(*void) -> int");       // get_handle_value
 
     // 2. Use the API through the trampolines.
     my_handle_t * handle = NULL;

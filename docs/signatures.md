@@ -99,8 +99,9 @@ A key design principle is the distinction between types defined by a **body** (`
 | **Union**            | `union<Name><...>` <br/> `<...>`             | A C `union`, defined by its `<...>` body. The named form is for definition; the anonymous form is for inline use.                                                                                                                                                              |
 | **Enum**             | `e<Name>:<type>` <br/> `e:<type>`           | A C `enum`. This is a semantic alias for an underlying integer `<type>`, which is **required**. The named form is for definition; the anonymous form `e:` is for inline use.                                                                                                    |
 | **Function Signature** | `(<arg_types>) -> <return_type>`          | Defines the type of a function. Arguments may be named (`(name:type)`) or anonymous (`(type)`).                                                                                                                                                                            |
+| **Variadic Signature** | `(<fixed_args>; <variadic_args>) -> <return_type>` | Defines a function signature. Fixed arguments are separated by commas. A semicolon `;` **must** appear to separate the fixed arguments from the variadic arguments.                                                                                                            |
 | **Function Pointer** | `*((<arg_types>) -> <return_type>)`        | A pointer to a function. This follows the universal pointer rule: it is a pointer `*` to a function signature type.                                                                                                                                                              |
-| **Variadic Arguments** | `...`                                     | The ellipsis `...` token, which must appear as the last element in a function's argument list.                                                                                                                                                                         |
+| **Variadic Function Pointer** | `*(<fixed_args>; <variadic_args>) -> <return_type>)`        | A pointer to a variadic function. This follows the universal pointer rule: it is a pointer `*` to a function signature type.                                                                                                                                                              |
 | **Annotations**      | `"name" <type_or_signature>`              | Optional string literal prefixes that provide additional ABI details. Standardized annotations include `"stdcall"`, `"cdecl"`, and `"fastcall"`. Interpretation of other annotations is implementation-defined.                                                            |
 
 ***
@@ -126,8 +127,8 @@ This table provides a wide variety of examples to demonstrate the expressiveness
 | `<int, float64>`                                     | An anonymous union that can hold either an `int` or a 64-bit `float64`.                                               |
 | `<as_int:int32, as_ptr:*void>`                        | An anonymous union with two named fields, a 32-bit `int` and a generic pointer.                                       |
 | `() -> void`                                         | A function that takes no arguments and returns nothing.                                                               |
-| `(*char, int) -> int`                                | A function that takes a `char*` and an `int`, and returns an `int`.                                                   |
-| `(*char, ... ) -> int`                                | `printf`: A variadic function that must take a `char*` and can take any number of subsequent arguments.               |
+| `(*char, int) -> int`                                | A function that takes a `*char` and an `int`, and returns an `int`.                                                   |
+| `(*char; int, double) -> int`                        | A variadic call to `printf("%d %f", ...)` taking a `*char`, an `int`, and a `double`. The semicolon `;` marks the start of the variadic part. |
 | `"stdcall" (*void, uint32) -> int`                     | A Windows API-style function using the `stdcall` calling convention.                                                  |
 | `e:int`                                              | An anonymous enum whose underlying ABI type is `int`.                                                                 |
 | `e<Color>:uint8`                                     | The definition of a named enum `Color` whose underlying ABI type is `uint8`.                                          |
@@ -220,8 +221,9 @@ enum_type           ::= 'e' ( '<' Identifier '>' )? ':' value_type
 complex_type        ::= 'c' '[' float_type ']'
 simd_type           ::= 'v' ( ( '[' Integer ':' value_type ']' ) | Integer )
 
-function_type       ::= '(' arg_list? ')' '->' value_type
-arg_list            ::= arg ( ',' arg )* ( ',' '...' )?
+function_type       ::= '(' fixed_arg_list? ( ';' variadic_arg_list? )? ')' '->' value_type
+fixed_arg_list      ::= arg ( ',' arg )*
+variadic_arg_list   ::= arg ( ',' arg )*
 arg                 ::= ( Identifier ':' )? value_type
 
 primitive_type      ::= abstract_type | fixed_width_type

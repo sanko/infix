@@ -71,7 +71,7 @@ typedef struct {
 
 /** @brief The main recursive function for parsing any single value type. */
 static infix_type * parse_type(parser_state * state);
-/** @brief Parses the components of a full function signature: `(<args>) -> <ret>`. */
+/** @brief Parses the components of a full function signature: `(fixed...; variadic...) -> ret`. */
 static infix_status parse_function_signature_details(parser_state * state,
                                                      infix_type ** out_ret_type,
                                                      infix_function_argument ** out_args,
@@ -183,9 +183,9 @@ static bool consume_keyword(parser_state * state, const char * keyword) {
     if (strncmp(state->p, keyword, len) == 0) {
         // This is the "whole word" check. The character after the keyword
         // cannot be alphanumeric, which would imply it's part of a larger word.
-        if (isalnum((unsigned char)state->p[len]) || state->p[len] == '_') {
+        if (isalnum((unsigned char)state->p[len]) || state->p[len] == '_')
             return false;
-        }
+
         // The keyword matched. Advance the pointer and return success.
         state->p += len;
         skip_whitespace(state);
@@ -269,6 +269,7 @@ static infix_type * parse_primitive(parser_state * state) {
     // If no keyword matches, it's not a primitive type.
     return nullptr;
 }
+
 /**
  * @internal
  * @brief Peeks ahead in the string to resolve a grammatical ambiguity.
@@ -320,10 +321,6 @@ static bool is_function_signature_ahead(const parser_state * state) {
     return (p[0] == '-' && p[1] == '>');
 }
 
-// =================================================================================================
-// Recursive-Descent Parsers
-// =================================================================================================
-
 /**
  * @internal
  * @brief Parses a function signature string and creates a function type descriptor.
@@ -343,7 +340,7 @@ static bool is_function_signature_ahead(const parser_state * state) {
  */
 static infix_type * parse_function_type(parser_state * state) {
     infix_type * ret_type = nullptr;
-    infix_function_argument * args = nullptr;  // FIX: Use the correct struct type
+    infix_function_argument * args = nullptr;
     size_t num_args = 0, num_fixed = 0;
 
     // Delegate the heavy lifting of parsing the argument list, arrow, and return type.
@@ -364,7 +361,7 @@ static infix_type * parse_function_type(parser_state * state) {
 
     // Populate the metadata with the parsed components.
     func_type->meta.func_ptr_info.return_type = ret_type;
-    func_type->meta.func_ptr_info.args = args;  // FIX: Assign to the correct member `args`
+    func_type->meta.func_ptr_info.args = args;
     func_type->meta.func_ptr_info.num_args = num_args;
     func_type->meta.func_ptr_info.num_fixed_args = num_fixed;
 
@@ -469,9 +466,8 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                     return nullptr;
                 }
             }
-            else if (*state->p == end_char) {
+            else if (*state->p == end_char)
                 break;  // End of the list.
-            }
             else {
                 // Anything else is a syntax error.
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
@@ -547,9 +543,8 @@ static infix_type * parse_packed_struct(parser_state * state) {
     // For packed structs, the size is simply the sum of member sizes, as there's
     // no internal padding. The final layout calculation is handled by the `_create` function.
     size_t total_size = 0;
-    for (size_t i = 0; i < num_members; ++i) {
+    for (size_t i = 0; i < num_members; ++i)
         total_size += members[i].type->size;
-    }
 
     infix_status status =
         infix_type_create_packed_struct(state->arena, &packed_type, total_size, alignment, members, num_members);
@@ -559,6 +554,7 @@ static infix_type * parse_packed_struct(parser_state * state) {
     }
     return packed_type;
 }
+
 /**
  * @internal
  * @brief The main entry point for the recursive-descent parser.
@@ -609,9 +605,8 @@ static infix_type * parse_type(parser_state * state) {
     else if (*state->p == '(') {
         // GROUPED TYPE or FUNCTION TYPE
         // This is the ambiguous case. We must look ahead to see if it's a function.
-        if (is_function_signature_ahead(state)) {
+        if (is_function_signature_ahead(state))
             result_type = parse_function_type(state);
-        }
         else {
             // It's a simple grouped type, e.g., *( (int)->void ).
             state->p++;  // Consume '('.
@@ -627,8 +622,8 @@ static infix_type * parse_type(parser_state * state) {
                 result_type = nullptr;
             }
             else {
-                state->p++;
-            }  // Consume ')'.
+                state->p++;  // Consume ')'.
+            }
         }
     }
     else if (*state->p == '[') {
@@ -671,18 +666,15 @@ static infix_type * parse_type(parser_state * state) {
             result_type = nullptr;
         }
     }
-    else if (*state->p == '!') {
+    else if (*state->p == '!')
         // PACKED STRUCT TYPE: !<align>?:{...}
         result_type = parse_packed_struct(state);
-    }
-    else if (*state->p == '{') {
+    else if (*state->p == '{')
         // ANONYMOUS STRUCT TYPE: {...}
         result_type = parse_aggregate(state, '{', '}', nullptr);
-    }
-    else if (*state->p == '<') {
+    else if (*state->p == '<')
         // ANONYMOUS UNION TYPE: <...>
         result_type = parse_aggregate(state, '<', '>', nullptr);
-    }
     else if (consume_keyword(state, "struct")) {
         // NAMED STRUCT or REFERENCE: struct<Name>{...} or struct<Name>
         if (*state->p != '<') {
@@ -705,9 +697,8 @@ static infix_type * parse_type(parser_state * state) {
         state->p++;
         skip_whitespace(state);
         // If a body follows, it's a definition.
-        if (*state->p == '{') {
+        if (*state->p == '{')
             result_type = parse_aggregate(state, '{', '}', name);
-        }
         else {
             // Otherwise, it's a forward declaration (a named reference).
             infix_status status = infix_type_create_named_reference(state->arena, &result_type, name);
@@ -739,9 +730,8 @@ static infix_type * parse_type(parser_state * state) {
         state->p++;
         skip_whitespace(state);
         // If a body follows, it's a definition.
-        if (*state->p == '<') {
+        if (*state->p == '<')
             result_type = parse_aggregate(state, '<', '>', name);
-        }
         else {
             // Otherwise, it's a forward declaration (a named reference).
             infix_status status = infix_type_create_named_reference(state->arena, &result_type, name);
@@ -872,9 +862,187 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
     state->depth--;
     return agg_type;
 }
-// =================================================================================================
-// Public API Implementations
-// =================================================================================================
+
+/**
+ * @internal
+ * @brief Parses the complete structure of a function signature string.
+ * @details This is the internal workhorse for `infix_signature_parse`. It handles
+ *          the entire `(fixed...; variadic...) -> ret` structure. It uses a
+ *          two-phase approach: first parsing all comma-separated fixed arguments,
+ *          then, if a semicolon is found, parsing all comma-separated variadic
+ *          arguments. It also enforces stricter grammar rules, such as forbidding
+ *          trailing commas.
+ *
+ * @param state The current parser state.
+ * @param[out] out_ret_type A pointer to the parsed return `infix_type`.
+ * @param[out] out_args A pointer to an array of parsed function arguments.
+ * @param[out] out_num_args The total number of arguments parsed.
+ * @param[out] out_num_fixed_args The number of non-variadic arguments.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+static infix_status parse_function_signature_details(parser_state * state,
+                                                     infix_type ** out_ret_type,
+                                                     infix_function_argument ** out_args,
+                                                     size_t * out_num_args,
+                                                     size_t * out_num_fixed_args) {
+    if (*state->p != '(')
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    state->p++;
+    skip_whitespace(state);
+
+    typedef struct arg_node {
+        infix_function_argument arg;
+        struct arg_node * next;
+    } arg_node;
+    arg_node *head = nullptr, *tail = nullptr;
+    size_t num_args = 0;
+
+    // Phase 1: Parse Fixed Arguments
+    if (*state->p != ')') {
+        while (1) {
+            skip_whitespace(state);
+            // The list of fixed arguments can be terminated by a ')' or a ';'.
+            if (*state->p == ')' || *state->p == ';')
+                break;
+
+            const char * p_before_arg = state->p;
+            const char * name = parse_identifier(state);
+            skip_whitespace(state);
+            if (name && *state->p == ':')
+                state->p++;
+            else {
+                name = nullptr;
+                state->p = p_before_arg;
+            }
+
+            infix_type * arg_type = parse_type(state);
+            if (!arg_type)
+                return state->last_error;
+
+            arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
+            if (!node) {
+                state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
+                return INFIX_ERROR_ALLOCATION_FAILED;
+            }
+            node->arg.type = arg_type;
+            node->arg.name = name;
+            node->next = nullptr;
+            if (!head)
+                head = tail = node;
+            else {
+                tail->next = node;
+                tail = node;
+            }
+            num_args++;
+
+            skip_whitespace(state);
+            if (*state->p == ',') {
+                state->p++;
+                skip_whitespace(state);
+                // A comma must be followed by another type, not the end of the list.
+                if (*state->p == ')' || *state->p == ';') {
+                    state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+                    return INFIX_ERROR_INVALID_ARGUMENT;
+                }
+            }
+            else if (*state->p != ')' && *state->p != ';')
+                return INFIX_ERROR_INVALID_ARGUMENT;
+            else
+                break;  // End of the fixed argument list.
+        }
+    }
+    *out_num_fixed_args = num_args;
+
+    // Phase 2: Parse Variadic Arguments (if any)
+    if (*state->p == ';') {
+        state->p++;
+        if (*state->p != ')') {  // Check for arguments after the separator.
+            while (1) {
+                skip_whitespace(state);
+                if (*state->p == ')')
+                    break;  // End of variadic list.
+
+                const char * p_before_arg = state->p;
+                const char * name = parse_identifier(state);
+                skip_whitespace(state);
+                if (name && *state->p == ':')
+                    state->p++;
+                else {
+                    name = nullptr;
+                    state->p = p_before_arg;
+                }
+
+                infix_type * arg_type = parse_type(state);
+                if (!arg_type)
+                    return state->last_error;
+
+                arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
+                if (!node) {
+                    state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
+                    return INFIX_ERROR_ALLOCATION_FAILED;
+                }
+                node->arg.type = arg_type;
+                node->arg.name = name;
+                node->next = nullptr;
+                if (!head)
+                    head = tail = node;
+                else {
+                    tail->next = node;
+                    tail = node;
+                }
+                num_args++;
+
+                skip_whitespace(state);
+                if (*state->p == ',') {
+                    state->p++;
+                    skip_whitespace(state);
+                    // A comma must be followed by another type, not the end of the list.
+                    if (*state->p == ')') {
+                        state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+                        return INFIX_ERROR_INVALID_ARGUMENT;
+                    }
+                }
+                else if (*state->p != ')')
+                    return INFIX_ERROR_INVALID_ARGUMENT;
+                else
+                    break;
+            }
+        }
+    }
+
+    skip_whitespace(state);
+    if (*state->p != ')')
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    state->p++;
+    skip_whitespace(state);
+
+    if (state->p[0] != '-' || state->p[1] != '>')
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    state->p += 2;
+
+    *out_ret_type = parse_type(state);
+    if (!*out_ret_type)
+        return state->last_error;
+
+    // Convert the linked list into a final, contiguous array.
+    infix_function_argument * args = num_args > 0
+        ? infix_arena_alloc(state->arena, sizeof(infix_function_argument) * num_args, _Alignof(infix_function_argument))
+        : nullptr;
+    if (num_args > 0 && !args) {
+        state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    arg_node * current = head;
+    for (size_t i = 0; i < num_args; i++) {
+        args[i] = current->arg;
+        current = current->next;
+    }
+
+    *out_args = args;
+    *out_num_args = num_args;
+
+    return INFIX_SUCCESS;
+}
 
 /**
  * @brief Parses a signature string representing a single data type.
@@ -906,7 +1074,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Each parse operation creates its own arena for the resulting type graph.
-    *out_arena = infix_arena_create(4096);  // 4KB is a reasonable default.
+    *out_arena = infix_arena_create(4096);
     if (!*out_arena)
         return INFIX_ERROR_ALLOCATION_FAILED;
 
@@ -933,150 +1101,6 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
     }
 
     *out_type = type;
-    return INFIX_SUCCESS;
-}
-
-/**
- * @internal
- * @brief Parses the complete structure of a function signature string.
- * @details This is the internal workhorse for `infix_signature_parse`. It handles
- *          the entire `(<args...>) -> <return_type>` structure. It parses the
- *          argument list within the parentheses, including handling the `...`
- *          variadic marker, then consumes the `->` arrow, and finally parses
- *          the return type.
- *
- *          Like `parse_aggregate_members`, it uses a temporary linked list on the
- *          arena to collect argument types before creating a final, contiguous
- *          array.
- *
- * @param state The current parser state.
- * @param[out] out_ret_type A pointer to the parsed return `infix_type`.
- * @param[out] out_args A pointer to an array of parsed function arguments.
- * @param[out] out_num_args The total number of arguments parsed.
- * @param[out] out_num_fixed_args The number of non-variadic arguments.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
- */
-static infix_status parse_function_signature_details(parser_state * state,
-                                                     infix_type ** out_ret_type,
-                                                     infix_function_argument ** out_args,
-                                                     size_t * out_num_args,
-                                                     size_t * out_num_fixed_args) {
-    if (*state->p != '(')
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    state->p++;
-    skip_whitespace(state);
-
-    // The temporary linked-list node now stores a full function argument.
-    typedef struct arg_node {
-        infix_function_argument arg;
-        struct arg_node * next;
-    } arg_node;
-    arg_node *head = nullptr, *tail = nullptr;
-    size_t num_fixed_args_count = 0;
-    bool is_variadic = false;
-
-    // Parse the argument list until the closing parenthesis is found.
-    if (*state->p != ')') {
-        while (1) {
-            skip_whitespace(state);
-            // Check for the variadic '...' marker.
-            if (state->p[0] == '.' && state->p[1] == '.' && state->p[2] == '.') {
-                // It's a syntax error to have multiple '...' markers.
-                if (is_variadic) {
-                    state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                    return state->last_error;
-                }
-                state->p += 3;
-                is_variadic = true;
-                skip_whitespace(state);
-                // The '...' must be the last element in the argument list.
-                if (*state->p != ')') {
-                    state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                    return state->last_error;
-                }
-                break;
-            }
-
-            // Parse the argument's name
-            const char * p_before_arg = state->p;
-            const char * name = parse_identifier(state);
-            skip_whitespace(state);
-
-            if (name && *state->p == ':')
-                state->p++;  // Consume the colon.
-            else {
-                // It was not a "name:", so it must have been a type. Backtrack.
-                name = nullptr;
-                state->p = p_before_arg;
-            }
-
-            // Parse the next argument type.
-            infix_type * arg_type = parse_type(state);
-            if (!arg_type)
-                return state->last_error;
-
-            // Add the parsed node to our temporary linked list.
-            arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
-            if (!node) {
-                state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-                return INFIX_ERROR_ALLOCATION_FAILED;
-            }
-            node->arg.type = arg_type;
-            node->arg.name = name;  // Store the name (anonymous args == nullptr)
-            node->next = nullptr;
-            if (!head)
-                head = tail = node;
-            else {
-                tail->next = node;
-                tail = node;
-            }
-            num_fixed_args_count++;
-
-            skip_whitespace(state);
-            if (*state->p == ',')
-                state->p++;
-            else
-                break;  // No more arguments.
-        }
-    }
-
-    skip_whitespace(state);
-    if (*state->p != ')')
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    state->p++;
-    skip_whitespace(state);
-
-    // After the argument list, we must find the '->' arrow.
-    if (state->p[0] != '-' || state->p[1] != '>')
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    state->p += 2;
-
-    // Finally, parse the return type.
-    *out_ret_type = parse_type(state);
-    if (!*out_ret_type)
-        return state->last_error;
-
-    // Allocate the final, contiguous array of infix_function_argument.
-    // The array only needs to hold the fixed (non-variadic) arguments.
-    infix_function_argument * args = num_fixed_args_count > 0
-        ? infix_arena_alloc(
-              state->arena, sizeof(infix_function_argument) * num_fixed_args_count, _Alignof(infix_function_argument))
-        : nullptr;
-    if (num_fixed_args_count > 0 && !args) {
-        state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-        return INFIX_ERROR_ALLOCATION_FAILED;
-    }
-
-    arg_node * current = head;
-    for (size_t i = 0; i < num_fixed_args_count; i++) {
-        args[i] = current->arg;
-        current = current->next;
-    }
-
-    *out_args = args;
-    *out_num_fixed_args = num_fixed_args_count;
-    *out_num_args = num_fixed_args_count + (is_variadic ? 1 : 0);
-
     return INFIX_SUCCESS;
 }
 
@@ -1117,9 +1141,8 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
     if (status == INFIX_SUCCESS) {
         skip_whitespace(&state);
         // Ensure the entire string was consumed.
-        if (state.p[0] != '\0') {
+        if (state.p[0] != '\0')
             status = INFIX_ERROR_INVALID_ARGUMENT;
-        }
     }
 
     // Clean up the arena on any failure.
@@ -1158,14 +1181,13 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
 
     // Bridge: The manual API expects an array of `infix_type*`. We must extract
     // the type pointers from our parsed arguments to build this temporary array.
-    // The size of this array should correspond to the number of fixed arguments.
     infix_type ** arg_types =
-        (num_fixed > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_fixed, _Alignof(infix_type *)) : nullptr;
-    if (num_fixed > 0 && !arg_types) {
+        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : NULL;
+    if (num_args > 0 && !arg_types) {
         infix_arena_destroy(arena);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    for (size_t i = 0; i < num_fixed; ++i)
+    for (size_t i = 0; i < num_args; ++i)
         arg_types[i] = args[i].type;
 
     // Then, pass the resulting types to the manual creation function.
@@ -1205,12 +1227,12 @@ c23_nodiscard infix_status infix_reverse_create(infix_reverse_t ** out_context,
 
     // Bridge logic, same as in infix_forward_create.
     infix_type ** arg_types =
-        (num_fixed > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_fixed, _Alignof(infix_type *)) : nullptr;
-    if (num_fixed > 0 && !arg_types) {
+        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : NULL;
+    if (num_args > 0 && !arg_types) {
         infix_arena_destroy(arena);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    for (size_t i = 0; i < num_fixed; ++i)
+    for (size_t i = 0; i < num_args; ++i)
         arg_types[i] = args[i].type;
 
     // Then, create the reverse trampoline from the parsed types.

@@ -14,8 +14,8 @@ double process_point(Point p) {
 
 int main() {
     // 1. Describe the signature: double(Point).
-    //    A Point is a struct of two doubles: {d,d}.
-    const char * signature = "{d,d}=>d";
+    //    A Point is an anonymous struct of two doubles: {double, double}.
+    const char * signature = "({double, double}) -> double";
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 

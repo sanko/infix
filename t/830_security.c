@@ -149,7 +149,7 @@ TEST {
             }
             else if (pid == 0) {  // Child process
                 infix_forward_t * trampoline = NULL;
-                infix_status status = infix_forward_create(&trampoline, "(int32)=>int32");
+                infix_status status = infix_forward_create(&trampoline, "(int32)->int32");
                 if (status != INFIX_SUCCESS)
                     exit(2);  // Exit with error if creation fails
                 infix_cif_func dangling_ptr = (infix_cif_func)infix_forward_get_code(trampoline);

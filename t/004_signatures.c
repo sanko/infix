@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2025 Sanko Robinson
  *
@@ -96,7 +95,7 @@ TEST {
     }
 
     subtest("Valid Full Function Signatures (v1.0 Syntax)") {
-        plan(6);
+        plan(8);  // Increased plan for new variadic tests
         subtest("Simple function: (int32, double) -> int64") {
             plan(4);
             infix_arena_t * a = NULL;
@@ -113,10 +112,8 @@ TEST {
             }
             else
                 skip(3, "Detail checks skipped");
-
             infix_arena_destroy(a);
         }
-
         subtest("No-arg function: () -> void") {
             plan(3);
             infix_arena_t * a = NULL;
@@ -131,28 +128,59 @@ TEST {
             }
             else
                 skip(2, "Detail checks skipped");
-
             infix_arena_destroy(a);
         }
-
-        subtest("Variadic function: (int32, ...) -> void") {
-            plan(3);
+        subtest("Variadic function with args: (int32; double) -> void") {
+            plan(4);
             infix_arena_t * a = NULL;
             infix_type * rt = NULL;
             infix_function_argument * at = NULL;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32, ...) -> void", &a, &rt, &at, &na, &nf);
+            infix_status s = infix_signature_parse("(int32; double) -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 2 && nf == 1, "Correct number of args (total vs fixed)");
+                ok(na == 2, "Correct total number of args");
+                ok(nf == 1, "Correct number of fixed args");
                 ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
             }
             else
-                skip(2, "Detail checks skipped");
-
+                skip(3, "Detail checks skipped");
             infix_arena_destroy(a);
         }
-
+        subtest("Variadic function with no variadic args passed: (int32;) -> void") {
+            plan(4);
+            infix_arena_t * a = NULL;
+            infix_type * rt = NULL;
+            infix_function_argument * at = NULL;
+            size_t na, nf;
+            infix_status s = infix_signature_parse("(int32;) -> void", &a, &rt, &at, &na, &nf);
+            ok(s == INFIX_SUCCESS, "Parsing succeeds for empty variadic part");
+            if (s == INFIX_SUCCESS) {
+                ok(na == 1, "Correct total number of args");
+                ok(nf == 1, "Correct number of fixed args");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+            }
+            else
+                skip(3, "Detail checks skipped");
+            infix_arena_destroy(a);
+        }
+        subtest("Variadic-only function: (;int) -> void") {
+            plan(4);
+            infix_arena_t * a = NULL;
+            infix_type * rt = NULL;
+            infix_function_argument * at = NULL;
+            size_t na, nf;
+            infix_status s = infix_signature_parse("(;int) -> void", &a, &rt, &at, &na, &nf);
+            ok(s == INFIX_SUCCESS, "Parsing succeeds for variadic-only function");
+            if (s == INFIX_SUCCESS) {
+                ok(na == 1, "Correct total number of args");
+                ok(nf == 0, "Correct number of fixed args (zero)");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+            }
+            else
+                skip(3, "Detail checks skipped");
+            infix_arena_destroy(a);
+        }
         subtest("Complex nested function: (*( (int32) -> void )) -> void") {
             plan(4);
             infix_arena_t * a = NULL;
@@ -167,12 +195,10 @@ TEST {
                 ok(args[0].type->meta.pointer_info.pointee_type->category == INFIX_TYPE_REVERSE_TRAMPOLINE,
                    "It points to a function type");
             }
-            else {
+            else
                 skip(3, "Detail checks skipped");
-            }
             infix_arena_destroy(a);
         }
-
         subtest("High-level API now active") {
             plan(2);
             infix_forward_t * fwd = NULL;
@@ -185,7 +211,6 @@ TEST {
             ok(rev_status == INFIX_SUCCESS, "infix_reverse_create now parses successfully");
             infix_reverse_destroy(rev);
         }
-
         subtest("Function with named arguments") {
             plan(6);
             infix_arena_t * a = NULL;
@@ -193,15 +218,11 @@ TEST {
             infix_function_argument * args = NULL;
             size_t na, nf;
             const char * sig = "(count: int32, name: *char) -> void";
-
-            // NOTE: We now call the updated infix_signature_parse
             infix_status s = infix_signature_parse(sig, &a, &rt, &args, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds for signature with named args");
-
             if (s == INFIX_SUCCESS) {
                 ok(na == 2 && nf == 2, "Correct number of args");
                 ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
-
                 // Introspection checks for names and types
                 ok(strcmp(args[0].name, "count") == 0 && args[0].type->category == INFIX_TYPE_PRIMITIVE,
                    "Arg 0 is 'count: int32'");
@@ -211,8 +232,7 @@ TEST {
                    "Arg 1 points to a primitive (char)");
             }
             else
-                skip(5, "Detail checks skipped due to parsing failure");
-
+                skip(5, "Detail checks skipped");
             infix_arena_destroy(a);
         }
     }
@@ -230,8 +250,8 @@ TEST {
         test_type_fail("!2:", "Incomplete packed struct definition");
         test_type_fail("[10:void]", "Array of void");
         test_type_fail("{int, void}", "Struct with void member");
-        test_type_fail("(..., int) -> void", "Variadic marker not at the end");
-        test_type_fail("(int, ..., ...)", "Multiple variadic markers");
+        test_type_fail("(int; double; int) -> void", "Multiple variadic separators");
+        test_type_fail("(int,;) -> void", "Empty argument before separator");
         test_type_fail("({)}", "Mismatched braces");
         test_type_fail("{[10:int}", "Unclosed struct brace");
         test_type_fail("\"stdcall", "Unclosed annotation string");
@@ -254,21 +274,16 @@ TEST {
                 ok(type->category == INFIX_TYPE_POINTER, "Top level is pointer");
                 infix_type * array_type = type->meta.pointer_info.pointee_type;
                 ok(array_type && array_type->category == INFIX_TYPE_ARRAY, "Points to an array");
-
                 infix_type * struct_def_type = array_type->meta.array_info.element_type;
                 ok(struct_def_type && struct_def_type->category == INFIX_TYPE_STRUCT,
                    "Array element is a struct definition");
-
                 infix_struct_member * member1 = &struct_def_type->meta.aggregate_info.members[0];
                 ok(member1->type->category == INFIX_TYPE_ENUM, "Member 1 is an enum");
-
                 infix_struct_member * member2 = &struct_def_type->meta.aggregate_info.members[1];
                 ok(member2->type->category == INFIX_TYPE_POINTER, "Member 2 is a pointer");
-
                 infix_type * pointee_type = member2->type->meta.pointer_info.pointee_type;
                 ok(pointee_type && pointee_type->category == INFIX_TYPE_NAMED_REFERENCE,
                    "It points to a named reference");
-
                 if (pointee_type)
                     ok(strcmp(pointee_type->meta.named_reference.name, "Node") == 0, "The reference is named 'Node'");
                 else

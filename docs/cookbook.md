@@ -4,7 +4,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 > **Note:** All examples in this cookbook are standalone, compilable C files located in the [`eg/cookbook/`](/eg/cookbook/) directory.
 
-> For a complete reference on the string format used in these examples (e.g., `"i"`, `"{d,d}"`, `"c*"`), please see the **[Signature Language Reference](docs/signatures.md)**.
+> For a complete reference on the string format used in these examples (e.g., `"int"`, `"{double, double}"`, `"*char"`), please see the **[Signature Language Reference](docs/signatures.md)**.
 
 ## Table of Contents
 
@@ -47,6 +47,8 @@ This guide provides practical, real-world examples to help you solve common FFI 
 *   **Chapter 8: Common Pitfalls & Troubleshooting**
     *   [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
     *   [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
+    *   [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
+    *   [Pitfall: Struct Packing Differences](#pitfall-struct-packing-differences)
     *   [A Note on Memory Safety by Design](#a-note-on-memory-safety-by-design)
 *   **Chapter 9: Building Language Bindings**
     *   [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
@@ -59,7 +61,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 **Problem**: You want to call a standard C function, like `int add(int, int);`.
 
-**Solution**: Describe the function's signature using the Signature API (`"i,i=>i"`), prepare pointers to your arguments, and invoke the function through the generated trampoline.
+**Solution**: Describe the function's signature using the v1.0 format (`"(int, int) -> int"`), prepare pointers to your arguments, and invoke the function through the generated trampoline.
 
 ```c
 #include <infix/infix.h>
@@ -69,7 +71,7 @@ int add_ints(int a, int b) { return a + b; }
 
 int main() {
     infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "i,i=>i");
+    infix_forward_create(&trampoline, "(int32, int32)->int32");
 
     int a = 40, b = 2;
     void* args[] = { &a, &b };
@@ -88,7 +90,7 @@ int main() {
 
 **Problem**: You need to call a C function that takes pointers as arguments, like `void swap(int* a, int* b);`.
 
-**Solution**: Use the `*` modifier in the signature string (`"i*,i*=>v"`). The values you pass in the `args` array are the addresses of your pointer variables.
+**Solution**: Use the `*` prefix modifier in the signature string (`"(*int, *int) -> void"`). The values you pass in the `args` array are the addresses of your pointer variables.
 
 ```c
 #include <infix/infix.h>
@@ -100,7 +102,7 @@ void swap_ints(int* a, int* b) {
 
 int main() {
     infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "i*,i*=>v");
+    infix_forward_create(&trampoline, "(*int32, *int32)->void");
 
     int x = 10, y = 20;
     int* ptr_x = &x;
@@ -115,13 +117,14 @@ int main() {
     return 0;
 }
 ```
+
 > [View the full code](/eg/cookbook/02_pointers.c)
 
 ### Recipe: Working with Opaque Pointers (Incomplete Types)
 
 **Problem**: You need to interact with a C library that uses opaque pointers (or "handles") where the internal structure is hidden.
 
-**Solution**: Use the `v*` signature for `void*` or any other opaque pointer type. This is the canonical representation for a generic handle.
+**Solution**: Use the `*void` signature. This is the canonical representation for a generic handle or opaque pointer.
 
 > [View the full code](/eg/cookbook/03_opaque_pointers.c)
 
@@ -129,7 +132,7 @@ int main() {
 
 **Problem**: You need to call a function that operates on a fixed-size array, like `long long sum_array(long long arr[4]);`.
 
-**Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (`"x*=>x"` for `int64_t(const int64_t*)`). `infix` will handle the call correctly.
+**Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (`"(*int64) -> int64"`). `infix` will handle the call correctly.
 
 > [View the full code](/eg/cookbook/04_fixed_arrays.c)
 
@@ -143,15 +146,13 @@ int main() {
 
 **Solution**: Use `infix_type_from_signature` to parse a signature string into a detailed `infix_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
-Before marshalling, a language binding could use the `pointee_type` information from a pointer member to validate that the data from the dynamic language is of the correct underlying type, preventing type-confusion bugs. For example, if the signature is `{name:c*, id:i}`, the binding can inspect the `name` member, see that it's a `pointer_to(char)`, and verify the script is providing a string before writing the pointer.
-
 > [View the full code](/eg/cookbook/05_dynamic_marshalling.c)
 
 ### Recipe: Small Structs Passed by Value
 
 **Problem**: You need to call a function that takes a small `struct` that the ABI passes in registers.
 
-**Solution**: Use the `{}` syntax (e.g., `"{d,d}=>d"` for `double(Point)`). `infix` will automatically determine the correct ABI passing convention.
+**Solution**: Use the anonymous struct syntax `({...})` (e.g., `"({double, double}) -> double"` for `double(Point)`). `infix` will automatically determine the correct ABI passing convention.
 
 > [View the full code](/eg/cookbook/06_small_struct_by_value.c)
 
@@ -167,15 +168,15 @@ Before marshalling, a language binding could use the `pointee_type` information 
 
 **Problem**: You need to call a function that *returns* a struct by value.
 
-**Solution**: Simply use the struct signature as the return type (e.g., `"=>__{d,d_}_"`).
+**Solution**: Simply use the struct signature as the return type (e.g., `"() -> {double, double}"`).
 
 > [View the full code](/eg/cookbook/08_return_struct.c)
 
-### Recipe: Working with Packed Structs via the Signature API
+### Recipe: Working with Packed Structs
 
-**Problem**: You need to call a C function that takes a packed struct.
+**Problem**: You need to call a C function that takes a packed struct (e.g., one defined with `#pragma pack(1)`).
 
-**Solution**: Use the `p(size,align){type@offset,...}` signature syntax, providing the exact layout metadata from your C compiler using `sizeof`, `_Alignof`, and `offsetof`.
+**Solution**: Use the `!{...}` syntax. The `!` prefix tells `infix` to use a packed layout with 1-byte alignment. The parser will correctly calculate all member offsets with no internal padding. For alignments other than 1, use `!N:{...}` where N is the alignment.
 
 > [View the full code](/eg/cookbook/09_packed_struct.c)
 
@@ -183,7 +184,7 @@ Before marshalling, a language binding could use the `pointee_type` information 
 
 **Problem**: You need to call a function that passes or returns a `union`.
 
-**Solution**: Use the `<...>` syntax to describe the union (e.g., `"<i,f>=>i"`). `infix` will automatically classify it for ABI compliance.
+**Solution**: Use the `<...>` syntax to describe the union (e.g., `"(<int, float>) -> int"`). `infix` will automatically classify it for ABI compliance.
 
 > [View the full code](/eg/cookbook/10_unions.c)
 
@@ -191,7 +192,7 @@ Before marshalling, a language binding could use the `pointee_type` information 
 
 **Problem**: You need to call a function that takes a pointer to a fixed-size array, like `void process_matrix(int (*matrix)[4]);`.
 
-**Solution**: Use grouping parentheses `()` around the array type before adding the `*` pointer modifier (e.g., `"([4]i)*=>v"`).
+**Solution**: Use the pointer prefix `*` on an array type (`*[4:int]`).
 
 > [View the full code](/eg/cookbook/11_pointer_to_array.c)
 
@@ -221,7 +222,7 @@ Before marshalling, a language binding could use the `pointee_type` information 
 
 **Problem**: You need to call a function with a variable number of arguments.
 
-**Solution**: Provide the types for *all* arguments you intend to pass in a single call and use a semicolon (`;`) in the signature to mark where the variadic part begins.
+**Solution**: Use the `;` token to seperate fixed and variadic arguments in the signature. The signature only needs to describe both the fixed (non-variadic) and variadic arguments.
 
 > [View the full code](/eg/cookbook/14_variadic_printf.c)
 
@@ -229,7 +230,7 @@ Before marshalling, a language binding could use the `pointee_type` information 
 
 **Problem**: You need to create a native function pointer for a handler that is itself variadic.
 
-**Solution**: Your C handler will use `<stdarg.h>`. The `infix` signature must describe a specific, concrete instance of the variadic call you expect the C code to make.
+**Solution**: Your C handler will use `<stdarg.h>`. The `infix` signature simply includes the `;` token after the fixed arguments, just as with a forward call.
 
 > [View the full code](/eg/cookbook/15_variadic_callback.c)
 
@@ -245,7 +246,7 @@ Before marshalling, a language binding could use the `pointee_type` information 
 
 **Problem**: You need to call a factory function that returns a pointer to another function, which you then need to call.
 
-**Solution**: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its `user_data`.
+**Solution**: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its `user_data`. The signature for a function pointer is `*((...)->...)`.
 
 > [View the full code](/eg/cookbook/17_return_callback.c)
 
@@ -261,7 +262,7 @@ It is possible to call a function written in Rust, Fortran, or C++ from C becaus
 
 **Problem**: You need to create, use, and destroy a C++ object from a pure C environment.
 
-**Solution**: The most robust solution is to create a simple C-style API in your C++ code using `extern "C"`. `infix` can then call this clean, predictable API, using `v*` as the opaque handle for the object pointer.
+**Solution**: The most robust solution is to create a simple C-style API in your C++ code using `extern "C"`. `infix` can then call this clean, predictable API, using `*void` as the opaque handle for the object pointer.
 
 > [View the full code](/eg/cookbook/18_cpp_example.c)
 The Pattern for Other Compiled Languages
@@ -282,6 +283,7 @@ pub extern "C" fn rust_add(a: i32, b: i32) -> i32 {
 *Compile with: `rustc --crate-type cdylib librust_math.rs`*
 
 ##### infix C Code (`main_rust.c`)
+
 ```c
 #include <infix.h>
 #include <stdio.h>
@@ -292,7 +294,7 @@ int main() {
     int (*rust_add)(int, int) = dlsym(lib, "rust_add");
 
     infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "i,i=>i");
+    infix_forward_create(&trampoline, "(int32, int32)->int32");
 
     int a = 50, b = 50;
     void* args[] = { &a, &b };
@@ -313,6 +315,7 @@ int main() {
 **Discussion**: Modern Fortran (2003+) can interoperate with C using the standard `iso_c_binding` module. The `bind(C)` attribute is the key to creating a C-compatible function. We must also explicitly tell it which arguments are passed by value, as Fortran's default is to pass by reference.
 
 ##### Fortran Code (`libfortran_math.f90`)
+
 ```fortran
 function fortran_add(a, b) result(c) bind(C, name='fortran_add')
     use iso_c_binding
@@ -335,7 +338,7 @@ int main() {
 
     // The infix code is identical to the Rust example!
     infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "i,i=>i");
+    infix_forward_create(&trampoline, "(int32, int32)->int32");
 
     int a = 20, b = 22;
     void* args[] = { &a, &b };
@@ -466,7 +469,7 @@ The C code would be identical to the previous examples, just loading `libasm_mat
 for (int i = 0; i < 1000000; ++i) {
     infix_forward_t* t;
     // VERY SLOW: Generating a new trampoline on every iteration.
-    infix_forward_create(&t, "i,i=>i");
+    infix_forward_create(&t, "(int, int) -> int");
     cif_func(target, &result, args);
     infix_forward_destroy(t);
 }
@@ -477,7 +480,7 @@ By amortizing the one-time generation cost over millions of calls, the FFI overh
 ```c
 // Correct Pattern: Generate once, use many times.
 infix_forward_t* t;
-infix_forward_create(&t, "i,i=>i");
+infix_forward_create(&t, "(int, int) -> int");
 infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(t);
 
 for (int i = 0; i < 1000000; ++i) {
@@ -501,7 +504,21 @@ infix_forward_destroy(t);
 
 *   **Symptom**: Silent data corruption or a crash much later in execution.
 *   **Explanation**: The type you describe in the signature string must *exactly* match the C type's size and alignment. A common error is mismatching the `long` type, which is 32 bits on 64-bit Windows but 64 bits on 64-bit Linux.
-*   **Solution**: Use fixed-width types from `<stdint.h>` (e.g., `int64_t`) and their corresponding `infix` types (`x`) whenever possible.
+*   **Solution**: Use fixed-width types from the Tier 2 specification (e.g., `int32`, `uint64`) whenever possible to be explicit about the memory layout.
+
+### Pitfall: Function Pointer Syntax
+
+*   **Symptom**: Parser error (`INFIX_ERROR_INVALID_ARGUMENT`).
+*   **Explanation**: The syntax for a pointer to a function can be tricky. A function type is `(...) -> ...`, and a pointer to anything is `*...`. Therefore, a pointer to a function type is `*((...) -> ...)`.
+*   **Solution**:
+    *   `int (*callback)(void)` is `*(() -> int)`.
+    *   `void (*handler)(int, int)` is `*((int, int) -> void)`.
+
+### Pitfall: Struct Packing Differences
+
+*   **Symptom**: Correct data is passed, but the C function reads garbage from some struct fields.
+*   **Explanation**: The way a C compiler packs a `struct` (where it adds padding bytes) can differ between compilers (e.g., MSVC vs. GCC) or with different compiler flags. The `infix` parser uses the standard layout rules for your platform, but if you are interfacing with a library compiled with non-standard packing, the layouts will not match.
+*   **Solution**: When in doubt, be explicit. Use the `!{...}` packed struct syntax and verify the member offsets match what the target library expects.
 
 ### A Note on Memory Safety by Design
 
@@ -527,12 +544,16 @@ Instead of building complex C `infix_type` objects, the binding's primary job is
 ```python
 # A conceptual function in a Python binding
 def _get_signature_string_from_ctypes(restype, argtypes):
-    type_map = { ctypes.c_int: 'i', ctypes.c_double: 'd', ctypes.c_void_p: 'v*' }
+    type_map = { ctypes.c_int: 'int', ctypes.c_double: 'double', ctypes.c_void_p: '*void' }
+
+    def _map_type_to_sig(t):
+        # ... recursive logic to handle structs, pointers, etc. ...
+        return type_map.get(t, "unknown")
 
     arg_parts = [_map_type_to_sig(t) for t in argtypes] # _map_type_to_sig is recursive
     ret_part = _map_type_to_sig(restype)
 
-    return f"{','.join(arg_parts)}=>{ret_part}"
+    return f"({','.join(arg_parts)}) -> {ret_part}"
 ```
 
 #### 2. Trampoline Caching
