@@ -182,6 +182,7 @@ typedef enum {
     INFIX_TYPE_ENUM,                ///< A C-style enumeration, with an underlying integer type.
     INFIX_TYPE_COMPLEX,             ///< A `_Complex` number type.
     INFIX_TYPE_VECTOR,              ///< A SIMD vector type.
+    INFIX_TYPE_NAMED_REFERENCE,     ///< A reference to a named type (e.g., `struct<Node>`).
     INFIX_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
 } infix_type_category;
 
@@ -258,6 +259,10 @@ struct infix_type_t {
             struct infix_type_t * element_type;  ///< The type of the elements in the vector.
             size_t num_elements;                 ///< The number of elements in the vector.
         } vector_info;
+        /** @brief For `INFIX_TYPE_NAMED_REFERENCE`. */
+        struct {
+            const char * name;
+        } named_reference;
     } meta;
 };
 
@@ -460,6 +465,12 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type *
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **, infix_type *);
+
+
+c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * arena,
+                                                             infix_type ** out_type,
+                                                             const char * name);
+
 
 /**
  * @brief A factory function to create an `infix_struct_member`.

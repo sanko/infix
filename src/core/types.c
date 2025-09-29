@@ -513,3 +513,35 @@ c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
     *out_type = type;
     return INFIX_SUCCESS;
 }
+
+/**
+ * @brief Creates a new `infix_type` for a named reference from an arena.
+ * @details This is used by the parser when it encounters a reference to a named
+ *          type like `struct<MyStruct>` that is NOT followed by a definition body.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param name The name of the type being referenced.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * arena,
+                                                             infix_type ** out_type,
+                                                             const char * name) {
+    if (out_type == NULL || name == NULL)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    if (type == NULL) {
+        *out_type = NULL;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
+    type->is_arena_allocated = true;
+    type->category = INFIX_TYPE_NAMED_REFERENCE;
+    // References have no size or alignment themselves; they are conceptual placeholders.
+    type->size = 0;
+    type->alignment = 0;
+    type->meta.named_reference.name = name;
+
+    *out_type = type;
+    return INFIX_SUCCESS;
+}
