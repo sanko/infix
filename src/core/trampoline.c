@@ -155,7 +155,7 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
 
         // Arena allocators don't support realloc. We must allocate a new block and copy.
         void * new_code = infix_arena_alloc(buf->arena, new_capacity, 16);
-        if (new_code == NULL) {
+        if (new_code == nullptr) {
             //~ fprintf(stderr, "Error: infix_arena_alloc failed in code_buffer_append.\n");
             buf->error = true;
             return;
@@ -240,7 +240,7 @@ static bool _is_type_graph_resolved(infix_type * type) {
         if (!_is_type_graph_resolved(type->meta.func_ptr_info.return_type))
             return false;
         for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
-            if (!_is_type_graph_resolved(type->meta.func_ptr_info.arg_types[i]))
+            if (!_is_type_graph_resolved(type->meta.func_ptr_info.args[i].type))
                 return false;
         }
         return true;
@@ -477,7 +477,7 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
     // The new list will have `1 (for context) + num_args` elements.
     infix_type ** callback_arg_types =
         infix_arena_alloc(arena, (1 + num_args) * sizeof(infix_type *), _Alignof(infix_type *));
-    if (callback_arg_types == NULL) {
+    if (callback_arg_types == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }

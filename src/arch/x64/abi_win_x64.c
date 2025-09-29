@@ -208,7 +208,7 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
             current_stack_offset += arg_stack_space;
             // Step 0: Make sure we aren't blowing ourselves up
             if (current_stack_offset > INFIX_MAX_ARG_SIZE) {
-                *out_layout = NULL;
+                *out_layout = nullptr;
                 return INFIX_ERROR_LAYOUT_FAILED;
             }
         }
@@ -473,7 +473,7 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
     }
 
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
-        *out_layout = NULL;
+        *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -485,7 +485,7 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
     // Prevent integer overflow from fuzzer-provided types that are impractically large by ensuring the total required
     // stack space is within a safe limit.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
-        *out_layout = NULL;
+        *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
     layout->total_stack_alloc = (total_local_space + 15) & ~15;

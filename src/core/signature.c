@@ -33,7 +33,7 @@
  *          - **Statelessness:** The parser itself is stateless. All necessary context
  *            (the current position in the string, the memory arena, recursion depth)
  *            is passed around in a `parser_state` struct.
- *          - **Error Handling:** Parsing failures are signaled by returning `NULL`.
+ *          - **Error Handling:** Parsing failures are signaled by returning `nullptr`.
  *            The `parser_state` struct contains a `last_error` field to provide a
  *            more specific reason for the failure.
  */
@@ -74,7 +74,7 @@ static infix_type * parse_type(parser_state * state);
 /** @brief Parses the components of a full function signature: `(<args>) -> <ret>`. */
 static infix_status parse_function_signature_details(parser_state * state,
                                                      infix_type ** out_ret_type,
-                                                     infix_type *** out_arg_types,
+                                                     infix_function_argument ** out_args,
                                                      size_t * out_num_args,
                                                      size_t * out_num_fixed_args);
 /** @brief A helper for parsing the body of an aggregate type (struct or union). */
@@ -120,7 +120,7 @@ static void skip_whitespace(parser_state * state) {
 static bool parse_size_t(parser_state * state, size_t * out_val) {
     const char * start = state->p;
     char * end;
-    // Use strtoull for robust parsing of 64-bit unsigned integers.
+    // Use strtoull for battle tested parsing of 64-bit unsigned integers.
     unsigned long long val = strtoull(start, &end, 10);
     // If the end pointer hasn't moved, no digits were consumed.
     if (end == start) {
@@ -139,26 +139,26 @@ static bool parse_size_t(parser_state * state, size_t * out_val) {
  *          followed by letters, numbers, or underscores. The parsed identifier
  *          is allocated as a new, null-terminated string from the parser's arena.
  * @param state The current parser state.
- * @return A pointer to the newly allocated identifier string, or `NULL` on failure.
+ * @return A pointer to the newly allocated identifier string, or `nullptr` on failure.
  */
 static const char * parse_identifier(parser_state * state) {
     skip_whitespace(state);
     const char * start = state->p;
     // An identifier must start with an alphabetic character or an underscore.
     if (!isalpha((unsigned char)*start) && *start != '_')
-        return NULL;
+        return nullptr;
     // Consume subsequent alphanumeric characters or underscores.
     while (isalnum((unsigned char)*state->p) || *state->p == '_')
         state->p++;
     size_t len = state->p - start;
     if (len == 0)
-        return NULL;
+        return nullptr;
 
     // Allocate space for the identifier in the arena and copy it.
     char * name = infix_arena_alloc(state->arena, len + 1, 1);
     if (!name) {
         state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-        return NULL;
+        return nullptr;
     }
     memcpy(name, start, len);
     name[len] = '\0';
@@ -205,7 +205,7 @@ static bool consume_keyword(parser_state * state, const char * keyword) {
  *
  * @param state The current parser state.
  * @return A pointer to the corresponding static `infix_type` for the primitive.
- *         Returns `NULL` if no primitive keyword is found at the current position.
+ *         Returns `nullptr` if no primitive keyword is found at the current position.
  */
 static infix_type * parse_primitive(parser_state * state) {
     // Tier 2: Explicit fixed-width types are checked first as they are more specific.
@@ -267,7 +267,7 @@ static infix_type * parse_primitive(parser_state * state) {
     if (consume_keyword(state, "float"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
     // If no keyword matches, it's not a primitive type.
-    return NULL;
+    return nullptr;
 }
 /**
  * @internal
@@ -339,21 +339,22 @@ static bool is_function_signature_ahead(const parser_state * state) {
  *
  * @param state The current parser state.
  * @return A pointer to a new, arena-allocated `infix_type` for the function,
- *         or `NULL` on failure.
+ *         or `nullptr` on failure.
  */
 static infix_type * parse_function_type(parser_state * state) {
-    infix_type *ret_type = NULL, **arg_types = NULL;
+    infix_type * ret_type = nullptr;
+    infix_function_argument * args = nullptr;  // FIX: Use the correct struct type
     size_t num_args = 0, num_fixed = 0;
 
     // Delegate the heavy lifting of parsing the argument list, arrow, and return type.
-    if (parse_function_signature_details(state, &ret_type, &arg_types, &num_args, &num_fixed) != INFIX_SUCCESS)
-        return NULL;
+    if (parse_function_signature_details(state, &ret_type, &args, &num_args, &num_fixed) != INFIX_SUCCESS)
+        return nullptr;
 
     // If parsing was successful, allocate a new type descriptor to represent the function signature.
     infix_type * func_type = infix_arena_alloc(state->arena, sizeof(infix_type), _Alignof(infix_type));
     if (!func_type) {
         state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-        return NULL;
+        return nullptr;
     }
 
     // A function signature type itself has the size and alignment of a pointer.
@@ -363,7 +364,7 @@ static infix_type * parse_function_type(parser_state * state) {
 
     // Populate the metadata with the parsed components.
     func_type->meta.func_ptr_info.return_type = ret_type;
-    func_type->meta.func_ptr_info.arg_types = arg_types;
+    func_type->meta.func_ptr_info.args = args;  // FIX: Assign to the correct member `args`
     func_type->meta.func_ptr_info.num_args = num_args;
     func_type->meta.func_ptr_info.num_fixed_args = num_fixed;
 
@@ -388,7 +389,7 @@ static infix_type * parse_function_type(parser_state * state) {
  * @param state The current parser state.
  * @param end_char The character that terminates the list (either '}' or '>').
  * @param[out] out_num_members On success, the total number of members found.
- * @return A pointer to an arena-allocated array of `infix_struct_member`, or `NULL`.
+ * @return A pointer to an arena-allocated array of `infix_struct_member`, or `nullptr`.
  */
 static infix_struct_member * parse_aggregate_members(parser_state * state, char end_char, size_t * out_num_members) {
     // A temporary node for building the linked list of members.
@@ -396,7 +397,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
         infix_struct_member m;
         struct member_node * next;
     } member_node;
-    member_node *head = NULL, *tail = NULL;
+    member_node *head = nullptr, *tail = nullptr;
     size_t num_members = 0;
 
     skip_whitespace(state);
@@ -420,36 +421,36 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 // If there's no colon, the identifier was actually the start of a
                 // type keyword (e.g., "int"). We must backtrack the parser to the
                 // position before we tried to parse it as a name.
-                name = NULL;
+                name = nullptr;
                 state->p = p_before_member;
             }
 
             // A syntax error: `{name:}` with no type.
             if (name && (*state->p == end_char || *state->p == ',')) {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                return NULL;
+                return nullptr;
             }
 
             // Now, recursively parse the member's type.
             infix_type * member_type = parse_type(state);
             if (!member_type) {
                 // Propagate the error from the recursive call.
-                return NULL;
+                return nullptr;
             }
             // The C standard forbids members of type void.
             if (member_type->category == INFIX_TYPE_VOID) {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                return NULL;
+                return nullptr;
             }
 
             // Add the parsed member to our linked list.
             member_node * node = infix_arena_alloc(state->arena, sizeof(member_node), _Alignof(member_node));
             if (!node) {
                 state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-                return NULL;
+                return nullptr;
             }
             node->m = infix_struct_member_create(name, member_type, 0);  // Offset is calculated later.
-            node->next = NULL;
+            node->next = nullptr;
             if (!head)
                 head = tail = node;
             else {
@@ -465,7 +466,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 // A trailing comma like `{int,}` is a syntax error.
                 if (*state->p == end_char) {
                     state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                    return NULL;
+                    return nullptr;
                 }
             }
             else if (*state->p == end_char) {
@@ -474,21 +475,21 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             else {
                 // Anything else is a syntax error.
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                return NULL;
+                return nullptr;
             }
         }
     }
 
     *out_num_members = num_members;
     if (num_members == 0)
-        return NULL;
+        return nullptr;
 
     // Pass 2: Convert the linked list to a contiguous array.
     infix_struct_member * members =
         infix_arena_alloc(state->arena, sizeof(infix_struct_member) * num_members, _Alignof(infix_struct_member));
     if (!members) {
         state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-        return NULL;
+        return nullptr;
     }
     member_node * current = head;
     for (size_t i = 0; i < num_members; i++) {
@@ -506,7 +507,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
  *          struct body to `parse_aggregate_members`. Finally, it calls the
  *          appropriate type creation function to build the packed struct type.
  * @param state The current parser state.
- * @return A new arena-allocated `infix_type` for the packed struct, or `NULL`.
+ * @return A new arena-allocated `infix_type` for the packed struct, or `nullptr`.
  */
 static infix_type * parse_packed_struct(parser_state * state) {
     size_t alignment = 1;  // The default alignment for a packed struct is 1.
@@ -515,10 +516,10 @@ static infix_type * parse_packed_struct(parser_state * state) {
         // Check for an explicit alignment override, e.g., `!4:{...}`.
         if (isdigit((unsigned char)*state->p)) {
             if (!parse_size_t(state, &alignment))
-                return NULL;
+                return nullptr;
             if (*state->p != ':') {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                return NULL;
+                return nullptr;
             }
             state->p++;
         }
@@ -527,22 +528,22 @@ static infix_type * parse_packed_struct(parser_state * state) {
     skip_whitespace(state);
     if (*state->p != '{') {
         state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-        return NULL;
+        return nullptr;
     }
     state->p++;
 
     size_t num_members = 0;
     infix_struct_member * members = parse_aggregate_members(state, '}', &num_members);
     if (state->last_error != INFIX_SUCCESS && num_members > 0)
-        return NULL;
+        return nullptr;
 
     if (*state->p != '}') {
         state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-        return NULL;
+        return nullptr;
     }
     state->p++;
 
-    infix_type * packed_type = NULL;
+    infix_type * packed_type = nullptr;
     // For packed structs, the size is simply the sum of member sizes, as there's
     // no internal padding. The final layout calculation is handled by the `_create` function.
     size_t total_size = 0;
@@ -554,7 +555,7 @@ static infix_type * parse_packed_struct(parser_state * state) {
         infix_type_create_packed_struct(state->arena, &packed_type, total_size, alignment, members, num_members);
     if (status != INFIX_SUCCESS) {
         state->last_error = status;
-        return NULL;
+        return nullptr;
     }
     return packed_type;
 }
@@ -574,18 +575,18 @@ static infix_type * parse_packed_struct(parser_state * state) {
  *
  * @param state The current parser state.
  * @return A new arena-allocated `infix_type` object representing the parsed type,
- *         or `NULL` on failure.
+ *         or `nullptr` on failure.
  */
 static infix_type * parse_type(parser_state * state) {
     // Security: Prevent stack overflow from deeply nested type definitions.
     if (state->depth >= MAX_RECURSION_DEPTH) {
         state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-        return NULL;
+        return nullptr;
     }
     state->depth++;
 
     skip_whitespace(state);
-    infix_type * result_type = NULL;
+    infix_type * result_type = nullptr;
     const char * p_before_type = state->p;  // Save position for backtracking on error.
 
     // The dispatch logic begins here, checking one token at a time.
@@ -597,12 +598,12 @@ static infix_type * parse_type(parser_state * state) {
         infix_type * pointee_type = parse_type(state);
         if (!pointee_type) {
             state->depth--;
-            return NULL;
+            return nullptr;
         }  // Propagate failure.
         // Create the final pointer type.
         if (infix_type_create_pointer_to(state->arena, &result_type, pointee_type) != INFIX_SUCCESS) {
             state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-            result_type = NULL;
+            result_type = nullptr;
         }
     }
     else if (*state->p == '(') {
@@ -618,12 +619,12 @@ static infix_type * parse_type(parser_state * state) {
             result_type = parse_type(state);  // Parse the inner type.
             if (!result_type) {
                 state->depth--;
-                return NULL;
+                return nullptr;
             }
             skip_whitespace(state);
             if (*state->p != ')') {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-                result_type = NULL;
+                result_type = nullptr;
             }
             else {
                 state->p++;
@@ -637,37 +638,37 @@ static infix_type * parse_type(parser_state * state) {
         size_t num_elements;
         if (!parse_size_t(state, &num_elements)) {
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         skip_whitespace(state);
         if (*state->p != ':') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         skip_whitespace(state);
         infix_type * element_type = parse_type(state);
         if (!element_type) {
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         // Arrays of void are illegal in C.
         if (element_type->category == INFIX_TYPE_VOID) {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         skip_whitespace(state);
         if (*state->p != ']') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         if (infix_type_create_array(state->arena, &result_type, element_type, num_elements) != INFIX_SUCCESS) {
             state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-            result_type = NULL;
+            result_type = nullptr;
         }
     }
     else if (*state->p == '!') {
@@ -676,30 +677,30 @@ static infix_type * parse_type(parser_state * state) {
     }
     else if (*state->p == '{') {
         // ANONYMOUS STRUCT TYPE: {...}
-        result_type = parse_aggregate(state, '{', '}', NULL);
+        result_type = parse_aggregate(state, '{', '}', nullptr);
     }
     else if (*state->p == '<') {
         // ANONYMOUS UNION TYPE: <...>
-        result_type = parse_aggregate(state, '<', '>', NULL);
+        result_type = parse_aggregate(state, '<', '>', nullptr);
     }
     else if (consume_keyword(state, "struct")) {
         // NAMED STRUCT or REFERENCE: struct<Name>{...} or struct<Name>
         if (*state->p != '<') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         const char * name = parse_identifier(state);
         if (!name) {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         if (*state->p != '>') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         skip_whitespace(state);
@@ -712,7 +713,7 @@ static infix_type * parse_type(parser_state * state) {
             infix_status status = infix_type_create_named_reference(state->arena, &result_type, name);
             if (status != INFIX_SUCCESS) {
                 state->last_error = status;
-                result_type = NULL;
+                result_type = nullptr;
             }
         }
     }
@@ -721,19 +722,19 @@ static infix_type * parse_type(parser_state * state) {
         if (*state->p != '<') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         const char * name = parse_identifier(state);
         if (!name) {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         if (*state->p != '>') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         skip_whitespace(state);
@@ -746,7 +747,7 @@ static infix_type * parse_type(parser_state * state) {
             infix_status status = infix_type_create_named_reference(state->arena, &result_type, name);
             if (status != INFIX_SUCCESS) {
                 state->last_error = status;
-                result_type = NULL;
+                result_type = nullptr;
             }
         }
     }
@@ -754,7 +755,7 @@ static infix_type * parse_type(parser_state * state) {
         // ENUM TYPE: e<Name>?:<type>
         state->p++;
         skip_whitespace(state);
-        const char * name = NULL;
+        const char * name = nullptr;
         // Check for optional name, e.g., e<MyEnum>:.
         if (*state->p == '<') {
             state->p++;
@@ -762,12 +763,12 @@ static infix_type * parse_type(parser_state * state) {
             if (!name) {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
                 state->depth--;
-                return NULL;
+                return nullptr;
             }
             if (*state->p != '>') {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
                 state->depth--;
-                return NULL;
+                return nullptr;
             }
             state->p++;
             skip_whitespace(state);
@@ -775,7 +776,7 @@ static infix_type * parse_type(parser_state * state) {
         if (*state->p != ':') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         skip_whitespace(state);
@@ -783,17 +784,17 @@ static infix_type * parse_type(parser_state * state) {
         infix_type * underlying_type = parse_type(state);
         if (!underlying_type) {
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         // The spec requires the underlying type to be an integer.
         if (underlying_type->category != INFIX_TYPE_PRIMITIVE) {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         if (infix_type_create_enum(state->arena, &result_type, underlying_type) != INFIX_SUCCESS) {
             state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-            result_type = NULL;
+            result_type = nullptr;
         }
         (void)name;  // Name is stored for introspection but not used by the core ABI.
     }
@@ -825,20 +826,20 @@ static infix_type * parse_type(parser_state * state) {
  * @param state The current parser state.
  * @param start_char The opening delimiter ('{' for structs, '<' for unions).
  * @param end_char The closing delimiter ('}' for structs, '>' for unions).
- * @param name The optional name of the aggregate type (can be NULL for anonymous ones).
- * @return A new arena-allocated `infix_type` for the aggregate, or `NULL` on failure.
+ * @param name The optional name of the aggregate type (can be nullptr for anonymous ones).
+ * @return A new arena-allocated `infix_type` for the aggregate, or `nullptr` on failure.
  */
 static infix_type * parse_aggregate(parser_state * state, char start_char, char end_char, const char * name) {
     if (state->depth >= MAX_RECURSION_DEPTH) {
         state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
-        return NULL;
+        return nullptr;
     }
     state->depth++;
 
     if (*state->p != start_char) {
         state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
         state->depth--;
-        return NULL;
+        return nullptr;
     }
     state->p++;
 
@@ -846,17 +847,17 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
     infix_struct_member * members = parse_aggregate_members(state, end_char, &num_members);
     if (state->last_error != INFIX_SUCCESS) {
         state->depth--;
-        return NULL;
+        return nullptr;
     }
 
     if (*state->p != end_char) {
         state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
         state->depth--;
-        return NULL;
+        return nullptr;
     }
     state->p++;
 
-    infix_type * agg_type = NULL;
+    infix_type * agg_type = nullptr;
     // Dispatch to the correct creation function based on the delimiter.
     infix_status status = (start_char == '{') ? infix_type_create_struct(state->arena, &agg_type, members, num_members)
                                               : infix_type_create_union(state->arena, &agg_type, members, num_members);
@@ -864,7 +865,7 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
     if (status != INFIX_SUCCESS) {
         state->last_error = status;
         state->depth--;
-        return NULL;
+        return nullptr;
     }
     (void)name;  // Name is stored for introspection.
 
@@ -918,7 +919,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
         // A successful parse of a single type should consume the entire string.
         // If there are trailing characters, the signature is considered invalid.
         if (state.p[0] != '\0') {
-            type = NULL;
+            type = nullptr;
             state.last_error = INFIX_ERROR_INVALID_ARGUMENT;
         }
     }
@@ -926,8 +927,8 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
     // On any failure, we must destroy the arena to prevent memory leaks.
     if (!type) {
         infix_arena_destroy(*out_arena);
-        *out_arena = NULL;
-        *out_type = NULL;
+        *out_arena = nullptr;
+        *out_type = nullptr;
         return state.last_error != INFIX_SUCCESS ? state.last_error : INFIX_ERROR_INVALID_ARGUMENT;
     }
 
@@ -950,14 +951,14 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
  *
  * @param state The current parser state.
  * @param[out] out_ret_type A pointer to the parsed return `infix_type`.
- * @param[out] out_arg_types A pointer to an array of parsed argument `infix_type*`.
+ * @param[out] out_args A pointer to an array of parsed function arguments.
  * @param[out] out_num_args The total number of arguments parsed.
  * @param[out] out_num_fixed_args The number of non-variadic arguments.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 static infix_status parse_function_signature_details(parser_state * state,
                                                      infix_type ** out_ret_type,
-                                                     infix_type *** out_arg_types,
+                                                     infix_function_argument ** out_args,
                                                      size_t * out_num_args,
                                                      size_t * out_num_fixed_args) {
     if (*state->p != '(')
@@ -965,12 +966,13 @@ static infix_status parse_function_signature_details(parser_state * state,
     state->p++;
     skip_whitespace(state);
 
-    typedef struct type_node {
-        infix_type * type;
-        struct type_node * next;
-    } type_node;
-    type_node *head = NULL, *tail = NULL;
-    size_t num_args = 0;
+    // The temporary linked-list node now stores a full function argument.
+    typedef struct arg_node {
+        infix_function_argument arg;
+        struct arg_node * next;
+    } arg_node;
+    arg_node *head = nullptr, *tail = nullptr;
+    size_t num_fixed_args_count = 0;
     bool is_variadic = false;
 
     // Parse the argument list until the closing parenthesis is found.
@@ -995,34 +997,46 @@ static infix_status parse_function_signature_details(parser_state * state,
                 break;
             }
 
+            // Parse the argument's name
+            const char * p_before_arg = state->p;
+            const char * name = parse_identifier(state);
+            skip_whitespace(state);
+
+            if (name && *state->p == ':')
+                state->p++;  // Consume the colon.
+            else {
+                // It was not a "name:", so it must have been a type. Backtrack.
+                name = nullptr;
+                state->p = p_before_arg;
+            }
+
             // Parse the next argument type.
             infix_type * arg_type = parse_type(state);
             if (!arg_type)
                 return state->last_error;
 
-            // Add the parsed type to our temporary linked list.
-            type_node * node = infix_arena_alloc(state->arena, sizeof(type_node), _Alignof(type_node));
+            // Add the parsed node to our temporary linked list.
+            arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
             if (!node) {
                 state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
                 return INFIX_ERROR_ALLOCATION_FAILED;
             }
-            node->type = arg_type;
-            node->next = NULL;
+            node->arg.type = arg_type;
+            node->arg.name = name;  // Store the name (anonymous args == nullptr)
+            node->next = nullptr;
             if (!head)
                 head = tail = node;
             else {
                 tail->next = node;
                 tail = node;
             }
-            num_args++;
+            num_fixed_args_count++;
 
             skip_whitespace(state);
-            if (*state->p == ',') {
+            if (*state->p == ',')
                 state->p++;
-            }
-            else {
+            else
                 break;  // No more arguments.
-            }
         }
     }
 
@@ -1041,68 +1055,52 @@ static infix_status parse_function_signature_details(parser_state * state,
     *out_ret_type = parse_type(state);
     if (!*out_ret_type)
         return state->last_error;
-    if ((*out_ret_type)->category == INFIX_TYPE_VOID && num_args == 0 && !is_variadic) {
-        // This is just a simple check for `() -> void` which has no args.
-    }
 
-    // Convert the linked list of argument types into a contiguous array.
-    infix_type ** arg_types =
-        num_args > 0 ? infix_arena_alloc(state->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : NULL;
-    if (num_args > 0 && !arg_types) {
+    // Allocate the final, contiguous array of infix_function_argument.
+    // The array only needs to hold the fixed (non-variadic) arguments.
+    infix_function_argument * args = num_fixed_args_count > 0
+        ? infix_arena_alloc(
+              state->arena, sizeof(infix_function_argument) * num_fixed_args_count, _Alignof(infix_function_argument))
+        : nullptr;
+    if (num_fixed_args_count > 0 && !args) {
         state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    type_node * current = head;
-    for (size_t i = 0; i < num_args; i++) {
-        arg_types[i] = current->type;
+
+    arg_node * current = head;
+    for (size_t i = 0; i < num_fixed_args_count; i++) {
+        args[i] = current->arg;
         current = current->next;
     }
 
-    *out_arg_types = arg_types;
-    *out_num_args = num_args;
-    *out_num_fixed_args = num_args;  // The spec currently only supports variadic at the end, so fixed == total.
+    *out_args = args;
+    *out_num_fixed_args = num_fixed_args_count;
+    *out_num_args = num_fixed_args_count + (is_variadic ? 1 : 0);
 
     return INFIX_SUCCESS;
 }
-
 
 /**
  * @brief Parses a full function signature string into its constituent infix_type parts.
  * @details This function provides direct access to the v1.0 signature parser. It creates a
  *          dedicated memory arena to hold the resulting `infix_type` object graph for the
- *          entire function signature. This is an advanced function for callers who
- *          need to inspect type information before generating a trampoline, or for
- *          tooling that needs to understand a C function's data contract.
+ *          entire function signature.
  *
  * @param[in]  signature A null-terminated string describing the function signature.
- *                       See the project's documentation for the full signature language.
- * @param[out] out_arena On success, this will be populated with a pointer to the new
- *                       arena that owns the entire parsed type graph. The caller is
- *                       responsible for destroying this arena with `infix_arena_destroy()`.
+ * @param[out] out_arena On success, will be populated with a pointer to the new arena.
  * @param[out] out_ret_type On success, will point to the `infix_type` for the return value.
- *                          This pointer is valid for the lifetime of the arena.
- * @param[out] out_arg_types On success, will point to an array of `infix_type*` for the
- *                           arguments. This array is also allocated within the arena.
- * @param[out] out_num_args On success, will be set to the total number of arguments.
+ * @param[out] out_args On success, will point to an array of `infix_function_argument`.
+ * @param[out] out_num_args On success, will be set to the total number of arguments (including `...`).
  * @param[out] out_num_fixed_args On success, will be set to the number of non-variadic arguments.
- *
  * @return Returns `INFIX_SUCCESS` if parsing is successful.
- * @return Returns `INFIX_ERROR_INVALID_ARGUMENT` if any parameters are null or the
- *         signature string is malformed.
- * @return Returns `INFIX_ERROR_ALLOCATION_FAILED` if the internal arena could not be created.
- *
- * @note **Memory Management:** On success, this function transfers ownership of the newly
- *       created arena to the caller. A single call to `infix_arena_destroy(*out_arena)` is
- *       sufficient to free all memory associated with the parsed types. If the
- *       function fails, `*out_arena` will be set to `NULL`.
  */
 c23_nodiscard infix_status infix_signature_parse(const char * signature,
                                                  infix_arena_t ** out_arena,
                                                  infix_type ** out_ret_type,
-                                                 infix_type *** out_arg_types,
+                                                 infix_function_argument ** out_args,
                                                  size_t * out_num_args,
                                                  size_t * out_num_fixed_args) {
-    if (!signature || !out_arena || !out_ret_type || !out_arg_types || !out_num_args || !out_num_fixed_args)
+    if (!signature || !out_arena || !out_ret_type || !out_args || !out_num_args || !out_num_fixed_args)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Create a new arena for this specific parsing operation.
@@ -1114,7 +1112,7 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
 
     // Delegate to the internal implementation.
     infix_status status =
-        parse_function_signature_details(&state, out_ret_type, out_arg_types, out_num_args, out_num_fixed_args);
+        parse_function_signature_details(&state, out_ret_type, out_args, out_num_args, out_num_fixed_args);
 
     if (status == INFIX_SUCCESS) {
         skip_whitespace(&state);
@@ -1127,7 +1125,7 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
     // Clean up the arena on any failure.
     if (status != INFIX_SUCCESS) {
         infix_arena_destroy(*out_arena);
-        *out_arena = NULL;
+        *out_arena = nullptr;
         return state.last_error != INFIX_SUCCESS ? state.last_error : status;
     }
 
@@ -1143,25 +1141,32 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
  * trampoline is self-contained and ready for use.
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
- * @param signature A null-terminated string describing the function signature,
- *                  e.g., `"(int, *char) -> void"`. See the project documentation
- *                  for the full v1.0 syntax.
+ * @param signature A null-terminated string describing the function signature.
  * @return `INFIX_SUCCESS` on success.
- * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
- *         contains unresolved named types (e.g., `struct<MyStruct>`).
- * @return `INFIX_ERROR_ALLOCATION_FAILED` on memory allocation failure.
  * @note The returned trampoline must be freed with `infix_forward_destroy`.
  */
 c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampoline, const char * signature) {
-    infix_arena_t * arena = NULL;
-    infix_type * ret_type = NULL;
-    infix_type ** arg_types = NULL;
+    infix_arena_t * arena = nullptr;
+    infix_type * ret_type = nullptr;
+    infix_function_argument * args = nullptr;
     size_t num_args, num_fixed;
 
     // First, parse the signature string into a type graph.
-    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed);
+    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed);
     if (status != INFIX_SUCCESS)
         return status;
+
+    // Bridge: The manual API expects an array of `infix_type*`. We must extract
+    // the type pointers from our parsed arguments to build this temporary array.
+    // The size of this array should correspond to the number of fixed arguments.
+    infix_type ** arg_types =
+        (num_fixed > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_fixed, _Alignof(infix_type *)) : nullptr;
+    if (num_fixed > 0 && !arg_types) {
+        infix_arena_destroy(arena);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    for (size_t i = 0; i < num_fixed; ++i)
+        arg_types[i] = args[i].type;
 
     // Then, pass the resulting types to the manual creation function.
     status = infix_forward_create_manual(out_trampoline, ret_type, arg_types, num_args, num_fixed);
@@ -1175,34 +1180,38 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
  * @brief Generates a reverse-call trampoline (callback) from a signature string.
  *
  * This function parses a v1.0 signature string to create a native, C-callable function
- * pointer that invokes the provided user handler. It simplifies the creation
- * of callbacks by managing the underlying `infix_type` objects automatically.
+ * pointer that invokes the provided user handler.
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
  * @param user_callback_fn A function pointer to the user's C callback handler.
- *                         Its signature must start with `infix_context_t*`, followed
- *                         by the types described in the signature string.
- * @param user_data A user-defined pointer for passing state to the handler,
- *                  accessible inside the handler via `infix_reverse_get_user_data`.
+ * @param user_data A user-defined pointer for passing state to the handler.
  * @return `INFIX_SUCCESS` on success.
- * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
- *         contains unresolved named types.
  * @note The returned context must be freed with `infix_reverse_destroy`.
  */
 c23_nodiscard infix_status infix_reverse_create(infix_reverse_t ** out_context,
                                                 const char * signature,
                                                 void * user_callback_fn,
                                                 void * user_data) {
-    infix_arena_t * arena = NULL;
-    infix_type * ret_type = NULL;
-    infix_type ** arg_types = NULL;
+    infix_arena_t * arena = nullptr;
+    infix_type * ret_type = nullptr;
+    infix_function_argument * args = nullptr;
     size_t num_args, num_fixed;
 
     // First, parse the signature string.
-    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed);
+    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed);
     if (status != INFIX_SUCCESS)
         return status;
+
+    // Bridge logic, same as in infix_forward_create.
+    infix_type ** arg_types =
+        (num_fixed > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_fixed, _Alignof(infix_type *)) : nullptr;
+    if (num_fixed > 0 && !arg_types) {
+        infix_arena_destroy(arena);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    for (size_t i = 0; i < num_fixed; ++i)
+        arg_types[i] = args[i].type;
 
     // Then, create the reverse trampoline from the parsed types.
     status =

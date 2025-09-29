@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2025 Sanko Robinson
  *
@@ -32,9 +33,8 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
         infix_status status = infix_type_from_signature(&type, &arena, signature);
 
         ok(status == INFIX_SUCCESS, "Parsing should succeed for '%s'", signature);
-        if (status == INFIX_SUCCESS && type) {
+        if (status == INFIX_SUCCESS && type)
             ok(type->category == expected_cat, "Type category should be %d (got %d)", expected_cat, type->category);
-        }
         else
             fail("Type category check skipped due to parsing failure");
         infix_arena_destroy(arena);
@@ -96,31 +96,32 @@ TEST {
     }
 
     subtest("Valid Full Function Signatures (v1.0 Syntax)") {
-        plan(5);
+        plan(6);
         subtest("Simple function: (int32, double) -> int64") {
             plan(4);
             infix_arena_t * a = NULL;
             infix_type * rt = NULL;
-            infix_type ** at = NULL;
+            infix_function_argument * at = NULL;
             size_t na, nf;
             infix_status s = infix_signature_parse("(int32, double) -> int64", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
                 ok(na == 2 && nf == 2, "Correct number of args");
                 ok(rt->category == INFIX_TYPE_PRIMITIVE, "Correct return type");
-                ok(at[0]->category == INFIX_TYPE_PRIMITIVE && at[1]->category == INFIX_TYPE_PRIMITIVE,
+                ok(at[0].type->category == INFIX_TYPE_PRIMITIVE && at[1].type->category == INFIX_TYPE_PRIMITIVE,
                    "Correct arg types");
             }
-            else {
+            else
                 skip(3, "Detail checks skipped");
-            }
+
             infix_arena_destroy(a);
         }
+
         subtest("No-arg function: () -> void") {
             plan(3);
             infix_arena_t * a = NULL;
             infix_type * rt = NULL;
-            infix_type ** at = NULL;
+            infix_function_argument * at = NULL;
             size_t na, nf;
             infix_status s = infix_signature_parse("() -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
@@ -128,40 +129,42 @@ TEST {
                 ok(na == 0 && nf == 0, "Correct number of args");
                 ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
             }
-            else {
+            else
                 skip(2, "Detail checks skipped");
-            }
+
             infix_arena_destroy(a);
         }
+
         subtest("Variadic function: (int32, ...) -> void") {
             plan(3);
             infix_arena_t * a = NULL;
             infix_type * rt = NULL;
-            infix_type ** at = NULL;
+            infix_function_argument * at = NULL;
             size_t na, nf;
             infix_status s = infix_signature_parse("(int32, ...) -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 1 && nf == 1, "Correct number of fixed args");
+                ok(na == 2 && nf == 1, "Correct number of args (total vs fixed)");
                 ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
             }
-            else {
+            else
                 skip(2, "Detail checks skipped");
-            }
+
             infix_arena_destroy(a);
         }
+
         subtest("Complex nested function: (*( (int32) -> void )) -> void") {
             plan(4);
             infix_arena_t * a = NULL;
             infix_type * rt = NULL;
-            infix_type ** at = NULL;
+            infix_function_argument * args = NULL;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(*((int32) -> void)) -> void", &a, &rt, &at, &na, &nf);
+            infix_status s = infix_signature_parse("(*((int32) -> void)) -> void", &a, &rt, &args, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
                 ok(na == 1 && nf == 1, "Has 1 argument");
-                ok(at[0]->category == INFIX_TYPE_POINTER, "Argument is a pointer");
-                ok(at[0]->meta.pointer_info.pointee_type->category == INFIX_TYPE_REVERSE_TRAMPOLINE,
+                ok(args[0].type->category == INFIX_TYPE_POINTER, "Argument is a pointer");
+                ok(args[0].type->meta.pointer_info.pointee_type->category == INFIX_TYPE_REVERSE_TRAMPOLINE,
                    "It points to a function type");
             }
             else {
@@ -169,6 +172,7 @@ TEST {
             }
             infix_arena_destroy(a);
         }
+
         subtest("High-level API now active") {
             plan(2);
             infix_forward_t * fwd = NULL;
@@ -180,6 +184,36 @@ TEST {
             infix_status rev_status = infix_reverse_create(&rev, "() -> void", dummy_handler, NULL);
             ok(rev_status == INFIX_SUCCESS, "infix_reverse_create now parses successfully");
             infix_reverse_destroy(rev);
+        }
+
+        subtest("Function with named arguments") {
+            plan(6);
+            infix_arena_t * a = NULL;
+            infix_type * rt = NULL;
+            infix_function_argument * args = NULL;
+            size_t na, nf;
+            const char * sig = "(count: int32, name: *char) -> void";
+
+            // NOTE: We now call the updated infix_signature_parse
+            infix_status s = infix_signature_parse(sig, &a, &rt, &args, &na, &nf);
+            ok(s == INFIX_SUCCESS, "Parsing succeeds for signature with named args");
+
+            if (s == INFIX_SUCCESS) {
+                ok(na == 2 && nf == 2, "Correct number of args");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+
+                // Introspection checks for names and types
+                ok(strcmp(args[0].name, "count") == 0 && args[0].type->category == INFIX_TYPE_PRIMITIVE,
+                   "Arg 0 is 'count: int32'");
+                ok(strcmp(args[1].name, "name") == 0 && args[1].type->category == INFIX_TYPE_POINTER,
+                   "Arg 1 is 'name: *char'");
+                ok(args[1].type->meta.pointer_info.pointee_type->category == INFIX_TYPE_PRIMITIVE,
+                   "Arg 1 points to a primitive (char)");
+            }
+            else
+                skip(5, "Detail checks skipped due to parsing failure");
+
+            infix_arena_destroy(a);
         }
     }
 
@@ -235,16 +269,13 @@ TEST {
                 ok(pointee_type && pointee_type->category == INFIX_TYPE_NAMED_REFERENCE,
                    "It points to a named reference");
 
-                if (pointee_type) {
+                if (pointee_type)
                     ok(strcmp(pointee_type->meta.named_reference.name, "Node") == 0, "The reference is named 'Node'");
-                }
-                else {
+                else
                     fail("Pointee type was null");
-                }
             }
-            else {
+            else
                 skip(7, "Skipping detail checks");
-            }
             infix_arena_destroy(arena);
         }
     }

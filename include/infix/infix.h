@@ -161,6 +161,8 @@
 typedef struct infix_type_t infix_type;
 /** @brief Describes a single member of an aggregate type (struct or union). */
 typedef struct infix_struct_member_t infix_struct_member;
+/** @brief Describes a single argument of a function type, including its optional name. */
+typedef struct infix_function_argument_t infix_function_argument;
 /** @brief An opaque handle to a JIT-compiled forward-call trampoline. */
 typedef struct infix_forward_t infix_forward_t;
 /** @brief An opaque handle to the context of a reverse-call trampoline (callback). */
@@ -244,7 +246,7 @@ struct infix_type_t {
         /** @brief For `INFIX_TYPE_REVERSE_TRAMPOLINE`. */
         struct {
             struct infix_type_t * return_type;  ///< Reverse trampoline return value.
-            struct infix_type_t ** arg_types;   ///< Arg list
+            infix_function_argument * args;     ///< Array of function arguments (name and type).
             size_t num_args;                    ///< The total number of fixed and variadic arguments.
             size_t num_fixed_args;              ///< The number of non-variadic arguments.
         } func_ptr_info;
@@ -278,6 +280,15 @@ struct infix_struct_member_t {
     const char * name;  ///< The name of the member (for debugging/reflection).
     infix_type * type;  ///< An `infix_type` describing the member's type.
     size_t offset;      ///< The byte offset of the member from the start of the aggregate.
+};
+
+/**
+ * @struct infix_function_argument_t
+ * @brief Describes a single argument to a function, pairing an optional name with its type.
+ */
+struct infix_function_argument_t {
+    const char * name;  ///< The name of the argument (for reflection). Can be `nullptr` if anonymous.
+    infix_type * type;  ///< An `infix_type` describing the argument's type.
 };
 
 // Provides C23 compatibility shims for older language standards.
@@ -662,7 +673,7 @@ c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *
  *       function fails, `*out_arena` will be set to `NULL`.
  */
 c23_nodiscard infix_status
-infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_type ***, size_t *, size_t *);
+infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_function_argument **, size_t *, size_t *);
 
 /**
  * @brief Parses a signature string representing a single data type.
@@ -737,7 +748,6 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t);
  */
 c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t);
 
-
 /**
  * @defgroup type_introspection_api Type Introspection API
  * @brief Functions for safely querying the properties of `infix_type` objects.
@@ -789,4 +799,22 @@ c23_nodiscard size_t infix_type_get_member_count(const infix_type * type);
  *         `index` is out of bounds.
  */
 c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type * type, size_t index);
+
+/**
+ * @brief Retrieves the name of a function argument by its index.
+ * @param func_type A pointer to an `infix_type` of category `INFIX_TYPE_REVERSE_TRAMPOLINE`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant string for the argument's name, or `nullptr` if the argument
+ *         is anonymous, the index is out of bounds, or `func_type` is not a function type.
+ */
+c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type, size_t index);
+
+/**
+ * @brief Retrieves the type of a function argument by its index.
+ * @param func_type A pointer to an `infix_type` of category `INFIX_TYPE_REVERSE_TRAMPOLINE`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         index is out of bounds or `func_type` is not a function type.
+ */
+c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func_type, size_t index);
 /** @} */

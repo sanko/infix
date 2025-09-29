@@ -385,7 +385,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
 
         // Security: Reject excessively large types before they reach the code generator.
         if (type->size > INFIX_MAX_ARG_SIZE) {
-            *out_layout = NULL;
+            *out_layout = nullptr;
             return INFIX_ERROR_LAYOUT_FAILED;
         }
 
@@ -780,7 +780,7 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
 
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
-        *out_layout = NULL;
+        *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -788,7 +788,7 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
 
     // Safety check against allocating too much stack.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
-        *out_layout = NULL;
+        *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 

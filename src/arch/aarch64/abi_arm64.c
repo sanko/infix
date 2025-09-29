@@ -296,7 +296,7 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 
         // Step 0: Make sure we aren't blowing ourselves up
         if (type->size > INFIX_MAX_ARG_SIZE) {
-            *out_layout = NULL;
+            *out_layout = nullptr;
             return INFIX_ERROR_LAYOUT_FAILED;
         }
 
@@ -730,7 +730,7 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
 
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
-        *out_layout = NULL;
+        *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -853,7 +853,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         // Case 2: Argument is passed by value.
         int32_t arg_save_loc = (int32_t)(layout->saved_args_offset + current_saved_data_offset);
 
-        infix_type * hfa_base_type = NULL;
+        infix_type * hfa_base_type = nullptr;
 
         if (!is_from_stack) {
             if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
