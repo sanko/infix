@@ -170,6 +170,7 @@ add_infix_test(002_simple_calls)
 add_infix_test(003_type_system_api)
 add_infix_test(004_signatures)
 add_infix_test(005_layouts)
+add_infix_test(006_end_to_end_calls)
 
 add_infix_test(101_by_value)
 add_infix_test(102_by_reference)
