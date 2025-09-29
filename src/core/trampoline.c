@@ -208,6 +208,50 @@ c23_nodiscard void * infix_forward_get_code(infix_forward_t * trampoline) {
 }
 
 /**
+ * @brief (Internal) Recursively checks if an entire type graph is fully resolved.
+ * @details A type graph is considered unresolved if it contains any nodes of
+ *          type INFIX_TYPE_NAMED_REFERENCE.
+ * @param type Pointer to infix_type_t struct which will be checked to confirm it's complete.
+ * @return `true` if resolved, `false` otherwise.
+ */
+static bool _is_type_graph_resolved(infix_type * type) {
+    if (!type)
+        return true;  // Null is fine.
+
+    switch (type->category) {
+    case INFIX_TYPE_NAMED_REFERENCE:
+        return false;  // Found an unresolved reference!
+
+    case INFIX_TYPE_POINTER:
+        return _is_type_graph_resolved(type->meta.pointer_info.pointee_type);
+
+    case INFIX_TYPE_ARRAY:
+        return _is_type_graph_resolved(type->meta.array_info.element_type);
+
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            if (!_is_type_graph_resolved(type->meta.aggregate_info.members[i].type))
+                return false;
+        }
+        return true;
+
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+        if (!_is_type_graph_resolved(type->meta.func_ptr_info.return_type))
+            return false;
+        for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
+            if (!_is_type_graph_resolved(type->meta.func_ptr_info.arg_types[i]))
+                return false;
+        }
+        return true;
+
+    // Primitives, Void, etc., are always resolved.
+    default:
+        return true;
+    }
+}
+
+/**
  * @brief Generates a forward-call trampoline for a given function signature.
  * @details This function orchestrates the entire process of JIT-compiling a forward
  *          trampoline. The process involves:
@@ -234,6 +278,14 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_tr
                                                        size_t num_fixed_args) {
     if (out_trampoline == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // Validate the type graphs
+    if (!_is_type_graph_resolved(return_type))
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    for (size_t i = 0; i < num_args; ++i) {
+        if (!_is_type_graph_resolved(arg_types[i]))
+            return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     const infix_forward_abi_spec * spec = get_current_forward_abi_spec();
     if (spec == nullptr)
@@ -371,6 +423,14 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
                                                        void * user_data) {
     if (out_context == nullptr || num_fixed_args > num_args)
         return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // Validate the graph
+    if (!_is_type_graph_resolved(return_type))
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    for (size_t i = 0; i < num_args; ++i) {
+        if (!_is_type_graph_resolved(arg_types[i]))
+            return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     const infix_reverse_abi_spec * spec = get_current_reverse_abi_spec();
     if (spec == nullptr)

@@ -83,7 +83,8 @@
  *
  * int main() {
  *     infix_forward_t* trampoline = NULL;
- *     const char* signature = "i*,i=>i"; // const char*, int => int
+ *     // Signature for: int printf(const char*, ...);
+ *     const char* signature = "(*char, ...) -> int";
  *
  *     infix_status status = infix_forward_create(&trampoline, signature);
  *     if (status != INFIX_SUCCESS) {
@@ -99,6 +100,7 @@
  *
  *     void* args[] = { &my_string, &my_int };
  *
+ *     // The target function is passed at the call site.
  *     cif(&printf, &printf_ret, args);
  *
  *     printf("printf returned: %d\n", printf_ret); // Should match the number of chars printed
@@ -592,16 +594,18 @@ c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *);
  * @brief Generates a forward-call trampoline from a signature string.
  *
  * This is the primary function of the high-level API. It parses a signature
- * string, constructs the necessary `infix_type` objects internally, generates the
- * trampoline, and cleans up all intermediate type descriptions. The resulting
- * trampoline is self-contained and ready for use.
+ * string using the v1.0 specification, constructs the necessary `infix_type` objects
+ * internally, generates the trampoline, and cleans up all intermediate type descriptions.
+ * The resulting trampoline is self-contained and ready for use.
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
- * @param signature A null-terminated string describing the function signature.
- *                  Format: "arg1,arg2;variadic_arg=>ret_type". See cookbook for details.
- *                  Supports packed structs with the syntax: p(size,align){type@offset;...}
- * @return `INFIX_SUCCESS` on success, or an error code on failure. `INFIX_ERROR_INVALID_ARGUMENT`
- *         is returned for parsing errors.
+ * @param signature A null-terminated string describing the function signature,
+ *                  e.g., `"(int, *char) -> void"`. See the project documentation
+ *                  for the full v1.0 syntax.
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
+ *         contains unresolved named types (e.g., `struct<MyStruct>`).
+ * @return `INFIX_ERROR_ALLOCATION_FAILED` on memory allocation failure.
  * @note The returned trampoline must be freed with `infix_forward_destroy`.
  */
 c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *);
@@ -609,31 +613,31 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *
 /**
  * @brief Generates a reverse-call trampoline (callback) from a signature string.
  *
- * This function parses a signature string to create a native, C-callable function
+ * This function parses a v1.0 signature string to create a native, C-callable function
  * pointer that invokes the provided user handler. It simplifies the creation
  * of callbacks by managing the underlying `infix_type` objects automatically.
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
- *                  Format: "arg1,arg2;variadic_arg=>ret_type". Supports packed structs.
  * @param user_callback_fn A function pointer to the user's C callback handler.
  *                         Its signature must start with `infix_context_t*`, followed
  *                         by the types described in the signature string.
  * @param user_data A user-defined pointer for passing state to the handler,
  *                  accessible inside the handler via `infix_reverse_get_user_data`.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
+ *         contains unresolved named types.
  * @note The returned context must be freed with `infix_reverse_destroy`.
  */
 c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *, void *, void *);
 
 /**
  * @brief Parses a full function signature string into its constituent infix_type parts.
- * @details This function provides direct access to the signature parser. It creates a
- *          dedicated arena to hold the resulting `infix_type` object graph for the
+ * @details This function provides direct access to the v1.0 signature parser. It creates a
+ *          dedicated memory arena to hold the resulting `infix_type` object graph for the
  *          entire function signature. This is an advanced function for callers who
- *          need to inspect the type information before or after generating a
- *          trampoline, or for those who wish to use the lower-level
- *          `infix_forward_create_manual` function directly.
+ *          need to inspect type information before generating a trampoline, or for
+ *          tooling that needs to understand a C function's data contract.
  *
  * @param[in]  signature A null-terminated string describing the function signature.
  *                       See the project's documentation for the full signature language.
@@ -662,7 +666,7 @@ infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_type 
 
 /**
  * @brief Parses a signature string representing a single data type.
- * @details This is a specialized version of the parser for use cases like data
+ * @details This is a specialized version of the v1.0 parser for use cases like data
  *          marshalling, serialization, or dynamic type inspection, where you need
  *          to describe a single data type rather than a full function signature.
  *          It creates a dedicated arena to hold the resulting `infix_type` object
@@ -673,7 +677,7 @@ infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_type 
  * @param[out] out_arena On success, will point to the new arena that owns the type
  *                       object graph. The caller is responsible for destroying this
  *                       arena with `infix_arena_destroy()`.
- * @param[in]  signature A string describing the data type (e.g., "i", "d*", "{s@0;i@4}").
+ * @param[in]  signature A string describing the data type (e.g., `"int32"`, `"*void"`, `"{int, float}"`).
  *
  * @return Returns `INFIX_SUCCESS` if parsing is successful.
  * @return Returns `INFIX_ERROR_INVALID_ARGUMENT` if any parameters are null or the
@@ -684,56 +688,6 @@ infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_type 
  *       returned in `*out_arena` and is responsible for its destruction.
  */
 c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *);
-
-/**
- * @defgroup signature_specifiers Signature Format Specifiers
- * @brief Defines for characters used in the high-level signature string format.
- * @details These macros provide symbolic names for the characters used to define
- *          types in a signature string, making programmatic string construction
- *          safer and more readable than using magic character literals.
- * @{
- */
-
-// Primitive Types
-#define INFIX_SIG_VOID 'v'
-#define INFIX_SIG_BOOL 'b'
-#define INFIX_SIG_CHAR 'c'
-#define INFIX_SIG_SINT8 'a'
-#define INFIX_SIG_UINT8 'h'
-#define INFIX_SIG_SINT16 's'
-#define INFIX_SIG_UINT16 't'
-#define INFIX_SIG_SINT32 'i'
-#define INFIX_SIG_UINT32 'j'
-#define INFIX_SIG_LONG 'l'
-#define INFIX_SIG_ULONG 'm'
-#define INFIX_SIG_SINT64 'x'
-#define INFIX_SIG_UINT64 'y'
-#define INFIX_SIG_SINT128 'n'
-#define INFIX_SIG_UINT128 'o'
-#define INFIX_SIG_FLOAT 'f'
-#define INFIX_SIG_DOUBLE 'd'
-#define INFIX_SIG_LONG_DOUBLE 'e'
-
-// Type Modifiers and Constructs
-#define INFIX_SIG_POINTER '*'
-#define INFIX_SIG_STRUCT_START '{'
-#define INFIX_SIG_STRUCT_END '}'
-#define INFIX_SIG_UNION_START '<'
-#define INFIX_SIG_UNION_END '>'
-#define INFIX_SIG_ARRAY_START '['
-#define INFIX_SIG_ARRAY_END ']'
-#define INFIX_SIG_PACKED_STRUCT 'p'
-#define INFIX_SIG_FUNC_PTR_START '('
-#define INFIX_SIG_FUNC_PTR_END ')'
-
-// Delimiters
-#define INFIX_SIG_MEMBER_SEPARATOR ','
-#define INFIX_SIG_VARIADIC_SEPARATOR ';'
-#define INFIX_SIG_OFFSET_SEPARATOR '@'
-#define INFIX_SIG_NAME_SEPARATOR ':'
-#define INFIX_SIG_RETURN_SEPARATOR "=>"
-
-/** @} */  // End of signature_specifiers group
 
 /** @} */  // End of high_level_api group
 
@@ -782,3 +736,57 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t);
  * @return A pointer to the zero-initialized memory, or `nullptr` on failure.
  */
 c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t);
+
+
+/**
+ * @defgroup type_introspection_api Type Introspection API
+ * @brief Functions for safely querying the properties of `infix_type` objects.
+ * @details These read-only functions provide a safe and convenient way to inspect
+ *          the metadata of a parsed `infix_type` without needing to directly
+ *          access the members of the `infix_type_t` struct. They include null-safety
+ *          checks and return sensible default values for invalid or mismatched types.
+ * @{
+ */
+
+/**
+ * @brief Retrieves the fundamental category of an `infix_type`.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The `infix_type_category` enum for the type. Returns `(infix_type_category)-1`
+ *         if the provided `type` pointer is `nullptr`.
+ */
+c23_nodiscard infix_type_category infix_type_get_category(const infix_type * type);
+
+/**
+ * @brief Retrieves the size of an `infix_type` in bytes.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The size of the type, equivalent to `sizeof(T)`. Returns `0` if the
+ *         provided `type` pointer is `nullptr`.
+ */
+c23_nodiscard size_t infix_type_get_size(const infix_type * type);
+
+/**
+ * @brief Retrieves the alignment requirement of an `infix_type` in bytes.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The alignment of the type, equivalent to `_Alignof(T)`. Returns `0` if the
+ *         provided `type` pointer is `nullptr`.
+ */
+c23_nodiscard size_t infix_type_get_alignment(const infix_type * type);
+
+/**
+ * @brief Retrieves the number of members in an aggregate type (struct or union).
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The number of members if the type is a struct or union. Returns `0` for
+ *         all other type categories or if the `type` pointer is `nullptr`.
+ */
+c23_nodiscard size_t infix_type_get_member_count(const infix_type * type);
+
+/**
+ * @brief Retrieves a specific member from an aggregate type by its index.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @param index The zero-based index of the member to retrieve.
+ * @return A constant pointer to the `infix_struct_member` on success. Returns `nullptr`
+ *         if `type` is not a struct or union, if `type` is `nullptr`, or if the
+ *         `index` is out of bounds.
+ */
+c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type * type, size_t index);
+/** @} */
