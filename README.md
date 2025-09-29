@@ -99,9 +99,9 @@ This API generates trampolines from a simple string: `(arg1, arg2, ...) -> ret_t
 > **For a complete guide to the signature language, see the [Signature Language Reference](docs/signatures.md).**
 
 **Key Functions:**
--   `infix_forward_create(tramp, "(int, int) -> int")`: Creates a forward trampoline from a signature string.
--   `infix_reverse_create(ctx, "(int) -> void", handler, data)`: Creates a callback from a signature string and a C handler.
--   `infix_type_from_signature(type, arena, "{int, double}")`: Parses a single data type signature for introspection.
+-   `infix_forward_create(tramp, "(int32, int32) -> int32")`: Creates a forward trampoline from a signature string.
+-   `infix_reverse_create(ctx, "(int32) -> void", handler, data)`: Creates a callback from a signature string and a C handler.
+-   `infix_type_from_signature(type, arena, "{int32, double}")`: Parses a single data type signature for introspection.
 -   `infix_signature_parse(...)`: Parses a full function signature for advanced use cases.
 
 ### The Manual API (Advanced)
@@ -135,7 +135,6 @@ See the [LICENSE-A2](LICENSE-A2) and/or [LICENSE-MIT](LICENSE-MIT) for the full 
 
 ### Documentation License
 
-All standalone documentation (`.md`), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**. I encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you
-give appropriate credit.
+All standalone documentation (`.md`), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**. I encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.
 
 See the [LICENSE-CC](LICENSE-CC) for details.

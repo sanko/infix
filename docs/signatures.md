@@ -201,40 +201,33 @@ Insignificant whitespace (spaces, tabs, newlines) is permitted between any two t
 This Extended Backus-Naur Form grammar formally defines the signature format.
 
 ```ebnf
-signature           ::= annotation* ( function_type | value_type )
+signature           ::= function_type | value_type
 
-annotation          ::= StringLiteral
+value_type          ::= pointer_type | array_type | aggregate_type | enum_type | primitive_type | grouped_type
 
-value_type          ::= pointer_type | array_type | struct_type | union_type | complex_type | simd_type | enum_type | primitive_type
-
-pointer_type        ::= '*' ( value_type | function_type )
+pointer_type        ::= '*' value_type
 array_type          ::= '[' Integer ':' value_type ']'
+grouped_type        ::= '(' value_type ')'
 
-struct_type         ::= packed_prefix? ( 'struct' '<' Identifier '>' )? '{' field_list? '}'
-packed_prefix       ::= ( '!' Integer ':' ) | '!'
-union_type          ::= ( 'union' '<' Identifier '>' )? '<' field_list? '>'
-field_list          ::= field ( ',' field )*
-field               ::= ( Identifier ':' )? value_type
+aggregate_type      ::= struct_type | union_type | packed_struct_type
+struct_type         ::= ( 'struct' '<' Identifier '>' )? '{' member_list? '}'
+union_type          ::= ( 'union' '<' Identifier '>' )? '<' member_list? '>'
+packed_struct_type  ::= 'packed' '(' Integer ',' Integer ')' 'struct' '{' packed_member_list? '}'
+member_list         ::= member ( ',' member )*
+packed_member_list  ::= packed_member ( ',' packed_member )*
+member              ::= ( Identifier ':' )? value_type
+packed_member       ::= ( Identifier ':' )? value_type '@' Integer
 
-enum_type           ::= 'e' ( '<' Identifier '>' )? ':' value_type
+enum_type           ::= 'e' ( '<' Identifier '>' )? ':' primitive_type
 
-complex_type        ::= 'c' '[' float_type ']'
-simd_type           ::= 'v' ( ( '[' Integer ':' value_type ']' ) | Integer )
-
-function_type       ::= '(' fixed_arg_list? ( ';' variadic_arg_list? )? ')' '->' value_type
-fixed_arg_list      ::= arg ( ',' arg )*
-variadic_arg_list   ::= arg ( ',' arg )*
+function_type       ::= '(' arg_list? ')' '->' value_type
+arg_list            ::= arg ( ',' arg )* ( ',' '...' )?
 arg                 ::= ( Identifier ':' )? value_type
 
-primitive_type      ::= abstract_type | fixed_width_type
-float_type          ::= 'float' | 'double' | 'float32' | 'float64' | 'float80' | 'float128'
+primitive_type      ::= 'void' | 'bool' | 'char' | 'uchar' | 'short' | 'ushort' | 'int' | 'uint' | 'long' | 'ulong' | 'longlong' | 'ulonglong' | 'float' | 'double' | 'long_double' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'int128' | 'uint128' | 'float32' | 'float64' | 'float80' | 'float128'
 
-abstract_type       ::= 'void' | 'char' | 'uchar' | 'short' | 'ushort' | 'int' | 'uint' | 'long' | 'ulong' | 'longlong' | 'ulonglong' | float_type
-fixed_width_type    ::= ('int' | 'uint') ('8' | '16' | '32' | '64' | '128') | 'float' ('32' | '64')
-
-Identifier          ::= [a-zA-Z] [a-zA-Z0-9_]*
+Identifier          ::= [a-zA-Z_] [a-zA-Z0-9_]*
 Integer             ::= [0-9]+
-StringLiteral       ::= '"' [^"]* '"'
 ```
 
 #### 4.3 Design Rationale: Why This Syntax?
