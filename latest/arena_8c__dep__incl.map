@@ -1,7 +1,7 @@
 <map id="src/core/arena.c" name="src/core/arena.c">
-<area shape="rect" id="Node000001" title="Implementation of the internal arena allocator." alt="" coords="53,5,178,31"/>
-<area shape="rect" id="Node000002" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="5,86,89,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,43,59,88,55,84,94,39"/>
-<area shape="rect" id="Node000003" href="$840__arena__allocator_8c.html" title="Unit tests for the internal arena allocator." alt="" coords="113,79,256,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="137,39,170,77,166,80,133,43"/>
+<area shape="rect" id="Node000001" title="Implementation of the internal arena allocator." alt="" coords="61,5,186,31"/>
+<area shape="rect" id="Node000002" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="5,79,89,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,42,62,80,58,76,99,38"/>
+<area shape="rect" id="Node000003" href="$840__arena__allocator_8c.html" title="Unit tests for the internal arena allocator." alt="" coords="114,79,287,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,38,190,76,186,80,144,42"/>
 </map>

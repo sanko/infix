@@ -1,21 +1,21 @@
 <map id="infix_forward_create" name="infix_forward_create">
-<area shape="rect" id="Node000001" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="5,56,160,81"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="419,5,569,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,53,208,41,309,29,404,21,405,26,310,34,208,46,140,59"/>
-<area shape="rect" id="Node000003" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="211,106,366,146"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,79,204,100,203,105,128,84"/>
-<area shape="rect" id="Node000008" href="$group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,56,369,81"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="160,66,195,66,195,71,160,71"/>
-<area shape="poly" id="edge7_Node000003_Node000002" title=" " alt="" coords="340,104,368,90,461,36,463,41,371,95,342,108"/>
-<area shape="rect" id="Node000004" href="$trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="431,156,557,181"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="367,139,419,150,418,156,365,145"/>
-<area shape="rect" id="Node000006" href="$trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="417,206,571,246"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="327,144,419,192,432,198,430,203,416,196,325,149"/>
-<area shape="rect" id="Node000007" href="$group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="423,107,565,132"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="366,121,409,119,409,125,366,126"/>
-<area shape="rect" id="Node000005" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="619,107,751,132"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="543,153,621,133,622,138,544,159"/>
-<area shape="poly" id="edge11_Node000008_Node000002" title=" " alt="" coords="340,53,428,31,429,37,342,58"/>
-<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="370,70,466,78,571,91,621,101,619,106,570,97,466,84,369,76"/>
-<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="342,79,429,101,428,106,340,84"/>
+<area shape="rect" id="Node000001" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="5,117,160,143"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="619,5,751,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,115,151,90,207,66,310,33,417,15,515,9,605,10,605,16,515,15,418,21,311,38,209,71,153,95,107,119"/>
+<area shape="rect" id="Node000003" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="419,195,569,220"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,140,155,161,209,179,310,197,405,204,405,209,309,202,207,185,153,166,107,145"/>
+<area shape="rect" id="Node000004" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="211,81,366,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,116,197,111,198,116,161,122"/>
+<area shape="rect" id="Node000008" href="$group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,145,369,171"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="161,138,195,143,194,148,160,143"/>
+<area shape="poly" id="edge8_Node000004_Node000003" title=" " alt="" coords="350,119,371,130,386,143,395,156,404,168,419,180,433,187,430,192,416,184,401,172,391,159,382,147,368,135,347,123"/>
+<area shape="rect" id="Node000005" href="$trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="431,31,557,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="360,78,434,57,435,62,362,83"/>
+<area shape="rect" id="Node000006" href="$trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="417,81,571,121"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="366,98,404,98,404,103,366,103"/>
+<area shape="rect" id="Node000007" href="$group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="423,145,565,171"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="362,118,435,139,434,144,360,123"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="557,32,604,26,605,31,558,38"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="343,168,428,189,427,194,342,173"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="370,155,409,155,409,161,370,161"/>
 </map>

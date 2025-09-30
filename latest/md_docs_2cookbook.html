@@ -77,7 +77,7 @@ $(function() {
 <p>&zwj;<b>Note:</b> All examples in this cookbook are standalone, compilable C files located in the <a href="/eg/cookbook/"><code>eg/cookbook/</code></a> directory. </p>
 </blockquote>
 <blockquote class="doxtable">
-<p>&zwj;For a complete reference on the string format used in these examples (e.g., <code>"i"</code>, <code>"{d,d}"</code>, <code>"c*"</code>), please see the <b><a class="el" href="md_docs_2signatures.html">Signature Language Reference</a></b>. </p>
+<p>&zwj;For a complete reference on the string format used in these examples (e.g., <code>"int"</code>, <code>"{double, double}"</code>, <code>"*char"</code>), please see the <b><a class="el" href="md_docs_2signatures.html">Signature Language Reference</a></b>. </p>
 </blockquote>
 <h1><a class="anchor" id="autotoc_md16"></a>
 Table of Contents</h1>
@@ -97,6 +97,7 @@ Table of Contents</h1>
 <li>Recipe: Working with Packed Structs via the Signature API</li>
 <li>Recipe: Working with Unions</li>
 <li>Recipe: Working with Pointers to Arrays</li>
+<li>Recipe: Working with Complex Numbers</li>
 </ul>
 </li>
 <li><b>Chapter 3: The Power of Callbacks (Reverse Calls)</b><ul>
@@ -137,6 +138,8 @@ Table of Contents</h1>
 <li><b>Chapter 8: Common Pitfalls &amp; Troubleshooting</b><ul>
 <li>Mistake: Passing a Value Instead of a Pointer in `args[]`</li>
 <li>Mistake: `infix` Signature Mismatch</li>
+<li>Pitfall: Function Pointer Syntax</li>
+<li>Pitfall: Struct Packing Differences</li>
 <li>A Note on Memory Safety by Design</li>
 </ul>
 </li>
@@ -151,7 +154,7 @@ Chapter 1: The Basics (Forward Calls)</h1>
 <h2><a class="anchor" id="autotoc_md19"></a>
 Recipe: Calling a Simple C Function</h2>
 <p><b>Problem</b>: You want to call a standard C function, like <code>int add(int, int);</code>.</p>
-<p><b>Solution</b>: Describe the function's signature using the Signature API (<code>"i,i=&gt;i"</code>), prepare pointers to your arguments, and invoke the function through the generated trampoline.</p>
+<p><b>Solution</b>: Describe the function's signature using the v1.0 format (<code>"(int, int) -&gt; int"</code>), prepare pointers to your arguments, and invoke the function through the generated trampoline.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"> </div>
@@ -159,7 +162,7 @@ Recipe: Calling a Simple C Function</h2>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
-<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;i,i=&gt;i&quot;</span>);</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;(int32, int32)-&gt;int32&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span> a = 40, b = 2;</div>
 <div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;a, &amp;b };</div>
@@ -172,10 +175,10 @@ Recipe: Calling a Simple C Function</h2>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__high__level__api_html_ga7b043799f03cb7e6d223991828b27822"><div class="ttname"><a href="group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:204</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga91ee73b14244e9479da4cf40d077ceec"><div class="ttname"><a href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *)</div><div class="ttdoc">Generates a forward-call trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> signature.c:1366</div></div>
-<div class="ttc" id="agroup__high__level__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Frees a forward trampoline and its associated executable memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:327</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga91ee73b14244e9479da4cf40d077ceec"><div class="ttname"><a href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *)</div><div class="ttdoc">Generates a forward-call trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> signature.c:1199</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Frees a forward trampoline and its associated executable memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:379</div></div>
 <div class="ttc" id="ainfix_8h_html"><div class="ttname"><a href="infix_8h.html">infix.h</a></div><div class="ttdoc">The main public header for the infix FFI library.</div></div>
-<div class="ttc" id="ainfix_8h_html_a3faff0adbe3b7f6df3be210295ec3a81"><div class="ttname"><a href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *target_function, void *return_value, void **args)</div><div class="ttdoc">The signature for a generic forward-call trampoline, the &quot;Call InterFace&quot; function.</div><div class="ttdef"><b>Definition</b> infix.h:320</div></div>
+<div class="ttc" id="ainfix_8h_html_a3faff0adbe3b7f6df3be210295ec3a81"><div class="ttname"><a href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *target_function, void *return_value, void **args)</div><div class="ttdoc">The signature for a generic forward-call trampoline, the &quot;Call InterFace&quot; function.</div><div class="ttdef"><b>Definition</b> infix.h:358</div></div>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:77</div></div>
 </div><!-- fragment --> <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/01_simple_call.c">View the full code</a> </p>
@@ -183,7 +186,7 @@ Recipe: Calling a Simple C Function</h2>
 <h2><a class="anchor" id="autotoc_md20"></a>
 Recipe: Passing and Receiving Pointers</h2>
 <p><b>Problem</b>: You need to call a C function that takes pointers as arguments, like <code>void swap(int* a, int* b);</code>.</p>
-<p><b>Solution</b>: Use the <code>*</code> modifier in the signature string (<code>"i*,i*=&gt;v"</code>). The values you pass in the <code>args</code> array are the addresses of your pointer variables.</p>
+<p><b>Solution</b>: Use the <code>*</code> prefix modifier in the signature string (<code>"(*int, *int) -&gt; void"</code>). The values you pass in the <code>args</code> array are the addresses of your pointer variables.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"> </div>
@@ -193,7 +196,7 @@ Recipe: Passing and Receiving Pointers</h2>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
-<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;i*,i*=&gt;v&quot;</span>);</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;(*int32, *int32)-&gt;void&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span> x = 10, y = 20;</div>
 <div class="line">    <span class="keywordtype">int</span>* ptr_x = &amp;x;</div>
@@ -207,20 +210,20 @@ Recipe: Passing and Receiving Pointers</h2>
 <div class="line">    <a class="code hl_function" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --> <blockquote class="doxtable">
+</div><!-- fragment --><blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/02_pointers.c">View the full code</a> </p>
 </blockquote>
 <h2><a class="anchor" id="autotoc_md21"></a>
 Recipe: Working with Opaque Pointers (Incomplete Types)</h2>
 <p><b>Problem</b>: You need to interact with a C library that uses opaque pointers (or "handles") where the internal structure is hidden.</p>
-<p><b>Solution</b>: Use the <code>v*</code> signature for <code>void*</code> or any other opaque pointer type. This is the canonical representation for a generic handle.</p>
+<p><b>Solution</b>: Use the <code>*void</code> signature. This is the canonical representation for a generic handle or opaque pointer.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/03_opaque_pointers.c">View the full code</a> </p>
 </blockquote>
 <h2><a class="anchor" id="autotoc_md22"></a>
 Recipe: Working with Fixed-Size Arrays</h2>
 <p><b>Problem</b>: You need to call a function that operates on a fixed-size array, like <code>long long sum_array(long long arr[4]);</code>.</p>
-<p><b>Solution</b>: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (<code>"x*=&gt;x"</code> for <code>int64_t(const int64_t*)</code>). <code>infix</code> will handle the call correctly.</p>
+<p><b>Solution</b>: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (<code>"(*int64) -&gt; int64"</code>). <code>infix</code> will handle the call correctly.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/04_fixed_arrays.c">View the full code</a> </p>
 </blockquote>
@@ -238,7 +241,7 @@ Recipe: Dynamic Struct Marshalling with the Signature Parser</h2>
 <h2><a class="anchor" id="autotoc_md26"></a>
 Recipe: Small Structs Passed by Value</h2>
 <p><b>Problem</b>: You need to call a function that takes a small <code>struct</code> that the ABI passes in registers.</p>
-<p><b>Solution</b>: Use the <code>{}</code> syntax (e.g., <code>"{d,d}=&gt;d"</code> for <code>double(Point)</code>). <code>infix</code> will automatically determine the correct ABI passing convention.</p>
+<p><b>Solution</b>: Use the anonymous struct syntax <code>({...})</code> (e.g., <code>"({double, double}) -&gt; double"</code> for <code>double(Point)</code>). <code>infix</code> will automatically determine the correct ABI passing convention.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/06_small_struct_by_value.c">View the full code</a> </p>
 </blockquote>
@@ -252,106 +255,113 @@ Recipe: Large Structs Passed by Reference</h2>
 <h2><a class="anchor" id="autotoc_md28"></a>
 Recipe: Receiving a Struct from a Function</h2>
 <p><b>Problem</b>: You need to call a function that <em>returns</em> a struct by value.</p>
-<p><b>Solution</b>: Simply use the struct signature as the return type (e.g., <code>"=&gt;__{d,d_}_"</code>).</p>
+<p><b>Solution</b>: Simply use the struct signature as the return type (e.g., <code>"() -&gt; {double, double}"</code>).</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/08_return_struct.c">View the full code</a> </p>
 </blockquote>
 <h2><a class="anchor" id="autotoc_md29"></a>
-Recipe: Working with Packed Structs via the Signature API</h2>
-<p><b>Problem</b>: You need to call a C function that takes a packed struct.</p>
-<p><b>Solution</b>: Use the <code>p(size,align){type@offset,...}</code> signature syntax, providing the exact layout metadata from your C compiler using <code>sizeof</code>, <code>_Alignof</code>, and <code>offsetof</code>.</p>
+Recipe: Working with Packed Structs</h2>
+<p><b>Problem</b>: You need to call a C function that takes a packed struct (e.g., one defined with <code>#pragma pack(1)</code>).</p>
+<p><b>Solution</b>: Use the <code>!{...}</code> syntax. The <code>!</code> prefix tells <code>infix</code> to use a packed layout with 1-byte alignment. The parser will correctly calculate all member offsets with no internal padding. For alignments other than 1, use <code>!N:{...}</code> where N is the alignment.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/09_packed_struct.c">View the full code</a> </p>
 </blockquote>
 <h2><a class="anchor" id="autotoc_md30"></a>
 Recipe: Working with Unions</h2>
 <p><b>Problem</b>: You need to call a function that passes or returns a <code>union</code>.</p>
-<p><b>Solution</b>: Use the <code>&lt;...&gt;</code> syntax to describe the union (e.g., <code>"&lt;i,f&gt;=&gt;i"</code>). <code>infix</code> will automatically classify it for ABI compliance.</p>
+<p><b>Solution</b>: Use the <code>&lt;...&gt;</code> syntax to describe the union (e.g., <code>"(&lt;int32, float32&gt;) -&gt; int32"</code>). <code>infix</code> will automatically classify it for ABI compliance.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/10_unions.c">View the full code</a> </p>
 </blockquote>
 <h2><a class="anchor" id="autotoc_md31"></a>
 Recipe: Working with Pointers to Arrays</h2>
 <p><b>Problem</b>: You need to call a function that takes a pointer to a fixed-size array, like <code>void process_matrix(int (*matrix)[4]);</code>.</p>
-<p><b>Solution</b>: Use grouping parentheses <code>()</code> around the array type before adding the <code>*</code> pointer modifier (e.g., <code>"([4]i)*=&gt;v"</code>).</p>
+<p><b>Solution</b>: Use the pointer prefix <code>*</code> on an array type (<code>*[4:int32]</code>).</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/11_pointer_to_array.c">View the full code</a> </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md32"></a>
-&lt;/blockquote&gt;</h1>
+<h2><a class="anchor" id="autotoc_md32"></a>
+Recipe: Working with Complex Numbers</h2>
+<p><b>Problem</b>: You need to call a C function from the <code>&lt;complex.h&gt;</code> standard library, or another scientific library that uses <code>_Complex</code> types.</p>
+<p><b>Solution</b>: Use the <code>c[...]</code> constructor in the signature string. The inner type must be a floating-point type, typically <code>float</code> or <code>double</code>. The <code>infix</code> library will handle the correct ABI rules for passing the two-part value.</p>
+<blockquote class="doxtable">
+<p>&zwj;<a href="/eg/cookbook/20_complex.c">View the full code</a> </p>
+</blockquote>
 <h1><a class="anchor" id="autotoc_md33"></a>
+&lt;/blockquote&gt;</h1>
+<h1><a class="anchor" id="autotoc_md34"></a>
 Chapter 3: The Power of Callbacks (Reverse Calls)</h1>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md35"></a>
 Recipe: Creating a Stateless Callback for &lt;tt&gt;qsort&lt;/tt&gt;</h2>
 <p><b>Problem</b>: You need to sort an array using C's <code>qsort</code>, which requires a function pointer for the comparison logic.</p>
 <p><b>Solution</b>: Use a reverse trampoline to create a native function pointer for your comparison handler. The handler's signature must accept <code>infix_context_t*</code> as its first argument.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/12_callback_qsort.c">View the full code</a> </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md35"></a>
+<h2><a class="anchor" id="autotoc_md36"></a>
 Recipe: Creating a Stateful Callback (The Modern Way)</h2>
 <p><b>Problem</b>: A callback handler needs access to application state, but the C library API is stateless (it provides no <code>void* user_data</code> parameter).</p>
 <p><b>Solution</b>: <code>infix</code> automatically passes a pointer to the <code>infix_context_t</code> as the <b>first argument</b> to every C callback handler. Retrieve your application state from the context's <code>user_data</code> field.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/13_stateful_callback.c">View the full code</a> </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md36"></a>
+<h1><a class="anchor" id="autotoc_md37"></a>
 Chapter 4: Advanced Techniques</h1>
-<h2><a class="anchor" id="autotoc_md37"></a>
+<h2><a class="anchor" id="autotoc_md38"></a>
 Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;</h2>
 <p><b>Problem</b>: You need to call a function with a variable number of arguments.</p>
-<p><b>Solution</b>: Provide the types for <em>all</em> arguments you intend to pass in a single call and use a semicolon (<code>;</code>) in the signature to mark where the variadic part begins.</p>
+<p><b>Solution</b>: Use the <code>;</code> token to seperate fixed and variadic arguments in the signature. The signature only needs to describe both the fixed (non-variadic) and variadic arguments.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/14_variadic_printf.c">View the full code</a> </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md38"></a>
+<h2><a class="anchor" id="autotoc_md39"></a>
 Recipe: Creating a Variadic Callback</h2>
 <p><b>Problem</b>: You need to create a native function pointer for a handler that is itself variadic.</p>
-<p><b>Solution</b>: Your C handler will use <code>&lt;stdarg.h&gt;</code>. The <code>infix</code> signature must describe a specific, concrete instance of the variadic call you expect the C code to make.</p>
+<p><b>Solution</b>: Your C handler will use <code>&lt;stdarg.h&gt;</code>. The <code>infix</code> signature simply includes the <code>;</code> token after the fixed arguments, just as with a forward call.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/15_variadic_callback.c">View the full code</a> </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md39"></a>
+<h2><a class="anchor" id="autotoc_md40"></a>
 Recipe: Proving Reentrancy with Nested FFI Calls</h2>
 <p><b>Problem</b>: You need to call a C function that takes a callback, and inside that callback handler, you need to call <em>another</em> C function using <code>infix</code>.</p>
 <p><b>Solution</b>: <code>infix</code> is fully reentrant. Create all necessary trampolines upfront and use them as needed.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/16_nested_calls.c">View the full code</a> </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md40"></a>
+<h2><a class="anchor" id="autotoc_md41"></a>
 Recipe: Receiving and Calling a Function Pointer</h2>
 <p><b>Problem</b>: You need to call a factory function that returns a pointer to another function, which you then need to call.</p>
-<p><b>Solution</b>: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its <code>user_data</code>.</p>
+<p><b>Solution</b>: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its <code>user_data</code>. The signature for a function pointer is <code>*((...)-&gt;...)</code>.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/17_return_callback.c">View the full code</a> </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md41"></a>
-&lt;/blockquote&gt;</h1>
 <h1><a class="anchor" id="autotoc_md42"></a>
+&lt;/blockquote&gt;</h1>
+<h1><a class="anchor" id="autotoc_md43"></a>
 Chapter 5: Interoperability with Other Languages</h1>
-<h2><a class="anchor" id="autotoc_md43"></a>
+<h2><a class="anchor" id="autotoc_md44"></a>
 The Universal Principle: The C ABI</h2>
 <p>It is possible to call a function written in Rust, Fortran, or C++ from C because of a shared standard: the <b>C Application Binary Interface (ABI)</b>. Nearly every compiled language provides a mechanism to expose a function using the C ABI. Once you have a C-compatible function pointer, the process of creating and using an <code>infix</code> trampoline is <b>exactly the same</b>, regardless of the source language.</p>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md45"></a>
 Recipe: Interfacing with a C++ Class</h2>
 <p><b>Problem</b>: You need to create, use, and destroy a C++ object from a pure C environment.</p>
-<p><b>Solution</b>: The most robust solution is to create a simple C-style API in your C++ code using <code>extern "C"</code>. <code>infix</code> can then call this clean, predictable API, using <code>v*</code> as the opaque handle for the object pointer.</p>
+<p><b>Solution</b>: The most robust solution is to create a simple C-style API in your C++ code using <code>extern "C"</code>. <code>infix</code> can then call this clean, predictable API, using <code>*void</code> as the opaque handle for the object pointer.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/18_cpp_example.c">View the full code</a> </p>
 </blockquote>
 <p>The Pattern for Other Compiled Languages</p>
 <p>The following examples all demonstrate how to export a simple <code>int add(int, int)</code> function from a shared library. Notice how the infix C code is nearly identical in every case, highlighting the power of the C ABI as a universal interface.</p>
-<h3><a class="anchor" id="autotoc_md45"></a>
+<h3><a class="anchor" id="autotoc_md46"></a>
 Rust</h3>
 <p><b>Discussion</b>: Rust has excellent, first-class support for C interoperability. The <code>extern "C"</code> keyword tells the compiler to use the C ABI, and the <code>#[no_mangle]</code> attribute prevents it from changing the function's name.</p>
-<h4><a class="anchor" id="autotoc_md46"></a>
+<h4><a class="anchor" id="autotoc_md47"></a>
 Rust Code (&lt;tt&gt;librust_math.rs&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line">#[no_mangle]</div>
 <div class="line">pub extern &quot;C&quot; fn rust_add(a: i32, b: i32) -&gt; i32 {</div>
 <div class="line">    a + b</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> <em>Compile with: <code>rustc --crate-type cdylib librust_math.rs</code></em></p>
-<h4><a class="anchor" id="autotoc_md47"></a>
+<h4><a class="anchor" id="autotoc_md48"></a>
 infix C Code (&lt;tt&gt;main_rust.c&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -362,7 +372,7 @@ infix C Code (&lt;tt&gt;main_rust.c&lt;/tt&gt;)</h4>
 <div class="line">    int (*rust_add)(int, int) = dlsym(lib, <span class="stringliteral">&quot;rust_add&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
-<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;i,i=&gt;i&quot;</span>);</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;(int32, int32)-&gt;int32&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span> a = 50, b = 50;</div>
 <div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;a, &amp;b };</div>
@@ -376,10 +386,10 @@ infix C Code (&lt;tt&gt;main_rust.c&lt;/tt&gt;)</h4>
 <div class="line">    dlclose(lib);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md48"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md49"></a>
 Fortran</h3>
 <p><b>Discussion</b>: Modern Fortran (2003+) can interoperate with C using the standard <code>iso_c_binding</code> module. The <code>bind(C)</code> attribute is the key to creating a C-compatible function. We must also explicitly tell it which arguments are passed by value, as Fortran's default is to pass by reference.</p>
-<h4><a class="anchor" id="autotoc_md49"></a>
+<h4><a class="anchor" id="autotoc_md50"></a>
 Fortran Code (&lt;tt&gt;libfortran_math.f90&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line"><span class="keyword">function </span>fortran_add(a, b) <span class="keyword">result</span>(c) bind(C, name=&#39;fortran_add&#39;)</div>
 <div class="line">    <span class="keywordtype">use </span>iso_c_binding</div>
@@ -388,7 +398,7 @@ Fortran Code (&lt;tt&gt;libfortran_math.f90&lt;/tt&gt;)</h4>
 <div class="line">    c = a + b</div>
 <div class="line"><span class="keyword">end function </span>fortran_add</div>
 </div><!-- fragment --><p> <em>Compile with: <code>gfortran -shared -fPIC -o libfortran_math.so libfortran_math.f90</code></em></p>
-<h4><a class="anchor" id="autotoc_md50"></a>
+<h4><a class="anchor" id="autotoc_md51"></a>
 infix C Code (&lt;tt&gt;main_fortran.c&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -400,7 +410,7 @@ infix C Code (&lt;tt&gt;main_fortran.c&lt;/tt&gt;)</h4>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// The infix code is identical to the Rust example!</span></div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
-<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;i,i=&gt;i&quot;</span>);</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;(int32, int32)-&gt;int32&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span> a = 20, b = 22;</div>
 <div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;a, &amp;b };</div>
@@ -414,10 +424,10 @@ infix C Code (&lt;tt&gt;main_fortran.c&lt;/tt&gt;)</h4>
 <div class="line">    dlclose(lib);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md51"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md52"></a>
 Zig</h3>
 <p><b>Discussion</b>: Zig is designed for seamless C integration. The <code>export</code> keyword is all that's needed to create a C-compatible function in a shared library.</p>
-<h4><a class="anchor" id="autotoc_md52"></a>
+<h4><a class="anchor" id="autotoc_md53"></a>
 Zig Code (&lt;tt&gt;libzig_math.zig&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line">const std = @import(&quot;std&quot;);</div>
 <div class="line"> </div>
@@ -425,13 +435,13 @@ Zig Code (&lt;tt&gt;libzig_math.zig&lt;/tt&gt;)</h4>
 <div class="line">    return a + b;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> <em>Compile with: <code>zig build-lib -dynamic libzig_math.zig</code></em></p>
-<h4><a class="anchor" id="autotoc_md53"></a>
+<h4><a class="anchor" id="autotoc_md54"></a>
 infix C Code (&lt;tt&gt;main_zig.c&lt;/tt&gt;)</h4>
 <p>The C code would be identical to the previous examples, just loading <code>libzig_math.so</code> and calling the <code>zig_add</code> symbol.</p>
-<h3><a class="anchor" id="autotoc_md54"></a>
+<h3><a class="anchor" id="autotoc_md55"></a>
 Go</h3>
 <p><b>Discussion</b>: Go can export functions to C using a special build mode and <code>cgo</code>. This involves a specific comment (<code>//export</code>) above the function.</p>
-<h4><a class="anchor" id="autotoc_md55"></a>
+<h4><a class="anchor" id="autotoc_md56"></a>
 Go Code (&lt;tt&gt;libgo_math.go&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line">package main</div>
 <div class="line"> </div>
@@ -444,13 +454,13 @@ Go Code (&lt;tt&gt;libgo_math.go&lt;/tt&gt;)</h4>
 <div class="line"> </div>
 <div class="line">func main() {} // Required for the build, but not used.</div>
 </div><!-- fragment --><p> <em>Compile with: <code>go build -buildmode=c-shared -o libgo_math.so libgo_math.go</code></em></p>
-<h4><a class="anchor" id="autotoc_md56"></a>
+<h4><a class="anchor" id="autotoc_md57"></a>
 infix C Code (&lt;tt&gt;main_go.c&lt;/tt&gt;)</h4>
 <p>The C code would be identical to the previous examples, just loading <code>libgo_math.so</code> and calling the <code>go_add</code> symbol.</p>
-<h3><a class="anchor" id="autotoc_md57"></a>
+<h3><a class="anchor" id="autotoc_md58"></a>
 Swift</h3>
 <p><b>Discussion</b>: Swift can export functions to C using the <code>@_cdecl</code> attribute, which makes them available via the C ABI.</p>
-<h4><a class="anchor" id="autotoc_md58"></a>
+<h4><a class="anchor" id="autotoc_md59"></a>
 Swift Code (&lt;tt&gt;libswift_math.swift&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line">import Foundation</div>
 <div class="line"> </div>
@@ -459,25 +469,25 @@ Swift Code (&lt;tt&gt;libswift_math.swift&lt;/tt&gt;)</h4>
 <div class="line">    return a + b</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> <em>Compile with: <code>swiftc -emit-library libswift_math.swift -o libswift_math.so</code></em></p>
-<h4><a class="anchor" id="autotoc_md59"></a>
+<h4><a class="anchor" id="autotoc_md60"></a>
 infix C Code (&lt;tt&gt;main_swift.c&lt;/tt&gt;)</h4>
 <p>The C code would be identical to the previous examples, just loading <code>libswift_math.so</code> and calling the <code>swift_add</code> symbol.</p>
-<h3><a class="anchor" id="autotoc_md60"></a>
+<h3><a class="anchor" id="autotoc_md61"></a>
 D (dlang)</h3>
 <p><b>Discussion</b>: The D language provides <code>extern (C)</code> to apply C linkage and calling conventions.</p>
-<h4><a class="anchor" id="autotoc_md61"></a>
+<h4><a class="anchor" id="autotoc_md62"></a>
 D Code (&lt;tt&gt;libd_math.d&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> (C) <span class="keywordtype">int</span> d_add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) {</div>
 <div class="line">    <span class="keywordflow">return</span> a + b;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> <em>Compile with: <code>dmd -shared -fPIC -of=libd_math.so libd_math.d</code></em></p>
-<h4><a class="anchor" id="autotoc_md62"></a>
+<h4><a class="anchor" id="autotoc_md63"></a>
 infix C Code (&lt;tt&gt;main_d.c&lt;/tt&gt;)</h4>
 <p>The C code would be identical to the previous examples, just loading <code>libd_math.so</code> and calling the <code>d_add</code> symbol.</p>
-<h3><a class="anchor" id="autotoc_md63"></a>
+<h3><a class="anchor" id="autotoc_md64"></a>
 Assembly (NASM)</h3>
 <p><b>Discussion</b>: This is the ultimate example. Assembly doesn't <em>use</em> an ABI; it <em>implements</em> it. Here we write an <code>add</code> function for the System V AMD64 ABI directly.</p>
-<h4><a class="anchor" id="autotoc_md64"></a>
+<h4><a class="anchor" id="autotoc_md65"></a>
 NASM Code (&lt;tt&gt;libasm_math.asm&lt;/tt&gt;)</h4>
 <div class="fragment"><div class="line">section .text</div>
 <div class="line">global asm_add</div>
@@ -488,37 +498,37 @@ NASM Code (&lt;tt&gt;libasm_math.asm&lt;/tt&gt;)</h4>
 <div class="line">    add eax, esi    ; Add second argument (esi) to eax</div>
 <div class="line">    ret             ; Return value is in eax</div>
 </div><!-- fragment --><p> <em>Compile with: <code>nasm -f elf64 -o libasm_math.o libasm_math.asm &amp;&amp; gcc -shared -o libasm_math.so libasm_math.o</code></em></p>
-<h4><a class="anchor" id="autotoc_md65"></a>
+<h4><a class="anchor" id="autotoc_md66"></a>
 infix C Code (&lt;tt&gt;main_asm.c&lt;/tt&gt;)</h4>
 <p>The C code would be identical to the previous examples, just loading <code>libasm_math.so</code> and calling the <code>asm_add</code> symbol. This demonstrates that infix is simply generating the machine code necessary to talk to any function that adheres to the platform's C ABI, no matter how it was created.</p>
-<h1><a class="anchor" id="autotoc_md66"></a>
+<h1><a class="anchor" id="autotoc_md67"></a>
 Chapter 6: Calling System Libraries</h1>
-<h2><a class="anchor" id="autotoc_md67"></a>
+<h2><a class="anchor" id="autotoc_md68"></a>
 Recipe: Calling Native System Libraries</h2>
-<p><b>Problem</b>: You need to call a native OS library like <code>User32.dll</code> on Windows or <code>CoreFoundation.framework</code> on macOS.</p>
+<p><b>Problem</b>: You need to call a native OS library like <code>user32.dll</code> on Windows or <code>CoreFoundation.framework</code> on macOS.</p>
 <p><b>Solution</b>: Load the library dynamically, get a function pointer, and use <code>infix</code> with the correct signature. The example file contains platform-specific code for Windows, macOS, and Linux.</p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="/eg/cookbook/19_system_libraries.c">View the full code</a> </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md68"></a>
-&lt;/blockquote&gt;</h1>
 <h1><a class="anchor" id="autotoc_md69"></a>
+&lt;/blockquote&gt;</h1>
+<h1><a class="anchor" id="autotoc_md70"></a>
 Chapter 7: Memory Management &amp; Performance</h1>
-<h2><a class="anchor" id="autotoc_md70"></a>
+<h2><a class="anchor" id="autotoc_md71"></a>
 Best Practice: Caching Trampolines</h2>
 <p><b>Rule</b>: <b>NEVER</b> generate a new trampoline for the same function signature inside a hot loop. The performance of <code>infix</code> comes from amortizing the one-time generation cost over many fast calls.</p>
 <div class="fragment"><div class="line"><span class="comment">// Anti-pattern: DO NOT DO THIS!</span></div>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 1000000; ++i) {</div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* t;</div>
 <div class="line">    <span class="comment">// VERY SLOW: Generating a new trampoline on every iteration.</span></div>
-<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;t, <span class="stringliteral">&quot;i,i=&gt;i&quot;</span>);</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;t, <span class="stringliteral">&quot;(int, int) -&gt; int&quot;</span>);</div>
 <div class="line">    cif_func(target, &amp;result, args);</div>
 <div class="line">    <a class="code hl_function" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>By amortizing the one-time generation cost over millions of calls, the FFI overhead becomes negligible.</p>
 <div class="fragment"><div class="line"><span class="comment">// Correct Pattern: Generate once, use many times.</span></div>
 <div class="line"><a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* t;</div>
-<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;t, <span class="stringliteral">&quot;i,i=&gt;i&quot;</span>);</div>
+<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec">infix_forward_create</a>(&amp;t, <span class="stringliteral">&quot;(int, int) -&gt; int&quot;</span>);</div>
 <div class="line"><a class="code hl_typedef" href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a> cif_func = (<a class="code hl_typedef" href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a>)<a class="code hl_function" href="group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822">infix_forward_get_code</a>(t);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 1000000; ++i) {</div>
@@ -528,46 +538,68 @@ Best Practice: Caching Trampolines</h2>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md72"></a>
+<h1><a class="anchor" id="autotoc_md73"></a>
 Chapter 8: Common Pitfalls &amp; Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md73"></a>
+<h2><a class="anchor" id="autotoc_md74"></a>
 Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;</h2>
 <ul>
 <li><b>Symptom</b>: Immediate crash (segmentation fault) or garbage data.</li>
 <li><b>Explanation</b>: The <code>args</code> array must contain <b>pointers to</b> your argument values, not the values themselves.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md74"></a>
+<h2><a class="anchor" id="autotoc_md75"></a>
 Mistake: &lt;tt&gt;infix&lt;/tt&gt; Signature Mismatch</h2>
 <ul>
 <li><b>Symptom</b>: Silent data corruption or a crash much later in execution.</li>
 <li><b>Explanation</b>: The type you describe in the signature string must <em>exactly</em> match the C type's size and alignment. A common error is mismatching the <code>long</code> type, which is 32 bits on 64-bit Windows but 64 bits on 64-bit Linux.</li>
-<li><b>Solution</b>: Use fixed-width types from <code>&lt;stdint.h&gt;</code> (e.g., <code>int64_t</code>) and their corresponding <code>infix</code> types (<code>x</code>) whenever possible.</li>
+<li><b>Solution</b>: Use fixed-width types from the Tier 2 specification (e.g., <code>int32</code>, <code>uint64</code>) whenever possible to be explicit about the memory layout.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md75"></a>
+<h2><a class="anchor" id="autotoc_md76"></a>
+Pitfall: Function Pointer Syntax</h2>
+<ul>
+<li><b>Symptom</b>: Parser error (<code>INFIX_ERROR_INVALID_ARGUMENT</code>).</li>
+<li><b>Explanation</b>: The syntax for a pointer to a function can be tricky. A function type is <code>(...) -&gt; ...</code>, and a pointer to anything is <code>*...</code>. Therefore, a pointer to a function type is <code>*((...) -&gt; ...)</code>.</li>
+<li><b>Solution</b>:<ul>
+<li><code>int (*callback)(void)</code> is <code>*(() -&gt; int32)</code>.</li>
+<li><code>void (*handler)(int, int)</code> is <code>*((int32, int32) -&gt; void)</code>.</li>
+</ul>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md77"></a>
+Pitfall: Struct Packing Differences</h2>
+<ul>
+<li><b>Symptom</b>: Correct data is passed, but the C function reads garbage from some struct fields.</li>
+<li><b>Explanation</b>: The way a C compiler packs a <code>struct</code> (where it adds padding bytes) can differ between compilers (e.g., MSVC vs. GCC) or with different compiler flags. The <code>infix</code> parser uses the standard layout rules for your platform, but if you are interfacing with a library compiled with non-standard packing, the layouts will not match.</li>
+<li><b>Solution</b>: When in doubt, be explicit. Use the <code>!{...}</code> packed struct syntax and verify the member offsets match what the target library expects.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md78"></a>
 A Note on Memory Safety by Design</h2>
 <p>The <code>infix</code> API is designed to eliminate common C memory management errors.</p><ul>
 <li>The high-level Signature API (<code>infix_forward_create</code>, etc.) handles all <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> memory management <b>automatically</b>.</li>
 <li>The low-level Manual API (<code>infix_type_create_struct</code>, etc.) is now <b>exclusively arena-based</b>, forcing a safe memory model where all types are freed with a single call to <code>infix_arena_destroy</code>.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md77"></a>
+<h1><a class="anchor" id="autotoc_md80"></a>
 Chapter 9: Building Language Bindings</h1>
 <p><b>Discussion</b>: <code>infix</code> is an ideal engine for creating a "language binding"—a library that allows a high-level language like Python, Ruby, or Lua to call C functions. The binding provides the crucial "glue" to the high-level language's runtime.</p>
-<h2><a class="anchor" id="autotoc_md78"></a>
+<h2><a class="anchor" id="autotoc_md81"></a>
 The Four Pillars of a Language Binding</h2>
 <p>A robust language binding built on <code>infix</code> must solve four main challenges.</p>
-<h3><a class="anchor" id="autotoc_md79"></a>
+<h3><a class="anchor" id="autotoc_md82"></a>
 1. Type Mapping -&gt; Signature String Generation</h3>
 <p>Instead of building complex C <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects, the binding's primary job is to <b>generate a signature string</b> from the high-level language's type information. This is a much simpler string manipulation task.</p>
 <p><b>Conceptual Python Binding Code:</b> </p><div class="fragment"><div class="line"><span class="comment"># A conceptual function in a Python binding</span></div>
 <div class="line"><span class="keyword">def </span>_get_signature_string_from_ctypes(restype, argtypes):</div>
-<div class="line">    type_map = { ctypes.c_int: <span class="stringliteral">&#39;i&#39;</span>, ctypes.c_double: <span class="stringliteral">&#39;d&#39;</span>, ctypes.c_void_p: <span class="stringliteral">&#39;v*&#39;</span> }</div>
+<div class="line">    type_map = { ctypes.c_int: <span class="stringliteral">&#39;int&#39;</span>, ctypes.c_double: <span class="stringliteral">&#39;double&#39;</span>, ctypes.c_void_p: <span class="stringliteral">&#39;*void&#39;</span> }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">def </span>_map_type_to_sig(t):</div>
+<div class="line">        <span class="comment"># ... recursive logic to handle structs, pointers, etc. ...</span></div>
+<div class="line">        <span class="keywordflow">return</span> type_map.get(t, <span class="stringliteral">&quot;unknown&quot;</span>)</div>
 <div class="line"> </div>
 <div class="line">    arg_parts = [_map_type_to_sig(t) <span class="keywordflow">for</span> t <span class="keywordflow">in</span> argtypes] <span class="comment"># _map_type_to_sig is recursive</span></div>
 <div class="line">    ret_part = _map_type_to_sig(restype)</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">return</span> f<span class="stringliteral">&quot;{&#39;,&#39;.join(arg_parts)}=&gt;{ret_part}&quot;</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md80"></a>
+<div class="line">    <span class="keywordflow">return</span> f<span class="stringliteral">&quot;({&#39;,&#39;.join(arg_parts)}) -&gt; {ret_part}&quot;</span></div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md83"></a>
 2. Trampoline Caching</h3>
 <p>Generating a trampoline is a one-time setup cost. The binding <b>must</b> implement a global, persistent cache for trampolines, using the signature string as the key.</p>
 <p><b>Conceptual C++ Binding Code:</b></p>
@@ -588,15 +620,15 @@ The Four Pillars of a Language Binding</h2>
 <div class="line">    }</div>
 <div class="line">    <span class="keywordflow">return</span> new_trampoline;</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:326</div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md81"></a>
+<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:364</div></div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md84"></a>
 3. Managing Memory &amp; Object Lifetimes</h3>
 <p>This is often the hardest part of FFI. The high-level language has a garbage collector (GC), but C does not. The binding must act as a bridge.</p>
 <ul>
 <li><b>For Forward Calls (HLL -&gt; C)</b>: When passing an object like a string to C, the binding must <b>hold a reference</b> to the high-level object for the duration of the C call to prevent the GC from collecting its memory.</li>
 <li><b>For Reverse Calls (C -&gt; HLL)</b>: When a high-level function is passed to C as a callback, the binding must store a <b>handle to the HLL function object</b> in the <code>user_data</code> field of the reverse trampoline. When the trampoline is destroyed, the binding must release its reference, allowing the GC to collect it.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md82"></a>
+<h3><a class="anchor" id="autotoc_md85"></a>
 4. Implementing the Callback Bridge</h3>
 <p>When a C library invokes a reverse trampoline, the JIT-compiled stub calls a C handler. This "bridge" handler must then transfer control back to the high-level language's runtime.</p>
 <p><b>Conceptual Python Callback Bridge:</b></p>
@@ -629,10 +661,10 @@ The Four Pillars of a Language Binding</h2>
 <div class="line">    Py_DECREF(py_args);</div>
 <div class="line">    PyGILState_Release(gstate); <span class="comment">// 6. Release the GIL.</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__high__level__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:533</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:593</div></div>
 <div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:87</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md84"></a>
+<h1><a class="anchor" id="autotoc_md87"></a>
 License and Legal</h1>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This documentation is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). You are free to share and adapt this material for any purpose, provided you give appropriate credit.</p>

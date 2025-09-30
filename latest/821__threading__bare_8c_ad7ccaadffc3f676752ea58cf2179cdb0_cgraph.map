@@ -25,7 +25,7 @@
 <area shape="rect" id="Node000009" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="447,177,601,217"/>
 <area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="352,296,374,283,389,269,398,255,407,241,422,227,433,221,435,225,426,231,411,245,402,258,393,273,378,287,354,301"/>
 <area shape="poly" id="edge14_Node000003_Node000011" title=" " alt="" coords="327,336,425,385,466,400,464,405,423,390,325,341"/>
-<area shape="rect" id="Node000013" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic pointer." alt="" coords="431,306,617,331"/>
+<area shape="rect" id="Node000013" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="431,306,617,331"/>
 <area shape="poly" id="edge16_Node000003_Node000013" title=" " alt="" coords="368,316,417,316,417,321,368,321"/>
 <area shape="poly" id="edge17_Node000003_Node000014" title=" " alt="" coords="309,337,357,390,389,419,425,443,439,450,437,454,423,447,386,423,353,394,305,340"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="803,239,833,227,881,197,921,166,924,170,884,202,836,232,805,244"/>

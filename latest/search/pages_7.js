@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['new_20platform_0',['Porting &lt;tt&gt;infix&lt;/tt&gt; to a New Platform',['../md_docs_2porting.html',1,'']]]
+  ['library_0',['library',['../md_CONTRIBUTING.html',1,'Contributing to the infix FFI Library'],['../index.html',1,'Infix FFI Library']]]
 ];

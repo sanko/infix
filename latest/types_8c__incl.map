@@ -1,15 +1,17 @@
 <map id="src/core/types.c" name="src/core/types.c">
-<area shape="rect" id="Node000001" title="Implements the FFI type system for creating and managing type descriptions." alt="" coords="377,5,501,31"/>
+<area shape="rect" id="Node000001" title="Implements the FFI type system for creating and managing type descriptions." alt="" coords="424,5,548,31"/>
 <area shape="rect" id="Node000002" href="$infix__internals_8h_source.html" title=" " alt="" coords="109,79,308,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="403,33,260,77,258,72,402,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="442,33,268,78,266,73,441,28"/>
 <area shape="rect" id="Node000009" href="$utility_8h.html" title="A header for debugging utilities that are conditionally compiled." alt="" coords="317,152,460,177"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="428,33,409,53,394,80,388,110,388,139,383,139,383,109,389,78,405,50,424,29"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="454,33,420,52,405,65,394,80,385,109,386,138,381,138,380,108,389,77,402,61,417,47,451,28"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="404,79,475,104"/>
-<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="442,31,442,65,437,65,437,31"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="481,32,457,69,452,66,476,30"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="499,79,566,104"/>
-<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="456,29,508,68,505,72,453,33"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="496,30,520,66,515,69,491,32"/>
 <area shape="rect" id="Node000012" title=" " alt="" coords="591,79,661,104"/>
-<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="470,28,584,71,582,76,468,33"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="510,28,592,70,590,75,507,33"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="685,79,756,104"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="524,28,673,73,671,78,523,33"/>
 <area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="124,152,293,177"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="211,104,211,138,206,138,206,104"/>
 <area shape="rect" id="Node000004" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="5,152,100,177"/>

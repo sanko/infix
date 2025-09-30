@@ -96,6 +96,7 @@ $(function() {
 <li>infix_forward_get_code()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822">infix.h</a>, <a class="el" href="group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822">trampoline.c</a></li>
 <li>infix_forward_t&#160;:&#160;<a class="el" href="infix_8h.html#ab8831eba6ed46e82a731acea84e8e90d">infix.h</a></li>
 <li>infix_free&#160;:&#160;<a class="el" href="infix_8h.html#a04e9a217a378e5c109ddfaef2f775d31">infix.h</a></li>
+<li>infix_function_argument&#160;:&#160;<a class="el" href="infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4">infix.h</a></li>
 <li>infix_internal_dispatch_callback_fn_impl()&#160;:&#160;<a class="el" href="executor_8c.html#ab973839755f4384eb456335fcb87cdc2">executor.c</a></li>
 <li>INFIX_MAJOR&#160;:&#160;<a class="el" href="group__version__macros.html#gaa56a725089ff7a0e38ca631b713e9272">infix.h</a></li>
 <li>infix_malloc&#160;:&#160;<a class="el" href="infix_8h.html#ae386105bc20f1819f8ffc8e808f0a7d9">infix.h</a></li>
@@ -125,10 +126,10 @@ $(function() {
 <li>infix_reverse_create()&#160;:&#160;<a class="el" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0">infix.h</a>, <a class="el" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0">signature.c</a></li>
 <li>infix_reverse_create_manual()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c">infix.h</a>, <a class="el" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c">trampoline.c</a></li>
 <li>infix_reverse_destroy()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e">infix.h</a>, <a class="el" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e">trampoline.c</a></li>
-<li>infix_reverse_get_code()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix.h</a>, <a class="el" href="group__high__level__api.html#ga3b75e8481ac13d11faa15046fc4adb66">trampoline.c</a></li>
+<li>infix_reverse_get_code()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga3b75e8481ac13d11faa15046fc4adb66">trampoline.c</a>, <a class="el" href="group__high__level__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix.h</a></li>
 <li>infix_reverse_get_user_data()&#160;:&#160;<a class="el" href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix.h</a>, <a class="el" href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">trampoline.c</a></li>
 <li>infix_reverse_t&#160;:&#160;<a class="el" href="infix_8h.html#abb2d689506b701634f6adfd5ca965888">infix.h</a></li>
-<li>infix_signature_parse()&#160;:&#160;<a class="el" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167">infix.h</a>, <a class="el" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167">signature.c</a></li>
+<li>infix_signature_parse()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19">infix.h</a>, <a class="el" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19">signature.c</a></li>
 <li>infix_status&#160;:&#160;<a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix.h</a></li>
 <li>infix_struct_member&#160;:&#160;<a class="el" href="infix_8h.html#a52e1a21df4188be7b30f8fd1cdcd68e8">infix.h</a></li>
 <li>infix_struct_member_create()&#160;:&#160;<a class="el" href="infix_8h.html#a1af697e48fc6d17a1313bec4a0fd6a80">infix.h</a>, <a class="el" href="types_8c.html#a4f1a1ed7286dba8ba14833babed4edcc">types.c</a></li>
@@ -136,20 +137,34 @@ $(function() {
 <li>infix_type&#160;:&#160;<a class="el" href="infix_8h.html#a0ab49e30398b3c31b723e8b82bf16029">infix.h</a></li>
 <li>INFIX_TYPE_ARRAY&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa3ad04a7f12af374c064dedbb9e2734fe">infix.h</a></li>
 <li>infix_type_category&#160;:&#160;<a class="el" href="infix_8h.html#a909e562b00e504aeceac698bd272f0ca">infix.h</a></li>
-<li>infix_type_create_array()&#160;:&#160;<a class="el" href="types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7">types.c</a>, <a class="el" href="infix_8h.html#a9f0d8a41015262d2dcffc97cf5f87772">infix.h</a></li>
+<li>INFIX_TYPE_COMPLEX&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa1f6e7b58d6fa04a5885655155ef73c8a">infix.h</a></li>
+<li>infix_type_create_array()&#160;:&#160;<a class="el" href="infix_8h.html#a9f0d8a41015262d2dcffc97cf5f87772">infix.h</a>, <a class="el" href="types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7">types.c</a></li>
+<li>infix_type_create_enum()&#160;:&#160;<a class="el" href="types_8c.html#aad682d0d4b636c282931735a89be7cf8">types.c</a>, <a class="el" href="infix_8h.html#a44df1ec1de746a0be838b55567d07cae">infix.h</a></li>
+<li>infix_type_create_named_reference()&#160;:&#160;<a class="el" href="infix_8h.html#add70103c39886a50bc11d53a182b13b5">infix.h</a>, <a class="el" href="types_8c.html#add70103c39886a50bc11d53a182b13b5">types.c</a></li>
 <li>infix_type_create_packed_struct()&#160;:&#160;<a class="el" href="infix_8h.html#a013ec0163fd36e611251d1a0897f773e">infix.h</a>, <a class="el" href="types_8c.html#ad33103485281e970058a783e5e181978">types.c</a></li>
 <li>infix_type_create_pointer()&#160;:&#160;<a class="el" href="infix_8h.html#a58f759e56e12c39603c391886dd6857f">infix.h</a>, <a class="el" href="types_8c.html#ac6cb3751246268621260b267de378d74">types.c</a></li>
+<li>infix_type_create_pointer_to()&#160;:&#160;<a class="el" href="infix_8h.html#aa186076fa232503f1f781fb3cd2e9cc7">infix.h</a>, <a class="el" href="types_8c.html#ad07a4c53b81830d8053cb27f78576c08">types.c</a></li>
 <li>infix_type_create_primitive()&#160;:&#160;<a class="el" href="infix_8h.html#ae323d599fbc081976a99a1e3b726a0b8">infix.h</a>, <a class="el" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1">types.c</a></li>
 <li>infix_type_create_struct()&#160;:&#160;<a class="el" href="infix_8h.html#ac80d3ec096ade5b991048b61fecfe7b2">infix.h</a>, <a class="el" href="types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086">types.c</a></li>
 <li>infix_type_create_union()&#160;:&#160;<a class="el" href="infix_8h.html#a4027aa78465a98b270d1d6e54e7c5e90">infix.h</a>, <a class="el" href="types_8c.html#a483854a00ecff6dcf774c04683892ec6">types.c</a></li>
 <li>infix_type_create_void()&#160;:&#160;<a class="el" href="infix_8h.html#a1eb812d62636fa21936521630a7d1be2">infix.h</a>, <a class="el" href="types_8c.html#a4caaa941ccc6aeb8b50654d8bafb6f18">types.c</a></li>
+<li>INFIX_TYPE_ENUM&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caac47e9500be469b977260719d3c4d0bbb">infix.h</a></li>
 <li>infix_type_from_signature()&#160;:&#160;<a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735">infix.h</a>, <a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735">signature.c</a></li>
+<li>infix_type_get_alignment()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#ga6e82b33919c107176a895ffcc072a4fa">infix.h</a>, <a class="el" href="group__type__introspection__api.html#ga6e82b33919c107176a895ffcc072a4fa">types.c</a></li>
+<li>infix_type_get_arg_name()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#gab184b0ee95dbf7e439994e4625e373d6">infix.h</a>, <a class="el" href="group__type__introspection__api.html#gab184b0ee95dbf7e439994e4625e373d6">types.c</a></li>
+<li>infix_type_get_arg_type()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#gab84d26a891210bf310195ae70297ccc6">infix.h</a>, <a class="el" href="group__type__introspection__api.html#gab84d26a891210bf310195ae70297ccc6">types.c</a></li>
+<li>infix_type_get_category()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#gaaa2f39de88ebd16907dfcbec7b4b7d26">infix.h</a>, <a class="el" href="group__type__introspection__api.html#gaaa2f39de88ebd16907dfcbec7b4b7d26">types.c</a></li>
+<li>infix_type_get_member()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#ga1fe5f9ea29a955a3594efeb233abdc46">infix.h</a>, <a class="el" href="group__type__introspection__api.html#ga1fe5f9ea29a955a3594efeb233abdc46">types.c</a></li>
+<li>infix_type_get_member_count()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#ga5e65ae09637439816571c4ca375dbf49">infix.h</a>, <a class="el" href="group__type__introspection__api.html#ga5e65ae09637439816571c4ca375dbf49">types.c</a></li>
+<li>infix_type_get_size()&#160;:&#160;<a class="el" href="group__type__introspection__api.html#ga4fe45a95459c8e87bdda59ed819ed8a5">infix.h</a>, <a class="el" href="group__type__introspection__api.html#ga4fe45a95459c8e87bdda59ed819ed8a5">types.c</a></li>
 <li>INFIX_TYPE_INIT&#160;:&#160;<a class="el" href="types_8c.html#a50bb65efbb034d9151d0ac0fcfdf583f">types.c</a></li>
+<li>INFIX_TYPE_NAMED_REFERENCE&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa83025c9996ffb0ff2bbba90a73cc7b4f">infix.h</a></li>
 <li>INFIX_TYPE_POINTER&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c">infix.h</a></li>
 <li>INFIX_TYPE_PRIMITIVE&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb">infix.h</a></li>
 <li>INFIX_TYPE_REVERSE_TRAMPOLINE&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa9aad5fd2fa055ea58dc8f63933d4b795">infix.h</a></li>
 <li>INFIX_TYPE_STRUCT&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caaf06a8a8b819b166236fabab3bf2bdcd4">infix.h</a></li>
 <li>INFIX_TYPE_UNION&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa08ce2141dc1fd43d23d3249570b40bb9">infix.h</a></li>
+<li>INFIX_TYPE_VECTOR&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa3de0694f38dd4a9a102f7935060206d6">infix.h</a></li>
 <li>INFIX_TYPE_VOID&#160;:&#160;<a class="el" href="group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441">infix.h</a></li>
 <li>inner_callback_handler()&#160;:&#160;<a class="el" href="303__advanced_8c.html#a9fc9fa6a3868072b8b3303cf29cb43c4">303_advanced.c</a></li>
 <li>int_callback_handler()&#160;:&#160;<a class="el" href="301__primitives_8c.html#ab04632b49a27b13e24c176d4e1483df8">301_primitives.c</a></li>

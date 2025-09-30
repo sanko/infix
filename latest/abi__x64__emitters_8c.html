@@ -192,6 +192,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a23556d45df0c63c7ebe0725b53324c76" id="r_a23556d45df0c63c7ebe0725b53324c76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a23556d45df0c63c7ebe0725b53324c76">emit_movsd_mem_xmm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest_base, int32_t offset, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
 <tr class="memdesc:a23556d45df0c63c7ebe0725b53324c76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits an x86-64 <code>movsd [r64 + offset], xmm</code> instruction.  <br /></td></tr>
 <tr class="separator:a23556d45df0c63c7ebe0725b53324c76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23680312acc54c8fef2e80f83fdaf5ed" id="r_a23680312acc54c8fef2e80f83fdaf5ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a23680312acc54c8fef2e80f83fdaf5ed">emit_movups_xmm_mem</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src_base, int32_t offset)</td></tr>
+<tr class="memdesc:a23680312acc54c8fef2e80f83fdaf5ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits an x86-64 <code>movups xmm, [r64 + offset]</code> instruction.  <br /></td></tr>
+<tr class="separator:a23680312acc54c8fef2e80f83fdaf5ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae185b40fc20f00d00bebd1aaad35cedd" id="r_ae185b40fc20f00d00bebd1aaad35cedd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#ae185b40fc20f00d00bebd1aaad35cedd">emit_movq_gpr_xmm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
 <tr class="memdesc:ae185b40fc20f00d00bebd1aaad35cedd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits an x86-64 <code>movq r64, xmm</code> instruction.  <br /></td></tr>
 <tr class="separator:ae185b40fc20f00d00bebd1aaad35cedd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1649,6 +1652,59 @@ Here is the call graph for this function:</div>
     <tr><td class="paramname">dest_base</td><td>The base register for the memory address. </td></tr>
     <tr><td class="paramname">offset</td><td>The 32-bit signed offset. </td></tr>
     <tr><td class="paramname">src</td><td>The source XMM register. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a23680312acc54c8fef2e80f83fdaf5ed" name="a23680312acc54c8fef2e80f83fdaf5ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23680312acc54c8fef2e80f83fdaf5ed">&#9670;&#160;</a></span>emit_movups_xmm_mem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_movups_xmm_mem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a>&#160;</td>
+          <td class="paramname"><em>src_base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Emits an x86-64 <code>movups xmm, [r64 + offset]</code> instruction. </p>
+<p>Emits <code>movups xmm, [src_base + offset]</code> (loads a 128-bit unaligned value from memory).</p>
+<p>Loads a 128-bit unaligned value from memory into an XMM register. </p><pre class="fragment">     - **Opcode:** `0F 10 /r`
+</pre> <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramname">dest</td><td>The destination XMM register. </td></tr>
+    <tr><td class="paramname">src_base</td><td>The base register for the memory address. </td></tr>
+    <tr><td class="paramname">offset</td><td>The 32-bit signed offset. </td></tr>
   </table>
   </dd>
 </dl>

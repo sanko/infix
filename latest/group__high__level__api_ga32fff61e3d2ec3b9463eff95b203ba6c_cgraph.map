@@ -14,7 +14,7 @@
 <area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="159,206,217,191,218,197,161,211"/>
 <area shape="rect" id="Node000009" href="$group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="227,330,389,356"/>
 <area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="108,247,153,282,209,315,231,324,229,329,207,320,150,286,105,251"/>
-<area shape="rect" id="Node000011" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic pointer." alt="" coords="215,380,401,405"/>
+<area shape="rect" id="Node000011" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="215,380,401,405"/>
 <area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="98,247,142,307,174,339,209,366,221,372,219,377,207,371,170,343,138,310,94,250"/>
 <area shape="rect" id="Node000012" href="$types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="208,429,408,454"/>
 <area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="94,248,110,284,134,330,168,377,210,416,218,421,216,426,206,420,164,380,130,333,105,287,89,250"/>

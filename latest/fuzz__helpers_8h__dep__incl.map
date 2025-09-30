@@ -1,15 +1,15 @@
 <map id="fuzz/fuzz_helpers.h" name="fuzz/fuzz_helpers.h">
 <area shape="rect" id="Node000001" title="Shared helper functions and types for infix FFI fuzzing harnesses." alt="" coords="419,5,566,31"/>
-<area shape="rect" id="Node000002" href="$fuzz__abi_8c.html" title="A fuzzer targeting the ABI&#45;specific classification logic." alt="" coords="5,86,124,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="406,34,279,55,137,81,107,89,105,83,136,76,278,49,405,29"/>
-<area shape="rect" id="Node000003" href="$fuzz__helpers_8c.html" title="Implementation of the shared recursive infix_type generator for fuzzing." alt="" coords="149,86,295,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="441,37,262,89,261,83,440,32"/>
-<area shape="rect" id="Node000004" href="$fuzz__signature_8c.html" title="A libFuzzer&#45;based harness for the infix FFI signature parser." alt="" coords="320,86,479,111"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="470,42,415,88,411,84,467,38"/>
-<area shape="rect" id="Node000005" href="$fuzz__trampoline_8c.html" title="A dual&#45;purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI trampo..." alt="" coords="503,86,672,111"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="519,38,575,84,572,88,516,42"/>
-<area shape="rect" id="Node000006" href="$fuzz__types_8c.html" title="A dual&#45;purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI type c..." alt="" coords="696,86,831,111"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="546,32,725,83,723,89,544,37"/>
-<area shape="rect" id="Node000007" href="$850__regression__cases_8c.html" title="Contains a data&#45;driven suite of deterministic unit tests for specific bugs found by fuzzing." alt="" coords="855,79,1007,119"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="579,30,844,76,856,78,855,84,843,81,578,35"/>
+<area shape="rect" id="Node000002" href="$fuzz__abi_8c.html" title="A fuzzer targeting the ABI&#45;specific classification logic." alt="" coords="5,79,124,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="411,36,125,83,124,78,410,30"/>
+<area shape="rect" id="Node000003" href="$fuzz__helpers_8c.html" title="Implementation of the shared recursive infix_type generator for fuzzing." alt="" coords="149,79,295,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="437,37,267,81,265,76,435,32"/>
+<area shape="rect" id="Node000004" href="$fuzz__signature_8c.html" title="A libFuzzer&#45;based harness for the infix FFI signature parser." alt="" coords="320,79,479,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="469,41,416,81,413,76,465,37"/>
+<area shape="rect" id="Node000005" href="$fuzz__trampoline_8c.html" title="A dual&#45;purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI trampo..." alt="" coords="503,79,672,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="520,37,573,76,570,81,517,41"/>
+<area shape="rect" id="Node000006" href="$fuzz__types_8c.html" title="A dual&#45;purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI type c..." alt="" coords="696,79,831,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="550,32,720,76,719,81,548,37"/>
+<area shape="rect" id="Node000007" href="$850__regression__cases_8c.html" title="Contains a data&#45;driven suite of deterministic unit tests for specific bugs found by fuzzing." alt="" coords="855,79,1040,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="579,30,874,76,874,81,579,35"/>
 </map>

@@ -22,11 +22,15 @@ var searchData=
   ['infix_5fprimitive_5fuint8_19',['INFIX_PRIMITIVE_UINT8',['../group__high__level__api.html#ga2cd7b00c1f2606249654a8e8b7cbc044a5d897112e15ba7badb572aade813f056',1,'infix.h']]],
   ['infix_5fsuccess_20',['INFIX_SUCCESS',['../group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da',1,'infix.h']]],
   ['infix_5ftype_5farray_21',['INFIX_TYPE_ARRAY',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa3ad04a7f12af374c064dedbb9e2734fe',1,'infix.h']]],
-  ['infix_5ftype_5fpointer_22',['INFIX_TYPE_POINTER',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c',1,'infix.h']]],
-  ['infix_5ftype_5fprimitive_23',['INFIX_TYPE_PRIMITIVE',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb',1,'infix.h']]],
-  ['infix_5ftype_5freverse_5ftrampoline_24',['INFIX_TYPE_REVERSE_TRAMPOLINE',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa9aad5fd2fa055ea58dc8f63933d4b795',1,'infix.h']]],
-  ['infix_5ftype_5fstruct_25',['INFIX_TYPE_STRUCT',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caaf06a8a8b819b166236fabab3bf2bdcd4',1,'infix.h']]],
-  ['infix_5ftype_5funion_26',['INFIX_TYPE_UNION',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa08ce2141dc1fd43d23d3249570b40bb9',1,'infix.h']]],
-  ['infix_5ftype_5fvoid_27',['INFIX_TYPE_VOID',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441',1,'infix.h']]],
-  ['integer_28',['INTEGER',['../abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92a5a063e265d2ac903b6808e9f6e73ec46',1,'abi_sysv_x64.c']]]
+  ['infix_5ftype_5fcomplex_22',['INFIX_TYPE_COMPLEX',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa1f6e7b58d6fa04a5885655155ef73c8a',1,'infix.h']]],
+  ['infix_5ftype_5fenum_23',['INFIX_TYPE_ENUM',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caac47e9500be469b977260719d3c4d0bbb',1,'infix.h']]],
+  ['infix_5ftype_5fnamed_5freference_24',['INFIX_TYPE_NAMED_REFERENCE',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa83025c9996ffb0ff2bbba90a73cc7b4f',1,'infix.h']]],
+  ['infix_5ftype_5fpointer_25',['INFIX_TYPE_POINTER',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c',1,'infix.h']]],
+  ['infix_5ftype_5fprimitive_26',['INFIX_TYPE_PRIMITIVE',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb',1,'infix.h']]],
+  ['infix_5ftype_5freverse_5ftrampoline_27',['INFIX_TYPE_REVERSE_TRAMPOLINE',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa9aad5fd2fa055ea58dc8f63933d4b795',1,'infix.h']]],
+  ['infix_5ftype_5fstruct_28',['INFIX_TYPE_STRUCT',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caaf06a8a8b819b166236fabab3bf2bdcd4',1,'infix.h']]],
+  ['infix_5ftype_5funion_29',['INFIX_TYPE_UNION',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa08ce2141dc1fd43d23d3249570b40bb9',1,'infix.h']]],
+  ['infix_5ftype_5fvector_30',['INFIX_TYPE_VECTOR',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa3de0694f38dd4a9a102f7935060206d6',1,'infix.h']]],
+  ['infix_5ftype_5fvoid_31',['INFIX_TYPE_VOID',['../group__high__level__api.html#ga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441',1,'infix.h']]],
+  ['integer_32',['INTEGER',['../abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92a5a063e265d2ac903b6808e9f6e73ec46',1,'abi_sysv_x64.c']]]
 ];

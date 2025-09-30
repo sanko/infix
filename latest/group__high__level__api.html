@@ -86,14 +86,14 @@ Collaboration diagram for High-Level Signature API:</div>
 <div class="center"><img src="group__high__level__api.png" border="0" usemap="#agroup____high____level____api" alt=""/></div>
 <map name="agroup____high____level____api" id="agroup____high____level____api">
 <area shape="rect" title="Convenience functions for creating trampolines from a signature string." alt="" coords="5,5,188,31"/>
-<area shape="rect" href="group__signature__specifiers.html" title="Defines for characters used in the high&#45;level signature string format." alt="" coords="236,5,437,31"/>
+<area shape="rect" href="group__type__introspection__api.html" title="Functions for safely querying the properties of infix_type objects." alt="" coords="236,5,403,31"/>
 </map>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 Modules</h2></td></tr>
-<tr class="memitem:group__signature__specifiers" id="r_group__signature__specifiers"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__signature__specifiers.html">Signature Format Specifiers</a></td></tr>
-<tr class="memdesc:group__signature__specifiers"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines for characters used in the high-level signature string format. <br /></td></tr>
+<tr class="memitem:group__type__introspection__api" id="r_group__type__introspection__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html">Type Introspection API</a></td></tr>
+<tr class="memdesc:group__type__introspection__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for safely querying the properties of <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -125,9 +125,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gac6039fa88ca992d2f89b005df46525d0" id="r_gac6039fa88ca992d2f89b005df46525d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0">infix_reverse_create</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, void *, void *)</td></tr>
 <tr class="memdesc:gac6039fa88ca992d2f89b005df46525d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a reverse-call trampoline (callback) from a signature string.  <br /></td></tr>
 <tr class="separator:gac6039fa88ca992d2f89b005df46525d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad6969bc86a3ab3c3352e35c376e7b167" id="r_gad6969bc86a3ab3c3352e35c376e7b167"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167">infix_signature_parse</a> (const char *, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, <a class="el" href="structinfix__type.html">infix_type</a> **, <a class="el" href="structinfix__type.html">infix_type</a> ***, size_t *, size_t *)</td></tr>
-<tr class="memdesc:gad6969bc86a3ab3c3352e35c376e7b167"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a full function signature string into its constituent <a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a> parts.  <br /></td></tr>
-<tr class="separator:gad6969bc86a3ab3c3352e35c376e7b167"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga607db171cf05343456f835000053dc19" id="r_ga607db171cf05343456f835000053dc19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19">infix_signature_parse</a> (const char *, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, <a class="el" href="structinfix__type.html">infix_type</a> **, <a class="el" href="infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **, size_t *, size_t *)</td></tr>
+<tr class="memdesc:ga607db171cf05343456f835000053dc19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a full function signature string into its constituent <a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a> parts.  <br /></td></tr>
+<tr class="separator:ga607db171cf05343456f835000053dc19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee130ec9cc180580da815450a7d5b735" id="r_gaee130ec9cc180580da815450a7d5b735"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735">infix_type_from_signature</a> (<a class="el" href="structinfix__type.html">infix_type</a> **, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, const char *)</td></tr>
 <tr class="memdesc:gaee130ec9cc180580da815450a7d5b735"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a signature string representing a single data type.  <br /></td></tr>
 <tr class="separator:gaee130ec9cc180580da815450a7d5b735"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,88 +166,164 @@ Variables</h2></td></tr>
 <a class="el" href="infix_8h.html#a2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a>&#160;&#160;&#160;<b>infix_type_t::primitive_id</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="memdesc:ga96e19f437574313e8e64ada0d752715d"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_PRIMITIVE</code>. <br /></td></tr>
 <tr class="separator:ga96e19f437574313e8e64ada0d752715d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2620f4b4ca0f3a3b2f497fa6e55da713" id="r_ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="memItemLeft" >
+<tr class="memitem:ga82f284856687ccfc35692651697fa733" id="r_ga82f284856687ccfc35692651697fa733"><td class="memItemLeft" >
+<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::pointee_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga82f284856687ccfc35692651697fa733"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type this pointer points to. <br /></td></tr>
+<tr class="separator:ga82f284856687ccfc35692651697fa733"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" >
+struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga04a5b21d8ed8ace3646e92275330b6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82f284856687ccfc35692651697fa733" id="r_ga82f284856687ccfc35692651697fa733"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>pointee_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga82f284856687ccfc35692651697fa733"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type this pointer points to. <br /></td></tr>
+<tr class="separator:ga82f284856687ccfc35692651697fa733"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::pointer_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gadb37406a18179173704f3428561cb922"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_POINTER</code>. <br /></td></tr>
+<tr class="separator:gadb37406a18179173704f3428561cb922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa15a8508483b37fe212fb479c2f44e2a" id="r_gaa15a8508483b37fe212fb479c2f44e2a"><td class="memItemLeft" >
 <a class="el" href="infix_8h.html#a52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;&#160;&#160;<b>infix_type_t::members</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate. <br /></td></tr>
-<tr class="separator:ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga12c78c54b366b04720c7dd4c20764003" id="r_ga12c78c54b366b04720c7dd4c20764003"><td class="memItemLeft" >
+<tr class="memdesc:gaa15a8508483b37fe212fb479c2f44e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate. <br /></td></tr>
+<tr class="separator:gaa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca307cbaffc95a71230aa9486593ff4f" id="r_gaca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" >
 <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>infix_type_t::num_members</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga12c78c54b366b04720c7dd4c20764003"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. <br /></td></tr>
-<tr class="separator:ga12c78c54b366b04720c7dd4c20764003"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa22f3f298d59facd39b9743fbe9dc5c7" id="r_gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="memItemLeft" >
+<tr class="memdesc:gaca307cbaffc95a71230aa9486593ff4f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. <br /></td></tr>
+<tr class="separator:gaca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" >
 struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:gaadc5f1865b50d7d6555c0b205eadeec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2620f4b4ca0f3a3b2f497fa6e55da713" id="r_ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="memItemLeft" >
+<tr class="separator:ga9d7572a9e837b5a8cb21010a91983abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa15a8508483b37fe212fb479c2f44e2a" id="r_gaa15a8508483b37fe212fb479c2f44e2a"><td class="memItemLeft" >
 &#160;&#160;&#160;<a class="el" href="infix_8h.html#a52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;&#160;&#160;<b>members</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate. <br /></td></tr>
-<tr class="separator:ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga12c78c54b366b04720c7dd4c20764003" id="r_ga12c78c54b366b04720c7dd4c20764003"><td class="memItemLeft" >
+<tr class="memdesc:gaa15a8508483b37fe212fb479c2f44e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate. <br /></td></tr>
+<tr class="separator:gaa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca307cbaffc95a71230aa9486593ff4f" id="r_gaca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" >
 &#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>num_members</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga12c78c54b366b04720c7dd4c20764003"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. <br /></td></tr>
-<tr class="separator:ga12c78c54b366b04720c7dd4c20764003"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa22f3f298d59facd39b9743fbe9dc5c7" id="r_gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::aggregate_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. <br /></td></tr>
-<tr class="separator:gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga85a2f592099415fb3f6cbee4bbcef9d3" id="r_ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="memItemLeft" >
-<a class="el" href="group__high__level__api.html#ga1b0a50a3b5eb19d2e45c7021c405787d">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of elements in the array. <br /></td></tr>
-<tr class="separator:ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1b0a50a3b5eb19d2e45c7021c405787d" id="r_ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="memItemLeft" >
+<tr class="memdesc:gaca307cbaffc95a71230aa9486593ff4f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. <br /></td></tr>
+<tr class="separator:gaca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::aggregate_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaeebefe41e0410c6cff0c01275bc37253"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. <br /></td></tr>
+<tr class="separator:gaeebefe41e0410c6cff0c01275bc37253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefb17d7bf4661847a9a9b957dedd04a4" id="r_gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memItemLeft" >
+<a class="el" href="group__high__level__api.html#ga997d4a4a3c2ed791eb70781b1bfe307f">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of elements in the array. <br /></td></tr>
+<tr class="separator:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga997d4a4a3c2ed791eb70781b1bfe307f" id="r_ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memItemLeft" >
 size_t&#160;&#160;&#160;<b>infix_type_t::num_elements</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the array. <br /></td></tr>
-<tr class="separator:ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga42825013735c2c44d1983f947274a08c" id="r_ga42825013735c2c44d1983f947274a08c"><td class="memItemLeft" >
+<tr class="memdesc:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the array. <br /></td></tr>
+<tr class="separator:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" >
 struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ga85a5f80cd1c220a4c07d24adfa9b90f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga85a2f592099415fb3f6cbee4bbcef9d3" id="r_ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="memItemLeft" >
-&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga1b0a50a3b5eb19d2e45c7021c405787d">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of elements in the array. <br /></td></tr>
-<tr class="separator:ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1b0a50a3b5eb19d2e45c7021c405787d" id="r_ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="memItemLeft" >
+<tr class="separator:ga9dcdb7c1762f7142954113f4c4db4aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefb17d7bf4661847a9a9b957dedd04a4" id="r_gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga997d4a4a3c2ed791eb70781b1bfe307f">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of elements in the array. <br /></td></tr>
+<tr class="separator:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga997d4a4a3c2ed791eb70781b1bfe307f" id="r_ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memItemLeft" >
 &#160;&#160;&#160;size_t&#160;&#160;&#160;<b>num_elements</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the array. <br /></td></tr>
-<tr class="separator:ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga42825013735c2c44d1983f947274a08c" id="r_ga42825013735c2c44d1983f947274a08c"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::array_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga42825013735c2c44d1983f947274a08c"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_ARRAY</code>. <br /></td></tr>
-<tr class="separator:ga42825013735c2c44d1983f947274a08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad26162c15372da25cf5ddb97d226d114" id="r_gad26162c15372da25cf5ddb97d226d114"><td class="memItemLeft" >
+<tr class="memdesc:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the array. <br /></td></tr>
+<tr class="separator:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::array_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaab386f4dc04faa543de51c13c86f79ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_ARRAY</code>. <br /></td></tr>
+<tr class="separator:gaab386f4dc04faa543de51c13c86f79ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4595ce20cd9bd6749c598882586d02e" id="r_gaa4595ce20cd9bd6749c598882586d02e"><td class="memItemLeft" >
 <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::return_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gad26162c15372da25cf5ddb97d226d114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse trampoline return value. <br /></td></tr>
-<tr class="separator:gad26162c15372da25cf5ddb97d226d114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga45e925dfc98138f76b51c7f895d8e3ca" id="r_ga45e925dfc98138f76b51c7f895d8e3ca"><td class="memItemLeft" >
-<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> **&#160;&#160;&#160;<b>infix_type_t::arg_types</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga45e925dfc98138f76b51c7f895d8e3ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arg list. <br /></td></tr>
-<tr class="separator:ga45e925dfc98138f76b51c7f895d8e3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7c26ce8c693d1a606cb4cab1e7edbe3a" id="r_ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="memItemLeft" >
+<tr class="memdesc:gaa4595ce20cd9bd6749c598882586d02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse trampoline return value. <br /></td></tr>
+<tr class="separator:gaa4595ce20cd9bd6749c598882586d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb0fa9d874938c89de1aad332d1d5dd8" id="r_gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memItemLeft" >
+<a class="el" href="infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *&#160;&#160;&#160;<b>infix_type_t::args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of function arguments (name and type). <br /></td></tr>
+<tr class="separator:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db4f34af67e79a44d63a04fac7e0f2e" id="r_ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memItemLeft" >
 <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>infix_type_t::num_args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of fixed and variadic arguments. <br /></td></tr>
-<tr class="separator:ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafbd5ec908b93f143fe3037ee04e3061e" id="r_gafbd5ec908b93f143fe3037ee04e3061e"><td class="memItemLeft" >
+<tr class="memdesc:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of fixed and variadic arguments. <br /></td></tr>
+<tr class="separator:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ff4aca821caf304e4181ecd0fb2a7d" id="r_ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memItemLeft" >
 <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>infix_type_t::num_fixed_args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gafbd5ec908b93f143fe3037ee04e3061e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
-<tr class="separator:gafbd5ec908b93f143fe3037ee04e3061e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99ef1081dea50024de0d00ef8b4c4520" id="r_ga99ef1081dea50024de0d00ef8b4c4520"><td class="memItemLeft" >
+<tr class="memdesc:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
+<tr class="separator:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" >
 struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ga5ade7d61731019aba01d143840ecc392"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad26162c15372da25cf5ddb97d226d114" id="r_gad26162c15372da25cf5ddb97d226d114"><td class="memItemLeft" >
+<tr class="separator:ga2a2d9a8c127bba88a5da75433005bdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4595ce20cd9bd6749c598882586d02e" id="r_gaa4595ce20cd9bd6749c598882586d02e"><td class="memItemLeft" >
 &#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>return_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gad26162c15372da25cf5ddb97d226d114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse trampoline return value. <br /></td></tr>
-<tr class="separator:gad26162c15372da25cf5ddb97d226d114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga45e925dfc98138f76b51c7f895d8e3ca" id="r_ga45e925dfc98138f76b51c7f895d8e3ca"><td class="memItemLeft" >
-&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> **&#160;&#160;&#160;<b>arg_types</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga45e925dfc98138f76b51c7f895d8e3ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arg list. <br /></td></tr>
-<tr class="separator:ga45e925dfc98138f76b51c7f895d8e3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7c26ce8c693d1a606cb4cab1e7edbe3a" id="r_ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="memItemLeft" >
+<tr class="memdesc:gaa4595ce20cd9bd6749c598882586d02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse trampoline return value. <br /></td></tr>
+<tr class="separator:gaa4595ce20cd9bd6749c598882586d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb0fa9d874938c89de1aad332d1d5dd8" id="r_gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *&#160;&#160;&#160;<b>args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of function arguments (name and type). <br /></td></tr>
+<tr class="separator:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db4f34af67e79a44d63a04fac7e0f2e" id="r_ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memItemLeft" >
 &#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>num_args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of fixed and variadic arguments. <br /></td></tr>
-<tr class="separator:ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafbd5ec908b93f143fe3037ee04e3061e" id="r_gafbd5ec908b93f143fe3037ee04e3061e"><td class="memItemLeft" >
+<tr class="memdesc:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of fixed and variadic arguments. <br /></td></tr>
+<tr class="separator:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ff4aca821caf304e4181ecd0fb2a7d" id="r_ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memItemLeft" >
 &#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>num_fixed_args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gafbd5ec908b93f143fe3037ee04e3061e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
-<tr class="separator:gafbd5ec908b93f143fe3037ee04e3061e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99ef1081dea50024de0d00ef8b4c4520" id="r_ga99ef1081dea50024de0d00ef8b4c4520"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::func_ptr_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga99ef1081dea50024de0d00ef8b4c4520"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. <br /></td></tr>
-<tr class="separator:ga99ef1081dea50024de0d00ef8b4c4520"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
+<tr class="separator:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::func_ptr_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. <br /></td></tr>
+<tr class="separator:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c923a189eb6700fd770f8f815aeef1e" id="r_ga8c923a189eb6700fd770f8f815aeef1e"><td class="memItemLeft" >
+<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::underlying_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8c923a189eb6700fd770f8f815aeef1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The integer type this enum is based on. <br /></td></tr>
+<tr class="separator:ga8c923a189eb6700fd770f8f815aeef1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" >
+struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabf1c7bb07d550892095e914072a7658c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c923a189eb6700fd770f8f815aeef1e" id="r_ga8c923a189eb6700fd770f8f815aeef1e"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>underlying_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8c923a189eb6700fd770f8f815aeef1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The integer type this enum is based on. <br /></td></tr>
+<tr class="separator:ga8c923a189eb6700fd770f8f815aeef1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::enum_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8efd553b2dd8682399057c026e61f839"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_ENUM</code>. <br /></td></tr>
+<tr class="separator:ga8efd553b2dd8682399057c026e61f839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b5d4e2f45f812ae54b0f1b265d1d54d" id="r_ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memItemLeft" >
+<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::base_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The floating point type of the real and imaginary parts. <br /></td></tr>
+<tr class="separator:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" >
+struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga654909b4eaa71cf395f7324c581e163f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b5d4e2f45f812ae54b0f1b265d1d54d" id="r_ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>base_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The floating point type of the real and imaginary parts. <br /></td></tr>
+<tr class="separator:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::complex_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8d6e1e8253d8911ce6754b06097d657f"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_COMPLEX</code>. <br /></td></tr>
+<tr class="separator:ga8d6e1e8253d8911ce6754b06097d657f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81abf1b30a3fab4312e3f20e74ab70b5" id="r_ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memItemLeft" >
+<a class="el" href="group__high__level__api.html#ga80581ecc44d474e5b081a306f0ee09a2">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>infix_type_t::element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the elements in the vector. <br /></td></tr>
+<tr class="separator:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80581ecc44d474e5b081a306f0ee09a2" id="r_ga80581ecc44d474e5b081a306f0ee09a2"><td class="memItemLeft" >
+size_t&#160;&#160;&#160;<b>infix_type_t::num_elements</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga80581ecc44d474e5b081a306f0ee09a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the vector. <br /></td></tr>
+<tr class="separator:ga80581ecc44d474e5b081a306f0ee09a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" >
+struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga07a9b5fb5a01455688c83d682686f62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81abf1b30a3fab4312e3f20e74ab70b5" id="r_ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga80581ecc44d474e5b081a306f0ee09a2">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the elements in the vector. <br /></td></tr>
+<tr class="separator:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80581ecc44d474e5b081a306f0ee09a2" id="r_ga80581ecc44d474e5b081a306f0ee09a2"><td class="memItemLeft" >
+&#160;&#160;&#160;size_t&#160;&#160;&#160;<b>num_elements</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga80581ecc44d474e5b081a306f0ee09a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the vector. <br /></td></tr>
+<tr class="separator:ga80581ecc44d474e5b081a306f0ee09a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::vector_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaac16a3039475a6fdce57b6599014b2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_VECTOR</code>. <br /></td></tr>
+<tr class="separator:gaac16a3039475a6fdce57b6599014b2da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c9af9a10aedbc07aa46f4630fa35c1" id="r_ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memItemLeft" >
+<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">const</a> <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">char</a> *&#160;&#160;&#160;<b>infix_type_t::name</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" >
+struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefbba96a3cadf0e38ba54f1ff7cb93b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c9af9a10aedbc07aa46f4630fa35c1" id="r_ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memItemLeft" >
+&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">const</a> <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">char</a> *&#160;&#160;&#160;<b>name</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<b>infix_type_t::named_reference</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga69c567720b478d07b87af0ef17aa9f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_NAMED_REFERENCE</code>. <br /></td></tr>
+<tr class="separator:ga69c567720b478d07b87af0ef17aa9f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06717387732a6557d456a760bb3150cc" id="r_ga06717387732a6557d456a760bb3150cc"><td class="memItemLeft" ><a id="ga06717387732a6557d456a760bb3150cc" name="ga06717387732a6557d456a760bb3150cc"></a>
 union {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,56 +331,109 @@ union {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 &#160;&#160;&#160;<a class="el" href="infix_8h.html#a2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a>&#160;&#160;&#160;<b>primitive_id</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="memdesc:ga96e19f437574313e8e64ada0d752715d"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_PRIMITIVE</code>. <br /></td></tr>
 <tr class="separator:ga96e19f437574313e8e64ada0d752715d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa22f3f298d59facd39b9743fbe9dc5c7" id="r_gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="memItemLeft" >
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" >
 &#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:gaadc5f1865b50d7d6555c0b205eadeec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2620f4b4ca0f3a3b2f497fa6e55da713" id="r_ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="memItemLeft" >
+<tr class="separator:ga04a5b21d8ed8ace3646e92275330b6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82f284856687ccfc35692651697fa733" id="r_ga82f284856687ccfc35692651697fa733"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>pointee_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga82f284856687ccfc35692651697fa733"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type this pointer points to. <br /></td></tr>
+<tr class="separator:ga82f284856687ccfc35692651697fa733"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>pointer_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gadb37406a18179173704f3428561cb922"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_POINTER</code>. <br /></td></tr>
+<tr class="separator:gadb37406a18179173704f3428561cb922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" >
+&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga9d7572a9e837b5a8cb21010a91983abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa15a8508483b37fe212fb479c2f44e2a" id="r_gaa15a8508483b37fe212fb479c2f44e2a"><td class="memItemLeft" >
 &#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="infix_8h.html#a52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;&#160;&#160;<b>members</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate. <br /></td></tr>
-<tr class="separator:ga2620f4b4ca0f3a3b2f497fa6e55da713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga12c78c54b366b04720c7dd4c20764003" id="r_ga12c78c54b366b04720c7dd4c20764003"><td class="memItemLeft" >
+<tr class="memdesc:gaa15a8508483b37fe212fb479c2f44e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate. <br /></td></tr>
+<tr class="separator:gaa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca307cbaffc95a71230aa9486593ff4f" id="r_gaca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" >
 &#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>num_members</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga12c78c54b366b04720c7dd4c20764003"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. <br /></td></tr>
-<tr class="separator:ga12c78c54b366b04720c7dd4c20764003"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa22f3f298d59facd39b9743fbe9dc5c7" id="r_gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>aggregate_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. <br /></td></tr>
-<tr class="separator:gaa22f3f298d59facd39b9743fbe9dc5c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga42825013735c2c44d1983f947274a08c" id="r_ga42825013735c2c44d1983f947274a08c"><td class="memItemLeft" >
+<tr class="memdesc:gaca307cbaffc95a71230aa9486593ff4f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. <br /></td></tr>
+<tr class="separator:gaca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>aggregate_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaeebefe41e0410c6cff0c01275bc37253"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. <br /></td></tr>
+<tr class="separator:gaeebefe41e0410c6cff0c01275bc37253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" >
 &#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ga85a5f80cd1c220a4c07d24adfa9b90f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga85a2f592099415fb3f6cbee4bbcef9d3" id="r_ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="memItemLeft" >
-&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga1b0a50a3b5eb19d2e45c7021c405787d">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of elements in the array. <br /></td></tr>
-<tr class="separator:ga85a2f592099415fb3f6cbee4bbcef9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1b0a50a3b5eb19d2e45c7021c405787d" id="r_ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="memItemLeft" >
+<tr class="separator:ga9dcdb7c1762f7142954113f4c4db4aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefb17d7bf4661847a9a9b957dedd04a4" id="r_gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga997d4a4a3c2ed791eb70781b1bfe307f">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of elements in the array. <br /></td></tr>
+<tr class="separator:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga997d4a4a3c2ed791eb70781b1bfe307f" id="r_ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memItemLeft" >
 &#160;&#160;&#160;&#160;&#160;&#160;size_t&#160;&#160;&#160;<b>num_elements</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the array. <br /></td></tr>
-<tr class="separator:ga1b0a50a3b5eb19d2e45c7021c405787d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga42825013735c2c44d1983f947274a08c" id="r_ga42825013735c2c44d1983f947274a08c"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>array_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga42825013735c2c44d1983f947274a08c"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_ARRAY</code>. <br /></td></tr>
-<tr class="separator:ga42825013735c2c44d1983f947274a08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99ef1081dea50024de0d00ef8b4c4520" id="r_ga99ef1081dea50024de0d00ef8b4c4520"><td class="memItemLeft" >
+<tr class="memdesc:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the array. <br /></td></tr>
+<tr class="separator:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>array_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaab386f4dc04faa543de51c13c86f79ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_ARRAY</code>. <br /></td></tr>
+<tr class="separator:gaab386f4dc04faa543de51c13c86f79ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" >
 &#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ga5ade7d61731019aba01d143840ecc392"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad26162c15372da25cf5ddb97d226d114" id="r_gad26162c15372da25cf5ddb97d226d114"><td class="memItemLeft" >
+<tr class="separator:ga2a2d9a8c127bba88a5da75433005bdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4595ce20cd9bd6749c598882586d02e" id="r_gaa4595ce20cd9bd6749c598882586d02e"><td class="memItemLeft" >
 &#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>return_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gad26162c15372da25cf5ddb97d226d114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse trampoline return value. <br /></td></tr>
-<tr class="separator:gad26162c15372da25cf5ddb97d226d114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga45e925dfc98138f76b51c7f895d8e3ca" id="r_ga45e925dfc98138f76b51c7f895d8e3ca"><td class="memItemLeft" >
-&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> **&#160;&#160;&#160;<b>arg_types</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga45e925dfc98138f76b51c7f895d8e3ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arg list. <br /></td></tr>
-<tr class="separator:ga45e925dfc98138f76b51c7f895d8e3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7c26ce8c693d1a606cb4cab1e7edbe3a" id="r_ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="memItemLeft" >
+<tr class="memdesc:gaa4595ce20cd9bd6749c598882586d02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse trampoline return value. <br /></td></tr>
+<tr class="separator:gaa4595ce20cd9bd6749c598882586d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb0fa9d874938c89de1aad332d1d5dd8" id="r_gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *&#160;&#160;&#160;<b>args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of function arguments (name and type). <br /></td></tr>
+<tr class="separator:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db4f34af67e79a44d63a04fac7e0f2e" id="r_ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memItemLeft" >
 &#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>num_args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of fixed and variadic arguments. <br /></td></tr>
-<tr class="separator:ga7c26ce8c693d1a606cb4cab1e7edbe3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafbd5ec908b93f143fe3037ee04e3061e" id="r_gafbd5ec908b93f143fe3037ee04e3061e"><td class="memItemLeft" >
+<tr class="memdesc:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of fixed and variadic arguments. <br /></td></tr>
+<tr class="separator:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ff4aca821caf304e4181ecd0fb2a7d" id="r_ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memItemLeft" >
 &#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">size_t</a>&#160;&#160;&#160;<b>num_fixed_args</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:gafbd5ec908b93f143fe3037ee04e3061e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
-<tr class="separator:gafbd5ec908b93f143fe3037ee04e3061e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99ef1081dea50024de0d00ef8b4c4520" id="r_ga99ef1081dea50024de0d00ef8b4c4520"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>func_ptr_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ga99ef1081dea50024de0d00ef8b4c4520"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. <br /></td></tr>
-<tr class="separator:ga99ef1081dea50024de0d00ef8b4c4520"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
+<tr class="separator:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>func_ptr_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. <br /></td></tr>
+<tr class="separator:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" >
+&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabf1c7bb07d550892095e914072a7658c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c923a189eb6700fd770f8f815aeef1e" id="r_ga8c923a189eb6700fd770f8f815aeef1e"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>underlying_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8c923a189eb6700fd770f8f815aeef1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The integer type this enum is based on. <br /></td></tr>
+<tr class="separator:ga8c923a189eb6700fd770f8f815aeef1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>enum_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8efd553b2dd8682399057c026e61f839"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_ENUM</code>. <br /></td></tr>
+<tr class="separator:ga8efd553b2dd8682399057c026e61f839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" >
+&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga654909b4eaa71cf395f7324c581e163f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b5d4e2f45f812ae54b0f1b265d1d54d" id="r_ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>base_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The floating point type of the real and imaginary parts. <br /></td></tr>
+<tr class="separator:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>complex_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8d6e1e8253d8911ce6754b06097d657f"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_COMPLEX</code>. <br /></td></tr>
+<tr class="separator:ga8d6e1e8253d8911ce6754b06097d657f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" >
+&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga07a9b5fb5a01455688c83d682686f62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81abf1b30a3fab4312e3f20e74ab70b5" id="r_ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga80581ecc44d474e5b081a306f0ee09a2">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<b>element_type</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the elements in the vector. <br /></td></tr>
+<tr class="separator:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80581ecc44d474e5b081a306f0ee09a2" id="r_ga80581ecc44d474e5b081a306f0ee09a2"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;size_t&#160;&#160;&#160;<b>num_elements</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga80581ecc44d474e5b081a306f0ee09a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of elements in the vector. <br /></td></tr>
+<tr class="separator:ga80581ecc44d474e5b081a306f0ee09a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>vector_info</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaac16a3039475a6fdce57b6599014b2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_VECTOR</code>. <br /></td></tr>
+<tr class="separator:gaac16a3039475a6fdce57b6599014b2da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" >
+&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefbba96a3cadf0e38ba54f1ff7cb93b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c9af9a10aedbc07aa46f4630fa35c1" id="r_ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">const</a> <a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">char</a> *&#160;&#160;&#160;<b>name</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<b>named_reference</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga69c567720b478d07b87af0ef17aa9f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_NAMED_REFERENCE</code>. <br /></td></tr>
+<tr class="separator:ga69c567720b478d07b87af0ef17aa9f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06717387732a6557d456a760bb3150cc" id="r_ga06717387732a6557d456a760bb3150cc"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_t::meta</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="memdesc:ga06717387732a6557d456a760bb3150cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-specific metadata. <br /></td></tr>
 <tr class="separator:ga06717387732a6557d456a760bb3150cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -320,10 +449,18 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_struct_
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>infix_struct_member_t::offset</b></td></tr>
 <tr class="memdesc:gabc9fb3780626694111f4c8c74700a9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The byte offset of the member from the start of the aggregate. <br /></td></tr>
 <tr class="separator:gabc9fb3780626694111f4c8c74700a9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8789f5063ea8ce9896f44c1c9d8f365c" id="r_ga8789f5063ea8ce9896f44c1c9d8f365c"><td class="memItemLeft" align="right" valign="top"><a id="ga8789f5063ea8ce9896f44c1c9d8f365c" name="ga8789f5063ea8ce9896f44c1c9d8f365c"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_function_argument_t::name</b></td></tr>
+<tr class="memdesc:ga8789f5063ea8ce9896f44c1c9d8f365c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the argument (for reflection). Can be <code>nullptr</code> if anonymous. <br /></td></tr>
+<tr class="separator:ga8789f5063ea8ce9896f44c1c9d8f365c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bd256c75cb6ec767cec121370e6a0ed" id="r_ga1bd256c75cb6ec767cec121370e6a0ed"><td class="memItemLeft" align="right" valign="top"><a id="ga1bd256c75cb6ec767cec121370e6a0ed" name="ga1bd256c75cb6ec767cec121370e6a0ed"></a>
+<a class="el" href="infix_8h.html#a0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_function_argument_t::type</b></td></tr>
+<tr class="memdesc:ga1bd256c75cb6ec767cec121370e6a0ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> describing the argument's type. <br /></td></tr>
+<tr class="separator:ga1bd256c75cb6ec767cec121370e6a0ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Convenience functions for creating trampolines from a signature string. </p>
-<p>This API is the recommended way for most users to interact with infix. It provides a simple, readable, and powerful way to generate FFI trampolines without needing to manually construct <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects. The implementation for these functions is in <code><a class="el" href="signature_8c.html" title="Implements the high-level signature string parser.">src/core/signature.c</a></code>. </p>
+<p>This API is the recommended way for most users to interact with infix. It provides a simple, readable, and powerful way to generate FFI trampolines without needing to manually construct <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects. The implementation for these functions is in <code><a class="el" href="signature_8c.html" title="Implements the high-level v1.0 signature string parser.">src/core/signature.c</a></code>. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="gabb32fed25010a3111812c8dfacd4cf40" name="gabb32fed25010a3111812c8dfacd4cf40"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gabb32fed25010a3111812c8dfacd4cf40">&#9670;&#160;</a></span>infix_arena_alloc()</h2>
@@ -383,52 +520,54 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph.png" border="0" usemap="#agroup__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph" alt=""/></div>
 <map name="agroup__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph" id="agroup__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph">
-<area shape="rect" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="895,332,1027,357"/>
-<area shape="rect" href="trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="677,79,830,104"/>
-<area shape="poly" title=" " alt="" coords="947,321,908,240,879,193,845,151,814,125,781,106,784,102,817,121,849,147,884,190,913,237,952,318"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="690,205,817,231"/>
-<area shape="poly" title=" " alt="" coords="936,324,895,288,845,252,801,233,803,228,848,248,899,283,939,320"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="222,198,377,238"/>
-<area shape="poly" title=" " alt="" coords="947,320,932,289,910,254,881,220,845,195,783,171,716,157,648,153,581,155,516,163,456,174,359,200,357,195,455,169,515,158,580,150,648,147,717,152,784,166,848,190,884,217,914,251,936,287,952,318"/>
-<area shape="rect" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="439,463,612,488"/>
-<area shape="poly" title=" " alt="" coords="957,371,946,415,925,468,893,520,872,542,848,560,799,582,756,585,712,576,659,561,623,546,590,527,539,490,543,486,593,523,625,542,661,555,713,571,757,580,798,577,845,556,869,538,889,516,920,465,940,413,952,370"/>
-<area shape="rect" href="group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="684,307,823,332"/>
-<area shape="poly" title=" " alt="" coords="881,338,823,330,823,325,881,332"/>
-<area shape="rect" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="445,320,606,345"/>
-<area shape="poly" title=" " alt="" coords="925,328,888,310,846,297,795,288,754,286,661,297,570,323,569,317,659,291,754,280,795,282,847,291,890,305,928,323"/>
-<area shape="rect" href="types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7" title="Creates a new infix_type for a fixed&#45;size array from an arena." alt="" coords="666,405,841,431"/>
-<area shape="poly" title=" " alt="" coords="921,365,848,395,806,408,805,403,846,390,919,361"/>
-<area shape="rect" href="types_8c.html#ad33103485281e970058a783e5e181978" title="Creates a new infix_type for a packed struct from an arena." alt="" coords="660,455,847,495"/>
-<area shape="poly" title=" " alt="" coords="940,370,899,408,848,446,824,458,821,453,845,441,896,404,936,366"/>
-<area shape="rect" href="types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086" title="Creates a new infix_type for a struct from an arena." alt="" coords="664,520,843,545"/>
-<area shape="poly" title=" " alt="" coords="951,371,912,440,883,478,848,510,824,522,821,518,845,505,879,474,908,437,946,369"/>
-<area shape="rect" href="types_8c.html#a483854a00ecff6dcf774c04683892ec6" title="Creates a new infix_type for a union from an arena." alt="" coords="665,356,842,381"/>
-<area shape="poly" title=" " alt="" coords="881,356,843,361,842,356,881,351"/>
-<area shape="rect" href="trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="481,104,569,129"/>
-<area shape="poly" title=" " alt="" coords="663,104,570,114,569,109,662,99"/>
-<area shape="rect" href="trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="479,5,571,31"/>
-<area shape="poly" title=" " alt="" coords="704,76,611,45,571,33,572,27,613,39,706,71"/>
-<area shape="rect" href="trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="479,55,571,80"/>
-<area shape="poly" title=" " alt="" coords="663,85,571,75,572,69,663,79"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="448,255,603,295"/>
-<area shape="poly" title=" " alt="" coords="690,237,603,259,602,253,688,231"/>
-<area shape="poly" title=" " alt="" coords="676,221,377,221,377,215,676,215"/>
-<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="222,263,377,288"/>
-<area shape="poly" title=" " alt="" coords="434,278,377,278,377,273,434,273"/>
-<area shape="poly" title=" " alt="" coords="434,255,376,240,378,235,435,250"/>
-<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,205,158,231"/>
-<area shape="poly" title=" " alt="" coords="209,221,158,221,158,215,209,215"/>
-<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,284,160,309"/>
-<area shape="poly" title=" " alt="" coords="229,245,209,253,119,286,117,281,207,247,227,240"/>
-<area shape="poly" title=" " alt="" coords="566,453,555,445,525,441,501,443,489,448,486,454,493,461,489,464,481,454,485,444,500,438,525,436,557,440,569,449"/>
-<area shape="poly" title=" " alt="" coords="461,319,349,291,351,285,462,314"/>
-<area shape="poly" title=" " alt="" coords="430,328,160,306,160,300,431,322"/>
-<area shape="rect" href="fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="208,364,391,389"/>
-<area shape="poly" title=" " alt="" coords="447,351,366,367,365,361,446,345"/>
-<area shape="poly" title=" " alt="" coords="689,437,577,465,576,460,688,431"/>
-<area shape="poly" title=" " alt="" coords="646,478,612,478,612,473,646,473"/>
-<area shape="poly" title=" " alt="" coords="688,519,576,491,577,485,689,514"/>
-<area shape="poly" title=" " alt="" coords="680,388,661,395,595,430,545,465,542,460,593,426,659,390,678,383"/>
+<area shape="rect" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="887,500,1019,525"/>
+<area shape="rect" href="trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="659,79,812,104"/>
+<area shape="poly" title=" " alt="" coords="947,487,939,422,921,333,907,285,889,238,865,192,837,150,807,124,773,107,775,102,810,120,841,147,870,189,893,235,912,284,927,332,945,421,952,486"/>
+<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="672,263,799,288"/>
+<area shape="poly" title=" " alt="" coords="941,488,926,450,904,404,874,357,837,316,815,301,790,291,792,286,817,297,840,312,879,354,909,402,931,448,946,486"/>
+<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="208,292,363,317"/>
+<area shape="poly" title=" " alt="" coords="938,489,922,460,900,426,872,393,837,367,812,359,767,350,639,335,363,312,363,307,639,330,768,345,813,354,840,362,875,389,904,422,927,457,943,487"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,213,363,253"/>
+<area shape="poly" title=" " alt="" coords="946,487,937,435,918,371,903,337,886,305,864,277,837,252,780,219,717,197,651,186,584,182,518,186,457,193,354,215,353,210,456,188,518,180,584,177,652,180,719,192,782,214,840,248,867,273,890,302,908,335,923,369,942,434,951,486"/>
+<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,299,160,324"/>
+<area shape="poly" title=" " alt="" coords="932,491,892,449,866,428,838,411,795,400,723,388,525,364,208,331,160,325,160,319,208,326,526,358,723,382,797,394,840,406,869,423,895,445,935,487"/>
+<area shape="rect" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="411,700,584,725"/>
+<area shape="poly" title=" " alt="" coords="954,539,950,603,934,686,920,729,900,771,874,808,840,839,813,856,788,866,763,872,739,872,689,861,631,839,589,816,553,784,524,753,505,727,509,724,528,749,557,781,592,811,633,834,691,856,740,867,763,866,786,861,811,851,837,835,870,805,896,768,915,727,929,685,945,602,949,539"/>
+<area shape="rect" href="group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="666,471,805,496"/>
+<area shape="poly" title=" " alt="" coords="872,505,804,495,805,490,873,499"/>
+<area shape="rect" href="types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7" title="Creates a new infix_type for a fixed&#45;size array from an arena." alt="" coords="648,421,823,447"/>
+<area shape="poly" title=" " alt="" coords="916,496,838,460,800,449,801,444,840,456,918,491"/>
+<area shape="rect" href="types_8c.html#aad682d0d4b636c282931735a89be7cf8" title="Creates a new infix_type for an enum from an arena." alt="" coords="646,585,825,611"/>
+<area shape="poly" title=" " alt="" coords="920,535,882,556,840,575,799,588,798,583,838,570,880,551,918,530"/>
+<area shape="rect" href="types_8c.html#add70103c39886a50bc11d53a182b13b5" title="Creates a new infix_type for a named reference from an arena." alt="" coords="642,635,829,675"/>
+<area shape="poly" title=" " alt="" coords="935,538,894,581,868,604,840,624,813,638,810,633,837,620,865,600,891,578,931,534"/>
+<area shape="rect" href="types_8c.html#ad33103485281e970058a783e5e181978" title="Creates a new infix_type for a packed struct from an arena." alt="" coords="642,521,829,561"/>
+<area shape="poly" title=" " alt="" coords="873,526,829,531,828,526,873,520"/>
+<area shape="rect" href="types_8c.html#ad07a4c53b81830d8053cb27f78576c08" title="Creates an infix_type for a pointer to a specific type from an arena." alt="" coords="632,749,839,775"/>
+<area shape="poly" title=" " alt="" coords="948,540,936,584,915,638,884,693,864,718,840,740,821,752,818,747,837,736,860,715,879,690,910,636,931,582,943,539"/>
+<area shape="rect" href="types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086" title="Creates a new infix_type for a struct from an arena." alt="" coords="646,700,825,725"/>
+<area shape="poly" title=" " alt="" coords="945,539,929,573,907,614,877,655,840,690,816,702,813,698,837,685,873,651,902,611,925,571,940,537"/>
+<area shape="rect" href="types_8c.html#a483854a00ecff6dcf774c04683892ec6" title="Creates a new infix_type for a union from an arena." alt="" coords="647,799,824,824"/>
+<area shape="poly" title=" " alt="" coords="951,539,942,592,922,660,908,695,890,730,867,762,840,789,823,801,820,796,837,785,863,758,885,727,903,693,917,658,937,591,946,538"/>
+<area shape="rect" href="trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="453,5,541,31"/>
+<area shape="poly" title=" " alt="" coords="683,77,583,45,541,32,542,27,585,39,685,72"/>
+<area shape="rect" href="trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="451,55,543,80"/>
+<area shape="poly" title=" " alt="" coords="644,85,543,75,544,69,645,80"/>
+<area shape="rect" href="trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="451,104,543,129"/>
+<area shape="poly" title=" " alt="" coords="645,104,544,115,543,109,644,98"/>
+<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="420,255,575,295"/>
+<area shape="poly" title=" " alt="" coords="658,278,575,278,575,273,658,273"/>
+<area shape="poly" title=" " alt="" coords="671,262,584,246,468,237,363,234,363,229,468,231,584,241,672,257"/>
+<area shape="poly" title=" " alt="" coords="407,291,363,297,362,291,406,285"/>
+<area shape="poly" title=" " alt="" coords="406,260,362,251,363,246,407,254"/>
+<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,220,158,245"/>
+<area shape="poly" title=" " alt="" coords="194,235,159,235,159,230,194,230"/>
+<area shape="poly" title=" " alt="" coords="221,260,118,301,116,296,219,255"/>
+<area shape="poly" title=" " alt="" coords="535,690,525,682,497,679,475,681,463,685,461,691,467,698,463,702,455,692,459,682,474,676,497,673,527,677,538,686"/>
+<area shape="poly" title=" " alt="" coords="641,455,634,460,605,487,580,519,559,553,541,589,517,654,504,700,499,699,512,652,536,586,554,551,575,516,601,484,630,456,638,451"/>
+<area shape="poly" title=" " alt="" coords="644,569,633,575,593,605,558,641,509,701,505,698,554,637,590,601,631,570,642,564"/>
+<area shape="poly" title=" " alt="" coords="632,715,584,715,584,710,632,710"/>
+<area shape="poly" title=" " alt="" coords="654,798,631,790,567,759,516,728,519,723,569,754,633,785,656,792"/>
 </map>
 </div>
 
@@ -551,7 +690,7 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="665,98,612,90,612,85,666,93"/>
 <area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="222,5,377,45"/>
 <area shape="poly" title=" " alt="" coords="717,89,677,66,630,48,564,34,497,26,377,24,377,18,498,21,565,29,631,43,679,61,720,84"/>
-<area shape="rect" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,122,615,147"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,122,615,147"/>
 <area shape="poly" title=" " alt="" coords="665,120,616,127,615,122,665,115"/>
 <area shape="rect" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="439,171,631,197"/>
 <area shape="poly" title=" " alt="" coords="712,128,632,163,594,174,592,169,630,157,710,123"/>
@@ -617,7 +756,7 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="665,156,630,151,376,121,377,115,631,146,665,151"/>
 <area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,155,160,180"/>
 <area shape="poly" title=" " alt="" coords="665,170,161,170,161,165,665,165"/>
-<area shape="rect" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,205,615,231"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,205,615,231"/>
 <area shape="poly" title=" " alt="" coords="685,186,591,208,590,203,684,181"/>
 <area shape="rect" href="fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="208,256,391,281"/>
 <area shape="poly" title=" " alt="" coords="740,193,697,248,667,275,632,295,592,308,551,314,510,316,469,313,394,300,335,284,337,279,395,295,470,308,510,310,551,309,591,303,630,290,663,270,693,244,736,190"/>
@@ -664,72 +803,54 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Generates a forward-call trampoline from a signature string. </p>
-<p>This is the primary function of the high-level API. It parses a signature string, constructs the necessary <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects internally, generates the trampoline, and cleans up all intermediate type descriptions. The resulting trampoline is self-contained and ready for use.</p>
+<p>This is the primary function of the high-level API. It parses a signature string using the v1.0 specification, constructs the necessary <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects internally, generates the trampoline, and cleans up all intermediate type descriptions. The resulting trampoline is self-contained and ready for use.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. Format: "arg1,arg2;variadic_arg=&gt;ret_type". See cookbook for details. Supports packed structs with the syntax: p(size,align){type@offset;...} </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the function signature, e.g., <code>"(int, *char) -&gt; void"</code>. See the project documentation for the full v1.0 syntax. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. <code>INFIX_ERROR_INVALID_ARGUMENT</code> is returned for parsing errors. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd>
+<dd>
+<code>INFIX_ERROR_INVALID_ARGUMENT</code> if the signature string is malformed or contains unresolved named types (e.g., <code>struct&lt;MyStruct&gt;</code>). </dd>
+<dd>
+<code>INFIX_ERROR_ALLOCATION_FAILED</code> on memory allocation failure. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The returned trampoline must be freed with <code>infix_forward_destroy</code>.</dd></dl>
-<p>Generates a forward-call trampoline from a signature string.</p>
-<p>This is the primary, recommended public API function for creating a <b>forward trampoline</b>. It serves as a convenient and memory-safe wrapper around the lower-level FFI functions, automating the entire process from string parsing to JIT compilation.</p>
-<p>A forward trampoline is a small, dynamically generated function that enables calls <em>from</em> a generic environment (like an embedded script) <em>into</em> a specific, native C function. The generated trampoline handles the complex, platform-specific details of the Application Binary Interface (ABI), such as placing arguments into the correct CPU registers or arranging them on the stack.</p>
-<h3><a class="anchor" id="autotoc_md225"></a>
-Process Walkthrough:</h3>
-<ol type="1">
-<li><b>Parse Signature</b>: It first calls <code>infix_signature_parse</code> to parse the input string. This step creates a temporary memory arena and populates it with the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph that describes the function's return type and argument types.</li>
-<li><b>Generate Trampoline</b>: If parsing succeeds, it passes the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> graph and other metadata (number of arguments, etc.) to the core <code>infix_forward_create_manual</code> function. This is the step where the machine code is actually generated and placed into executable memory.</li>
-<li><b>Automatic Cleanup</b>: Crucially, regardless of whether the trampoline generation succeeds or fails, this function ensures that the temporary arena and all the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects created in step 1 are destroyed before returning. This completely automates memory management for the type system, preventing leaks and simplifying the caller's code.</li>
-</ol>
+<p>This is the primary function of the high-level API. It parses a v1.0 signature string, constructs the necessary <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects internally, generates the trampoline, and cleans up all intermediate type descriptions. The resulting trampoline is self-contained and ready for use.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, this will be populated with a pointer to a newly allocated <code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code> handle. This handle is the primary object used to interact with the JIT-compiled code. The caller is responsible for freeing this handle with <code><a class="el" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory.">infix_forward_destroy()</a></code>.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the C function's signature. The format is <code>"arg1,arg2;variadic_arg=&gt;ret_type"</code>. See the main project documentation for the full grammar. Example: <code>"i*,i=&gt;i"</code> for <code>int printf(const char*, int)</code>.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>INFIX_SUCCESS</code> if the trampoline was successfully created. </dd>
-<dd>
-Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if the <code>out_trampoline</code> parameter is null or if the signature string is malformed. </dd>
-<dd>
-Returns <code>INFIX_ERROR_ALLOCATION_FAILED</code> if any internal memory allocation fails during either parsing or JIT compilation. </dd>
-<dd>
-Returns other <code>infix_status</code> error codes on failures during the JIT compilation process (e.g., <code>INFIX_ERROR_PROTECTION_FAILED</code>).</dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Ownership</b>: The caller is responsible for destroying the <code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code> object returned via the <code>out_trampoline</code> parameter by calling <code><a class="el" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory.">infix_forward_destroy()</a></code>. All intermediate memory used for parsing the signature is managed automatically by this function.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts.">infix_signature_parse()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward-call trampoline for a given function signature.">infix_forward_create_manual()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory.">infix_forward_destroy()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822" title="Retrieves the executable code pointer from a forward trampoline.">infix_forward_get_code()</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The returned trampoline must be freed with <code>infix_forward_destroy</code>. </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph.png" border="0" usemap="#agroup__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph" alt=""/></div>
 <map name="agroup__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph" id="agroup__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph">
-<area shape="rect" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="5,56,160,81"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="419,5,569,31"/>
-<area shape="poly" title=" " alt="" coords="139,53,208,41,309,29,404,21,405,26,310,34,208,46,140,59"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="211,106,366,146"/>
-<area shape="poly" title=" " alt="" coords="130,79,204,100,203,105,128,84"/>
-<area shape="rect" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,56,369,81"/>
-<area shape="poly" title=" " alt="" coords="160,66,195,66,195,71,160,71"/>
-<area shape="poly" title=" " alt="" coords="340,104,368,90,461,36,463,41,371,95,342,108"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="431,156,557,181"/>
-<area shape="poly" title=" " alt="" coords="367,139,419,150,418,156,365,145"/>
-<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="417,206,571,246"/>
-<area shape="poly" title=" " alt="" coords="327,144,419,192,432,198,430,203,416,196,325,149"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="423,107,565,132"/>
-<area shape="poly" title=" " alt="" coords="366,121,409,119,409,125,366,126"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="619,107,751,132"/>
-<area shape="poly" title=" " alt="" coords="543,153,621,133,622,138,544,159"/>
-<area shape="poly" title=" " alt="" coords="340,53,428,31,429,37,342,58"/>
-<area shape="poly" title=" " alt="" coords="370,70,466,78,571,91,621,101,619,106,570,97,466,84,369,76"/>
-<area shape="poly" title=" " alt="" coords="342,79,429,101,428,106,340,84"/>
+<area shape="rect" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="5,117,160,143"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="619,5,751,31"/>
+<area shape="poly" title=" " alt="" coords="105,115,151,90,207,66,310,33,417,15,515,9,605,10,605,16,515,15,418,21,311,38,209,71,153,95,107,119"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="419,195,569,220"/>
+<area shape="poly" title=" " alt="" coords="110,140,155,161,209,179,310,197,405,204,405,209,309,202,207,185,153,166,107,145"/>
+<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="211,81,366,121"/>
+<area shape="poly" title=" " alt="" coords="160,116,197,111,198,116,161,122"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,145,369,171"/>
+<area shape="poly" title=" " alt="" coords="161,138,195,143,194,148,160,143"/>
+<area shape="poly" title=" " alt="" coords="350,119,371,130,386,143,395,156,404,168,419,180,433,187,430,192,416,184,401,172,391,159,382,147,368,135,347,123"/>
+<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="431,31,557,56"/>
+<area shape="poly" title=" " alt="" coords="360,78,434,57,435,62,362,83"/>
+<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="417,81,571,121"/>
+<area shape="poly" title=" " alt="" coords="366,98,404,98,404,103,366,103"/>
+<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="423,145,565,171"/>
+<area shape="poly" title=" " alt="" coords="362,118,435,139,434,144,360,123"/>
+<area shape="poly" title=" " alt="" coords="557,32,604,26,605,31,558,38"/>
+<area shape="poly" title=" " alt="" coords="343,168,428,189,427,194,342,173"/>
+<area shape="poly" title=" " alt="" coords="370,155,409,155,409,161,370,161"/>
 </map>
 </div>
 
@@ -967,95 +1088,72 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Generates a reverse-call trampoline (callback) from a signature string. </p>
-<p>This function parses a signature string to create a native, C-callable function pointer that invokes the provided user handler. It simplifies the creation of callbacks by managing the underlying <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects automatically.</p>
+<p>This function parses a v1.0 signature string to create a native, C-callable function pointer that invokes the provided user handler. It simplifies the creation of callbacks by managing the underlying <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects automatically.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the callback's signature. Format: "arg1,arg2;variadic_arg=&gt;ret_type". Supports packed structs. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the callback's signature. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's C callback handler. Its signature must start with <code>infix_context_t*</code>, followed by the types described in the signature string. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">user_data</td><td>A user-defined pointer for passing state to the handler, accessible inside the handler via <code>infix_reverse_get_user_data</code>. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd>
+<dd>
+<code>INFIX_ERROR_INVALID_ARGUMENT</code> if the signature string is malformed or contains unresolved named types. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The returned context must be freed with <code>infix_reverse_destroy</code>.</dd></dl>
-<p>Generates a reverse-call trampoline (callback) from a signature string.</p>
-<p>This is the primary, recommended public API function for creating a <b>reverse trampoline</b>, also known as a <b>callback</b>. It provides a convenient and memory-safe wrapper around the lower-level FFI functions, automating the entire process from string parsing to the JIT compilation of the callback stub.</p>
-<p>A reverse trampoline is a native, C-callable function pointer that, when invoked by C code, redirects the call to a user-provided handler function (the <code>user_callback_fn</code>). The JIT-compiled stub is responsible for marshalling the arguments from the native C calling convention (registers and stack) into a generic format that can be passed to the user's handler.</p>
-<p>This function is essential for interoperability with C libraries that require function pointers for callbacks, notifications, or event handling.</p>
-<h3><a class="anchor" id="autotoc_md226"></a>
-Process Walkthrough:</h3>
-<ol type="1">
-<li><b>Parse Signature</b>: It first calls <code>infix_signature_parse</code> to parse the input string. This step creates a temporary memory arena and populates it with the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph that describes the callback's return type and argument types.</li>
-<li><b>Generate Trampoline</b>: If parsing succeeds, it passes the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> graph, along with the user-provided callback function and user data, to the core <code>infix_reverse_create_manual</code> function. This step JIT-compiles the callable stub and sets up the internal context required for the callback mechanism.</li>
-<li><b>Automatic Cleanup</b>: Just like its forward-trampoline counterpart, this function ensures that the temporary arena and all the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects created during parsing are destroyed before returning. This happens regardless of whether the trampoline generation succeeds or fails, guaranteeing that no memory is leaked.</li>
-</ol>
+<p>This function parses a v1.0 signature string to create a native, C-callable function pointer that invokes the provided user handler.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, this will be populated with a pointer to a newly allocated <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> handle. This handle contains the executable code pointer and all the context for the callback. The caller is responsible for freeing this handle with <code><a class="el" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT-compiled stub, and its context.">infix_reverse_destroy()</a></code>.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the C callback's signature. The format is <code>"arg1,arg2;variadic_arg=&gt;ret_type"</code>. Example: <code>"i,i=&gt;i"</code> for a callback that takes two <code>int</code>s and returns an <code>int</code>.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's actual C handler. Its C signature must logically match the signature described in the string.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">user_data</td><td>An arbitrary, opaque pointer that will be associated with this callback. It can be retrieved later using <code><a class="el" href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3" title="Retrieves the user_data stored with a reverse trampoline.">infix_reverse_get_user_data()</a></code>. This is useful for passing state to a stateful callback.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the callback's signature. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's C callback handler. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">user_data</td><td>A user-defined pointer for passing state to the handler. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>INFIX_SUCCESS</code> if the callback trampoline was successfully created. </dd>
-<dd>
-Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if any of the <code>out</code> parameters are null or if the signature string is malformed. </dd>
-<dd>
-Returns <code>INFIX_ERROR_ALLOCATION_FAILED</code> if any internal memory allocation fails. </dd>
-<dd>
-Returns other <code>infix_status</code> error codes on failures during the JIT compilation process.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Ownership</b>: The caller is responsible for destroying the <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> object returned via the <code>out_context</code> parameter by calling <code><a class="el" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT-compiled stub, and its context.">infix_reverse_destroy()</a></code>. All intermediate memory used for parsing the signature is managed automatically.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts.">infix_signature_parse()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse-call trampoline (a native callable function pointer for a callback).">infix_reverse_create_manual()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT-compiled stub, and its context.">infix_reverse_destroy()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#ga3b75e8481ac13d11faa15046fc4adb66" title="Retrieves the executable code pointer from a reverse trampoline.">infix_reverse_get_code()</a> </dd>
-<dd>
-<a class="el" href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3" title="Retrieves the user_data stored with a reverse trampoline.">infix_reverse_get_user_data()</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The returned context must be freed with <code>infix_reverse_destroy</code>. </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph.png" border="0" usemap="#agroup__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph" alt=""/></div>
 <map name="agroup__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph" id="agroup__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph">
-<area shape="rect" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,50,160,75"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="665,138,815,163"/>
-<area shape="poly" title=" " alt="" coords="124,47,215,25,338,7,406,3,476,5,545,15,612,34,646,52,677,76,723,125,719,129,674,80,643,57,610,39,544,20,475,11,406,8,338,12,216,30,126,52"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,269,363,309"/>
-<area shape="poly" title=" " alt="" coords="97,73,259,256,255,260,93,77"/>
-<area shape="rect" href="group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="430,50,591,75"/>
-<area shape="poly" title=" " alt="" coords="160,60,416,60,416,65,160,65"/>
-<area shape="poly" title=" " alt="" coords="303,267,348,224,377,202,410,185,470,165,533,153,595,146,650,144,650,150,595,152,534,158,472,170,412,190,380,207,351,228,306,270"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="677,416,803,442"/>
-<area shape="poly" title=" " alt="" coords="303,307,348,357,378,382,412,401,475,422,542,432,606,436,663,434,663,439,606,441,541,438,474,427,410,406,375,386,344,361,299,311"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="869,251,1001,276"/>
-<area shape="poly" title=" " alt="" coords="363,283,411,281,855,264,855,269,411,286,363,288"/>
-<area shape="rect" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="435,466,587,506"/>
-<area shape="poly" title=" " alt="" coords="300,308,344,375,376,412,412,445,433,458,430,463,409,450,372,416,340,378,295,311"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="669,302,811,327"/>
-<area shape="poly" title=" " alt="" coords="363,291,655,307,655,312,363,296"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="433,352,588,392"/>
-<area shape="poly" title=" " alt="" coords="341,306,443,344,442,349,340,311"/>
-<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="429,531,592,556"/>
-<area shape="poly" title=" " alt="" coords="294,308,308,352,331,408,366,467,388,493,412,516,422,523,419,527,409,520,384,497,361,470,327,411,303,354,289,310"/>
-<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic pointer." alt="" coords="417,99,604,124"/>
-<area shape="poly" title=" " alt="" coords="297,267,341,205,373,171,409,141,438,127,441,131,412,146,376,175,345,209,301,270"/>
-<area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="411,200,611,226"/>
-<area shape="poly" title=" " alt="" coords="341,266,410,242,456,227,458,232,412,247,343,271"/>
-<area shape="poly" title=" " alt="" coords="795,414,820,401,851,375,879,345,918,287,922,290,883,348,855,379,823,406,798,418"/>
-<area shape="poly" title=" " alt="" coords="531,350,714,170,718,174,534,353"/>
-<area shape="poly" title=" " alt="" coords="589,388,676,410,675,415,587,393"/>
-<area shape="poly" title=" " alt="" coords="587,350,675,328,676,333,589,355"/>
-<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="663,352,817,392"/>
-<area shape="poly" title=" " alt="" coords="588,369,649,369,649,374,588,374"/>
-<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="659,531,821,556"/>
-<area shape="poly" title=" " alt="" coords="593,541,645,541,645,546,593,546"/>
-<area shape="poly" title=" " alt="" coords="574,72,612,84,662,105,706,128,704,133,660,110,610,89,573,78"/>
-<area shape="poly" title=" " alt="" coords="592,61,646,67,706,78,766,96,823,123,856,148,884,179,923,237,919,240,880,182,852,152,820,127,764,101,704,83,645,72,591,66"/>
-<area shape="poly" title=" " alt="" coords="593,73,612,84,632,104,642,125,649,147,661,173,727,289,722,291,656,175,644,149,637,127,628,108,609,88,590,77"/>
+<area shape="rect" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,407,160,433"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="869,117,1001,142"/>
+<area shape="poly" title=" " alt="" coords="88,406,125,338,156,289,193,236,238,182,289,131,347,86,410,51,468,28,520,12,568,5,613,3,659,8,708,18,822,51,848,61,873,75,912,106,909,110,870,80,846,66,820,56,706,23,658,13,613,9,568,10,521,18,470,33,412,56,350,90,293,135,242,186,198,240,160,292,130,340,93,408"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="665,497,815,522"/>
+<area shape="poly" title=" " alt="" coords="139,430,263,456,411,481,536,495,651,503,650,508,536,500,410,487,262,462,138,435"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,285,363,325"/>
+<area shape="poly" title=" " alt="" coords="105,405,236,330,239,335,107,410"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="430,547,591,573"/>
+<area shape="poly" title=" " alt="" coords="96,431,141,479,173,505,209,526,260,543,314,554,367,560,416,562,416,567,367,565,313,559,259,548,207,531,170,510,138,483,92,435"/>
+<area shape="poly" title=" " alt="" coords="296,283,340,224,372,193,409,168,466,145,526,129,586,118,647,111,761,109,856,116,855,121,761,115,647,117,587,123,527,134,468,150,412,173,375,197,344,228,301,287"/>
+<area shape="poly" title=" " alt="" coords="363,306,432,311,505,320,569,334,594,343,612,354,627,369,634,386,638,419,642,451,648,467,661,482,668,488,664,492,657,486,644,470,637,453,633,419,629,387,622,372,609,358,592,348,567,339,504,326,431,317,363,311"/>
+<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="677,167,803,193"/>
+<area shape="poly" title=" " alt="" coords="303,283,348,241,377,220,410,203,474,184,541,174,606,170,663,171,663,176,606,175,542,179,475,189,412,208,380,224,351,245,306,287"/>
+<area shape="rect" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="435,368,587,408"/>
+<area shape="poly" title=" " alt="" coords="341,323,443,361,442,366,340,328"/>
+<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="669,547,811,573"/>
+<area shape="poly" title=" " alt="" coords="291,325,300,380,320,452,335,490,356,526,381,557,412,583,447,600,484,610,523,613,562,611,637,596,697,576,699,581,638,601,563,616,523,618,483,615,445,605,409,588,377,561,351,529,331,492,315,454,294,381,286,326"/>
+<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="433,432,588,472"/>
+<area shape="poly" title=" " alt="" coords="305,324,351,371,380,396,412,418,424,424,421,429,409,422,377,400,347,375,302,328"/>
+<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="429,66,592,91"/>
+<area shape="poly" title=" " alt="" coords="292,284,308,247,333,200,367,151,409,109,434,94,436,99,412,113,371,154,337,202,313,249,297,286"/>
+<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="417,218,604,243"/>
+<area shape="poly" title=" " alt="" coords="330,283,410,252,437,244,438,250,412,257,332,288"/>
+<area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="411,267,611,293"/>
+<area shape="poly" title=" " alt="" coords="362,294,397,290,397,296,363,299"/>
+<area shape="poly" title=" " alt="" coords="789,165,872,143,873,148,791,170"/>
+<area shape="poly" title=" " alt="" coords="589,469,676,491,675,496,587,474"/>
+<area shape="poly" title=" " alt="" coords="587,432,609,418,633,394,655,368,690,309,714,252,729,206,734,207,719,254,694,311,659,371,637,398,612,422,590,436"/>
+<area shape="poly" title=" " alt="" coords="544,470,597,501,660,532,681,541,679,546,658,537,595,506,542,474"/>
+<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="663,432,817,472"/>
+<area shape="poly" title=" " alt="" coords="588,449,649,449,649,455,588,455"/>
+<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="659,66,821,91"/>
+<area shape="poly" title=" " alt="" coords="593,76,645,76,645,81,593,81"/>
+<area shape="poly" title=" " alt="" coords="569,545,668,523,669,528,570,550"/>
+<area shape="poly" title=" " alt="" coords="592,557,655,557,655,563,592,563"/>
 </map>
 </div>
 
@@ -1120,12 +1218,12 @@ Here is the call graph for this function:</div>
 <p>Generates a reverse-call trampoline (a native callable function pointer for a callback). </p>
 <p>Creates a native C function pointer that, when called, will invoke a user-provided C handler function, marshalling the arguments correctly.</p>
 <p><b>CRITICAL</b>: The C handler function you provide (<code>user_callback_fn</code>) will <b>always</b> receive a pointer to its <code>infix_context_t</code> context as its <b>first argument</b>. The subsequent arguments will match the types described in the signature string. This context-passing mechanism allows you to create stateful callbacks.</p>
-<h3><a class="anchor" id="autotoc_md166"></a>
+<h3><a class="anchor" id="autotoc_md185"></a>
 Handler Signature Example</h3>
 <p>If your <code>infix</code> signature string is <code>"i,d*=&gt;v"</code>, which corresponds to a C type of <code>void (*)(int, double*)</code>, your C handler function <b>must</b> have the following signature: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> my_c_handler(<a class="code hl_struct" href="structinfix__reverse__t.html">infix_context_t</a>* context, <span class="keywordtype">int</span> arg1, <span class="keywordtype">double</span>* arg2);</div>
 <div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:87</div></div>
 </div><!-- fragment --><p> You can then retrieve your state within the handler by calling: </p><div class="fragment"><div class="line">my_state_t* state = (my_state_t*)<a class="code hl_function" href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a>(context);</div>
-<div class="ttc" id="agroup__high__level__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:533</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:593</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
@@ -1175,7 +1273,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="159,206,217,191,218,197,161,211"/>
 <area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="227,330,389,356"/>
 <area shape="poly" title=" " alt="" coords="108,247,153,282,209,315,231,324,229,329,207,320,150,286,105,251"/>
-<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic pointer." alt="" coords="215,380,401,405"/>
+<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="215,380,401,405"/>
 <area shape="poly" title=" " alt="" coords="98,247,142,307,174,339,209,366,221,372,219,377,207,371,170,343,138,310,94,250"/>
 <area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="208,429,408,454"/>
 <area shape="poly" title=" " alt="" coords="94,248,110,284,134,330,168,377,210,416,218,421,216,426,206,420,164,380,130,333,105,287,89,250"/>
@@ -1335,8 +1433,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="gad6969bc86a3ab3c3352e35c376e7b167" name="gad6969bc86a3ab3c3352e35c376e7b167"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad6969bc86a3ab3c3352e35c376e7b167">&#9670;&#160;</a></span>infix_signature_parse()</h2>
+<a id="ga607db171cf05343456f835000053dc19" name="ga607db171cf05343456f835000053dc19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga607db171cf05343456f835000053dc19">&#9670;&#160;</a></span>infix_signature_parse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1362,8 +1460,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> ***&#160;</td>
-          <td class="paramname"><em>out_arg_types</em>, </td>
+          <td class="paramtype"><a class="el" href="infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **&#160;</td>
+          <td class="paramname"><em>out_args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1386,7 +1484,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Parses a full function signature string into its constituent <a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a> parts. </p>
-<p>This function provides direct access to the signature parser. It creates a dedicated arena to hold the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph for the entire function signature. This is an advanced function for callers who need to inspect the type information before or after generating a trampoline, or for those who wish to use the lower-level <code>infix_forward_create_manual</code> function directly.</p>
+<p>This function provides direct access to the v1.0 signature parser. It creates a dedicated memory arena to hold the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph for the entire function signature. This is an advanced function for callers who need to inspect type information before generating a trampoline, or for tooling that needs to understand a C function's data contract.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. See the project's documentation for the full signature language. </td></tr>
@@ -1404,53 +1502,36 @@ Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if any parameters are null or 
 <dd>
 Returns <code>INFIX_ERROR_ALLOCATION_FAILED</code> if the internal arena could not be created.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd><b>Memory Management:</b> On success, this function transfers ownership of the newly created arena to the caller. A single call to <code>infix_arena_destroy(*out_arena)</code> is sufficient to free all memory associated with the parsed types. If the function fails, <code>*out_arena</code> will be set to <code>NULL</code>.</dd></dl>
-<p>This is a key high-level function that acts as the primary bridge from the user-friendly string format to the library's internal <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> graph representation. It is designed for advanced use cases where the caller needs to inspect the parsed type information before generating a trampoline, or for manually driving the FFI generation process.</p>
-<p>For simpler use cases, it is recommended to use <code>infix_forward_create</code> or <code>infix_reverse_create</code>, which wrap this function and handle all memory management automatically.</p>
-<h3><a class="anchor" id="autotoc_md224"></a>
-Parsing Process Walkthrough:</h3>
-<p>The function executes in a well-defined sequence:</p><ol type="1">
-<li><b>Locate Return Separator</b>: It first performs a nest-aware scan of the input string to find the top-level return separator (<code>=&gt;</code>). This is critical to correctly distinguish the main separator from any <code>=&gt;</code> characters that might appear inside a function pointer argument, e.g., <code>(i=&gt;v),i=&gt;v</code>.</li>
-<li><b>Parse Return Type</b>: Once the signature is split, the portion of the string <em>after</em> the <code>=&gt;</code> is parsed by recursively calling <code>parse_type</code>.</li>
-<li><b>Tokenize Arguments</b>: The portion of the string <em>before</em> the <code>=&gt;</code> is then processed. It is tokenized by splitting on the argument separator (<code>,</code>) and the variadic separator (<code>;</code>). This tokenization is also nest-aware to correctly handle commas inside complex aggregate types like <code>{i,d}</code>.</li>
-<li><b>Parse Each Argument</b>: The <code>parse_type</code> function is called on each resulting token to generate its corresponding <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object.</li>
-<li><b>Assemble Final Structures</b>: The parsed <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects for the arguments are collected from a temporary linked list into a final, contiguous array. All allocations are made from the single arena created at the start of the process.</li>
-</ol>
+<p>This function provides direct access to the v1.0 signature parser. It creates a dedicated memory arena to hold the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph for the entire function signature.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. See the project's main documentation for the full signature language grammar. Example: <code>"{i,d*}, [10]c; p(1,1){c@0} =&gt; (i=&gt;v)*</code></td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, this parameter will be populated with a pointer to the newly created <code><a class="el" href="structinfix__arena__t.html">infix_arena_t</a></code>. This arena owns the memory for the <em>entire</em> parsed type graph, including the return type, the argument types, and the array that holds the argument type pointers. On failure, this will be <code>NULL</code>. <b>The caller is responsible for destroying this arena</b> with <code><a class="el" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it.">infix_arena_destroy()</a></code>.</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_ret_type</td><td>On success, this will point to the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for the return value. This pointer is an allocation within the <code>*out_arena</code> and is valid only for the lifetime of that arena.</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_arg_types</td><td>On success, this will point to an array of <code>infix_type*</code> pointers, one for each argument. This array and the types it points to are all allocated within the <code>*out_arena</code>.</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_args</td><td>On success, this will be set to the total number of parsed arguments (both fixed and variadic).</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_fixed_args</td><td>On success, this will be set to the number of non-variadic arguments (i.e., the arguments that appear before a <code>;</code> separator).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, will be populated with a pointer to the new arena. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_ret_type</td><td>On success, will point to the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for the return value. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_args</td><td>On success, will point to an array of <code>infix_function_argument</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_args</td><td>On success, will be set to the total number of arguments (including <code>...</code>). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_fixed_args</td><td>On success, will be set to the number of non-variadic arguments. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>INFIX_SUCCESS</code> if the entire signature was parsed successfully. </dd>
-<dd>
-Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if any of the <code>out</code> parameters are null, or if the signature string is empty, malformed, or contains syntax errors. </dd>
-<dd>
-Returns <code>INFIX_ERROR_ALLOCATION_FAILED</code> if the internal arena or any of its sub-allocations could not be completed.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Ownership</b>: On a successful return (<code>INFIX_SUCCESS</code>), this function transfers ownership of the newly created arena to the caller. A single call to <code>infix_arena_destroy(*out_arena)</code> is the correct and only way to free all memory associated with the parsed types. If the function fails, it performs its own cleanup, and <code>*out_arena</code> will be set to <code>NULL</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>INFIX_SUCCESS</code> if parsing is successful. </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="group__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_cgraph.png" border="0" usemap="#agroup__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_cgraph" alt=""/></div>
-<map name="agroup__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_cgraph" id="agroup__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_cgraph">
-<area shape="rect" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="5,55,167,80"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="224,5,356,31"/>
-<area shape="poly" title=" " alt="" coords="139,52,223,31,224,37,140,57"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="219,55,361,80"/>
-<area shape="poly" title=" " alt="" coords="167,65,205,65,205,70,167,70"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="215,104,365,129"/>
-<area shape="poly" title=" " alt="" coords="140,77,224,98,223,103,139,83"/>
+<div class="center"><img src="group__high__level__api_ga607db171cf05343456f835000053dc19_cgraph.png" border="0" usemap="#agroup__high__level__api_ga607db171cf05343456f835000053dc19_cgraph" alt=""/></div>
+<map name="agroup__high__level__api_ga607db171cf05343456f835000053dc19_cgraph" id="agroup__high__level__api_ga607db171cf05343456f835000053dc19_cgraph">
+<area shape="rect" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="5,31,167,56"/>
+<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="219,5,361,31"/>
+<area shape="poly" title=" " alt="" coords="167,31,204,26,205,31,167,36"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="215,55,365,80"/>
+<area shape="poly" title=" " alt="" coords="167,50,201,54,200,59,167,55"/>
 </map>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="group__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_icgraph.png" border="0" usemap="#agroup__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_icgraph" alt=""/></div>
-<map name="agroup__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_icgraph" id="agroup__high__level__api_gad6969bc86a3ab3c3352e35c376e7b167_icgraph">
+<div class="center"><img src="group__high__level__api_ga607db171cf05343456f835000053dc19_icgraph.png" border="0" usemap="#agroup__high__level__api_ga607db171cf05343456f835000053dc19_icgraph" alt=""/></div>
+<map name="agroup__high__level__api_ga607db171cf05343456f835000053dc19_icgraph" id="agroup__high__level__api_ga607db171cf05343456f835000053dc19_icgraph">
 <area shape="rect" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="236,55,397,80"/>
 <area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="19,5,174,31"/>
 <area shape="poly" title=" " alt="" coords="245,54,154,33,155,28,247,49"/>
@@ -1496,12 +1577,12 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Parses a signature string representing a single data type. </p>
-<p>This is a specialized version of the parser for use cases like data marshalling, serialization, or dynamic type inspection, where you need to describe a single data type rather than a full function signature. It creates a dedicated arena to hold the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph for the specified type.</p>
+<p>This is a specialized version of the v1.0 parser for use cases like data marshalling, serialization, or dynamic type inspection, where you need to describe a single data type rather than a full function signature. It creates a dedicated arena to hold the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph for the specified type.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. This pointer is valid for the lifetime of the returned arena. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, will point to the new arena that owns the type object graph. The caller is responsible for destroying this arena with <code><a class="el" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it.">infix_arena_destroy()</a></code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A string describing the data type (e.g., "i", "d*", "{s@0;i@4}").</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A string describing the data type (e.g., <code>"int32"</code>, <code>"*void"</code>, <code>"{int, float}"</code>).</td></tr>
   </table>
   </dd>
 </dl>
@@ -1510,33 +1591,7 @@ Here is the caller graph for this function:</div>
 Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if any parameters are null or the signature string is malformed or contains trailing characters. </dd>
 <dd>
 Returns <code>INFIX_ERROR_ALLOCATION_FAILED</code> if the internal arena could not be created.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Management:</b> On success, the caller takes ownership of the arena returned in <code>*out_arena</code> and is responsible for its destruction.</dd></dl>
-<p>This is a high-level public API function that serves as a specialized entry point into the parsing engine. Its purpose is to parse a string that represents a single, complete data type (such as <code>"i"</code>, <code>"d*"</code>, or <code>"{s,[10]c}"</code>), rather than a full function signature.</p>
-<p>This function is ideal for use cases like data marshalling, serialization, dynamic type inspection, or any scenario where an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph is needed to describe data outside the context of a function call.</p>
-<h3><a class="anchor" id="autotoc_md223"></a>
-Process Walkthrough:</h3>
-<ol type="1">
-<li><b>Input Validation</b>: It performs initial null checks on the input parameters.</li>
-<li><b>Arena Creation</b>: It creates a new, dedicated <code><a class="el" href="structinfix__arena__t.html">infix_arena_t</a></code> to own all memory for the resulting <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph.</li>
-<li><b>Parser Invocation</b>: It initializes a <code><a class="el" href="structparser__state.html">parser_state</a></code> and calls the core <code>parse_type</code> function to perform the actual parsing of the signature string.</li>
-<li><b>Completeness Check</b>: After <code>parse_type</code> returns, this function performs a crucial validation step: it checks if the <em>entire</em> input string has been consumed. If any characters remain (e.g., junk after a valid type like <code>"i*d"</code>), it is considered a syntax error. A valid type signature must describe a single, complete type and nothing more.</li>
-<li><b>Ownership Transfer</b>: On success, it populates the <code>out_type</code> and <code>out_arena</code> pointers and transfers ownership of the arena to the caller.</li>
-<li><b>Cleanup on Failure</b>: If parsing fails at any stage, it ensures the created arena is properly destroyed before returning, preventing any memory leaks.</li>
-</ol>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> that represents the parsed signature. This pointer is an allocation within the returned arena and is valid only for its lifetime.</td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, this will point to the new <code><a class="el" href="structinfix__arena__t.html">infix_arena_t</a></code> that owns the entire <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> object graph. The caller is responsible for destroying this arena with <code><a class="el" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it.">infix_arena_destroy()</a></code>. On failure, this will be set to <code>NULL</code>.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the data type to be parsed. e.g., <code>"i"</code>, <code>"d*"</code>, <code>"{s,[10]c}"</code>, <code>"[10]{name:c*, id:i}"</code></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <code>INFIX_SUCCESS</code> if the entire string was successfully parsed into a single, valid type. </dd>
-<dd>
-Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if any parameters are null, the signature string is malformed, or if the string contains trailing characters after a valid type definition. </dd>
-<dd>
-Returns <code>INFIX_ERROR_ALLOCATION_FAILED</code> if the internal memory arena could not be created.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Management</b>: On a successful return (<code>INFIX_SUCCESS</code>), the caller assumes ownership of the arena returned via the <code>out_arena</code> parameter. A single call to <code>infix_arena_destroy(*out_arena)</code> is the necessary and sufficient action to free all memory associated with the parsed type graph. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd><b>Memory Management:</b> On success, the caller takes ownership of the arena returned in <code>*out_arena</code> and is responsible for its destruction. </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1559,6 +1614,41 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="222,21,188,21,188,15,222,15"/>
 </map>
 </div>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="gaa9edbcf03dc1eadffbde6d90c23db918" name="gaa9edbcf03dc1eadffbde6d90c23db918"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa9edbcf03dc1eadffbde6d90c23db918">&#9670;&#160;</a></span>element_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a>* infix_type_t::element_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The type of elements in the array. </p>
+<p>The type of the elements in the vector. </p>
+
+</div>
+</div>
+<a id="ga3c4a320aede1d81a156ef8dfec4109c0" name="ga3c4a320aede1d81a156ef8dfec4109c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3c4a320aede1d81a156ef8dfec4109c0">&#9670;&#160;</a></span>num_elements</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t infix_type_t::num_elements</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The number of elements in the array. </p>
+<p>The number of elements in the vector. </p>
 
 </div>
 </div>

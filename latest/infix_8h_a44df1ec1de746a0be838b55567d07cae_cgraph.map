@@ -1,0 +1,5 @@
+<map id="infix_type_create_enum" name="infix_type_create_enum">
+<area shape="rect" id="Node000001" title="Creates a new infix_type for an enum from an arena." alt="" coords="5,5,184,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="232,5,364,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,15,218,15,218,21,184,21"/>
+</map>

@@ -1,7 +1,10 @@
 <map id="infix_struct_member_t" name="infix_struct_member_t">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,173,31"/>
-<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title=" " alt="" coords="40,103,139,128"/>
-<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="53,40,40,56,38,68,44,80,69,100,65,105,40,83,33,69,35,54,49,37"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,90,107,73,107,55,96,32,100,30,112,54,112,73,106,91"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="153,105,162,108,165,116,157,125,139,128,138,123,155,120,160,115,158,112,151,110"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="17,5,185,31"/>
+<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title=" " alt="" coords="52,117,151,143"/>
+<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="65,40,52,56,50,62,52,68,68,95,89,115,85,119,64,98,47,70,45,62,47,53,61,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,104,119,80,119,55,108,32,112,30,124,54,124,81,117,106"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="166,117,174,122,177,130,169,141,151,145,150,140,166,137,172,130,170,126,163,122"/>
+<area shape="rect" id="Node000003" href="$structinfix__function__argument__t.html" title="Describes a single argument to a function, pairing an optional name with its type." alt="" coords="5,229,197,255"/>
+<area shape="poly" id="edge5_Node000003_Node000002" title=" " alt="" coords="86,155,68,191,68,205,76,217,87,227,83,231,72,220,63,206,63,190,81,153"/>
+<area shape="poly" id="edge4_Node000002_Node000003" title=" " alt="" coords="101,215,101,205,100,143,105,143,107,205,106,216"/>
 </map>

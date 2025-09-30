@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xmm_5fsave_5farea_5foffset_0',['xmm_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662',1,'infix_reverse_call_frame_layout']]]
+  ['vector_5finfo_0',['vector_info',['../group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t::vector_info'],['../group__high__level__api.html#gaac16a3039475a6fdce57b6599014b2da',1,'infix_type_t::@0::vector_info']]]
 ];

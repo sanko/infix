@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: t/000_core/001_primitives.c File Reference</title>
+<title>infix FFI Library: t/001_primitives.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_75a01b229474ab4722425a88156bb54e.html">t</a></li><li class="navelem"><a class="el" href="dir_5bec6e2a16d2d4cdf81e36f7db99abba.html">000_core</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_75a01b229474ab4722425a88156bb54e.html">t</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -90,9 +90,9 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 001_primitives.c:</div>
 <div class="dyncontent">
-<div class="center"><img src="001__primitives_8c__incl.png" border="0" usemap="#at_2000__core_2001__primitives_8c" alt=""/></div>
-<map name="at_2000__core_2001__primitives_8c" id="at_2000__core_2001__primitives_8c">
-<area shape="rect" title="Tests FFI functionality with all supported primitive C types." alt="" coords="257,5,459,31"/>
+<div class="center"><img src="001__primitives_8c__incl.png" border="0" usemap="#at_2001__primitives_8c" alt=""/></div>
+<map name="at_2001__primitives_8c" id="at_2001__primitives_8c">
+<area shape="rect" title="Tests FFI functionality with all supported primitive C types." alt="" coords="289,5,427,31"/>
 <area shape="rect" href="double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
 <area shape="poly" title=" " alt="" coords="315,33,146,78,145,73,314,28"/>
 <area shape="rect" href="infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="196,79,365,104"/>
@@ -229,7 +229,8 @@ Variables</h2></td></tr>
 <li>Calls the native C function through the generated trampoline.</li>
 <li>Asserts that the value returned from the FFI call is identical to the value that was passed in.</li>
 </ol>
-<p>This process validates that the library correctly handles the size, alignment, and ABI-specific calling conventions for every primitive type on the target platform, forming the foundational layer of the entire test suite. </p>
+<p>This process validates that the library correctly handles the size, alignment, and ABI-specific calling conventions for every primitive type on the target platform, forming the foundational layer of the entire test suite.</p>
+<p>These tests use the manual API to test primitive types to verify functionality without bringing the signature system in. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a7b9434662a6bdbb629296e28900aaf75" name="a7b9434662a6bdbb629296e28900aaf75"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b9434662a6bdbb629296e28900aaf75">&#9670;&#160;</a></span>TEST_PRIMITIVE</h2>
@@ -295,17 +296,17 @@ Variables</h2></td></tr>
 <div class="line">            cif((<span class="keywordtype">void</span> *)passthrough_func, &amp;result, args);                                                          \</div>
 <div class="line">            ok(result == input, <span class="stringliteral">&quot;Value is correct (&quot;</span> format_specifier <span class="stringliteral">&quot; == &quot;</span> format_specifier <span class="stringliteral">&quot;)&quot;</span>, input, result); \</div>
 <div class="line">        }                                                                                                          \</div>
-<div class="line">        <span class="keywordflow">else</span> {                                                                                                     \</div>
+<div class="line">        else                                                                                                       \</div>
 <div class="line">            fail(<span class="stringliteral">&quot;Trampoline code pointer was NULL&quot;</span>);                                                              \</div>
-<div class="line">        }                                                                                                          \</div>
+<div class="line">                                                                                                                   \</div>
 <div class="line">        infix_forward_destroy(trampoline);                                                                         \</div>
 <div class="line">    }</div>
 <div class="ttc" id="agroup__high__level__api_html_ga7b043799f03cb7e6d223991828b27822"><div class="ttname"><a href="group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:204</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:326</div></div>
-<div class="ttc" id="agroup__high__level__api_html_gace742bcf7fd3c3978f951dfb025e0a2d"><div class="ttname"><a href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d">infix_forward_create_manual</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t)</div><div class="ttdoc">Generates a forward-call trampoline for a given function signature.</div><div class="ttdef"><b>Definition</b> trampoline.c:230</div></div>
-<div class="ttc" id="ainfix_8h_html_a3faff0adbe3b7f6df3be210295ec3a81"><div class="ttname"><a href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *target_function, void *return_value, void **args)</div><div class="ttdoc">The signature for a generic forward-call trampoline, the &quot;Call InterFace&quot; function.</div><div class="ttdef"><b>Definition</b> infix.h:320</div></div>
-<div class="ttc" id="ainfix_8h_html_a8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">An enumeration of all possible success or failure codes from the public API.</div><div class="ttdef"><b>Definition</b> infix.h:325</div></div>
-<div class="ttc" id="ainfix_8h_html_ae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="infix_8h.html#ae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:105</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:364</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gace742bcf7fd3c3978f951dfb025e0a2d"><div class="ttname"><a href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d">infix_forward_create_manual</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t)</div><div class="ttdoc">Generates a forward-call trampoline for a given function signature.</div><div class="ttdef"><b>Definition</b> trampoline.c:274</div></div>
+<div class="ttc" id="ainfix_8h_html_a3faff0adbe3b7f6df3be210295ec3a81"><div class="ttname"><a href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *target_function, void *return_value, void **args)</div><div class="ttdoc">The signature for a generic forward-call trampoline, the &quot;Call InterFace&quot; function.</div><div class="ttdef"><b>Definition</b> infix.h:358</div></div>
+<div class="ttc" id="ainfix_8h_html_a8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">An enumeration of all possible success or failure codes from the public API.</div><div class="ttdef"><b>Definition</b> infix.h:363</div></div>
+<div class="ttc" id="ainfix_8h_html_ae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="infix_8h.html#ae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:107</div></div>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:77</div></div>
 <div class="ttc" id="astructinfix__type_html"><div class="ttname"><a href="structinfix__type.html">infix_type</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div></div>
 </div><!-- fragment -->

@@ -1,37 +1,37 @@
 <map id="infix_reverse_create" name="infix_reverse_create">
-<area shape="rect" id="Node000001" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,50,160,75"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="665,138,815,163"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,47,215,25,338,7,406,3,476,5,545,15,612,34,646,52,677,76,723,125,719,129,674,80,643,57,610,39,544,20,475,11,406,8,338,12,216,30,126,52"/>
-<area shape="rect" id="Node000003" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,269,363,309"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,73,259,256,255,260,93,77"/>
-<area shape="rect" id="Node000014" href="$group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="430,50,591,75"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="160,60,416,60,416,65,160,65"/>
-<area shape="poly" id="edge8_Node000003_Node000002" title=" " alt="" coords="303,267,348,224,377,202,410,185,470,165,533,153,595,146,650,144,650,150,595,152,534,158,472,170,412,190,380,207,351,228,306,270"/>
-<area shape="rect" id="Node000004" href="$trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="677,416,803,442"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="303,307,348,357,378,382,412,401,475,422,542,432,606,436,663,434,663,439,606,441,541,438,474,427,410,406,375,386,344,361,299,311"/>
-<area shape="rect" id="Node000005" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="869,251,1001,276"/>
-<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="363,283,411,281,855,264,855,269,411,286,363,288"/>
-<area shape="rect" id="Node000006" href="$trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="435,466,587,506"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="300,308,344,375,376,412,412,445,433,458,430,463,409,450,372,416,340,378,295,311"/>
-<area shape="rect" id="Node000007" href="$group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="669,302,811,327"/>
-<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="363,291,655,307,655,312,363,296"/>
-<area shape="rect" id="Node000008" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="433,352,588,392"/>
-<area shape="poly" id="edge9_Node000003_Node000008" title=" " alt="" coords="341,306,443,344,442,349,340,311"/>
-<area shape="rect" id="Node000010" href="$group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="429,531,592,556"/>
-<area shape="poly" id="edge14_Node000003_Node000010" title=" " alt="" coords="294,308,308,352,331,408,366,467,388,493,412,516,422,523,419,527,409,520,384,497,361,470,327,411,303,354,289,310"/>
-<area shape="rect" id="Node000012" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic pointer." alt="" coords="417,99,604,124"/>
-<area shape="poly" id="edge16_Node000003_Node000012" title=" " alt="" coords="297,267,341,205,373,171,409,141,438,127,441,131,412,146,376,175,345,209,301,270"/>
-<area shape="rect" id="Node000013" href="$types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="411,200,611,226"/>
-<area shape="poly" id="edge17_Node000003_Node000013" title=" " alt="" coords="341,266,410,242,456,227,458,232,412,247,343,271"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="795,414,820,401,851,375,879,345,918,287,922,290,883,348,855,379,823,406,798,418"/>
-<area shape="poly" id="edge13_Node000008_Node000002" title=" " alt="" coords="531,350,714,170,718,174,534,353"/>
-<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="589,388,676,410,675,415,587,393"/>
-<area shape="poly" id="edge12_Node000008_Node000007" title=" " alt="" coords="587,350,675,328,676,333,589,355"/>
-<area shape="rect" id="Node000009" href="$trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="663,352,817,392"/>
-<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="588,369,649,369,649,374,588,374"/>
-<area shape="rect" id="Node000011" href="$group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="659,531,821,556"/>
-<area shape="poly" id="edge15_Node000010_Node000011" title=" " alt="" coords="593,541,645,541,645,546,593,546"/>
-<area shape="poly" id="edge21_Node000014_Node000002" title=" " alt="" coords="574,72,612,84,662,105,706,128,704,133,660,110,610,89,573,78"/>
-<area shape="poly" id="edge19_Node000014_Node000005" title=" " alt="" coords="592,61,646,67,706,78,766,96,823,123,856,148,884,179,923,237,919,240,880,182,852,152,820,127,764,101,704,83,645,72,591,66"/>
-<area shape="poly" id="edge20_Node000014_Node000007" title=" " alt="" coords="593,73,612,84,632,104,642,125,649,147,661,173,727,289,722,291,656,175,644,149,637,127,628,108,609,88,590,77"/>
+<area shape="rect" id="Node000001" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,407,160,433"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="869,117,1001,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,406,125,338,156,289,193,236,238,182,289,131,347,86,410,51,468,28,520,12,568,5,613,3,659,8,708,18,822,51,848,61,873,75,912,106,909,110,870,80,846,66,820,56,706,23,658,13,613,9,568,10,521,18,470,33,412,56,350,90,293,135,242,186,198,240,160,292,130,340,93,408"/>
+<area shape="rect" id="Node000003" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="665,497,815,522"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,430,263,456,411,481,536,495,651,503,650,508,536,500,410,487,262,462,138,435"/>
+<area shape="rect" id="Node000004" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,285,363,325"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="105,405,236,330,239,335,107,410"/>
+<area shape="rect" id="Node000014" href="$group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="430,547,591,573"/>
+<area shape="poly" id="edge19_Node000001_Node000014" title=" " alt="" coords="96,431,141,479,173,505,209,526,260,543,314,554,367,560,416,562,416,567,367,565,313,559,259,548,207,531,170,510,138,483,92,435"/>
+<area shape="poly" id="edge7_Node000004_Node000002" title=" " alt="" coords="296,283,340,224,372,193,409,168,466,145,526,129,586,118,647,111,761,109,856,116,855,121,761,115,647,117,587,123,527,134,468,150,412,173,375,197,344,228,301,287"/>
+<area shape="poly" id="edge9_Node000004_Node000003" title=" " alt="" coords="363,306,432,311,505,320,569,334,594,343,612,354,627,369,634,386,638,419,642,451,648,467,661,482,668,488,664,492,657,486,644,470,637,453,633,419,629,387,622,372,609,358,592,348,567,339,504,326,431,317,363,311"/>
+<area shape="rect" id="Node000005" href="$trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="677,167,803,193"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="303,283,348,241,377,220,410,203,474,184,541,174,606,170,663,171,663,176,606,175,542,179,475,189,412,208,380,224,351,245,306,287"/>
+<area shape="rect" id="Node000006" href="$trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="435,368,587,408"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="341,323,443,361,442,366,340,328"/>
+<area shape="rect" id="Node000007" href="$group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="669,547,811,573"/>
+<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="291,325,300,380,320,452,335,490,356,526,381,557,412,583,447,600,484,610,523,613,562,611,637,596,697,576,699,581,638,601,563,616,523,618,483,615,445,605,409,588,377,561,351,529,331,492,315,454,294,381,286,326"/>
+<area shape="rect" id="Node000008" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="433,432,588,472"/>
+<area shape="poly" id="edge10_Node000004_Node000008" title=" " alt="" coords="305,324,351,371,380,396,412,418,424,424,421,429,409,422,377,400,347,375,302,328"/>
+<area shape="rect" id="Node000010" href="$group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="429,66,592,91"/>
+<area shape="poly" id="edge15_Node000004_Node000010" title=" " alt="" coords="292,284,308,247,333,200,367,151,409,109,434,94,436,99,412,113,371,154,337,202,313,249,297,286"/>
+<area shape="rect" id="Node000012" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="417,218,604,243"/>
+<area shape="poly" id="edge17_Node000004_Node000012" title=" " alt="" coords="330,283,410,252,437,244,438,250,412,257,332,288"/>
+<area shape="rect" id="Node000013" href="$types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="411,267,611,293"/>
+<area shape="poly" id="edge18_Node000004_Node000013" title=" " alt="" coords="362,294,397,290,397,296,363,299"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="789,165,872,143,873,148,791,170"/>
+<area shape="poly" id="edge14_Node000008_Node000003" title=" " alt="" coords="589,469,676,491,675,496,587,474"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="587,432,609,418,633,394,655,368,690,309,714,252,729,206,734,207,719,254,694,311,659,371,637,398,612,422,590,436"/>
+<area shape="poly" id="edge13_Node000008_Node000007" title=" " alt="" coords="544,470,597,501,660,532,681,541,679,546,658,537,595,506,542,474"/>
+<area shape="rect" id="Node000009" href="$trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="663,432,817,472"/>
+<area shape="poly" id="edge12_Node000008_Node000009" title=" " alt="" coords="588,449,649,449,649,455,588,455"/>
+<area shape="rect" id="Node000011" href="$group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="659,66,821,91"/>
+<area shape="poly" id="edge16_Node000010_Node000011" title=" " alt="" coords="593,76,645,76,645,81,593,81"/>
+<area shape="poly" id="edge21_Node000014_Node000003" title=" " alt="" coords="569,545,668,523,669,528,570,550"/>
+<area shape="poly" id="edge20_Node000014_Node000007" title=" " alt="" coords="592,557,655,557,655,563,592,563"/>
 </map>

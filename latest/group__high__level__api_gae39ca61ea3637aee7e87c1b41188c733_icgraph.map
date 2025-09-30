@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="665,98,612,90,612,85,666,93"/>
 <area shape="rect" id="Node000004" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="222,5,377,45"/>
 <area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="717,89,677,66,630,48,564,34,497,26,377,24,377,18,498,21,565,29,631,43,679,61,720,84"/>
-<area shape="rect" id="Node000007" href="$group__high__level__api.html#gad6969bc86a3ab3c3352e35c376e7b167" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,122,615,147"/>
+<area shape="rect" id="Node000007" href="$group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,122,615,147"/>
 <area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="665,120,616,127,615,122,665,115"/>
 <area shape="rect" id="Node000009" href="$group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="439,171,631,197"/>
 <area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="712,128,632,163,594,174,592,169,630,157,710,123"/>

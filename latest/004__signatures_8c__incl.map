@@ -1,5 +1,5 @@
-<map id="t/000_core/004_signatures.c" name="t/000_core/004_signatures.c">
-<area shape="rect" id="Node000001" title="Tests the high&#45;level string&#45;based signature API." alt="" coords="141,5,345,31"/>
+<map id="t/004_signatures.c" name="t/004_signatures.c">
+<area shape="rect" id="Node000001" title="Hardened test suite for the high&#45;level v1.0 signature API." alt="" coords="173,5,314,31"/>
 <area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,33,127,75,125,70,217,28"/>
 <area shape="rect" id="Node000003" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="196,79,291,104"/>

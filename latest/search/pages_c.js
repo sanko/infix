@@ -1,12 +1,7 @@
 var searchData=
 [
-  ['the_20infix_20ffi_20library_0',['Contributing to the infix FFI Library',['../md_CONTRIBUTING.html',1,'']]],
-  ['the_20tt_20infix_20tt_20ffi_20cookbook_1',['The &lt;tt&gt;infix&lt;/tt&gt; FFI Cookbook',['../md_docs_2cookbook.html',1,'']]],
-  ['the_20tt_20infix_20tt_20signature_20language_20reference_2',['The &lt;tt&gt;infix&lt;/tt&gt; Signature Language Reference',['../md_docs_2signatures.html',1,'']]],
-  ['to_20a_20new_20platform_3',['Porting &lt;tt&gt;infix&lt;/tt&gt; to a New Platform',['../md_docs_2porting.html',1,'']]],
-  ['to_20the_20infix_20ffi_20library_4',['Contributing to the infix FFI Library',['../md_CONTRIBUTING.html',1,'']]],
-  ['tt_20infix_20tt_5',['Building and Integrating &lt;tt&gt;infix&lt;/tt&gt;',['../md_INSTALL.html',1,'']]],
-  ['tt_20infix_20tt_20ffi_20cookbook_6',['The &lt;tt&gt;infix&lt;/tt&gt; FFI Cookbook',['../md_docs_2cookbook.html',1,'']]],
-  ['tt_20infix_20tt_20signature_20language_20reference_7',['The &lt;tt&gt;infix&lt;/tt&gt; Signature Language Reference',['../md_docs_2signatures.html',1,'']]],
-  ['tt_20infix_20tt_20to_20a_20new_20platform_8',['Porting &lt;tt&gt;infix&lt;/tt&gt; to a New Platform',['../md_docs_2porting.html',1,'']]]
+  ['security_20policy_0',['Security Policy',['../md_SECURITY.html',1,'']]],
+  ['signature_20format_20specification_20v1_200_1',['FFI Signature Format Specification v1.0',['../md_docs_2signatures.html',1,'']]],
+  ['specification_20v1_200_2',['FFI Signature Format Specification v1.0',['../md_docs_2signatures.html',1,'']]],
+  ['strong_20project_20roadmap_3a_20infix_20ffi_20strong_3',['&lt;strong&gt;Project Roadmap: infix FFI&lt;/strong&gt;',['../md_TODO.html',1,'']]]
 ];
