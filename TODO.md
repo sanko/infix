@@ -80,11 +80,11 @@ This document outlines the planned development goals for the infix FFI library, 
 
 *Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.*
 
-- [ ] **Add `_Complex` Type Support**
+- [x] **Add `_Complex` Type Support**
     *   **Context:** The C `_Complex` type is a standard feature used in scientific and engineering domains. Supporting it is a key step towards feature-completeness. The ABI rules for `_Complex` are generally straightforward, often mapping directly to existing logic for two-element structs or Homogeneous Floating-point Aggregates (HFAs).
     *   **Idea:**
         1.  Introduce a new `INFIX_TYPE_COMPLEX` category to the `infix_type` system.
-        2.  Add a new signature syntax, such as `complex(f)` for `float _Complex` and `complex(d)` for `double _Complex`.
+        2.  Add a new signature syntax, such as ~~`complex(f)` for `float _Complex` and `complex(d)` for `double _Complex`~~.
         3.  Update the ABI backends to classify this new type. On System V/AArch64, it should be treated like a two-element float/double aggregate. On Windows x64, it will be passed by reference (as its size, 16 bytes, is not a power of two).
     *   **Goal:** A user can create a trampoline for a function like `double _Complex cadd(double _Complex a, double _Complex b)` using the signature `"complex(d),complex(d)=>complex(d)"` and have it work correctly on all supported platforms.
     *   **Possible Roadblocks:** Minimal. The logic for this largely exists within the aggregate classifiers already. The main work is in plumbing the new type through the system.

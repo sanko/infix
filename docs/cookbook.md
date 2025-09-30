@@ -185,7 +185,7 @@ int main() {
 
 **Problem**: You need to call a function that passes or returns a `union`.
 
-**Solution**: Use the `<...>` syntax to describe the union (e.g., `"(<int, float>) -> int"`). `infix` will automatically classify it for ABI compliance.
+**Solution**: Use the `<...>` syntax to describe the union (e.g., `"(<int32, float32>) -> int32"`). `infix` will automatically classify it for ABI compliance.
 
 > [View the full code](/eg/cookbook/10_unions.c)
 
@@ -193,7 +193,7 @@ int main() {
 
 **Problem**: You need to call a function that takes a pointer to a fixed-size array, like `void process_matrix(int (*matrix)[4]);`.
 
-**Solution**: Use the pointer prefix `*` on an array type (`*[4:int]`).
+**Solution**: Use the pointer prefix `*` on an array type (`*[4:int32]`).
 
 > [View the full code](/eg/cookbook/11_pointer_to_array.c)
 
@@ -459,7 +459,7 @@ The C code would be identical to the previous examples, just loading `libasm_mat
 
 ### Recipe: Calling Native System Libraries
 
-**Problem**: You need to call a native OS library like `User32.dll` on Windows or `CoreFoundation.framework` on macOS.
+**Problem**: You need to call a native OS library like `user32.dll` on Windows or `CoreFoundation.framework` on macOS.
 
 **Solution**: Load the library dynamically, get a function pointer, and use `infix` with the correct signature. The example file contains platform-specific code for Windows, macOS, and Linux.
 
@@ -520,8 +520,8 @@ infix_forward_destroy(t);
 *   **Symptom**: Parser error (`INFIX_ERROR_INVALID_ARGUMENT`).
 *   **Explanation**: The syntax for a pointer to a function can be tricky. A function type is `(...) -> ...`, and a pointer to anything is `*...`. Therefore, a pointer to a function type is `*((...) -> ...)`.
 *   **Solution**:
-    *   `int (*callback)(void)` is `*(() -> int)`.
-    *   `void (*handler)(int, int)` is `*((int, int) -> void)`.
+    *   `int (*callback)(void)` is `*(() -> int32)`.
+    *   `void (*handler)(int, int)` is `*((int32, int32) -> void)`.
 
 ### Pitfall: Struct Packing Differences
 

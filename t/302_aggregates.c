@@ -110,9 +110,9 @@ TEST {
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         members[0] =
-            infix_struct_member_create("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
+            infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         members[1] =
-            infix_struct_member_create("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+            infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
         infix_type * point_type = NULL;
 
         infix_status status = infix_type_create_struct(arena, &point_type, members, 2);
@@ -143,7 +143,7 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         for (int i = 0; i < 6; ++i)
             members[i] =
-                infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
+                infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
         infix_type * large_struct_type = NULL;
 
         infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
@@ -175,7 +175,7 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         for (int i = 0; i < 6; ++i)
             members[i] =
-                infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
+                infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
         infix_type * large_struct_type = NULL;
 
         infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
@@ -216,7 +216,7 @@ TEST {
 
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create("v", array_type, offsetof(Vector4, v));
+        members[0] = infix_type_create_member("v", array_type, offsetof(Vector4, v));
         infix_type * struct_type = NULL;
 
         status = infix_type_create_struct(arena, &struct_type, members, 1);
@@ -245,8 +245,8 @@ TEST {
         infix_arena_t * arena = infix_arena_create(4096);
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0);
-        members[1] = infix_struct_member_create("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 0);
+        members[0] = infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0);
+        members[1] = infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 0);
         infix_type * union_type = NULL;
 
         infix_status status = infix_type_create_union(arena, &union_type, members, 2);
@@ -277,9 +277,9 @@ TEST {
 
         infix_struct_member * members =
             infix_arena_alloc(arena, 2 * sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create(
+        members[0] = infix_type_create_member(
             "a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(PackedStruct, a));
-        members[1] = infix_struct_member_create(
+        members[1] = infix_type_create_member(
             "b", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), offsetof(PackedStruct, b));
 
         infix_type * packed_type = NULL;

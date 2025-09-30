@@ -240,9 +240,24 @@ typedef struct {
 } infix_reverse_abi_spec;
 
 // trampoline.c
-/** @brief Selects the correct forward-call ABI spec at compile time. */
+/**
+ * @internal
+ * @brief Selects and returns the ABI-specific v-table for forward trampolines.
+ * @details This function uses preprocessor defines to select the correct ABI
+ *          implementation at compile time. It is the core of the library's
+ *          platform abstraction for forward calls.
+ * @return A constant pointer to the active `infix_forward_abi_spec`.
+ */
 const infix_forward_abi_spec * get_current_forward_abi_spec();
-/** @brief Selects the correct reverse-call ABI spec at compile time. */
+
+/**
+ * @internal
+ * @brief Selects and returns the ABI-specific v-table for reverse trampolines.
+ * @details This function uses preprocessor defines to select the correct ABI
+ *          implementation at compile time. It is the core of the library's
+ *          platform abstraction for reverse calls.
+ * @return A constant pointer to the active `infix_reverse_abi_spec`.
+ */
 const infix_reverse_abi_spec * get_current_reverse_abi_spec();
 
 /**
@@ -353,7 +368,13 @@ static inline bool is_long_double(const infix_type * type) {
     return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_LONG_DOUBLE;
 }
 
-/** @brief Determines if an argument must be passed by reference according to Win x64 ABI rules. */
+/**
+ * @internal
+ * @brief Determines if a type must be passed by reference on the Windows x64 ABI.
+ * @details This function implements the core Windows x64 rule: any type whose
+ *          size is not a power of two (1, 2, 4, or 8) is passed by reference.
+ * @return true if the type should be passed by reference, false otherwise.
+ */
 static inline bool is_passed_by_reference(infix_type * type) {
     // On Windows x64, aggregates whose size is not a power of two (1, 2, 4, 8 bytes)
     // are passed by reference. This also applies to sizes larger than 8 bytes on MSVC.

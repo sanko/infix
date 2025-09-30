@@ -30,6 +30,9 @@
  * This process validates that the library correctly handles the size, alignment,
  * and ABI-specific calling conventions for every primitive type on the target
  * platform, forming the foundational layer of the entire test suite.
+ *
+ * These tests use the manual API to test primitive types to verify functionality
+ * without bringing the signature system in.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -121,9 +124,9 @@ __int128_t passthrough_sint128(__int128_t v) {
             cif((void *)passthrough_func, &result, args);                                                          \
             ok(result == input, "Value is correct (" format_specifier " == " format_specifier ")", input, result); \
         }                                                                                                          \
-        else {                                                                                                     \
+        else                                                                                                       \
             fail("Trampoline code pointer was NULL");                                                              \
-        }                                                                                                          \
+                                                                                                                   \
         infix_forward_destroy(trampoline);                                                                         \
     }
 
@@ -156,9 +159,8 @@ TEST {
         infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
         cif((void *)passthrough_long_double, &result, args);
 
-        if (result == input) {
+        if (result == input)
             pass("Value is correct for long double");
-        }
         else {
             fail("Value is incorrect for long double");
             // On failure, print detailed byte-level diagnostics.

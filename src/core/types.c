@@ -417,7 +417,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
  *               value should be obtained using the standard `offsetof` macro.
  * @return An initialized `infix_struct_member`.
  */
-infix_struct_member infix_struct_member_create(const char * name, infix_type * type, size_t offset) {
+infix_struct_member infix_type_create_member(const char * name, infix_type * type, size_t offset) {
     return (infix_struct_member){name, type, offset};
 }
 

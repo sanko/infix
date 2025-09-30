@@ -49,9 +49,9 @@ infix_type* create_packed_data_type(infix_arena_t* arena) {
 
     // 2. Allocate the list of members from the arena.
     infix_struct_member* members = infix_arena_alloc(arena, sizeof(infix_struct_member) * 3, _Alignof(infix_struct_member));
-    members = infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT16), offsetof(PackedData, id));
-    members = infix_struct_member_create(NULL, char_array_type, offsetof(PackedData, name));
-    members = infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT32), offsetof(PackedData, flags));
+    members = infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT16), offsetof(PackedData, id));
+    members = infix_type_create_member(NULL, char_array_type, offsetof(PackedData, name));
+    members = infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT32), offsetof(PackedData, flags));
 
     // 3. Create the final packed struct type, also from the arena.
     infix_type* packed_type = NULL;

@@ -58,10 +58,10 @@ TEST {
         // 1. Happy Path: Verify correct size and alignment calculation.
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create(
-            "c", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(TestStruct, c));
-        members[1] = infix_struct_member_create(
-            "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestStruct, d));
+        members[0] =
+            infix_type_create_member("c", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(TestStruct, c));
+        members[1] =
+            infix_type_create_member("d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestStruct, d));
         infix_type * struct_type = NULL;
         infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
 
@@ -81,7 +81,7 @@ TEST {
         // 2. Error Handling: Pass a NULL member type.
         infix_struct_member * bad_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        bad_members[0] = infix_struct_member_create("bad", NULL, 0);
+        bad_members[0] = infix_type_create_member("bad", NULL, 0);
         infix_type * bad_struct_type = NULL;
         status = infix_type_create_struct(arena, &bad_struct_type, bad_members, 1);
         ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_struct rejects NULL member type");
@@ -96,10 +96,10 @@ TEST {
         // 1. Happy Path: Verify correct size and alignment.
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create(
-            "i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestUnion, i));
-        members[1] = infix_struct_member_create(
-            "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestUnion, d));
+        members[0] =
+            infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestUnion, i));
+        members[1] =
+            infix_type_create_member("d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestUnion, d));
         infix_type * union_type = NULL;
         infix_status status = infix_type_create_union(arena, &union_type, members, 2);
 

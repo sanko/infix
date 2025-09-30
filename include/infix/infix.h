@@ -84,7 +84,7 @@
  * int main() {
  *     infix_forward_t* trampoline = NULL;
  *     // Signature for: int printf(const char*, ...);
- *     const char* signature = "(*char; int32) -> int";
+ *     const char* signature = "(*char; int32) -> int32";
  *
  *     infix_status status = infix_forward_create(&trampoline, signature);
  *     if (status != INFIX_SUCCESS) {
@@ -355,7 +355,7 @@ struct infix_function_argument_t {
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
  */
-typedef void (*infix_cif_func)(void * target_function, void * return_value, void ** args);
+typedef void (*infix_cif_func)(void *, void *, void **);
 
 /**
  * @brief An enumeration of all possible success or failure codes from the public API.
@@ -479,14 +479,36 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type *
  */
 c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **, infix_type *);
 
+/**
+ * @brief Creates a new `infix_type` for a named reference from an arena.
+ * @details This is an advanced function primarily used by the signature parser when it
+ *          encounters a reference to a named type (e.g., `struct<MyStruct>`) that is
+ *          NOT followed by a definition body. It acts as a placeholder that must be
+ *          resolved before a trampoline can be generated.
+ *
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param name The name of the type being referenced.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note A type graph containing a named reference is considered "unresolved" and
+ *       cannot be used to generate a trampoline until the reference is replaced
+ *       with a full type definition.
+ */
+c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t *, infix_type **, const char *);
 
-c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * arena,
-                                                             infix_type ** out_type,
-                                                             const char * name);
-
-c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
-                                                     infix_type ** out_type,
-                                                     infix_type * base_type);
+/**
+ * @brief Creates a new `infix_type` for a `_Complex` number from an arena.
+ * @details This function describes a standard C `_Complex` number. The memory layout is
+ *          equivalent to a two-element array of the base floating-point type.
+ *
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param base_type The floating-point `infix_type` of the real and imaginary parts
+ *                  (must be `INFIX_PRIMITIVE_FLOAT` or `INFIX_PRIMITIVE_DOUBLE`).
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if `base_type` is not a `float` or `double`.
+ */
+c23_nodiscard infix_status infix_type_create_complex(infix_arena_t *, infix_type **, infix_type *);
 
 /**
  * @brief A factory function to create an `infix_struct_member`.
@@ -497,7 +519,7 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
  * @param offset The byte offset of the member, obtained via the `offsetof` macro.
  * @return An initialized `infix_struct_member`.
  */
-infix_struct_member infix_struct_member_create(const char *, infix_type *, size_t);
+infix_struct_member infix_type_create_member(const char *, infix_type *, size_t);
 
 /**
  * @defgroup high_level_api High-Level Signature API
@@ -767,7 +789,7 @@ c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t)
  * @return The `infix_type_category` enum for the type. Returns `(infix_type_category)-1`
  *         if the provided `type` pointer is `nullptr`.
  */
-c23_nodiscard infix_type_category infix_type_get_category(const infix_type * type);
+c23_nodiscard infix_type_category infix_type_get_category(const infix_type *);
 
 /**
  * @brief Retrieves the size of an `infix_type` in bytes.
@@ -775,7 +797,7 @@ c23_nodiscard infix_type_category infix_type_get_category(const infix_type * typ
  * @return The size of the type, equivalent to `sizeof(T)`. Returns `0` if the
  *         provided `type` pointer is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_size(const infix_type * type);
+c23_nodiscard size_t infix_type_get_size(const infix_type *);
 
 /**
  * @brief Retrieves the alignment requirement of an `infix_type` in bytes.
@@ -783,7 +805,7 @@ c23_nodiscard size_t infix_type_get_size(const infix_type * type);
  * @return The alignment of the type, equivalent to `_Alignof(T)`. Returns `0` if the
  *         provided `type` pointer is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_alignment(const infix_type * type);
+c23_nodiscard size_t infix_type_get_alignment(const infix_type *);
 
 /**
  * @brief Retrieves the number of members in an aggregate type (struct or union).
@@ -791,7 +813,7 @@ c23_nodiscard size_t infix_type_get_alignment(const infix_type * type);
  * @return The number of members if the type is a struct or union. Returns `0` for
  *         all other type categories or if the `type` pointer is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_member_count(const infix_type * type);
+c23_nodiscard size_t infix_type_get_member_count(const infix_type *);
 
 /**
  * @brief Retrieves a specific member from an aggregate type by its index.
@@ -801,7 +823,7 @@ c23_nodiscard size_t infix_type_get_member_count(const infix_type * type);
  *         if `type` is not a struct or union, if `type` is `nullptr`, or if the
  *         `index` is out of bounds.
  */
-c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type * type, size_t index);
+c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type *, size_t);
 
 /**
  * @brief Retrieves the name of a function argument by its index.
@@ -810,7 +832,7 @@ c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type
  * @return A constant string for the argument's name, or `nullptr` if the argument
  *         is anonymous, the index is out of bounds, or `func_type` is not a function type.
  */
-c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type, size_t index);
+c23_nodiscard const char * infix_type_get_arg_name(const infix_type *, size_t);
 
 /**
  * @brief Retrieves the type of a function argument by its index.
@@ -819,5 +841,5 @@ c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type,
  * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
  *         index is out of bounds or `func_type` is not a function type.
  */
-c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func_type, size_t index);
+c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type *, size_t);
 /** @} */

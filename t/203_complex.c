@@ -82,9 +82,9 @@ TEST {
 
             ok(complex_abs(SUB_CX_DOUBLE(result, expected)) < 1e-9, "double complex multiplication is correct");
         }
-        else {
+        else
             skip(1, "Test skipped");
-        }
+
         infix_forward_destroy(trampoline);
     }
 

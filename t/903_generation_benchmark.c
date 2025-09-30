@@ -57,9 +57,9 @@ TEST {
         infix_struct_member * point_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         point_members[0] =
-            infix_struct_member_create("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
+            infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         point_members[1] =
-            infix_struct_member_create("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+            infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
         infix_type * point_type = NULL;
         if (infix_type_create_struct(arena, &point_type, point_members, 2) != INFIX_SUCCESS) {
             infix_arena_destroy(arena);

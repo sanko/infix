@@ -446,7 +446,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
                 return nullptr;
             }
-            node->m = infix_struct_member_create(name, member_type, 0);  // Offset is calculated later.
+            node->m = infix_type_create_member(name, member_type, 0);  // Offset is calculated later.
             node->next = nullptr;
             if (!head)
                 head = tail = node;

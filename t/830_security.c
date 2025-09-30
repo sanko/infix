@@ -248,8 +248,8 @@ TEST {
             // This tests the library's internal calculation, not faulty user input.
             infix_type malicious_type = {.size = SIZE_MAX / 2 + 10, .alignment = 8};
             infix_struct_member members[2];
-            members[0] = infix_struct_member_create("a", &malicious_type, 0);
-            members[1] = infix_struct_member_create("b", &malicious_type, 0);
+            members[0] = infix_type_create_member("a", &malicious_type, 0);
+            members[1] = infix_type_create_member("b", &malicious_type, 0);
 
             infix_type * bad_type = NULL;
             infix_status status = infix_type_create_struct(arena, &bad_type, members, 2);
@@ -275,7 +275,7 @@ TEST {
             // This test is already correct. It tests the padding calculation overflow.
             infix_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
             infix_struct_member members[1];
-            members[0] = infix_struct_member_create("bad", &malicious_member_type, 0);
+            members[0] = infix_type_create_member("bad", &malicious_member_type, 0);
             infix_type * bad_type = NULL;
             infix_status status = infix_type_create_union(arena, &bad_type, members, 1);
             ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_union returned error on overflow");
