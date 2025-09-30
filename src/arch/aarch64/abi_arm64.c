@@ -157,6 +157,12 @@ static infix_type * get_hfa_base_type(infix_type * type) {
     // Recursive step for structs: check the first member.
     if (type->category == INFIX_TYPE_STRUCT && type->meta.aggregate_info.num_members > 0)
         return get_hfa_base_type(type->meta.aggregate_info.members[0].type);
+    // Recusive step for _Complex
+    if (type->category == INFIX_TYPE_COMPLEX)
+        return get_hfa_base_type(type->meta.complex_info.base_type);
+    // Recusive step for _Complex
+    if (type->category == INFIX_TYPE_COMPLEX)
+        return get_hfa_base_type(type->meta.complex_info.base_type);
     return nullptr;  // Not a float-based type
 }
 
@@ -180,6 +186,13 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
         (*field_count)++;
         return type == base_type;
     }
+
+    // Recursive step for _Complex.
+    if (type->category == INFIX_TYPE_COMPLEX)
+        // Both the real and imaginary parts must match the base type.
+        // The complex number's base type itself must also match.
+        return type->meta.complex_info.base_type == base_type;
+
     // Recursive step for arrays.
     if (type->category == INFIX_TYPE_ARRAY)
         return is_hfa_recursive_check(type->meta.array_info.element_type, base_type, field_count);
@@ -209,7 +222,8 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
  * @return `true` if the type is a valid HFA, `false` otherwise.
  */
 static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
-    if (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_ARRAY)
+    if (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_ARRAY &&
+        type->category != INFIX_TYPE_COMPLEX)
         return false;
 
     if (type->size == 0 || type->size > 64)
@@ -289,7 +303,12 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
     layout->is_variadic = (num_fixed_args < num_args);
     layout->num_args = num_args;
     layout->num_stack_args = 0;
-    layout->return_value_in_memory = return_uses_hidden_pointer_abi(ret_type);
+
+    // An aggregate is returned by reference (via hidden pointer in X8) if it is larger than 16 bytes.
+    bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
+
+    layout->return_value_in_memory = (ret_is_aggregate && ret_type->size > 16);
 
     for (size_t i = 0; i < num_args; ++i) {
         infix_type * type = arg_types[i];
@@ -804,8 +823,13 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                                                                 infix_reverse_t * context) {
     // If the return type is a large struct, the caller passes a hidden pointer in X8.
     // We must save this pointer into our return buffer location immediately.
-    if (context->return_type->size > 16)
-        // str x8, [sp, #return_buffer_offset]
+    bool ret_is_aggregate =
+        (context->return_type->category == INFIX_TYPE_STRUCT || context->return_type->category == INFIX_TYPE_UNION ||
+         context->return_type->category == INFIX_TYPE_ARRAY || context->return_type->category == INFIX_TYPE_COMPLEX);
+
+    bool return_in_memory = ret_is_aggregate && context->return_type->size > 16;
+
+    if (return_in_memory)  // str x8, [sp, #return_buffer_offset]
         emit_arm64_str_imm(buf, true, X8_REG, SP_REG, layout->return_buffer_offset);
 
     size_t gpr_idx = 0, vpr_idx = 0, current_saved_data_offset = 0;
@@ -974,8 +998,14 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
                                                            infix_reverse_t * context) {
     // Arg 1: Load context pointer into X0.
     emit_arm64_load_u64_immediate(buf, X0_REG, (uint64_t)context);
+
+    bool ret_is_aggregate =
+        (context->return_type->category == INFIX_TYPE_STRUCT || context->return_type->category == INFIX_TYPE_UNION ||
+         context->return_type->category == INFIX_TYPE_ARRAY || context->return_type->category == INFIX_TYPE_COMPLEX);
+    bool return_in_memory = ret_is_aggregate && context->return_type->size > 16;
+
     // Arg 2: Load pointer to return buffer into X1.
-    if (context->return_type->size > 16)
+    if (return_in_memory)
         // We saved the pointer from X8 earlier, now we load it back.
         emit_arm64_ldr_imm(buf, true, X1_REG, SP_REG, layout->return_buffer_offset);
     else
@@ -1006,8 +1036,11 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
                                                     infix_reverse_call_frame_layout * layout,
                                                     infix_reverse_t * context) {
-    // If the function returns a value and it's not passed via hidden pointer...
-    if (context->return_type->category != INFIX_TYPE_VOID && context->return_type->size <= 16) {
+    bool ret_is_aggregate =
+        (context->return_type->category == INFIX_TYPE_STRUCT || context->return_type->category == INFIX_TYPE_UNION ||
+         context->return_type->category == INFIX_TYPE_ARRAY || context->return_type->category == INFIX_TYPE_COMPLEX);
+    bool return_in_memory = ret_is_aggregate && context->return_type->size > 16;
+    if (context->return_type->category != INFIX_TYPE_VOID && !return_in_memory) {
         infix_type * base = nullptr;
         if (is_hfa(context->return_type, &base)) {
             size_t num_elements = context->return_type->size / base->size;

@@ -114,11 +114,11 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
  */
 static bool return_value_is_by_reference(infix_type * type) {
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
-        type->category == INFIX_TYPE_ARRAY) {
+        type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX)
         // According to the Microsoft x64 ABI, aggregates are returned by reference
         // if their size is NOT 1, 2, 4, or 8 bytes. This correctly includes 16-byte structs.
         return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
-    }
+
 #if defined(INFIX_COMPILER_GCC)
     // GCC/Clang have a special case for returning long double by reference on Windows.
     if (is_long_double(type))

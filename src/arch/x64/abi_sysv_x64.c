@@ -237,6 +237,17 @@ static bool classify_recursive(
         }
         return false;
     }
+    if (type->category == INFIX_TYPE_COMPLEX) {
+        infix_type * base = type->meta.complex_info.base_type;
+        // A complex number is just like a struct { base_type real; base_type imag; }
+        // So we classify the first element at offset 0.
+        if (classify_recursive(base, offset, classes, depth + 1, field_count))
+            return true;  // Propagate unaligned discovery
+        // And the second element at offset + size of the base.
+        if (classify_recursive(base, offset + base->size, classes, depth + 1, field_count))
+            return true;  // Propagate unaligned discovery
+        return false;
+    }
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION) {
         // Recursively classify each member of the struct/union.
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
@@ -352,7 +363,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
 
     // Determine if the return value requires a hidden pointer argument passed in RDI.
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-                             ret_type->category == INFIX_TYPE_ARRAY);
+                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
 
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
     layout->return_value_in_memory = (ret_is_aggregate && ret_type->size > 16);
@@ -400,7 +411,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
         }
 
         bool is_aggregate = type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
-            type->category == INFIX_TYPE_ARRAY;
+            type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX;
         arg_class_t classes[2] = {NO_CLASS, NO_CLASS};
         size_t num_classes = 0;
         bool placed_in_register = false;
@@ -729,7 +740,7 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                 }
                 else {                                              // SSE, INTEGER
                     emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
-                    emit_mov_mem_reg(buf, R13_REG, 8, RDX_REG);     // mov [r13 + 8], rdx
+                    emit_mov_mem_reg(buf, R13_REG, 8, RAX_REG);     // mov [r13 + 8], rax
                 }
             }
         }
@@ -842,7 +853,7 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     bool return_in_memory = false;
     infix_type * ret_type = context->return_type;
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-                             ret_type->category == INFIX_TYPE_ARRAY);
+                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
 
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
@@ -950,7 +961,7 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
     bool return_in_memory = false;
     infix_type * ret_type = context->return_type;
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-                             ret_type->category == INFIX_TYPE_ARRAY);
+                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
             return_in_memory = true;
@@ -1002,7 +1013,7 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         bool return_in_memory = false;
         infix_type * ret_type = context->return_type;
         bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-                                 ret_type->category == INFIX_TYPE_ARRAY);
+                                 ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
 
         if (ret_is_aggregate) {
             if (ret_type->size > 16) {

@@ -84,7 +84,7 @@
  * int main() {
  *     infix_forward_t* trampoline = NULL;
  *     // Signature for: int printf(const char*, ...);
- *     const char* signature = "(*char, ...) -> int";
+ *     const char* signature = "(*char; int32) -> int";
  *
  *     infix_status status = infix_forward_create(&trampoline, signature);
  *     if (status != INFIX_SUCCESS) {
@@ -484,6 +484,9 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
                                                              infix_type ** out_type,
                                                              const char * name);
 
+c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
+                                                     infix_type ** out_type,
+                                                     infix_type * base_type);
 
 /**
  * @brief A factory function to create an `infix_struct_member`.

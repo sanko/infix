@@ -643,6 +643,39 @@ void emit_movsd_mem_xmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x6
 }
 
 /**
+ * @brief Emits an x86-64 `movups xmm, [r64 + offset]` instruction.
+ * @details Loads a 128-bit unaligned value from memory into an XMM register.
+ *
+ *          - **Opcode:** `0F 10 /r`
+ *
+ * @param buf The code buffer.
+ * @param dest The destination XMM register.
+ * @param src_base The base register for the memory address.
+ * @param offset The 32-bit signed offset.
+ */
+void emit_movups_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset) {
+    uint8_t rex = 0;
+    if (dest >= XMM8_REG)
+        rex |= REX_R;
+    if (src_base >= R8_REG)
+        rex |= REX_B;
+    if (rex)
+        emit_byte(buf, 0x40 | rex);
+    emit_byte(buf, 0x0F);
+    emit_byte(buf, 0x10);  // Opcode for MOVUPS
+    uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
+    if (offset == 0 && (src_base % 8) != RBP_REG)
+        mod = 0x00;
+    emit_byte(buf, mod | ((dest % 8) << 3) | (src_base % 8));
+    if (src_base % 8 == RSP_REG)
+        emit_byte(buf, 0x24);
+    if (mod == 0x40)
+        emit_byte(buf, (uint8_t)offset);
+    else if (mod == 0x80)
+        emit_int32(buf, offset);
+}
+
+/**
  * @brief Emits an x86-64 `movq r64, xmm` instruction.
  * @details This instruction copies the lower 64 bits of an XMM register
  *          into a general-purpose register.

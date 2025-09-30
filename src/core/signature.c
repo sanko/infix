@@ -788,6 +788,34 @@ static infix_type * parse_type(parser_state * state) {
         }
         (void)name;  // Name is stored for introspection but not used by the core ABI.
     }
+    else if (*state->p == 'c' && state->p[1] == '[') {  // extra test to make sure we avoid eating `char`
+        // COMPLEX TYPE: c[<type>]
+        state->p++;
+        skip_whitespace(state);
+        if (*state->p != '[') {
+            state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+            state->depth--;
+            return NULL;
+        }
+        state->p++;
+        skip_whitespace(state);
+        infix_type * base_type = parse_type(state);
+        if (!base_type) {
+            state->depth--;
+            return NULL;
+        }
+        skip_whitespace(state);
+        if (*state->p != ']') {
+            state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+            state->depth--;
+            return NULL;
+        }
+        state->p++;
+        if (infix_type_create_complex(state->arena, &result_type, base_type) != INFIX_SUCCESS) {
+            state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
+            result_type = NULL;
+        }
+    }
     else {
         // PRIMITIVE TYPE
         // If none of the above constructors match, it must be a primitive type.

@@ -21,6 +21,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
     *   [Recipe: Working with Packed Structs via the Signature API](#recipe-working-with-packed-structs-via-the-signature-api)
     *   [Recipe: Working with Unions](#recipe-working-with-unions)
     *   [Recipe: Working with Pointers to Arrays](#recipe-working-with-pointers-to-arrays)
+    *   [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
 *   **Chapter 3: The Power of Callbacks (Reverse Calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
     *   [Recipe: Creating a Stateful Callback (The Modern Way)](#recipe-creating-a-stateful-callback-the-modern-way)
@@ -195,6 +196,14 @@ int main() {
 **Solution**: Use the pointer prefix `*` on an array type (`*[4:int]`).
 
 > [View the full code](/eg/cookbook/11_pointer_to_array.c)
+
+### Recipe: Working with Complex Numbers
+
+**Problem**: You need to call a C function from the `<complex.h>` standard library, or another scientific library that uses `_Complex` types.
+
+**Solution**: Use the `c[...]` constructor in the signature string. The inner type must be a floating-point type, typically `float` or `double`. The `infix` library will handle the correct ABI rules for passing the two-part value.
+
+> [View the full code](/eg/cookbook/20_complex.c)
 
 ---
 

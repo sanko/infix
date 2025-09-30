@@ -66,6 +66,9 @@ void emit_movss_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32
 /** @brief Emits `movsd xmm, [src_base + offset]` (loads a 64-bit double from memory). */
 void emit_movsd_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset);
 
+/** @brief Emits `movups xmm, [src_base + offset]` (loads a 128-bit unaligned value from memory). */
+void emit_movups_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset);
+
 /** @brief Emits `movsxd r64, [src_base + offset]` (loads a 32-bit value from memory and sign-extends it to 64 bits). */
 void emit_movsxd_reg_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32_t offset);
 

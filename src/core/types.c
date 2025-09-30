@@ -204,6 +204,35 @@ c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
     return INFIX_SUCCESS;
 }
 
+
+c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
+                                                     infix_type ** out_type,
+                                                     infix_type * base_type) {
+    if (out_type == NULL || base_type == NULL)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // A complex number must be based on a float or double.
+    if (!is_float(base_type) && !is_double(base_type))
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    if (type == NULL) {
+        *out_type = NULL;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
+    type->is_arena_allocated = true;
+    type->category = INFIX_TYPE_COMPLEX;
+
+    // The size is twice the base type; alignment is the same as the base type.
+    type->size = base_type->size * 2;
+    type->alignment = base_type->alignment;
+    type->meta.complex_info.base_type = base_type;
+
+    *out_type = type;
+    return INFIX_SUCCESS;
+}
+
 /**
  * @brief Creates an `infix_type` for a struct, allocating from an arena.
  * @details This function calculates the size and alignment of the struct based on its
