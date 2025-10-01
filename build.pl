@@ -501,7 +501,7 @@ sub run_coverage_msvc {
     my ( $config, $obj_suffix, $test_names_ref ) = @_;
     if ( $config->{arch} eq 'arm64' ) {
         warn "\n# Warning: Skipping OpenCppCoverage on Windows ARM64 as it is unsupported.\n";
-        return 0;
+        return compile_and_run_tests( \%config, $obj_suffix, $test_names_ref, 0 );
     }
     my $tool_path = File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
     warn "Error: OpenCppCoverage not found at '$tool_path'." unless -f $tool_path;

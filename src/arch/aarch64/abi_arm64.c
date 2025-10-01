@@ -148,8 +148,6 @@ const infix_reverse_abi_spec g_arm64_reverse_spec = {
 static infix_type * get_hfa_base_type(infix_type * type) {
     if (type == nullptr)
         return nullptr;
-    if (type->category == INFIX_TYPE_VECTOR)
-        return nullptr;
     // Base case: we've found a primitive float or double.
     if (is_float(type) || is_double(type))
         return type;
@@ -165,6 +163,9 @@ static infix_type * get_hfa_base_type(infix_type * type) {
     // Recusive step for _Complex
     if (type->category == INFIX_TYPE_COMPLEX)
         return get_hfa_base_type(type->meta.complex_info.base_type);
+    // Recursive step for vectors
+    if (type->category == INFIX_TYPE_VECTOR)
+        return get_hfa_base_type(type->meta.vector_info.element_type);
     return nullptr;  // Not a float-based type
 }
 
@@ -195,6 +196,7 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
         // The complex number's base type itself must also match.
         return type->meta.complex_info.base_type == base_type;
 
+    // Recursive step for vectors.
     if (type->category == INFIX_TYPE_VECTOR)
         return is_hfa_recursive_check(type->meta.vector_info.element_type, base_type, field_count);
 
@@ -570,7 +572,9 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
             emit_int32(buf, 0xAA0903E0 | GPR_ARGS[loc->reg_index]);  // mov xN, x9
             break;
         case ARG_LOCATION_VPR:
-            if (is_long_double(type) || type->category == INFIX_TYPE_VECTOR)
+            if (is_long_double(type))
+                emit_arm64_ldr_q_imm(buf, VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr qN, [x9]
+            else if (type->category == INFIX_TYPE_VECTOR)
                 emit_arm64_ldr_q_imm(buf, VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr qN, [x9]
             else
                 emit_arm64_ldr_vpr(buf, is_double(type), VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr dN/sN, [x9]
@@ -678,9 +682,11 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         infix_type * hfa_base = nullptr;
         // The order of these checks is critical. Handle the most specific cases first.
-        if (is_long_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
+        if (is_long_double(ret_type))
             // On non-Apple AArch64, long double is 16 bytes and returned in V0.
             // On Apple, this case is never hit because types.c aliases it to a standard double.
+            emit_arm64_str_q_imm(buf, V0_REG, X20_REG, 0);  // str q0, [x20]
+        else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16)
             emit_arm64_str_q_imm(buf, V0_REG, X20_REG, 0);  // str q0, [x20]
         else if (is_hfa(ret_type, &hfa_base)) {
             size_t num_elements = ret_type->size / hfa_base->size;

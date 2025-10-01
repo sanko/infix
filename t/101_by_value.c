@@ -19,8 +19,7 @@
  * complex aspects of any ABI: the rules for passing and returning structs in
  * CPU registers. The behavior is highly platform-dependent.
  *
- * This file consolidates several previous tests (`008_return_point.c`,
- * `015_struct_with_array.c`, `207_mixed_type_aggr.c`) into a single,
+ * This file consolidates several previous tests into a single,
  * cohesive suite with the following goals:
  *
  * 1.  **General Case:** Tests a simple `struct { double; double; }` to verify
@@ -30,6 +29,8 @@
  * 3.  **AArch64 (ARM64) Specific:** Tests a `struct { float v[4]; }`, which is a
  *     Homogeneous Floating-point Aggregate (HFA) and should be passed in four
  *     consecutive floating-point registers.
+ * 4.  **SIMD Vector Types:** Contains conditionally compiled tests for native 128-bit
+ *     SIMD vector types on both x86-64 (`__m128d`) and AArch64 (`float64x2_t`).
  *
  * Platform-specific tests are conditionally compiled using preprocessor guards to
  * ensure they only run on relevant targets.
@@ -42,10 +43,17 @@
 #include <infix/infix.h>
 #include <math.h>  // For fabs
 
+// Platform-specific headers and functions for SIMD tests
+#if defined(INFIX_ARCH_X86_SSE2)
 #if defined(_MSC_VER)
 #include <intrin.h>
 #else
 #include <immintrin.h>  // For GCC/Clang
+#endif
+#elif defined(INFIX_ARCH_ARM_NEON)
+#include <arm_neon.h>
+// https://developer.arm.com/documentation/102581/0200/About-intrinsics
+//
 #endif
 
 // Native C Target Functions
@@ -72,10 +80,17 @@ float sum_vector4(Vector4 vec) {
     return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3];
 }
 
+#if defined(INFIX_ARCH_X86_SSE2)
 // A native C function that adds two 128-bit vectors of doubles.
 __m128d native_vector_add(__m128d a, __m128d b) {
     return _mm_add_pd(a, b);
 }
+#elif defined(INFIX_ARCH_ARM_NEON)
+// A native C function that uses NEON intrinsics to add two vectors.
+float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) {
+    return vaddq_f64(a, b);
+}
+#endif
 
 TEST {
     plan(4);  // One subtest for each major scenario.
@@ -91,40 +106,40 @@ TEST {
             infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         point_members[1] =
             infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
-        infix_type * point_type = NULL;
+        infix_type * point_type = nullptr;
         infix_status status = infix_type_create_struct(arena, &point_type, point_members, 2);
         if (!ok(status == INFIX_SUCCESS, "infix_type for Point created successfully")) {
             skip(4, "Cannot proceed without Point type");
             infix_arena_destroy(arena);
-            return;
         }
+        else {
+            // Test 1: Pass Point as an argument
+            infix_type * arg_ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+            infix_forward_t * arg_trampoline = nullptr;
+            status = infix_forward_create_manual(&arg_trampoline, arg_ret_type, &point_type, 1, 1);
+            ok(status == INFIX_SUCCESS, "Trampoline for process_point_by_value created");
 
-        // Test 1: Pass Point as an argument
-        infix_type * arg_ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-        infix_forward_t * arg_trampoline = NULL;
-        status = infix_forward_create_manual(&arg_trampoline, arg_ret_type, &point_type, 1, 1);
-        ok(status == INFIX_SUCCESS, "Trampoline for process_point_by_value created");
+            infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
+            Point p_in = {10.5, 20.5};
+            double sum_result = 0.0;
+            void * arg_args[] = {&p_in};
+            arg_cif((void *)process_point_by_value, &sum_result, arg_args);
+            ok(fabs(sum_result - 31.0) < 0.001, "Struct passed as argument correctly");
+            infix_forward_destroy(arg_trampoline);
 
-        infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
-        Point p_in = {10.5, 20.5};
-        double sum_result = 0.0;
-        void * arg_args[] = {&p_in};
-        arg_cif((void *)process_point_by_value, &sum_result, arg_args);
-        ok(fabs(sum_result - 31.0) < 0.001, "Struct passed as argument correctly");
-        infix_forward_destroy(arg_trampoline);
+            // Test 2: Return Point as a value
+            infix_forward_t * ret_trampoline = nullptr;
+            status = infix_forward_create_manual(&ret_trampoline, point_type, nullptr, 0, 0);
+            ok(status == INFIX_SUCCESS, "Trampoline for return_point_by_value created");
 
-        // Test 2: Return Point as a value
-        infix_forward_t * ret_trampoline = NULL;
-        status = infix_forward_create_manual(&ret_trampoline, point_type, NULL, 0, 0);
-        ok(status == INFIX_SUCCESS, "Trampoline for return_point_by_value created");
+            infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
+            Point p_out = {0.0, 0.0};
+            ret_cif((void *)return_point_by_value, &p_out, nullptr);
+            ok(fabs(p_out.x - 100.0) < 0.001 && fabs(p_out.y - 200.0) < 0.001, "Struct returned by value correctly");
+            infix_forward_destroy(ret_trampoline);
 
-        infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
-        Point p_out = {0.0, 0.0};
-        ret_cif((void *)return_point_by_value, &p_out, NULL);
-        ok(fabs(p_out.x - 100.0) < 0.001 && fabs(p_out.y - 200.0) < 0.001, "Struct returned by value correctly");
-        infix_forward_destroy(ret_trampoline);
-
-        infix_arena_destroy(arena);
+            infix_arena_destroy(arena);
+        }
     }
 
     subtest("ABI Specific: System V x64 mixed-register struct") {
@@ -138,10 +153,10 @@ TEST {
             "i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(MixedIntDouble, i));
         members[1] = infix_type_create_member(
             "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(MixedIntDouble, d));
-        infix_type * mixed_type = NULL;
+        infix_type * mixed_type = nullptr;
         (void)infix_type_create_struct(arena, &mixed_type, members, 2);
 
-        infix_forward_t * trampoline = NULL;
+        infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for mixed-type struct created");
@@ -163,90 +178,114 @@ TEST {
         infix_arena_t * arena = infix_arena_create(4096);
 
         // Level 1: Create the inner array type float[4]
-        infix_type * array_type = NULL;
+        infix_type * array_type = nullptr;
         infix_status status =
             infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 4);
         if (status != INFIX_SUCCESS) {
             fail("Failed to create HFA inner array type");
             skip(1, "Cannot proceed");
             infix_arena_destroy(arena);
-            return;
         }
+        else {
+            // Level 2: Wrap the array in a struct
+            infix_struct_member * members =
+                infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
+            members[0] = infix_type_create_member("v", array_type, offsetof(Vector4, v));
+            infix_type * struct_type = nullptr;
+            status = infix_type_create_struct(arena, &struct_type, members, 1);
+            if (status != INFIX_SUCCESS) {
+                fail("Failed to create HFA container struct type");
+                skip(1, "Cannot proceed");
+                infix_arena_destroy(arena);
+                return;
+            }
 
-        // Level 2: Wrap the array in a struct
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        members[0] = infix_type_create_member("v", array_type, offsetof(Vector4, v));
-        infix_type * struct_type = NULL;
-        status = infix_type_create_struct(arena, &struct_type, members, 1);
-        if (status != INFIX_SUCCESS) {
-            fail("Failed to create HFA container struct type");
-            skip(1, "Cannot proceed");
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_manual(
+                &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
+            ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
+
+            infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+            Vector4 vec = {{1.5f, 2.5f, 3.5f, 4.5f}};
+            float result = 0.0f;
+            void * args[] = {&vec};
+            cif_func((void *)sum_vector4, &result, args);
+            ok(fabs(result - 12.0f) < 0.001, "HFA struct passed correctly");
+
+            infix_forward_destroy(trampoline);
             infix_arena_destroy(arena);
-            return;
         }
-
-        infix_forward_t * trampoline = NULL;
-        status = infix_forward_create_manual(
-            &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
-        ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-        Vector4 vec = {{1.5f, 2.5f, 3.5f, 4.5f}};
-        float result = 0.0f;
-        void * args[] = {&vec};
-        cif_func((void *)sum_vector4, &result, args);
-        ok(fabs(result - 12.0f) < 0.001, "HFA struct passed correctly");
-
-        infix_forward_destroy(trampoline);
-        infix_arena_destroy(arena);
     }
-
-    subtest("ABI Specific: 128-bit SIMD Vector (__m128d)") {
+    subtest("ABI Specific: 128-bit SIMD Vector") {
         plan(2);
-        // This test will only run on platforms that support SSE2.
 #if defined(INFIX_ARCH_X86_SSE2)
-        note("Testing __m128d passed and returned by value.");
+        note("Testing __m128d passed and returned by value on x86-64.");
         infix_arena_t * arena = infix_arena_create(4096);
-
         // 1. Create the infix_type for v[2:double]
-        infix_type * vector_type = NULL;
+        infix_type * vector_type = nullptr;
         infix_status status =
             infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 2);
 
         if (!ok(status == INFIX_SUCCESS, "infix_type for __m128d created successfully")) {
             skip(1, "Cannot proceed without vector type");
             infix_arena_destroy(arena);
-            return;
         }
+        else {
+            // 2. Create the trampoline for __m128d(__m128d, __m128d)
+            infix_type * arg_types[] = {vector_type, vector_type};
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
 
-        // 2. Create the trampoline for __m128d(__m128d, __m128d)
-        infix_type * arg_types[] = {vector_type, vector_type};
-        infix_forward_t * trampoline = NULL;
-        status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+            // 3. Prepare arguments and call
+            __m128d vec_a = _mm_set_pd(20.0, 10.0);  // Vector [10.0, 20.0]
+            __m128d vec_b = _mm_set_pd(22.0, 32.0);  // Vector [32.0, 22.0]
+            void * args[] = {&vec_a, &vec_b};
+            union {
+                __m128d v;
+                double d[2];
+            } result;
+            result.v = _mm_setzero_pd();
+            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add, &result.v, args);
 
-        // 3. Prepare arguments and call
-        __m128d vec_a = _mm_set_pd(20.0, 10.0);  // Vector [10.0, 20.0]
-        __m128d vec_b = _mm_set_pd(22.0, 32.0);  // Vector [32.0, 22.0]
-        void * args[] = {&vec_a, &vec_b};
+            ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
+               "SIMD vector passed/returned correctly");
+            diag("Result: [%f, %f]", result.d[0], result.d[1]);
+            infix_forward_destroy(trampoline);
+            infix_arena_destroy(arena);
+        }
+#elif defined(INFIX_ARCH_ARM_NEON)
+        note("Testing float64x2_t passed/returned by value on AArch64 via HFA classification.");
+        infix_arena_t * arena = infix_arena_create(4096);
+        // On ARM, a float64x2_t is treated as an HFA. The most direct representation is an array.
+        infix_type * neon_vector_type = nullptr;
+        infix_status status =
+            infix_type_create_array(arena, &neon_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 2);
 
-        union {
-            __m128d v;
-            double d[2];
-        } result;
-        result.v = _mm_setzero_pd();
-
-        ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add, &result.v, args);
-
-        // 4. Verify the result: [10.0+32.0, 20.0+22.0] -> [42.0, 42.0]
-        ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
-           "SIMD vector passed and returned correctly");
-        diag("Result: [%f, %f]", result.d[0], result.d[1]);
-
-        infix_forward_destroy(trampoline);
-        infix_arena_destroy(arena);
+        if (!ok(status == INFIX_SUCCESS, "infix_type for float64x2_t layout created successfully")) {
+            skip(1, "Cannot proceed");
+            infix_arena_destroy(arena);
+        }
+        else {
+            infix_type * arg_types[] = {neon_vector_type, neon_vector_type};
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_manual(&trampoline, neon_vector_type, arg_types, 2, 2);
+            float64_t a_data[] = {10.0, 20.0};
+            float64_t b_data[] = {32.0, 22.0};
+            float64x2_t vec_a = vld1q_f64(a_data);
+            float64x2_t vec_b = vld1q_f64(b_data);
+            void * args[] = {&vec_a, &vec_b};
+            float64x2_t result_vec;
+            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)neon_vector_add, &result_vec, args);
+            float64_t result_data[2];
+            vst1q_f64(result_data, result_vec);
+            ok(fabs(result_data[0] - 42.0) < 1e-9 && fabs(result_data[1] - 42.0) < 1e-9,
+               "NEON vector passed/returned correctly via HFA rules");
+            diag("Result: [%f, %f]", result_data[0], result_data[1]);
+            infix_forward_destroy(trampoline);
+            infix_arena_destroy(arena);
+        }
 #else
-        skip(2, "SSE2 support not available, skipping SIMD vector test.");
+        skip(2, "No supported 128-bit SIMD vector type on this platform.");
 #endif
     }
 }
