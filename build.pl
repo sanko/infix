@@ -111,7 +111,7 @@ if ( $config{compiler} eq 'msvc' ) {
     die 'Warning: MSVC environment not detected. Build may fail. Please run from a VS dev prompt.' unless $ENV{VCINSTALLDIR};
     $config{cc} = 'cl';
     my @include_flags = map { '-I' . File::Spec->catfile($_) } @{ $config{include_dirs} };
-    $config{cflags}  = [ @base_cflags, '-std:c17', '-experimental:c11atomics', '-W3', '-GS', '-MD', '-arch:AVX2', @include_flags ];
+    $config{cflags}  = [ @base_cflags, '-std:c17', '-experimental:c11atomics', '-W3', '-GS', '-MD', @include_flags ];
     $config{ldflags} = ['-link'];
     if ( $is_coverage_build || $command eq 'test' ) {
         push @{ $config{cflags} },  '-Zi';
@@ -124,7 +124,7 @@ if ( $config{compiler} eq 'msvc' ) {
 else {    # GCC or Clang
     $config{cc} = $config{compiler};
     my @include_flags = map { "-I" . File::Spec->catfile($_) } @{ $config{include_dirs} };
-    $config{cflags}  = [ @base_cflags, '-std=c17', '-Wall', '-Wextra', '-g', '-O2', '-pthread', '-mavx2', @include_flags ];
+    $config{cflags}  = [ @base_cflags, '-std=c17', '-Wall', '-Wextra', '-g', '-O2', '-pthread', @include_flags ];
     $config{ldflags} = [];
     if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch_raw !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
         print "ARM64 cross-compilation detected for clang. Adding --target flag.\n";
@@ -372,7 +372,7 @@ sub compile_and_run_tests {
             next;
         }
         my @source_files = ($test_c);
-        my @local_cflags = @{ $config->{cflags} };
+        my @local_cflags = ( @{ $config->{cflags} }, ( $config{arch} eq 'x64' ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) : '' ) );
         if ( $test_c =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );

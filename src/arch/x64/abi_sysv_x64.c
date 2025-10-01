@@ -366,7 +366,10 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                              ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
 
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
-    layout->return_value_in_memory = (ret_is_aggregate && ret_type->size > 16);
+    // Exception: 256-bit vectors are returned in YMM0.
+    layout->return_value_in_memory =
+        (ret_is_aggregate && ret_type->size > 16) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size > 32);
+
 
     // Rule 2: Small aggregates (<= 16 bytes) must also be returned via hidden pointer
     // if their classification is MEMORY. This is critical for types like packed structs
@@ -452,7 +455,8 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                     layout->arg_locations[i].reg_index = gpr_count++;
                     placed_in_register = true;
                 }
-                else if (classes[0] == SSE && type->size == 32 && xmm_count < NUM_XMM_ARGS) {
+                else if (classes[0] == SSE && type->category == INFIX_TYPE_VECTOR && type->size == 32 &&
+                         xmm_count < NUM_XMM_ARGS) {
                     // AVX/256-bit vector case
                     layout->arg_locations[i].type = ARG_LOCATION_XMM;  // Re-use XMM type
                     layout->arg_locations[i].reg_index = xmm_count++;
@@ -632,11 +636,11 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             if (is_float(arg_types[i]))
                 // movss xmm_reg, [r15] (Move Scalar Single-Precision)
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
-            else if (arg_types[i]->category == INFIX_TYPE_VECTOR)
-                emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else if (arg_types[i]->category == INFIX_TYPE_VECTOR && arg_types[i]->size == 32)
                 // AVX case: Use the new 256-bit move emitter
                 emit_vmovupd_ymm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
+            else if (arg_types[i]->category == INFIX_TYPE_VECTOR)
+                emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
                 // movsd xmm_reg, [r15] (Move Scalar Double-Precision)
                 emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
@@ -760,7 +764,7 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                     case 4:
                         emit_mov_mem_reg32(buf, R13_REG, 0, RAX_REG);  // mov [r13], eax
                         break;
-                    case 8:
+                    default:
                         emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);  // mov [r13], rax
                         break;
                     }
@@ -787,10 +791,10 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                 }
                 else if (classes[0] == INTEGER && classes[1] == SSE) {
                     emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);     // mov [r13], rax
-                    emit_movsd_xmm_mem(buf, R13_REG, 8, XMM0_REG);  // movsd [r13 + 8], xmm0
+                    emit_movsd_mem_xmm(buf, R13_REG, 8, XMM0_REG);  // movsd [r13 + 8], xmm0
                 }
                 else {                                              // SSE, INTEGER
-                    emit_movsd_xmm_mem(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
+                    emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
                     emit_mov_mem_reg(buf, R13_REG, 8, RAX_REG);     // mov [r13 + 8], rax
                 }
             }
@@ -859,7 +863,7 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
 
     // Local variables are accessed via negative offsets from the frame pointer (RBP).
     // The layout is [ return_buffer | args_array | saved_args_data ]
-    layout->return_buffer_offset = -layout->total_stack_alloc;
+    layout->return_buffer_offset = -(int32_t)layout->total_stack_alloc;
     layout->args_array_offset = layout->return_buffer_offset + return_size;
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
 
@@ -1083,16 +1087,20 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         // Now, handle the return value based on the correct classification.
         if (is_long_double(context->return_type))
             emit_fldt_mem(buf, RBP_REG, layout->return_buffer_offset);
-        else if (return_in_memory) {
+        else if (return_in_memory)
             // The return value was written directly via the hidden pointer.
             // The ABI requires this pointer to be returned in RAX.
             emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
-        }
         else {
             // Classify the return type to determine which registers to load.
             arg_class_t classes[2];
             size_t num_classes;
-            classify_aggregate_sysv(context->return_type, classes, &num_classes);
+            if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32) {
+                classes[0] = SSE;
+                num_classes = 1;
+            }
+            else
+                classify_aggregate_sysv(context->return_type, classes, &num_classes);
 
             if (num_classes >= 1) {  // First eightbyte
                 if (classes[0] == SSE) {
@@ -1112,7 +1120,6 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                         emit_vmovupd_ymm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 32);
                     else
                         emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
-                    emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
                 }
                 else  // INTEGER
                     emit_mov_reg_mem(buf, RDX_REG, RBP_REG, layout->return_buffer_offset + 8);

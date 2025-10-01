@@ -10,7 +10,7 @@ ARFLAGS := rcs
 
 # --- Flags ---
 # Base flags for all compilations
-BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2 -mavx2
+BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2
 
 # Include directories needed for the LIBRARY
 LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64
@@ -19,7 +19,7 @@ LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64
 LIB_CFLAGS   := $(BASE_CFLAGS) $(LIB_INC_DIRS) -DINFIX_DEBUG_ENABLED=1
 
 # Flags for compiling and linking TESTS ONLY.
-TEST_CFLAGS  := $(BASE_CFLAGS) $(LIB_INC_DIRS) -It/include -Ithird_party/double_tap -DDBLTAP_ENABLE=1 -DINFIX_DEBUG_ENABLED=1
+TEST_CFLAGS  := $(BASE_CFLAGS) $(LIB_INC_DIRS) -mavx2 -It/include -Ithird_party/double_tap -DDBLTAP_ENABLE=1 -DINFIX_DEBUG_ENABLED=1
 
 # --- Source Files ---
 # The list of library sources is now complete.
