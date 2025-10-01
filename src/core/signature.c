@@ -70,15 +70,14 @@ typedef struct {
 } parser_state;
 
 /** @brief The main recursive function for parsing any single value type. */
-static infix_type * parse_type(parser_state * state);
+static infix_type * parse_type(parser_state *);
 /** @brief Parses the components of a full function signature: `(fixed...; variadic...) -> ret`. */
-static infix_status parse_function_signature_details(parser_state * state,
-                                                     infix_type ** out_ret_type,
-                                                     infix_function_argument ** out_args,
-                                                     size_t * out_num_args,
-                                                     size_t * out_num_fixed_args);
+static infix_status parse_function_signature_details(
+    parser_state *, infix_type **, infix_function_argument **, size_t *, size_t *);
 /** @brief A helper for parsing the body of an aggregate type (struct or union). */
-static infix_type * parse_aggregate(parser_state * state, char start_char, char end_char, const char * name);
+static infix_type * parse_aggregate(parser_state *, char, char, const char *);
+/** @brief Parses a SIMD vector type from a signature string: `v[<N>:<type>]`. */
+static infix_type * parse_vector_type(parser_state *);
 
 /**
  * @internal
@@ -816,6 +815,10 @@ static infix_type * parse_type(parser_state * state) {
             result_type = NULL;
         }
     }
+    else if (*state->p == 'v' && state->p[1] == '[') {
+        // VECTOR TYPE: v[<N>:<type>]
+        result_type = parse_vector_type(state);
+    }
     else {
         // PRIMITIVE TYPE
         // If none of the above constructors match, it must be a primitive type.
@@ -889,6 +892,64 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
 
     state->depth--;
     return agg_type;
+}
+
+/**
+ * @internal
+ * @brief Parses a SIMD vector type from the input string.
+ * @details This function handles the `v[<N>:<type>]` syntax. It parses the
+ *          number of elements `N` and the primitive element `<type>`, then calls
+ *          `infix_type_create_vector` to construct the final type object.
+ *
+ * @param state The current parser state.
+ * @return A new arena-allocated `infix_type` for the vector, or `nullptr` on a parsing or allocation error.
+ */
+static infix_type * parse_vector_type(parser_state * state) {
+    state->p++;  // Consume 'v'
+    skip_whitespace(state);
+
+    if (*state->p != '[') {
+        state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+        return nullptr;
+    }
+    state->p++;  // Consume '['
+    skip_whitespace(state);
+
+    size_t num_elements;
+    if (!parse_size_t(state, &num_elements)) {
+        return nullptr;
+    }
+    skip_whitespace(state);
+
+    if (*state->p != ':') {
+        state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+        return nullptr;
+    }
+    state->p++;  // Consume ':'
+    skip_whitespace(state);
+
+    infix_type * element_type = parse_type(state);
+    if (!element_type) {
+        return nullptr;
+    }
+    if (element_type->category != INFIX_TYPE_PRIMITIVE) {
+        state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+        return nullptr;
+    }
+
+    skip_whitespace(state);
+    if (*state->p != ']') {
+        state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
+        return nullptr;
+    }
+    state->p++;  // Consume ']'
+
+    infix_type * vector_type = nullptr;
+    if (infix_type_create_vector(state->arena, &vector_type, element_type, num_elements) != INFIX_SUCCESS) {
+        state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
+        return nullptr;
+    }
+    return vector_type;
 }
 
 /**

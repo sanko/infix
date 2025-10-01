@@ -421,6 +421,41 @@ infix_struct_member infix_type_create_member(const char * name, infix_type * typ
     return (infix_struct_member){name, type, offset};
 }
 
+
+c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * arena,
+                                                    infix_type ** out_type,
+                                                    infix_type * element_type,
+                                                    size_t num_elements) {
+    if (out_type == nullptr || element_type == nullptr || element_type->category != INFIX_TYPE_PRIMITIVE)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // Security: Check for integer overflow before calculating the total vector size.
+    if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
+        *out_type = nullptr;
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    if (type == nullptr) {
+        *out_type = nullptr;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
+    type->is_arena_allocated = true;
+    type->category = INFIX_TYPE_VECTOR;
+    type->meta.vector_info.element_type = element_type;
+    type->meta.vector_info.num_elements = num_elements;
+
+    // A vector's size is the total size of its elements.
+    type->size = element_type->size * num_elements;
+    // Common ABIs require 128-bit vectors to be 16-byte aligned.
+    // We will enforce this alignment, as it's the strictest requirement.
+    type->alignment = type->size > 8 ? 16 : type->size;
+
+    *out_type = type;
+    return INFIX_SUCCESS;
+}
+
 /**
  * @brief Creates an `infix_type` for a union, allocating from an arena.
  * @details This function calculates the size and alignment for a union according to

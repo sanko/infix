@@ -38,8 +38,15 @@
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "types.h"  // Test-specific type definitions
+#include <common/infix_config.h>
 #include <infix/infix.h>
 #include <math.h>  // For fabs
+
+#if defined(_MSC_VER)
+#include <intrin.h>
+#else
+#include <immintrin.h>  // For GCC/Clang
+#endif
 
 // Native C Target Functions
 /** @brief Processes a Point struct passed by value, returning a sum of its members. */
@@ -65,8 +72,13 @@ float sum_vector4(Vector4 vec) {
     return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3];
 }
 
+// A native C function that adds two 128-bit vectors of doubles.
+__m128d native_vector_add(__m128d a, __m128d b) {
+    return _mm_add_pd(a, b);
+}
+
 TEST {
-    plan(3);  // One subtest for each major scenario.
+    plan(4);  // One subtest for each major scenario.
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(5);
@@ -188,5 +200,53 @@ TEST {
 
         infix_forward_destroy(trampoline);
         infix_arena_destroy(arena);
+    }
+
+    subtest("ABI Specific: 128-bit SIMD Vector (__m128d)") {
+        plan(2);
+        // This test will only run on platforms that support SSE2.
+#if defined(INFIX_ARCH_X86_SSE2)
+        note("Testing __m128d passed and returned by value.");
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // 1. Create the infix_type for v[2:double]
+        infix_type * vector_type = NULL;
+        infix_status status =
+            infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 2);
+
+        if (!ok(status == INFIX_SUCCESS, "infix_type for __m128d created successfully")) {
+            skip(1, "Cannot proceed without vector type");
+            infix_arena_destroy(arena);
+            return;
+        }
+
+        // 2. Create the trampoline for __m128d(__m128d, __m128d)
+        infix_type * arg_types[] = {vector_type, vector_type};
+        infix_forward_t * trampoline = NULL;
+        status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+
+        // 3. Prepare arguments and call
+        __m128d vec_a = _mm_set_pd(20.0, 10.0);  // Vector [10.0, 20.0]
+        __m128d vec_b = _mm_set_pd(22.0, 32.0);  // Vector [32.0, 22.0]
+        void * args[] = {&vec_a, &vec_b};
+
+        union {
+            __m128d v;
+            double d[2];
+        } result;
+        result.v = _mm_setzero_pd();
+
+        ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add, &result.v, args);
+
+        // 4. Verify the result: [10.0+32.0, 20.0+22.0] -> [42.0, 42.0]
+        ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
+           "SIMD vector passed and returned correctly");
+        diag("Result: [%f, %f]", result.d[0], result.d[1]);
+
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
+#else
+        skip(2, "SSE2 support not available, skipping SIMD vector test.");
+#endif
     }
 }

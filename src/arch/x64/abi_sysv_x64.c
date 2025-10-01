@@ -420,16 +420,19 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             // Complex types need the full classification algorithm.
             classify_aggregate_sysv(type, classes, &num_classes);
         else {
-            // Simple primitive types are classified directly.
-            if (is_float(type) || is_double(type))
+            // Simple primitive and vector types are classified directly.
+            if (is_float(type) || is_double(type) || type->category == INFIX_TYPE_VECTOR) {
                 classes[0] = SSE;
-            else
+                num_classes = 1;
+            }
+            else {
                 classes[0] = INTEGER;
-            num_classes = 1;
-            // Primitives > 8 bytes (like __int128) are treated as two INTEGER parts.
-            if (type->size > 8) {
-                classes[1] = INTEGER;
-                num_classes = 2;
+                num_classes = 1;
+                // Primitives > 8 bytes (like __int128) are treated as two INTEGER parts.
+                if (type->size > 8) {
+                    classes[1] = INTEGER;
+                    num_classes = 2;
+                }
             }
         }
 
@@ -618,6 +621,8 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             if (is_float(arg_types[i]))
                 // movss xmm_reg, [r15] (Move Scalar Single-Precision)
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
+            else if (arg_types[i]->category == INFIX_TYPE_VECTOR)
+                emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
                 // movsd xmm_reg, [r15] (Move Scalar Double-Precision)
                 emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
@@ -697,13 +702,33 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
         else {
             // For other types, we must classify the return type just like an argument.
             arg_class_t classes[2];
-            size_t num_classes;
-            classify_aggregate_sysv(ret_type, classes, &num_classes);
+            size_t num_classes = 0;
+            bool is_aggregate = ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX;
+
+            if (is_aggregate)
+                classify_aggregate_sysv(ret_type, classes, &num_classes);
+            else {
+                if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
+                    classes[0] = SSE;
+                    num_classes = 1;
+                }
+                else {
+                    classes[0] = INTEGER;
+                    num_classes = 1;
+                    if (ret_type->size > 8) {
+                        classes[1] = INTEGER;
+                        num_classes = 2;
+                    }
+                }
+            }
 
             if (num_classes == 1) {  // Returned in a single register
                 if (classes[0] == SSE) {
                     if (is_float(ret_type))
                         emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movss [r13], xmm0
+                    else if (ret_type->category == INFIX_TYPE_VECTOR)
+                        emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
                     else
                         emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
                 }
@@ -731,15 +756,21 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_mem_reg(buf, R13_REG, 8, RDX_REG);  // mov [r13 + 8], rdx
                 }
                 else if (classes[0] == SSE && classes[1] == SSE) {
-                    emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
-                    emit_movsd_mem_xmm(buf, R13_REG, 8, XMM1_REG);  // movsd [r13 + 8], xmm1
+                    if (ret_type->category == INFIX_TYPE_VECTOR) {
+                        emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+                        emit_movups_mem_xmm(buf, R13_REG, 16, XMM1_REG);
+                    }
+                    else {
+                        emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
+                        emit_movsd_mem_xmm(buf, R13_REG, 8, XMM1_REG);  // movsd [r13 + 8], xmm1
+                    }
                 }
                 else if (classes[0] == INTEGER && classes[1] == SSE) {
                     emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);     // mov [r13], rax
-                    emit_movsd_mem_xmm(buf, R13_REG, 8, XMM0_REG);  // movsd [r13 + 8], xmm0
+                    emit_movsd_xmm_mem(buf, R13_REG, 8, XMM0_REG);  // movsd [r13 + 8], xmm0
                 }
                 else {                                              // SSE, INTEGER
-                    emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
+                    emit_movsd_xmm_mem(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
                     emit_mov_mem_reg(buf, R13_REG, 8, RAX_REG);     // mov [r13 + 8], rax
                 }
             }
@@ -1016,9 +1047,8 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                  ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
 
         if (ret_is_aggregate) {
-            if (ret_type->size > 16) {
+            if (ret_type->size > 16)
                 return_in_memory = true;
-            }
             else {
                 arg_class_t ret_classes[2];
                 size_t num_ret_classes;

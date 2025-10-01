@@ -33,12 +33,6 @@
  *     emitting common data types (bytes, integers) into the code buffer.
  */
 
-// Define the POSIX source macro to ensure function declarations for posix_memalign
-// are visible. This must be defined before any system headers are included.
-#if !defined(_POSIX_C_SOURCE)
-#define _POSIX_C_SOURCE 200809L
-#endif
-
 #include "../common/infix_internals.h"
 #include "../common/utility.h"  // Restored for infix_dump_hex and INFIX_DEBUG_PRINTF
 #include <stdio.h>

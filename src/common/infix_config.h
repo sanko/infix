@@ -69,6 +69,15 @@
  *
  */
 
+// Define the POSIX source macro to ensure function declarations for shm_open,
+// ftruncate, etc., are visible on all POSIX-compliant systems.
+#if !defined(_POSIX_C_SOURCE)
+#define _POSIX_C_SOURCE 200809L
+#endif
+#if (defined(__linux__) || defined(__gnu_linux__)) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+
 // Host Platform and Architecture Detection
 // This block ALWAYS detects the native host. It is NOT overridden by the ABI flag.
 #if defined(_WIN32)
@@ -176,3 +185,60 @@
 #endif
 #endif
 #endif
+
+/**
+ * @defgroup simd_macros SIMD Feature Detection Macros
+ * @brief Internal macros for compile-time detection of SIMD instruction set support.
+ * @details These macros are used to conditionally compile SIMD-specific code, such as
+ *          the inclusion of intrinsic headers (`<immintrin.h>`, `<arm_neon.h>`) and
+ *          the activation of tests that require specific hardware features. They are
+ *          for internal library use and are not part of the public API.
+ * @{
+ */
+/** @brief Can be defined by the user to disable all intrinsic-related code. */
+//~ #define INFIX_NO_INTRINSICS
+
+#if !defined(INFIX_NO_INTRINSICS)
+#if defined(__AVX2__)
+/** @brief Defined if the target supports the AVX2 instruction set. */
+#define INFIX_ARCH_X86_AVX2
+#endif
+#if defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86) && defined(_M_IX86_FP) && (_M_IX86_FP >= 2))
+/** @brief Defined if the target supports SSE2. This is the baseline for x86-64. */
+#define INFIX_ARCH_X86_SSE2
+#endif
+#if defined(__ARM_NEON) || defined(_M_ARM64)
+/** @brief Defined if the target supports the ARM NEON instruction set. */
+#define INFIX_ARCH_ARM_NEON
+#endif
+#if defined(__ARM_FEATURE_SVE)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension (SVE). */
+#define INFIX_ARCH_ARM_SVE
+#endif
+#if defined(__ARM_FEATURE_SVE2)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension 2 (SVE2). */
+#define INFIX_ARCH_ARM_SVE2
+#endif
+#if defined(__riscv) && defined(__riscv_vector)
+#if ((defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 14) || (defined(__clang__) && __clang_major__ >= 19))
+/** @brief Defined if the target supports the RISC-V Vector Extension ('V'). */
+#define INFIX_ARCH_RISCV_RVV
+#endif
+#endif
+#
+#if defined(INFIX_ARCH_X86_AVX2)
+#include <immintrin.h>
+#endif
+#if defined(INFIX_ARCH_X86_SSE2)
+#include <emmintrin.h>
+#elif defined(INFIX_ARCH_ARM_NEON)
+#include <arm_neon.h>
+#endif
+#if defined(INFIX_ARCH_ARM_SVE) || defined(INFIX_ARCH_ARM_SVE2)
+#include <arm_sve.h>
+#endif
+#if defined(INFIX_ARCH_RISCV_RVV)
+#include <riscv_vector.h>
+#endif
+#endif
+/** @} */  // end simd_macros

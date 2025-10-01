@@ -522,6 +522,25 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t *, infix_type
 infix_struct_member infix_type_create_member(const char *, infix_type *, size_t);
 
 /**
+ * @brief Creates a new `infix_type` for a SIMD vector from an arena.
+ * @details This function describes a fixed-size SIMD vector type, which is typically
+ *          passed in dedicated vector registers (e.g., XMM on x86-64, NEON on ARM).
+ *          It is essential for interfacing with libraries that use intrinsics for
+ *          high-performance computing.
+ *
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param element_type The primitive `infix_type` of the vector's elements (e.g.,
+ *                     `INFIX_PRIMITIVE_FLOAT`, `INFIX_PRIMITIVE_SINT64`).
+ * @param num_elements The number of elements in the vector.
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if `out_type` or `element_type` is null, or
+ *         if `element_type` is not a primitive.
+ * @return `INFIX_ERROR_ALLOCATION_FAILED` if memory allocation fails.
+ */
+c23_nodiscard infix_status infix_type_create_vector(infix_arena_t *, infix_type **, infix_type *, size_t);
+
+/**
  * @defgroup high_level_api High-Level Signature API
  * @brief Convenience functions for creating trampolines from a signature string.
  * @details This API is the recommended way for most users to interact with infix.

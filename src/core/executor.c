@@ -37,12 +37,6 @@
  *     bridge to invoke the user's C callback with the correctly marshalled arguments.
  */
 
-// Define the POSIX source macro to ensure function declarations for shm_open,
-// ftruncate, etc., are visible on all POSIX-compliant systems.
-#if !defined(_POSIX_C_SOURCE)
-#define _POSIX_C_SOURCE 200809L
-#endif
-
 #include "../common/infix_internals.h"
 #include "../common/utility.h"
 #include <stdio.h>
@@ -174,6 +168,7 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         close(fd);
     }
 #endif
+
     if (code == MAP_FAILED)
         return exec;
 

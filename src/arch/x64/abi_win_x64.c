@@ -113,6 +113,8 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
  * @return `true` if the type should be returned by reference, `false` otherwise.
  */
 static bool return_value_is_by_reference(infix_type * type) {
+    if (type->category == INFIX_TYPE_VECTOR)
+        return false;
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
         type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX)
         // According to the Microsoft x64 ABI, aggregates are returned by reference
@@ -185,7 +187,7 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
     for (size_t i = 0; i < num_args; ++i) {
         infix_type * current_type = arg_types[i];
 
-        bool is_fp = is_float(current_type) || is_double(current_type);
+        bool is_fp = is_float(current_type) || is_double(current_type) || current_type->category == INFIX_TYPE_VECTOR;
         bool is_ref = is_passed_by_reference(current_type);
         bool is_variadic_arg = (i >= num_fixed_args);
         if (arg_position < 4) {
@@ -215,7 +217,6 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
     }
 
     size_t total_stack_arg_size = current_stack_offset - SHADOW_SPACE;
-
 
     // Total allocation must include shadow space and be 16-byte aligned.
     layout->total_stack_alloc = (SHADOW_SPACE + total_stack_arg_size + 15) & ~15;
@@ -311,9 +312,8 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
         // R15 = pointer to the argument's data.
         emit_mov_reg_mem(buf, R15_REG, R14_REG, (int32_t)(i * sizeof(void *)));
         if (loc->type == ARG_LOCATION_GPR) {
-            if (is_passed_by_reference(current_type)) {
+            if (is_passed_by_reference(current_type))
                 emit_mov_reg_reg(buf, GPR_ARGS[loc->reg_index], R15_REG);
-            }
             else if (layout->is_variadic && is_variadic_arg && (is_float(current_type) || is_double(current_type))) {
                 x64_xmm xmm_reg = XMM_ARGS[loc->reg_index];
                 x64_gpr gpr_reg = GPR_ARGS[loc->reg_index];
@@ -324,9 +324,8 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
                     EMIT_BYTES(buf, 0x0F, 0x5A);
                     emit_modrm(buf, 3, xmm_reg % 8, xmm_reg % 8);
                 }
-                else {
+                else
                     emit_movsd_xmm_mem(buf, xmm_reg, R15_REG, 0);
-                }
                 emit_movq_gpr_xmm(buf, gpr_reg, xmm_reg);
             }
             else {
@@ -340,17 +339,17 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
                     else if (current_type->size == 2)
                         emit_movsx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
                 }
-                else if (is_signed && current_type->size <= 4) {
+                else if (is_signed && current_type->size <= 4)
                     emit_movsxd_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                }
-                else {
+                else
                     emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                }
             }
         }
         else {
             if (is_float(current_type))
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
+            else if (current_type->category == INFIX_TYPE_VECTOR)
+                emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
                 emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
         }
@@ -403,13 +402,11 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
             emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (is_double(ret_type))
             emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
-#if !defined(INFIX_COMPILER_MSVC)
         // On GCC/Clang on Windows, 16-byte primitives (__int128_t, long double)
-        // are returned in XMM0.
-        else if (ret_type->size == 16 && ret_type->category == INFIX_TYPE_PRIMITIVE)
-            // We need to emit 'movups [r13], xmm0'. Opcode: 0F 11.
-            EMIT_BYTES(buf, 0x41, 0x0f, 0x11, 0x45, 0x00);  // movups [r13], xmm0
-#endif
+        // are returned in XMM0. This now also applies to MSVC for vector types.
+        else if (ret_type->size == 16 &&
+                 (ret_type->category == INFIX_TYPE_PRIMITIVE || ret_type->category == INFIX_TYPE_VECTOR))
+            emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else {
             // All other returnable-by-value types are in RAX.
             switch (ret_type->size) {
@@ -557,22 +554,19 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
             // Determine the source of the argument data in our register save area.
             int32_t source_offset;
             bool use_xmm = is_fp && !is_variadic_arg;
-            if (use_xmm) {
+            if (use_xmm)
                 source_offset = layout->xmm_save_area_offset + arg_pos * 16;
-            }
-            else {
+            else
                 source_offset = layout->gpr_save_area_offset + arg_pos * 8;
-            }
 
             // Is the source data the final argument, or a pointer to it?
-            if (passed_by_ref) {
+            if (passed_by_ref)
                 // The value in the register IS the pointer we need for the args_array.
                 emit_mov_reg_mem(buf, RAX_REG, RSP_REG, source_offset);
-            }
-            else {
+            else
                 // The value in the register is the data. We must save it, then get a pointer to the saved copy.
                 emit_lea_reg_mem(buf, RAX_REG, RSP_REG, source_offset);
-            }
+
             emit_mov_mem_reg(buf, RSP_REG, layout->args_array_offset + i * sizeof(void *), RAX_REG);
         }
         else {
@@ -583,12 +577,11 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
             // So, the 5th argument is at [RBP + 8 (ret) + 8 (old RBP) + 32 (shadow space)] = [RBP + 48]
             int32_t caller_stack_offset = 16 + SHADOW_SPACE + (stack_slot_offset * 8);
 
-            if (passed_by_ref) {
+            if (passed_by_ref)
                 emit_mov_reg_mem(buf, RAX_REG, RBP_REG, caller_stack_offset);
-            }
-            else {
+            else
                 emit_lea_reg_mem(buf, RAX_REG, RBP_REG, caller_stack_offset);
-            }
+
             emit_mov_mem_reg(buf, RSP_REG, layout->args_array_offset + i * sizeof(void *), RAX_REG);
 
             size_t size_on_stack = (passed_by_ref) ? 8 : current_type->size;
@@ -597,6 +590,7 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
     }
     return INFIX_SUCCESS;
 }
+
 
 /**
  * @brief Stage 4: Generates the code to call the high-level C dispatcher function.
@@ -613,12 +607,10 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
     EMIT_BYTES(buf, 0x48, 0xB9);  // mov rcx, #context
     emit_int64(buf, (int64_t)context);
 
-    if (return_value_is_by_reference(context->return_type)) {
+    if (return_value_is_by_reference(context->return_type))
         emit_mov_reg_mem(buf, RDX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
-    }
-    else {
+    else
         emit_lea_reg_mem(buf, RDX_REG, RSP_REG, layout->return_buffer_offset);
-    }
 
     emit_lea_reg_mem(buf, R8_REG, RSP_REG, layout->args_array_offset);
     EMIT_BYTES(buf, 0x49, 0xBB);  // mov r9, #internal_dispatcher_func_ptr
