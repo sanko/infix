@@ -84,7 +84,8 @@ These are defined for forward compatibility in high-performance computing.
 | Name | Signature Syntax | C Equivalent | Description |
 | :--- | :--- | :--- | :--- |
 | **Complex Number** | `c[<type>]` | `float _Complex` | A complex number, constructed from a floating-point `<type>`. The memory layout is equivalent to `[2:<type>]`. |
-| **SIMD Vector** | `v[<N>:<type>]` | `__m128`, `__m256i` | A SIMD vector that should be passed in a dedicated vector register. |
+| **128-bit SIMD Vector** | `v[2:double]` <br/> `v[4:float]` | `__m128d` <br/> `__m128` | A 128-bit SSE vector. Passed in a single XMM/NEON register. |
+| **256-bit SIMD Vector** | `v[4:double]` <br/> `v[8:float]` | `__m256d` <br/> `__m256` | A 256-bit AVX vector. Requires AVX support. Passed in a YMM register on System V or by reference on Windows. |
 | **Opaque Vector** | `v<bits>` | N/A | A fallback for rare cases where a SIMD value's element types are unknown. |
 
 ### 2.4 Type Constructors and Composite Structures
@@ -139,7 +140,8 @@ This table provides a wide variety of examples to demonstrate the expressiveness
 | `*((int, int) -> int)`                               | A pointer to a function that takes two `int`s and returns an `int`.                                                   |
 | `struct<Ctx>{ data:*void, callback:*( (int) -> void ) }` | A struct with a function pointer field named `callback`. The callback takes an `int` and returns `void`.              |
 | `c[float]`                                           | A C `float _Complex` number, with the same memory layout as `[2:float]`.                                              |
-| `v[4:float32]`                                       | A 128-bit SIMD vector containing four 32-bit floats (e.g., SSE `__m128`).                                             |
+| `v[4:float]`                                         | A 128-bit SIMD vector containing four 32-bit floats (e.g., SSE `__m128`).                                             |
+| `v[4:double]`                                        | A 256-bit SIMD vector containing four 64-bit doubles (e.g., AVX `__m256d`). Requires AVX support to be enabled.      |
 
 #### 3.2 Architectural Pattern: Define and Use
 

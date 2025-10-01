@@ -10,7 +10,7 @@ ARFLAGS := rcs
 
 # --- Flags ---
 # Base flags for all compilations
-BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2
+BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2 -mavx2
 
 # Include directories needed for the LIBRARY
 LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64

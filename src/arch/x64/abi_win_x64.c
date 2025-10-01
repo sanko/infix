@@ -113,12 +113,14 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
  * @return `true` if the type should be returned by reference, `false` otherwise.
  */
 static bool return_value_is_by_reference(infix_type * type) {
+    // On Windows x64, SIMD vector types have their own specific rule that is
+    // different from other aggregates. 128-bit vectors (__m128) are returned by
+    // value in XMM0. Larger vectors (__m256d) are returned by reference.
     if (type->category == INFIX_TYPE_VECTOR)
-        return false;
+        return type->size > 16;
+
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
         type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX)
-        // According to the Microsoft x64 ABI, aggregates are returned by reference
-        // if their size is NOT 1, 2, 4, or 8 bytes. This correctly includes 16-byte structs.
         return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
 
 #if defined(INFIX_COMPILER_GCC)
@@ -517,7 +519,7 @@ static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_r
 }
 
 /**
- * @brief (Win x64) Stage 3: Generates code to marshal arguments into the generic `void**` array.
+ * @brief Stage 3: Generates code to marshal arguments into the generic `void**` array.
  * @details This function first saves all potential argument registers (RCX, RDX, R8, R9, XMM0-3)
  * to a dedicated area on the stack. Then, it iterates through the expected arguments, determines
  * their source (register save area or caller's stack), and populates the `args_array` with
@@ -621,24 +623,41 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
 }
 
 /**
- * @brief (Win x64) Stage 5: Generates the epilogue for the reverse trampoline stub.
- * @details After the C dispatcher returns, this code retrieves the return value from the
- *          return buffer on the stub's stack and places it into the correct native return
- *          register (RAX or XMM0). It then deallocates the stack frame, restores saved
- *          registers, and returns to the original native caller.
- * @param buf The code buffer.
- * @param layout The blueprint containing the return buffer's offset.
- * @param context The context containing the return type information.
- * @return `INFIX_SUCCESS`.
+ * @brief Stage 5: Generates the epilogue for the reverse trampoline stub.
+ *
+ * @details After the C dispatcher returns, this code is responsible for the final steps
+ *          of the reverse trampoline. It retrieves the return value from the buffer on
+ *          the stub's local stack and places it into the correct native return register
+ *          (`RAX` or `XMM0`) as required by the Windows x64 ABI.
+ *
+ *          This function correctly handles the complex, compiler-specific rules for
+ *          returning aggregate types:
+ *          - **By-Reference Returns:** For large aggregates (including `__m256d` on all
+ *            compilers and `__m128d` on MSVC), the original caller passes a hidden
+ *            pointer in `RCX`. The ABI requires the callback to return this same
+ *            pointer in `RAX`. This function emits the code to load the saved pointer
+ *            into `RAX`.
+ *          - **By-Value Returns:** For values returned directly in registers, this
+ *            function emits the correct `mov` instructions to load the data from
+ *            the stack buffer into either `RAX` (for integers/pointers) or `XMM0`
+ *            (for floats/doubles/vectors). It correctly distinguishes between MSVC
+ *            and GCC/Clang for 16-byte return types.
+ *
+ *          Finally, it emits the standard function epilogue to deallocate the stack frame,
+ *          restore the caller's saved registers, and return control to the native caller.
+ *
+ * @param buf The code buffer to which the machine code will be written.
+ * @param layout The blueprint containing the offsets for the stub's local stack variables.
+ * @param context The context containing the full return type information for the callback.
+ * @return `INFIX_SUCCESS` on successful code generation.
  */
 static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                                                       infix_reverse_call_frame_layout * layout,
                                                       infix_reverse_t * context) {
     // Handle the return value after the dispatcher returns.
     if (context->return_type->category != INFIX_TYPE_VOID) {
-        if (return_value_is_by_reference(context->return_type)) {
+        if (return_value_is_by_reference(context->return_type))
             emit_mov_reg_mem(buf, RAX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
-        }
 #if !defined(INFIX_COMPILER_MSVC)
         else if (context->return_type->size == 16 && context->return_type->category == INFIX_TYPE_PRIMITIVE) {
             // GCC/Clang on Windows returns 128-bit integers and long double in XMM0

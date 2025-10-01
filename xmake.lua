@@ -18,6 +18,11 @@ after_load(function (target)
     end
 end)
 
+-- https://xmake.io/api/description/project-target.html#add-vectorexts
+-- v[4:double] support requires avx2
+add_vectorexts("avx", "avx2")
+--~ add_vectorexts("avx512") TODO
+
 -- Define the static library target "infix"
 target("infix")
     set_kind("static")

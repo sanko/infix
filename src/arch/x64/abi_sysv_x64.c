@@ -424,6 +424,11 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             if (is_float(type) || is_double(type) || type->category == INFIX_TYPE_VECTOR) {
                 classes[0] = SSE;
                 num_classes = 1;
+                // Special classification for 256-bit AVX vectors.
+                // They are passed in a single YMM register, which we model as a single SSE class.
+                // The size check distinguishes it from 128-bit vectors.
+                if (type->category == INFIX_TYPE_VECTOR && type->size == 32)
+                    num_classes = 1;  // Treat as a single unit for classification
             }
             else {
                 classes[0] = INTEGER;
@@ -445,6 +450,12 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                 if (classes[0] == INTEGER && gpr_count < NUM_GPR_ARGS) {
                     layout->arg_locations[i].type = ARG_LOCATION_GPR;
                     layout->arg_locations[i].reg_index = gpr_count++;
+                    placed_in_register = true;
+                }
+                else if (classes[0] == SSE && type->size == 32 && xmm_count < NUM_XMM_ARGS) {
+                    // AVX/256-bit vector case
+                    layout->arg_locations[i].type = ARG_LOCATION_XMM;  // Re-use XMM type
+                    layout->arg_locations[i].reg_index = xmm_count++;
                     placed_in_register = true;
                 }
                 else if (classes[0] == SSE && xmm_count < NUM_XMM_ARGS) {
@@ -623,6 +634,9 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else if (arg_types[i]->category == INFIX_TYPE_VECTOR)
                 emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
+            else if (arg_types[i]->category == INFIX_TYPE_VECTOR && arg_types[i]->size == 32)
+                // AVX case: Use the new 256-bit move emitter
+                emit_vmovupd_ymm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
                 // movsd xmm_reg, [r15] (Move Scalar Double-Precision)
                 emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
@@ -727,6 +741,8 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                 if (classes[0] == SSE) {
                     if (is_float(ret_type))
                         emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movss [r13], xmm0
+                    else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32)
+                        emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);  // AVX case
                     else if (ret_type->category == INFIX_TYPE_VECTOR)
                         emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
                     else
@@ -756,7 +772,11 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_mem_reg(buf, R13_REG, 8, RDX_REG);  // mov [r13 + 8], rdx
                 }
                 else if (classes[0] == SSE && classes[1] == SSE) {
-                    if (ret_type->category == INFIX_TYPE_VECTOR) {
+                    if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32) {
+                        emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);
+                        emit_vmovupd_mem_ymm(buf, R13_REG, 32, XMM1_REG);
+                    }
+                    else if (ret_type->category == INFIX_TYPE_VECTOR) {
                         emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
                         emit_movups_mem_xmm(buf, R13_REG, 16, XMM1_REG);
                     }
@@ -1078,6 +1098,8 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                 if (classes[0] == SSE) {
                     if (is_float(context->return_type))
                         emit_movss_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
+                    else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
+                        emit_vmovupd_ymm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else
                         emit_movsd_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                 }
@@ -1085,8 +1107,13 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
             }
             if (num_classes == 2) {  // Second eightbyte
-                if (classes[1] == SSE)
+                if (classes[1] == SSE) {
+                    if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
+                        emit_vmovupd_ymm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 32);
+                    else
+                        emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
                     emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
+                }
                 else  // INTEGER
                     emit_mov_reg_mem(buf, RDX_REG, RBP_REG, layout->return_buffer_offset + 8);
             }

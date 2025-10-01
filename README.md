@@ -79,6 +79,7 @@ int main() {
 | **Struct** | `{int, double}` | `struct { int; double; }` |
 | **Union** | `<int, double>` | `union { int; double; }` |
 | **Packed Struct**| `!{char, int}` | `struct { char; int; } __attribute__((packed))` |
+| **SIMD Vector** | `v[4:double]` | `__m256d` (AVX) |
 | **Function Ptr**| `*((int) -> void)` | `void (*func)(int)` |
 | **Variadic** | `(*char; int)` | `const char*, int, ...` |
 

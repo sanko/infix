@@ -8,6 +8,17 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-mavx2" COMPILER_SUPPORTS_AVX2_GCC)
+check_cxx_compiler_flag("/arch:AVX2" COMPILER_SUPPORTS_AVX2_MSVC)
+if(COMPILER_SUPPORTS_AVX2_GCC)
+    add_compile_options("-mavx2")
+elseif(COMPILER_SUPPORTS_AVX2_MSVC)
+    add_compile_options("/arch:AVX2")
+else()
+    message(WARNING "Compiler does not support AVX2 instruction set.")
+endif()
+
 # Use the standard GNUInstallDirs module to define portable installation paths.
 include(GNUInstallDirs)
 

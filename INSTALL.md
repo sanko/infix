@@ -328,3 +328,12 @@ package("infix")
         import("package.tools.xmake").install(package, configs)
     end)
 ```
+
+## 4. Enabling SIMD Support (AVX/AVX2)
+
+The infix library supports 256-bit SIMD vector types (e.g., __m256d) on x86-64 platforms. To use this feature, you must compile both the library and your application with compiler flags that enable AVX2 support. This allows the compiler to recognize the `__m256d` type and generate the correct instructions.
+
+* GCC / Clang: Use the `-mavx2` flag.
+* MSVC: Use the `/arch:AVX2` flag.
+
+All build scripts included with `infix` automatically add these flags.

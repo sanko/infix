@@ -29,8 +29,9 @@
  * 3.  **AArch64 (ARM64) Specific:** Tests a `struct { float v[4]; }`, which is a
  *     Homogeneous Floating-point Aggregate (HFA) and should be passed in four
  *     consecutive floating-point registers.
- * 4.  **SIMD Vector Types:** Contains conditionally compiled tests for native 128-bit
- *     SIMD vector types on both x86-64 (`__m128d`) and AArch64 (`float64x2_t`).
+ * 4.  **SIMD Vector Types:** Contains conditionally compiled tests for native SIMD
+ *     vector types, including 128-bit SSE (`__m128d`), 256-bit AVX (`__m256d`),
+ *     and AArch64 NEON (`float64x2_t`).
  *
  * Platform-specific tests are conditionally compiled using preprocessor guards to
  * ensure they only run on relevant targets.
@@ -92,8 +93,15 @@ float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) {
 }
 #endif
 
+#if defined(INFIX_ARCH_X86_AVX2)
+// A native C function that adds two 256-bit vectors of doubles.
+__m256d native_vector_add_256(__m256d a, __m256d b) {
+    return _mm256_add_pd(a, b);
+}
+#endif
+
 TEST {
-    plan(4);  // One subtest for each major scenario.
+    plan(5);  // One subtest for each major scenario.
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(5);
@@ -287,6 +295,50 @@ TEST {
         }
 #else
         skip(2, "No supported 128-bit SIMD vector type on this platform.");
+#endif
+    }
+
+    subtest("ABI Specific: 256-bit AVX Vector") {
+        plan(2);
+#if defined(INFIX_ARCH_X86_AVX2)
+        note("Testing __m256d passed and returned by value on x86-64 with AVX2.");
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // 1. Create the infix_type for v[4:double] to represent __m256d.
+        infix_type * vector_type = NULL;
+        infix_status status =
+            infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 4);
+
+        if (!ok(status == INFIX_SUCCESS, "infix_type for __m256d created successfully")) {
+            skip(1, "Cannot proceed without vector type");
+            infix_arena_destroy(arena);
+        }
+        else {
+            // 2. Create the trampoline for __m256d(__m256d, __m256d)
+            infix_type * arg_types[] = {vector_type, vector_type};
+            infix_forward_t * trampoline = NULL;
+            status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+
+            // 3. Prepare arguments and call
+            __m256d vec_a = _mm256_set_pd(40.0, 30.0, 20.0, 10.0);  // Vector [10, 20, 30, 40]
+            __m256d vec_b = _mm256_set_pd(2.0, 12.0, 22.0, 32.0);   // Vector [32, 22, 12,  2]
+            void * args[] = {&vec_a, &vec_b};
+            union {
+                __m256d v;
+                double d[4];
+            } result;
+            result.v = _mm256_setzero_pd();
+            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add_256, &result.v, args);
+
+            ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9 && fabs(result.d[2] - 42.0) < 1e-9 &&
+                   fabs(result.d[3] - 42.0) < 1e-9,
+               "256-bit SIMD vector passed/returned correctly");
+            diag("Result: [%f, %f, %f, %f]", result.d[0], result.d[1], result.d[2], result.d[3]);
+            infix_forward_destroy(trampoline);
+            infix_arena_destroy(arena);
+        }
+#else
+        skip(2, "No supported 256-bit SIMD vector type on this platform (requires AVX2).");
 #endif
     }
 }

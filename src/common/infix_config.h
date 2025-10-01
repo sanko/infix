@@ -199,7 +199,7 @@
 //~ #define INFIX_NO_INTRINSICS
 
 #if !defined(INFIX_NO_INTRINSICS)
-#if defined(__AVX2__)
+#if defined(__AVX2__) || (defined(_MSC_VER) && defined(__AVX__))
 /** @brief Defined if the target supports the AVX2 instruction set. */
 #define INFIX_ARCH_X86_AVX2
 #endif
