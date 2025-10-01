@@ -1,7 +1,7 @@
 var searchData=
 [
   ['infix_5farena_5ft_0',['infix_arena_t',['../infix_8h.html#a7ae858c5c8d9fc138d31c0be4421dcdb',1,'infix.h']]],
-  ['infix_5fcif_5ffunc_1',['infix_cif_func',['../infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81',1,'infix.h']]],
+  ['infix_5fcif_5ffunc_1',['infix_cif_func',['../infix_8h.html#a34ef26a155a3861d5172b7c07239ee43',1,'infix.h']]],
   ['infix_5fcontext_5ft_2',['infix_context_t',['../infix_8h.html#ad1b3ed7bb2f9a2bf47df3299111ab74f',1,'infix.h']]],
   ['infix_5fforward_5ft_3',['infix_forward_t',['../infix_8h.html#ab8831eba6ed46e82a731acea84e8e90d',1,'infix.h']]],
   ['infix_5ffunction_5fargument_4',['infix_function_argument',['../infix_8h.html#a72f59e8e9a0afd58599c6c0448668bd4',1,'infix.h']]],

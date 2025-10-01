@@ -272,10 +272,22 @@ Using in Visual Studio Code</h3>
 <div class="line">        }</div>
 <div class="line">    ]</div>
 <div class="line">}</div>
-</div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md209"></a>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md208"></a>
+Manual Integration into an Existing Project</h4>
+<p>Because <code>infix</code> uses a "unity build," you do not need to build it as a separate static or shared library. You can compile it directly into your project. This is the simplest method and allows for better compiler optimizations.</p>
+<ol type="1">
+<li>Copy the <code>src/</code> and <code>include/</code> directories from the <code>infix</code> repository into your project's source tree (e.g., into a <code>third_party/infix</code> subdirectory).</li>
+<li>Add the <code>infix</code> <code>include</code> path to your compiler's include search paths (e.g., <code>-Ithird_party/infix/include</code>).</li>
+<li>Add the single <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">infix.c</a></code> file to your project's list of source files to be compiled.</li>
+</ol>
+<blockquote class="doxtable">
+<p>&zwj;To integrate <code>infix</code> into your project, you only need to add <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> to your list of source files to compile and add the <code>include/</code> directory to your include paths. </p>
+</blockquote>
+<p>That's it. Your project will now build with the <code>infix</code> library compiled directly in.</p>
+<hr  />
+<h2><a class="anchor" id="autotoc_md210"></a>
 3. Packaging &lt;tt&gt;infix&lt;/tt&gt; (For Maintainers)</h2>
-<h3><a class="anchor" id="autotoc_md210"></a>
+<h3><a class="anchor" id="autotoc_md211"></a>
 Linux Distributions (DEB/RPM)</h3>
 <p>The CMake install target is the standard way to integrate with packaging systems. The key is to use the <code>DESTDIR</code> environment variable during the install step.</p>
 <p><b>Example for a Debian <code>rules</code> file:</b></p>
@@ -288,7 +300,7 @@ Linux Distributions (DEB/RPM)</h3>
 <div class="line"> </div>
 <div class="line">override_dh_auto_install:</div>
 <div class="line">    dh_auto_install --destdir=$(CURDIR)/debian/tmp</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md211"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md212"></a>
 xmake Repository</h3>
 <p>To submit <code>infix</code> to the public <code>xmake-repo</code>, you would create a <code>packages/i/infix/xmake.lua</code> file in a fork of the repository.</p>
 <div class="fragment"><div class="line">package(&quot;infix&quot;)</div>

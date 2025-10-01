@@ -8,7 +8,7 @@ var searchData=
   ['unreleased_5',['[Unreleased]',['../md_CHANGELOG.html#autotoc_md1',1,'']]],
   ['usage_6',['usage',['../index.html#usage_sec',1,'Basic Usage'],['../md_docs_2signatures.html#autotoc_md173',1,'Part 3: Examples, Best Practices, and Usage']]],
   ['use_7',['3.2 Architectural Pattern: Define and Use',['../md_docs_2signatures.html#autotoc_md175',1,'']]],
-  ['use_20after_20free_20prevention_20guard_20pages_8',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md231',1,'']]],
+  ['use_20after_20free_20prevention_20guard_20pages_8',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md234',1,'']]],
   ['user_5fcallback_5ffn_9',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],
   ['user_5fdata_10',['user_data',['../structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1',1,'infix_reverse_t']]],
   ['userprofile_11',['UserProfile',['../structUserProfile.html',1,'']]],

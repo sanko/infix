@@ -35,7 +35,7 @@ var searchData=
   ['v7_5freg_32',['V7_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea4093aa06e3b254d5ed8a69cdefc3c9f3',1,'abi_arm64_common.h']]],
   ['v8_5freg_33',['V8_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea833f555fde105a843b7dcd4bfe57ca75',1,'abi_arm64_common.h']]],
   ['v9_5freg_34',['V9_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea39d2e514751460f40a35b1215d0c0ef3',1,'abi_arm64_common.h']]],
-  ['validation_20fuzzing_35',['5. Continuous Security Validation (Fuzzing)',['../md_SECURITY.html#autotoc_md234',1,'']]],
+  ['validation_20fuzzing_35',['5. Continuous Security Validation (Fuzzing)',['../md_SECURITY.html#autotoc_md237',1,'']]],
   ['value_36',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md26',1,'']]],
   ['value_20instead_20of_20a_20pointer_20in_20tt_20args_20tt_37',['Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md74',1,'']]],
   ['variadic_20callback_38',['Recipe: Creating a Variadic Callback',['../md_docs_2cookbook.html#autotoc_md39',1,'']]],
@@ -46,12 +46,12 @@ var searchData=
   ['vector4_5fcallback_5fhandler_43',['vector4_callback_handler',['../302__aggregates_8c.html#aae76761188b2d389cd00a2bb9c6c29ee',1,'302_aggregates.c']]],
   ['vector_5finfo_44',['vector_info',['../group__high__level__api.html#gaac16a3039475a6fdce57b6599014b2da',1,'infix_type_t::@0::vector_info'],['../group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t::vector_info']]],
   ['version_20information_45',['Version Information',['../group__version__macros.html',1,'']]],
-  ['versions_46',['Supported Versions',['../md_SECURITY.html#autotoc_md226',1,'']]],
+  ['versions_46',['Supported Versions',['../md_SECURITY.html#autotoc_md229',1,'']]],
   ['visual_20studio_20code_47',['Using in Visual Studio Code',['../md_INSTALL.html#autotoc_md207',1,'']]],
   ['vm_48',['Core Design Philosophy: The JIT Compiler vs. The Call VM',['../md_docs_2internals.html#autotoc_md139',1,'']]],
   ['vm_20interpreter_20model_20e_20g_20tt_20dyncall_20tt_49',['The Alternative: The Call VM / Interpreter Model (e.g., &lt;tt&gt;dyncall&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md140',1,'']]],
   ['void_5fcallback_5fhandler_50',['void_callback_handler',['../301__primitives_8c.html#afb4ece8c6bb2cc5243c4f00a6276b2ac',1,'301_primitives.c']]],
   ['vs_20signature_51',['1. API Layers: Core vs. Signature',['../md_docs_2internals.html#autotoc_md92',1,'']]],
   ['vs_20the_20call_20vm_52',['Core Design Philosophy: The JIT Compiler vs. The Call VM',['../md_docs_2internals.html#autotoc_md139',1,'']]],
-  ['vulnerability_53',['Reporting a Vulnerability',['../md_SECURITY.html#autotoc_md227',1,'']]]
+  ['vulnerability_53',['Reporting a Vulnerability',['../md_SECURITY.html#autotoc_md230',1,'']]]
 ];

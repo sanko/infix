@@ -21,7 +21,7 @@ var searchData=
   ['go_20tt_18',['Go Code (&lt;tt&gt;libgo_math.go&lt;/tt&gt;)',['../md_docs_2cookbook.html#autotoc_md56',1,'']]],
   ['gpr_5fsave_5farea_5foffset_19',['gpr_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a845e2eb5c5d49d4a710ba8af9c2428fb',1,'infix_reverse_call_frame_layout']]],
   ['grammar_20',['4.2 EBNF Grammar',['../md_docs_2signatures.html#autotoc_md180',1,'']]],
-  ['guard_20pages_21',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md231',1,'']]],
+  ['guard_20pages_21',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md234',1,'']]],
   ['guard_20pages_20for_20freed_20trampolines_22',['Guard Pages for Freed Trampolines',['../md_docs_2internals.html#autotoc_md100',1,'']]],
   ['guide_23',['The Debugging Guide',['../md_docs_2internals.html#autotoc_md114',1,'']]],
   ['guiding_20principles_24',['Guiding Principles',['../md_docs_2internals.html#autotoc_md130',1,'']]]

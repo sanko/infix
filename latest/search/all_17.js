@@ -9,7 +9,7 @@ var searchData=
   ['nested_20ffi_20calls_6',['Recipe: Proving Reentrancy with Nested FFI Calls',['../md_docs_2cookbook.html#autotoc_md40',1,'']]],
   ['new_20abi_7',['Step 4: Integrate the New ABI',['../md_docs_2porting.html#autotoc_md158',1,'']]],
   ['new_20platform_8',['Porting &lt;tt&gt;infix&lt;/tt&gt; to a New Platform',['../md_docs_2porting.html',1,'']]],
-  ['new_20regression_20test_9',['How to Add a New Regression Test',['../850__regression__cases_8c.html#autotoc_md235',1,'']]],
+  ['new_20regression_20test_9',['How to Add a New Regression Test',['../850__regression__cases_8c.html#autotoc_md238',1,'']]],
   ['nmake_20windows_20with_20msvc_10',['NMake (Windows with MSVC)',['../md_INSTALL.html#autotoc_md200',1,'']]],
   ['no_5fclass_11',['NO_CLASS',['../abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92acd909de88b9a6bc292a6c39c4c033287',1,'abi_sysv_x64.c']]],
   ['nonpoweroftwostruct_12',['NonPowerOfTwoStruct',['../structNonPowerOfTwoStruct.html',1,'']]],

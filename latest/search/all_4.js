@@ -6,7 +6,7 @@ var searchData=
   ['4_204_20comparison_20with_20other_20systems_3',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md182',1,'']]],
   ['4_205_20rationale_20for_20advanced_20data_20types_4',['4.5 Rationale for Advanced Data Types',['../md_docs_2signatures.html#autotoc_md183',1,'']]],
   ['4_20a_20stateless_20composable_20core_5',['1.4 A Stateless, Composable Core',['../md_docs_2signatures.html#autotoc_md167',1,'']]],
-  ['4_20api_20hardening_20against_20integer_20overflows_6',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md233',1,'']]],
+  ['4_20api_20hardening_20against_20integer_20overflows_6',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md236',1,'']]],
   ['4_20benefits_20for_20tooling_20and_20mental_20modeling_7',['3.4 Benefits for Tooling and Mental Modeling',['../md_docs_2signatures.html#autotoc_md177',1,'']]],
   ['4_20executable_20memory_20management_20and_20security_20tt_20executor_20c_20tt_8',['4. Executable Memory Management and Security (&lt;tt&gt;executor.c&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md98',1,'']]],
   ['4_20implementing_20the_20callback_20bridge_9',['4. Implementing the Callback Bridge',['../md_docs_2cookbook.html#autotoc_md85',1,'']]],

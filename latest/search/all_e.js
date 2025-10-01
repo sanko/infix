@@ -57,15 +57,16 @@ var searchData=
   ['examples_20best_20practices_20and_20usage_54',['Part 3: Examples, Best Practices, and Usage',['../md_docs_2signatures.html#autotoc_md173',1,'']]],
   ['exec_55',['exec',['../structinfix__reverse__t.html#a1b6b50c9fdecedb6a09e9d76e4ed8fdb',1,'infix_reverse_t']]],
   ['executable_20memory_20management_20and_20security_20tt_20executor_20c_20tt_56',['4. Executable Memory Management and Security (&lt;tt&gt;executor.c&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md98',1,'']]],
-  ['execute_20memory_20policy_57',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md230',1,'']]],
+  ['execute_20memory_20policy_57',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md233',1,'']]],
   ['execute_20w_20x_58',['Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md99',1,'']]],
   ['execute_5fcallback_5fas_5farg_5fharness_59',['execute_callback_as_arg_harness',['../303__advanced_8c.html#a935cb020b1f28fd5550626d771a808a5',1,'303_advanced.c']]],
   ['execute_5fmany_5fargs_5fcallback_60',['execute_many_args_callback',['../401__large__stack_8c.html#a5bbfbfc732971dfdd40e6e8e1370150e',1,'401_large_stack.c']]],
   ['execute_5fpointer_5fmodify_5fcallback_61',['execute_pointer_modify_callback',['../303__advanced_8c.html#a59bbb40c988d1a3c7a422c19848e03ea',1,'303_advanced.c']]],
   ['executor_20c_20tt_62',['4. Executable Memory Management and Security (&lt;tt&gt;executor.c&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md98',1,'']]],
   ['executor_2ec_63',['executor.c',['../executor_8c.html',1,'']]],
-  ['expansion_20optimization_20strong_64',['&lt;strong&gt;Medium Priority: Expansion &amp; Optimization&lt;/strong&gt;',['../md_TODO.html#autotoc_md238',1,'']]],
-  ['expected_5fstatus_65',['expected_status',['../structregression__test__case__t.html#a8d84cddb4f622127b503bc8b1c82a956',1,'regression_test_case_t']]],
-  ['explicit_20fixed_20width_20types_66',['2.2 Tier 2: Explicit Fixed-Width Types',['../md_docs_2signatures.html#autotoc_md170',1,'']]],
-  ['external_20abi_20documentation_67',['External ABI Documentation',['../md_docs_2internals.html#autotoc_md125',1,'']]]
+  ['existing_20project_64',['Manual Integration into an Existing Project',['../md_INSTALL.html#autotoc_md208',1,'']]],
+  ['expansion_20optimization_20strong_65',['&lt;strong&gt;Medium Priority: Expansion &amp; Optimization&lt;/strong&gt;',['../md_TODO.html#autotoc_md241',1,'']]],
+  ['expected_5fstatus_66',['expected_status',['../structregression__test__case__t.html#a8d84cddb4f622127b503bc8b1c82a956',1,'regression_test_case_t']]],
+  ['explicit_20fixed_20width_20types_67',['2.2 Tier 2: Explicit Fixed-Width Types',['../md_docs_2signatures.html#autotoc_md170',1,'']]],
+  ['external_20abi_20documentation_68',['External ABI Documentation',['../md_docs_2internals.html#autotoc_md125',1,'']]]
 ];

@@ -299,9 +299,9 @@ typedef <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a>&#1
 typedef struct <a class="el" href="structinfix__arena__t.html">infix_arena_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_arena_t</b></td></tr>
 <tr class="memdesc:a7ae858c5c8d9fc138d31c0be4421dcdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">An opaque handle to a memory arena for fast, temporary allocations. <br /></td></tr>
 <tr class="separator:a7ae858c5c8d9fc138d31c0be4421dcdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3faff0adbe3b7f6df3be210295ec3a81" id="r_a3faff0adbe3b7f6df3be210295ec3a81"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#a3faff0adbe3b7f6df3be210295ec3a81">infix_cif_func</a>) (void *target_function, void *return_value, void **args)</td></tr>
-<tr class="memdesc:a3faff0adbe3b7f6df3be210295ec3a81"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a generic forward-call trampoline, the "Call InterFace" function.  <br /></td></tr>
-<tr class="separator:a3faff0adbe3b7f6df3be210295ec3a81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34ef26a155a3861d5172b7c07239ee43" id="r_a34ef26a155a3861d5172b7c07239ee43"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#a34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>) (void *, void *, void **)</td></tr>
+<tr class="memdesc:a34ef26a155a3861d5172b7c07239ee43"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a generic forward-call trampoline, the "Call InterFace" function.  <br /></td></tr>
+<tr class="separator:a34ef26a155a3861d5172b7c07239ee43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -388,15 +388,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a44df1ec1de746a0be838b55567d07cae" id="r_a44df1ec1de746a0be838b55567d07cae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#a44df1ec1de746a0be838b55567d07cae">infix_type_create_enum</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__type.html">infix_type</a> **, <a class="el" href="structinfix__type.html">infix_type</a> *)</td></tr>
 <tr class="memdesc:a44df1ec1de746a0be838b55567d07cae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for an enum from an arena.  <br /></td></tr>
 <tr class="separator:a44df1ec1de746a0be838b55567d07cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add70103c39886a50bc11d53a182b13b5" id="r_add70103c39886a50bc11d53a182b13b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#add70103c39886a50bc11d53a182b13b5">infix_type_create_named_reference</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *arena, <a class="el" href="structinfix__type.html">infix_type</a> **out_type, const char *name)</td></tr>
-<tr class="memdesc:add70103c39886a50bc11d53a182b13b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a named reference from an arena.  <br /></td></tr>
-<tr class="separator:add70103c39886a50bc11d53a182b13b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a591e25c719b58a1ea33cd5c572d8025d" id="r_a591e25c719b58a1ea33cd5c572d8025d"><td class="memItemLeft" align="right" valign="top"><a id="a591e25c719b58a1ea33cd5c572d8025d" name="a591e25c719b58a1ea33cd5c572d8025d"></a>
-<a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_complex</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *arena, <a class="el" href="structinfix__type.html">infix_type</a> **out_type, <a class="el" href="structinfix__type.html">infix_type</a> *base_type)</td></tr>
-<tr class="separator:a591e25c719b58a1ea33cd5c572d8025d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1af697e48fc6d17a1313bec4a0fd6a80" id="r_a1af697e48fc6d17a1313bec4a0fd6a80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__struct__member.html">infix_struct_member</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#a1af697e48fc6d17a1313bec4a0fd6a80">infix_struct_member_create</a> (const char *, <a class="el" href="structinfix__type.html">infix_type</a> *, size_t)</td></tr>
-<tr class="memdesc:a1af697e48fc6d17a1313bec4a0fd6a80"><td class="mdescLeft">&#160;</td><td class="mdescRight">A factory function to create an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>.  <br /></td></tr>
-<tr class="separator:a1af697e48fc6d17a1313bec4a0fd6a80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee217899ccae9a128e95673e8f2f69cc" id="r_aee217899ccae9a128e95673e8f2f69cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#aee217899ccae9a128e95673e8f2f69cc">infix_type_create_named_reference</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__type.html">infix_type</a> **, const char *)</td></tr>
+<tr class="memdesc:aee217899ccae9a128e95673e8f2f69cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a named reference from an arena.  <br /></td></tr>
+<tr class="separator:aee217899ccae9a128e95673e8f2f69cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a642b11fa95d575f407b33a9dc28d81bf" id="r_a642b11fa95d575f407b33a9dc28d81bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#a642b11fa95d575f407b33a9dc28d81bf">infix_type_create_complex</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__type.html">infix_type</a> **, <a class="el" href="structinfix__type.html">infix_type</a> *)</td></tr>
+<tr class="memdesc:a642b11fa95d575f407b33a9dc28d81bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a <code>_Complex</code> number from an arena.  <br /></td></tr>
+<tr class="separator:a642b11fa95d575f407b33a9dc28d81bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed99b57de2c839a66eb54c9e82d703d9" id="r_aed99b57de2c839a66eb54c9e82d703d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__struct__member.html">infix_struct_member</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix_8h.html#aed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a> (const char *, <a class="el" href="structinfix__type.html">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:aed99b57de2c839a66eb54c9e82d703d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A factory function to create an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>.  <br /></td></tr>
+<tr class="separator:aed99b57de2c839a66eb54c9e82d703d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gace742bcf7fd3c3978f951dfb025e0a2d" id="r_gace742bcf7fd3c3978f951dfb025e0a2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="structinfix__type.html">infix_type</a> *, <a class="el" href="structinfix__type.html">infix_type</a> **, size_t, size_t)</td></tr>
 <tr class="memdesc:gace742bcf7fd3c3978f951dfb025e0a2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a forward-call trampoline for a given function signature.  <br /></td></tr>
 <tr class="separator:gace742bcf7fd3c3978f951dfb025e0a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -442,27 +442,27 @@ Functions</h2></td></tr>
 <tr class="memitem:ga624819bf3bc628f63575001ed9c6ffd5" id="r_ga624819bf3bc628f63575001ed9c6ffd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5">infix_arena_calloc</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, size_t, size_t, size_t)</td></tr>
 <tr class="memdesc:ga624819bf3bc628f63575001ed9c6ffd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a zero-initialized block of memory from the arena.  <br /></td></tr>
 <tr class="separator:ga624819bf3bc628f63575001ed9c6ffd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaa2f39de88ebd16907dfcbec7b4b7d26" id="r_gaaa2f39de88ebd16907dfcbec7b4b7d26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a909e562b00e504aeceac698bd272f0ca">infix_type_category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#gaaa2f39de88ebd16907dfcbec7b4b7d26">infix_type_get_category</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *type)</td></tr>
-<tr class="memdesc:gaaa2f39de88ebd16907dfcbec7b4b7d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the fundamental category of an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>.  <br /></td></tr>
-<tr class="separator:gaaa2f39de88ebd16907dfcbec7b4b7d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4fe45a95459c8e87bdda59ed819ed8a5" id="r_ga4fe45a95459c8e87bdda59ed819ed8a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga4fe45a95459c8e87bdda59ed819ed8a5">infix_type_get_size</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *type)</td></tr>
-<tr class="memdesc:ga4fe45a95459c8e87bdda59ed819ed8a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the size of an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> in bytes.  <br /></td></tr>
-<tr class="separator:ga4fe45a95459c8e87bdda59ed819ed8a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6e82b33919c107176a895ffcc072a4fa" id="r_ga6e82b33919c107176a895ffcc072a4fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga6e82b33919c107176a895ffcc072a4fa">infix_type_get_alignment</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *type)</td></tr>
-<tr class="memdesc:ga6e82b33919c107176a895ffcc072a4fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the alignment requirement of an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> in bytes.  <br /></td></tr>
-<tr class="separator:ga6e82b33919c107176a895ffcc072a4fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5e65ae09637439816571c4ca375dbf49" id="r_ga5e65ae09637439816571c4ca375dbf49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga5e65ae09637439816571c4ca375dbf49">infix_type_get_member_count</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *type)</td></tr>
-<tr class="memdesc:ga5e65ae09637439816571c4ca375dbf49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the number of members in an aggregate type (struct or union).  <br /></td></tr>
-<tr class="separator:ga5e65ae09637439816571c4ca375dbf49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1fe5f9ea29a955a3594efeb233abdc46" id="r_ga1fe5f9ea29a955a3594efeb233abdc46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="structinfix__struct__member.html">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga1fe5f9ea29a955a3594efeb233abdc46">infix_type_get_member</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *type, size_t index)</td></tr>
-<tr class="memdesc:ga1fe5f9ea29a955a3594efeb233abdc46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a specific member from an aggregate type by its index.  <br /></td></tr>
-<tr class="separator:ga1fe5f9ea29a955a3594efeb233abdc46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab184b0ee95dbf7e439994e4625e373d6" id="r_gab184b0ee95dbf7e439994e4625e373d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#gab184b0ee95dbf7e439994e4625e373d6">infix_type_get_arg_name</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *func_type, size_t index)</td></tr>
-<tr class="memdesc:gab184b0ee95dbf7e439994e4625e373d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of a function argument by its index.  <br /></td></tr>
-<tr class="separator:gab184b0ee95dbf7e439994e4625e373d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab84d26a891210bf310195ae70297ccc6" id="r_gab84d26a891210bf310195ae70297ccc6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#gab84d26a891210bf310195ae70297ccc6">infix_type_get_arg_type</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *func_type, size_t index)</td></tr>
-<tr class="memdesc:gab84d26a891210bf310195ae70297ccc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the type of a function argument by its index.  <br /></td></tr>
-<tr class="separator:gab84d26a891210bf310195ae70297ccc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9d8374030d014a748fd0d2b26e5415e3" id="r_ga9d8374030d014a748fd0d2b26e5415e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a909e562b00e504aeceac698bd272f0ca">infix_type_category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga9d8374030d014a748fd0d2b26e5415e3">infix_type_get_category</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga9d8374030d014a748fd0d2b26e5415e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the fundamental category of an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>.  <br /></td></tr>
+<tr class="separator:ga9d8374030d014a748fd0d2b26e5415e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e49d4bdbfe42b661bf7bcb597793e9a" id="r_ga0e49d4bdbfe42b661bf7bcb597793e9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga0e49d4bdbfe42b661bf7bcb597793e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the size of an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> in bytes.  <br /></td></tr>
+<tr class="separator:ga0e49d4bdbfe42b661bf7bcb597793e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1ed0ae5410046578126032b844f81fc1" id="r_ga1ed0ae5410046578126032b844f81fc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">infix_type_get_alignment</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga1ed0ae5410046578126032b844f81fc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the alignment requirement of an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> in bytes.  <br /></td></tr>
+<tr class="separator:ga1ed0ae5410046578126032b844f81fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga678390feeed80a43111725c4e73c0dda" id="r_ga678390feeed80a43111725c4e73c0dda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga678390feeed80a43111725c4e73c0dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the number of members in an aggregate type (struct or union).  <br /></td></tr>
+<tr class="separator:ga678390feeed80a43111725c4e73c0dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafc256d548bfd78ff90ee38a1cc0ae8b9" id="r_gafc256d548bfd78ff90ee38a1cc0ae8b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="structinfix__struct__member.html">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:gafc256d548bfd78ff90ee38a1cc0ae8b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a specific member from an aggregate type by its index.  <br /></td></tr>
+<tr class="separator:gafc256d548bfd78ff90ee38a1cc0ae8b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga797871621d591d441be67d42be2d1efa" id="r_ga797871621d591d441be67d42be2d1efa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga797871621d591d441be67d42be2d1efa">infix_type_get_arg_name</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:ga797871621d591d441be67d42be2d1efa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of a function argument by its index.  <br /></td></tr>
+<tr class="separator:ga797871621d591d441be67d42be2d1efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga184bcb5102d6315b8ff8d6defe1387f9" id="r_ga184bcb5102d6315b8ff8d6defe1387f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html#ga184bcb5102d6315b8ff8d6defe1387f9">infix_type_get_arg_type</a> (const <a class="el" href="structinfix__type.html">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:ga184bcb5102d6315b8ff8d6defe1387f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the type of a function argument by its index.  <br /></td></tr>
+<tr class="separator:ga184bcb5102d6315b8ff8d6defe1387f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The main public header for the infix FFI library. </p>
@@ -571,14 +571,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a3faff0adbe3b7f6df3be210295ec3a81" name="a3faff0adbe3b7f6df3be210295ec3a81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3faff0adbe3b7f6df3be210295ec3a81">&#9670;&#160;</a></span>infix_cif_func</h2>
+<a id="a34ef26a155a3861d5172b7c07239ee43" name="a34ef26a155a3861d5172b7c07239ee43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34ef26a155a3861d5172b7c07239ee43">&#9670;&#160;</a></span>infix_cif_func</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* infix_cif_func) (void *target_function, void *return_value, void **args)</td>
+          <td class="memname">typedef void(* infix_cif_func) (void *, void *, void **)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -716,61 +716,6 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a1af697e48fc6d17a1313bec4a0fd6a80" name="a1af697e48fc6d17a1313bec4a0fd6a80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1af697e48fc6d17a1313bec4a0fd6a80">&#9670;&#160;</a></span>infix_struct_member_create()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structinfix__struct__member.html">infix_struct_member</a> infix_struct_member_create </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td>
-          <td class="paramname"><em>type</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>offset</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A factory function to create an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>. </p>
-<p>This is a convenience helper for populating the <code>members</code> array passed to <code>infix_type_create_struct</code> or <code>infix_type_create_union</code>. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>The member's name (for debugging; can be <code>nullptr</code>). </td></tr>
-    <tr><td class="paramname">type</td><td>A pointer to the member's <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
-    <tr><td class="paramname">offset</td><td>The byte offset of the member, obtained via the <code>offsetof</code> macro. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An initialized <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>.</dd></dl>
-<p>This is a convenient helper function for creating an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>, which is needed to define the layout of structs and unions.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>The member's name (for debugging purposes; can be <code>nullptr</code>). </td></tr>
-    <tr><td class="paramname">type</td><td>A pointer to the member's <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
-    <tr><td class="paramname">offset</td><td>The byte offset of the member from the start of the aggregate. This value should be obtained using the standard <code>offsetof</code> macro. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An initialized <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>. </dd></dl>
-
-</div>
-</div>
 <a id="a9f0d8a41015262d2dcffc97cf5f87772" name="a9f0d8a41015262d2dcffc97cf5f87772"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f0d8a41015262d2dcffc97cf5f87772">&#9670;&#160;</a></span>infix_type_create_array()</h2>
 
@@ -857,6 +802,64 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a642b11fa95d575f407b33a9dc28d81bf" name="a642b11fa95d575f407b33a9dc28d81bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a642b11fa95d575f407b33a9dc28d81bf">&#9670;&#160;</a></span>infix_type_create_complex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_complex </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> **&#160;</td>
+          <td class="paramname"><em>out_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>base_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a <code>_Complex</code> number from an arena. </p>
+<p>This function describes a standard C <code>_Complex</code> number. The memory layout is equivalent to a two-element array of the base floating-point type.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">base_type</td><td>The floating-point <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> of the real and imaginary parts (must be <code>INFIX_PRIMITIVE_FLOAT</code> or <code>INFIX_PRIMITIVE_DOUBLE</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd>
+<dd>
+<code>INFIX_ERROR_INVALID_ARGUMENT</code> if <code>base_type</code> is not a <code>float</code> or <code>double</code>. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="infix_8h_a642b11fa95d575f407b33a9dc28d81bf_cgraph.png" border="0" usemap="#ainfix_8h_a642b11fa95d575f407b33a9dc28d81bf_cgraph" alt=""/></div>
+<map name="ainfix_8h_a642b11fa95d575f407b33a9dc28d81bf_cgraph" id="ainfix_8h_a642b11fa95d575f407b33a9dc28d81bf_cgraph">
+<area shape="rect" title="Creates a new infix_type for a _Complex number from an arena." alt="" coords="5,5,203,31"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="251,5,383,31"/>
+<area shape="poly" title=" " alt="" coords="203,15,237,15,237,21,203,21"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a44df1ec1de746a0be838b55567d07cae" name="a44df1ec1de746a0be838b55567d07cae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a44df1ec1de746a0be838b55567d07cae">&#9670;&#160;</a></span>infix_type_create_enum()</h2>
 
@@ -912,8 +915,63 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="add70103c39886a50bc11d53a182b13b5" name="add70103c39886a50bc11d53a182b13b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add70103c39886a50bc11d53a182b13b5">&#9670;&#160;</a></span>infix_type_create_named_reference()</h2>
+<a id="aed99b57de2c839a66eb54c9e82d703d9" name="aed99b57de2c839a66eb54c9e82d703d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed99b57de2c839a66eb54c9e82d703d9">&#9670;&#160;</a></span>infix_type_create_member()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structinfix__struct__member.html">infix_struct_member</a> infix_type_create_member </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A factory function to create an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>. </p>
+<p>This is a convenience helper for populating the <code>members</code> array passed to <code>infix_type_create_struct</code> or <code>infix_type_create_union</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The member's name (for debugging; can be <code>nullptr</code>). </td></tr>
+    <tr><td class="paramname">type</td><td>A pointer to the member's <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
+    <tr><td class="paramname">offset</td><td>The byte offset of the member, obtained via the <code>offsetof</code> macro. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An initialized <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>.</dd></dl>
+<p>This is a convenient helper function for creating an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>, which is needed to define the layout of structs and unions.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The member's name (for debugging purposes; can be <code>nullptr</code>). </td></tr>
+    <tr><td class="paramname">type</td><td>A pointer to the member's <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
+    <tr><td class="paramname">offset</td><td>The byte offset of the member from the start of the aggregate. This value should be obtained using the standard <code>offsetof</code> macro. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An initialized <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>. </dd></dl>
+
+</div>
+</div>
+<a id="aee217899ccae9a128e95673e8f2f69cc" name="aee217899ccae9a128e95673e8f2f69cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee217899ccae9a128e95673e8f2f69cc">&#9670;&#160;</a></span>infix_type_create_named_reference()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -945,6 +1003,17 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a named reference from an arena. </p>
+<p>This is an advanced function primarily used by the signature parser when it encounters a reference to a named type (e.g., <code>struct&lt;MyStruct&gt;</code>) that is NOT followed by a definition body. It acts as a placeholder that must be resolved before a trampoline can be generated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">name</td><td>The name of the type being referenced. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>A type graph containing a named reference is considered "unresolved" and cannot be used to generate a trampoline until the reference is replaced with a full type definition.</dd></dl>
 <p>This is used by the parser when it encounters a reference to a named type like <code>struct&lt;MyStruct&gt;</code> that is NOT followed by a definition body. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
@@ -957,8 +1026,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="infix_8h_add70103c39886a50bc11d53a182b13b5_cgraph.png" border="0" usemap="#ainfix_8h_add70103c39886a50bc11d53a182b13b5_cgraph" alt=""/></div>
-<map name="ainfix_8h_add70103c39886a50bc11d53a182b13b5_cgraph" id="ainfix_8h_add70103c39886a50bc11d53a182b13b5_cgraph">
+<div class="center"><img src="infix_8h_aee217899ccae9a128e95673e8f2f69cc_cgraph.png" border="0" usemap="#ainfix_8h_aee217899ccae9a128e95673e8f2f69cc_cgraph" alt=""/></div>
+<map name="ainfix_8h_aee217899ccae9a128e95673e8f2f69cc_cgraph" id="ainfix_8h_aee217899ccae9a128e95673e8f2f69cc_cgraph">
 <area shape="rect" title="Creates a new infix_type for a named reference from an arena." alt="" coords="5,5,192,45"/>
 <area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="240,13,372,38"/>
 <area shape="poly" title=" " alt="" coords="192,23,226,23,226,28,192,28"/>
