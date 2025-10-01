@@ -113,11 +113,16 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
  * @return `true` if the type should be returned by reference, `false` otherwise.
  */
 static bool return_value_is_by_reference(infix_type * type) {
-    // On Windows x64, SIMD vector types have their own specific rule that is
-    // different from other aggregates. 128-bit vectors (__m128) are returned by
-    // value in XMM0. Larger vectors (__m256d) are returned by reference.
-    if (type->category == INFIX_TYPE_VECTOR)
+    if (type->category == INFIX_TYPE_VECTOR) {
+#if defined(INFIX_COMPILER_GCC)
+        // GCC on Windows returns vectors larger than 16 bytes by reference.
         return type->size > 16;
+#else
+        // MSVC and Clang-cl return vectors up to 32 bytes (256-bit) by value
+        // in YMM0. Larger vectors are returned by reference.
+        return type->size > 32;
+#endif
+    }
 
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
         type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX)
@@ -409,6 +414,8 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
         else if (ret_type->size == 16 &&
                  (ret_type->category == INFIX_TYPE_PRIMITIVE || ret_type->category == INFIX_TYPE_VECTOR))
             emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+        else if (ret_type->size == 32 && ret_type->category == INFIX_TYPE_VECTOR)
+            emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);
         else {
             // All other returnable-by-value types are in RAX.
             switch (ret_type->size) {
@@ -666,6 +673,8 @@ static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
             emit_int32(buf, layout->return_buffer_offset);
         }
 #endif
+        else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
+            emit_vmovupd_ymm_mem(buf, XMM0_REG, RSP_REG, layout->return_buffer_offset);
         else if (is_float(context->return_type))
             emit_movss_xmm_mem(buf, XMM0_REG, RSP_REG, layout->return_buffer_offset);
         else if (is_double(context->return_type))
