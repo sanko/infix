@@ -219,7 +219,6 @@ TEST {
     subtest("ABI Specific: 128-bit SIMD Vector") {
         plan(2);
 #if defined(INFIX_ARCH_X86_SSE2)
-        note("Testing __m128d passed and returned by value on x86-64.");
         infix_arena_t * arena = infix_arena_create(4096);
         // 1. Create the infix_type for v[2:double]
         infix_type * vector_type = nullptr;
@@ -240,7 +239,7 @@ TEST {
             __m128d vec_a = _mm_set_pd(20.0, 10.0);  // Vector [10.0, 20.0]
             __m128d vec_b = _mm_set_pd(22.0, 32.0);  // Vector [32.0, 22.0]
             void * args[] = {&vec_a, &vec_b};
-            union {
+            union {  // So we can check each value
                 __m128d v;
                 double d[2];
             } result;
@@ -254,12 +253,14 @@ TEST {
             infix_arena_destroy(arena);
         }
 #elif defined(INFIX_ARCH_ARM_NEON)
-        note("Testing float64x2_t passed/returned by value on AArch64 via HFA classification.");
         infix_arena_t * arena = infix_arena_create(4096);
-        // On ARM, a float64x2_t is treated as an HFA. The most direct representation is an array.
+        // 1. Create the infix_type for v[2:double]
         infix_type * neon_vector_type = nullptr;
+
+        // A native NEON vector should be described as a VECTOR type, not an ARRAY.
+        // This allows the ABI logic to distinguish it from a struct-of-doubles (HFA).
         infix_status status =
-            infix_type_create_array(arena, &neon_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 2);
+            infix_type_create_vector(arena, &neon_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 2);
 
         if (!ok(status == INFIX_SUCCESS, "infix_type for float64x2_t layout created successfully")) {
             skip(1, "Cannot proceed");
@@ -279,7 +280,7 @@ TEST {
             float64_t result_data[2];
             vst1q_f64(result_data, result_vec);
             ok(fabs(result_data[0] - 42.0) < 1e-9 && fabs(result_data[1] - 42.0) < 1e-9,
-               "NEON vector passed/returned correctly via HFA rules");
+               "NEON vector passed/returned correctly");
             diag("Result: [%f, %f]", result_data[0], result_data[1]);
             infix_forward_destroy(trampoline);
             infix_arena_destroy(arena);
