@@ -31,7 +31,7 @@
  *     consecutive floating-point registers.
  * 4.  **SIMD Vector Types:** Contains conditionally compiled tests for native SIMD
  *     vector types, including 128-bit SSE (`__m128d`), 256-bit AVX (`__m256d`),
- *     and AArch64 NEON (`float64x2_t`).
+ *     AArch64 NEON (`float64x2_t`), and AArch64 SVE (`svfloat64_t`).
  *
  * Platform-specific tests are conditionally compiled using preprocessor guards to
  * ensure they only run on relevant targets.
@@ -56,6 +56,10 @@
 // https://developer.arm.com/documentation/102581/0200/About-intrinsics
 //
 #endif
+#if defined(INFIX_ARCH_ARM_SVE)
+#include <arm_sve.h>
+#endif
+
 
 // Native C Target Functions
 /** @brief Processes a Point struct passed by value, returning a sum of its members. */
@@ -100,8 +104,18 @@ __m256d native_vector_add_256(__m256d a, __m256d b) {
 }
 #endif
 
+#if defined(INFIX_ARCH_ARM_SVE)
+// A native C function that adds two scalable vectors of doubles using SVE intrinsics.
+svfloat64_t native_sve_vector_add(svfloat64_t a, svfloat64_t b) {
+    // Get an all-true predicate for 64-bit elements to operate on all lanes.
+    svbool_t pg = svptrue_b64();
+    // Perform the addition under the control of the predicate.
+    return svadd_z(pg, a, b);
+}
+#endif
+
 TEST {
-    plan(5);  // One subtest for each major scenario.
+    plan(6);  // One subtest for each major scenario.
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(5);
@@ -339,6 +353,74 @@ TEST {
         }
 #else
         skip(2, "No supported 256-bit SIMD vector type on this platform (requires AVX2).");
+#endif
+    }
+
+    subtest("ABI Specific: ARM64 Scalable Vector (SVE)") {
+        plan(2);
+#if defined(INFIX_ARCH_ARM_SVE)
+        note("Testing ARM64 Scalable Vector Extension (SVE).");
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // 1. Determine the vector size at RUNTIME. This is the key to SVE.
+        size_t num_elements = svcntd();  // Count of 64-bit (double) elements.
+        note("Detected SVE vector width: %zu bits (%zu double elements).", svlen_b() * 8, num_elements);
+
+        // 2. Create the infix_type for the dynamically sized vector.
+        infix_type * sve_vector_type = nullptr;
+        infix_status status = infix_type_create_vector(
+            arena, &sve_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), num_elements);
+
+        if (!ok(status == INFIX_SUCCESS, "infix_type for svfloat64_t created successfully")) {
+            skip(1, "Cannot proceed without SVE vector type");
+            infix_arena_destroy(arena);
+        }
+        else {
+            // 3. Create the trampoline for svfloat64_t(svfloat64_t, svfloat64_t)
+            infix_type * arg_types[] = {sve_vector_type, sve_vector_type};
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
+
+            // 4. Prepare data arrays, call the trampoline, and verify the result.
+            // Allocate memory for the data arrays based on the runtime size.
+            double * vec_a_data = malloc(sizeof(double) * num_elements);
+            double * vec_b_data = malloc(sizeof(double) * num_elements);
+            double * result_data = malloc(sizeof(double) * num_elements);
+
+            for (size_t i = 0; i < num_elements; ++i) {
+                vec_a_data[i] = 10.0 + i;
+                vec_b_data[i] = 32.0 - i;
+            }
+
+            svbool_t pg = svptrue_b64();
+            svfloat64_t vec_a = svld1_f64(pg, vec_a_data);
+            svfloat64_t vec_b = svld1_f64(pg, vec_b_data);
+            svfloat64_t result_vec;
+
+            void * args[] = {&vec_a, &vec_b};
+
+            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_sve_vector_add, &result_vec, args);
+
+            svst1_f64(pg, result_data, result_vec);
+
+            bool all_correct = true;
+            for (size_t i = 0; i < num_elements; ++i) {
+                if (fabs(result_data[i] - 42.0) > 1e-9) {
+                    all_correct = false;
+                    diag("Mismatch at element %zu: expected 42.0, got %f", i, result_data[i]);
+                }
+            }
+
+            ok(all_correct, "SVE vector passed/returned correctly for all %zu elements", num_elements);
+
+            free(vec_a_data);
+            free(vec_b_data);
+            free(result_data);
+            infix_forward_destroy(trampoline);
+            infix_arena_destroy(arena);
+        }
+#else
+        skip(2, "No SVE support on this platform (requires -march=armv8-a+sve or similar).");
 #endif
     }
 }

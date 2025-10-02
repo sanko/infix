@@ -562,7 +562,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
             emit_int32(buf, 0xAA0903E0 | GPR_ARGS[loc->reg_index]);  // mov xN, x9
             break;
         case ARG_LOCATION_VPR:
-            if (is_long_double(type) || type->category == INFIX_TYPE_VECTOR)
+            if (is_long_double(type) || (type->category == INFIX_TYPE_VECTOR && type->size == 16))
                 emit_arm64_ldr_q_imm(buf, VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr qN, [x9]
             else
                 emit_arm64_ldr_vpr(buf, is_double(type), VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr dN/sN, [x9]
@@ -588,7 +588,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                         if (is_float(type) || is_double(type)) {
                             // Floats are promoted to doubles.
                             emit_arm64_ldr_vpr(buf, true, V16_REG, X9_REG, 0);  // Load as double
-                            if (loc->stack_offset < max_imm_offset)
+                            if (loc->stack_offset < (unsigned)max_imm_offset)
                                 emit_arm64_str_vpr(buf, true, V16_REG, SP_REG, loc->stack_offset);
                             else {
                                 emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, loc->stack_offset);
@@ -611,7 +611,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
 
 
                             // Store the promoted 64-bit value.
-                            if (loc->stack_offset < max_imm_offset)
+                            if (loc->stack_offset < (unsigned)max_imm_offset)
                                 emit_arm64_str_imm(buf, true, X10_REG, SP_REG, loc->stack_offset);
                             else {
                                 emit_arm64_add_imm(buf, true, false, X11_REG, SP_REG, loc->stack_offset);
@@ -700,6 +700,8 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
             case 16:  // For __int128_t or small structs
                 emit_arm64_str_imm(buf, true, X0_REG, X20_REG, 0);
                 emit_arm64_str_imm(buf, true, X1_REG, X20_REG, 8);
+                break;
+            default:
                 break;
             }
         }
@@ -884,7 +886,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                     const int scale = is_double(hfa_base_type) ? 8 : 4;
                     for (size_t j = 0; j < num_elements; ++j) {
                         int32_t dest_offset = arg_save_loc + j * hfa_base_type->size;
-                        if (dest_offset >= 0 && (dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
+                        if (dest_offset >= 0 && ((unsigned)dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
                             emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
                         else {
                             emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
@@ -898,7 +900,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             else if (expect_in_vpr) {
                 if (vpr_idx < NUM_VPR_ARGS) {
                     const int scale = is_long_double(type) ? 16 : (is_double(type) ? 8 : 4);
-                    if (arg_save_loc >= 0 && (arg_save_loc / scale) <= 0xFFF && (arg_save_loc % scale == 0)) {
+                    if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / scale) <= 0xFFF && (arg_save_loc % scale == 0)) {
                         if (is_long_double(type))
                             emit_arm64_str_q_imm(buf, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
                         else
@@ -925,7 +927,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                         if (gpr_idx % 2 != 0)
                             gpr_idx++;
 #endif
-                        if (arg_save_loc >= 0 && ((arg_save_loc + 8) / 8) <= 0xFFF && (arg_save_loc % 8 == 0)) {
+                        if (arg_save_loc >= 0 && (((unsigned)arg_save_loc + 8) / 8) <= 0xFFF &&
+                            (arg_save_loc % 8 == 0)) {
                             emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
                             emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc + 8);
                         }
@@ -940,7 +943,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                 }
                 else {  // <= 8-byte value in one GPR
                     if (gpr_idx < NUM_GPR_ARGS) {
-                        if (arg_save_loc >= 0 && (arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
+                        if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
                             emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
                         else {
                             emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
@@ -957,7 +960,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             for (size_t offset = 0; offset < type->size; offset += 8) {
                 emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, caller_stack_offset + offset);
                 int32_t dest_offset = arg_save_loc + offset;
-                if (dest_offset >= 0 && (dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
+                if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
                     emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
                 else {
                     emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
@@ -969,7 +972,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
 
         int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
         emit_arm64_add_imm(buf, true, false, X9_REG, SP_REG, arg_save_loc);
-        if (dest_offset >= 0 && (dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
+        if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
             emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
         else {
             emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);

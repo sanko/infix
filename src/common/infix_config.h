@@ -224,6 +224,18 @@
 /** @brief Defined if the target supports the RISC-V Vector Extension ('V'). */
 #define INFIX_ARCH_RISCV_RVV
 #endif
+#if defined(__ARM_NEON) || defined(_M_ARM64)
+/** @brief Defined if the target supports the ARM NEON instruction set. */
+#define INFIX_ARCH_ARM_NEON
+#endif
+#if defined(__ARM_FEATURE_SVE)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension (SVE). */
+#define INFIX_ARCH_ARM_SVE
+#endif
+#if defined(__ARM_FEATURE_SVE2)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension 2 (SVE2). */
+#define INFIX_ARCH_ARM_SVE2
+#endif
 #endif
 #
 #if defined(INFIX_ARCH_X86_AVX2)

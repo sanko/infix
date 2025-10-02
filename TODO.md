@@ -142,6 +142,19 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** Create a new `infix_syscall_create` API that emits assembly to load registers and execute the `syscall` instruction.
     *   **Goal:** A user can successfully call a basic OS syscall, such as `write` on Linux, using a generated trampoline.
     *   **Possible Roadblocks:** Extremely high implementation cost. Requires a unique ABI implementation for every supported OS. Testing is very difficult and OS-specific.
+    *   **References:**
+            - General:
+                - https://www.cs.uaf.edu/courses/cs301/2014-fall/notes/syscall/index.html
+            - Windows:
+                - https://j00ru.vexillium.org/syscalls/nt/64/
+                - https://github.com/hfiref0x/SyscallTables
+            - Linux:
+                - https://syscalls64.paolostivanin.com/
+                - https://filippo.io/linux-syscall-table/
+            - FreeBSD:
+                - https://lists.freebsd.org/archives/freebsd-hackers/2023-July/002351.html
+                - https://www.lurklurk.org/concordance.html (Linux vs. FreeBSD)
+                - https://alfonsosiciliano.gitlab.io/posts/2023-08-28-freebsd-15-system-calls.html
 
 - [ ] **Add Exception Handling Boundary**
     *   **Context:** An unhandled C++ or SEH exception that crosses the FFI boundary will crash the program. A robust library should provide a way to handle this.
@@ -179,3 +192,13 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The "Writing to a hardened reverse trampoline context causes a crash" test passes successfully on macOS.
     *   **Possible Roadblocks:** This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems.
 
+- [ ] **Add Half-Precision Floating-Point (`float16_t`) Support**
+    *   **Context:** `_Float16` is increasingly important for machine learning and GPU-related tasks.
+    *   **Idea:** Add a new primitive type. The ABI rules are simple: `_Float16` arguments are promoted to `float` and passed in standard floating-point registers.
+    *   **Goal:** The library correctly handles `float16_t` arguments and return values.
+
+- [ ] **Add Support for Scalable Vectors (ARM SVE & RISC-V 'V')**
+    *   **Context:** This is the future of SIMD on these architectures, where the vector size is determined by the hardware at runtime.
+    *   **Idea:** This would require a major architectural redesign. The JIT code would need to query the hardware's vector length at runtime and dynamically adjust its behavior.
+    *   **Goal:** Basic support for a function taking a scalable vector type.
+    *   **Possible Roadblocks:** Monumental implementation effort. Likely out of scope for the current library

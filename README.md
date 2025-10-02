@@ -13,13 +13,13 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
     *   **Guard Pages:** Freed trampolines are made inaccessible to prevent use-after-free bugs.
     *   **Read-Only Contexts:** Callback context data is made read-only to guard against runtime memory corruption.
 *   **Stateful Callbacks Made Easy:** The reverse-call API is designed to make stateful callbacks simple and safe, even when the C library you're calling doesn't provide a `user_data` parameter.
-*   **Zero Dependencies & Simple Integration:** `infix` uses a unity build, making integration into any C/C++ project trivial.
+*   **Zero Dependencies & Simple Integration:** `infix` uses a unity build, making integration into any C/C++ project trivial by simply compiling `src/infix.c`.
 
 ## Who is this for?
 
 `infix` is designed for developers who need to bridge the gap between different codebases or language runtimes. You'll find it especially useful if you are:
 
-*   **A Language Binding Author:** `infix` is the ideal engine for allowing a high-level language like Python, Ruby, Perl, or Lua to call C libraries. The introspectable type system and signature parser simplify the complex task of data marshalling.
+*   **A Language Binding Author:** `infix` is the ideal engine for allowing a high-level language like Python, Ruby, Perl, or Lua to call C libraries. The introspectable type system simplifies the complex task of data marshalling.
 *   **A Plugin System Architect:** Build a stable, ABI-agnostic plugin system. `infix` can provide the boundary layer, allowing you to load and call functions from shared libraries without tight coupling.
 *   **A C/C++ Developer:** Dynamically call functions from system libraries (`user32.dll`, `libc.so.6`, etc.) without needing to link against them at compile time.
 *   **A Security Researcher:** `infix` provides a powerful, fuzz-tested toolkit for analyzing and interacting with native code.
@@ -79,7 +79,9 @@ int main() {
 | **Struct** | `{int, double}` | `struct { int; double; }` |
 | **Union** | `<int, double>` | `union { int; double; }` |
 | **Packed Struct**| `!{char, int}` | `struct { char; int; } __attribute__((packed))` |
-| **SIMD Vector** | `v[4:double]` | `__m256d` (AVX) |
+| **Complex** | `c[double]` | `double _Complex` |
+| **SIMD Vector** | `v[4:float]` | `__m128` (SSE) |
+|                 | `v[4:double]` | `__m256d` (AVX) |
 | **Function Ptr**| `*((int) -> void)` | `void (*func)(int)` |
 | **Variadic** | `(*char; int)` | `const char*, int, ...` |
 
@@ -88,6 +90,7 @@ int main() {
 For performance-critical or highly dynamic applications, you can build type descriptions manually. This API is **exclusively arena-based** to guarantee memory safety.
 
 **Example: Manually Describing a `Point` Struct**
+
 ```c
 #include <infix/infix.h>
 #include <stddef.h>
@@ -120,8 +123,8 @@ int main() {
 
 <details>
 <summary><strong>Click to expand the full Manual API reference</strong></summary>
-
 **Arena Management**
+
 | Function | Purpose |
 | :--- | :--- |
 | `infix_arena_create(size)` | Create a memory arena for fast allocations. |
@@ -130,6 +133,7 @@ int main() {
 | `infix_arena_destroy(arena)` | Free an arena and **all** objects allocated within it. |
 
 **Type Creation**
+
 | Function | Purpose |
 | :--- | :--- |
 | `infix_type_create_primitive(...)` | Get a static descriptor for `int`, `double`, etc. |
@@ -145,6 +149,7 @@ int main() {
 | `infix_type_create_member(...)` | Helper to create a member for a struct or union. |
 
 **Trampoline Management**
+
 | Function | Purpose |
 | :--- | :--- |
 | `infix_forward_create_manual(...)` | Generate a forward trampoline from manual `infix_type` objects. |
@@ -156,6 +161,7 @@ int main() {
 | `infix_reverse_destroy(ctx)` | Free a reverse trampoline, its stub, and its context. |
 
 **Type Introspection**
+
 | Function | Purpose |
 | :--- | :--- |
 | `infix_type_get_category(type)` | Get the fundamental kind of a type (struct, pointer, etc.). |
@@ -171,7 +177,6 @@ int main() {
 Beyond just calling functions, `infix` provides a powerful introspection API that allows you to parse a signature string and examine the complete memory layout of a C type at runtime. This is the key feature that makes `infix` an ideal engine for building language bindings, serializers, or any tool that needs to dynamically interact with C data structures.
 
 **Example: Inspecting a C Struct at Runtime**
-
 ```c
 #include <infix/infix.h>
 #include <stdio.h>
@@ -216,7 +221,6 @@ int main() {
 ```
 
 **Output:**
-
 ```
 Inspecting struct layout for: {id:int32, score:double, name:*char}
 Total size: 24 bytes, Alignment: 8 bytes
@@ -225,13 +229,14 @@ Total size: 24 bytes, Alignment: 8 bytes
   - Member 'name': offset=16, size=8
 ```
 
-This runtime layout information allows you to, for example, take a Python object and correctly pack its attributes into a C `UserProfile` struct in memory, byte by byte.
+This runtime layout information allows you to, for example, take a Perl hash and correctly pack its key/value pairs into a C `UserProfile` struct in memory, byte by byte.
 
 ## Supported Platforms
 
 `infix` is rigorously tested on a wide array of operating systems, compilers, and architectures with every commit.
 
 <details>
+
 <summary><strong>Click to view the full CI test matrix</strong></summary>
 
 | OS | Architecture | Compilers | Status |
@@ -256,9 +261,9 @@ This runtime layout information allows you to, for example, take a Python object
 
 ## Building and Integrating
 
-Full build instructions for `xmake`, `cmake`, `make`, and `nmake` are available in **[INSTALL.md](INSTALL.md)**.
+Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are available in **[INSTALL.md](INSTALL.md)**.
 
-Because `infix` uses a unity build, integration into an existing project is simple: You only need to add `src/infix.c` to your list of source files to compile and add the `include/` directory to your include paths.
+Because `infix` uses a unity build, integration into an existing project is simple: add `src/infix.c` to your list of source files and add the `include/` directory to your include paths.
 
 ## Learn More
 

@@ -372,7 +372,16 @@ sub compile_and_run_tests {
             next;
         }
         my @source_files = ($test_c);
-        my @local_cflags = ( @{ $config->{cflags} }, ( $config{arch} eq 'x64' ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) : '' ) );
+        my @local_cflags = ( @{ $config->{cflags} },
+
+
+        (
+        $config{arch} eq 'x64' ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
+        $config{arch} eq 'arm64' ? '-march=armv8-a+sve'
+: '-march=armv8-a+sve'
+)
+
+);
         if ( $test_c =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
