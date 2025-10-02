@@ -1,26 +1,29 @@
 <map id="infix_arena_destroy" name="infix_arena_destroy">
-<area shape="rect" id="Node000001" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="679,155,829,180"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="222,40,377,65"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="738,144,720,115,696,83,665,53,630,30,591,16,550,10,509,8,468,11,393,25,335,43,333,37,392,20,468,6,509,3,551,4,592,11,632,25,669,49,700,80,725,112,742,141"/>
-<area shape="rect" id="Node000003" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="457,39,612,79"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="719,150,629,100,588,82,590,77,632,96,722,145"/>
-<area shape="rect" id="Node000004" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="222,90,377,130"/>
-<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="665,156,630,151,376,121,377,115,631,146,665,151"/>
-<area shape="rect" id="Node000006" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,155,160,180"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="665,170,161,170,161,165,665,165"/>
-<area shape="rect" id="Node000007" href="$group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,205,615,231"/>
-<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="685,186,591,208,590,203,684,181"/>
-<area shape="rect" id="Node000008" href="$fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="208,256,391,281"/>
-<area shape="poly" id="edge15_Node000001_Node000008" title=" " alt="" coords="740,193,697,248,667,275,632,295,592,308,551,314,510,316,469,313,394,300,335,284,337,279,395,295,470,308,510,310,551,309,591,303,630,290,663,270,693,244,736,190"/>
-<area shape="rect" id="Node000009" href="$group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="439,255,631,280"/>
-<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="725,190,682,218,632,244,595,257,593,252,630,240,680,214,723,186"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="444,59,377,58,377,52,444,54"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="444,81,378,96,376,91,443,76"/>
-<area shape="rect" id="Node000005" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,97,158,123"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="209,113,158,113,158,107,209,107"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="211,136,132,157,131,152,209,131"/>
-<area shape="poly" id="edge10_Node000007_Node000002" title=" " alt="" coords="514,196,462,138,427,107,389,80,361,68,363,63,392,76,431,103,466,134,518,192"/>
-<area shape="poly" id="edge11_Node000007_Node000006" title=" " alt="" coords="440,213,208,189,160,182,161,177,208,183,440,207"/>
-<area shape="poly" id="edge12_Node000007_Node000008" title=" " alt="" coords="462,236,360,259,358,253,461,231"/>
-<area shape="poly" id="edge14_Node000009_Node000008" title=" " alt="" coords="425,271,391,271,391,265,425,265"/>
+<area shape="rect" id="Node000001" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="881,183,1032,208"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="425,208,579,233"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="868,203,580,219,579,214,867,198"/>
+<area shape="rect" id="Node000003" href="$group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="656,5,819,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="939,173,895,112,866,80,832,52,792,33,794,28,835,48,869,76,900,109,943,169"/>
+<area shape="rect" id="Node000004" href="$group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="421,49,583,75"/>
+<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="932,175,888,136,861,118,832,103,769,83,704,71,640,64,584,62,584,57,641,59,704,65,771,78,834,98,864,113,892,132,936,171"/>
+<area shape="rect" id="Node000006" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,93,363,133"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="913,180,875,165,833,154,705,133,576,121,458,115,363,114,363,109,458,110,576,116,705,128,834,149,876,160,915,175"/>
+<area shape="rect" id="Node000007" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,157,160,183"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="868,193,833,191,455,180,160,174,160,168,455,174,833,186,868,188"/>
+<area shape="rect" id="Node000008" href="$group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="657,259,818,284"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="909,215,834,242,778,261,776,256,832,237,907,210"/>
+<area shape="rect" id="Node000009" href="$fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="411,309,593,335"/>
+<area shape="poly" id="edge17_Node000001_Node000009" title=" " alt="" coords="938,220,894,262,865,283,834,299,774,318,711,328,649,332,594,332,594,327,649,327,710,323,773,313,832,294,863,278,890,258,934,216"/>
+<area shape="rect" id="Node000010" href="$group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="641,360,833,385"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="943,221,900,282,869,314,835,343,794,362,792,357,832,338,866,311,895,278,939,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="656,36,571,52,570,47,655,31"/>
+<area shape="rect" id="Node000005" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,72,158,97"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="407,70,158,83,158,78,406,64"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="434,81,363,97,362,92,433,75"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="194,103,158,98,159,92,195,97"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="202,139,129,160,128,155,200,134"/>
+<area shape="poly" id="edge12_Node000008_Node000002" title=" " alt="" coords="663,258,561,236,562,231,665,253"/>
+<area shape="poly" id="edge13_Node000008_Node000007" title=" " alt="" coords="642,270,531,263,410,249,255,218,128,185,130,180,256,212,411,243,531,257,643,265"/>
+<area shape="poly" id="edge14_Node000008_Node000009" title=" " alt="" coords="665,290,562,312,561,307,663,284"/>
+<area shape="poly" id="edge16_Node000010_Node000009" title=" " alt="" coords="663,360,561,337,562,332,665,354"/>
 </map>

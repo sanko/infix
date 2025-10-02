@@ -85,8 +85,9 @@ Collaboration diagram for High-Level Signature API:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api.png" border="0" usemap="#agroup____high____level____api" alt=""/></div>
 <map name="agroup____high____level____api" id="agroup____high____level____api">
-<area shape="rect" title="Convenience functions for creating trampolines from a signature string." alt="" coords="5,5,188,31"/>
-<area shape="rect" href="group__type__introspection__api.html" title="Functions for safely querying the properties of infix_type objects." alt="" coords="236,5,403,31"/>
+<area shape="rect" href="group__forward__introspection__api.html" title="Functions for safely querying the signature of a forward trampoline." alt="" coords="244,5,395,45"/>
+<area shape="rect" title="Convenience functions for creating trampolines from a signature string." alt="" coords="5,42,188,67"/>
+<area shape="rect" href="group__type__introspection__api.html" title="Functions for safely querying the properties of infix_type objects." alt="" coords="236,70,403,95"/>
 </map>
 </div>
 <table class="memberdecls">
@@ -94,6 +95,9 @@ Collaboration diagram for High-Level Signature API:</div>
 Modules</h2></td></tr>
 <tr class="memitem:group__type__introspection__api" id="r_group__type__introspection__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__introspection__api.html">Type Introspection API</a></td></tr>
 <tr class="memdesc:group__type__introspection__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for safely querying the properties of <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__forward__introspection__api" id="r_group__forward__introspection__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__forward__introspection__api.html">Forward Trampoline Introspection API</a></td></tr>
+<tr class="memdesc:group__forward__introspection__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for safely querying the signature of a forward trampoline. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -520,58 +524,54 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph.png" border="0" usemap="#agroup__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph" alt=""/></div>
 <map name="agroup__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph" id="agroup__high__level__api_gabb32fed25010a3111812c8dfacd4cf40_icgraph">
-<area shape="rect" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="887,547,1019,572"/>
-<area shape="rect" href="trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="659,79,812,104"/>
-<area shape="poly" title=" " alt="" coords="948,533,943,461,927,360,912,306,893,251,868,198,837,150,807,124,773,107,776,102,810,120,841,147,873,196,898,249,917,304,932,359,948,460,954,533"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="672,263,799,288"/>
-<area shape="poly" title=" " alt="" coords="944,534,932,488,911,429,880,369,860,341,837,316,816,301,792,291,795,286,819,297,840,312,864,337,884,366,916,427,937,486,949,533"/>
-<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="208,292,363,317"/>
-<area shape="poly" title=" " alt="" coords="942,534,929,495,907,449,877,403,858,384,837,367,812,358,767,349,639,333,363,312,363,306,640,328,768,344,814,353,840,362,862,380,881,400,912,446,934,493,947,532"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,213,363,253"/>
-<area shape="poly" title=" " alt="" coords="948,533,941,473,924,396,910,356,891,317,867,282,837,252,810,233,780,217,718,195,651,183,583,180,517,184,455,192,351,215,350,210,454,187,517,178,583,175,652,178,719,190,783,212,812,228,840,248,871,278,896,314,915,354,929,394,947,472,953,532"/>
-<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,299,160,324"/>
-<area shape="poly" title=" " alt="" coords="938,535,922,505,900,471,872,438,837,411,796,398,724,385,526,361,208,331,160,325,160,319,208,326,527,356,725,380,798,393,840,406,875,434,904,468,927,503,943,533"/>
-<area shape="rect" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="411,736,584,761"/>
-<area shape="poly" title=" " alt="" coords="891,546,833,537,767,533,698,540,665,548,633,562,607,579,584,600,547,650,520,700,505,737,500,735,516,697,542,647,580,596,604,574,631,557,663,543,697,534,767,528,834,532,891,541"/>
-<area shape="rect" href="group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="666,471,805,496"/>
-<area shape="poly" title=" " alt="" coords="907,544,838,518,779,499,780,494,840,513,908,539"/>
-<area shape="rect" href="types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7" title="Creates a new infix_type for a fixed&#45;size array from an arena." alt="" coords="648,736,823,761"/>
-<area shape="poly" title=" " alt="" coords="943,586,928,618,905,656,876,694,840,726,815,738,813,734,837,721,872,690,901,653,923,616,939,584"/>
-<area shape="rect" href="types_8c.html#a591e25c719b58a1ea33cd5c572d8025d" title="Creates a new infix_type for a _Complex number from an arena." alt="" coords="637,572,834,597"/>
-<area shape="poly" title=" " alt="" coords="873,571,835,576,834,570,873,566"/>
-<area shape="rect" href="types_8c.html#aad682d0d4b636c282931735a89be7cf8" title="Creates a new infix_type for an enum from an arena." alt="" coords="646,621,825,647"/>
-<area shape="poly" title=" " alt="" coords="915,581,840,613,800,624,799,619,838,607,913,576"/>
-<area shape="rect" href="types_8c.html#add70103c39886a50bc11d53a182b13b5" title="Creates a new infix_type for a named reference from an arena." alt="" coords="642,671,829,711"/>
-<area shape="poly" title=" " alt="" coords="933,584,892,624,840,662,814,674,812,669,837,657,889,620,929,580"/>
-<area shape="rect" href="types_8c.html#ad33103485281e970058a783e5e181978" title="Creates a new infix_type for a packed struct from an arena." alt="" coords="642,835,829,875"/>
-<area shape="poly" title=" " alt="" coords="950,586,939,637,919,701,887,767,866,798,840,825,823,837,820,833,837,821,862,795,883,765,914,699,934,635,945,585"/>
-<area shape="rect" href="types_8c.html#ad07a4c53b81830d8053cb27f78576c08" title="Creates an infix_type for a pointer to a specific type from an arena." alt="" coords="632,785,839,811"/>
-<area shape="poly" title=" " alt="" coords="948,586,935,628,913,680,882,732,863,756,840,776,821,788,818,783,837,772,859,752,878,729,909,677,930,626,943,585"/>
-<area shape="rect" href="types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086" title="Creates a new infix_type for a struct from an arena." alt="" coords="646,900,825,925"/>
-<area shape="poly" title=" " alt="" coords="953,586,947,648,929,730,915,773,896,815,871,855,840,889,821,902,819,898,837,885,867,852,891,813,910,771,924,728,941,647,948,585"/>
-<area shape="rect" href="types_8c.html#a483854a00ecff6dcf774c04683892ec6" title="Creates a new infix_type for a union from an arena." alt="" coords="647,421,824,447"/>
-<area shape="poly" title=" " alt="" coords="930,538,890,498,865,477,837,460,810,449,812,444,840,456,868,473,893,494,934,534"/>
-<area shape="rect" href="types_8c.html#a16b030f50ef5144f6aec8d2b263e4fa0" title="Creates a new infix_type for a SIMD vector from an arena." alt="" coords="644,949,827,975"/>
-<area shape="poly" title=" " alt="" coords="955,586,951,656,936,752,922,803,902,853,875,899,840,940,824,951,821,947,837,936,871,896,897,850,917,801,931,751,946,656,949,585"/>
-<area shape="rect" href="trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="453,5,541,31"/>
-<area shape="poly" title=" " alt="" coords="683,77,583,45,541,32,542,27,585,39,685,72"/>
-<area shape="rect" href="trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="451,55,543,80"/>
-<area shape="poly" title=" " alt="" coords="644,85,543,75,544,69,645,80"/>
-<area shape="rect" href="trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="451,104,543,129"/>
-<area shape="poly" title=" " alt="" coords="645,104,544,115,543,109,644,98"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="420,255,575,295"/>
-<area shape="poly" title=" " alt="" coords="658,278,575,278,575,273,658,273"/>
-<area shape="poly" title=" " alt="" coords="671,262,584,246,468,237,363,234,363,229,468,231,584,241,672,257"/>
-<area shape="poly" title=" " alt="" coords="407,291,363,297,362,291,406,285"/>
-<area shape="poly" title=" " alt="" coords="406,260,362,251,363,246,407,254"/>
-<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,220,158,245"/>
-<area shape="poly" title=" " alt="" coords="194,235,159,235,159,230,194,230"/>
-<area shape="poly" title=" " alt="" coords="221,260,118,301,116,296,219,255"/>
-<area shape="poly" title=" " alt="" coords="535,726,525,718,497,715,475,717,463,721,461,727,467,734,463,738,455,728,459,718,474,712,497,709,527,713,538,722"/>
-<area shape="poly" title=" " alt="" coords="634,751,584,751,584,746,634,746"/>
-<area shape="poly" title=" " alt="" coords="649,833,631,826,568,794,517,764,520,759,570,789,633,821,651,828"/>
-<area shape="poly" title=" " alt="" coords="647,898,631,890,589,860,553,824,505,763,509,760,557,821,593,856,633,885,650,893"/>
-<area shape="poly" title=" " alt="" coords="640,455,634,460,602,492,575,529,554,569,537,609,514,684,503,736,498,735,508,683,532,607,549,566,571,526,598,488,630,456,637,451"/>
+<area shape="rect" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="684,444,816,469"/>
+<area shape="rect" href="trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="456,61,609,87"/>
+<area shape="poly" title=" " alt="" coords="746,431,740,366,724,278,709,232,690,186,665,144,634,107,606,89,609,84,638,103,670,141,695,184,714,230,729,277,745,365,751,430"/>
+<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="469,117,596,143"/>
+<area shape="poly" title=" " alt="" coords="744,431,735,376,716,304,702,266,683,229,661,194,634,164,616,151,595,142,598,138,619,147,638,160,665,191,688,226,706,264,721,302,740,375,749,430"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="217,154,372,194"/>
+<area shape="poly" title=" " alt="" coords="742,431,732,383,712,323,681,263,660,237,634,215,604,197,572,183,503,167,434,162,372,165,372,160,434,157,504,162,574,178,607,192,638,211,663,233,685,261,717,321,737,382,748,430"/>
+<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,215,160,240"/>
+<area shape="poly" title=" " alt="" coords="739,432,725,395,704,351,674,308,655,289,635,274,598,258,547,246,418,232,279,227,160,228,160,222,279,222,419,227,548,241,600,253,637,269,659,285,678,304,708,348,730,393,744,430"/>
+<area shape="rect" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="208,639,381,664"/>
+<area shape="poly" title=" " alt="" coords="736,433,721,402,699,367,670,335,635,310,579,285,530,275,507,276,483,282,458,293,431,309,392,344,362,387,339,435,322,484,304,577,299,639,294,638,299,576,317,483,334,433,357,384,388,341,428,305,455,288,481,277,506,271,530,270,580,280,637,305,674,331,703,364,725,399,741,430"/>
+<area shape="rect" href="group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="463,320,602,345"/>
+<area shape="poly" title=" " alt="" coords="727,435,687,396,662,376,635,359,601,346,603,341,637,354,665,371,690,392,731,432"/>
+<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="455,369,610,395"/>
+<area shape="poly" title=" " alt="" coords="711,440,635,409,596,397,597,392,637,403,713,435"/>
+<area shape="rect" href="types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7" title="Creates a new infix_type for a fixed&#45;size array from an arena." alt="" coords="445,419,620,444"/>
+<area shape="poly" title=" " alt="" coords="670,450,620,444,620,439,671,445"/>
+<area shape="rect" href="types_8c.html#a591e25c719b58a1ea33cd5c572d8025d" title="Creates a new infix_type for a _Complex number from an arena." alt="" coords="434,468,631,493"/>
+<area shape="poly" title=" " alt="" coords="671,468,632,472,631,467,670,463"/>
+<area shape="rect" href="types_8c.html#aad682d0d4b636c282931735a89be7cf8" title="Creates a new infix_type for an enum from an arena." alt="" coords="443,517,622,543"/>
+<area shape="poly" title=" " alt="" coords="710,478,637,507,593,520,591,515,635,502,708,473"/>
+<area shape="rect" href="types_8c.html#add70103c39886a50bc11d53a182b13b5" title="Creates a new infix_type for a named reference from an arena." alt="" coords="439,567,626,607"/>
+<area shape="poly" title=" " alt="" coords="729,482,689,520,637,556,609,570,606,565,635,552,685,515,726,478"/>
+<area shape="rect" href="types_8c.html#ad33103485281e970058a783e5e181978" title="Creates a new infix_type for a packed struct from an arena." alt="" coords="439,631,626,671"/>
+<area shape="poly" title=" " alt="" coords="740,483,701,552,672,589,638,621,617,634,614,629,634,617,668,586,697,549,735,481"/>
+<area shape="rect" href="types_8c.html#ad07a4c53b81830d8053cb27f78576c08" title="Creates an infix_type for a pointer to a specific type from an arena." alt="" coords="429,696,636,721"/>
+<area shape="poly" title=" " alt="" coords="746,484,733,528,712,583,681,638,661,663,638,685,616,698,613,694,634,681,657,660,676,635,707,580,728,527,741,483"/>
+<area shape="rect" href="types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086" title="Creates a new infix_type for a struct from an arena." alt="" coords="443,745,622,771"/>
+<area shape="poly" title=" " alt="" coords="749,484,739,537,720,605,706,641,687,676,665,708,638,736,620,747,617,743,634,732,661,705,683,673,701,639,715,603,734,536,743,483"/>
+<area shape="rect" href="types_8c.html#a483854a00ecff6dcf774c04683892ec6" title="Creates a new infix_type for a union from an arena." alt="" coords="444,795,621,820"/>
+<area shape="poly" title=" " alt="" coords="750,483,744,545,727,627,712,670,693,712,669,751,638,785,621,797,618,792,634,781,664,748,689,710,707,668,722,625,739,544,745,483"/>
+<area shape="rect" href="types_8c.html#a16b030f50ef5144f6aec8d2b263e4fa0" title="Creates a new infix_type for a SIMD vector from an arena." alt="" coords="441,844,624,869"/>
+<area shape="poly" title=" " alt="" coords="752,483,748,553,733,648,719,699,699,748,672,794,638,835,621,846,618,842,634,831,668,791,694,746,714,697,728,647,743,553,746,483"/>
+<area shape="rect" href="trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="251,5,339,31"/>
+<area shape="poly" title=" " alt="" coords="464,61,338,31,340,26,465,56"/>
+<area shape="rect" href="trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="249,55,341,80"/>
+<area shape="poly" title=" " alt="" coords="442,74,341,71,341,66,442,69"/>
+<area shape="rect" href="trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="249,104,341,129"/>
+<area shape="poly" title=" " alt="" coords="448,92,341,111,340,106,447,87"/>
+<area shape="poly" title=" " alt="" coords="456,147,373,162,372,157,455,142"/>
+<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,161,158,187"/>
+<area shape="poly" title=" " alt="" coords="203,177,158,177,158,171,203,171"/>
+<area shape="poly" title=" " alt="" coords="205,199,135,217,134,212,203,194"/>
+<area shape="poly" title=" " alt="" coords="332,629,322,621,295,617,272,619,260,624,258,630,264,637,260,640,253,630,257,620,271,614,295,612,324,616,336,625"/>
+<area shape="poly" title=" " alt="" coords="440,452,431,458,406,478,384,501,346,553,319,603,303,639,298,637,315,600,342,550,379,498,402,474,428,453,437,447"/>
+<area shape="poly" title=" " alt="" coords="426,654,382,654,382,649,426,649"/>
+<area shape="poly" title=" " alt="" coords="449,744,428,736,362,701,311,666,314,662,365,697,430,732,451,739"/>
+<area shape="poly" title=" " alt="" coords="442,792,428,786,387,757,351,724,303,666,307,662,355,720,391,753,431,781,444,788"/>
 </map>
 </div>
 
@@ -689,27 +689,23 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_gae39ca61ea3637aee7e87c1b41188c733_icgraph.png" border="0" usemap="#agroup__high__level__api_gae39ca61ea3637aee7e87c1b41188c733_icgraph" alt=""/></div>
 <map name="agroup__high__level__api_gae39ca61ea3637aee7e87c1b41188c733_icgraph" id="agroup__high__level__api_gae39ca61ea3637aee7e87c1b41188c733_icgraph">
-<area shape="rect" title="Creates and initializes a new memory arena." alt="" coords="679,94,821,119"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="457,57,612,97"/>
-<area shape="poly" title=" " alt="" coords="665,98,612,90,612,85,666,93"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="222,5,377,45"/>
-<area shape="poly" title=" " alt="" coords="717,89,677,66,630,48,564,34,497,26,377,24,377,18,498,21,565,29,631,43,679,61,720,84"/>
-<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,122,615,147"/>
-<area shape="poly" title=" " alt="" coords="665,120,616,127,615,122,665,115"/>
-<area shape="rect" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="439,171,631,197"/>
-<area shape="poly" title=" " alt="" coords="712,128,632,163,594,174,592,169,630,157,710,123"/>
-<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="222,70,377,95"/>
-<area shape="poly" title=" " alt="" coords="444,82,377,84,377,78,444,77"/>
-<area shape="poly" title=" " alt="" coords="443,60,376,45,378,40,444,55"/>
-<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,13,158,38"/>
-<area shape="poly" title=" " alt="" coords="209,28,158,28,158,23,209,23"/>
-<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,91,160,117"/>
-<area shape="poly" title=" " alt="" coords="232,53,120,94,118,89,230,48"/>
-<area shape="poly" title=" " alt="" coords="463,122,357,98,358,93,464,116"/>
-<area shape="poly" title=" " alt="" coords="440,131,160,112,160,107,440,126"/>
-<area shape="rect" href="fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="208,171,391,197"/>
-<area shape="poly" title=" " alt="" coords="461,153,361,174,360,169,460,148"/>
-<area shape="poly" title=" " alt="" coords="425,187,391,187,391,181,425,181"/>
+<area shape="rect" title="Creates and initializes a new memory arena." alt="" coords="476,104,619,129"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="255,39,409,79"/>
+<area shape="poly" title=" " alt="" coords="485,103,407,82,408,77,486,98"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="251,104,413,129"/>
+<area shape="poly" title=" " alt="" coords="462,119,413,119,413,114,462,114"/>
+<area shape="rect" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="236,153,428,179"/>
+<area shape="poly" title=" " alt="" coords="479,135,389,156,388,151,478,130"/>
+<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="21,5,172,31"/>
+<area shape="poly" title=" " alt="" coords="240,46,169,33,170,28,241,41"/>
+<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="19,55,174,80"/>
+<area shape="poly" title=" " alt="" coords="241,65,174,67,174,62,241,60"/>
+<area shape="poly" title=" " alt="" coords="257,104,158,83,159,77,258,99"/>
+<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="19,104,174,129"/>
+<area shape="poly" title=" " alt="" coords="238,119,174,119,174,114,238,114"/>
+<area shape="rect" href="fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="5,153,188,179"/>
+<area shape="poly" title=" " alt="" coords="258,135,159,156,158,151,257,130"/>
+<area shape="poly" title=" " alt="" coords="222,169,188,169,188,163,222,163"/>
 </map>
 </div>
 
@@ -751,30 +747,33 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_ga50b7219c58789fc03898690254f0280e_icgraph.png" border="0" usemap="#agroup__high__level__api_ga50b7219c58789fc03898690254f0280e_icgraph" alt=""/></div>
 <map name="agroup__high__level__api_ga50b7219c58789fc03898690254f0280e_icgraph" id="agroup__high__level__api_ga50b7219c58789fc03898690254f0280e_icgraph">
-<area shape="rect" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="679,155,829,180"/>
-<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="222,40,377,65"/>
-<area shape="poly" title=" " alt="" coords="738,144,720,115,696,83,665,53,630,30,591,16,550,10,509,8,468,11,393,25,335,43,333,37,392,20,468,6,509,3,551,4,592,11,632,25,669,49,700,80,725,112,742,141"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="457,39,612,79"/>
-<area shape="poly" title=" " alt="" coords="719,150,629,100,588,82,590,77,632,96,722,145"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="222,90,377,130"/>
-<area shape="poly" title=" " alt="" coords="665,156,630,151,376,121,377,115,631,146,665,151"/>
-<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,155,160,180"/>
-<area shape="poly" title=" " alt="" coords="665,170,161,170,161,165,665,165"/>
-<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="454,205,615,231"/>
-<area shape="poly" title=" " alt="" coords="685,186,591,208,590,203,684,181"/>
-<area shape="rect" href="fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="208,256,391,281"/>
-<area shape="poly" title=" " alt="" coords="740,193,697,248,667,275,632,295,592,308,551,314,510,316,469,313,394,300,335,284,337,279,395,295,470,308,510,310,551,309,591,303,630,290,663,270,693,244,736,190"/>
-<area shape="rect" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="439,255,631,280"/>
-<area shape="poly" title=" " alt="" coords="725,190,682,218,632,244,595,257,593,252,630,240,680,214,723,186"/>
-<area shape="poly" title=" " alt="" coords="444,59,377,58,377,52,444,54"/>
-<area shape="poly" title=" " alt="" coords="444,81,378,96,376,91,443,76"/>
-<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,97,158,123"/>
-<area shape="poly" title=" " alt="" coords="209,113,158,113,158,107,209,107"/>
-<area shape="poly" title=" " alt="" coords="211,136,132,157,131,152,209,131"/>
-<area shape="poly" title=" " alt="" coords="514,196,462,138,427,107,389,80,361,68,363,63,392,76,431,103,466,134,518,192"/>
-<area shape="poly" title=" " alt="" coords="440,213,208,189,160,182,161,177,208,183,440,207"/>
-<area shape="poly" title=" " alt="" coords="462,236,360,259,358,253,461,231"/>
-<area shape="poly" title=" " alt="" coords="425,271,391,271,391,265,425,265"/>
+<area shape="rect" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="881,183,1032,208"/>
+<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="425,208,579,233"/>
+<area shape="poly" title=" " alt="" coords="868,203,580,219,579,214,867,198"/>
+<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="656,5,819,31"/>
+<area shape="poly" title=" " alt="" coords="939,173,895,112,866,80,832,52,792,33,794,28,835,48,869,76,900,109,943,169"/>
+<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="421,49,583,75"/>
+<area shape="poly" title=" " alt="" coords="932,175,888,136,861,118,832,103,769,83,704,71,640,64,584,62,584,57,641,59,704,65,771,78,834,98,864,113,892,132,936,171"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,93,363,133"/>
+<area shape="poly" title=" " alt="" coords="913,180,875,165,833,154,705,133,576,121,458,115,363,114,363,109,458,110,576,116,705,128,834,149,876,160,915,175"/>
+<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,157,160,183"/>
+<area shape="poly" title=" " alt="" coords="868,193,833,191,455,180,160,174,160,168,455,174,833,186,868,188"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="657,259,818,284"/>
+<area shape="poly" title=" " alt="" coords="909,215,834,242,778,261,776,256,832,237,907,210"/>
+<area shape="rect" href="fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="411,309,593,335"/>
+<area shape="poly" title=" " alt="" coords="938,220,894,262,865,283,834,299,774,318,711,328,649,332,594,332,594,327,649,327,710,323,773,313,832,294,863,278,890,258,934,216"/>
+<area shape="rect" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type." alt="" coords="641,360,833,385"/>
+<area shape="poly" title=" " alt="" coords="943,221,900,282,869,314,835,343,794,362,792,357,832,338,866,311,895,278,939,218"/>
+<area shape="poly" title=" " alt="" coords="656,36,571,52,570,47,655,31"/>
+<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,72,158,97"/>
+<area shape="poly" title=" " alt="" coords="407,70,158,83,158,78,406,64"/>
+<area shape="poly" title=" " alt="" coords="434,81,363,97,362,92,433,75"/>
+<area shape="poly" title=" " alt="" coords="194,103,158,98,159,92,195,97"/>
+<area shape="poly" title=" " alt="" coords="202,139,129,160,128,155,200,134"/>
+<area shape="poly" title=" " alt="" coords="663,258,561,236,562,231,665,253"/>
+<area shape="poly" title=" " alt="" coords="642,270,531,263,410,249,255,218,128,185,130,180,256,212,411,243,531,257,643,265"/>
+<area shape="poly" title=" " alt="" coords="665,290,562,312,561,307,663,284"/>
+<area shape="poly" title=" " alt="" coords="663,360,561,337,562,332,665,354"/>
 </map>
 </div>
 
@@ -836,25 +835,16 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph.png" border="0" usemap="#agroup__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph" alt=""/></div>
 <map name="agroup__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph" id="agroup__high__level__api_ga91ee73b14244e9479da4cf40d077ceec_cgraph">
-<area shape="rect" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="5,117,160,143"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="619,5,751,31"/>
-<area shape="poly" title=" " alt="" coords="105,115,151,90,207,66,310,33,417,15,515,9,605,10,605,16,515,15,418,21,311,38,209,71,153,95,107,119"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="419,195,569,220"/>
-<area shape="poly" title=" " alt="" coords="110,140,155,161,209,179,310,197,405,204,405,209,309,202,207,185,153,166,107,145"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="211,81,366,121"/>
-<area shape="poly" title=" " alt="" coords="160,116,197,111,198,116,161,122"/>
-<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,145,369,171"/>
-<area shape="poly" title=" " alt="" coords="161,138,195,143,194,148,160,143"/>
-<area shape="poly" title=" " alt="" coords="350,119,371,130,386,143,395,156,404,168,419,180,433,187,430,192,416,184,401,172,391,159,382,147,368,135,347,123"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="431,31,557,56"/>
-<area shape="poly" title=" " alt="" coords="360,78,434,57,435,62,362,83"/>
-<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="417,81,571,121"/>
-<area shape="poly" title=" " alt="" coords="366,98,404,98,404,103,366,103"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="423,145,565,171"/>
-<area shape="poly" title=" " alt="" coords="362,118,435,139,434,144,360,123"/>
-<area shape="poly" title=" " alt="" coords="557,32,604,26,605,31,558,38"/>
-<area shape="poly" title=" " alt="" coords="343,168,428,189,427,194,342,173"/>
-<area shape="poly" title=" " alt="" coords="370,155,409,155,409,161,370,161"/>
+<area shape="rect" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="5,56,160,81"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="223,5,355,31"/>
+<area shape="poly" title=" " alt="" coords="135,53,223,31,224,37,136,58"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="417,57,568,83"/>
+<area shape="poly" title=" " alt="" coords="160,66,404,67,404,72,160,72"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,107,369,132"/>
+<area shape="poly" title=" " alt="" coords="136,79,224,101,223,106,135,84"/>
+<area shape="poly" title=" " alt="" coords="341,104,426,83,427,89,342,109"/>
+<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="421,107,564,132"/>
+<area shape="poly" title=" " alt="" coords="370,117,407,117,407,122,370,122"/>
 </map>
 </div>
 
@@ -916,57 +906,22 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The returned trampoline must be freed with <code>infix_forward_destroy</code>.</dd></dl>
-<p>This function orchestrates the entire process of JIT-compiling a forward trampoline. The process involves:</p><ol type="1">
-<li>Selecting the correct ABI-specific implementation.</li>
-<li>Calculating the function's call frame layout (register usage, stack space).</li>
-<li>Generating the machine code for the prologue, argument marshalling, the actual call, and the epilogue.</li>
-<li>Allocating executable memory.</li>
-<li>Copying the generated code into the memory and making it executable. Error handling is managed through a single cleanup path to ensure all intermediate resources are freed correctly.</li>
-</ol>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, this will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">return_type</td><td>The <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> of the function's return value. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for each argument. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_args</td><td>The total number of arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_fixed_args</td><td>For variadic functions, the number of non-variadic arguments. For non-variadic functions, this must equal <code>num_args</code>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_cgraph.png" border="0" usemap="#agroup__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_cgraph" alt=""/></div>
-<map name="agroup__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_cgraph" id="agroup__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_cgraph">
-<area shape="rect" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="5,85,160,125"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="221,5,348,31"/>
-<area shape="poly" title=" " alt="" coords="120,82,207,41,228,33,230,38,209,46,123,87"/>
-<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="208,55,361,95"/>
-<area shape="poly" title=" " alt="" coords="160,91,194,86,194,91,161,96"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="213,120,356,145"/>
-<area shape="poly" title=" " alt="" coords="161,113,200,118,199,124,160,118"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="209,169,360,195"/>
-<area shape="poly" title=" " alt="" coords="131,122,209,154,232,162,230,167,207,159,129,127"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="409,5,541,31"/>
-<area shape="poly" title=" " alt="" coords="348,15,395,15,395,21,348,21"/>
-</map>
-</div>
+<dl class="section note"><dt>Note</dt><dd>The returned trampoline must be freed with <code>infix_forward_destroy</code>. </dd>
+<dd>
+<b>Memory Ownership:</b> The generated <code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code> is a self-contained object. It performs a deep copy of the provided <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects into its own internal memory arena. The caller is free to destroy the arena used to create the initial types immediately after this function returns.</dd></dl>
+<p>This public API function is now a simple wrapper around the internal implementation. It calls the core logic without providing a source arena, triggering the fallback to a default internal arena size. </p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_icgraph.png" border="0" usemap="#agroup__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_icgraph" alt=""/></div>
 <map name="agroup__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_icgraph" id="agroup__high__level__api_gace742bcf7fd3c3978f951dfb025e0a2d_icgraph">
-<area shape="rect" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="411,27,565,67"/>
-<area shape="rect" href="group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="208,5,363,31"/>
-<area shape="poly" title=" " alt="" coords="397,37,363,32,364,27,398,32"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,55,363,95"/>
-<area shape="poly" title=" " alt="" coords="397,63,364,67,363,62,397,57"/>
-<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,37,158,63"/>
-<area shape="poly" title=" " alt="" coords="194,67,158,62,159,57,195,61"/>
-<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,87,160,112"/>
-<area shape="poly" title=" " alt="" coords="195,89,161,93,160,87,194,83"/>
+<area shape="rect" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="411,23,565,63"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,23,363,63"/>
+<area shape="poly" title=" " alt="" coords="397,46,363,46,363,41,397,41"/>
+<area shape="rect" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,5,158,31"/>
+<area shape="poly" title=" " alt="" coords="194,35,158,30,159,25,195,29"/>
+<area shape="rect" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,55,160,80"/>
+<area shape="poly" title=" " alt="" coords="195,57,161,61,160,55,194,51"/>
 </map>
 </div>
 
@@ -989,13 +944,23 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Frees a forward trampoline and its associated executable memory. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>This function safely cleans up all resources associated with a forward trampoline, including the JIT-compiled code and the internal arena that stores its type metadata. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">trampoline</td><td>The trampoline to free. Can be <code>nullptr</code>.</td></tr>
-    <tr><td class="paramname">trampoline</td><td>The trampoline to free. Can be <code>nullptr</code>, in which case it does nothing. </td></tr>
   </table>
   </dd>
 </dl>
+<p>Frees a forward trampoline and its associated executable memory. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__high__level__api_gad87a8882dec00b89a4bc5c87db2fc032_cgraph.png" border="0" usemap="#agroup__high__level__api_gad87a8882dec00b89a4bc5c87db2fc032_cgraph" alt=""/></div>
+<map name="agroup__high__level__api_gad87a8882dec00b89a4bc5c87db2fc032_cgraph" id="agroup__high__level__api_gad87a8882dec00b89a4bc5c87db2fc032_cgraph">
+<area shape="rect" title="Frees a forward trampoline and its associated executable memory." alt="" coords="5,5,168,31"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="216,5,367,31"/>
+<area shape="poly" title=" " alt="" coords="168,15,202,15,202,21,168,21"/>
+</map>
+</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1123,41 +1088,38 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph.png" border="0" usemap="#agroup__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph" alt=""/></div>
 <map name="agroup__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph" id="agroup__high__level__api_gac6039fa88ca992d2f89b005df46525d0_cgraph">
-<area shape="rect" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,407,160,433"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="869,117,1001,142"/>
-<area shape="poly" title=" " alt="" coords="88,406,125,338,156,289,193,236,238,182,289,131,347,86,410,51,468,28,520,12,568,5,613,3,659,8,708,18,822,51,848,61,873,75,912,106,909,110,870,80,846,66,820,56,706,23,658,13,613,9,568,10,521,18,470,33,412,56,350,90,293,135,242,186,198,240,160,292,130,340,93,408"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="665,497,815,522"/>
-<area shape="poly" title=" " alt="" coords="139,430,263,456,411,481,536,495,651,503,650,508,536,500,410,487,262,462,138,435"/>
-<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,285,363,325"/>
-<area shape="poly" title=" " alt="" coords="105,405,236,330,239,335,107,410"/>
-<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="430,547,591,573"/>
-<area shape="poly" title=" " alt="" coords="96,431,141,479,173,505,209,526,260,543,314,554,367,560,416,562,416,567,367,565,313,559,259,548,207,531,170,510,138,483,92,435"/>
-<area shape="poly" title=" " alt="" coords="296,283,340,224,372,193,409,168,466,145,526,129,586,118,647,111,761,109,856,116,855,121,761,115,647,117,587,123,527,134,468,150,412,173,375,197,344,228,301,287"/>
-<area shape="poly" title=" " alt="" coords="363,306,432,311,505,320,569,334,594,343,612,354,627,369,634,386,638,419,642,451,648,467,661,482,668,488,664,492,657,486,644,470,637,453,633,419,629,387,622,372,609,358,592,348,567,339,504,326,431,317,363,311"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="677,167,803,193"/>
-<area shape="poly" title=" " alt="" coords="303,283,348,241,377,220,410,203,474,184,541,174,606,170,663,171,663,176,606,175,542,179,475,189,412,208,380,224,351,245,306,287"/>
-<area shape="rect" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="435,368,587,408"/>
-<area shape="poly" title=" " alt="" coords="341,323,443,361,442,366,340,328"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="669,547,811,573"/>
-<area shape="poly" title=" " alt="" coords="291,325,300,380,320,452,335,490,356,526,381,557,412,583,447,600,484,610,523,613,562,611,637,596,697,576,699,581,638,601,563,616,523,618,483,615,445,605,409,588,377,561,351,529,331,492,315,454,294,381,286,326"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="433,432,588,472"/>
-<area shape="poly" title=" " alt="" coords="305,324,351,371,380,396,412,418,424,424,421,429,409,422,377,400,347,375,302,328"/>
-<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="429,66,592,91"/>
-<area shape="poly" title=" " alt="" coords="292,284,308,247,333,200,367,151,409,109,434,94,436,99,412,113,371,154,337,202,313,249,297,286"/>
-<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="417,218,604,243"/>
-<area shape="poly" title=" " alt="" coords="330,283,410,252,437,244,438,250,412,257,332,288"/>
-<area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="411,267,611,293"/>
-<area shape="poly" title=" " alt="" coords="362,294,397,290,397,296,363,299"/>
-<area shape="poly" title=" " alt="" coords="789,165,872,143,873,148,791,170"/>
-<area shape="poly" title=" " alt="" coords="589,469,676,491,675,496,587,474"/>
-<area shape="poly" title=" " alt="" coords="587,432,609,418,633,394,655,368,690,309,714,252,729,206,734,207,719,254,694,311,659,371,637,398,612,422,590,436"/>
-<area shape="poly" title=" " alt="" coords="544,470,597,501,660,532,681,541,679,546,658,537,595,506,542,474"/>
-<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="663,432,817,472"/>
-<area shape="poly" title=" " alt="" coords="588,449,649,449,649,455,588,455"/>
-<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="659,66,821,91"/>
-<area shape="poly" title=" " alt="" coords="593,76,645,76,645,81,593,81"/>
-<area shape="poly" title=" " alt="" coords="569,545,668,523,669,528,570,550"/>
-<area shape="poly" title=" " alt="" coords="592,557,655,557,655,563,592,563"/>
+<area shape="rect" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,175,160,200"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="681,408,813,434"/>
+<area shape="poly" title=" " alt="" coords="93,199,131,268,162,317,200,370,246,425,298,476,355,522,418,557,472,577,517,584,562,577,616,557,653,535,685,505,711,473,729,444,734,447,715,476,689,508,656,539,619,562,564,582,517,589,471,583,416,562,352,526,294,480,242,428,196,373,158,320,126,271,88,202"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="876,92,1027,118"/>
+<area shape="poly" title=" " alt="" coords="92,173,138,125,170,99,207,77,295,42,373,19,443,6,511,3,580,8,653,19,829,53,874,66,915,84,913,89,872,72,827,58,652,24,579,13,511,8,444,11,374,24,297,47,209,82,173,103,141,129,96,177"/>
+<area shape="rect" href="group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="211,274,366,314"/>
+<area shape="poly" title=" " alt="" coords="110,198,238,266,236,270,107,203"/>
+<area shape="rect" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="208,92,369,118"/>
+<area shape="poly" title=" " alt="" coords="114,173,243,120,245,125,116,177"/>
+<area shape="poly" title=" " alt="" coords="346,312,418,336,555,373,676,403,675,408,554,378,417,341,344,317"/>
+<area shape="poly" title=" " alt="" coords="366,302,422,306,485,307,552,303,617,291,663,276,709,257,796,211,869,163,922,124,925,129,872,168,798,215,711,261,665,281,618,296,553,308,486,312,422,312,366,307"/>
+<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="454,408,581,434"/>
+<area shape="poly" title=" " alt="" coords="314,313,361,350,419,387,454,402,452,407,416,391,357,354,311,317"/>
+<area shape="rect" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="441,508,593,548"/>
+<area shape="poly" title=" " alt="" coords="300,314,316,352,342,401,376,451,419,494,431,501,428,506,416,498,372,454,337,403,311,354,295,316"/>
+<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="446,92,589,118"/>
+<area shape="poly" title=" " alt="" coords="297,273,315,240,342,201,375,161,416,127,431,119,434,123,419,131,379,164,346,204,320,243,302,275"/>
+<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="440,192,595,232"/>
+<area shape="poly" title=" " alt="" coords="338,272,416,241,438,234,440,239,418,246,340,277"/>
+<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, its context, and its internal arena." alt="" coords="436,142,599,167"/>
+<area shape="poly" title=" " alt="" coords="305,272,352,225,382,199,416,177,434,169,437,174,419,182,386,203,355,228,309,276"/>
+<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="424,256,611,282"/>
+<area shape="poly" title=" " alt="" coords="366,283,410,278,411,284,367,288"/>
+<area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="417,458,617,483"/>
+<area shape="poly" title=" " alt="" coords="303,313,348,379,381,414,419,444,430,450,427,455,416,449,377,418,344,382,299,316"/>
+<area shape="poly" title=" " alt="" coords="581,418,667,418,667,424,581,424"/>
+<area shape="poly" title=" " alt="" coords="599,148,708,140,828,126,879,118,880,123,828,132,708,145,599,153"/>
+<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline, its executable memory, and its internal arena." alt="" coords="665,92,828,118"/>
+<area shape="poly" title=" " alt="" coords="576,139,673,118,674,123,578,144"/>
+<area shape="poly" title=" " alt="" coords="828,102,862,102,862,108,828,108"/>
+<area shape="poly" title=" " alt="" coords="341,90,417,77,532,67,623,63,713,67,828,77,888,87,887,92,828,82,713,72,623,69,533,72,418,82,342,95"/>
+<area shape="poly" title=" " alt="" coords="370,102,432,102,432,108,370,108"/>
 </map>
 </div>
 
@@ -1222,12 +1184,12 @@ Here is the call graph for this function:</div>
 <p>Generates a reverse-call trampoline (a native callable function pointer for a callback). </p>
 <p>Creates a native C function pointer that, when called, will invoke a user-provided C handler function, marshalling the arguments correctly.</p>
 <p><b>CRITICAL</b>: The C handler function you provide (<code>user_callback_fn</code>) will <b>always</b> receive a pointer to its <code>infix_context_t</code> context as its <b>first argument</b>. The subsequent arguments will match the types described in the signature string. This context-passing mechanism allows you to create stateful callbacks.</p>
-<h3><a class="anchor" id="autotoc_md185"></a>
+<h3><a class="anchor" id="autotoc_md187"></a>
 Handler Signature Example</h3>
 <p>If your <code>infix</code> signature string is <code>"i,d*=&gt;v"</code>, which corresponds to a C type of <code>void (*)(int, double*)</code>, your C handler function <b>must</b> have the following signature: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> my_c_handler(<a class="code hl_struct" href="structinfix__reverse__t.html">infix_context_t</a>* context, <span class="keywordtype">int</span> arg1, <span class="keywordtype">double</span>* arg2);</div>
-<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:87</div></div>
+<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:92</div></div>
 </div><!-- fragment --><p> You can then retrieve your state within the handler by calling: </p><div class="fragment"><div class="line">my_state_t* state = (my_state_t*)<a class="code hl_function" href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a>(context);</div>
-<div class="ttc" id="agroup__high__level__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:587</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__high__level__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:706</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
@@ -1241,9 +1203,11 @@ Handler Signature Example</h3>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The returned context must be freed with <code>infix_reverse_destroy</code>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The returned context must be freed with <code>infix_reverse_destroy</code>. </dd>
+<dd>
+<b>Memory Ownership:</b> The generated <code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code> is a self-contained object. It performs a deep copy of the provided <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects into its own internal memory arena. The caller is free to destroy the arena used to create the initial types immediately after this function returns.</dd></dl>
 <p>Generates a reverse-call trampoline (a native callable function pointer for a callback).</p>
-<p>This function creates a native, C-callable function pointer that, when invoked, calls back into a user-provided handler. The process is highly optimized and follows a multi-stage generation process. A key part of this process is creating a <b>cached forward trampoline</b> that is used internally to call the user's C handler with the correct ABI.</p>
+<p>This function creates a native, C-callable function pointer that, when invoked, calls back into a user-provided handler. The returned <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> context is now a fully self-contained object, owning deep copies of all necessary type information in its own private memory arena. This design eliminates use-after-free vulnerabilities caused by the user freeing their temporary type-creation arena.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the context for the new reverse trampoline. </td></tr>
@@ -1262,33 +1226,30 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__high__level__api_ga32fff61e3d2ec3b9463eff95b203ba6c_cgraph.png" border="0" usemap="#agroup__high__level__api_ga32fff61e3d2ec3b9463eff95b203ba6c_cgraph" alt=""/></div>
 <map name="agroup__high__level__api_ga32fff61e3d2ec3b9463eff95b203ba6c_cgraph" id="agroup__high__level__api_ga32fff61e3d2ec3b9463eff95b203ba6c_cgraph">
-<area shape="rect" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="5,208,160,248"/>
-<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="474,50,601,76"/>
-<area shape="poly" title=" " alt="" coords="96,207,140,154,171,126,207,103,271,79,338,65,403,59,460,57,460,62,403,64,338,71,272,85,209,108,175,130,144,157,100,210"/>
-<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="667,25,799,50"/>
-<area shape="poly" title=" " alt="" coords="90,207,107,174,132,135,166,95,207,63,263,37,323,20,385,9,448,4,565,7,660,20,659,25,564,13,448,9,386,14,325,25,265,42,209,68,169,99,137,138,112,177,95,209"/>
-<area shape="rect" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="232,266,384,306"/>
-<area shape="poly" title=" " alt="" coords="161,245,219,260,218,266,159,251"/>
-<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="466,101,609,126"/>
-<area shape="poly" title=" " alt="" coords="103,206,148,169,176,151,207,137,270,119,334,109,397,105,452,105,452,111,397,111,335,115,271,124,209,142,179,156,151,173,106,210"/>
-<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="462,216,613,241"/>
-<area shape="poly" title=" " alt="" coords="160,226,448,226,448,231,160,231"/>
-<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="231,151,385,191"/>
-<area shape="poly" title=" " alt="" coords="159,206,217,191,218,197,161,211"/>
-<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="227,330,389,356"/>
-<area shape="poly" title=" " alt="" coords="108,247,153,282,209,315,231,324,229,329,207,320,150,286,105,251"/>
-<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="215,380,401,405"/>
-<area shape="poly" title=" " alt="" coords="98,247,142,307,174,339,209,366,221,372,219,377,207,371,170,343,138,310,94,250"/>
-<area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="208,429,408,454"/>
-<area shape="poly" title=" " alt="" coords="94,248,110,284,134,330,168,377,210,416,218,421,216,426,206,420,164,380,130,333,105,287,89,250"/>
-<area shape="poly" title=" " alt="" coords="600,52,652,45,653,51,601,58"/>
-<area shape="poly" title=" " alt="" coords="339,149,392,117,455,86,476,78,478,83,457,91,395,122,342,153"/>
-<area shape="poly" title=" " alt="" coords="385,149,472,127,473,132,386,154"/>
-<area shape="poly" title=" " alt="" coords="386,188,473,210,472,215,385,193"/>
-<area shape="rect" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a" title="Selects the correct forward&#45;call ABI spec at compile time." alt="" coords="461,151,614,191"/>
-<area shape="poly" title=" " alt="" coords="385,168,447,168,447,174,385,174"/>
-<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="456,330,619,356"/>
-<area shape="poly" title=" " alt="" coords="390,340,442,340,442,346,390,346"/>
+<area shape="rect" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="5,214,160,254"/>
+<area shape="rect" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="245,5,371,31"/>
+<area shape="poly" title=" " alt="" coords="90,212,107,177,132,133,165,87,206,48,231,34,234,38,210,52,169,91,136,136,111,180,95,215"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="471,31,603,56"/>
+<area shape="poly" title=" " alt="" coords="93,212,137,151,169,118,207,92,269,65,335,49,400,41,457,38,458,43,400,46,336,55,271,71,209,96,173,122,141,155,98,215"/>
+<area shape="rect" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b" title="Selects the correct reverse&#45;call ABI spec at compile time." alt="" coords="232,106,384,146"/>
+<area shape="poly" title=" " alt="" coords="111,212,155,183,207,156,224,148,226,153,209,160,158,188,114,216"/>
+<area shape="rect" href="group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="237,171,379,196"/>
+<area shape="poly" title=" " alt="" coords="159,214,237,196,238,202,161,219"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="667,285,817,311"/>
+<area shape="poly" title=" " alt="" coords="160,236,408,257,653,284,652,290,408,262,160,242"/>
+<area shape="rect" href="group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="231,271,385,311"/>
+<area shape="poly" title=" " alt="" coords="161,251,218,266,217,271,159,256"/>
+<area shape="rect" href="group__high__level__api.html#ga00b101025663c423a28433e139be5d4e" title="Frees a reverse trampoline, its JIT&#45;compiled stub, its context, and its internal arena." alt="" coords="227,336,389,361"/>
+<area shape="poly" title=" " alt="" coords="108,252,153,287,209,321,231,330,229,335,207,326,150,292,105,256"/>
+<area shape="rect" href="types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic void* pointer." alt="" coords="215,385,401,411"/>
+<area shape="poly" title=" " alt="" coords="98,253,142,312,174,345,209,372,221,378,219,383,207,376,170,349,138,316,94,256"/>
+<area shape="rect" href="types_8c.html#ad15f9806b1a6de5d1b3747de1607a2e1" title="Creates an infix_type descriptor for a primitive C type." alt="" coords="208,435,408,460"/>
+<area shape="poly" title=" " alt="" coords="94,253,110,290,134,336,168,382,210,421,218,427,216,431,206,425,164,386,130,338,105,292,89,255"/>
+<area shape="poly" title=" " alt="" coords="372,22,458,32,458,37,372,28"/>
+<area shape="poly" title=" " alt="" coords="380,333,456,322,652,302,653,307,456,327,381,339"/>
+<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline, its executable memory, and its internal arena." alt="" coords="456,336,619,361"/>
+<area shape="poly" title=" " alt="" coords="390,346,442,346,442,351,390,351"/>
+<area shape="poly" title=" " alt="" coords="589,333,676,311,678,317,590,338"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1323,13 +1284,14 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Frees a reverse trampoline, its JIT-compiled stub, and its context. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>This function safely cleans up all resources associated with a reverse trampoline, including the JIT-compiled code, the cached forward trampoline, and the internal arena that stores its type metadata. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">reverse_trampoline</td><td>The reverse trampoline to free. Can be <code>nullptr</code>.</td></tr>
   </table>
   </dd>
 </dl>
-<p>This function safely cleans up all resources associated with a reverse trampoline, including the cached forward trampoline, the executable stub, and the protected memory holding the context struct itself. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Frees a reverse trampoline, its JIT-compiled stub, and its context.</p>
+<p>This function safely cleans up all resources associated with a reverse trampoline, including the cached forward trampoline, the executable stub, the protected memory holding the context struct itself, and the internal arena that owns the type metadata. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">reverse_trampoline</td><td>The reverse trampoline to free. Can be <code>nullptr</code>. </td></tr>
   </table>
@@ -1341,8 +1303,11 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="group__high__level__api_ga00b101025663c423a28433e139be5d4e_cgraph.png" border="0" usemap="#agroup__high__level__api_ga00b101025663c423a28433e139be5d4e_cgraph" alt=""/></div>
 <map name="agroup__high__level__api_ga00b101025663c423a28433e139be5d4e_cgraph" id="agroup__high__level__api_ga00b101025663c423a28433e139be5d4e_cgraph">
 <area shape="rect" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="5,5,168,31"/>
-<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="216,5,379,31"/>
-<area shape="poly" title=" " alt="" coords="168,15,202,15,202,21,168,21"/>
+<area shape="rect" href="group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="427,5,577,31"/>
+<area shape="poly" title=" " alt="" coords="168,15,413,15,413,21,168,21"/>
+<area shape="rect" href="group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline, its executable memory, and its internal arena." alt="" coords="216,31,379,56"/>
+<area shape="poly" title=" " alt="" coords="169,25,203,29,202,35,168,30"/>
+<area shape="poly" title=" " alt="" coords="379,31,413,26,413,32,379,36"/>
 </map>
 </div>
 <div class="dynheader">

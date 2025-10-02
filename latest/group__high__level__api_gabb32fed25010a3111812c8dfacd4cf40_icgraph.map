@@ -1,54 +1,50 @@
 <map id="infix_arena_alloc" name="infix_arena_alloc">
-<area shape="rect" id="Node000001" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="887,547,1019,572"/>
-<area shape="rect" id="Node000002" href="$trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="659,79,812,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="948,533,943,461,927,360,912,306,893,251,868,198,837,150,807,124,773,107,776,102,810,120,841,147,873,196,898,249,917,304,932,359,948,460,954,533"/>
-<area shape="rect" id="Node000006" href="$trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="672,263,799,288"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="944,534,932,488,911,429,880,369,860,341,837,316,816,301,792,291,795,286,819,297,840,312,864,337,884,366,916,427,937,486,949,533"/>
-<area shape="rect" id="Node000008" href="$group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="208,292,363,317"/>
-<area shape="poly" id="edge15_Node000001_Node000008" title=" " alt="" coords="942,534,929,495,907,449,877,403,858,384,837,367,812,358,767,349,639,333,363,312,363,306,640,328,768,344,814,353,840,362,862,380,881,400,912,446,934,493,947,532"/>
-<area shape="rect" id="Node000009" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="208,213,363,253"/>
-<area shape="poly" id="edge17_Node000001_Node000009" title=" " alt="" coords="948,533,941,473,924,396,910,356,891,317,867,282,837,252,810,233,780,217,718,195,651,183,583,180,517,184,455,192,351,215,350,210,454,187,517,178,583,175,652,178,719,190,783,212,812,228,840,248,871,278,896,314,915,354,929,394,947,472,953,532"/>
-<area shape="rect" id="Node000011" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,299,160,324"/>
-<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="938,535,922,505,900,471,872,438,837,411,796,398,724,385,526,361,208,331,160,325,160,319,208,326,527,356,725,380,798,393,840,406,875,434,904,468,927,503,943,533"/>
-<area shape="rect" id="Node000012" href="$fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="411,736,584,761"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="891,546,833,537,767,533,698,540,665,548,633,562,607,579,584,600,547,650,520,700,505,737,500,735,516,697,542,647,580,596,604,574,631,557,663,543,697,534,767,528,834,532,891,541"/>
-<area shape="rect" id="Node000013" href="$group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="666,471,805,496"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="907,544,838,518,779,499,780,494,840,513,908,539"/>
-<area shape="rect" id="Node000014" href="$types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7" title="Creates a new infix_type for a fixed&#45;size array from an arena." alt="" coords="648,736,823,761"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="943,586,928,618,905,656,876,694,840,726,815,738,813,734,837,721,872,690,901,653,923,616,939,584"/>
-<area shape="rect" id="Node000015" href="$types_8c.html#a591e25c719b58a1ea33cd5c572d8025d" title="Creates a new infix_type for a _Complex number from an arena." alt="" coords="637,572,834,597"/>
-<area shape="poly" id="edge20_Node000001_Node000015" title=" " alt="" coords="873,571,835,576,834,570,873,566"/>
-<area shape="rect" id="Node000016" href="$types_8c.html#aad682d0d4b636c282931735a89be7cf8" title="Creates a new infix_type for an enum from an arena." alt="" coords="646,621,825,647"/>
-<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="915,581,840,613,800,624,799,619,838,607,913,576"/>
-<area shape="rect" id="Node000017" href="$types_8c.html#add70103c39886a50bc11d53a182b13b5" title="Creates a new infix_type for a named reference from an arena." alt="" coords="642,671,829,711"/>
-<area shape="poly" id="edge22_Node000001_Node000017" title=" " alt="" coords="933,584,892,624,840,662,814,674,812,669,837,657,889,620,929,580"/>
-<area shape="rect" id="Node000018" href="$types_8c.html#ad33103485281e970058a783e5e181978" title="Creates a new infix_type for a packed struct from an arena." alt="" coords="642,835,829,875"/>
-<area shape="poly" id="edge23_Node000001_Node000018" title=" " alt="" coords="950,586,939,637,919,701,887,767,866,798,840,825,823,837,820,833,837,821,862,795,883,765,914,699,934,635,945,585"/>
-<area shape="rect" id="Node000019" href="$types_8c.html#ad07a4c53b81830d8053cb27f78576c08" title="Creates an infix_type for a pointer to a specific type from an arena." alt="" coords="632,785,839,811"/>
-<area shape="poly" id="edge25_Node000001_Node000019" title=" " alt="" coords="948,586,935,628,913,680,882,732,863,756,840,776,821,788,818,783,837,772,859,752,878,729,909,677,930,626,943,585"/>
-<area shape="rect" id="Node000020" href="$types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086" title="Creates a new infix_type for a struct from an arena." alt="" coords="646,900,825,925"/>
-<area shape="poly" id="edge26_Node000001_Node000020" title=" " alt="" coords="953,586,947,648,929,730,915,773,896,815,871,855,840,889,821,902,819,898,837,885,867,852,891,813,910,771,924,728,941,647,948,585"/>
-<area shape="rect" id="Node000021" href="$types_8c.html#a483854a00ecff6dcf774c04683892ec6" title="Creates a new infix_type for a union from an arena." alt="" coords="647,421,824,447"/>
-<area shape="poly" id="edge28_Node000001_Node000021" title=" " alt="" coords="930,538,890,498,865,477,837,460,810,449,812,444,840,456,868,473,893,494,934,534"/>
-<area shape="rect" id="Node000022" href="$types_8c.html#a16b030f50ef5144f6aec8d2b263e4fa0" title="Creates a new infix_type for a SIMD vector from an arena." alt="" coords="644,949,827,975"/>
-<area shape="poly" id="edge30_Node000001_Node000022" title=" " alt="" coords="955,586,951,656,936,752,922,803,902,853,875,899,840,940,824,951,821,947,837,936,871,896,897,850,917,801,931,751,946,656,949,585"/>
-<area shape="rect" id="Node000003" href="$trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="453,5,541,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="683,77,583,45,541,32,542,27,585,39,685,72"/>
-<area shape="rect" id="Node000004" href="$trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="451,55,543,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="644,85,543,75,544,69,645,80"/>
-<area shape="rect" id="Node000005" href="$trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="451,104,543,129"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="645,104,544,115,543,109,644,98"/>
-<area shape="rect" id="Node000007" href="$group__high__level__api.html#gace742bcf7fd3c3978f951dfb025e0a2d" title="Generates a forward&#45;call trampoline for a given function signature." alt="" coords="420,255,575,295"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="658,278,575,278,575,273,658,273"/>
-<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="671,262,584,246,468,237,363,234,363,229,468,231,584,241,672,257"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="407,291,363,297,362,291,406,285"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="406,260,362,251,363,246,407,254"/>
-<area shape="rect" id="Node000010" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,220,158,245"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="194,235,159,235,159,230,194,230"/>
-<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="221,260,118,301,116,296,219,255"/>
-<area shape="poly" id="edge13_Node000012_Node000012" title=" " alt="" coords="535,726,525,718,497,715,475,717,463,721,461,727,467,734,463,738,455,728,459,718,474,712,497,709,527,713,538,722"/>
-<area shape="poly" id="edge19_Node000014_Node000012" title=" " alt="" coords="634,751,584,751,584,746,634,746"/>
-<area shape="poly" id="edge24_Node000018_Node000012" title=" " alt="" coords="649,833,631,826,568,794,517,764,520,759,570,789,633,821,651,828"/>
-<area shape="poly" id="edge27_Node000020_Node000012" title=" " alt="" coords="647,898,631,890,589,860,553,824,505,763,509,760,557,821,593,856,633,885,650,893"/>
-<area shape="poly" id="edge29_Node000021_Node000012" title=" " alt="" coords="640,455,634,460,602,492,575,529,554,569,537,609,514,684,503,736,498,735,508,683,532,607,549,566,571,526,598,488,630,456,637,451"/>
+<area shape="rect" id="Node000001" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="684,444,816,469"/>
+<area shape="rect" id="Node000002" href="$trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="456,61,609,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="746,431,740,366,724,278,709,232,690,186,665,144,634,107,606,89,609,84,638,103,670,141,695,184,714,230,729,277,745,365,751,430"/>
+<area shape="rect" id="Node000006" href="$trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca" title="Initializes a code_buffer for use with an arena." alt="" coords="469,117,596,143"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="744,431,735,376,716,304,702,266,683,229,661,194,634,164,616,151,595,142,598,138,619,147,638,160,665,191,688,226,706,264,721,302,740,375,749,430"/>
+<area shape="rect" id="Node000007" href="$group__high__level__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c" title="Generates a reverse&#45;call trampoline (a native callable function pointer for a callback)." alt="" coords="217,154,372,194"/>
+<area shape="poly" id="edge14_Node000001_Node000007" title=" " alt="" coords="742,431,732,383,712,323,681,263,660,237,634,215,604,197,572,183,503,167,434,162,372,165,372,160,434,157,504,162,574,178,607,192,638,211,663,233,685,261,717,321,737,382,748,430"/>
+<area shape="rect" id="Node000009" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="5,215,160,240"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="739,432,725,395,704,351,674,308,655,289,635,274,598,258,547,246,418,232,279,227,160,228,160,222,279,222,419,227,548,241,600,253,637,269,659,285,678,304,708,348,730,393,744,430"/>
+<area shape="rect" id="Node000010" href="$fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="208,639,381,664"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="736,433,721,402,699,367,670,335,635,310,579,285,530,275,507,276,483,282,458,293,431,309,392,344,362,387,339,435,322,484,304,577,299,639,294,638,299,576,317,483,334,433,357,384,388,341,428,305,455,288,481,277,506,271,530,270,580,280,637,305,674,331,703,364,725,399,741,430"/>
+<area shape="rect" id="Node000011" href="$group__high__level__api.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates a zero&#45;initialized block of memory from the arena." alt="" coords="463,320,602,345"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="727,435,687,396,662,376,635,359,601,346,603,341,637,354,665,371,690,392,731,432"/>
+<area shape="rect" id="Node000012" href="$group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="455,369,610,395"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="711,440,635,409,596,397,597,392,637,403,713,435"/>
+<area shape="rect" id="Node000013" href="$types_8c.html#a4b7a10d67d4799fcf29a50412b9754e7" title="Creates a new infix_type for a fixed&#45;size array from an arena." alt="" coords="445,419,620,444"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="670,450,620,444,620,439,671,445"/>
+<area shape="rect" id="Node000014" href="$types_8c.html#a591e25c719b58a1ea33cd5c572d8025d" title="Creates a new infix_type for a _Complex number from an arena." alt="" coords="434,468,631,493"/>
+<area shape="poly" id="edge17_Node000001_Node000014" title=" " alt="" coords="671,468,632,472,631,467,670,463"/>
+<area shape="rect" id="Node000015" href="$types_8c.html#aad682d0d4b636c282931735a89be7cf8" title="Creates a new infix_type for an enum from an arena." alt="" coords="443,517,622,543"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="710,478,637,507,593,520,591,515,635,502,708,473"/>
+<area shape="rect" id="Node000016" href="$types_8c.html#add70103c39886a50bc11d53a182b13b5" title="Creates a new infix_type for a named reference from an arena." alt="" coords="439,567,626,607"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="729,482,689,520,637,556,609,570,606,565,635,552,685,515,726,478"/>
+<area shape="rect" id="Node000017" href="$types_8c.html#ad33103485281e970058a783e5e181978" title="Creates a new infix_type for a packed struct from an arena." alt="" coords="439,631,626,671"/>
+<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="740,483,701,552,672,589,638,621,617,634,614,629,634,617,668,586,697,549,735,481"/>
+<area shape="rect" id="Node000018" href="$types_8c.html#ad07a4c53b81830d8053cb27f78576c08" title="Creates an infix_type for a pointer to a specific type from an arena." alt="" coords="429,696,636,721"/>
+<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="746,484,733,528,712,583,681,638,661,663,638,685,616,698,613,694,634,681,657,660,676,635,707,580,728,527,741,483"/>
+<area shape="rect" id="Node000019" href="$types_8c.html#a656d1576ae7ad78cbd5e54e64d65d086" title="Creates a new infix_type for a struct from an arena." alt="" coords="443,745,622,771"/>
+<area shape="poly" id="edge23_Node000001_Node000019" title=" " alt="" coords="749,484,739,537,720,605,706,641,687,676,665,708,638,736,620,747,617,743,634,732,661,705,683,673,701,639,715,603,734,536,743,483"/>
+<area shape="rect" id="Node000020" href="$types_8c.html#a483854a00ecff6dcf774c04683892ec6" title="Creates a new infix_type for a union from an arena." alt="" coords="444,795,621,820"/>
+<area shape="poly" id="edge25_Node000001_Node000020" title=" " alt="" coords="750,483,744,545,727,627,712,670,693,712,669,751,638,785,621,797,618,792,634,781,664,748,689,710,707,668,722,625,739,544,745,483"/>
+<area shape="rect" id="Node000021" href="$types_8c.html#a16b030f50ef5144f6aec8d2b263e4fa0" title="Creates a new infix_type for a SIMD vector from an arena." alt="" coords="441,844,624,869"/>
+<area shape="poly" id="edge27_Node000001_Node000021" title=" " alt="" coords="752,483,748,553,733,648,719,699,699,748,672,794,638,835,621,846,618,842,634,831,668,791,694,746,714,697,728,647,743,553,746,483"/>
+<area shape="rect" id="Node000003" href="$trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="251,5,339,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="464,61,338,31,340,26,465,56"/>
+<area shape="rect" id="Node000004" href="$trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="249,55,341,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="442,74,341,71,341,66,442,69"/>
+<area shape="rect" id="Node000005" href="$trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="249,104,341,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="448,92,341,111,340,106,447,87"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="456,147,373,162,372,157,455,142"/>
+<area shape="rect" id="Node000008" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="7,161,158,187"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="203,177,158,177,158,171,203,171"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="205,199,135,217,134,212,203,194"/>
+<area shape="poly" id="edge10_Node000010_Node000010" title=" " alt="" coords="332,629,322,621,295,617,272,619,260,624,258,630,264,637,260,640,253,630,257,620,271,614,295,612,324,616,336,625"/>
+<area shape="poly" id="edge16_Node000013_Node000010" title=" " alt="" coords="440,452,431,458,406,478,384,501,346,553,319,603,303,639,298,637,315,600,342,550,379,498,402,474,428,453,437,447"/>
+<area shape="poly" id="edge21_Node000017_Node000010" title=" " alt="" coords="426,654,382,654,382,649,426,649"/>
+<area shape="poly" id="edge24_Node000019_Node000010" title=" " alt="" coords="449,744,428,736,362,701,311,666,314,662,365,697,430,732,451,739"/>
+<area shape="poly" id="edge26_Node000020_Node000010" title=" " alt="" coords="442,792,428,786,387,757,351,724,303,666,307,662,355,720,391,753,431,781,444,788"/>
 </map>

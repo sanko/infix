@@ -1,0 +1,5 @@
+<map id="infix_forward_destroy" name="infix_forward_destroy">
+<area shape="rect" id="Node000001" title="Frees a forward trampoline and its associated executable memory." alt="" coords="5,5,168,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="216,5,367,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,15,202,15,202,21,168,21"/>
+</map>

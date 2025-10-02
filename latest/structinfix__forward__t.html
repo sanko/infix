@@ -80,17 +80,42 @@ Collaboration diagram for infix_forward_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structinfix__forward__t__coll__graph.png" border="0" usemap="#ainfix__forward__t_coll__map" alt="Collaboration graph"/></div>
 <map name="ainfix__forward__t_coll__map" id="ainfix__forward__t_coll__map">
-<area shape="rect" title=" " alt="" coords="16,93,135,119"/>
-<area shape="rect" href="structinfix__executable__t.html" title=" " alt="" coords="5,5,145,31"/>
-<area shape="poly" title=" " alt="" coords="78,45,78,93,73,93,73,45"/>
+<area shape="rect" title=" " alt="" coords="147,108,266,133"/>
+<area shape="rect" href="structinfix__arena__t.html" title=" " alt="" coords="5,5,112,31"/>
+<area shape="poly" title=" " alt="" coords="88,36,191,106,188,110,85,41"/>
+<area shape="rect" href="structinfix__executable__t.html" title=" " alt="" coords="137,5,277,31"/>
+<area shape="poly" title=" " alt="" coords="209,45,209,108,204,108,204,45"/>
+<area shape="rect" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system." alt="" coords="301,5,387,31"/>
+<area shape="poly" title=" " alt="" coords="319,41,224,110,221,106,316,37"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:acf87f9e48e9727e7c5432869aa9672b7" id="r_acf87f9e48e9727e7c5432869aa9672b7"><td class="memItemLeft" align="right" valign="top"><a id="acf87f9e48e9727e7c5432869aa9672b7" name="acf87f9e48e9727e7c5432869aa9672b7"></a>
+<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>arena</b></td></tr>
+<tr class="memdesc:acf87f9e48e9727e7c5432869aa9672b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The arena that owns all the type metadata for this trampoline. <br /></td></tr>
+<tr class="separator:acf87f9e48e9727e7c5432869aa9672b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2acff8531f53fd864fcb68aa3a5db6e1" id="r_a2acff8531f53fd864fcb68aa3a5db6e1"><td class="memItemLeft" align="right" valign="top"><a id="a2acff8531f53fd864fcb68aa3a5db6e1" name="a2acff8531f53fd864fcb68aa3a5db6e1"></a>
 <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>exec</b></td></tr>
+<tr class="memdesc:a2acff8531f53fd864fcb68aa3a5db6e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the executable JIT-compiled stub. <br /></td></tr>
 <tr class="separator:a2acff8531f53fd864fcb68aa3a5db6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96a63bb1f08d8a6c33f26453f9d55c28" id="r_a96a63bb1f08d8a6c33f26453f9d55c28"><td class="memItemLeft" align="right" valign="top"><a id="a96a63bb1f08d8a6c33f26453f9d55c28" name="a96a63bb1f08d8a6c33f26453f9d55c28"></a>
+<a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b></td></tr>
+<tr class="memdesc:a96a63bb1f08d8a6c33f26453f9d55c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a> of the trampoline's return value. <br /></td></tr>
+<tr class="separator:a96a63bb1f08d8a6c33f26453f9d55c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a913857474b58fa757b6463d33cf9c789" id="r_a913857474b58fa757b6463d33cf9c789"><td class="memItemLeft" align="right" valign="top"><a id="a913857474b58fa757b6463d33cf9c789" name="a913857474b58fa757b6463d33cf9c789"></a>
+<a class="el" href="structinfix__type.html">infix_type</a> **&#160;</td><td class="memItemRight" valign="bottom"><b>arg_types</b></td></tr>
+<tr class="memdesc:a913857474b58fa757b6463d33cf9c789"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array of <a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a> pointers for each argument. <br /></td></tr>
+<tr class="separator:a913857474b58fa757b6463d33cf9c789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c8616d2a2cebca1bd8d353f5243d2b4" id="r_a4c8616d2a2cebca1bd8d353f5243d2b4"><td class="memItemLeft" align="right" valign="top"><a id="a4c8616d2a2cebca1bd8d353f5243d2b4" name="a4c8616d2a2cebca1bd8d353f5243d2b4"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>num_args</b></td></tr>
+<tr class="memdesc:a4c8616d2a2cebca1bd8d353f5243d2b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of arguments. <br /></td></tr>
+<tr class="separator:a4c8616d2a2cebca1bd8d353f5243d2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66c75e047baadbb016fb5bbfba0b6848" id="r_a66c75e047baadbb016fb5bbfba0b6848"><td class="memItemLeft" align="right" valign="top"><a id="a66c75e047baadbb016fb5bbfba0b6848" name="a66c75e047baadbb016fb5bbfba0b6848"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>num_fixed_args</b></td></tr>
+<tr class="memdesc:a66c75e047baadbb016fb5bbfba0b6848"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments. <br /></td></tr>
+<tr class="separator:a66c75e047baadbb016fb5bbfba0b6848"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/common/<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a></li>

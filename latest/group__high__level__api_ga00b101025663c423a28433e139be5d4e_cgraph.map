@@ -1,5 +1,8 @@
 <map id="infix_reverse_destroy" name="infix_reverse_destroy">
 <area shape="rect" id="Node000001" title="Frees a reverse trampoline, its JIT&#45;compiled stub, and its context." alt="" coords="5,5,168,31"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline and its associated executable memory." alt="" coords="216,5,379,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,15,202,15,202,21,168,21"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="427,5,577,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,15,413,15,413,21,168,21"/>
+<area shape="rect" id="Node000003" href="$group__high__level__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Frees a forward trampoline, its executable memory, and its internal arena." alt="" coords="216,31,379,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,25,203,29,202,35,168,30"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="379,31,413,26,413,32,379,36"/>
 </map>

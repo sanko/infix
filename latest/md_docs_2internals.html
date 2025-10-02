@@ -72,8 +72,8 @@ $(function() {
   <div class="headertitle"><div class="title">infix FFI: Internals Documentation</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md88"></a> This document provides a deep dive into the architecture and internal workings of <code>infix</code>. It's a little disorganized but is intended for maintainers and developers looking to contribute or understand the library's design philosophy.</p>
-<h1><a class="anchor" id="autotoc_md89"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md89"></a> This document provides a deep dive into the architecture and internal workings of <code>infix</code>. It's a little disorganized but is intended for maintainers and developers looking to contribute or understand the library's design philosophy.</p>
+<h1><a class="anchor" id="autotoc_md90"></a>
 Core Design Philosophy</h1>
 <p>The architecture of <code>infix</code> is the result of deliberate design choices aimed at balancing performance, security, and developer ergonomics.</p>
 <ol type="1">
@@ -82,7 +82,7 @@ Core Design Philosophy</h1>
 <li><b>Abstraction and Portability:</b> Platform- and ABI-specific logic is strictly isolated behind a clean internal interface (the "ABI spec" v-tables). This allows the core trampoline engine to remain platform-agnostic, which dramatically simplifies maintenance and makes porting to new architectures a clear, well-defined process.</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md91"></a>
+<h1><a class="anchor" id="autotoc_md92"></a>
 Architectural Overview</h1>
 <p>The library can be broken down into five main layers:</p>
 <ol type="1">
@@ -93,12 +93,12 @@ Architectural Overview</h1>
 <li><b> **Trampoline Generator (<code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code>)**: The core engine that uses the other layers to build the final machine code.</b></li>
 </ol>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md92"></a>
+<h2><a class="anchor" id="autotoc_md93"></a>
 1. API Layers: Core vs. Signature</h2>
 <p><b></b></p>
 <p><b><code>infix</code> provides two distinct APIs for creating trampolines. Understanding their trade-offs is key to using the library effectively.</b></p>
 <p><b></b></p>
-<h3><a class="anchor" id="autotoc_md93"></a>
+<h3><a class="anchor" id="autotoc_md94"></a>
 The Core API (&lt;tt&gt;infix_type_create_*&lt;/tt&gt;, &lt;tt&gt;infix_forward_create_manual&lt;/tt&gt;)</h3>
 <p><b></b></p>
 <p><b>This is the foundational, low-level API. It offers maximum power and flexibility and is designed for performance-critical applications or dynamic environments where type information is not known until runtime.</b></p>
@@ -139,12 +139,12 @@ The Core API (&lt;tt&gt;infix_type_create_*&lt;/tt&gt;, &lt;tt&gt;infix_forward_
 <div class="ttc" id="ainfix_8h_html_a9f0d8a41015262d2dcffc97cf5f87772"><div class="ttname"><a href="infix_8h.html#a9f0d8a41015262d2dcffc97cf5f87772">infix_type_create_array</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t)</div><div class="ttdoc">Creates a new infix_type for a fixed-size array from an arena.</div><div class="ttdef"><b>Definition</b> types.c:561</div></div>
 <div class="ttc" id="ainfix_8h_html_ae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="infix_8h.html#ae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:107</div></div>
 <div class="ttc" id="ainfix_8h_html_aed99b57de2c839a66eb54c9e82d703d9"><div class="ttname"><a href="infix_8h.html#aed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a></div><div class="ttdeci">infix_struct_member infix_type_create_member(const char *, infix_type *, size_t)</div><div class="ttdoc">A factory function to create an infix_struct_member.</div><div class="ttdef"><b>Definition</b> types.c:420</div></div>
-<div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:108</div></div>
+<div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:114</div></div>
 <div class="ttc" id="astructinfix__struct__member_html"><div class="ttname"><a href="structinfix__struct__member.html">infix_struct_member</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div></div>
 <div class="ttc" id="astructinfix__type_html"><div class="ttname"><a href="structinfix__type.html">infix_type</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div></div>
 </div><!-- fragment --><p></b></p>
 <p><b></b></p>
-<h3><a class="anchor" id="autotoc_md94"></a>
+<h3><a class="anchor" id="autotoc_md95"></a>
 The Signature API (&lt;tt&gt;infix_forward_create&lt;/tt&gt;, &lt;tt&gt;infix_reverse_create&lt;/tt&gt;)</h3>
 <p><b></b></p>
 <p><b>This is the high-level API, designed for convenience, readability, and safety. It is the recommended choice for over 99% of use cases.</b></p>
@@ -172,7 +172,7 @@ The Signature API (&lt;tt&gt;infix_forward_create&lt;/tt&gt;, &lt;tt&gt;infix_re
 <div class="ttc" id="ainfix_8h_html"><div class="ttname"><a href="infix_8h.html">infix.h</a></div><div class="ttdoc">The main public header for the infix FFI library.</div></div>
 </div><!-- fragment --><p> The comparison clearly shows that the Signature API is far more productive and less error-prone for any signature that can be expressed as a string.</b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md95"></a>
+<h2><a class="anchor" id="autotoc_md96"></a>
 2. The Signature Parser (&lt;tt&gt;signature.c&lt;/tt&gt;)</h2>
 <p><b></b></p>
 <p><b>This component is the engine behind the Signature API.</b></p>
@@ -183,7 +183,7 @@ The Signature API (&lt;tt&gt;infix_forward_create&lt;/tt&gt;, &lt;tt&gt;infix_re
 </ul>
 <p></b></p>
 <p><b></b></p>
-<h3><a class="anchor" id="autotoc_md96"></a>
+<h3><a class="anchor" id="autotoc_md97"></a>
 Parser Error Handling and Security</h3>
 <p><b> The parser is a primary attack surface and is hardened accordingly.</p><ul>
 <li><b>Sticky Errors</b>: A <code>parser_state_t</code> struct is passed through all parsing functions. If any function encounters a syntax error, it sets <code>state-&gt;error</code> and returns <code>NULL</code>. All other functions check this flag on entry and abort immediately if it's set, ensuring a clean and fast failure.</li>
@@ -191,7 +191,7 @@ Parser Error Handling and Security</h3>
 </ul>
 <p></b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md97"></a>
+<h2><a class="anchor" id="autotoc_md98"></a>
 3. The Type System (&lt;tt&gt;types.c&lt;/tt&gt;)</h2>
 <p><b></b></p>
 <p><b>The <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> struct is the cornerstone of the library. It provides the generator with the metadata (size, alignment, and composition) needed to correctly handle arguments and return values.</b></p>
@@ -203,12 +203,12 @@ Parser Error Handling and Security</h3>
 </ul>
 <p></b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md98"></a>
+<h2><a class="anchor" id="autotoc_md99"></a>
 4. Executable Memory Management and Security (&lt;tt&gt;executor.c&lt;/tt&gt;)</h2>
 <p><b></b></p>
 <p><b>The library implements multiple layers of security to protect against common JIT vulnerabilities.</b></p>
 <p><b></b></p>
-<h4><a class="anchor" id="autotoc_md99"></a>
+<h4><a class="anchor" id="autotoc_md100"></a>
 Write XOR Execute (W^X)</h4>
 <p><b> A memory region is never simultaneously writable and executable. The implementation strategy varies by platform for maximum security and compatibility:</b></p>
 <p><b></p><div class="fragment"><div class="line">---</div>
@@ -246,24 +246,24 @@ Write XOR Execute (W^X)</h4>
 <div class="line">    end</div>
 </div><!-- fragment --><p></b></p>
 <p><b></b></p>
-<h4><a class="anchor" id="autotoc_md100"></a>
+<h4><a class="anchor" id="autotoc_md101"></a>
 Guard Pages for Freed Trampolines</h4>
 <p><b> To mitigate use-after-free vulnerabilities, <code>infix_executable_free</code> does not immediately release the memory. Instead, it changes its protection to <code>PROT_NONE</code> (no read/write/execute). This turns a subtle vulnerability into a safe, immediate, and obvious crash if a dangling function pointer is ever called.</b></p>
 <p><b></b></p>
-<h4><a class="anchor" id="autotoc_md101"></a>
+<h4><a class="anchor" id="autotoc_md102"></a>
 Read-Only Callback Contexts</h4>
 <p><b> The <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> struct contains function pointers that could be targeted by memory corruption attacks. After a callback context is fully initialized, the memory page containing it is made read-only using <code>mprotect</code>/<code>VirtualProtect</code>.</b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md102"></a>
+<h2><a class="anchor" id="autotoc_md103"></a>
 5. The ABI Abstraction Layer and Trampoline Generator (&lt;tt&gt;trampoline.c&lt;/tt&gt;)</h2>
 <p><b></b></p>
 <p><b>The core of the library's portability is the separation of concerns via two v-table structs: <code><a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a></code> and <code><a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a></code>. The <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> engine is the consumer of these specs. It orchestrates the entire JIT process, from classifying the signature to emitting the final machine code.</b></p>
 <p><b></b></p>
-<h3><a class="anchor" id="autotoc_md103"></a>
+<h3><a class="anchor" id="autotoc_md104"></a>
 Trampoline Generation Flow</h3>
 <p><b></b></p>
 <p><b></b></p>
-<h4><a class="anchor" id="autotoc_md104"></a>
+<h4><a class="anchor" id="autotoc_md105"></a>
 Forward Call Trampoline</h4>
 <p><b></b></p>
 <p><b></p><div class="fragment"><div class="line">graph TD</div>
@@ -288,7 +288,7 @@ Forward Call Trampoline</h4>
 <div class="line">    end</div>
 </div><!-- fragment --><p></b></p>
 <p><b></b></p>
-<h4><a class="anchor" id="autotoc_md105"></a>
+<h4><a class="anchor" id="autotoc_md106"></a>
 Reverse Call Trampoline (Callbacks)</h4>
 <p><b></b></p>
 <p><b></p><div class="fragment"><div class="line">graph TD</div>
@@ -319,7 +319,7 @@ Reverse Call Trampoline (Callbacks)</h4>
 <div class="line">    end</div>
 </div><!-- fragment --><p></b></p>
 <p><b></b></p>
-<h1><a class="anchor" id="autotoc_md106"></a>
+<h1><a class="anchor" id="autotoc_md107"></a>
 A Note on the "Unity" Build</h1>
 <p><b></b></p>
 <p><b><code>infix</code> is designed to be built as a single translation unit (a "unity build"). The top-level <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> file does not contain logic; it is simply a list of <code>#include</code> directives for all the other <code>.c</code> files in the <code>src/core/</code> directory.</b></p>
@@ -333,12 +333,12 @@ A Note on the "Unity" Build</h1>
 <p><b></p><hr  />
 <p></b></p>
 <p><b></b></p>
-<h1><a class="anchor" id="autotoc_md108"></a>
+<h1><a class="anchor" id="autotoc_md109"></a>
 infix ABI Internals</h1>
 <p><b></b></p>
 <p><b>This document provides a low-level technical comparison of the Application Binary Interfaces (ABIs) supported by infix. It is intended for maintainers and contributors working within the <code>abi/</code> directory.</b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md109"></a>
+<h2><a class="anchor" id="autotoc_md110"></a>
 Comparative Overview</h2>
 <p><b></b></p>
 <p><b>The following table summarizes the key differences in calling conventions between the supported 64-bit ABIs.</b></p>
@@ -364,7 +364,7 @@ Comparative Overview</h2>
 </table>
 <p></b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md110"></a>
+<h2><a class="anchor" id="autotoc_md111"></a>
 Deep Dive: System V AMD64 Aggregate Classification</h2>
 <p><b></b></p>
 <p><b><em>File: <code><a class="el" href="abi__sysv__x64_8c.html" title="Implements the FFI logic for the System V AMD64 ABI.">abi_sysv_x64.c</a></code></em></b></p>
@@ -381,7 +381,7 @@ Deep Dive: System V AMD64 Aggregate Classification</h2>
 </ul>
 <p></b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md111"></a>
+<h2><a class="anchor" id="autotoc_md112"></a>
 Deep Dive: Windows x64 By-Reference Rule</h2>
 <p><b></b></p>
 <p><b><em>File: <code><a class="el" href="abi__win__x64_8c.html" title="Implements the FFI logic for the Windows x64 calling convention.">abi_win_x64.c</a></code></em></b></p>
@@ -392,7 +392,7 @@ Deep Dive: Windows x64 By-Reference Rule</h2>
 </ul>
 <p></b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md112"></a>
+<h2><a class="anchor" id="autotoc_md113"></a>
 Deep Dive: AArch64 Homogeneous Floating-point Aggregates (HFA)</h2>
 <p><b></b></p>
 <p><b><em>File: <code><a class="el" href="abi__arm64_8c.html" title="Implements the FFI logic for the AArch64 (ARM64) architecture following the AAPCS64 calling conventio...">abi_arm64.c</a></code></em></b></p>
@@ -406,18 +406,18 @@ Deep Dive: AArch64 Homogeneous Floating-point Aggregates (HFA)</h2>
 <p><b></p><hr  />
 <p></b></p>
 <p><b></b></p>
-<h1><a class="anchor" id="autotoc_md114"></a>
+<h1><a class="anchor" id="autotoc_md115"></a>
 The Debugging Guide</h1>
 <p><b></b></p>
 <p><b>This guide is for library maintainers and advanced contributors who need to debug the low-level machine code generated by <code>infix</code>.</b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md115"></a>
+<h2><a class="anchor" id="autotoc_md116"></a>
 Introduction</h2>
 <p><b></b></p>
 <p><b>Debugging Just-In-Time compiled code can feel like black magic. The code you're stepping through doesn't exist in any source file; it's a raw sequence of bytes in an executable memory page. However, with the right tools and techniques, it's entirely manageable.</b></p>
 <p><b>This guide covers the two primary methods for inspecting the machine code generated by infix: using the built-in <code>infix_dump_hex</code> utility and stepping through the code live with a debugger like GDB or WinDbg.</b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md116"></a>
+<h2><a class="anchor" id="autotoc_md117"></a>
 Method 1: Static Analysis with &lt;tt&gt;infix_dump_hex&lt;/tt&gt;</h2>
 <p><b></b></p>
 <p><b>The simplest way to see what the JIT is producing is to print it. infix provides a <code>infix_dump_hex</code> utility (in <code><a class="el" href="utility_8h.html" title="A header for debugging utilities that are conditionally compiled.">utility.h</a></code>) that is enabled in debug builds.</b></p>
@@ -428,10 +428,11 @@ Method 1: Static Analysis with &lt;tt&gt;infix_dump_hex&lt;/tt&gt;</h2>
 <div class="line"><span class="comment">// The handle is opaque in the public API, but for debugging, you can</span></div>
 <div class="line"><span class="comment">// temporarily expose the infix_forward_t struct in infix.h</span></div>
 <div class="line"><span class="keywordflow">if</span> (trampoline) {</div>
-<div class="line">    infix_dump_hex(trampoline-&gt;exec.<a class="code hl_variable" href="structinfix__executable__t.html#a50e15399f44c62193a85a674ae393b3f">rx_ptr</a>, trampoline-&gt;exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>, <span class="stringliteral">&quot;My Trampoline&quot;</span>);</div>
+<div class="line">    infix_dump_hex(trampoline-&gt;<a class="code hl_variable" href="structinfix__forward__t.html#a2acff8531f53fd864fcb68aa3a5db6e1">exec</a>.<a class="code hl_variable" href="structinfix__executable__t.html#a50e15399f44c62193a85a674ae393b3f">rx_ptr</a>, trampoline-&gt;<a class="code hl_variable" href="structinfix__forward__t.html#a2acff8531f53fd864fcb68aa3a5db6e1">exec</a>.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>, <span class="stringliteral">&quot;My Trampoline&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="astructinfix__executable__t_html_a0fb7198de8f0b15b94a5b526c9f07c92"><div class="ttname"><a href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">infix_executable_t::size</a></div><div class="ttdeci">size_t size</div><div class="ttdoc">The total size of the allocated memory region in bytes.</div><div class="ttdef"><b>Definition</b> infix_internals.h:46</div></div>
 <div class="ttc" id="astructinfix__executable__t_html_a50e15399f44c62193a85a674ae393b3f"><div class="ttname"><a href="structinfix__executable__t.html#a50e15399f44c62193a85a674ae393b3f">infix_executable_t::rx_ptr</a></div><div class="ttdeci">void * rx_ptr</div><div class="ttdoc">A pointer to the memory with Read+Execute permissions. This is the callable address.</div><div class="ttdef"><b>Definition</b> infix_internals.h:43</div></div>
+<div class="ttc" id="astructinfix__forward__t_html_a2acff8531f53fd864fcb68aa3a5db6e1"><div class="ttname"><a href="structinfix__forward__t.html#a2acff8531f53fd864fcb68aa3a5db6e1">infix_forward_t::exec</a></div><div class="ttdeci">infix_executable_t exec</div><div class="ttdoc">Handle to the executable JIT-compiled stub.</div><div class="ttdef"><b>Definition</b> infix_internals.h:79</div></div>
 <div class="ttc" id="autility_8h_html"><div class="ttname"><a href="utility_8h.html">utility.h</a></div><div class="ttdoc">A header for debugging utilities that are conditionally compiled.</div></div>
 </div><!-- fragment --><p> This will produce a detailed hexdump of the generated machine code, which you can then compare against an instruction set reference for your architecture (e.g., the Intel/AMD developer manuals or the ARM Architecture Reference Manual).</b></p>
 <p><b></p><div class="fragment"><div class="line"># My Forward Trampoline (size: 78 bytes)</div>
@@ -440,7 +441,7 @@ Method 1: Static Analysis with &lt;tt&gt;infix_dump_hex&lt;/tt&gt;</h2>
 <div class="line">#   ...</div>
 </div><!-- fragment --><p></b></p>
 <p><b></b></p>
-<h2><a class="anchor" id="autotoc_md117"></a>
+<h2><a class="anchor" id="autotoc_md118"></a>
 Method 2: Live Debugging with GDB (Linux/macOS)</h2>
 <p><b></b></p>
 <p><b>This is the most powerful method. It allows you to step through the JIT'd code one instruction at a time and inspect the state of the CPU registers.</b></p>
@@ -455,23 +456,23 @@ Method 2: Live Debugging with GDB (Linux/macOS)</h2>
 </li>
 </ol>
 <p></b></p>
-<h1><a class="anchor" id="autotoc_md118"></a>
+<h1><a class="anchor" id="autotoc_md119"></a>
 Your program will run and print the address</h1>
 <p><b> DEBUG: Trampoline generated at address: 0x7ffff7fde000</b></p>
 <p><b></b></p>
-<h1><a class="anchor" id="autotoc_md119"></a>
+<h1><a class="anchor" id="autotoc_md120"></a>
 Now, set the breakpoint</h1>
 <p><b> (gdb) b *0x7ffff7fde000 Breakpoint 1 at 0x7ffff7fde000 ``<code></p><ol type="1">
 <li><p class="startli">**Trigger and Disassemble**: Run the program. When it breaks, usedisassemble` to view the JIT code.</p>
-<p class="startli"><code>gdb @section autotoc_md120 After the cif_func() is called in your C code... Breakpoint 1, 0x00007ffff7fde000 in ?? () (gdb) disassemble Dump of assembler code for function 0x7ffff7fde000: =&gt; 0x00007ffff7fde000: push rbp 0x00007ffff7fde001: mov rsp,rbp 0x00007ffff7fde004: push r12 ... End of assembler dump. </code></p>
+<p class="startli"><code>gdb @section autotoc_md121 After the cif_func() is called in your C code... Breakpoint 1, 0x00007ffff7fde000 in ?? () (gdb) disassemble Dump of assembler code for function 0x7ffff7fde000: =&gt; 0x00007ffff7fde000: push rbp 0x00007ffff7fde001: mov rsp,rbp 0x00007ffff7fde004: push r12 ... End of assembler dump. </code></p>
 </li>
 <li><p class="startli"><b>Step and Verify</b>: Use <code>stepi</code> (step instruction) and <code>info registers</code> to walk through the code and check register values before the <code>call</code> instruction. At that point, all the argument registers (<code>rdi</code>, <code>rsi</code>, <code>xmm0</code>, etc.) should contain the correct values you passed in.</p>
-<p class="startli"><code>gdb (gdb) # ... stepi until you are right before the call ... (gdb) info registers rdi rsi rdi 0x2a 42 rsi 0x64 100 @section autotoc_md121 If the values here are correct, your trampoline code is likely correct. @section autotoc_md122 If they are wrong, you can step backward to see where the wrong value was loaded. </code></p>
+<p class="startli"><code>gdb (gdb) # ... stepi until you are right before the call ... (gdb) info registers rdi rsi rdi 0x2a 42 rsi 0x64 100 @section autotoc_md122 If the values here are correct, your trampoline code is likely correct. @section autotoc_md123 If they are wrong, you can step backward to see where the wrong value was loaded. </code></p>
 </li>
 </ol>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md123"></a>
+<h3><a class="anchor" id="autotoc_md124"></a>
 Method 3: Live Debugging with WinDbg (Windows)</h3>
 <p><b><code></code></b></p>
 <p><b><code>The process on Windows is conceptually identical but uses different commands (<code>bp</code> to set breakpoint, <code>u</code> to unassemble, <code>r</code> to view registers, <code>t</code> to trace/step).</code></b></p>
@@ -492,7 +493,7 @@ Method 3: Live Debugging with WinDbg (Windows)</h3>
 <p><b><code></p><hr  />
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h2><a class="anchor" id="autotoc_md125"></a>
+<h2><a class="anchor" id="autotoc_md126"></a>
 External ABI Documentation</h2>
 <p><b><code></code></b></p>
 <p><b><code>The current <code>infix</code> implementations are based on the official ABI documents for each platform.</code></b></p>
@@ -513,7 +514,7 @@ External ABI Documentation</h2>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md126"></a>
+<h3><a class="anchor" id="autotoc_md127"></a>
 A Cross-Language Type Reference</h3>
 <p><b><code></code></b></p>
 <p><b><code>Getting the types right is the most critical part of FFI. A mismatch between the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> you describe and the actual type used by the library function can lead to stack corruption, crashes, or silent data corruption.</code></b></p>
@@ -555,7 +556,7 @@ A Cross-Language Type Reference</h3>
 </table>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h4><a class="anchor" id="autotoc_md127"></a>
+<h4><a class="anchor" id="autotoc_md128"></a>
 Common Windows Type Definitions</h4>
 <p><b><code></code></b></p>
 <p><b><code>The Windows API uses a large number of <code>typedef</code>s for C primitives. This table helps map them to the correct infix types. All types are for 64-bit Windows.</code></b></p>
@@ -602,12 +603,12 @@ Common Windows Type Definitions</h4>
 <p><b><code></p><hr  />
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h2><a class="anchor" id="autotoc_md129"></a>
+<h2><a class="anchor" id="autotoc_md130"></a>
 Core Design Philosophy</h2>
 <p><b><code></code></b></p>
 <p><b><code>The architecture of <code>infix</code> is not accidental. It is the result of a series of deliberate design choices aimed at balancing performance, security, and developer ergonomics. This section explains the "why" behind some of the most important architectural decisions.</code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md130"></a>
+<h3><a class="anchor" id="autotoc_md131"></a>
 Guiding Principles</h3>
 <p><b><code></code></b></p>
 <p><b><code>Three high-level principles guide the library's development:</code></b></p>
@@ -618,7 +619,7 @@ Guiding Principles</h3>
 </ol>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md131"></a>
+<h3><a class="anchor" id="autotoc_md132"></a>
 API Naming: The &lt;tt&gt;infix_&lt;/tt&gt; Prefix</h3>
 <p><b><code></code></b></p>
 <p><b><code><b>The Decision:</b> All public symbols (functions, typedefs, enums, macros) exposed by <code><a class="el" href="infix_8h.html" title="The main public header for the infix FFI library.">infix.h</a></code> use the <code>infix_</code> or <code>INFIX_</code> prefix.</code></b></p>
@@ -629,7 +630,7 @@ API Naming: The &lt;tt&gt;infix_&lt;/tt&gt; Prefix</h3>
 <p></code></b></p>
 <p><b><code><b>The Trade-off:</b> The <code>infix_</code> prefix is slightly more verbose than a shorter alternative. This is an insignificant cost compared to the enormous benefit of guaranteeing namespace safety.</code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md132"></a>
+<h3><a class="anchor" id="autotoc_md133"></a>
 Memory Safety by Default: The Arena-Based Manual API</h3>
 <p><b><code></code></b></p>
 <p><b><code><b>The Decision:</b> The low-level, "manual" API for creating <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> objects is <b>exclusively arena-based</b>. The old, <code>malloc</code>-based functions with their complex ownership semantics have been removed from the public API.</code></b></p>
@@ -641,7 +642,7 @@ Memory Safety by Default: The Arena-Based Manual API</h3>
 <p></code></b></p>
 <p><b><code><b>The Trade-off:</b> The user must now manage an <code><a class="el" href="structinfix__arena__t.html">infix_arena_t</a></code> object. This is a small price to pay for guaranteed memory safety and a simpler API.</code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md133"></a>
+<h3><a class="anchor" id="autotoc_md134"></a>
 Callbacks: The Power of the Universal Context</h3>
 <p><b><code></code></b></p>
 <p><b><code><b>The Decision:</b> All user-provided C callback handlers <b>always</b> receive a pointer to their <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> (aliased as <code>infix_context_t</code>) as their first argument. There is no "stateless" callback mode.</code></b></p>
@@ -652,7 +653,7 @@ Callbacks: The Power of the Universal Context</h3>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md134"></a>
+<h3><a class="anchor" id="autotoc_md135"></a>
 ABI Dispatch: V-Tables for Cross-Platform Fuzzing</h3>
 <p><b><code></code></b></p>
 <p><b><code><b>The Decision:</b> The core <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> engine dispatches to ABI-specific logic via a v-table (a struct of function pointers, <code><a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a></code>). It does not use <code>#ifdef</code> blocks to compile in only one ABI's implementation at a time.</code></b></p>
@@ -662,15 +663,30 @@ ABI Dispatch: V-Tables for Cross-Platform Fuzzing</h3>
 </ul>
 <p></code></b></p>
 <p><b><code><b>The Trade-off:</b> This approach adds a single layer of indirection (a function pointer call) in the <em>trampoline generation</em> code and makes <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> slightly more verbose. This has zero impact on the performance of the final JIT-compiled code and is a tiny price to pay for the massive strategic advantage of comprehensive, multi-platform testing in a single environment.</code></b></p>
+<p><b><code></code></b></p>
+<h3><a class="anchor" id="autotoc_md136"></a>
+The Self-Contained Object Model: Trading Memory for Safety</h3>
+<p><b><code></code></b></p>
+<p><b><code><b>The Decision:</b> Both <code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code> and <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> are designed as <b>self-contained objects</b>. When a trampoline is created, it performs a <b>deep copy</b> of all the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> metadata it needs into its own private, internal memory arena.</code></b></p>
+<p><b><code><b>The Rationale:</b> This architecture is a deliberate trade-off that prioritizes memory safety and API simplicity above all else.</code></b></p>
+<p><b><code></p><ol type="1">
+<li><b>Elimination of Use-After-Free:</b> The primary motivation is to solve a critical dangling pointer problem. Without this model, a user would create types in a temporary arena, create a trampoline that points to them, and then destroy the arena, leaving the trampoline in a dangerously invalid state. By making an internal copy, the trampoline's lifetime is completely decoupled from the user's temporary data. The user can and should destroy their arena immediately after creation.</li>
+<li><b>Enabling Safe Introspection:</b> The introspection API (<code>infix_forward_get_arg_type</code>, etc.) would not be possible without this model. It can only work if the type information is guaranteed to be valid for the entire lifetime of the trampoline handle.</li>
+<li><b>Simplified Memory Management for the User:</b> The user's responsibility is clear: they manage their own arenas for type creation, and they manage the trampoline handles. The two are independent.</li>
+</ol>
+<p></code></b></p>
+<p><b><code><b>The Trade-off: Memory Overhead</b></code></b></p>
+<p><b><code>The cost of this safety is a higher memory footprint per trampoline. Each handle now contains its own private arena (which automatically adjusts to usage) to store the type graph. For several hundred trampolines, this can add a few megabytes to the application's memory usage.</code></b></p>
+<p><b><code>This is considered an acceptable cost for the vast majority of applications (desktop, server, language runtimes) where the benefit of guaranteed memory safety far outweighs the modest increase in RAM usage. For highly constrained embedded environments, future versions of the library may offer a "tuned" creation function that allows the user to specify a smaller internal arena size.</code></b></p>
 <p><b><code></p><hr  />
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h2><a class="anchor" id="autotoc_md136"></a>
+<h2><a class="anchor" id="autotoc_md138"></a>
 Design Philosophy: A Stable Public API</h2>
 <p><b><code></code></b></p>
 <p><b><code>A core design goal of <code>infix</code> is to provide a stable, clean, and professional public API. A key part of this is the strict separation between the library's <b>public contract</b> and its <b>internal implementation details</b>.</code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md137"></a>
+<h3><a class="anchor" id="autotoc_md139"></a>
 Platform Macros: An Internal Affair</h3>
 <p><b><code></code></b></p>
 <p><b><code>In previous versions, the main public header, <code><a class="el" href="infix_8h.html" title="The main public header for the infix FFI library.">infix.h</a></code>, contained a large and complex block of preprocessor macros for detecting the operating system, CPU architecture, and compiler (e.g., <code>INFIX_OS_WINDOWS</code>, <code>INFIX_ARCH_X64</code>).</code></b></p>
@@ -693,12 +709,12 @@ Platform Macros: An Internal Affair</h3>
 <p><b><code></p><hr  />
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h2><a class="anchor" id="autotoc_md139"></a>
+<h2><a class="anchor" id="autotoc_md141"></a>
 Core Design Philosophy: The JIT Compiler vs. The Call VM</h2>
 <p><b><code></code></b></p>
 <p><b><code>A key architectural choice in <code>infix</code> is its use of a Just-in-Time (JIT) compiler to generate trampolines, rather than using a set of pre-compiled assembly stubs, a model often called a "Call VM" or "Interpreter" and used by libraries like <code>dyncall</code>. This decision was deliberate and has profound implications for the library's API design, performance characteristics, and intended use cases.</code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md140"></a>
+<h3><a class="anchor" id="autotoc_md142"></a>
 The Alternative: The Call VM / Interpreter Model (e.g., &lt;tt&gt;dyncall&lt;/tt&gt;)</h3>
 <p><b><code></code></b></p>
 <p><b><code>In a Call VM model, the library provides a set of low-level functions to build a function call piece by piece. The process typically looks like this:</p><ol type="1">
@@ -719,7 +735,7 @@ The Alternative: The Call VM / Interpreter Model (e.g., &lt;tt&gt;dyncall&lt;/tt
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md141"></a>
+<h3><a class="anchor" id="autotoc_md143"></a>
 The &lt;tt&gt;infix&lt;/tt&gt; Approach: The JIT Compiler Model</h3>
 <p><b><code></code></b></p>
 <p><b><code><code>infix</code> takes a different approach. It uses its <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> system as a <b>single source of truth</b>.</p><ol type="1">
@@ -743,7 +759,7 @@ The &lt;tt&gt;infix&lt;/tt&gt; Approach: The JIT Compiler Model</h3>
 <p><b><code></p><hr  />
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h2><a class="anchor" id="autotoc_md143"></a>
+<h2><a class="anchor" id="autotoc_md145"></a>
 Code Generation and Emitters</h2>
 <p><b><code></code></b></p>
 <p><b><code>The actual machine code is generated by a set of low-level "emitter" functions, specific to each architecture (e.g., <code><a class="el" href="abi__x64__emitters_8c.html" title="Implements the internal helper functions for emitting x86-64 machine code.">abi_x64_emitters.c</a></code>, <code>abi_riscv64_emitters.c</code>).</code></b></p>
@@ -775,15 +791,15 @@ Code Generation and Emitters</h2>
 <div class="ttc" id="aabi__x64__emitters_8c_html_a3bc0def8574505550e37a9879ed04620"><div class="ttname"><a href="abi__x64__emitters_8c.html#a3bc0def8574505550e37a9879ed04620">emit_mov_reg_mem</a></div><div class="ttdeci">void emit_mov_reg_mem(code_buffer *buf, x64_gpr dest, x64_gpr src_base, int32_t offset)</div><div class="ttdoc">Emits an x86-64 mov r64, [r64 + offset] instruction.</div><div class="ttdef"><b>Definition</b> abi_x64_emitters.c:152</div></div>
 <div class="ttc" id="aabi__x64__emitters_8c_html_a877fb1f8f0703500d3c1210976a4f98e"><div class="ttname"><a href="abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e">emit_rex_prefix</a></div><div class="ttdeci">void emit_rex_prefix(code_buffer *buf, bool w, bool r, bool x, bool b)</div><div class="ttdoc">Emits an x86-64 REX prefix byte.</div><div class="ttdef"><b>Definition</b> abi_x64_emitters.c:1076</div></div>
 <div class="ttc" id="aabi__x64__emitters_8c_html_afbe0ce8d2a6b21fd4662133b077106c1"><div class="ttname"><a href="abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1">emit_modrm</a></div><div class="ttdeci">void emit_modrm(code_buffer *buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm)</div><div class="ttdoc">Emits an x86-64 ModR/M byte.</div><div class="ttdef"><b>Definition</b> abi_x64_emitters.c:1058</div></div>
-<div class="ttc" id="astructcode__buffer_html"><div class="ttname"><a href="structcode__buffer.html">code_buffer</a></div><div class="ttdoc">An utility structure for dynamically building machine code in memory. @This is not part of the public...</div><div class="ttdef"><b>Definition</b> infix_internals.h:122</div></div>
+<div class="ttc" id="astructcode__buffer_html"><div class="ttname"><a href="structcode__buffer.html">code_buffer</a></div><div class="ttdoc">An utility structure for dynamically building machine code in memory. @This is not part of the public...</div><div class="ttdef"><b>Definition</b> infix_internals.h:128</div></div>
 </div><!-- fragment --><p></code></b></p>
 <p><b><code>This separation makes the ABI logic easier to read and allows the low-level encoding details to be managed and verified in one place.</code></b></p>
 <p><b><code></code></b></p>
-<h2><a class="anchor" id="autotoc_md144"></a>
+<h2><a class="anchor" id="autotoc_md146"></a>
 Design Philosophy: Key Architectural Decisions</h2>
 <p><b><code></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md145"></a>
+<h3><a class="anchor" id="autotoc_md147"></a>
 The Unity Build</h3>
 <p><b><code></code></b></p>
 <p><b><code><code>infix</code> is designed to be built as a single translation unit. The top-level <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> file simply <code>#include</code>s all other core <code>.c</code> files.</code></b></p>
@@ -797,7 +813,7 @@ The Unity Build</h3>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md146"></a>
+<h3><a class="anchor" id="autotoc_md148"></a>
 API Naming: The &lt;tt&gt;infix_&lt;/tt&gt; Prefix</h3>
 <p><b><code></code></b></p>
 <p><b><code></p><ul>
@@ -806,7 +822,7 @@ API Naming: The &lt;tt&gt;infix_&lt;/tt&gt; Prefix</h3>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md147"></a>
+<h3><a class="anchor" id="autotoc_md149"></a>
 Memory Safety by Default: The Arena-Based Manual API</h3>
 <p><b><code></code></b></p>
 <p><b><code></p><ul>
@@ -815,7 +831,7 @@ Memory Safety by Default: The Arena-Based Manual API</h3>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md148"></a>
+<h3><a class="anchor" id="autotoc_md150"></a>
 Callbacks: The Power of the Universal Context</h3>
 <p><b><code></code></b></p>
 <p><b><code></p><ul>
@@ -829,7 +845,7 @@ Callbacks: The Power of the Universal Context</h3>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md149"></a>
+<h3><a class="anchor" id="autotoc_md151"></a>
 ABI Dispatch: V-Tables for Cross-Platform Fuzzing</h3>
 <p><b><code></code></b></p>
 <p><b><code></p><ul>
@@ -838,7 +854,7 @@ ABI Dispatch: V-Tables for Cross-Platform Fuzzing</h3>
 </ul>
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h3><a class="anchor" id="autotoc_md150"></a>
+<h3><a class="anchor" id="autotoc_md152"></a>
 Platform Macros: An Internal Affair</h3>
 <p><b><code></code></b></p>
 <p><b><code></p><ul>
@@ -854,7 +870,7 @@ Platform Macros: An Internal Affair</h3>
 <p><b><code></p><hr  />
 <p></code></b></p>
 <p><b><code></code></b></p>
-<h1><a class="anchor" id="autotoc_md152"></a>
+<h1><a class="anchor" id="autotoc_md154"></a>
 License and Legal</h1>
 <p><b><code></code></b></p>
 <p><b><code>Copyright (c) 2025 Sanko Robinson</code></b></p>

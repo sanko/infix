@@ -1,5 +1,9 @@
 <map id="infix_forward_t" name="infix_forward_t">
-<area shape="rect" id="Node000001" title=" " alt="" coords="16,93,135,119"/>
-<area shape="rect" id="Node000002" href="$structinfix__executable__t.html" title=" " alt="" coords="5,5,145,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,45,78,93,73,93,73,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="147,108,266,133"/>
+<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title=" " alt="" coords="5,5,112,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,36,191,106,188,110,85,41"/>
+<area shape="rect" id="Node000003" href="$structinfix__executable__t.html" title=" " alt="" coords="137,5,277,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,45,209,108,204,108,204,45"/>
+<area shape="rect" id="Node000004" href="$structinfix__type.html" title="The central structure for describing any data type in the FFI system." alt="" coords="301,5,387,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="319,41,224,110,221,106,316,37"/>
 </map>

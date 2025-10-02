@@ -72,17 +72,17 @@ $(function() {
   <div class="headertitle"><div class="title">FFI Signature Format Specification v1.0</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md162"></a> </p>
-<h2><a class="anchor" id="autotoc_md163"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md164"></a> </p>
+<h2><a class="anchor" id="autotoc_md165"></a>
 Part 1: Introduction</h2>
-<h3><a class="anchor" id="autotoc_md164"></a>
+<h3><a class="anchor" id="autotoc_md166"></a>
 1.1 The Challenge of Interoperability</h3>
 <p>In modern software development, it is rare for a system to be built in a single programming language. High-performance libraries are often written in C, C++, or Rust, while applications are built in Python, C#, Java, or JavaScript. The bridge between these worlds is the Foreign Function Interface (FFI). An FFI allows code written in one language to call functions and manipulate data structures defined in another.</p>
 <p>The core challenge of any FFI is establishing a precise, unambiguous contract between the caller and the callee. Both sides must agree on the exact size, alignment, and representation of every piece of data. Failure to do so results in stack corruption, crashes, and security vulnerabilities.</p>
-<h3><a class="anchor" id="autotoc_md165"></a>
+<h3><a class="anchor" id="autotoc_md167"></a>
 1.2 The Limitations of C Declarations</h3>
 <p>For decades, the de facto standard for this contract has been the C header file. However, C's declaration syntax, while powerful, is notoriously difficult for both humans and machines to parse. It requires a complex "spiral rule" to decipher, is filled with ambiguity, and often hides the true memory layout of data. A declaration like <code>void (*(*f[])())()</code> is a testament to this complexity, being nearly unreadable while describing a valid type.</p>
-<h3><a class="anchor" id="autotoc_md166"></a>
+<h3><a class="anchor" id="autotoc_md168"></a>
 1.3 Our Solution: A Human-First Signature System</h3>
 <p>This document specifies a new FFI signature format designed from the ground up to solve these problems. It is a concise, string-based representation of C types and function signatures, built on three core principles:</p>
 <ol type="1">
@@ -90,7 +90,7 @@ Part 1: Introduction</h2>
 <li><b>Unambiguous and Consistent:</b> The grammar is designed to be parsed linearly (left-to-right) without the precedence battles and ambiguities of C's syntax. A given symbol or structure has a single, consistent meaning.</li>
 <li><b>Developer-Centric Type System:</b> It provides two tiers of types: abstract C-style keywords for platform portability, and explicit fixed-width keywords for when precise memory layout is paramount.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md167"></a>
+<h3><a class="anchor" id="autotoc_md169"></a>
 1.4 A Stateless, Composable Core</h3>
 <p>A key architectural principle of this specification is that the core FFI library remains <b>stateless</b>. The FFI's responsibility is to parse a complete, self-contained signature string and prepare a function call. It does not maintain a global type registry.</p>
 <p>This design empowers the user. The management of named types is handled by the user or a higher-level binding generator, typically through a simple dictionary or map. This allows for maximum flexibility, composability, and thread-safety. A user can maintain separate type registries for different libraries and compose them as needed. The process is simple:</p>
@@ -102,10 +102,10 @@ Part 1: Introduction</h2>
 </ol>
 <p>This separation of concerns—type management vs. call invocation—is a cornerstone of this design's robustness.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md168"></a>
+<h1><a class="anchor" id="autotoc_md170"></a>
 Part 2: The Type System Reference</h1>
 <p>The signature system is composed of primitive types, type constructors, composite data structures, and function types.</p>
-<h2><a class="anchor" id="autotoc_md169"></a>
+<h2><a class="anchor" id="autotoc_md171"></a>
 2.1 Tier 1: Abstract C Types</h2>
 <p>These keywords represent standard C types whose size can vary by platform. The FFI implementation is responsible for resolving them to the correct size and alignment for the target ABI. Use these for portable bindings to standard C libraries.</p>
 <table class="markdownTable">
@@ -139,7 +139,7 @@ Part 2: The Type System Reference</h1>
 <td class="markdownTableBodyLeft"><code>double</code>   </td><td class="markdownTableBodyLeft">64 bits   </td><td class="markdownTableBodyLeft"><code>double</code>   </td><td class="markdownTableBodyLeft"><code>f64</code>   </td><td class="markdownTableBodyLeft"><code>ctypes.c_double</code>   </td><td class="markdownTableBodyLeft">A 64-bit double-precision floating-point number.   </td></tr>
 </table>
 <p>See <a href="https://en.wikipedia.org/wiki/Comparison_of_programming_languages_(basic_instructions)">https://en.wikipedia.org/wiki/Comparison_of_programming_languages_(basic_instructions)</a> for more languages to compare against.</p>
-<h2><a class="anchor" id="autotoc_md170"></a>
+<h2><a class="anchor" id="autotoc_md172"></a>
 2.2 Tier 2: Explicit Fixed-Width Types</h2>
 <p>These keywords are used when the exact size of a type is known and required. This is essential for network protocols, file formats, and fixed-layout APIs.</p>
 <table class="markdownTable">
@@ -164,7 +164,7 @@ Part 2: The Type System Reference</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>float128</code>   </td><td class="markdownTableBodyLeft"><code>long double</code> (PPC/SPARC)   </td><td class="markdownTableBodyLeft">128 bits   </td><td class="markdownTableBodyLeft">A 128-bit quadruple-precision float.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md171"></a>
+<h2><a class="anchor" id="autotoc_md173"></a>
 2.3 Advanced Numeric and Vector Types</h2>
 <p>These are defined for forward compatibility in high-performance computing.</p>
 <table class="markdownTable">
@@ -183,7 +183,7 @@ Part 2: The Type System Reference</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><b>Opaque Vector</b>   </td><td class="markdownTableBodyLeft"><code>v&lt;bits&gt;</code>   </td><td class="markdownTableBodyLeft">N/A   </td><td class="markdownTableBodyLeft">A fallback for rare cases where a SIMD value's element types are unknown.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md172"></a>
+<h2><a class="anchor" id="autotoc_md174"></a>
 2.4 Type Constructors and Composite Structures</h2>
 <p>A key design principle is the distinction between types defined by a <b>body</b> (<code>struct</code>, <code>union</code>) and types that are semantic <b>aliases</b> (<code>enum</code>).</p>
 <table class="markdownTable">
@@ -214,9 +214,9 @@ Part 2: The Type System Reference</h1>
 <td class="markdownTableBodyLeft"><b>Annotations</b>   </td><td class="markdownTableBodyLeft"><code>"name" &lt;type_or_signature&gt;</code>   </td><td class="markdownTableBodyLeft">Optional string literal prefixes that provide additional ABI details. Standardized annotations include <code>"stdcall"</code>, <code>"cdecl"</code>, and <code>"fastcall"</code>. Interpretation of other annotations is implementation-defined.   </td></tr>
 </table>
 <hr  />
-<h2><a class="anchor" id="autotoc_md173"></a>
+<h2><a class="anchor" id="autotoc_md175"></a>
 Part 3: Examples, Best Practices, and Usage</h2>
-<h3><a class="anchor" id="autotoc_md174"></a>
+<h3><a class="anchor" id="autotoc_md176"></a>
 3.1 Syntax Showcase</h3>
 <p>This table provides a wide variety of examples to demonstrate the expressiveness and clarity of the signature format.</p>
 <table class="markdownTable">
@@ -277,7 +277,7 @@ Part 3: Examples, Best Practices, and Usage</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>v[4:double]</code>   </td><td class="markdownTableBodyLeft">A 256-bit SIMD vector containing four 64-bit doubles (e.g., AVX <code>__m256d</code>). Requires AVX support to be enabled.   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md175"></a>
+<h3><a class="anchor" id="autotoc_md177"></a>
 3.2 Architectural Pattern: Define and Use</h3>
 <p>This example demonstrates the "define once, use by reference" pattern that the stateless FFI architecture enables.</p>
 <ul>
@@ -297,7 +297,7 @@ Part 3: Examples, Best Practices, and Usage</h2>
 </ul>
 </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md176"></a>
+<h3><a class="anchor" id="autotoc_md178"></a>
 3.3 Common Pitfalls and Solutions</h3>
 <ol type="1">
 <li><b>Pitfall: <code>long double</code> Ambiguity</b><ul>
@@ -311,19 +311,19 @@ Part 3: Examples, Best Practices, and Usage</h2>
 </ul>
 </li>
 </ol>
-<h3><a class="anchor" id="autotoc_md177"></a>
+<h3><a class="anchor" id="autotoc_md179"></a>
 3.4 Benefits for Tooling and Mental Modeling</h3>
 <ul>
 <li><b>Introspection:</b> This format is a machine-readable schema. A tool can parse <code>!{id:uint16, data:[16:uint8]}</code> and instantly calculate its size, determine field offsets, generate GUIs, or create safe, high-level object bindings in the host language.</li>
 <li><b>Mental Model:</b> The linear, left-to-right syntax allows a developer to reason about complex C types without cognitive overhead. The signature <code>*([16:*{...}])</code> is read simply as "a pointer to an array of 16 pointers to a struct." This replaces the error-prone "[spiral rule](https://c-faq.com/decl/spiral.anderson.html)" of C with a simple, declarative description of the type.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md178"></a>
+<h1><a class="anchor" id="autotoc_md180"></a>
 Part 4: Technical Specification and Design Rationale</h1>
-<h3><a class="anchor" id="autotoc_md179"></a>
+<h3><a class="anchor" id="autotoc_md181"></a>
 4.1 Whitespace and Comments</h3>
 <p>Insignificant whitespace (spaces, tabs, newlines) is permitted between any two tokens and should be ignored by a compliant parser. Comments begin with a hash symbol (<code>#</code>) and continue to the end of the line.</p>
-<h3><a class="anchor" id="autotoc_md180"></a>
+<h3><a class="anchor" id="autotoc_md182"></a>
 4.2 EBNF Grammar</h3>
 <p>This Extended Backus-Naur Form grammar formally defines the signature format.</p>
 <div class="fragment"><div class="line">signature           ::= function_type | value_type</div>
@@ -353,14 +353,14 @@ Part 4: Technical Specification and Design Rationale</h1>
 <div class="line"> </div>
 <div class="line">Identifier          ::= [a-zA-Z_] [a-zA-Z0-9_]*</div>
 <div class="line">Integer             ::= [0-9]+</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md181"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md183"></a>
 4.3 Design Rationale: Why This Syntax?</h3>
 <ol type="1">
 <li><b>The Two-Tier Type System over a Single-Character Encoding:</b> Our two-tier system (<code>int</code> vs. <code>int32</code>) directly maps to the developer's intent: "Do I want this to be portable or do I need a specific layout?" This is more explicit and readable than a machine-first encoding like the Itanium ABI's (<code>i</code> vs. <code>x</code>).</li>
 <li><b>Universal Prefix Modifiers and Delimited Constructors:</b> C's syntax complexity stems from the precedence battle between prefix <code>*</code> and postfix <code>[]</code> and <code>()</code>. Our system uses a pure prefix approach for pointers (<code>*</code>) and clear delimiter-based approaches for all other composites, eliminating ambiguity and allowing for simple, linear parsing.</li>
 <li><b>Body vs. Alias Principle:</b> The syntax distinguishes between types defined by a body and types that are semantic aliases. Types with a member list (<code>struct</code>, <code>union</code>) use a full keyword when named. Types that are aliases for an underlying type (<code>enum</code>) use a concise symbolic constructor (<code>e</code>).</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md182"></a>
+<h3><a class="anchor" id="autotoc_md184"></a>
 4.4 Comparison with Other Systems</h3>
 <ul>
 <li><b>vs. Itanium C++ ABI:</b> Itanium is a "write-only" format designed for linkers. It is maximally compact but unreadable. Our system is designed for humans to read and write, making a deliberate trade-off in verbosity for a massive gain in clarity.</li>
@@ -372,7 +372,7 @@ Part 4: Technical Specification and Design Rationale</h1>
 </ul>
 </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md183"></a>
+<h3><a class="anchor" id="autotoc_md185"></a>
 4.5 Rationale for Advanced Data Types</h3>
 <ol type="1">
 <li><b>SIMD Vectors:</b> The <code>v[&lt;N&gt;:&lt;type&gt;]</code> syntax was adopted because it is highly descriptive. The leading <code>v</code> acts as a crucial flag to the FFI implementation, indicating that this is a value destined for a SIMD register. The array-like portion provides the rich metadata needed for both ABI correctness and high-level binding generation.</li>
