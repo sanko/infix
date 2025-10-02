@@ -75,7 +75,13 @@ typedef void (*infix_internal_dispatch_callback_fn)(infix_reverse_t *, void *, v
  * to keep it opaque in the public API (`infix.h`).
  */
 struct infix_forward_t {
-    infix_executable_t exec;
+    infix_arena_t * arena;     ///< The arena that owns all the type metadata for this trampoline.
+    infix_executable_t exec;   ///< Handle to the executable JIT-compiled stub.
+    infix_type * return_type;  ///< The infix_type of the trampoline's return value.
+    infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
+    size_t num_args;           ///< The total number of arguments.
+    size_t num_fixed_args;     ///< The number of non-variadic arguments.
+    bool is_variadic;          ///< True if the function signature is variadic.
 };
 
 /**
@@ -85,6 +91,7 @@ struct infix_forward_t {
  * It is intentionally opaque in the public API.
  */
 struct infix_reverse_t {
+    infix_arena_t * arena;     ///< The arena that owns all the type metadata for this callback.
     infix_executable_t exec;   ///< Handle to the executable JIT-compiled stub.
     infix_type * return_type;  ///< The infix_type of the callback's return value.
     infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.

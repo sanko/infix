@@ -372,7 +372,7 @@ sub compile_and_run_tests {
             next;
         }
         my @source_files = ($test_c);
-        warn '$config{arch}: '. $config{arch};
+        warn '$config{arch}: ' . $config{arch};
         my @local_cflags = (
             @{ $config->{cflags} }, (
                 $config{arch} eq 'x64'       ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :

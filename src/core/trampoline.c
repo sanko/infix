@@ -244,6 +244,78 @@ static bool _is_type_graph_resolved(infix_type * type) {
         return true;
     }
 }
+/**
+ * @internal
+ * @brief Recursively performs a deep copy of an infix_type object graph into a destination arena.
+ * @details This function is the core of making trampolines self-contained. It walks a type
+ *          graph and duplicates it in the destination arena. It correctly handles static
+ *          primitive types by not copying them.
+ * @param dest_arena The arena to copy the type graph into.
+ * @param src_type The source type to copy.
+ * @return A pointer to the newly-copied type in the destination arena, or the original
+ *         pointer if it was a non-arena-allocated static primitive. Returns NULL on failure.
+ */
+static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type) {
+    if (src_type == NULL)
+        return NULL;
+
+    // If the source type is a static primitive (not from an arena), we don't need to copy it.
+    // We can just return the original pointer.
+    if (!src_type->is_arena_allocated)
+        return (infix_type *)src_type;
+
+    // Allocate space for the new type in the destination arena and copy the base struct.
+    infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
+    if (dest_type == NULL) {
+        return NULL;
+    }
+    memcpy(dest_type, src_type, sizeof(infix_type));
+
+    // Recursively copy any nested types based on the category.
+    switch (src_type->category) {
+    case INFIX_TYPE_POINTER:
+        dest_type->meta.pointer_info.pointee_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.pointer_info.pointee_type);
+        break;
+    case INFIX_TYPE_ARRAY:
+        dest_type->meta.array_info.element_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.array_info.element_type);
+        break;
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        if (src_type->meta.aggregate_info.num_members > 0) {
+            size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
+            dest_type->meta.aggregate_info.members =
+                infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
+            if (dest_type->meta.aggregate_info.members == NULL)
+                return NULL;
+
+            memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+
+            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i)
+                dest_type->meta.aggregate_info.members[i].type =
+                    _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
+        }
+        break;
+    // Other cases like ENUM, COMPLEX, VECTOR, etc. would follow the same pattern.
+    case INFIX_TYPE_ENUM:
+        dest_type->meta.enum_info.underlying_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.enum_info.underlying_type);
+        break;
+    case INFIX_TYPE_COMPLEX:
+        dest_type->meta.complex_info.base_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.complex_info.base_type);
+        break;
+    case INFIX_TYPE_VECTOR:
+        dest_type->meta.vector_info.element_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.vector_info.element_type);
+        break;
+    default:
+        // Primitives, Void, Named References (names are arena-allocated strings) are shallow copied.
+        break;
+    }
+    return dest_type;
+}
 
 /**
  * @brief Generates a forward-call trampoline for a given function signature.
@@ -456,15 +528,33 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
 
     context = (infix_reverse_t *)prot.rw_ptr;
     infix_memset(context, 0, context_alloc_size);
+
+    // Create a new persistent arena owned by the context.
+    context->arena = infix_arena_create(8192);  // 8KB should be enough for most type graphs.
+    if (context->arena == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+
     context->protected_ctx = prot;
-    context->return_type = return_type;
-    context->arg_types = arg_types;
+    //~ context->return_type = return_type;
+    //~ context->arg_types = arg_types;
     context->num_args = num_args;
     context->num_fixed_args = num_fixed_args;
     context->is_variadic = (num_fixed_args < num_args);
     context->user_callback_fn = user_callback_fn;
     context->user_data = user_data;
     context->internal_dispatcher = infix_internal_dispatch_callback_fn_impl;
+
+    // Deep copy all type information into the context's own arena.
+    context->return_type = _copy_type_graph_to_arena(context->arena, return_type);
+    context->arg_types = infix_arena_alloc(context->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+    if (num_args > 0 && context->arg_types == NULL) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+    for (size_t i = 0; i < num_args; ++i)
+        context->arg_types[i] = _copy_type_graph_to_arena(context->arena, arg_types[i]);
 
     // The user's callback handler expects the `infix_reverse_t*` context
     // as its FIRST argument. We must create a new argument type list that reflects this.
@@ -481,8 +571,8 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
 
     // Now, copy and promote the original user-defined arguments into the rest of the array.
     if (context->is_variadic) {
-        for (size_t i = 0; i < num_args; ++i) {
-            infix_type * current_type = arg_types[i];
+        for (size_t i = 0; i < context->num_args; ++i) {
+            infix_type * current_type = context->arg_types[i];
             if (i >= num_fixed_args) {  // Apply default argument promotions for variadic part.
                 if (is_float(current_type))
                     callback_arg_types[i + 1] = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
@@ -503,8 +593,11 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
 
     // Generate the cached forward trampoline with the *correct, prepended* argument list.
     // The total number of arguments and fixed arguments are each increased by one.
-    status = infix_forward_create_manual(
-        &context->cached_forward_trampoline, return_type, callback_arg_types, num_args + 1, num_fixed_args + 1);
+    status = infix_forward_create_manual(&context->cached_forward_trampoline,
+                                         context->return_type,
+                                         callback_arg_types,
+                                         num_args + 1,
+                                         num_fixed_args + 1);
 
     if (status != INFIX_SUCCESS)
         goto cleanup;
@@ -602,6 +695,8 @@ void infix_reverse_destroy(infix_reverse_t * reverse_trampoline) {
         return;
     if (reverse_trampoline->cached_forward_trampoline)
         infix_forward_destroy(reverse_trampoline->cached_forward_trampoline);
+    if (reverse_trampoline->arena)
+        infix_arena_destroy(reverse_trampoline->arena);
     infix_executable_free(reverse_trampoline->exec);
     infix_protected_free(reverse_trampoline->protected_ctx);
 }

@@ -862,3 +862,8 @@ c23_nodiscard const char * infix_type_get_arg_name(const infix_type *, size_t);
  */
 c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type *, size_t);
 /** @} */
+
+
+c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t *);
+c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t *);
+c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t *, size_t);

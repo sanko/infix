@@ -58,7 +58,7 @@ for _, test_file in ipairs(os.files("t/*.c")) do
 
         -- https://xmake.io/api/description/project-target.html#add-vectorexts
         -- v[4:double] support requires avx2
-        add_vectorexts("avx", "avx2")
+        add_vectorexts("all")
         --~ add_vectorexts("avx512") TODO
 
         -- Add platform-specific system libraries for tests
