@@ -185,3 +185,6 @@
 #endif
 #endif
 #endif
+
+/* @brief The amount of overhead we add to our forward trampoline's arena. In bytes. */
+#define INFIX_TRAMPOLINE_HEADROOM 128

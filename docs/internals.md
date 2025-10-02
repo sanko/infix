@@ -531,6 +531,22 @@ Three high-level principles guide the library's development:
 
 **The Trade-off:** This approach adds a single layer of indirection (a function pointer call) in the *trampoline generation* code and makes `trampoline.c` slightly more verbose. This has zero impact on the performance of the final JIT-compiled code and is a tiny price to pay for the massive strategic advantage of comprehensive, multi-platform testing in a single environment.
 
+### The Self-Contained Object Model: Trading Memory for Safety
+
+**The Decision:** Both `infix_forward_t` and `infix_reverse_t` are designed as **self-contained objects**. When a trampoline is created, it performs a **deep copy** of all the `infix_type` metadata it needs into its own private, internal memory arena.
+
+**The Rationale:** This architecture is a deliberate trade-off that prioritizes memory safety and API simplicity above all else.
+
+1.  **Elimination of Use-After-Free:** The primary motivation is to solve a critical dangling pointer problem. Without this model, a user would create types in a temporary arena, create a trampoline that points to them, and then destroy the arena, leaving the trampoline in a dangerously invalid state. By making an internal copy, the trampoline's lifetime is completely decoupled from the user's temporary data. The user can and should destroy their arena immediately after creation.
+2.  **Enabling Safe Introspection:** The introspection API (`infix_forward_get_arg_type`, etc.) would not be possible without this model. It can only work if the type information is guaranteed to be valid for the entire lifetime of the trampoline handle.
+3.  **Simplified Memory Management for the User:** The user's responsibility is clear: they manage their own arenas for type creation, and they manage the trampoline handles. The two are independent.
+
+**The Trade-off: Memory Overhead**
+
+The cost of this safety is a higher memory footprint per trampoline. Each handle now contains its own private arena (which automatically adjusts to usage) to store the type graph. For several hundred trampolines, this can add a few megabytes to the application's memory usage.
+
+This is considered an acceptable cost for the vast majority of applications (desktop, server, language runtimes) where the benefit of guaranteed memory safety far outweighs the modest increase in RAM usage. For highly constrained embedded environments, future versions of the library may offer a "tuned" creation function that allows the user to specify a smaller internal arena size.
+
 ---
 
 ## Design Philosophy: A Stable Public API

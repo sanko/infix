@@ -61,10 +61,10 @@
  *     into five distinct steps for clarity and maintainability.
  */
 
+#include "abi_arm64_common.h"
+#include "abi_arm64_emitters.h"
 #include "common/infix_internals.h"
 #include "common/utility.h"
-#include <abi_arm64_common.h>
-#include <abi_arm64_emitters.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -174,6 +174,9 @@ static infix_type * get_hfa_base_type(infix_type * type) {
  * @return `true` if all constituent members of `type` are of `base_type`, `false` otherwise.
  */
 static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, size_t * field_count) {
+    // A generated type can have a NULL member. This cannot be an HFA.
+    if (type == nullptr)
+        return false;
     // Limit the number of fields we are willing to inspect for a single aggregate.
     if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY)
         return false;

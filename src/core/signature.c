@@ -794,25 +794,25 @@ static infix_type * parse_type(parser_state * state) {
         if (*state->p != '[') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         skip_whitespace(state);
         infix_type * base_type = parse_type(state);
         if (!base_type) {
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         skip_whitespace(state);
         if (*state->p != ']') {
             state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
             state->depth--;
-            return NULL;
+            return nullptr;
         }
         state->p++;
         if (infix_type_create_complex(state->arena, &result_type, base_type) != INFIX_SUCCESS) {
             state->last_error = INFIX_ERROR_ALLOCATION_FAILED;
-            result_type = NULL;
+            result_type = nullptr;
         }
     }
     else if (*state->p == 'v' && state->p[1] == '[') {
@@ -1271,7 +1271,7 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
     // Bridge: The manual API expects an array of `infix_type*`. We must extract
     // the type pointers from our parsed arguments to build this temporary array.
     infix_type ** arg_types =
-        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : NULL;
+        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
     if (num_args > 0 && !arg_types) {
         infix_arena_destroy(arena);
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -1279,10 +1279,13 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
     for (size_t i = 0; i < num_args; ++i)
         arg_types[i] = args[i].type;
 
-    // Then, pass the resulting types to the manual creation function.
-    status = infix_forward_create_manual(out_trampoline, ret_type, arg_types, num_args, num_fixed);
+    //  Instead of calling the public manual API, we now need
+    // a way to tell the creation function about our temporary arena so it can
+    // calculate the exact memory needed. Let's assume an internal function
+    // _infix_forward_create_from_parsed_arena exists for this.
+    status = _infix_forward_create_internal(out_trampoline, ret_type, arg_types, num_args, num_fixed, arena);
 
-    // Finally, destroy the temporary arena used for parsing.
+    // The temporary arena has now been measured and its types copied. It can be safely destroyed.
     infix_arena_destroy(arena);
     return status;
 }
@@ -1316,7 +1319,7 @@ c23_nodiscard infix_status infix_reverse_create(infix_reverse_t ** out_context,
 
     // Bridge logic, same as in infix_forward_create.
     infix_type ** arg_types =
-        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : NULL;
+        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
     if (num_args > 0 && !arg_types) {
         infix_arena_destroy(arena);
         return INFIX_ERROR_ALLOCATION_FAILED;

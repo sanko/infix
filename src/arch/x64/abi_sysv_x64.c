@@ -153,6 +153,9 @@ const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
  */
 static bool classify_recursive(
     infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
+    // A recursive call can be made with a NULL type (e.g., from a malformed array from fuzzer).
+    if (type == nullptr)
+        return false;  // Terminate recusion path.
     // Abort classification if the type is excessively complex or too deep. Give up and pass in memory.
     if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY || depth > MAX_CLASSIFY_DEPTH) {
         classes[0] = MEMORY;
@@ -209,6 +212,9 @@ static bool classify_recursive(
         return false;
     }
     if (type->category == INFIX_TYPE_ARRAY) {
+        if (type->meta.array_info.element_type == nullptr)
+            return false;
+
         // If the array elements have no size, iterating over them is pointless
         // and can cause a timeout if num_elements is large, as the offset never advances.
         // We only need to classify the element type once at the starting offset.
@@ -239,6 +245,10 @@ static bool classify_recursive(
     }
     if (type->category == INFIX_TYPE_COMPLEX) {
         infix_type * base = type->meta.complex_info.base_type;
+        // A zero-sized base type would cause infinite recursion.
+        // Treat this as a malformed type and stop classification.
+        if (base == nullptr || base->size == 0)
+            return false;
         // A complex number is just like a struct { base_type real; base_type imag; }
         // So we classify the first element at offset 0.
         if (classify_recursive(base, offset, classes, depth + 1, field_count))
@@ -249,6 +259,12 @@ static bool classify_recursive(
         return false;
     }
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION) {
+        // A generated type can have num_members > 0 but a NULL members pointer.
+        // This is invalid and must be passed in memory.
+        if (type->meta.aggregate_info.members == nullptr) {
+            classes[0] = MEMORY;
+            return true;
+        }
         // Recursively classify each member of the struct/union.
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             // Check count *before* each recursive call inside the loop.
@@ -256,7 +272,15 @@ static bool classify_recursive(
                 classes[0] = MEMORY;
                 return true;
             }
+
             infix_struct_member * member = &type->meta.aggregate_info.members[i];
+
+            // A generated type can have a NULL member type.
+            // This is invalid, and the aggregate must be passed in memory.
+            if (member->type == nullptr) {
+                classes[0] = MEMORY;
+                return true;
+            }
             size_t member_offset = offset + member->offset;
             // If this member starts at or after the 16-byte boundary,
             // it cannot influence register classification, so we can skip it.

@@ -114,6 +114,9 @@ int main() {
     // Now 'point_type' can be used to generate a trampoline...
 
     // 4. Destroy the arena to free the 'point_type' and all other allocations.
+    // Note: Once a trampoline is created with these types, it is safe to destroy
+    // this arena. The trampoline handle now owns its own internal copy of all
+    // necessary type information.
     infix_arena_destroy(arena);
     return 0;
 }

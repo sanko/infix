@@ -208,7 +208,7 @@ c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
 c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
                                                      infix_type ** out_type,
                                                      infix_type * base_type) {
-    if (out_type == NULL || base_type == NULL)
+    if (out_type == nullptr || base_type == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     // A complex number must be based on a float or double.
@@ -216,8 +216,8 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
-    if (type == NULL) {
-        *out_type = NULL;
+    if (type == nullptr) {
+        *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
@@ -762,4 +762,36 @@ c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func
     if (index >= func_type->meta.func_ptr_info.num_fixed_args)
         return nullptr;
     return func_type->meta.func_ptr_info.args[index].type;
+}
+
+/**
+ * @brief Retrieves the number of arguments for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return The total number of arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t * trampoline) {
+    return trampoline ? trampoline->num_args : 0;
+}
+
+/**
+ * @brief Retrieves the return type for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
+ */
+c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t * trampoline) {
+    return trampoline ? trampoline->return_type : nullptr;
+}
+
+/**
+ * @brief Retrieves the type of a specific argument for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         handle is `nullptr` or the index is out of bounds.
+ */
+c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t * trampoline, size_t index) {
+    if (!trampoline || index >= trampoline->num_args) {
+        return nullptr;
+    }
+    return trampoline->arg_types[index];
 }

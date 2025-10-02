@@ -81,7 +81,6 @@ struct infix_forward_t {
     infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
     size_t num_args;           ///< The total number of arguments.
     size_t num_fixed_args;     ///< The number of non-variadic arguments.
-    bool is_variadic;          ///< True if the function signature is variadic.
 };
 
 /**
@@ -590,3 +589,18 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type *
  *       object graph will be freed when `infix_arena_destroy` is called.
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
+
+/**
+ * @internal
+ * @brief The internal core logic for creating a forward trampoline.
+ * @details This function contains the full logic for JIT-compiling a forward trampoline.
+ *          It accepts an optional `source_arena` parameter. If provided, it measures the
+ *          memory used by the source types and creates a new, tightly-sized arena for the
+ *          trampoline handle. This drastically reduces memory overhead. If `source_arena` is
+ *          NULL, it falls back to a default size.
+ * @param source_arena An optional pointer to the arena from which the `infix_type` objects
+ *                     were created. Used for memory optimization.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status
+_infix_forward_create_internal(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, infix_arena_t *);

@@ -49,7 +49,7 @@ typedef union {
 typedef int64_t TestArray[10];
 
 TEST {
-    plan(4);  // One subtest per major API area.
+    plan(5);
 
     subtest("infix_type_create_struct API validation") {
         plan(3);
@@ -170,6 +170,39 @@ TEST {
         status = infix_type_create_enum(arena, &bad_enum_type, bad_underlying_type);
         ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_enum rejects non-integer underlying type");
 
+        infix_arena_destroy(arena);
+    }
+
+    subtest("Forward trampoline introspection API") {
+        plan(7);
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // Create a non-trivial signature to test against.
+        infix_type * ret_type = infix_type_create_pointer();
+        infix_type * arg1_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_struct_member members[] = {{"d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 0}};
+        infix_type * arg2_type = nullptr;
+        (void)infix_type_create_struct(arena, &arg2_type, members, 1);
+        infix_type * arg_types[] = {arg1_type, arg2_type};
+
+        infix_forward_t * trampoline = nullptr;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        ok(status == INFIX_SUCCESS && trampoline != nullptr, "Trampoline created for introspection test");
+
+        if (trampoline) {
+            ok(infix_forward_get_num_args(trampoline) == 2, "get_num_args returns correct count");
+            ok(infix_forward_get_return_type(trampoline)->category == INFIX_TYPE_POINTER, "get_return_type is correct");
+            ok(infix_forward_get_arg_type(trampoline, 0)->category == INFIX_TYPE_PRIMITIVE,
+               "get_arg_type(0) is correct");
+            ok(infix_forward_get_arg_type(trampoline, 1)->category == INFIX_TYPE_STRUCT, "get_arg_type(1) is correct");
+            ok(infix_forward_get_arg_type(trampoline, 99) == nullptr,
+               "get_arg_type returns nullptr for out-of-bounds index");
+            ok(infix_forward_get_num_args(nullptr) == 0, "get_num_args handles nullptr input");
+        }
+        else
+            skip(6, "Skipping introspection checks due to creation failure");
+
+        infix_forward_destroy(trampoline);
         infix_arena_destroy(arena);
     }
 }

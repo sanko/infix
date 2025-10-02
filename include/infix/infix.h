@@ -563,6 +563,10 @@ c23_nodiscard infix_status infix_type_create_vector(infix_arena_t *, infix_type 
  * must equal `num_args`.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  * @note The returned trampoline must be freed with `infix_forward_destroy`.
+ * @note **Memory Ownership:** The generated `infix_forward_t` is a self-contained
+ *       object. It performs a deep copy of the provided `infix_type` objects into
+ *       its own internal memory arena. The caller is free to destroy the arena
+ *       used to create the initial types immediately after this function returns.
  */
 c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t);
 
@@ -599,18 +603,28 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix
  * @param user_data A user-defined pointer for passing state to the handler.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  * @note The returned context must be freed with `infix_reverse_destroy`.
+ * @note **Memory Ownership:** The generated `infix_forward_t` is a self-contained
+ *       object. It performs a deep copy of the provided `infix_type` objects into
+ *       its own internal memory arena. The caller is free to destroy the arena
+ *       used to create the initial types immediately after this function returns.
  */
 c23_nodiscard infix_status
 infix_reverse_create_manual(infix_reverse_t **, infix_type *, infix_type **, size_t, size_t, void *, void *);
 
 /**
  * @brief Frees a forward trampoline and its associated executable memory.
+ * @details This function safely cleans up all resources associated with a forward
+ *          trampoline, including the JIT-compiled code and the internal arena
+ *          that stores its type metadata.
  * @param trampoline The trampoline to free. Can be `nullptr`.
  */
 void infix_forward_destroy(infix_forward_t *);
 
 /**
  * @brief Frees a reverse trampoline, its JIT-compiled stub, and its context.
+ * @details This function safely cleans up all resources associated with a reverse
+ *          trampoline, including the JIT-compiled code, the cached forward trampoline,
+ *          and the internal arena that stores its type metadata.
  * @param reverse_trampoline The reverse trampoline to free. Can be `nullptr`.
  */
 void infix_reverse_destroy(infix_reverse_t *);
@@ -863,7 +877,34 @@ c23_nodiscard const char * infix_type_get_arg_name(const infix_type *, size_t);
 c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type *, size_t);
 /** @} */
 
-
+/**
+ * @defgroup forward_introspection_api Forward Trampoline Introspection API
+ * @brief Functions for safely querying the signature of a forward trampoline.
+ * @details These functions allow you to inspect the argument and return types that
+ *          a forward trampoline was created with. This is useful for bindings that
+ *          need to verify or dynamically handle function signatures.
+ * @{
+ */
+/**
+ * @brief Retrieves the number of arguments for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return The total number of arguments. Returns `0` if the handle is `nullptr`.
+ */
 c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t *);
+
+/**
+ * @brief Retrieves the return type for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
+ */
 c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t *);
+
+/**
+ * @brief Retrieves the type of a specific argument for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         handle is `nullptr` or the index is out of bounds.
+ */
 c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t *, size_t);
+/** @} */
