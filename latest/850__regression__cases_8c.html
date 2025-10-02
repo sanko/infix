@@ -143,6 +143,7 @@ Classes</h2></td></tr>
 Enumerations</h2></td></tr>
 <tr class="memitem:a069f203eb4bd59c4b6e646ea3cef8c26" id="r_a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26">fuzzer_target_t</a> { <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3">TARGET_TYPE_GENERATOR</a>
 , <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883">TARGET_SIGNATURE_PARSER</a>
+, <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a">TARGET_TRAMPOLINE_GENERATOR</a>
  }</td></tr>
 <tr class="separator:a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -209,6 +210,8 @@ How to Add a New Regression Test</h3>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3" name="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3"></a>TARGET_TYPE_GENERATOR&#160;</td><td class="fielddoc"><p>Tests the <code>generate_random_type</code> function (for timeouts/crashes in Core API). </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883" name="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883"></a>TARGET_SIGNATURE_PARSER&#160;</td><td class="fielddoc"><p>Tests the <code>infix_type_from_signature</code> function (for bugs in the Signature API). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a" name="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a"></a>TARGET_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"><p>Tests <code>infix_*_create_manual</code> functions. </p>
 </td></tr>
 </table>
 

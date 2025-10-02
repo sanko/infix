@@ -1,22 +1,22 @@
 <map id="src/arch/aarch64/abi_arm64_emitters.h" name="src/arch/aarch64/abi_arm64_emitters.h">
-<area shape="rect" id="Node000001" title="Declares the internal helper functions for emitting AArch64 machine code." alt="" coords="211,5,364,45"/>
-<area shape="rect" id="Node000002" href="$infix__internals_8h_source.html" title=" " alt="" coords="94,93,281,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,48,215,87,212,82,261,43"/>
-<area shape="rect" id="Node000009" href="$abi__arm64__common_8h.html" title="Common definitions for the AArch64 (ARM64) architecture." alt="" coords="305,93,472,119"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="313,43,364,82,361,87,310,48"/>
-<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="5,167,175,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="173,121,119,160,116,156,170,117"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="199,167,293,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="199,117,230,155,226,158,195,121"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="91,313,174,339"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="201,195,135,216,108,228,92,242,87,256,91,272,111,302,107,305,86,274,82,256,88,238,105,224,133,211,199,189"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="209,313,283,339"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="261,191,285,223,293,244,291,266,281,287,269,305,264,301,277,284,286,265,287,245,280,226,256,194"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="353,240,424,265"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="270,190,354,231,352,236,268,194"/>
-<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="103,240,277,265"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="239,194,210,231,205,228,235,191"/>
-<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="183,267,153,304,149,301,178,264"/>
-<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="201,264,231,301,226,304,197,267"/>
-<area shape="poly" id="edge11_Node000009_Node000007" title=" " alt="" coords="391,119,391,226,386,226,386,119"/>
+<area shape="rect" id="Node000001" title="Declares the internal helper functions for emitting AArch64 machine code." alt="" coords="112,5,265,45"/>
+<area shape="rect" id="Node000002" href="$abi__arm64__common_8h.html" title="Common definitions for the AArch64 (ARM64) architecture." alt="" coords="5,93,172,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,48,116,87,113,82,163,43"/>
+<area shape="rect" id="Node000004" href="$infix__internals_8h_source.html" title=" " alt="" coords="197,93,383,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="215,43,265,82,262,87,212,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="93,240,164,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,118,124,226,119,227,89,120"/>
+<area shape="rect" id="Node000005" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="127,167,296,192"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="279,121,236,159,232,156,276,117"/>
+<area shape="rect" id="Node000006" href="$infix_8h.html" title="The main public header for the infix FFI library." alt="" coords="320,167,415,192"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="304,117,346,155,343,159,301,121"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="330,195,178,239,177,234,328,189"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="269,313,351,339"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="332,195,298,213,283,226,271,241,267,256,270,272,290,302,285,305,265,274,262,256,266,239,279,222,295,208,330,190"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="386,313,461,339"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="405,190,441,208,457,222,470,239,474,256,470,274,449,305,445,302,465,272,469,256,465,241,453,226,438,213,403,194"/>
+<area shape="rect" id="Node000009" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="280,240,455,265"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="370,192,370,226,365,226,365,192"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="360,267,330,304,326,301,356,264"/>
+<area shape="poly" id="edge11_Node000009_Node000008" title=" " alt="" coords="379,264,408,301,404,304,374,267"/>
 </map>
