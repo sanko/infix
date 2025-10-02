@@ -44,6 +44,76 @@
 #include <infix/infix.h>
 #include <math.h>  // For fabs
 
+/**
+ * @defgroup simd_macros SIMD Feature Detection Macros
+ * @brief Internal macros for compile-time detection of SIMD instruction set support.
+ * @details These macros are used to conditionally compile SIMD-specific code, such as
+ *          the inclusion of intrinsic headers (`<immintrin.h>`, `<arm_neon.h>`) and
+ *          the activation of tests that require specific hardware features. They are
+ *          for internal library use and are not part of the public API.
+ * @{
+ */
+/** @brief Can be defined by the user to disable all intrinsic-related code. */
+//~ #define INFIX_NO_INTRINSICS
+
+#if !defined(INFIX_NO_INTRINSICS)
+#if defined(__AVX2__) || (defined(_MSC_VER) && defined(__AVX__))
+/** @brief Defined if the target supports the AVX2 instruction set. */
+#define INFIX_ARCH_X86_AVX2
+#endif
+#if defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86) && defined(_M_IX86_FP) && (_M_IX86_FP >= 2))
+/** @brief Defined if the target supports SSE2. This is the baseline for x86-64. */
+#define INFIX_ARCH_X86_SSE2
+#endif
+#if defined(__ARM_NEON) || defined(_M_ARM64)
+/** @brief Defined if the target supports the ARM NEON instruction set. */
+#define INFIX_ARCH_ARM_NEON
+#endif
+#if defined(__ARM_FEATURE_SVE)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension (SVE). */
+#define INFIX_ARCH_ARM_SVE
+#endif
+#if defined(__ARM_FEATURE_SVE2)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension 2 (SVE2). */
+#define INFIX_ARCH_ARM_SVE2
+#endif
+#if defined(__riscv) && defined(__riscv_vector)
+#if ((defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 14) || (defined(__clang__) && __clang_major__ >= 19))
+/** @brief Defined if the target supports the RISC-V Vector Extension ('V'). */
+#define INFIX_ARCH_RISCV_RVV
+#endif
+#if defined(__ARM_NEON) || defined(_M_ARM64)
+/** @brief Defined if the target supports the ARM NEON instruction set. */
+#define INFIX_ARCH_ARM_NEON
+#endif
+#if defined(__ARM_FEATURE_SVE)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension (SVE). */
+#define INFIX_ARCH_ARM_SVE
+#endif
+#if defined(__ARM_FEATURE_SVE2)
+/** @brief Defined if the target supports the ARM Scalable Vector Extension 2 (SVE2). */
+#define INFIX_ARCH_ARM_SVE2
+#endif
+#endif
+#
+#if defined(INFIX_ARCH_X86_AVX2)
+#include <immintrin.h>
+#endif
+#if defined(INFIX_ARCH_X86_SSE2)
+#include <emmintrin.h>
+#elif defined(INFIX_ARCH_ARM_NEON)
+#include <arm_neon.h>
+#endif
+#if defined(INFIX_ARCH_ARM_SVE) || defined(INFIX_ARCH_ARM_SVE2)
+#include <arm_sve.h>
+#endif
+#if defined(INFIX_ARCH_RISCV_RVV)
+#include <riscv_vector.h>
+#endif
+#endif
+/** @} */  // end simd_macros
+
+
 // Platform-specific headers and functions for SIMD tests
 #if defined(INFIX_ARCH_X86_SSE2)
 #if defined(_MSC_VER)
@@ -363,8 +433,11 @@ TEST {
         infix_arena_t * arena = infix_arena_create(4096);
 
         // 1. Determine the vector size at RUNTIME. This is the key to SVE.
+        // Use svcntb() (count bytes) which is the canonical intrinsic for vector length.
+        // svlen_b() is often an alias but is less portable and can cause linker errors.
+        size_t vector_len_bytes = svcntb();
         size_t num_elements = svcntd();  // Count of 64-bit (double) elements.
-        note("Detected SVE vector width: %zu bits (%zu double elements).", svlen_b() * 8, num_elements);
+        note("Detected SVE vector width: %zu bits (%zu double elements).", vector_len_bytes * 8, num_elements);
 
         // 2. Create the infix_type for the dynamically sized vector.
         infix_type * sve_vector_type = nullptr;
