@@ -177,6 +177,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a3c72e817ab9600f1a22ea663b56d6ce1" id="r_a3c72e817ab9600f1a22ea663b56d6ce1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a3c72e817ab9600f1a22ea663b56d6ce1">emit_movsd_xmm_mem</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src_base, int32_t offset)</td></tr>
 <tr class="memdesc:a3c72e817ab9600f1a22ea663b56d6ce1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits an x86-64 <code>movsd xmm, [r64 + offset]</code> instruction.  <br /></td></tr>
 <tr class="separator:a3c72e817ab9600f1a22ea663b56d6ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa98fe3d0067efea2ecc616a6ef3e2976" id="r_aa98fe3d0067efea2ecc616a6ef3e2976"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aa98fe3d0067efea2ecc616a6ef3e2976">emit_vmovupd_ymm_mem</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src_base, int32_t offset)</td></tr>
+<tr class="memdesc:aa98fe3d0067efea2ecc616a6ef3e2976"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits <code>vmovupd ymm, [src_base + offset]</code> (load 256-bit AVX vector from memory).  <br /></td></tr>
+<tr class="separator:aa98fe3d0067efea2ecc616a6ef3e2976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b2a2a6c600f4053ad6c4d6b76fe98df" id="r_a5b2a2a6c600f4053ad6c4d6b76fe98df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a5b2a2a6c600f4053ad6c4d6b76fe98df">emit_vmovupd_mem_ymm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest_base, int32_t offset, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
+<tr class="memdesc:a5b2a2a6c600f4053ad6c4d6b76fe98df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits <code>vmovupd [dest_base + offset], ymm</code> (store 256-bit AVX vector to memory).  <br /></td></tr>
+<tr class="separator:a5b2a2a6c600f4053ad6c4d6b76fe98df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c26f297ecebc97b60ebc3852c1cca25" id="r_a5c26f297ecebc97b60ebc3852c1cca25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a5c26f297ecebc97b60ebc3852c1cca25">emit_movsxd_reg_mem</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src_base, int32_t offset)</td></tr>
 <tr class="memdesc:a5c26f297ecebc97b60ebc3852c1cca25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits an x86-64 <code>movsxd r64, [r/m32]</code> instruction.  <br /></td></tr>
 <tr class="separator:a5c26f297ecebc97b60ebc3852c1cca25"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -561,25 +567,29 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="abi__x64__emitters_8c_afbe0ce8d2a6b21fd4662133b077106c1_icgraph.png" border="0" usemap="#aabi__x64__emitters_8c_afbe0ce8d2a6b21fd4662133b077106c1_icgraph" alt=""/></div>
 <map name="aabi__x64__emitters_8c_afbe0ce8d2a6b21fd4662133b077106c1_icgraph" id="aabi__x64__emitters_8c_afbe0ce8d2a6b21fd4662133b077106c1_icgraph">
-<area shape="rect" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="257,203,364,228"/>
+<area shape="rect" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="257,252,364,277"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#a71403e87cc9138ee7fee9c892b2f14f8" title="Emits an x86&#45;64 add r64, imm8 instruction." alt="" coords="29,5,185,31"/>
-<area shape="poly" title=" " alt="" coords="299,191,287,157,267,117,241,77,208,44,185,32,187,27,211,40,245,74,272,114,292,155,304,189"/>
+<area shape="poly" title=" " alt="" coords="303,239,293,196,275,143,247,89,229,65,208,44,184,31,187,26,211,40,233,62,252,86,280,141,298,194,308,238"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#a6487e4953ffbbadd032df97e107e2be6" title="Emits an x86&#45;64 dec r64 instruction." alt="" coords="52,55,163,80"/>
-<area shape="poly" title=" " alt="" coords="294,192,259,141,235,115,208,94,186,83,162,76,164,71,188,78,211,89,239,111,264,138,298,189"/>
+<area shape="poly" title=" " alt="" coords="299,240,287,206,267,166,241,127,208,93,186,82,162,75,164,69,188,77,211,89,245,123,272,164,292,204,304,238"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#a8f6e45beb7feceb9737140d329fc82c8" title="Emits an x86&#45;64 mov r64, imm32 instruction." alt="" coords="23,104,192,129"/>
-<area shape="poly" title=" " alt="" coords="284,195,249,168,208,143,178,132,180,127,210,138,252,163,287,191"/>
+<area shape="poly" title=" " alt="" coords="294,242,259,191,235,165,208,143,184,132,187,127,211,138,239,161,264,187,298,239"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#ae185b40fc20f00d00bebd1aaad35cedd" title="Emits an x86&#45;64 movq r64, xmm instruction." alt="" coords="25,153,190,179"/>
-<area shape="poly" title=" " alt="" coords="246,202,209,193,162,181,163,176,210,187,247,197"/>
+<area shape="poly" title=" " alt="" coords="284,244,249,217,208,192,178,181,180,176,210,188,252,213,287,240"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#ae351c6af013cfa7ed22367d1839d7a37" title="Emits an x86&#45;64 movq xmm, r64 instruction." alt="" coords="25,203,190,228"/>
-<area shape="poly" title=" " alt="" coords="244,218,190,218,190,213,244,213"/>
+<area shape="poly" title=" " alt="" coords="246,251,209,242,162,231,163,225,210,237,247,246"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#ae34a082f12409ca1c16e3c01eb3ce325" title="Emits an x86&#45;64 movsx r64, r/m16 instruction." alt="" coords="5,252,209,277"/>
-<area shape="poly" title=" " alt="" coords="245,234,161,255,160,249,244,229"/>
+<area shape="poly" title=" " alt="" coords="244,267,210,267,210,262,244,262"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#a4376537f529432bb9268d9a3d73c0246" title="Emits an x86&#45;64 movsx r64, r/m8 instruction." alt="" coords="9,301,205,327"/>
-<area shape="poly" title=" " alt="" coords="287,239,252,266,210,291,176,304,174,299,208,286,249,262,284,235"/>
+<area shape="poly" title=" " alt="" coords="245,283,161,304,160,299,244,278"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#a37e332ff45fbfe018cfe0da54b153158" title="Emits an x86&#45;64 movzx r64, r/m16 instruction." alt="" coords="5,351,209,376"/>
-<area shape="poly" title=" " alt="" coords="298,241,263,292,239,318,211,340,184,353,181,348,208,336,235,314,259,288,294,238"/>
+<area shape="poly" title=" " alt="" coords="287,289,252,316,210,340,176,353,174,348,208,336,249,311,284,284"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#af741e4795cba8c938890bb9df45f10f4" title="Emits an x86&#45;64 movzx r64, r/m8 instruction." alt="" coords="9,400,205,425"/>
-<area shape="poly" title=" " alt="" coords="304,242,291,275,272,315,245,356,211,389,188,402,185,398,208,385,241,352,267,313,286,273,299,240"/>
+<area shape="poly" title=" " alt="" coords="298,291,263,341,239,367,211,390,184,402,181,398,208,385,235,364,259,338,294,288"/>
+<area shape="rect" href="abi__x64__emitters_8c.html#a5b2a2a6c600f4053ad6c4d6b76fe98df" title="Emits vmovupd [dest_base + offset], ymm (store 256&#45;bit AVX vector to memory)." alt="" coords="6,449,209,475"/>
+<area shape="poly" title=" " alt="" coords="304,291,291,325,272,365,245,405,211,439,188,452,185,447,208,435,241,401,267,362,286,323,299,289"/>
+<area shape="rect" href="abi__x64__emitters_8c.html#aa98fe3d0067efea2ecc616a6ef3e2976" title="Emits vmovupd ymm, [src_base + offset] (load 256&#45;bit AVX vector from memory)." alt="" coords="6,499,209,524"/>
+<area shape="poly" title=" " alt="" coords="308,291,298,334,279,388,251,442,233,466,211,488,190,501,188,496,208,484,229,463,247,439,275,385,292,333,303,290"/>
 </map>
 </div>
 
@@ -1973,6 +1983,138 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="309,267,271,329,244,362,211,390,185,402,183,398,208,385,240,358,267,326,304,264"/>
 <area shape="rect" href="abi__x64__emitters_8c.html#af741e4795cba8c938890bb9df45f10f4" title="Emits an x86&#45;64 movzx r64, r/m8 instruction." alt="" coords="9,449,205,475"/>
 <area shape="poly" title=" " alt="" coords="313,268,300,306,279,352,250,399,211,439,188,452,186,447,208,435,246,396,274,350,295,304,308,266"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a5b2a2a6c600f4053ad6c4d6b76fe98df" name="a5b2a2a6c600f4053ad6c4d6b76fe98df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b2a2a6c600f4053ad6c4d6b76fe98df">&#9670;&#160;</a></span>emit_vmovupd_mem_ymm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_vmovupd_mem_ymm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a>&#160;</td>
+          <td class="paramname"><em>dest_base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Emits <code>vmovupd [dest_base + offset], ymm</code> (store 256-bit AVX vector to memory). </p>
+<p>Emits <code>vmovupd [dest_base + offset], ymm</code> (stores a 256-bit unaligned value to memory using AVX).</p>
+<p>This instruction stores a 256-bit unaligned packed double-precision floating-point value from a YMM register to memory.</p>
+<ul>
+<li><b>Instruction format:</b> <code>VEX.256.66.0F.WIG 11 /r</code></li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramname">dest_base</td><td>The base GPR for the memory address. </td></tr>
+    <tr><td class="paramname">offset</td><td>The 32-bit signed offset from the base register. </td></tr>
+    <tr><td class="paramname">src</td><td>The source YMM register (specified as an x64_xmm enum). </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="abi__x64__emitters_8c_a5b2a2a6c600f4053ad6c4d6b76fe98df_cgraph.png" border="0" usemap="#aabi__x64__emitters_8c_a5b2a2a6c600f4053ad6c4d6b76fe98df_cgraph" alt=""/></div>
+<map name="aabi__x64__emitters_8c_a5b2a2a6c600f4053ad6c4d6b76fe98df_cgraph" id="aabi__x64__emitters_8c_a5b2a2a6c600f4053ad6c4d6b76fe98df_cgraph">
+<area shape="rect" title="Emits vmovupd [dest_base + offset], ymm (store 256&#45;bit AVX vector to memory)." alt="" coords="5,5,208,31"/>
+<area shape="rect" href="abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="256,5,363,31"/>
+<area shape="poly" title=" " alt="" coords="209,15,242,15,242,21,209,21"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa98fe3d0067efea2ecc616a6ef3e2976" name="aa98fe3d0067efea2ecc616a6ef3e2976"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa98fe3d0067efea2ecc616a6ef3e2976">&#9670;&#160;</a></span>emit_vmovupd_ymm_mem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_vmovupd_ymm_mem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a>&#160;</td>
+          <td class="paramname"><em>src_base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Emits <code>vmovupd ymm, [src_base + offset]</code> (load 256-bit AVX vector from memory). </p>
+<p>Emits <code>vmovupd ymm, [src_base + offset]</code> (loads a 256-bit unaligned value from memory using AVX).</p>
+<p>This instruction loads a 256-bit unaligned packed double-precision floating-point value from memory into a YMM register.</p>
+<ul>
+<li><b>Instruction format:</b> <code>VEX.256.66.0F.WIG 10 /r</code></li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramname">dest</td><td>The destination YMM register (specified as an x64_xmm enum). </td></tr>
+    <tr><td class="paramname">src_base</td><td>The base GPR for the memory address. </td></tr>
+    <tr><td class="paramname">offset</td><td>The 32-bit signed offset from the base register. </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="abi__x64__emitters_8c_aa98fe3d0067efea2ecc616a6ef3e2976_cgraph.png" border="0" usemap="#aabi__x64__emitters_8c_aa98fe3d0067efea2ecc616a6ef3e2976_cgraph" alt=""/></div>
+<map name="aabi__x64__emitters_8c_aa98fe3d0067efea2ecc616a6ef3e2976_cgraph" id="aabi__x64__emitters_8c_aa98fe3d0067efea2ecc616a6ef3e2976_cgraph">
+<area shape="rect" title="Emits vmovupd ymm, [src_base + offset] (load 256&#45;bit AVX vector from memory)." alt="" coords="5,5,208,31"/>
+<area shape="rect" href="abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="256,5,363,31"/>
+<area shape="poly" title=" " alt="" coords="209,15,242,15,242,21,209,21"/>
 </map>
 </div>
 

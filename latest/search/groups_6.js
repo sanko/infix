@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['version_20information_0',['Version Information',['../group__version__macros.html',1,'']]]
+  ['macros_0',['SIMD Feature Detection Macros',['../group__simd__macros.html',1,'']]]
 ];

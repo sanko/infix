@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['signature_20api_0',['High-Level Signature API',['../group__high__level__api.html',1,'']]]
+  ['information_0',['Version Information',['../group__version__macros.html',1,'']]],
+  ['introspection_20api_1',['Type Introspection API',['../group__type__introspection__api.html',1,'']]]
 ];

@@ -169,6 +169,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a135cb0682ed5fea9f0ed6ad4d705c5b0" id="r_a135cb0682ed5fea9f0ed6ad4d705c5b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__struct__member.html">infix_struct_member</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a135cb0682ed5fea9f0ed6ad4d705c5b0">infix_type_create_member</a> (const char *name, <a class="el" href="structinfix__type.html">infix_type</a> *type, size_t offset)</td></tr>
 <tr class="memdesc:a135cb0682ed5fea9f0ed6ad4d705c5b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A factory function to create an <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code>.  <br /></td></tr>
 <tr class="separator:a135cb0682ed5fea9f0ed6ad4d705c5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16b030f50ef5144f6aec8d2b263e4fa0" id="r_a16b030f50ef5144f6aec8d2b263e4fa0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a16b030f50ef5144f6aec8d2b263e4fa0">infix_type_create_vector</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *arena, <a class="el" href="structinfix__type.html">infix_type</a> **out_type, <a class="el" href="structinfix__type.html">infix_type</a> *element_type, size_t num_elements)</td></tr>
+<tr class="memdesc:a16b030f50ef5144f6aec8d2b263e4fa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a SIMD vector from an arena.  <br /></td></tr>
+<tr class="separator:a16b030f50ef5144f6aec8d2b263e4fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a483854a00ecff6dcf774c04683892ec6" id="r_a483854a00ecff6dcf774c04683892ec6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a483854a00ecff6dcf774c04683892ec6">infix_type_create_union</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *arena, <a class="el" href="structinfix__type.html">infix_type</a> **out_type, <a class="el" href="structinfix__struct__member.html">infix_struct_member</a> *members, size_t num_members)</td></tr>
 <tr class="memdesc:a483854a00ecff6dcf774c04683892ec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a union, allocating from an arena.  <br /></td></tr>
 <tr class="separator:a483854a00ecff6dcf774c04683892ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -928,6 +931,73 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr..." alt="" coords="5,29,179,55"/>
 <area shape="poly" title=" " alt="" coords="212,45,179,45,179,39,212,39"/>
 <area shape="poly" title=" " alt="" coords="132,20,121,11,92,8,68,10,56,15,53,20,60,28,56,31,48,21,52,11,67,5,92,3,123,6,135,15"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a16b030f50ef5144f6aec8d2b263e4fa0" name="a16b030f50ef5144f6aec8d2b263e4fa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16b030f50ef5144f6aec8d2b263e4fa0">&#9670;&#160;</a></span>infix_type_create_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="infix_8h.html#a8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_vector </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> **&#160;</td>
+          <td class="paramname"><em>out_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__type.html">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>element_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_elements</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> for a SIMD vector from an arena. </p>
+<p>This function describes a fixed-size SIMD vector type, which is typically passed in dedicated vector registers (e.g., XMM on x86-64, NEON on ARM). It is essential for interfacing with libraries that use intrinsics for high-performance computing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">element_type</td><td>The primitive <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> of the vector's elements (e.g., <code>INFIX_PRIMITIVE_FLOAT</code>, <code>INFIX_PRIMITIVE_SINT64</code>). </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_elements</td><td>The number of elements in the vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd>
+<dd>
+<code>INFIX_ERROR_INVALID_ARGUMENT</code> if <code>out_type</code> or <code>element_type</code> is null, or if <code>element_type</code> is not a primitive. </dd>
+<dd>
+<code>INFIX_ERROR_ALLOCATION_FAILED</code> if memory allocation fails. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="types_8c_a16b030f50ef5144f6aec8d2b263e4fa0_cgraph.png" border="0" usemap="#atypes_8c_a16b030f50ef5144f6aec8d2b263e4fa0_cgraph" alt=""/></div>
+<map name="atypes_8c_a16b030f50ef5144f6aec8d2b263e4fa0_cgraph" id="atypes_8c_a16b030f50ef5144f6aec8d2b263e4fa0_cgraph">
+<area shape="rect" title="Creates a new infix_type for a SIMD vector from an arena." alt="" coords="5,5,188,31"/>
+<area shape="rect" href="group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="236,5,368,31"/>
+<area shape="poly" title=" " alt="" coords="188,15,222,15,222,21,188,21"/>
 </map>
 </div>
 

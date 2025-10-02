@@ -173,8 +173,14 @@ Part 2: The Type System Reference</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><b>Complex <a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a></b>   </td><td class="markdownTableBodyLeft"><code>c[&lt;type&gt;]</code>   </td><td class="markdownTableBodyLeft"><code>float _Complex</code>   </td><td class="markdownTableBodyLeft">A complex number, constructed from a floating-point <code>&lt;type&gt;</code>. The memory layout is equivalent to <code>[2:&lt;type&gt;]</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><b>SIMD Vector</b>   </td><td class="markdownTableBodyLeft"><code>v[&lt;N&gt;:&lt;type&gt;]</code>   </td><td class="markdownTableBodyLeft"><code>__m128</code>, <code>__m256i</code>   </td><td class="markdownTableBodyLeft">A SIMD vector that should be passed in a dedicated vector register.    </td></tr>
+<td class="markdownTableBodyLeft"><b>128-bit SIMD Vector</b>   </td><td class="markdownTableBodyLeft"><code>v[2:double]</code> <br  />
+ <code>v[4:float]</code>   </td><td class="markdownTableBodyLeft"><code>__m128d</code> <br  />
+ <code>__m128</code>   </td><td class="markdownTableBodyLeft">A 128-bit SSE vector. Passed in a single XMM/NEON register.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>256-bit SIMD Vector</b>   </td><td class="markdownTableBodyLeft"><code>v[4:double]</code> <br  />
+ <code>v[8:float]</code>   </td><td class="markdownTableBodyLeft"><code>__m256d</code> <br  />
+ <code>__m256</code>   </td><td class="markdownTableBodyLeft">A 256-bit AVX vector. Requires AVX support. Passed in a YMM register on System V or by reference on Windows.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><b>Opaque Vector</b>   </td><td class="markdownTableBodyLeft"><code>v&lt;bits&gt;</code>   </td><td class="markdownTableBodyLeft">N/A   </td><td class="markdownTableBodyLeft">A fallback for rare cases where a SIMD value's element types are unknown.   </td></tr>
 </table>
 <h2><a class="anchor" id="autotoc_md172"></a>
@@ -267,7 +273,9 @@ Part 3: Examples, Best Practices, and Usage</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>c[float]</code>   </td><td class="markdownTableBodyLeft">A C <code>float _Complex</code> number, with the same memory layout as <code>[2:float]</code>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><code>v[4:float32]</code>   </td><td class="markdownTableBodyLeft">A 128-bit SIMD vector containing four 32-bit floats (e.g., SSE <code>__m128</code>).   </td></tr>
+<td class="markdownTableBodyLeft"><code>v[4:float]</code>   </td><td class="markdownTableBodyLeft">A 128-bit SIMD vector containing four 32-bit floats (e.g., SSE <code>__m128</code>).    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><code>v[4:double]</code>   </td><td class="markdownTableBodyLeft">A 256-bit SIMD vector containing four 64-bit doubles (e.g., AVX <code>__m256d</code>). Requires AVX support to be enabled.   </td></tr>
 </table>
 <h3><a class="anchor" id="autotoc_md175"></a>
 3.2 Architectural Pattern: Define and Use</h3>

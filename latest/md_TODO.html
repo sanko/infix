@@ -250,6 +250,29 @@ $(function() {
 <li><b>Idea:</b> Create a new <code>infix_syscall_create</code> API that emits assembly to load registers and execute the <code>syscall</code> instruction.</li>
 <li><b>Goal:</b> A user can successfully call a basic OS syscall, such as <code>write</code> on Linux, using a generated trampoline.</li>
 <li><b>Possible Roadblocks:</b> Extremely high implementation cost. Requires a unique ABI implementation for every supported OS. Testing is very difficult and OS-specific.</li>
+<li><b>References:</b><ul>
+<li>General:<ul>
+<li><a href="https://www.cs.uaf.edu/courses/cs301/2014-fall/notes/syscall/index.html">https://www.cs.uaf.edu/courses/cs301/2014-fall/notes/syscall/index.html</a></li>
+</ul>
+</li>
+<li>Windows:<ul>
+<li><a href="https://j00ru.vexillium.org/syscalls/nt/64/">https://j00ru.vexillium.org/syscalls/nt/64/</a></li>
+<li><a href="https://github.com/hfiref0x/SyscallTables">https://github.com/hfiref0x/SyscallTables</a></li>
+</ul>
+</li>
+<li>Linux:<ul>
+<li><a href="https://syscalls64.paolostivanin.com/">https://syscalls64.paolostivanin.com/</a></li>
+<li><a href="https://filippo.io/linux-syscall-table/">https://filippo.io/linux-syscall-table/</a></li>
+</ul>
+</li>
+<li>FreeBSD:<ul>
+<li><a href="https://lists.freebsd.org/archives/freebsd-hackers/2023-July/002351.html">https://lists.freebsd.org/archives/freebsd-hackers/2023-July/002351.html</a></li>
+<li><a href="https://www.lurklurk.org/concordance.html">https://www.lurklurk.org/concordance.html</a> (Linux vs. FreeBSD)</li>
+<li><a href="https://alfonsosiciliano.gitlab.io/posts/2023-08-28-freebsd-15-system-calls.html">https://alfonsosiciliano.gitlab.io/posts/2023-08-28-freebsd-15-system-calls.html</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>[ ] <b>Add Exception Handling Boundary</b><ul>
@@ -291,7 +314,20 @@ $(function() {
 <li><b>Context:</b> The read-only hardening for reverse trampoline contexts does not currently work on macOS due to platform-specific memory protection behavior.</li>
 <li><b>Idea:</b> Research the correct combination of <code>mmap</code> flags and/or other system calls required to create a reliably read-only data page on macOS.</li>
 <li><b>Goal:</b> The "Writing to a hardened reverse trampoline context causes a crash" test passes successfully on macOS.</li>
-<li><b>Possible Roadblocks:</b> This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems. </li>
+<li><b>Possible Roadblocks:</b> This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems.</li>
+</ul>
+</li>
+<li>[ ] <b>Add Half-Precision Floating-Point (<code>float16_t</code>) Support**<ul>
+<li><b>Context:</b> <code>_Float16</code> is increasingly important for machine learning and GPU-related tasks.</li>
+<li><b>Idea:</b> Add a new primitive type. The ABI rules are simple: <code>_Float16</code> arguments are promoted to <code>float</code> and passed in standard floating-point registers.</li>
+<li><b>Goal:</b> The library correctly handles <code>float16_t</code> arguments and return values.</li>
+</ul>
+</b></li>
+<li><b>[ ] **Add Support for Scalable Vectors (ARM SVE &amp; RISC-V 'V')</b><ul>
+<li><b>Context:</b> This is the future of SIMD on these architectures, where the vector size is determined by the hardware at runtime.</li>
+<li><b>Idea:</b> This would require a major architectural redesign. The JIT code would need to query the hardware's vector length at runtime and dynamically adjust its behavior.</li>
+<li><b>Goal:</b> Basic support for a function taking a scalable vector type.</li>
+<li><b>Possible Roadblocks:</b> Monumental implementation effort. Likely out of scope for the current library </li>
 </ul>
 </li>
 </ul>
