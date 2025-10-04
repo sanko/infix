@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['quick_20start_3a_20the_20two_20apis_0',['Quick Start: The Two APIs',['../md_README.html#autotoc_md56',1,'']]]
+  ['vector_5finfo_0',['vector_info',['../structinfix__type__t.html#a07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t']]],
+  ['version_20information_1',['Version Information',['../group__version__macros.html',1,'']]]
 ];
