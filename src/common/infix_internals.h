@@ -75,16 +75,12 @@ typedef void (*infix_internal_dispatch_callback_fn)(infix_reverse_t *, void *, v
  * to keep it opaque in the public API (`infix.h`).
  */
 struct infix_forward_t {
-<<<<<<< HEAD
     infix_arena_t * arena;     ///< The arena that owns all the type metadata for this trampoline.
     infix_executable_t exec;   ///< Handle to the executable JIT-compiled stub.
     infix_type * return_type;  ///< The infix_type of the trampoline's return value.
     infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
     size_t num_args;           ///< The total number of arguments.
     size_t num_fixed_args;     ///< The number of non-variadic arguments.
-=======
-    infix_executable_t exec;
->>>>>>> main
 };
 
 /**
@@ -94,10 +90,7 @@ struct infix_forward_t {
  * It is intentionally opaque in the public API.
  */
 struct infix_reverse_t {
-<<<<<<< HEAD
     infix_arena_t * arena;     ///< The arena that owns all the type metadata for this callback.
-=======
->>>>>>> main
     infix_executable_t exec;   ///< Handle to the executable JIT-compiled stub.
     infix_type * return_type;  ///< The infix_type of the callback's return value.
     infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
@@ -252,7 +245,6 @@ typedef struct {
     infix_status (*generate_reverse_epilogue)(code_buffer *, infix_reverse_call_frame_layout *, infix_reverse_t *);
 } infix_reverse_abi_spec;
 
-<<<<<<< HEAD
 /**
  * @internal
  * @brief Aligns a value up to the next multiple of a given alignment.
@@ -285,12 +277,6 @@ const infix_forward_abi_spec * get_current_forward_abi_spec();
  *          platform abstraction for reverse calls.
  * @return A constant pointer to the active `infix_reverse_abi_spec`.
  */
-=======
-// trampoline.c
-/** @brief Selects the correct forward-call ABI spec at compile time. */
-const infix_forward_abi_spec * get_current_forward_abi_spec();
-/** @brief Selects the correct reverse-call ABI spec at compile time. */
->>>>>>> main
 const infix_reverse_abi_spec * get_current_reverse_abi_spec();
 
 /**
@@ -401,7 +387,6 @@ static inline bool is_long_double(const infix_type * type) {
     return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_LONG_DOUBLE;
 }
 
-<<<<<<< HEAD
 /**
  * @internal
  * @brief Determines if a type must be passed by reference on the Windows x64 ABI.
@@ -409,9 +394,6 @@ static inline bool is_long_double(const infix_type * type) {
  *          size is not a power of two (1, 2, 4, or 8) is passed by reference.
  * @return true if the type should be passed by reference, false otherwise.
  */
-=======
-/** @brief Determines if an argument must be passed by reference according to Win x64 ABI rules. */
->>>>>>> main
 static inline bool is_passed_by_reference(infix_type * type) {
     // On Windows x64, aggregates whose size is not a power of two (1, 2, 4, 8 bytes)
     // are passed by reference. This also applies to sizes larger than 8 bytes on MSVC.
@@ -620,7 +602,6 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type *
  *       object graph will be freed when `infix_arena_destroy` is called.
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
-<<<<<<< HEAD
 
 /**
  * @internal
@@ -636,5 +617,3 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type *
  */
 c23_nodiscard infix_status
 _infix_forward_create_internal(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, infix_arena_t *);
-=======
->>>>>>> main

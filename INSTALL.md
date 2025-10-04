@@ -272,7 +272,6 @@ Add `infix` as a dependency in your `xmake.lua`.
 }
 ```
 
-<<<<<<< HEAD
 #### Manual Integration into an Existing Project
 
 Because `infix` uses a "unity build," you do not need to build it as a separate static or shared library. You can compile it directly into your project. This is the simplest method and allows for better compiler optimizations.
@@ -285,8 +284,6 @@ Because `infix` uses a "unity build," you do not need to build it as a separate 
 
 That's it. Your project will now build with the `infix` library compiled directly in.
 
-=======
->>>>>>> main
 ---
 
 ## 3. Packaging `infix` (For Maintainers)

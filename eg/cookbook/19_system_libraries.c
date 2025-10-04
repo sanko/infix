@@ -19,13 +19,8 @@ void run_windows_example() {
     }
     void * MessageBoxW_ptr = (void *)GetProcAddress(user32, "MessageBoxW");
 
-<<<<<<< HEAD
     // Signature: int MessageBoxW(HWND, LPCWSTR, LPCWSTR, UINT)
     const char * signature = "(*void, *void, *void, uint) -> int";
-=======
-    // Signature: int(HWND, LPCWSTR, LPCWSTR, UINT)
-    const char * signature = "v*,v*,v*,j=>i";  // v* for handles/pointers, j for UINT
->>>>>>> main
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 
@@ -67,19 +62,11 @@ void run_macos_example() {
 
     infix_forward_t *t_create, *t_getlen, *t_release;
     // CFStringRef CFStringCreateWithCString(CFAllocatorRef, const char *, CFStringEncoding)
-<<<<<<< HEAD
     infix_forward_create(&t_create, "(*void, *char, ulong) -> *void");
     // CFIndex CFStringGetLength(CFStringRef)
     infix_forward_create(&t_getlen, "(*void) -> long");
     // void CFRelease(CFTypeRef)
     infix_forward_create(&t_release, "(*void) -> void");
-=======
-    infix_forward_create(&t_create, "v*,c*,l=>v*");
-    // CFIndex CFStringGetLength(CFStringRef)
-    infix_forward_create(&t_getlen, "v*=>l");
-    // void CFRelease(CFTypeRef)
-    infix_forward_create(&t_release, "v*=>v");
->>>>>>> main
 
     CFAllocatorRef allocator = NULL;
     const char * my_str = "Hello from macOS!";
@@ -117,26 +104,15 @@ void run_linux_example() {
 
     infix_forward_t *t_hostname, *t_pow;
     // int gethostname(char *name, size_t len);
-<<<<<<< HEAD
     infix_forward_create(&t_hostname, "(*char, uint64) -> int");  // size_t is uint64 on 64-bit linux
     // double pow(double base, double exp);
     infix_forward_create(&t_pow, "(double, double) -> double");
-=======
-    infix_forward_create(&t_hostname, "c*,y=>i");  // y is uint64_t (size_t on 64-bit linux)
-    // double pow(double base, double exp);
-    infix_forward_create(&t_pow, "d,d=>d");
->>>>>>> main
 
     // Call gethostname
     char hostname_buf[256] = {0};
     size_t len = sizeof(hostname_buf);
     int result = 0;
-<<<<<<< HEAD
     void * hostname_args[] = {hostname_buf, &len};  // Pass buffer by value (decays to pointer)
-=======
-    // Note: The first arg is the buffer itself, the second is a pointer to the length.
-    void * hostname_args[] = {hostname_buf, &len};
->>>>>>> main
     ((infix_cif_func)infix_forward_get_code(t_hostname))(gethostname_ptr, &result, hostname_args);
     if (result == 0)
         printf("Linux Hostname: %s\n", hostname_buf);

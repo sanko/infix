@@ -37,15 +37,6 @@
  *     bridge to invoke the user's C callback with the correctly marshalled arguments.
  */
 
-<<<<<<< HEAD
-=======
-// Define the POSIX source macro to ensure function declarations for shm_open,
-// ftruncate, etc., are visible on all POSIX-compliant systems.
-#if !defined(_POSIX_C_SOURCE)
-#define _POSIX_C_SOURCE 200809L
-#endif
-
->>>>>>> main
 #include "../common/infix_internals.h"
 #include "../common/utility.h"
 #include <stdio.h>
@@ -327,11 +318,7 @@ c23_nodiscard infix_protected_t infix_protected_alloc(size_t size) {
         return prot;
 
 #if defined(INFIX_OS_WINDOWS)
-<<<<<<< HEAD
     prot.rw_ptr = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-=======
-    prot.rw_ptr = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
->>>>>>> main
 #else  // POSIX platforms
 #if defined(MAP_ANON)
     prot.rw_ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);

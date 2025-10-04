@@ -30,12 +30,10 @@ CppProperties.json
 prev/
 *.cov
 bin/
-<<<<<<< HEAD
 *.bak
 Testing/*
 html/*
 latex/*
 leak-*
 .tidyall.d/*
-=======
->>>>>>> main
+doxygen_build/*

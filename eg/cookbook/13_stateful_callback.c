@@ -22,11 +22,7 @@ typedef struct {
 } AppContext;
 
 // This is our C handler. It receives the `infix_context_t*` as its first argument.
-<<<<<<< HEAD
 // The subsequent arguments (int item_value) match the signature string "(int) -> void".
-=======
-// The subsequent arguments (int item_value) match the signature string "i=>v".
->>>>>>> main
 void my_stateful_handler(infix_context_t * context, int item_value) {
     // Retrieve our application's state from the user_data pointer!
     AppContext * ctx = (AppContext *)infix_reverse_get_user_data(context);
@@ -42,11 +38,7 @@ int main() {
     // 1. Create a reverse trampoline for the signature the C library expects: void(int).
     //    We pass a pointer to our AppContext struct as the user_data.
     infix_reverse_t * rt = NULL;
-<<<<<<< HEAD
     infix_reverse_create(&rt, "(int) -> void", (void *)my_stateful_handler, &ctx);
-=======
-    infix_reverse_create(&rt, "i=>v", (void *)my_stateful_handler, &ctx);
->>>>>>> main
 
     item_processor_t processor_ptr = (item_processor_t)infix_reverse_get_code(rt);
 

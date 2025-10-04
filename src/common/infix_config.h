@@ -69,7 +69,6 @@
  *
  */
 
-<<<<<<< HEAD
 // Define the POSIX source macro to ensure function declarations for shm_open,
 // ftruncate, etc., are visible on all POSIX-compliant systems.
 #if !defined(_POSIX_C_SOURCE)
@@ -79,8 +78,6 @@
 #define _GNU_SOURCE
 #endif
 
-=======
->>>>>>> main
 // Host Platform and Architecture Detection
 // This block ALWAYS detects the native host. It is NOT overridden by the ABI flag.
 #if defined(_WIN32)
@@ -188,9 +185,6 @@
 #endif
 #endif
 #endif
-<<<<<<< HEAD
 
 /* @brief The amount of overhead we add to our forward trampoline's arena. In bytes. */
 #define INFIX_TRAMPOLINE_HEADROOM 128
-=======
->>>>>>> main

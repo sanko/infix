@@ -13,13 +13,8 @@ int sum_large_struct(LargeStruct s) {
 }
 
 int main() {
-<<<<<<< HEAD
     // 1. Signature: int(LargeStruct). A LargeStruct is {int,int,int,int,int,int}.
     const char * signature = "({int,int,int,int,int,int}) -> int";
-=======
-    // 1. Signature: int(LargeStruct). A LargeStruct is {i,i,i,i,i,i}.
-    const char * signature = "{i,i,i,i,i,i}=>i";
->>>>>>> main
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 

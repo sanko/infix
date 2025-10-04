@@ -16,21 +16,12 @@
 
 int main() {
     // 1. Create trampolines for the clean C wrapper functions.
-<<<<<<< HEAD
     //    The Counter* handle is treated as an opaque pointer `*void`.
     infix_forward_t *t_create, *t_destroy, *t_add, *t_get;
     infix_forward_create(&t_create, "() -> *void");        // Counter* Counter_create();
     infix_forward_create(&t_destroy, "(*void) -> void");   // void Counter_destroy(Counter*);
     infix_forward_create(&t_add, "(*void, int) -> void");  // void Counter_add(Counter*, int);
     infix_forward_create(&t_get, "(*void) -> int");        // int Counter_get(Counter*);
-=======
-    //    The Counter* handle is treated as an opaque pointer `v*`.
-    infix_forward_t *t_create, *t_destroy, *t_add, *t_get;
-    infix_forward_create(&t_create, "=>v*");    // Counter* Counter_create();
-    infix_forward_create(&t_destroy, "v*=>v");  // void Counter_destroy(Counter*);
-    infix_forward_create(&t_add, "v*,i=>v");    // void Counter_add(Counter*, int);
-    infix_forward_create(&t_get, "v*=>i");      // int Counter_get(Counter*);
->>>>>>> main
 
     // 2. Interact with the C++ object through the trampolines.
     Counter * counter_obj = NULL;

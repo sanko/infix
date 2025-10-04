@@ -41,30 +41,17 @@ void my_handler(infix_context_t * context, int event_code) {
 
 int main() {
     // 1. Create all necessary trampolines upfront. Caching is key.
-<<<<<<< HEAD
     infix_forward_create(&g_log_trampoline, "(*char) -> void");  // For log_event
 
     infix_reverse_t * rt = NULL;
     infix_reverse_create(&rt, "(int) -> void", (void *)my_handler, NULL);  // For my_handler
-=======
-    infix_forward_create(&g_log_trampoline, "c*=>v");  // For log_event
-
-    infix_reverse_t * rt = NULL;
-    infix_reverse_create(&rt, "i=>v", (void *)my_handler, NULL);  // For my_handler
->>>>>>> main
     void * handler_ptr = infix_reverse_get_code(rt);
 
     infix_forward_t *t_register, *t_run;
     // Signature for register_handler: void(void(*)(int))
-<<<<<<< HEAD
     // A pointer `*` to a function type `(int) -> void`.
     infix_forward_create(&t_register, "(*((int) -> void)) -> void");
     infix_forward_create(&t_run, "() -> void");  // For run_loop
-=======
-    // A pointer `*` to a function `(i=>v)`
-    infix_forward_create(&t_register, "(i=>v)*=>v");
-    infix_forward_create(&t_run, "=>v");  // For run_loop
->>>>>>> main
 
     // 2. Execute the nested call.
     printf("Registering handler...\n");

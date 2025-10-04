@@ -18,12 +18,7 @@ int64_t sum_array_elements(const int64_t * arr) {
 
 int main() {
     // 1. Signature describes the decayed pointer type: int64_t(const int64_t*)
-<<<<<<< HEAD
     const char * signature = "(*int64) -> int64";
-=======
-    //    'x' is the specifier for int64_t. 'x*' is a pointer to it.
-    const char * signature = "x*=>x";
->>>>>>> main
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 
