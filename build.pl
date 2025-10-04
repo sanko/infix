@@ -179,21 +179,33 @@ elsif ( $command eq 'memtest' ) {
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
     push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
+<<<<<<< HEAD
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '810_memory_stress', 'memcheck' );
+=======
+    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/810_memory_stress', 'memcheck' );
+>>>>>>> main
 }
 elsif ( $command eq 'memtest:fault' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
     push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
+<<<<<<< HEAD
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '811_fault_injection', 'memcheck' );
+=======
+    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/811_fault_injection', 'memcheck' );
+>>>>>>> main
 }
 elsif ( $command eq 'memtest:arena' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
     push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
+<<<<<<< HEAD
     $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '840_arena_allocator', 'memcheck' );
+=======
+    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/840_arena_allocator', 'memcheck' );
+>>>>>>> main
 }
 elsif ( $command eq 'helgrindtest' ) {
     my %helgrind_config = %config;

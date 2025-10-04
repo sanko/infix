@@ -16,12 +16,29 @@ int process_packed(PackedStruct p) {
 }
 
 int main() {
+<<<<<<< HEAD
     // 1. Describe the packed struct using the `!{...}` syntax.
     //    The `!` indicates a packed struct with default 1-byte alignment.
     //    The infix parser will calculate the correct packed offsets automatically.
     const char * signature = "(!{char, uint64}) -> int";
 
     printf("Using signature: %s\n", signature);
+=======
+    // 1. Build the signature string dynamically using the compiler's layout info.
+    //    Syntax: p(size,align){member_type@offset,...}
+    char signature[128];
+    snprintf(signature,
+             sizeof(signature),
+             "p(%zu,%zu){c@%zu,y@%zu}=>i",
+             sizeof(PackedStruct),       // The total size
+             _Alignof(PackedStruct),     // The alignment
+             offsetof(PackedStruct, a),  // Offset of member 'a'
+             offsetof(PackedStruct, b)   // Offset of member 'b'
+    );
+    // Note: 'y' is the specifier for uint64_t.
+
+    printf("Generated signature: %s\n", signature);
+>>>>>>> main
 
     // 2. Create the trampoline.
     infix_forward_t * trampoline = NULL;

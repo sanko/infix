@@ -13,8 +13,13 @@ Point create_point() {
 }
 
 int main() {
+<<<<<<< HEAD
     // 1. Signature: Point(void). The return type is the struct {double, double}.
     const char * signature = "() -> {double, double}";
+=======
+    // 1. Signature: Point(void). The return type is the struct {d,d}.
+    const char * signature = "=>{d,d}";
+>>>>>>> main
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 

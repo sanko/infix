@@ -18,8 +18,14 @@ void process_matrix_row(int (*row_ptr)[4]) {
 
 int main() {
     // 1. Signature for void(int(*)[4]).
+<<<<<<< HEAD
     //    The type is a pointer `*` to an array `[4:int]`.
     const char * signature = "(*[4:int]) -> void";
+=======
+    //    We must group the array type `[4]i` in parentheses before adding the
+    //    pointer modifier `*`. This overrides the default right-to-left precedence.
+    const char * signature = "([4]i)*=>v";
+>>>>>>> main
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 

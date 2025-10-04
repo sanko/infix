@@ -27,8 +27,13 @@
  * specific machine instruction or a common addressing mode.
  */
 
+<<<<<<< HEAD
 #include "abi_x64_common.h"
 #include "common/infix_internals.h"
+=======
+#include "common/infix_internals.h"
+#include <abi_x64_common.h>
+>>>>>>> main
 
 /** @brief Emits `mov r64, imm64` to load a 64-bit immediate value into a register. */
 void emit_mov_reg_imm64(code_buffer * buf, x64_gpr reg, uint64_t value);

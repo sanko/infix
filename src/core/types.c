@@ -34,7 +34,10 @@
 #include <limits.h>  // For SIZE_MAX
 #include <stdio.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <string.h>
+=======
+>>>>>>> main
 
 /**
  * @def INFIX_TYPE_INIT
@@ -60,12 +63,19 @@
 // simplifying the user's code.
 static infix_type _infix_type_void = {
     .category = INFIX_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .meta = {0}};
+<<<<<<< HEAD
 // The generic pointer now explicitly points to void for introspection purposes.
+=======
+>>>>>>> main
 static infix_type _infix_type_pointer = {.category = INFIX_TYPE_POINTER,
                                          .size = sizeof(void *),
                                          .alignment = _Alignof(void *),
                                          .is_arena_allocated = false,
+<<<<<<< HEAD
                                          .meta.pointer_info = {.pointee_type = &_infix_type_void}};
+=======
+                                         .meta = {0}};
+>>>>>>> main
 static infix_type _infix_type_bool = INFIX_TYPE_INIT(INFIX_PRIMITIVE_BOOL, bool);
 static infix_type _infix_type_uint8 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT8, uint8_t);
 static infix_type _infix_type_sint8 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT8, int8_t);
@@ -163,7 +173,11 @@ c23_nodiscard infix_type * infix_type_create_pointer() {
 }
 
 /**
+<<<<<<< HEAD
  * @brief Creates an `infix_type` descriptor for the `void` type.
+=======
+ * @brief Creates an `infix_type` descriptor for `void`.
+>>>>>>> main
  * @details Returns a pointer to the static singleton instance describing the `void` type,
  *          used exclusively for the return type of a function that returns nothing.
  *
@@ -175,6 +189,7 @@ c23_nodiscard infix_type * infix_type_create_void() {
 }
 
 /**
+<<<<<<< HEAD
  * @brief Creates an `infix_type` for a pointer to a specific type, allocating from an arena.
  * @details This function is the designated way to create a pointer type that retains
  *          introspection information about what it points to.
@@ -191,6 +206,36 @@ c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
     if (!out_type || !pointee_type)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
+=======
+ * @brief Creates an `infix_type` for a struct, allocating from an arena.
+ * @details This function calculates the size and alignment of the struct based on its
+ *          members, adhering to standard C layout rules. It iterates through the members
+ *          to find the maximum alignment requirement and calculates the total size, including
+ *          any trailing padding needed to satisfy the struct's overall alignment. It is
+ *          hardened against integer overflows that could arise from malformed member layouts.
+ *
+ * @param arena The memory arena from which to allocate the new `infix_type`.
+ * @param[out] out_type On success, a pointer to an `infix_type*` that will receive the new type.
+ * @param members An array of `infix_struct_member` describing the struct's layout.
+ * @param num_members The number of members in the array.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
+                                                    infix_type ** out_type,
+                                                    infix_struct_member * members,
+                                                    size_t num_members) {
+    if (out_type == nullptr)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // Validate that all member types are non-null.
+    for (size_t i = 0; i < num_members; ++i) {
+        if (members[i].type == nullptr) {
+            *out_type = nullptr;
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        }
+    }
+
+>>>>>>> main
     infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
@@ -199,11 +244,56 @@ c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
 
     *type = *infix_type_create_pointer();  // Copy base properties from the void* singleton
     type->is_arena_allocated = true;
+<<<<<<< HEAD
     type->meta.pointer_info.pointee_type = pointee_type;
+=======
+    type->category = INFIX_TYPE_STRUCT;
+    type->meta.aggregate_info.members = members;
+    type->meta.aggregate_info.num_members = num_members;
+
+    size_t preliminary_size = 0;
+    size_t max_alignment = 1;
+
+    // First pass: determine the natural size and max alignment.
+    for (size_t i = 0; i < num_members; ++i) {
+        infix_struct_member * member = &members[i];
+
+        // Security: Check for integer overflow when calculating member end.
+        if (member->offset > SIZE_MAX - member->type->size) {
+            *out_type = nullptr;
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        }
+
+        size_t member_end = member->offset + member->type->size;
+        if (member_end > preliminary_size)
+            preliminary_size = member_end;
+        if (member->type->alignment > max_alignment)
+            max_alignment = member->type->alignment;
+    }
+
+    type->alignment = max_alignment;
+
+    // Check for overflow when calculating padding.
+    if (max_alignment > 0 && preliminary_size > SIZE_MAX - (max_alignment - 1)) {
+        *out_type = nullptr;
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    // Final size is the preliminary size rounded up to the nearest multiple of the max alignment.
+    if (max_alignment > 0)
+        type->size = (preliminary_size + max_alignment - 1) & ~(max_alignment - 1);
+    else
+        type->size = preliminary_size;
+
+    INFIX_DEBUG_PRINTF("Created struct type. Size: %llu, Alignment: %llu",
+                       (unsigned long long)type->size,
+                       (unsigned long long)type->alignment);
+>>>>>>> main
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
+<<<<<<< HEAD
 
 c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
                                                      infix_type ** out_type,
@@ -213,6 +303,42 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
 
     // A complex number must be based on a float or double.
     if (!is_float(base_type) && !is_double(base_type))
+=======
+/**
+ * @brief Creates an `infix_type` for a packed struct, allocating from an arena.
+ * @details This is the designated way to describe C structs that use
+ *          non-standard memory layouts, typically resulting from compiler directives
+ *          like `__attribute__((packed))` or `#pragma pack(1)`. All memory is
+ *          allocated from the provided arena.
+ *
+ * @param arena The memory arena from which to allocate the new `infix_type`.
+ * @param[out] out_type On success, this will point to a newly created `infix_type`.
+ * @param total_size    The exact size of the packed struct in bytes, as returned by
+ *                      `sizeof(your_packed_struct)`.
+ * @param alignment     The alignment requirement of the packed struct in bytes, as
+ *                      returned by `_Alignof(your_packed_struct)`. This is often 1.
+ * @param members       An array of `infix_struct_member` describing each member of the
+ *                      struct. The offsets within this array must be the correct,
+ *                      packed offsets from `offsetof`.
+ * @param num_members   The number of elements in the `members` array.
+ *
+ * @return `INFIX_SUCCESS` on successful creation.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if `out_type` is nullptr, `alignment` is zero, or
+ *         `members` is nullptr when `num_members` > 0.
+ * @return `INFIX_ERROR_ALLOCATION_FAILED` if memory for the `infix_type` struct could not
+ *         be allocated from the arena.
+ *
+ * @note **Memory Ownership:** All memory for the created `infix_type` and its metadata
+ *       is owned by the provided arena.
+ */
+c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena,
+                                                           infix_type ** out_type,
+                                                           size_t total_size,
+                                                           size_t alignment,
+                                                           infix_struct_member * members,
+                                                           size_t num_members) {
+    if (out_type == nullptr || (num_members > 0 && members == nullptr) || alignment == 0)
+>>>>>>> main
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
@@ -222,18 +348,27 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
     }
 
     type->is_arena_allocated = true;
+<<<<<<< HEAD
     type->category = INFIX_TYPE_COMPLEX;
 
     // The size is twice the base type; alignment is the same as the base type.
     type->size = base_type->size * 2;
     type->alignment = base_type->alignment;
     type->meta.complex_info.base_type = base_type;
+=======
+    type->size = total_size;
+    type->alignment = alignment;
+    type->category = INFIX_TYPE_STRUCT;
+    type->meta.aggregate_info.members = members;
+    type->meta.aggregate_info.num_members = num_members;
+>>>>>>> main
 
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
 /**
+<<<<<<< HEAD
  * @internal
  * @brief (Internal) Common setup for creating an aggregate type.
  * @details Validates members, allocates the main type struct, and copies the member
@@ -252,10 +387,53 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
     for (size_t i = 0; i < num_members; ++i) {
         if (members[i].type == nullptr) {
             *out_type = nullptr;
+=======
+ * @brief A factory function to create an `infix_struct_member`.
+ * @details This is a convenient helper function for creating an `infix_struct_member`,
+ *          which is needed to define the layout of structs and unions.
+ *
+ * @param name The member's name (for debugging purposes; can be `nullptr`).
+ * @param type A pointer to the member's `infix_type`.
+ * @param offset The byte offset of the member from the start of the aggregate. This
+ *               value should be obtained using the standard `offsetof` macro.
+ * @return An initialized `infix_struct_member`.
+ */
+infix_struct_member infix_struct_member_create(const char * name, infix_type * type, size_t offset) {
+    return (infix_struct_member){name, type, offset};
+}
+
+/**
+ * @brief Creates an `infix_type` for a union, allocating from an arena.
+ * @details This function calculates the size and alignment for a union according to
+ *          standard C layout rules. The alignment is the largest alignment of any
+ *          member. The size is the size of the largest single member, padded to be
+ *          a multiple of the union's final alignment. It is hardened against integer
+ *          overflows.
+ *
+ * @param arena The memory arena from which to allocate the new `infix_type`.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param members An array of `infix_struct_member` describing the union's members.
+ * @param num_members The number of members in the array.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
+                                                   infix_type ** out_type,
+                                                   infix_struct_member * members,
+                                                   size_t num_members) {
+    if (out_type == NULL) {
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    // Validate that all member types are non-null before proceeding.
+    for (size_t i = 0; i < num_members; ++i) {
+        if (members[i].type == NULL) {
+            *out_type = NULL;
+>>>>>>> main
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
     }
 
+<<<<<<< HEAD
     infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
@@ -512,6 +690,19 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_UNION;
     type->meta.aggregate_info.members = arena_members;
+=======
+    // Allocate the infix_type struct itself from the arena.
+    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    if (type == NULL) {
+        *out_type = NULL;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
+    // Mark this type as arena-allocated so infix_type_destroy will ignore it.
+    type->is_arena_allocated = true;
+    type->category = INFIX_TYPE_UNION;
+    type->meta.aggregate_info.members = members;
+>>>>>>> main
     type->meta.aggregate_info.num_members = num_members;
 
     size_t max_size = 0;
@@ -528,6 +719,15 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     }
     type->alignment = max_alignment;
 
+<<<<<<< HEAD
+=======
+    // Security: Check for integer overflow before calculating the final padded size.
+    if (max_alignment > 0 && max_size > SIZE_MAX - (max_alignment - 1)) {
+        *out_type = NULL;
+        return INFIX_ERROR_INVALID_ARGUMENT;  // Overflow would occur
+    }
+
+>>>>>>> main
     // The final size is the size of the largest member, rounded up to a
     // multiple of the union's overall alignment.
     type->size = _infix_align_up(max_size, max_alignment);
@@ -561,20 +761,33 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
                                                    infix_type ** out_type,
                                                    infix_type * element_type,
                                                    size_t num_elements) {
+<<<<<<< HEAD
     if (out_type == nullptr || element_type == nullptr)
+=======
+    if (out_type == NULL || element_type == NULL)
+>>>>>>> main
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Security: Check for integer overflow before calculating the total array size.
     // This is critical when dealing with inputs from a parser or other untrusted source.
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
+<<<<<<< HEAD
         *out_type = nullptr;
+=======
+        *out_type = NULL;
+>>>>>>> main
         return INFIX_ERROR_INVALID_ARGUMENT;  // Calculation would overflow.
     }
 
     // Allocate the infix_type struct itself from the arena.
     infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+<<<<<<< HEAD
     if (type == nullptr) {
         *out_type = nullptr;
+=======
+    if (type == NULL) {
+        *out_type = NULL;
+>>>>>>> main
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
@@ -594,6 +807,7 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
 
     *out_type = type;
     return INFIX_SUCCESS;
+<<<<<<< HEAD
 }
 
 /**
@@ -823,4 +1037,6 @@ c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_
     if (!trampoline || index >= trampoline->num_args)
         return nullptr;
     return trampoline->arg_types[index];
+=======
+>>>>>>> main
 }

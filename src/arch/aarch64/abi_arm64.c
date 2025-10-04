@@ -61,10 +61,17 @@
  *     into five distinct steps for clarity and maintainability.
  */
 
+<<<<<<< HEAD
 #include "abi_arm64_common.h"
 #include "abi_arm64_emitters.h"
 #include "common/infix_internals.h"
 #include "common/utility.h"
+=======
+#include "common/infix_internals.h"
+#include "common/utility.h"
+#include <abi_arm64_common.h>
+#include <abi_arm64_emitters.h>
+>>>>>>> main
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -174,9 +181,12 @@ static infix_type * get_hfa_base_type(infix_type * type) {
  * @return `true` if all constituent members of `type` are of `base_type`, `false` otherwise.
  */
 static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, size_t * field_count) {
+<<<<<<< HEAD
     // A generated type can have a NULL member. This cannot be an HFA.
     if (type == nullptr)
         return false;
+=======
+>>>>>>> main
     // Limit the number of fields we are willing to inspect for a single aggregate.
     if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY)
         return false;
@@ -222,8 +232,12 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
  * @return `true` if the type is a valid HFA, `false` otherwise.
  */
 static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
+<<<<<<< HEAD
     if (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_ARRAY &&
         type->category != INFIX_TYPE_COMPLEX)
+=======
+    if (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_ARRAY)
+>>>>>>> main
         return false;
 
     if (type->size == 0 || type->size > 64)
@@ -315,7 +329,11 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 
         // Step 0: Make sure we aren't blowing ourselves up
         if (type->size > INFIX_MAX_ARG_SIZE) {
+<<<<<<< HEAD
             *out_layout = nullptr;
+=======
+            *out_layout = NULL;
+>>>>>>> main
             return INFIX_ERROR_LAYOUT_FAILED;
         }
 
@@ -337,8 +355,12 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
         }
 #endif
 
+<<<<<<< HEAD
         bool pass_fp_in_vpr =
             is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+=======
+        bool pass_fp_in_vpr = is_float(type) || is_double(type) || is_long_double(type);
+>>>>>>> main
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI: If the function is variadic, ALL floating-point
         // arguments are passed in general-purpose registers.
@@ -752,7 +774,11 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
 
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
+<<<<<<< HEAD
         *out_layout = nullptr;
+=======
+        *out_layout = NULL;
+>>>>>>> main
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -880,7 +906,11 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         // Case 2: Argument is passed by value.
         int32_t arg_save_loc = (int32_t)(layout->saved_args_offset + current_saved_data_offset);
 
+<<<<<<< HEAD
         infix_type * hfa_base_type = nullptr;
+=======
+        infix_type * hfa_base_type = NULL;
+>>>>>>> main
 
         if (!is_from_stack) {
             if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
@@ -930,8 +960,12 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                         if (gpr_idx % 2 != 0)
                             gpr_idx++;
 #endif
+<<<<<<< HEAD
                         if (arg_save_loc >= 0 && (((unsigned)arg_save_loc + 8) / 8) <= 0xFFF &&
                             (arg_save_loc % 8 == 0)) {
+=======
+                        if (arg_save_loc >= 0 && ((arg_save_loc + 8) / 8) <= 0xFFF && (arg_save_loc % 8 == 0)) {
+>>>>>>> main
                             emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
                             emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc + 8);
                         }
@@ -1040,11 +1074,16 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
                                                     infix_reverse_call_frame_layout * layout,
                                                     infix_reverse_t * context) {
+<<<<<<< HEAD
     bool ret_is_aggregate =
         (context->return_type->category == INFIX_TYPE_STRUCT || context->return_type->category == INFIX_TYPE_UNION ||
          context->return_type->category == INFIX_TYPE_ARRAY || context->return_type->category == INFIX_TYPE_COMPLEX);
     bool return_in_memory = ret_is_aggregate && context->return_type->size > 16;
     if (context->return_type->category != INFIX_TYPE_VOID && !return_in_memory) {
+=======
+    // If the function returns a value and it's not passed via hidden pointer...
+    if (context->return_type->category != INFIX_TYPE_VOID && context->return_type->size <= 16) {
+>>>>>>> main
         infix_type * base = nullptr;
         if (is_hfa(context->return_type, &base)) {
             size_t num_elements = context->return_type->size / base->size;

@@ -192,6 +192,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The "Writing to a hardened reverse trampoline context causes a crash" test passes successfully on macOS.
     *   **Possible Roadblocks:** This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems.
 
+<<<<<<< HEAD
 - [ ] **Add Half-Precision Floating-Point (`float16_t`) Support**
     *   **Context:** `_Float16` is increasingly important for machine learning and GPU-related tasks.
     *   **Idea:** Add a new primitive type. The ABI rules are simple: `_Float16` arguments are promoted to `float` and passed in standard floating-point registers.
@@ -202,3 +203,10 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** This would require a major architectural redesign. The JIT code would need to query the hardware's vector length at runtime and dynamically adjust its behavior.
     *   **Goal:** Basic support for a function taking a scalable vector type.
     *   **Possible Roadblocks:** Monumental implementation effort. Likely out of scope for the current library
+=======
+- [ ] **Add Support for Advanced C Types (`_Complex` and SIMD)**
+    *   **Context:** Modern C and its common extensions include types for complex numbers (`float _Complex`, `double _Complex`) and SIMD vectors (`__m128`, NEON types) that have specific ABI passing rules. Supporting them directly would improve interoperability with scientific and multimedia libraries.
+    *   **Idea:** Extend the `infix_type` system with new categories or primitives for these types. Implement the corresponding ABI classification and marshalling logic in each backend. For example, `_Complex` types are often passed as if they were a two-element struct of floats/doubles.
+    *   **Goal:** A user can create an `infix_type` for `double _Complex` and successfully call a function that uses it, with the library handling the ABI rules correctly on all supported platforms.
+    *   **Possible Roadblocks:** SIMD types in particular have very platform-specific ABI rules that will require careful research for each backend.
+>>>>>>> main

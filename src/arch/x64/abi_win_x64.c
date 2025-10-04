@@ -44,10 +44,17 @@
 #pragma warning(disable : 4267)  // conversion from 'size_t' to 'int32_t'
 #endif
 
+<<<<<<< HEAD
 #include "abi_x64_common.h"
 #include "abi_x64_emitters.h"
 #include "common/infix_internals.h"
 #include "common/utility.h"
+=======
+#include "common/infix_internals.h"
+#include "common/utility.h"
+#include <abi_x64_common.h>
+#include <abi_x64_emitters.h>
+>>>>>>> main
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -113,6 +120,7 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
  * @return `true` if the type should be returned by reference, `false` otherwise.
  */
 static bool return_value_is_by_reference(infix_type * type) {
+<<<<<<< HEAD
     if (type->category == INFIX_TYPE_VECTOR) {
 #if defined(INFIX_COMPILER_GCC)
         // GCC on Windows returns vectors larger than 16 bytes by reference.
@@ -128,6 +136,14 @@ static bool return_value_is_by_reference(infix_type * type) {
         type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX)
         return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
 
+=======
+    if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
+        type->category == INFIX_TYPE_ARRAY) {
+        // According to the Microsoft x64 ABI, aggregates are returned by reference
+        // if their size is NOT 1, 2, 4, or 8 bytes. This correctly includes 16-byte structs.
+        return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
+    }
+>>>>>>> main
 #if defined(INFIX_COMPILER_GCC)
     // GCC/Clang have a special case for returning long double by reference on Windows.
     if (is_long_double(type))
@@ -217,7 +233,11 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
             current_stack_offset += arg_stack_space;
             // Step 0: Make sure we aren't blowing ourselves up
             if (current_stack_offset > INFIX_MAX_ARG_SIZE) {
+<<<<<<< HEAD
                 *out_layout = nullptr;
+=======
+                *out_layout = NULL;
+>>>>>>> main
                 return INFIX_ERROR_LAYOUT_FAILED;
             }
         }
@@ -409,6 +429,7 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
             emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (is_double(ret_type))
             emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+<<<<<<< HEAD
         // On GCC/Clang on Windows, 16-byte primitives (__int128_t, long double)
         // are returned in XMM0. This now also applies to MSVC for vector types.
         else if (ret_type->size == 16 &&
@@ -416,6 +437,15 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
             emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (ret_type->size == 32 && ret_type->category == INFIX_TYPE_VECTOR)
             emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);
+=======
+#if !defined(INFIX_COMPILER_MSVC)
+        // On GCC/Clang on Windows, 16-byte primitives (__int128_t, long double)
+        // are returned in XMM0.
+        else if (ret_type->size == 16 && ret_type->category == INFIX_TYPE_PRIMITIVE)
+            // We need to emit 'movups [r13], xmm0'. Opcode: 0F 11.
+            EMIT_BYTES(buf, 0x41, 0x0f, 0x11, 0x45, 0x00);  // movups [r13], xmm0
+#endif
+>>>>>>> main
         else {
             // All other returnable-by-value types are in RAX.
             switch (ret_type->size) {
@@ -479,7 +509,11 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
     }
 
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
+<<<<<<< HEAD
         *out_layout = nullptr;
+=======
+        *out_layout = NULL;
+>>>>>>> main
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -491,7 +525,11 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
     // Prevent integer overflow from fuzzer-provided types that are impractically large by ensuring the total required
     // stack space is within a safe limit.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
+<<<<<<< HEAD
         *out_layout = nullptr;
+=======
+        *out_layout = NULL;
+>>>>>>> main
         return INFIX_ERROR_LAYOUT_FAILED;
     }
     layout->total_stack_alloc = (total_local_space + 15) & ~15;
@@ -616,7 +654,11 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
     EMIT_BYTES(buf, 0x48, 0xB9);  // mov rcx, #context
     emit_int64(buf, (int64_t)context);
 
+<<<<<<< HEAD
     if (return_value_is_by_reference(context->return_type))
+=======
+    if (return_value_is_by_reference(context->return_type)) {
+>>>>>>> main
         emit_mov_reg_mem(buf, RDX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
     else
         emit_lea_reg_mem(buf, RDX_REG, RSP_REG, layout->return_buffer_offset);
@@ -630,6 +672,7 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
 }
 
 /**
+<<<<<<< HEAD
  * @brief Stage 5: Generates the epilogue for the reverse trampoline stub.
  *
  * @details After the C dispatcher returns, this code is responsible for the final steps
@@ -657,14 +700,31 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
  * @param layout The blueprint containing the offsets for the stub's local stack variables.
  * @param context The context containing the full return type information for the callback.
  * @return `INFIX_SUCCESS` on successful code generation.
+=======
+ * @brief (Win x64) Stage 5: Generates the epilogue for the reverse trampoline stub.
+ * @details After the C dispatcher returns, this code retrieves the return value from the
+ *          return buffer on the stub's stack and places it into the correct native return
+ *          register (RAX or XMM0). It then deallocates the stack frame, restores saved
+ *          registers, and returns to the original native caller.
+ * @param buf The code buffer.
+ * @param layout The blueprint containing the return buffer's offset.
+ * @param context The context containing the return type information.
+ * @return `INFIX_SUCCESS`.
+>>>>>>> main
  */
 static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                                                       infix_reverse_call_frame_layout * layout,
                                                       infix_reverse_t * context) {
     // Handle the return value after the dispatcher returns.
     if (context->return_type->category != INFIX_TYPE_VOID) {
+<<<<<<< HEAD
         if (return_value_is_by_reference(context->return_type))
             emit_mov_reg_mem(buf, RAX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
+=======
+        if (return_value_is_by_reference(context->return_type)) {
+            emit_mov_reg_mem(buf, RAX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
+        }
+>>>>>>> main
 #if !defined(INFIX_COMPILER_MSVC)
         else if (context->return_type->size == 16 && context->return_type->category == INFIX_TYPE_PRIMITIVE) {
             // GCC/Clang on Windows returns 128-bit integers and long double in XMM0

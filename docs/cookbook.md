@@ -2,9 +2,15 @@
 
 This guide provides practical, real-world examples to help you solve common FFI problems and leverage the full power of the `infix` library. Where the `README.md` covers concepts, this cookbook provides the code.
 
+<<<<<<< HEAD
 > **Note:** All examples in this cookbook are standalone, compilable C files located in the [`eg/cookbook/`](/eg/cookbook/) directory.
 
 > For a complete reference on the string format used in these examples (e.g., `"int"`, `"{double, double}"`, `"*char"`), please see the **[Signature Language Reference](docs/signatures.md)**.
+=======
+> **Note:** All examples in this cookbook are standalone, compilable C files located in the [`eg/cookbook/`](eg/cookbook/) directory.
+
+> For a complete reference on the string format used in these examples (e.g., `"i"`, `"{d,d}"`, `"c*"`), please see the **[Signature Language Reference](docs/signatures.md)**.
+>>>>>>> main
 
 ## Table of Contents
 
@@ -21,8 +27,11 @@ This guide provides practical, real-world examples to help you solve common FFI 
     *   [Recipe: Working with Packed Structs via the Signature API](#recipe-working-with-packed-structs-via-the-signature-api)
     *   [Recipe: Working with Unions](#recipe-working-with-unions)
     *   [Recipe: Working with Pointers to Arrays](#recipe-working-with-pointers-to-arrays)
+<<<<<<< HEAD
     *   [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
     *   [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
+=======
+>>>>>>> main
 *   **Chapter 3: The Power of Callbacks (Reverse Calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
     *   [Recipe: Creating a Stateful Callback (The Modern Way)](#recipe-creating-a-stateful-callback-the-modern-way)
@@ -49,8 +58,11 @@ This guide provides practical, real-world examples to help you solve common FFI 
 *   **Chapter 8: Common Pitfalls & Troubleshooting**
     *   [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
     *   [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
+<<<<<<< HEAD
     *   [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
     *   [Pitfall: Struct Packing Differences](#pitfall-struct-packing-differences)
+=======
+>>>>>>> main
     *   [A Note on Memory Safety by Design](#a-note-on-memory-safety-by-design)
 *   **Chapter 9: Building Language Bindings**
     *   [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
@@ -63,7 +75,11 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 **Problem**: You want to call a standard C function, like `int add(int, int);`.
 
+<<<<<<< HEAD
 **Solution**: Describe the function's signature using the v1.0 format (`"(int, int) -> int"`), prepare pointers to your arguments, and invoke the function through the generated trampoline.
+=======
+**Solution**: Describe the function's signature using the Signature API (`"i,i=>i"`), prepare pointers to your arguments, and invoke the function through the generated trampoline.
+>>>>>>> main
 
 ```c
 #include <infix/infix.h>
@@ -73,7 +89,11 @@ int add_ints(int a, int b) { return a + b; }
 
 int main() {
     infix_forward_t* trampoline = NULL;
+<<<<<<< HEAD
     infix_forward_create(&trampoline, "(int32, int32)->int32");
+=======
+    infix_forward_create(&trampoline, "i,i=>i");
+>>>>>>> main
 
     int a = 40, b = 2;
     void* args[] = { &a, &b };
@@ -86,13 +106,21 @@ int main() {
     return 0;
 }
 ```
+<<<<<<< HEAD
 > [View the full code](/eg/cookbook/01_simple_call.c)
+=======
+> [View the full code](eg/cookbook/01_simple_call.c)
+>>>>>>> main
 
 ### Recipe: Passing and Receiving Pointers
 
 **Problem**: You need to call a C function that takes pointers as arguments, like `void swap(int* a, int* b);`.
 
+<<<<<<< HEAD
 **Solution**: Use the `*` prefix modifier in the signature string (`"(*int, *int) -> void"`). The values you pass in the `args` array are the addresses of your pointer variables.
+=======
+**Solution**: Use the `*` modifier in the signature string (`"i*,i*=>v"`). The values you pass in the `args` array are the addresses of your pointer variables.
+>>>>>>> main
 
 ```c
 #include <infix/infix.h>
@@ -104,7 +132,11 @@ void swap_ints(int* a, int* b) {
 
 int main() {
     infix_forward_t* trampoline = NULL;
+<<<<<<< HEAD
     infix_forward_create(&trampoline, "(*int32, *int32)->void");
+=======
+    infix_forward_create(&trampoline, "i*,i*=>v");
+>>>>>>> main
 
     int x = 10, y = 20;
     int* ptr_x = &x;
@@ -119,6 +151,7 @@ int main() {
     return 0;
 }
 ```
+> [View the full code](eg/cookbook/02_pointers.c)
 
 > [View the full code](/eg/cookbook/02_pointers.c)
 
@@ -126,17 +159,29 @@ int main() {
 
 **Problem**: You need to interact with a C library that uses opaque pointers (or "handles") where the internal structure is hidden.
 
+<<<<<<< HEAD
 **Solution**: Use the `*void` signature. This is the canonical representation for a generic handle or opaque pointer.
 
 > [View the full code](/eg/cookbook/03_opaque_pointers.c)
+=======
+**Solution**: Use the `v*` signature for `void*` or any other opaque pointer type. This is the canonical representation for a generic handle.
+
+> [View the full code](eg/cookbook/03_opaque_pointers.c)
+>>>>>>> main
 
 ### Recipe: Working with Fixed-Size Arrays
 
 **Problem**: You need to call a function that operates on a fixed-size array, like `long long sum_array(long long arr[4]);`.
 
+<<<<<<< HEAD
 **Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (`"(*int64) -> int64"`). `infix` will handle the call correctly.
 
 > [View the full code](/eg/cookbook/04_fixed_arrays.c)
+=======
+**Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this (`"x*=>x"` for `int64_t(const int64_t*)`). `infix` will handle the call correctly.
+
+> [View the full code](eg/cookbook/04_fixed_arrays.c)
+>>>>>>> main
 
 ---
 
@@ -148,15 +193,25 @@ int main() {
 
 **Solution**: Use `infix_type_from_signature` to parse a signature string into a detailed `infix_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
+<<<<<<< HEAD
 > [View the full code](/eg/cookbook/05_dynamic_marshalling.c)
+=======
+> [View the full code](eg/cookbook/05_dynamic_marshalling.c)
+>>>>>>> main
 
 ### Recipe: Small Structs Passed by Value
 
 **Problem**: You need to call a function that takes a small `struct` that the ABI passes in registers.
 
+<<<<<<< HEAD
 **Solution**: Use the anonymous struct syntax `({...})` (e.g., `"({double, double}) -> double"` for `double(Point)`). `infix` will automatically determine the correct ABI passing convention.
 
 > [View the full code](/eg/cookbook/06_small_struct_by_value.c)
+=======
+**Solution**: Use the `{}` syntax (e.g., `"{d,d}=>d"` for `double(Point)`). `infix` will automatically determine the correct ABI passing convention.
+
+> [View the full code](eg/cookbook/06_small_struct_by_value.c)
+>>>>>>> main
 
 ### Recipe: Large Structs Passed by Reference
 
@@ -164,12 +219,17 @@ int main() {
 
 **Solution**: The process is identical to the small struct example. `infix`'s ABI logic will detect that the struct is large and automatically pass it by reference.
 
+<<<<<<< HEAD
 > [View the full code](/eg/cookbook/07_large_struct_by_reference.c)
+=======
+> [View the full code](eg/cookbook/07_large_struct_by_reference.c)
+>>>>>>> main
 
 ### Recipe: Receiving a Struct from a Function
 
 **Problem**: You need to call a function that *returns* a struct by value.
 
+<<<<<<< HEAD
 **Solution**: Simply use the struct signature as the return type (e.g., `"() -> {double, double}"`).
 
 > [View the full code](/eg/cookbook/08_return_struct.c)
@@ -181,19 +241,39 @@ int main() {
 **Solution**: Use the `!{...}` syntax. The `!` prefix tells `infix` to use a packed layout with 1-byte alignment. The parser will correctly calculate all member offsets with no internal padding. For alignments other than 1, use `!N:{...}` where N is the alignment.
 
 > [View the full code](/eg/cookbook/09_packed_struct.c)
+=======
+**Solution**: Simply use the struct signature as the return type (e.g., `"=>__{d,d_}_"`).
+
+> [View the full code](eg/cookbook/08_return_struct.c)
+
+### Recipe: Working with Packed Structs via the Signature API
+
+**Problem**: You need to call a C function that takes a packed struct.
+
+**Solution**: Use the `p(size,align){type@offset,...}` signature syntax, providing the exact layout metadata from your C compiler using `sizeof`, `_Alignof`, and `offsetof`.
+
+> [View the full code](eg/cookbook/09_packed_struct.c)
+>>>>>>> main
 
 ### Recipe: Working with Unions
 
 **Problem**: You need to call a function that passes or returns a `union`.
 
+<<<<<<< HEAD
 **Solution**: Use the `<...>` syntax to describe the union (e.g., `"(<int32, float32>) -> int32"`). `infix` will automatically classify it for ABI compliance.
 
 > [View the full code](/eg/cookbook/10_unions.c)
+=======
+**Solution**: Use the `<...>` syntax to describe the union (e.g., `"<i,f>=>i"`). `infix` will automatically classify it for ABI compliance.
+
+> [View the full code](eg/cookbook/10_unions.c)
+>>>>>>> main
 
 ### Recipe: Working with Pointers to Arrays
 
 **Problem**: You need to call a function that takes a pointer to a fixed-size array, like `void process_matrix(int (*matrix)[4]);`.
 
+<<<<<<< HEAD
 **Solution**: Use the pointer prefix `*` on an array type (`*[4:int32]`).
 
 > [View the full code](/eg/cookbook/11_pointer_to_array.c)
@@ -215,6 +295,11 @@ int main() {
 > [View the full code](/eg/cookbook/21_introspection.c)
 
 > This example demonstrates how a language binding can use the introspection API to build a runtime type checker, greatly improving the safety and robustness of the FFI bridge.
+=======
+**Solution**: Use grouping parentheses `()` around the array type before adding the `*` pointer modifier (e.g., `"([4]i)*=>v"`).
+
+> [View the full code](eg/cookbook/11_pointer_to_array.c)
+>>>>>>> main
 
 ---
 
@@ -226,7 +311,11 @@ int main() {
 
 **Solution**: Use a reverse trampoline to create a native function pointer for your comparison handler. The handler's signature must accept `infix_context_t*` as its first argument.
 
+<<<<<<< HEAD
 > [View the full code](/eg/cookbook/12_callback_qsort.c)
+=======
+> [View the full code](eg/cookbook/12_callback_qsort.c)
+>>>>>>> main
 
 ### Recipe: Creating a Stateful Callback (The Modern Way)
 
@@ -234,7 +323,11 @@ int main() {
 
 **Solution**: `infix` automatically passes a pointer to the `infix_context_t` as the **first argument** to every C callback handler. Retrieve your application state from the context's `user_data` field.
 
+<<<<<<< HEAD
 > [View the full code](/eg/cookbook/13_stateful_callback.c)
+=======
+> [View the full code](eg/cookbook/13_stateful_callback.c)
+>>>>>>> main
 
 ## Chapter 4: Advanced Techniques
 
@@ -242,17 +335,29 @@ int main() {
 
 **Problem**: You need to call a function with a variable number of arguments.
 
+<<<<<<< HEAD
 **Solution**: Use the `;` token to seperate fixed and variadic arguments in the signature. The signature only needs to describe both the fixed (non-variadic) and variadic arguments.
 
 > [View the full code](/eg/cookbook/14_variadic_printf.c)
+=======
+**Solution**: Provide the types for *all* arguments you intend to pass in a single call and use a semicolon (`;`) in the signature to mark where the variadic part begins.
+
+> [View the full code](eg/cookbook/14_variadic_printf.c)
+>>>>>>> main
 
 ### Recipe: Creating a Variadic Callback
 
 **Problem**: You need to create a native function pointer for a handler that is itself variadic.
 
+<<<<<<< HEAD
 **Solution**: Your C handler will use `<stdarg.h>`. The `infix` signature simply includes the `;` token after the fixed arguments, just as with a forward call.
 
 > [View the full code](/eg/cookbook/15_variadic_callback.c)
+=======
+**Solution**: Your C handler will use `<stdarg.h>`. The `infix` signature must describe a specific, concrete instance of the variadic call you expect the C code to make.
+
+> [View the full code](eg/cookbook/15_variadic_callback.c)
+>>>>>>> main
 
 ### Recipe: Proving Reentrancy with Nested FFI Calls
 
@@ -260,15 +365,25 @@ int main() {
 
 **Solution**: `infix` is fully reentrant. Create all necessary trampolines upfront and use them as needed.
 
+<<<<<<< HEAD
 > [View the full code](/eg/cookbook/16_nested_calls.c)
+=======
+> [View the full code](eg/cookbook/16_nested_calls.c)
+>>>>>>> main
 
 ### Recipe: Receiving and Calling a Function Pointer
 
 **Problem**: You need to call a factory function that returns a pointer to another function, which you then need to call.
 
+<<<<<<< HEAD
 **Solution**: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its `user_data`. The signature for a function pointer is `*((...)->...)`.
 
 > [View the full code](/eg/cookbook/17_return_callback.c)
+=======
+**Solution**: Use two reverse trampolines. The "provider" callback returns a pointer to the "worker" callback, which it retrieves from its `user_data`.
+
+> [View the full code](eg/cookbook/17_return_callback.c)
+>>>>>>> main
 
 ---
 
@@ -282,9 +397,15 @@ It is possible to call a function written in Rust, Fortran, or C++ from C becaus
 
 **Problem**: You need to create, use, and destroy a C++ object from a pure C environment.
 
+<<<<<<< HEAD
 **Solution**: The most robust solution is to create a simple C-style API in your C++ code using `extern "C"`. `infix` can then call this clean, predictable API, using `*void` as the opaque handle for the object pointer.
 
 > [View the full code](/eg/cookbook/18_cpp_example.c)
+=======
+**Solution**: The most robust solution is to create a simple C-style API in your C++ code using `extern "C"`. `infix` can then call this clean, predictable API, using `v*` as the opaque handle for the object pointer.
+
+> [View the full code](eg/cookbook/18_cpp_example.c)
+>>>>>>> main
 The Pattern for Other Compiled Languages
 
 The following examples all demonstrate how to export a simple `int add(int, int)` function from a shared library. Notice how the infix C code is nearly identical in every case, highlighting the power of the C ABI as a universal interface.
@@ -314,7 +435,11 @@ int main() {
     int (*rust_add)(int, int) = dlsym(lib, "rust_add");
 
     infix_forward_t* trampoline = NULL;
+<<<<<<< HEAD
     infix_forward_create(&trampoline, "(int32, int32)->int32");
+=======
+    infix_forward_create(&trampoline, "i,i=>i");
+>>>>>>> main
 
     int a = 50, b = 50;
     void* args[] = { &a, &b };
@@ -358,7 +483,11 @@ int main() {
 
     // The infix code is identical to the Rust example!
     infix_forward_t* trampoline = NULL;
+<<<<<<< HEAD
     infix_forward_create(&trampoline, "(int32, int32)->int32");
+=======
+    infix_forward_create(&trampoline, "i,i=>i");
+>>>>>>> main
 
     int a = 20, b = 22;
     void* args[] = { &a, &b };
@@ -470,11 +599,19 @@ The C code would be identical to the previous examples, just loading `libasm_mat
 
 ### Recipe: Calling Native System Libraries
 
+<<<<<<< HEAD
 **Problem**: You need to call a native OS library like `user32.dll` on Windows or `CoreFoundation.framework` on macOS.
 
 **Solution**: Load the library dynamically, get a function pointer, and use `infix` with the correct signature. The example file contains platform-specific code for Windows, macOS, and Linux.
 
 > [View the full code](/eg/cookbook/19_system_libraries.c)
+=======
+**Problem**: You need to call a native OS library like `User32.dll` on Windows or `CoreFoundation.framework` on macOS.
+
+**Solution**: Load the library dynamically, get a function pointer, and use `infix` with the correct signature. The example file contains platform-specific code for Windows, macOS, and Linux.
+
+> [View the full code](eg/cookbook/19_system_libraries.c)
+>>>>>>> main
 
 ---
 
@@ -489,7 +626,11 @@ The C code would be identical to the previous examples, just loading `libasm_mat
 for (int i = 0; i < 1000000; ++i) {
     infix_forward_t* t;
     // VERY SLOW: Generating a new trampoline on every iteration.
+<<<<<<< HEAD
     infix_forward_create(&t, "(int, int) -> int");
+=======
+    infix_forward_create(&t, "i,i=>i");
+>>>>>>> main
     cif_func(target, &result, args);
     infix_forward_destroy(t);
 }
@@ -500,7 +641,11 @@ By amortizing the one-time generation cost over millions of calls, the FFI overh
 ```c
 // Correct Pattern: Generate once, use many times.
 infix_forward_t* t;
+<<<<<<< HEAD
 infix_forward_create(&t, "(int, int) -> int");
+=======
+infix_forward_create(&t, "i,i=>i");
+>>>>>>> main
 infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(t);
 
 for (int i = 0; i < 1000000; ++i) {
@@ -524,6 +669,7 @@ infix_forward_destroy(t);
 
 *   **Symptom**: Silent data corruption or a crash much later in execution.
 *   **Explanation**: The type you describe in the signature string must *exactly* match the C type's size and alignment. A common error is mismatching the `long` type, which is 32 bits on 64-bit Windows but 64 bits on 64-bit Linux.
+<<<<<<< HEAD
 *   **Solution**: Use fixed-width types from the Tier 2 specification (e.g., `int32`, `uint64`) whenever possible to be explicit about the memory layout.
 
 ### Pitfall: Function Pointer Syntax
@@ -550,6 +696,20 @@ The `infix` API is designed to eliminate common C memory management errors.
 
 ## Chapter 9: Building Language Bindings
 
+=======
+*   **Solution**: Use fixed-width types from `<stdint.h>` (e.g., `int64_t`) and their corresponding `infix` types (`x`) whenever possible.
+
+### A Note on Memory Safety by Design
+
+The `infix` API is designed to eliminate common C memory management errors.
+*   The high-level Signature API (`infix_forward_create`, etc.) handles all `infix_type` memory management **automatically**.
+*   The low-level Manual API (`infix_type_create_struct`, etc.) is now **exclusively arena-based**, forcing a safe memory model where all types are freed with a single call to `infix_arena_destroy`.
+
+---
+
+## Chapter 9: Building Language Bindings
+
+>>>>>>> main
 **Discussion**: `infix` is an ideal engine for creating a "language binding"—a library that allows a high-level language like Python, Ruby, or Lua to call C functions. The binding provides the crucial "glue" to the high-level language's runtime.
 
 ### The Four Pillars of a Language Binding
@@ -564,6 +724,7 @@ Instead of building complex C `infix_type` objects, the binding's primary job is
 ```python
 # A conceptual function in a Python binding
 def _get_signature_string_from_ctypes(restype, argtypes):
+<<<<<<< HEAD
     type_map = { ctypes.c_int: 'int', ctypes.c_double: 'double', ctypes.c_void_p: '*void' }
 
     def _map_type_to_sig(t):
@@ -574,6 +735,14 @@ def _get_signature_string_from_ctypes(restype, argtypes):
     ret_part = _map_type_to_sig(restype)
 
     return f"({','.join(arg_parts)}) -> {ret_part}"
+=======
+    type_map = { ctypes.c_int: 'i', ctypes.c_double: 'd', ctypes.c_void_p: 'v*' }
+
+    arg_parts = [_map_type_to_sig(t) for t in argtypes] # _map_type_to_sig is recursive
+    ret_part = _map_type_to_sig(restype)
+
+    return f"{','.join(arg_parts)}=>{ret_part}"
+>>>>>>> main
 ```
 
 #### 2. Trampoline Caching
