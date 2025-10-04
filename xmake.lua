@@ -30,7 +30,7 @@ target("infix")
 --~     add_defines("INFIX_DEBUG_ENABLED=1")
 
 -- Define the test targets.
-for _, test_file in ipairs(os.files("t/**/*.c")) do
+for _, test_file in ipairs(os.files("t/*.c")) do
     local target_name = path.basename(test_file)
 
     target(target_name)
@@ -55,6 +55,11 @@ for _, test_file in ipairs(os.files("t/**/*.c")) do
         add_includedirs("t/include")
         add_defines("DBLTAP_ENABLE=1")
         add_tests(target_name)
+
+        -- https://xmake.io/api/description/project-target.html#add-vectorexts
+        -- v[4:double] support requires avx2
+        add_vectorexts("all")
+        --~ add_vectorexts("avx512") TODO
 
         -- Add platform-specific system libraries for tests
         on_config(function(target)
@@ -89,6 +94,11 @@ for _, fuzz_harness in ipairs(os.files("fuzz/fuzz_*.c")) do
             add_deps("infix")
             set_policy("build.sanitizer.address", true)
             add_includedirs("fuzz", "src/core") -- Add src/core for internals.h
+
+            -- https://xmake.io/api/description/project-target.html#add-vectorexts
+            -- v[4:double] support requires avx2
+            add_vectorexts("avx", "avx2")
+            --~ add_vectorexts("avx512") TODO
 
             -- Add fuzzer-specific flags
             -- This requires the user to configure the toolchain appropriately,

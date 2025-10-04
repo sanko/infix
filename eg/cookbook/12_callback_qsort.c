@@ -27,7 +27,11 @@ int compare_ints_handler(infix_context_t * context, const void * a, const void *
 int main() {
     // 1. Describe the signature `qsort` expects for its comparison function:
     //    int(const void*, const void*)
+<<<<<<< HEAD
+    const char * qsort_compare_sig = "(*void, *void) -> int32";
+=======
     const char * qsort_compare_sig = "v*,v*=>i";
+>>>>>>> main
     infix_reverse_t * rt = NULL;
     infix_reverse_create(&rt, qsort_compare_sig, (void *)compare_ints_handler, NULL);
 

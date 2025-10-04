@@ -112,32 +112,25 @@ void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
     if (size == 0)
         return (void *)(arena->buffer + arena->current_offset);
 
-    // Calculate the padding required to meet the alignment.
-    uintptr_t current_ptr = (uintptr_t)arena->buffer + arena->current_offset;
-    uintptr_t aligned_ptr = (current_ptr + alignment - 1) & ~(alignment - 1);
-    size_t padding = aligned_ptr - current_ptr;
+    // Calculate the next aligned offset using the shared helper.
+    size_t aligned_offset = _infix_align_up(arena->current_offset, alignment);
 
-    // Check if adding padding would overflow size_t.
-    if (arena->current_offset > SIZE_MAX - padding) {
-        arena->error = true;
-        return nullptr;
-    }
-    size_t aligned_offset = arena->current_offset + padding;
-    // Check if adding the requested size would overflow size_t.
-    if (aligned_offset > SIZE_MAX - size) {
+    // Check for overflow during the alignment calculation.
+    if (aligned_offset < arena->current_offset) {
         arena->error = true;
         return nullptr;
     }
 
-    // Check if there is enough space left in the arena.
-    if (aligned_offset + size > arena->capacity) {
+    // Check if adding the requested size would overflow size_t or exceed capacity.
+    if (SIZE_MAX - size < aligned_offset || aligned_offset + size > arena->capacity) {
         arena->error = true;
         return nullptr;
     }
 
-    // Bump the pointer and return the aligned address.
+    // All checks passed. Get the pointer and update the offset.
+    void * ptr = arena->buffer + aligned_offset;
     arena->current_offset = aligned_offset + size;
-    return (void *)aligned_ptr;
+    return ptr;
 }
 
 /**

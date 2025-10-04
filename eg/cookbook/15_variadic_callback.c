@@ -24,10 +24,18 @@ void run_logger(log_func_t logger) {
 }
 
 int main() {
+<<<<<<< HEAD
+    // 1. Describe the signature for the C library's callback:
+    //    void(const char*, const char*, ...)
+    //    The concrete call made by the harness will have an int as the variadic part.
+    //    The semicolon indicates where the variadic arguments begin.
+    const char * signature = "(*char, *char; int) -> void";
+=======
     // 1. Describe the *concrete signature* of the call being made inside run_logger:
     //    void(const char*, const char*, int)
     //    The semicolon indicates that the `int` is a variadic argument.
     const char * signature = "c*,c*;i=>v";
+>>>>>>> main
 
     // 2. Create the reverse trampoline.
     infix_reverse_t * rt = NULL;

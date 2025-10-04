@@ -83,7 +83,12 @@
  *
  * int main() {
  *     infix_forward_t* trampoline = NULL;
+<<<<<<< HEAD
+ *     // Signature for: int printf(const char*, ...);
+ *     const char* signature = "(*char; int32) -> int32";
+=======
  *     const char* signature = "i*,i=>i"; // const char*, int => int
+>>>>>>> main
  *
  *     infix_status status = infix_forward_create(&trampoline, signature);
  *     if (status != INFIX_SUCCESS) {
@@ -99,6 +104,10 @@
  *
  *     void* args[] = { &my_string, &my_int };
  *
+<<<<<<< HEAD
+ *     // The target function is passed at the call site.
+=======
+>>>>>>> main
  *     cif(&printf, &printf_ret, args);
  *
  *     printf("printf returned: %d\n", printf_ret); // Should match the number of chars printed
@@ -121,8 +130,47 @@
  * SPDX-License-Identifier: CC-BY-4.0
  */
 
+<<<<<<< HEAD
+//=================================================================================================
+// Doxygen Modules
+//=================================================================================================
+
+/**
+ * @defgroup public_api Public API
+ * @brief The primary public-facing functions for using the infix library.
+ *
+ * @defgroup high_level_api High-Level Signature API
+ * @ingroup public_api
+ * @brief Recommended functions for creating trampolines from a signature string.
+ *
+ * @defgroup manual_api Manual Type-Creation API
+ * @ingroup public_api
+ * @brief Advanced functions for manually building `infix_type` objects.
+ *
+ * @defgroup type_system Type System
+ * @ingroup public_api
+ * @brief Structures and functions for describing C data types.
+ *
+ * @defgroup introspection_api Introspection API
+ * @ingroup public_api
+ * @brief Functions for querying the properties of trampolines and types.
+ *
+ * @defgroup memory_management Memory Management
+ * @ingroup public_api
+ * @brief The arena allocator and configurable memory functions.
+ */
+
+//=================================================================================================
+// Version Information
+//=================================================================================================
+
 /**
  * @defgroup version_macros Version Information
+ * @ingroup public_api
+=======
+/**
+ * @defgroup version_macros Version Information
+>>>>>>> main
  * @brief Macros defining the semantic version of the infix library.
  * @details The versioning scheme follows Semantic Versioning 2.0.0 (SemVer).
  * - **MAJOR** version is incremented for incompatible API changes.
@@ -130,11 +178,16 @@
  * - **PATCH** version is incremented for making backward-compatible bug fixes.
  * @{
  */
+<<<<<<< HEAD
+#define INFIX_MAJOR 0
+#define INFIX_MINOR 1
+=======
 /** @brief The major version of the infix library. Incremented for breaking API changes. */
 #define INFIX_MAJOR 1
 /** @brief The minor version of the infix library. Incremented for new, backward-compatible features. */
 #define INFIX_MINOR 0
 /** @brief The patch version of the infix library. Incremented for backward-compatible bug fixes. */
+>>>>>>> main
 #define INFIX_PATCH 0
 /** @} */
 
@@ -155,10 +208,25 @@
 #include <stddef.h>
 #include <stdint.h>
 
+<<<<<<< HEAD
+//=================================================================================================
+// Core Types & Handles
+//=================================================================================================
+
+/** @addtogroup type_system */
+/** @{ */
+
+=======
+>>>>>>> main
 /** @brief The central structure for describing any data type in the FFI system. */
 typedef struct infix_type_t infix_type;
 /** @brief Describes a single member of an aggregate type (struct or union). */
 typedef struct infix_struct_member_t infix_struct_member;
+<<<<<<< HEAD
+/** @brief Describes a single argument of a function type, including its optional name. */
+typedef struct infix_function_argument_t infix_function_argument;
+=======
+>>>>>>> main
 /** @brief An opaque handle to a JIT-compiled forward-call trampoline. */
 typedef struct infix_forward_t infix_forward_t;
 /** @brief An opaque handle to the context of a reverse-call trampoline (callback). */
@@ -179,6 +247,13 @@ typedef enum {
     INFIX_TYPE_UNION,               ///< A user-defined union (`union`).
     INFIX_TYPE_ARRAY,               ///< A fixed-size array.
     INFIX_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
+<<<<<<< HEAD
+    INFIX_TYPE_ENUM,                ///< A C-style enumeration, with an underlying integer type.
+    INFIX_TYPE_COMPLEX,             ///< A `_Complex` number type.
+    INFIX_TYPE_VECTOR,              ///< A SIMD vector type.
+    INFIX_TYPE_NAMED_REFERENCE,     ///< A reference to a named type (e.g., `struct<Node>`).
+=======
+>>>>>>> main
     INFIX_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
 } infix_type_category;
 
@@ -205,10 +280,17 @@ typedef enum {
 } infix_primitive_type_id;
 
 /**
+<<<<<<< HEAD
+ * @struct infix_type_t
+ * @brief The central structure for describing any data type in the FFI system.
+ *
+ * @details This structure provides the FFI code generator with the necessary metadata
+=======
  * @struct infix_type
  * @brief The central structure for describing any data type in the FFI system.
  *
  * This structure provides the FFI code generator with the necessary metadata
+>>>>>>> main
  * (size, alignment, category, and contents) to correctly handle arguments and
  * return values according to the target ABI.
  */
@@ -221,6 +303,13 @@ struct infix_type_t {
     union {
         /** @brief For `INFIX_TYPE_PRIMITIVE`. */
         infix_primitive_type_id primitive_id;
+<<<<<<< HEAD
+        /** @brief For `INFIX_TYPE_POINTER`. */
+        struct {
+            struct infix_type_t * pointee_type;  ///< The type this pointer points to.
+        } pointer_info;
+=======
+>>>>>>> main
         /** @brief For `INFIX_TYPE_STRUCT` and `INFIX_TYPE_UNION`. */
         struct {
             infix_struct_member * members;  ///< Array of members for the aggregate.
@@ -234,15 +323,43 @@ struct infix_type_t {
         /** @brief For `INFIX_TYPE_REVERSE_TRAMPOLINE`. */
         struct {
             struct infix_type_t * return_type;  ///< Reverse trampoline return value.
+<<<<<<< HEAD
+            infix_function_argument * args;     ///< Array of function arguments (name and type).
+            size_t num_args;                    ///< The total number of fixed and variadic arguments.
+            size_t num_fixed_args;              ///< The number of non-variadic arguments.
+        } func_ptr_info;
+        /** @brief For `INFIX_TYPE_ENUM`. */
+        struct {
+            struct infix_type_t * underlying_type;  ///< The integer type this enum is based on.
+        } enum_info;
+        /** @brief For `INFIX_TYPE_COMPLEX`. */
+        struct {
+            struct infix_type_t * base_type;  ///< The floating point type of the real and imaginary parts.
+        } complex_info;
+        /** @brief For `INFIX_TYPE_VECTOR`. */
+        struct {
+            struct infix_type_t * element_type;  ///< The type of the elements in the vector.
+            size_t num_elements;                 ///< The number of elements in the vector.
+        } vector_info;
+        /** @brief For `INFIX_TYPE_NAMED_REFERENCE`. */
+        struct {
+            const char * name;
+        } named_reference;
+=======
             struct infix_type_t ** arg_types;   ///< Arg list
             size_t num_args;                    ///< The total number of fixed and variadic arguments.
             size_t num_fixed_args;              ///< The number of non-variadic arguments.
         } func_ptr_info;
+>>>>>>> main
     } meta;
 };
 
 /**
+<<<<<<< HEAD
+ * @struct infix_struct_member_t
+=======
  * @struct infix_struct_member
+>>>>>>> main
  * @brief Describes a single member of an aggregate type (struct or union).
  * @details This structure provides the necessary metadata to define the layout of
  * a C struct or union, which is essential for correct ABI classification.
@@ -253,6 +370,116 @@ struct infix_struct_member_t {
     size_t offset;      ///< The byte offset of the member from the start of the aggregate.
 };
 
+<<<<<<< HEAD
+/**
+ * @struct infix_function_argument_t
+ * @brief Describes a single argument to a function, pairing an optional name with its type.
+ */
+struct infix_function_argument_t {
+    const char * name;  ///< The name of the argument (for reflection). Can be `nullptr` if anonymous.
+    infix_type * type;  ///< An `infix_type` describing the argument's type.
+};
+
+/** @} */  // End of type_system group
+
+#include "common/compat_c23.h"
+
+//=================================================================================================
+// Configurable Memory Allocators
+//=================================================================================================
+
+/** @addtogroup memory_management */
+/** @{ */
+
+/**
+ * @def infix_malloc(size)
+ * @brief A macro for the memory allocation function used by the library.
+ * @details By default, this maps to the standard `malloc`. Users can define this
+ * macro before including `infix.h` to redirect all internal memory allocations
+ * to a custom allocator, for example, for memory pooling, leak tracking, or
+ * integration with a garbage collector.
+ *
+ * @example
+ * ```c
+ * // In your project's configuration header, or before including infix.h:
+ * #include <stdlib.h> // For size_t
+ * void* my_custom_alloc(size_t size) {
+ *     // Custom allocation logic...
+ *     return malloc(size);
+ * }
+ * void my_custom_free(void* ptr) {
+ *     // Custom deallocation logic...
+ *     free(ptr);
+ * }
+ *
+ * #define infix_malloc(size) my_custom_alloc(size)
+ * #define infix_free(ptr)    my_custom_free(ptr)
+ *
+ * #include "infix.h"
+ * ```
+ */
+#ifndef infix_malloc
+#define infix_malloc malloc
+#endif
+
+/**
+ * @def infix_calloc(num, size)
+ * @brief A macro for the zero-initializing memory allocation function.
+ * @details Defaults to `calloc`. Can be overridden for custom memory management. See
+ * the example under `infix_malloc`.
+ */
+#ifndef infix_calloc
+#define infix_calloc calloc
+#endif
+
+/**
+ * @def infix_realloc(ptr, size)
+ * @brief A macro for the memory reallocation function.
+ * @details Defaults to `realloc`. Can be overridden for custom memory management. See
+ * the example under `infix_malloc`.
+ */
+#ifndef infix_realloc
+#define infix_realloc realloc
+#endif
+
+/**
+ * @def infix_free(ptr)
+ * @brief A macro for the memory deallocation function.
+ * @details Defaults to `free`. Can be overridden for custom memory management. See
+ * the example under `infix_malloc`.
+ */
+#ifndef infix_free
+#define infix_free free
+#endif
+
+/**
+ * @def infix_memcpy(dest, src, n)
+ * @brief A macro for copying memory from a source to a destination pointer.
+ * @details Defaults to `memcpy`. Can be overridden for custom memory management. See
+ * the example under `infix_malloc`.
+ */
+#ifndef infix_memcpy
+#define infix_memcpy memcpy
+#endif
+
+/**
+ * @def infix_memset(s, c, n)
+ * @brief A macro for setting a block of memory to a specific value.
+ * @details Defaults to `memset`. Can be overridden for custom memory management. See
+ * the example under `infix_malloc`.
+ */
+#ifndef infix_memset
+#define infix_memset memset
+#endif
+/** @} */
+
+//=================================================================================================
+// Public Types & Enums
+//=================================================================================================
+
+/** @addtogroup public_api */
+/** @{ */
+=======
 // Provides C23 compatibility shims for older language standards.
 // This is included *after* the core types are defined.
 #include <common/compat_c23.h>
@@ -308,6 +535,7 @@ struct infix_struct_member_t {
  */
 #define infix_memset memset
 #endif
+>>>>>>> main
 
 /**
  * @brief The signature for a generic forward-call trampoline, the "Call InterFace" function.
@@ -317,7 +545,11 @@ struct infix_struct_member_t {
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
  */
+<<<<<<< HEAD
+typedef void (*infix_cif_func)(void *, void *, void **);
+=======
 typedef void (*infix_cif_func)(void * target_function, void * return_value, void ** args);
+>>>>>>> main
 
 /**
  * @brief An enumeration of all possible success or failure codes from the public API.
@@ -332,6 +564,282 @@ typedef enum {
     INFIX_ERROR_                    ///< An unspecified error occurred.
 } infix_status;
 
+<<<<<<< HEAD
+/** @} */
+
+//=================================================================================================
+// High-Level Signature API
+//=================================================================================================
+
+/** @addtogroup high_level_api */
+/** @{ */
+
+/**
+ * @brief Generates a forward-call trampoline from a signature string.
+ * @details This is the primary function of the high-level API. It parses a signature
+ * string using the v1.0 specification, constructs the necessary `infix_type` objects
+ * internally, generates the trampoline, and cleans up all intermediate type descriptions.
+ * The resulting trampoline is self-contained and ready for use.
+ *
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param signature A null-terminated string describing the function signature,
+ *                  e.g., `"(int, *char) -> void"`. See the project documentation
+ *                  for the full v1.0 syntax.
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
+ *         contains unresolved named types (e.g., `struct<MyStruct>`).
+ * @return `INFIX_ERROR_ALLOCATION_FAILED` on memory allocation failure.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
+ * @example
+ * ```c
+ * #include <stdio.h>
+ * #include "infix.h"
+ *
+ * int main() {
+ *     infix_forward_t* trampoline = NULL;
+ *     // Create a trampoline for: int puts(const char* s);
+ *     infix_forward_create(&trampoline, "(*char) -> int");
+ *
+ *     infix_cif_func puts_caller = (infix_cif_func)infix_forward_get_code(trampoline);
+ *
+ *     const char* my_string = "Hello from infix!";
+ *     void* args[] = { &my_string };
+ *     int return_code;
+ *
+ *     puts_caller(&puts, &return_code, args);
+ *
+ *     infix_forward_destroy(trampoline);
+ *     return 0;
+ * }
+ * ```
+ */
+c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *);
+
+/**
+ * @brief Generates a reverse-call trampoline (callback) from a signature string.
+ * @details This function parses a v1.0 signature string to create a native, C-callable function
+ * pointer that invokes the provided user handler.
+ *
+ * @param[out] out_context On success, will point to the new reverse trampoline context.
+ * @param signature A null-terminated string describing the callback's signature.
+ * @param user_callback_fn A function pointer to the user's C callback handler.
+ *                         Its signature must start with `infix_context_t*`, followed
+ *                         by the types described in the signature string.
+ * @param user_data A user-defined pointer for passing state to the handler,
+ *                  accessible inside the handler via `infix_reverse_get_user_data`.
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
+ *         contains unresolved named types.
+ * @note The returned context must be freed with `infix_reverse_destroy`.
+ * @example
+ * ```c
+ * #include <stdio.h>
+ * #include "infix.h"
+ *
+ * // User's callback handler. Note the first argument is always the context.
+ * void my_adder_handler(infix_context_t* ctx, int* ret, int a, int b) {
+ *     int* user_value = (int*)infix_reverse_get_user_data(ctx);
+ *     printf("Callback received: a=%d, b=%d. User data is %d.\n", a, b, *user_value);
+ *     *ret = a + b + *user_value;
+ * }
+ *
+ * int main() {
+ *     infix_reverse_t* context = NULL;
+ *     int my_user_data = 100;
+ *
+ *     // Create a callback for a function with signature: int (*)(int, int)
+ *     infix_reverse_create(&context, "(int, int) -> int", &my_adder_handler, &my_user_data);
+ *
+ *     // Get the native C function pointer
+ *     int (*my_c_func)(int, int) = infix_reverse_get_code(context);
+ *
+ *     // Call it like any normal C function
+ *     int result = my_c_func(5, 7); // Will print and return 5 + 7 + 100
+ *     printf("Callback returned: %d\n", result); // Prints "Callback returned: 112"
+ *
+ *     infix_reverse_destroy(context);
+ *     return 0;
+ * }
+ * ```
+ */
+c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *, void *, void *);
+
+/**
+ * @brief Parses a full function signature string into its constituent infix_type parts.
+ * @details This is an advanced function for callers who need to inspect type information
+ *          before generating a trampoline. It creates a dedicated memory arena to hold
+ *          the resulting `infix_type` object graph.
+ *
+ * @param[in]  signature A null-terminated string describing the function signature.
+ * @param[out] out_arena On success, points to the new arena owning the type graph.
+ * @param[out] out_ret_type On success, points to the `infix_type` for the return value.
+ * @param[out] out_args On success, points to an array of `infix_function_argument`.
+ * @param[out] out_num_args On success, will be set to the total number of arguments.
+ * @param[out] out_num_fixed_args On success, will be set to the number of non-variadic arguments.
+ * @return `INFIX_SUCCESS` if parsing is successful.
+ * @note **Memory Management:** On success, the caller takes ownership of the arena.
+ * @example
+ * ```c
+ * infix_arena_t* arena = NULL;
+ * infix_type* ret_type = NULL;
+ * infix_function_argument* args = NULL;
+ * size_t num_args, num_fixed;
+ *
+ * const char* sig = "(name: *char, age: int) -> void";
+ * infix_status status = infix_signature_parse(sig, &arena, &ret_type, &args, &num_args, &num_fixed);
+ *
+ * if (status == INFIX_SUCCESS) {
+ *     printf("Signature has %zu arguments.\n", num_args);
+ *     // ... inspect types ...
+ *     infix_arena_destroy(arena);
+ * }
+ * ```
+ */
+c23_nodiscard infix_status
+infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_function_argument **, size_t *, size_t *);
+
+/**
+ * @brief Parses a signature string representing a single data type.
+ * @details A specialized parser for use cases like data marshalling or type inspection,
+ *          where a full function signature is not needed.
+ *
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param[out] out_arena On success, points to the new arena that owns the type graph.
+ * @param[in]  signature A string describing the data type (e.g., `"int32"`, `"{int, float}"`).
+ * @return `INFIX_SUCCESS` if parsing is successful.
+ * @note **Memory Management:** On success, the caller takes ownership of the arena.
+ * @example
+ * ```c
+ * infix_arena_t* arena = NULL;
+ * infix_type* my_struct_type = NULL;
+ * const char* sig = "{ x: int, y: int }";
+ *
+ * infix_status status = infix_type_from_signature(&my_struct_type, &arena, sig);
+ *
+ * if (status == INFIX_SUCCESS) {
+ *     printf("Parsed struct size: %zu\n", infix_type_get_size(my_struct_type));
+ *     infix_arena_destroy(arena);
+ * }
+ * ```
+ */
+c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *);
+
+/** @} */
+
+//=================================================================================================
+// Manual Type-Creation API
+//=================================================================================================
+
+/** @addtogroup manual_api */
+/** @{ */
+
+/**
+ * @brief Generates a forward-call trampoline for a given function signature.
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param return_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type*` for each argument.
+ * @param num_args The total number of arguments.
+ * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
+ * @note **Memory Ownership:** The generated `infix_forward_t` is self-contained.
+ * @example
+ * ```c
+ * // Manually create a trampoline for: int puts(const char* s);
+ * infix_forward_t* trampoline = NULL;
+ * infix_type* ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+ * infix_type* arg_types[] = { infix_type_create_pointer() };
+ *
+ * infix_forward_create_manual(&trampoline, ret_type, arg_types, 1, 1);
+ * // ... use trampoline ...
+ * infix_forward_destroy(trampoline);
+ * ```
+ */
+c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t);
+
+/**
+ * @brief Generates a reverse-call trampoline (a native callable function pointer for a callback).
+ * @details Creates a native C function pointer that invokes a user-provided handler.
+ * @param[out] out_context On success, will point to the new reverse trampoline context.
+ * @param return_type The return type of the callback.
+ * @param arg_types An array of `infix_type` pointers for the callback's arguments.
+ * @param num_args The total number of arguments in `arg_types`.
+ * @param num_fixed_args The number of fixed arguments.
+ * @param user_callback_fn A function pointer to your C callback handler.
+ * @param user_data A user-defined pointer for passing state to the handler.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note See `infix_reverse_create` for critical details on the handler's signature.
+ * @note The returned context must be freed with `infix_reverse_destroy`.
+ * @note The generated context is self-contained.
+ * @example
+ * ```c
+ * // Same callback handler as the infix_reverse_create example
+ * void my_adder_handler(infix_context_t* ctx, int* ret, int a, int b);
+ *
+ * infix_reverse_t* context = NULL;
+ * int my_user_data = 100;
+ *
+ * infix_type* ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+ * infix_type* arg_types[] = {
+ *     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+ *     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)
+ * };
+ *
+ * infix_reverse_create_manual(&context, ret_type, arg_types, 2, 2, &my_adder_handler, &my_user_data);
+ * // ... use context ...
+ * infix_reverse_destroy(context);
+ * ```
+ */
+c23_nodiscard infix_status
+infix_reverse_create_manual(infix_reverse_t **, infix_type *, infix_type **, size_t, size_t, void *, void *);
+
+/**
+ * @brief Frees a forward trampoline and its associated executable memory.
+ * @param trampoline The trampoline to free. Can be `nullptr`.
+ * @example
+ * ```c
+ * infix_forward_t* trampoline = NULL;
+ * infix_forward_create(&trampoline, "() -> void");
+ * // ...
+ * infix_forward_destroy(trampoline);
+ * trampoline = NULL; // Good practice
+ * ```
+ */
+void infix_forward_destroy(infix_forward_t *);
+
+/**
+ * @brief Frees a reverse trampoline, its JIT-compiled stub, and its context.
+ * @param reverse_trampoline The reverse trampoline to free. Can be `nullptr`.
+ * @example
+ * ```c
+ * infix_reverse_t* context = NULL;
+ * infix_reverse_create(&context, "() -> void", my_handler, NULL);
+ * // ...
+ * infix_reverse_destroy(context);
+ * context = NULL; // Good practice
+ * ```
+ */
+void infix_reverse_destroy(infix_reverse_t *);
+
+/** @} */
+
+//=================================================================================================
+// Type System Creation API
+//=================================================================================================
+/** @addtogroup type_system */
+/** @{ */
+
+/**
+ * @brief Creates an `infix_type` descriptor for a primitive C type.
+ * @param id The enumerator for the desired primitive type (e.g., `INFIX_PRIMITIVE_SINT32`).
+ * @return A pointer to the static `infix_type` descriptor.
+ * @warning The returned pointer points to a static global and must NOT be freed.
+ * @example
+ * ```c
+ * // Get the type descriptor for a standard 'int'
+ * infix_type* type_int = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+ * ```
+=======
 /**
  * @brief Creates an `infix_type` descriptor for a primitive C type.
  * @details This function returns a pointer to a static, singleton instance for the
@@ -339,28 +847,89 @@ typedef enum {
  * @param id The enumerator for the desired primitive type (e.g., `INFIX_PRIMITIVE_SINT32`).
  * @return A pointer to the static `infix_type` descriptor. Returns `nullptr` for invalid IDs.
  * @warning The returned pointer must NOT be passed to any deallocation function.
+>>>>>>> main
  */
 c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id);
 
 /**
+<<<<<<< HEAD
+ * @brief Creates an `infix_type` descriptor for a generic `void*` pointer.
+ * @return A pointer to the static `infix_type` descriptor for a pointer.
+ * @warning Do not free the returned pointer.
+ * @example
+ * ```c
+ * // Get the type descriptor for a generic pointer
+ * infix_type* type_ptr = infix_type_create_pointer();
+ * ```
+=======
  * @brief Creates an `infix_type` descriptor for a generic pointer.
  * @details Returns a pointer to the static, singleton instance for `void*`.
  * @return A pointer to the static `infix_type` descriptor for a pointer.
  * @warning Do not free the returned pointer.
+>>>>>>> main
  */
 c23_nodiscard infix_type * infix_type_create_pointer(void);
 
 /**
+<<<<<<< HEAD
+ * @brief Creates an `infix_type` for a pointer to a specific type from an arena.
+ * @param arena The arena from which to allocate memory for the new pointer type.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
+ * @param pointee_type An `infix_type` describing the type the pointer points to.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @example
+ * ```c
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* type_int = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+ * infix_type* type_int_ptr = NULL;
+ * infix_type_create_pointer_to(arena, &type_int_ptr, type_int);
+ * // Now type_int_ptr represents 'int*'
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t *, infix_type **, infix_type *);
+
+/**
+ * @brief Creates an `infix_type` descriptor for the `void` type.
+ * @return A pointer to the static `infix_type` for `void`.
+ * @warning Do not free the returned pointer.
+ * @example
+ * ```c
+ * // Get the type descriptor for 'void', used for function return types
+ * infix_type* type_void = infix_type_create_void();
+ * ```
+=======
  * @brief Creates an `infix_type` descriptor for the `void` type.
  * @details Returns a pointer to the static, singleton instance for `void`, which is
  * used exclusively to describe the return type of functions that return nothing.
  * @return A pointer to the static `infix_type` for `void`.
  * @warning Do not free the returned pointer.
+>>>>>>> main
  */
 c23_nodiscard infix_type * infix_type_create_void(void);
 
 /**
  * @brief Creates a new `infix_type` for a struct from an arena.
+<<<<<<< HEAD
+ * @param arena The arena from which to allocate memory for the new type.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
+ * @param members An array of `infix_struct_member` describing each member.
+ * @param num_members The number of elements in the `members` array.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @example
+ * ```c
+ * // Create a type for: struct Point { int x; int y; };
+ * struct Point { int x; int y; };
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* point_type = NULL;
+ * infix_struct_member point_members[] = {
+ *     infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(struct Point, x)),
+ *     infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(struct Point, y))
+ * };
+ * infix_type_create_struct(arena, &point_type, point_members, 2);
+ * infix_arena_destroy(arena);
+ * ```
+=======
  * @details Calculates the size and alignment of the struct based on its members,
  * adhering to standard C layout rules. All memory for the new type is allocated
  * from the provided arena.
@@ -371,15 +940,19 @@ c23_nodiscard infix_type * infix_type_create_void(void);
  * @param num_members The number of elements in the `members` array.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  * @note All allocated memory is owned by the arena.
+>>>>>>> main
  */
 c23_nodiscard infix_status infix_type_create_struct(infix_arena_t *, infix_type **, infix_struct_member *, size_t);
 
 /**
  * @brief Creates a new `infix_type` for a packed struct from an arena.
+<<<<<<< HEAD
+=======
  * @details This function is used for structs with non-standard layouts (e.g., from `__attribute__((packed))`).
  * The caller must provide the exact size and alignment. All memory for the new type is
  * allocated from the provided arena.
  *
+>>>>>>> main
  * @param arena The arena from which to allocate.
  * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param total_size The exact size of the packed struct in bytes.
@@ -387,21 +960,59 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t *, infix_type 
  * @param members An array of `infix_struct_member` describing each member.
  * @param num_members The number of elements in the `members` array.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * // Create a type for: #pragma pack(1) struct Packed { char c; int i; };
+ * #pragma pack(push, 1)
+ * struct Packed { char c; int i; };
+ * #pragma pack(pop)
+ *
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* packed_type = NULL;
+ * infix_struct_member packed_members[] = {
+ *     infix_type_create_member("c", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(struct Packed, c)),
+ *     infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(struct Packed, i))
+ * };
+ * infix_type_create_packed_struct(arena, &packed_type, sizeof(struct Packed), 1, packed_members, 2);
+ * infix_arena_destroy(arena);
+ * ```
+=======
  * @note All allocated memory is owned by the arena.
+>>>>>>> main
  */
 c23_nodiscard infix_status
 infix_type_create_packed_struct(infix_arena_t *, infix_type **, size_t, size_t, infix_struct_member *, size_t);
 
 /**
  * @brief Creates a new `infix_type` for a union from an arena.
+<<<<<<< HEAD
+=======
  * @details Calculates the size and alignment of the union based on its members.
  * All memory for the new type is allocated from the provided arena.
+>>>>>>> main
  * @param arena The arena from which to allocate.
  * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param members An array of `infix_struct_member` describing each member of the union.
  * @param num_members The number of elements in the `members` array.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * // Create a type for: union Value { int i; float f; };
+ * union Value { int i; float f; };
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* value_type = NULL;
+ * infix_struct_member value_members[] = {
+ *     infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(union Value, i)),
+ *     infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), offsetof(union Value, f))
+ * };
+ * infix_type_create_union(arena, &value_type, value_members, 2);
+ * infix_arena_destroy(arena);
+ * ```
+=======
  * @note All allocated memory is owned by the arena.
+>>>>>>> main
  */
 c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type **, infix_struct_member *, size_t);
 
@@ -412,18 +1023,203 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type *
  * @param element_type An `infix_type` describing the type of each element in the array.
  * @param num_elements The number of elements in the array.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * // Create a type for: float
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* array_type = NULL;
+ * infix_type* float_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
+ * infix_type_create_array(arena, &array_type, float_type, 4);
+ * infix_arena_destroy(arena);
+ * ```
+=======
  * @note All allocated memory is owned by the arena.
+>>>>>>> main
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
 
 /**
+<<<<<<< HEAD
+ * @brief Creates a new `infix_type` for an enum from an arena.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param underlying_type The integer `infix_type` that this enum is based on.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @example
+ * ```c
+ * // Create a type for an enum based on an unsigned int
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* enum_type = NULL;
+ * infix_type* uint_type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT32);
+ * infix_type_create_enum(arena, &enum_type, uint_type);
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **, infix_type *);
+
+/**
+ * @brief Creates a new `infix_type` for a named reference from an arena.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param name The name of the type being referenced.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note A type graph containing a named reference is "unresolved".
+ * @example
+ * ```c
+ * // Create a placeholder for a struct that will be defined later
+ * // This is mostly used internally by the signature parser.
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* node_ref = NULL;
+ * infix_type_create_named_reference(arena, &node_ref, "Node");
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t *, infix_type **, const char *);
+
+/**
+ * @brief Creates a new `infix_type` for a `_Complex` number from an arena.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param base_type The floating-point `infix_type` of the real and imaginary parts.
+ * @return `INFIX_SUCCESS` on success.
+ * @example
+ * ```c
+ * // Create a type for: _Complex double
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* complex_type = NULL;
+ * infix_type* double_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+ * infix_type_create_complex(arena, &complex_type, double_type);
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard infix_status infix_type_create_complex(infix_arena_t *, infix_type **, infix_type *);
+
+/**
+ * @brief Creates a new `infix_type` for a SIMD vector from an arena.
+ * @param arena The arena from which to allocate.
+ * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param element_type The primitive `infix_type` of the vector's elements.
+ * @param num_elements The number of elements in the vector.
+ * @return `INFIX_SUCCESS` on success.
+ * @example
+ * ```c
+ * // Create a type for a vector of 4 floats (like __m128)
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * infix_type* vec4f_type = NULL;
+ * infix_type* float_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
+ * infix_type_create_vector(arena, &vec4f_type, float_type, 4);
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard infix_status infix_type_create_vector(infix_arena_t *, infix_type **, infix_type *, size_t);
+
+/**
+ * @brief A factory function to create an `infix_struct_member`.
+=======
  * @brief A factory function to create an `infix_struct_member`.
  * @details This is a convenience helper for populating the `members` array passed to
  * `infix_type_create_struct` or `infix_type_create_union`.
+>>>>>>> main
  * @param name The member's name (for debugging; can be `nullptr`).
  * @param type A pointer to the member's `infix_type`.
  * @param offset The byte offset of the member, obtained via the `offsetof` macro.
  * @return An initialized `infix_struct_member`.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * #include <stddef.h> // For offsetof
+ * struct Point { int x; int y; };
+ * infix_struct_member x_member = infix_type_create_member(
+ *     "x",
+ *     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+ *     offsetof(struct Point, x)
+ * );
+ * ```
+ */
+infix_struct_member infix_type_create_member(const char *, infix_type *, size_t);
+
+/** @} */
+
+//=================================================================================================
+// Memory Management API
+//=================================================================================================
+
+/** @addtogroup memory_management */
+/** @{ */
+
+/**
+ * @brief Creates and initializes a new memory arena.
+ * @param initial_size The total number of bytes to pre-allocate for the arena.
+ * @return A pointer to the new `infix_arena_t`, or `nullptr` if allocation fails.
+ * @example
+ * ```c
+ * infix_arena_t* my_arena = infix_arena_create(8192); // 8KB arena
+ * if (my_arena) {
+ *     // ... use the arena ...
+ *     infix_arena_destroy(my_arena);
+ * }
+ * ```
+ */
+c23_nodiscard infix_arena_t * infix_arena_create(size_t);
+
+/**
+ * @brief Frees an entire memory arena and all objects allocated within it.
+ * @param arena The arena to destroy. Can be `nullptr` (no-op).
+ * @example
+ * ```c
+ * infix_arena_t* my_arena = infix_arena_create(1024);
+ * // ... allocate objects from my_arena ...
+ * infix_arena_destroy(my_arena); // Frees the arena and all objects in one call.
+ * ```
+ */
+void infix_arena_destroy(infix_arena_t *);
+
+/**
+ * @brief Allocates a block of memory from the arena with a specific alignment.
+ * @param arena The arena to allocate from.
+ * @param size The number of bytes to allocate.
+ * @param alignment The required alignment of the returned pointer (must be a power of two).
+ * @return A pointer to the allocated memory, or `nullptr` on failure.
+ * @example
+ * ```c
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * // Allocate space for a struct, respecting its alignment
+ * my_struct* obj = (my_struct*)infix_arena_alloc(arena, sizeof(my_struct), _Alignof(my_struct));
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t);
+
+/**
+ * @brief Allocates a zero-initialized block of memory from the arena.
+ * @param arena The arena to allocate from.
+ * @param num The number of elements to allocate.
+ * @param size The size of each element.
+ * @param alignment The required alignment of the returned pointer.
+ * @return A pointer to the zero-initialized memory, or `nullptr` on failure.
+ * @example
+ * ```c
+ * infix_arena_t* arena = infix_arena_create(1024);
+ * // Allocate and zero-out an array of 10 integers
+ * int* my_array = (int*)infix_arena_calloc(arena, 10, sizeof(int), _Alignof(int));
+ * infix_arena_destroy(arena);
+ * ```
+ */
+c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t);
+
+/** @} */
+
+//=================================================================================================
+// Introspection API
+//=================================================================================================
+
+/** @addtogroup introspection_api */
+/** @{ */
+
+/** @name Trampoline Introspection */
+/** @{ */
+=======
  */
 infix_struct_member infix_struct_member_create(const char *, infix_type *, size_t);
 
@@ -501,11 +1297,23 @@ void infix_forward_destroy(infix_forward_t *);
  * @param reverse_trampoline The reverse trampoline to free. Can be `nullptr`.
  */
 void infix_reverse_destroy(infix_reverse_t *);
+>>>>>>> main
 
 /**
  * @brief Retrieves the executable code pointer from a forward trampoline.
  * @param trampoline A handle to a previously created forward trampoline.
  * @return A callable function pointer of type `infix_cif_func`. Returns `nullptr` if the handle is invalid.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * infix_forward_t* trampoline = NULL;
+ * infix_forward_create(&trampoline, "() -> void");
+ * infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
+ * // Now 'cif' can be called.
+ * infix_forward_destroy(trampoline);
+ * ```
+=======
+>>>>>>> main
  */
 c23_nodiscard void * infix_forward_get_code(infix_forward_t *);
 
@@ -513,6 +1321,22 @@ c23_nodiscard void * infix_forward_get_code(infix_forward_t *);
  * @brief Retrieves the executable code pointer from a reverse trampoline.
  * @param reverse_trampoline A handle to a previously created reverse trampoline.
  * @return A callable function pointer. Returns `nullptr` if the handle is invalid.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * infix_reverse_t* context = NULL;
+ * infix_reverse_create(&context, "(int) -> void", my_handler, NULL);
+ *
+ * // Get a native C function pointer to the trampoline
+ * void (*native_func_ptr)(int) = infix_reverse_get_code(context);
+ *
+ * // This pointer can be passed to C libraries.
+ * native_func_ptr(42);
+ *
+ * infix_reverse_destroy(context);
+ * ```
+=======
+>>>>>>> main
  */
 c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *);
 
@@ -520,10 +1344,192 @@ c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *);
  * @brief Retrieves the user_data stored with a reverse trampoline.
  * @param reverse_trampoline A handle to a reverse trampoline context.
  * @return The opaque user_data pointer. Returns `nullptr` if the handle is invalid.
+<<<<<<< HEAD
+ * @example
+ * ```c
+ * // Inside a callback handler:
+ * void my_handler(infix_context_t* ctx, int arg) {
+ *     my_app_state* state = (my_app_state*)infix_reverse_get_user_data(ctx);
+ *     // ... use state ...
+ * }
+ * ```
+=======
+>>>>>>> main
  */
 c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *);
 
 /**
+<<<<<<< HEAD
+ * @brief Retrieves the number of arguments for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return The total number of arguments. Returns `0` if the handle is `nullptr`.
+ * @example
+ * ```c
+ * infix_forward_t* trampoline = NULL;
+ * infix_forward_create(&trampoline, "(int, float) -> void");
+ * size_t count = infix_forward_get_num_args(trampoline); // count will be 2
+ * infix_forward_destroy(trampoline);
+ * ```
+ */
+c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t *);
+
+/**
+ * @brief Retrieves the return type for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
+ * @example
+ * ```c
+ * infix_forward_t* trampoline = NULL;
+ * infix_forward_create(&trampoline, "() -> int");
+ * const infix_type* ret_type = infix_forward_get_return_type(trampoline);
+ * // ret_type will describe an 'int'
+ * infix_forward_destroy(trampoline);
+ * ```
+ */
+c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t *);
+
+/**
+ * @brief Retrieves the type of a specific argument for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         handle is `nullptr` or the index is out of bounds.
+ * @example
+ * ```c
+ * infix_forward_t* trampoline = NULL;
+ * infix_forward_create(&trampoline, "(int, float) -> void");
+ * const infix_type* arg1_type = infix_forward_get_arg_type(trampoline, 1);
+ * // arg1_type will describe a 'float'
+ * infix_forward_destroy(trampoline);
+ * ```
+ */
+c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t *, size_t);
+
+/**
+ * @brief Retrieves the number of arguments for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return The total number of arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t *);
+
+/**
+ * @brief Retrieves the return type for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
+ */
+c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t *);
+
+/**
+ * @brief Retrieves the type of a specific argument for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         handle is `nullptr` or the index is out of bounds.
+ */
+c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t *, size_t);
+/** @} */
+
+/** @name Type Introspection */
+/** @{ */
+
+/**
+ * @brief Retrieves the fundamental category of an `infix_type`.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The `infix_type_category` enum for the type.
+ * @example
+ * ```c
+ * infix_type* type_int = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+ * if (infix_type_get_category(type_int) == INFIX_TYPE_PRIMITIVE) {
+ *     // It's a primitive type
+ * }
+ * ```
+ */
+c23_nodiscard infix_type_category infix_type_get_category(const infix_type *);
+
+/**
+ * @brief Retrieves the size of an `infix_type` in bytes.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The size of the type. Returns `0` if the type is `nullptr`.
+ * @example
+ * ```c
+ * infix_type* type_double = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+ * size_t s = infix_type_get_size(type_double); // s will be sizeof(double)
+ * ```
+ */
+c23_nodiscard size_t infix_type_get_size(const infix_type *);
+
+/**
+ * @brief Retrieves the alignment requirement of an `infix_type` in bytes.
+ * @param type A pointer to the `infix_type` to inspect. Can be `nullptr`.
+ * @return The alignment of the type. Returns `0` if the type is `nullptr`.
+ * @example
+ * ```c
+ * infix_type* type_double = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+ * size_t a = infix_type_get_alignment(type_double); // a will be _Alignof(double)
+ * ```
+ */
+c23_nodiscard size_t infix_type_get_alignment(const infix_type *);
+
+/**
+ * @brief Retrieves the number of members in an aggregate type (struct or union).
+ * @param type A pointer to an `infix_type`. Can be `nullptr`.
+ * @return The number of members if the type is a struct or union; `0` otherwise.
+ * @example
+ * ```c
+ * // Assuming 'point_type' was created as in the infix_type_create_struct example...
+ * size_t count = infix_type_get_member_count(point_type); // count will be 2
+ * ```
+ */
+c23_nodiscard size_t infix_type_get_member_count(const infix_type *);
+
+/**
+ * @brief Retrieves a specific member from an aggregate type by its index.
+ * @param type A pointer to an `infix_type`. Can be `nullptr`.
+ * @param index The zero-based index of the member to retrieve.
+ * @return A constant pointer to the `infix_struct_member` on success. Returns `nullptr`
+ *         if `type` is not a struct/union or the `index` is out of bounds.
+ * @example
+ * ```c
+ * // Assuming 'point_type' was created...
+ * const infix_struct_member* member_y = infix_type_get_member(point_type, 1);
+ * if (member_y) {
+ *     printf("Member 'y' is at offset %zu\n", member_y->offset);
+ * }
+ * ```
+ */
+c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type *, size_t);
+
+/**
+ * @brief Retrieves the name of a function argument by its index.
+ * @param func_type A pointer to an `infix_type` of category `INFIX_TYPE_REVERSE_TRAMPOLINE`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant string for the argument's name, or `nullptr`.
+ * @example
+ * ```c
+ * // Assuming 'args' was retrieved from infix_signature_parse for "(name: *char)..."
+ * const infix_type* func_sig = ...; // A function signature type
+ * const char* name = infix_type_get_arg_name(func_sig, 0); // name will be "name"
+ * ```
+ */
+c23_nodiscard const char * infix_type_get_arg_name(const infix_type *, size_t);
+
+/**
+ * @brief Retrieves the type of a function argument by its index.
+ * @param func_type A pointer to an `infix_type` of category `INFIX_TYPE_REVERSE_TRAMPOLINE`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if invalid.
+ * @example
+ * ```c
+ * const infix_type* func_sig = ...; // A function signature type for "(int, float)..."
+ * const infix_type* arg1_type = infix_type_get_arg_type(func_sig, 1);
+ * // arg1_type will describe a float
+ * ```
+ */
+c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type *, size_t);
+/** @} */
+
+/** @} */
+=======
  * @defgroup high_level_api High-Level Signature API
  * @brief Convenience functions for creating trampolines from a signature string.
  * @details This API is the recommended way for most users to interact with infix.
@@ -726,3 +1732,4 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t);
  * @return A pointer to the zero-initialized memory, or `nullptr` on failure.
  */
 c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t);
+>>>>>>> main
