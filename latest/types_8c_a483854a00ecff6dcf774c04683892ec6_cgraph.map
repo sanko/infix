@@ -1,5 +1,0 @@
-<map id="infix_type_create_union" name="infix_type_create_union">
-<area shape="rect" id="Node000001" title="Creates an infix_type for a union, allocating from an arena." alt="" coords="5,5,183,31"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="231,5,363,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,15,217,15,217,21,183,21"/>
-</map>
