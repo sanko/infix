@@ -35,3 +35,4 @@ Testing/*
 html/*
 latex/*
 leak-*
+.tidyall.d/*
