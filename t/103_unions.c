@@ -68,9 +68,8 @@ TEST {
     infix_struct_member * members =
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
     members[0] =
-        infix_struct_member_create("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(Number, i));
-    members[1] =
-        infix_struct_member_create("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), offsetof(Number, f));
+        infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(Number, i));
+    members[1] = infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), offsetof(Number, f));
     infix_type * union_type = NULL;
     infix_status status = infix_type_create_union(arena, &union_type, members, 2);
 

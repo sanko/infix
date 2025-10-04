@@ -30,3 +30,9 @@ CppProperties.json
 prev/
 *.cov
 bin/
+*.bak
+Testing/*
+html/*
+latex/*
+leak-*
+.tidyall.d/*

@@ -14,32 +14,29 @@
 /**
  * @file arena.c
  * @brief Implementation of the internal arena allocator.
+ * @ingroup memory_management
  *
- * @details This file provides the concrete implementations for the arena
- * allocator's functions. It contains the logic for creating the arena,
- * performing fast, aligned "bump" allocations, and destroying the arena
- * to free all its memory at once.
+ * @internal
+ * This file provides the concrete implementations for the arena allocator's public API.
+ * It contains the logic for creating the arena, performing fast, aligned "bump"
+ * allocations, and destroying the arena to free all its memory at once.
  *
- * The implementation includes security-critical checks to prevent integer
- * overflows when calculating allocation sizes and offsets, making it safe
- * for use with potentially untrusted inputs from the fuzzing harnesses.
+ * The implementation includes security-critical checks to prevent integer overflows
+ * when calculating allocation sizes and offsets, making it safe for use with
+ * potentially untrusted inputs from parsers or fuzzing harnesses.
+ * @endinternal
  */
 
 #include "common/infix_internals.h"
-#include <stdint.h>  // For uintptr_t
+#include <stdint.h>  // For uintptr_t, SIZE_MAX
 #include <stdlib.h>
 #include <string.h>  // For memset
 
-/**
- * @brief Creates and initializes a new memory arena.
- * @details Allocates two blocks of memory: one for the `infix_arena_t` controller
- *          struct itself and a second, larger block for the arena's buffer.
- *          If either allocation fails, it ensures any partially allocated
- *          memory is cleaned up to prevent leaks.
- *
- * @param initial_size The number of bytes to pre-allocate for the arena's main buffer.
- * @return A pointer to the newly created `infix_arena_t`, or `nullptr` if any memory
- *         allocation fails.
+/*
+ * Implementation for infix_arena_create.
+ * This function allocates two separate blocks of memory: one for the `infix_arena_t`
+ * controller struct itself, and a second, larger block for the arena's main buffer.
+ * It includes logic to prevent memory leaks if the second allocation fails.
  */
 infix_arena_t * infix_arena_create(size_t initial_size) {
     // Allocate the arena controller struct itself.
@@ -50,7 +47,9 @@ infix_arena_t * infix_arena_create(size_t initial_size) {
     // Allocate the main memory block for the arena.
     arena->buffer = infix_malloc(initial_size);
     if (arena->buffer == nullptr && initial_size > 0) {
-        infix_free(arena);  // Clean up on partial failure.
+        // Critical cleanup: if the main buffer allocation fails, we must free
+        // the `arena` struct itself to prevent a memory leak.
+        infix_free(arena);
         return nullptr;
     }
 
@@ -61,100 +60,74 @@ infix_arena_t * infix_arena_create(size_t initial_size) {
     return arena;
 }
 
-/**
- * @brief Frees an entire memory arena and all objects allocated within it.
- * @details This is the primary cleanup function for an arena. It frees the main
- *          memory buffer and then frees the `infix_arena_t` struct itself. It is
- *          safe to call this function with a `nullptr` argument.
- *
- * @param arena The arena to destroy. Can be `nullptr`, in which case it is a no-op.
+/*
+ * Implementation for infix_arena_destroy.
+ * This function frees the main memory buffer and then the `infix_arena_t` struct.
+ * It is safe to call with a `nullptr` argument.
  */
 void infix_arena_destroy(infix_arena_t * arena) {
     if (arena == nullptr)
         return;
 
-    // Free the main buffer, then the controller struct.
+    // Free the main buffer first, then the controller struct.
     if (arena->buffer)
         infix_free(arena->buffer);
 
     infix_free(arena);
 }
 
-/**
- * @brief Allocates a block of memory from the arena with a specific alignment.
- * @details This is the core "bump" allocation logic. It calculates the necessary
- *          padding to align the current offset to the requested boundary. It
- *          performs multiple security checks to prevent integer overflows during
- *          this calculation. If the requested size (plus padding) fits within
- *          the arena's capacity, it advances the `current_offset` and returns the
- *          aligned pointer. Otherwise, it sets the arena's internal error flag
- *          and returns `nullptr`.
- *
- * @param arena The arena to allocate from.
- * @param size The number of bytes requested.
- * @param alignment The required alignment for the returned pointer. Must be a power of two.
- * @return A pointer to the allocated memory, or `nullptr` on failure (out of memory,
- *         overflow, or invalid alignment).
+/*
+ * Implementation for infix_arena_alloc.
+ * This is the core "bump" allocation logic. It calculates the necessary padding
+ * to align the current offset and performs multiple security checks to prevent
+ * integer overflows. If the request fits, it advances the `current_offset` and
+ * returns the aligned pointer; otherwise, it sets the arena's error flag.
  */
 void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
     // Fail immediately if the arena is null or already in an error state.
     if (arena == nullptr || arena->error)
         return nullptr;
 
-    // Alignment must be a power of two. This is a common check.
+    // Security: Alignment must be a power of two. This is a common and critical check.
     if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         arena->error = true;
         return nullptr;
     }
 
-    // An allocation of zero bytes should return a valid, unique pointer per the C standard.
-    // We return a pointer to the current position without advancing it.
+    // Per the C standard, an allocation of zero bytes should return a valid, unique pointer.
+    // We return a pointer to the current position without advancing the offset.
     if (size == 0)
         return (void *)(arena->buffer + arena->current_offset);
 
-    // Calculate the padding required to meet the alignment.
-    uintptr_t current_ptr = (uintptr_t)arena->buffer + arena->current_offset;
-    uintptr_t aligned_ptr = (current_ptr + alignment - 1) & ~(alignment - 1);
-    size_t padding = aligned_ptr - current_ptr;
+    // Calculate the next aligned offset using the shared helper.
+    size_t aligned_offset = _infix_align_up(arena->current_offset, alignment);
 
-    // Check if adding padding would overflow size_t.
-    if (arena->current_offset > SIZE_MAX - padding) {
-        arena->error = true;
-        return nullptr;
-    }
-    size_t aligned_offset = arena->current_offset + padding;
-    // Check if adding the requested size would overflow size_t.
-    if (aligned_offset > SIZE_MAX - size) {
+    // Security: Check for integer overflow during the alignment calculation.
+    if (aligned_offset < arena->current_offset) {
         arena->error = true;
         return nullptr;
     }
 
-    // Check if there is enough space left in the arena.
-    if (aligned_offset + size > arena->capacity) {
+    // Security: Check if adding the requested size would overflow size_t or exceed capacity.
+    if (SIZE_MAX - size < aligned_offset || aligned_offset + size > arena->capacity) {
         arena->error = true;
         return nullptr;
     }
 
-    // Bump the pointer and return the aligned address.
+    // All checks passed. Get the pointer and "bump" the offset.
+    void * ptr = arena->buffer + aligned_offset;
     arena->current_offset = aligned_offset + size;
-    return (void *)aligned_ptr;
+    return ptr;
 }
 
-/**
- * @brief Allocates a zero-initialized block of memory from the arena.
- * @details This is a convenience wrapper around `infix_arena_alloc`. It first calculates
- *          the total size required (`num * size`), checking for integer overflow.
- *          It then calls `infix_arena_alloc` to get the memory block and, if successful,
- *          uses `memset` to zero it out.
- *
- * @param arena The arena to allocate from.
- * @param num The number of elements to allocate.
- * @param size The size of each element in bytes.
- * @param alignment The required alignment of the returned pointer.
- * @return A pointer to the zero-initialized memory block, or `nullptr` on failure.
+/*
+ * Implementation for infix_arena_calloc.
+ * This is a convenience wrapper around `infix_arena_alloc` that also zeroes the memory.
+ * It includes a critical security check to prevent integer overflow when calculating
+ * the total allocation size.
  */
 void * infix_arena_calloc(infix_arena_t * arena, size_t num, size_t size, size_t alignment) {
-    // Security: Check for integer overflow in the size calculation.
+    // Security: Check for integer overflow in the `num * size` calculation.
     if (size > 0 && num > SIZE_MAX / size) {
         if (arena)
             arena->error = true;

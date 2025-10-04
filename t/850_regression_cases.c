@@ -70,8 +70,9 @@
  * @brief Enumerates the different parts of the infix library that can be targeted by a regression test.
  */
 typedef enum {
-    TARGET_TYPE_GENERATOR,   ///< Tests the `generate_random_type` function (for timeouts/crashes in Core API).
-    TARGET_SIGNATURE_PARSER  ///< Tests the `infix_type_from_signature` function (for bugs in the Signature API).
+    TARGET_TYPE_GENERATOR,       ///< Tests the `generate_random_type` function (for timeouts/crashes in Core API).
+    TARGET_SIGNATURE_PARSER,     ///< Tests the `infix_type_from_signature` function (for bugs in the Signature API).
+    TARGET_TRAMPOLINE_GENERATOR  ///< Tests `infix_*_create_manual` functions.
 } fuzzer_target_t;
 
 /**
@@ -159,7 +160,16 @@ static const regression_test_case_t regression_tests[] = {
     {.name = "Global buffer overflow in SysV classifier (XMM index bug)",
      .b64_input = "AQAAAAAAAAAAAAAAAAAAAAAAAAAQUwAAAP///wD//+np5+l6AA==",
      .target = TARGET_TYPE_GENERATOR,
-     .expected_status = INFIX_SUCCESS}};
+     .expected_status = INFIX_SUCCESS},
+    {.name = "SysV Classifier NULL member type dereference",
+     .b64_input = "/////////////////////////////////wDJAIAAAAAA/////////////////////////////////////7//////CA==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "NULL type in arg_types for reverse trampoline (case 1)",
+     .b64_input = "iAOysoiVA7L////////////////N////C////////////////4X/////////////9///////zf////8L////////////////////"
+                  "////////9/8=",
+     .target = TARGET_TRAMPOLINE_GENERATOR,
+     .expected_status = INFIX_ERROR_INVALID_ARGUMENT}};
 
 /**
  * @internal
@@ -220,6 +230,37 @@ static void run_regression_case(const regression_test_case_t * test) {
 
             infix_arena_destroy(arena);
             free(signature);
+        }
+        else if (test->target == TARGET_TRAMPOLINE_GENERATOR) {
+            fuzzer_input in = {(const uint8_t *)data, data_size};
+            infix_arena_t * arena = infix_arena_create(65536);
+            if (!arena) {
+                fail("Failed to create arena for trampoline generator test.");
+                free(data);
+                return;
+            }
+
+            // This logic mirrors fuzz_trampoline.c to reproduce the bug.
+            size_t total_fields = 0;
+            infix_type * type_pool[1] = {generate_random_type(arena, &in, 0, &total_fields)};
+            if (type_pool[0] == NULL)
+                type_pool[0] = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+
+            // The key part of the bug: create an args array with a NULL type.
+            infix_type * arg_types[] = {NULL};
+
+            infix_forward_t * fwd = NULL;
+            infix_status fwd_status = infix_forward_create_manual(&fwd, type_pool[0], arg_types, 1, 1);
+            infix_forward_destroy(fwd);
+
+            infix_reverse_t * rev = NULL;
+            infix_status rev_status = infix_reverse_create_manual(&rev, type_pool[0], arg_types, 1, 1, NULL, NULL);
+            infix_reverse_destroy(rev);
+
+            ok(fwd_status == test->expected_status && rev_status == test->expected_status,
+               "Trampoline generators correctly returned expected status %d",
+               test->expected_status);
+            infix_arena_destroy(arena);
         }
 
         free(data);

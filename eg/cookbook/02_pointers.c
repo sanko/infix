@@ -15,8 +15,8 @@ void swap_ints(int * a, int * b) {
 
 int main() {
     // 1. Describe the signature: void(int*, int*)
-    //    'i*' represents an int pointer. 'v' represents void.
-    const char * signature = "i*,i*=>v";
+    //    The '*' is a prefix modifier for the pointer type.
+    const char * signature = "(*int, *int) -> void";
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 

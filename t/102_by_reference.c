@@ -78,7 +78,7 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         for (int i = 0; i < 6; ++i) {
-            members[i] = infix_struct_member_create(NULL, s32_type, sizeof(int) * i);
+            members[i] = infix_type_create_member(NULL, s32_type, sizeof(int) * i);
         }
         infix_type * large_struct_type = NULL;
         infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
@@ -124,9 +124,9 @@ TEST {
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 3, _Alignof(infix_struct_member));
         infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        members[0] = infix_struct_member_create("a", s32_type, offsetof(NonPowerOfTwoStruct, a));
-        members[1] = infix_struct_member_create("b", s32_type, offsetof(NonPowerOfTwoStruct, b));
-        members[2] = infix_struct_member_create("c", s32_type, offsetof(NonPowerOfTwoStruct, c));
+        members[0] = infix_type_create_member("a", s32_type, offsetof(NonPowerOfTwoStruct, a));
+        members[1] = infix_type_create_member("b", s32_type, offsetof(NonPowerOfTwoStruct, b));
+        members[2] = infix_type_create_member("c", s32_type, offsetof(NonPowerOfTwoStruct, c));
 
         infix_type * npot_type = NULL;
         infix_status status = infix_type_create_struct(arena, &npot_type, members, 3);

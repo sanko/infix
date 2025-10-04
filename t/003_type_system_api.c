@@ -49,7 +49,7 @@ typedef union {
 typedef int64_t TestArray[10];
 
 TEST {
-    plan(3);  // One subtest per major API area.
+    plan(5);
 
     subtest("infix_type_create_struct API validation") {
         plan(3);
@@ -58,10 +58,10 @@ TEST {
         // 1. Happy Path: Verify correct size and alignment calculation.
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create(
-            "c", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(TestStruct, c));
-        members[1] = infix_struct_member_create(
-            "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestStruct, d));
+        members[0] =
+            infix_type_create_member("c", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(TestStruct, c));
+        members[1] =
+            infix_type_create_member("d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestStruct, d));
         infix_type * struct_type = NULL;
         infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
 
@@ -75,14 +75,13 @@ TEST {
             ok(struct_type->size == sizeof(TestStruct) && struct_type->alignment == (size_t)_Alignof(TestStruct),
                "Struct size and alignment match compiler's layout");
         }
-        else {
+        else
             skip(1, "Cannot verify layout due to creation failure");
-        }
 
         // 2. Error Handling: Pass a NULL member type.
         infix_struct_member * bad_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        bad_members[0] = infix_struct_member_create("bad", NULL, 0);
+        bad_members[0] = infix_type_create_member("bad", NULL, 0);
         infix_type * bad_struct_type = NULL;
         status = infix_type_create_struct(arena, &bad_struct_type, bad_members, 1);
         ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_struct rejects NULL member type");
@@ -97,10 +96,10 @@ TEST {
         // 1. Happy Path: Verify correct size and alignment.
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create(
-            "i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestUnion, i));
-        members[1] = infix_struct_member_create(
-            "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestUnion, d));
+        members[0] =
+            infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestUnion, i));
+        members[1] =
+            infix_type_create_member("d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestUnion, d));
         infix_type * union_type = NULL;
         infix_status status = infix_type_create_union(arena, &union_type, members, 2);
 
@@ -114,9 +113,8 @@ TEST {
             ok(union_type->size == sizeof(TestUnion) && union_type->alignment == (size_t)_Alignof(TestUnion),
                "Union size and alignment match compiler's layout");
         }
-        else {
+        else
             skip(1, "Cannot verify layout due to creation failure");
-        }
 
         infix_arena_destroy(arena);
     }
@@ -140,15 +138,71 @@ TEST {
             ok(array_type->size == sizeof(TestArray) && array_type->alignment == (size_t)_Alignof(TestArray),
                "Array size and alignment match compiler's layout");
         }
-        else {
+        else
             skip(1, "Cannot verify layout due to creation failure");
-        }
 
         // 2. Error Handling: Pass a NULL element type.
         infix_type * bad_array_type = NULL;
         status = infix_type_create_array(arena, &bad_array_type, NULL, 10);
         ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array rejects NULL element type");
 
+        infix_arena_destroy(arena);
+    }
+
+    subtest("infix_type_create_enum API validation") {
+        plan(3);
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // 1. Happy Path: Verify correct size and alignment.
+        infix_type * underlying_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_type * enum_type = NULL;
+        infix_status status = infix_type_create_enum(arena, &enum_type, underlying_type);
+
+        if (ok(status == INFIX_SUCCESS && enum_type != NULL, "Successfully created a valid enum type"))
+            ok(enum_type->size == sizeof(int32_t) && enum_type->alignment == (size_t)_Alignof(int32_t),
+               "Enum size and alignment match underlying integer type");
+        else
+            skip(1, "Cannot verify layout due to creation failure");
+
+        // 2. Error Handling: Pass a non-integer underlying type.
+        infix_type * bad_underlying_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+        infix_type * bad_enum_type = NULL;
+        status = infix_type_create_enum(arena, &bad_enum_type, bad_underlying_type);
+        ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_enum rejects non-integer underlying type");
+
+        infix_arena_destroy(arena);
+    }
+
+    subtest("Forward trampoline introspection API") {
+        plan(7);
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // Create a non-trivial signature to test against.
+        infix_type * ret_type = infix_type_create_pointer();
+        infix_type * arg1_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+        infix_struct_member members[] = {{"d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 0}};
+        infix_type * arg2_type = nullptr;
+        (void)infix_type_create_struct(arena, &arg2_type, members, 1);
+        infix_type * arg_types[] = {arg1_type, arg2_type};
+
+        infix_forward_t * trampoline = nullptr;
+        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        ok(status == INFIX_SUCCESS && trampoline != nullptr, "Trampoline created for introspection test");
+
+        if (trampoline) {
+            ok(infix_forward_get_num_args(trampoline) == 2, "get_num_args returns correct count");
+            ok(infix_forward_get_return_type(trampoline)->category == INFIX_TYPE_POINTER, "get_return_type is correct");
+            ok(infix_forward_get_arg_type(trampoline, 0)->category == INFIX_TYPE_PRIMITIVE,
+               "get_arg_type(0) is correct");
+            ok(infix_forward_get_arg_type(trampoline, 1)->category == INFIX_TYPE_STRUCT, "get_arg_type(1) is correct");
+            ok(infix_forward_get_arg_type(trampoline, 99) == nullptr,
+               "get_arg_type returns nullptr for out-of-bounds index");
+            ok(infix_forward_get_num_args(nullptr) == 0, "get_num_args handles nullptr input");
+        }
+        else
+            skip(6, "Skipping introspection checks due to creation failure");
+
+        infix_forward_destroy(trampoline);
         infix_arena_destroy(arena);
     }
 }

@@ -14,33 +14,26 @@
 /**
  * @file trampoline.c
  * @brief The core engine for JIT compiling FFI trampolines.
+ * @ingroup trampoline_engine
  *
- * @details This file implements the generic, platform-agnostic logic for
- * generating both forward and reverse trampolines. It acts as a central coordinator,
- * using ABI-specific "specs" (virtual tables of function pointers) to call the
+ * @internal
+ * This file implements the generic, platform-agnostic logic for generating
+ * both forward and reverse trampolines. It acts as a central coordinator,
+ * using ABI-specific "specs" (v-tables of function pointers) to call the
  * correct implementation for the target platform's calling convention.
  *
- * The main responsibilities of this file are:
- * 1.  **Dispatching:** It selects the correct ABI implementation at compile time via the
- *     `infix_forward_abi_spec` and `infix_reverse_abi_spec` interfaces.
- * 2.  **Code Buffering:** It provides utility functions for building machine code in a
- *     dynamic, automatically-resizing memory buffer (`code_buffer`).
- * 3.  **Public API Implementation:** It contains the logic for the high-level public API
- *     functions like `infix_forward_create_manual` and `infix_reverse_create_manual`,
- *     which orchestrate the entire code generation process from layout calculation
- *     to memory finalization.
- * 4.  **Low-Level Emitters:** It provides cross-architecture helper functions for
- *     emitting common data types (bytes, integers) into the code buffer.
+ * Its main responsibilities are:
+ * 1.  **Dispatching:** Selecting the correct ABI implementation at compile time.
+ * 2.  **Code Buffering:** Providing utilities for building machine code.
+ * 3.  **Public API Implementation:** Containing the logic for the high-level
+ *     `_create_manual` functions.
+ * 4.  **Memory Safety:** Ensuring trampoline handles are self-contained by deep-copying
+ *     all type metadata into private, internal memory arenas.
+ * @endinternal
  */
 
-// Define the POSIX source macro to ensure function declarations for posix_memalign
-// are visible. This must be defined before any system headers are included.
-#if !defined(_POSIX_C_SOURCE)
-#define _POSIX_C_SOURCE 200809L
-#endif
-
-#include "../common/infix_internals.h"
-#include "../common/utility.h"  // Restored for infix_dump_hex and INFIX_DEBUG_PRINTF
+#include "common/infix_internals.h"
+#include "common/utility.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,10 +49,15 @@
 #include <unistd.h>
 #endif
 
-// ABI Specification Declarations
-// These extern declarations link to the ABI-specific v-tables defined in files
-// like `abi_win_x64.c`, `abi_sysv_x64.c`, and `abi_arm64.c`. The preprocessor
-// ensures that only the v-table for the target platform is linked into the final binary.
+//=================================================================================================
+// ABI Specification Declarations & Dispatch
+//=================================================================================================
+
+/*
+ * These extern declarations link to the ABI-specific v-tables defined in files
+ * like `abi_win_x64.c` and `abi_sysv_x64.c`. The preprocessor ensures that only
+ * the v-table for the target platform is linked into the final binary.
+ */
 #if defined(INFIX_ABI_WINDOWS_X64)
 extern const infix_forward_abi_spec g_win_x64_forward_spec;
 extern const infix_reverse_abi_spec g_win_x64_reverse_spec;
@@ -72,11 +70,10 @@ extern const infix_reverse_abi_spec g_arm64_reverse_spec;
 #endif
 
 /**
+ * @internal
  * @brief Selects the correct forward-call ABI spec at compile time.
- * @details This function uses preprocessor directives to return a pointer to the
- *          globally defined ABI specification structure for the current target.
- *          This is the primary mechanism for dispatching to the correct platform-specific
- *          code generation logic for forward trampolines.
+ * @details This function is the primary mechanism for dispatching to the correct
+ *          platform-specific code generation logic for forward trampolines.
  * @return A pointer to the active `infix_forward_abi_spec`, or `nullptr` if unsupported.
  */
 const infix_forward_abi_spec * get_current_forward_abi_spec() {
@@ -92,8 +89,8 @@ const infix_forward_abi_spec * get_current_forward_abi_spec() {
 }
 
 /**
+ * @internal
  * @brief Selects the correct reverse-call ABI spec at compile time.
- * @details Similar to `get_current_forward_abi_spec`, but for reverse trampolines (callbacks).
  * @return A pointer to the active `infix_reverse_abi_spec`, or `nullptr` if unsupported.
  */
 const infix_reverse_abi_spec * get_current_reverse_abi_spec() {
@@ -108,36 +105,33 @@ const infix_reverse_abi_spec * get_current_reverse_abi_spec() {
 #endif
 }
 
+//=================================================================================================
+// Code Buffer & Emitter Utilities
+//=================================================================================================
+
 /**
- * @brief Initializes a code_buffer for use with an arena.
- * @param buf A pointer to the `code_buffer` to initialize.
- * @param arena The arena to use for memory allocations.
+ * @internal
+ * @brief Initializes a `code_buffer` for use with an arena.
  */
 void code_buffer_init(code_buffer * buf, infix_arena_t * arena) {
     buf->capacity = 64;  // Start with a small initial capacity.
     buf->arena = arena;
-    buf->code = infix_arena_alloc(arena, buf->capacity, 16);  // Align to 16 bytes for safety
+    buf->code = infix_arena_alloc(arena, buf->capacity, 16);
     buf->size = 0;
     buf->error = (buf->code == nullptr);
-    //~ if (buf->error)
-    //~ fprintf(stderr, "Error: infix_arena_alloc failed in code_buffer_init.\n");
 }
 
 /**
+ * @internal
  * @brief Appends data to a code buffer, reallocating from the arena if necessary.
- * @param buf A pointer to the `code_buffer`.
- * @param data A pointer to the raw bytes to append.
- * @param len The number of bytes to append.
+ * @details Since arenas do not support `realloc`, this function allocates a new,
+ *          larger block and copies the existing code when the buffer is full.
  */
 void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
-    if (buf->error)  // If we're already in an error state, do nothing.
-        return;
+    if (buf->error)
+        return;  // If already in an error state, do nothing.
 
     if (len > SIZE_MAX - buf->size) {
-        //~ fprintf(stderr,
-        //~ "Error: Appending %llu bytes to buffer of size %llu would cause overflow.\n",
-        //~ (unsigned long long)len,
-        //~ (unsigned long long)buf->size);
         buf->error = true;
         return;
     }
@@ -146,21 +140,17 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
         size_t new_capacity = buf->capacity;
         while (new_capacity < buf->size + len) {
             if (new_capacity > SIZE_MAX / 2) {
-                //~ fprintf(stderr, "Error: code_buffer cannot grow further without overflow.\n");
                 buf->error = true;
                 return;
             }
             new_capacity *= 2;
         }
 
-        // Arena allocators don't support realloc. We must allocate a new block and copy.
         void * new_code = infix_arena_alloc(buf->arena, new_capacity, 16);
-        if (new_code == NULL) {
-            //~ fprintf(stderr, "Error: infix_arena_alloc failed in code_buffer_append.\n");
+        if (new_code == nullptr) {
             buf->error = true;
             return;
         }
-        // Copy the old code to the new, larger buffer.
         infix_memcpy(new_code, buf->code, buf->size);
         buf->code = new_code;
         buf->capacity = new_capacity;
@@ -169,37 +159,161 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
     buf->size += len;
 }
 
-/**
- * @brief Appends a single byte to the code buffer.
- * @param buf The code buffer to which the byte will be appended.
- * @param byte The 8-bit value to emit.
- */
+/** @internal @brief Appends a single byte to the code buffer. */
 void emit_byte(code_buffer * buf, uint8_t byte) {
     code_buffer_append(buf, &byte, 1);
 }
 
-/**
- * @brief Appends a 32-bit integer (little-endian) to the code buffer.
- * @param buf The code buffer.
- * @param value The 32-bit integer to emit.
- */
+/** @internal @brief Appends a 32-bit integer (little-endian) to the code buffer. */
 void emit_int32(code_buffer * buf, int32_t value) {
     code_buffer_append(buf, &value, 4);
 }
 
-/**
- * @brief Appends a 64-bit integer (little-endian) to the code buffer.
- * @param buf The code buffer.
- * @param value The 64-bit integer to emit.
- */
+/** @internal @brief Appends a 64-bit integer (little-endian) to the code buffer. */
 void emit_int64(code_buffer * buf, int64_t value) {
     code_buffer_append(buf, &value, 8);
 }
 
+//=================================================================================================
+// Internal Type System Helpers
+//=================================================================================================
+
 /**
- * @brief Retrieves the executable code pointer from a forward trampoline.
- * @param trampoline A handle to a previously created forward trampoline.
- * @return A callable function pointer of type `infix_cif_func`. Returns `nullptr` if the handle is invalid.
+ * @internal
+ * @brief Recursively performs a deep copy of an `infix_type` object graph.
+ * @details This function is the core of making trampolines self-contained. It walks a type
+ *          graph and duplicates it in the destination arena. This prevents use-after-free
+ *          errors if the user destroys the original arena used to create the types.
+ * @param dest_arena The destination arena to copy the type graph into.
+ * @param src_type The source type to copy.
+ * @return A pointer to the newly-copied type, or `nullptr` on allocation failure.
+ */
+static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type) {
+    if (src_type == nullptr)
+        return nullptr;
+
+    // Optimization: If the source type is a static primitive, we don't need to copy it.
+    if (!src_type->is_arena_allocated)
+        return (infix_type *)src_type;
+
+    // Allocate space for the new type in the destination arena and copy the base struct.
+    infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
+    if (dest_type == nullptr)
+        return nullptr;
+    memcpy(dest_type, src_type, sizeof(infix_type));
+
+    // Recursively copy any nested types based on the category.
+    switch (src_type->category) {
+    case INFIX_TYPE_POINTER:
+        dest_type->meta.pointer_info.pointee_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.pointer_info.pointee_type);
+        break;
+    case INFIX_TYPE_ARRAY:
+        dest_type->meta.array_info.element_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.array_info.element_type);
+        break;
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        if (src_type->meta.aggregate_info.num_members > 0) {
+            size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
+            dest_type->meta.aggregate_info.members =
+                infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
+            if (dest_type->meta.aggregate_info.members == nullptr)
+                return nullptr;
+            memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+
+            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
+                dest_type->meta.aggregate_info.members[i].type =
+                    _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
+                // Deep copy the member name string to avoid dangling pointers.
+                const char * src_name = src_type->meta.aggregate_info.members[i].name;
+                if (src_name) {
+                    size_t name_len = strlen(src_name) + 1;
+                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                    if (!dest_name)
+                        return nullptr;
+                    memcpy(dest_name, src_name, name_len);
+                    *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+                }
+            }
+        }
+        break;
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+        dest_type->meta.func_ptr_info.return_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.return_type);
+        if (src_type->meta.func_ptr_info.num_args > 0) {
+            size_t args_size = sizeof(infix_function_argument) * src_type->meta.func_ptr_info.num_args;
+            dest_type->meta.func_ptr_info.args =
+                infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
+            if (dest_type->meta.func_ptr_info.args == nullptr)
+                return nullptr;
+            memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
+
+            for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
+                dest_type->meta.func_ptr_info.args[i].type =
+                    _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.args[i].type);
+                const char * src_name = src_type->meta.func_ptr_info.args[i].name;
+                if (src_name) {
+                    size_t name_len = strlen(src_name) + 1;
+                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                    if (!dest_name)
+                        return nullptr;
+                    memcpy(dest_name, src_name, name_len);
+                    *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
+                }
+            }
+        }
+        break;
+    default:
+        // For PRIMITIVE, VOID, ENUM, etc., the initial shallow copy is sufficient.
+        break;
+    }
+    return dest_type;
+}
+
+/**
+ * @internal
+ * @brief Recursively checks if an entire type graph is fully resolved.
+ * @details A type graph is "unresolved" if it contains any nodes of type
+ *          `INFIX_TYPE_NAMED_REFERENCE`. Generating a trampoline from an
+ *          unresolved graph is an error.
+ * @return `true` if resolved, `false` otherwise.
+ */
+static bool _is_type_graph_resolved(infix_type * type) {
+    if (!type)
+        return true;
+    switch (type->category) {
+    case INFIX_TYPE_NAMED_REFERENCE:
+        return false;
+    case INFIX_TYPE_POINTER:
+        return _is_type_graph_resolved(type->meta.pointer_info.pointee_type);
+    case INFIX_TYPE_ARRAY:
+        return _is_type_graph_resolved(type->meta.array_info.element_type);
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i)
+            if (!_is_type_graph_resolved(type->meta.aggregate_info.members[i].type))
+                return false;
+        return true;
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+        if (!_is_type_graph_resolved(type->meta.func_ptr_info.return_type))
+            return false;
+        for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i)
+            if (!_is_type_graph_resolved(type->meta.func_ptr_info.args[i].type))
+                return false;
+        return true;
+    default:
+        return true;
+    }
+}
+
+//=================================================================================================
+// Forward Trampoline Implementation
+//=================================================================================================
+
+/*
+ * Implementation for infix_forward_get_code.
+ * This is a simple accessor for the public API.
  */
 c23_nodiscard void * infix_forward_get_code(infix_forward_t * trampoline) {
     if (trampoline == nullptr)
@@ -208,32 +322,38 @@ c23_nodiscard void * infix_forward_get_code(infix_forward_t * trampoline) {
 }
 
 /**
- * @brief Generates a forward-call trampoline for a given function signature.
- * @details This function orchestrates the entire process of JIT-compiling a forward
- *          trampoline. The process involves:
- *          1. Selecting the correct ABI-specific implementation.
- *          2. Calculating the function's call frame layout (register usage, stack space).
- *          3. Generating the machine code for the prologue, argument marshalling, the actual call, and the epilogue.
- *          4. Allocating executable memory.
- *          5. Copying the generated code into the memory and making it executable.
- *          Error handling is managed through a single cleanup path to ensure all
- *          intermediate resources are freed correctly.
+ * @internal
+ * @brief The internal core logic for creating a forward trampoline.
+ * @details This function orchestrates the entire JIT compilation process for a
+ *          forward trampoline. It uses the ABI spec v-table to delegate platform-specific
+ *          layout calculation and code generation.
  *
- * @param[out] out_trampoline On success, this will point to the handle for the new trampoline.
- * @param return_type The `infix_type` of the function's return value.
- * @param arg_types An array of `infix_type*` for each argument.
- * @param num_args The total number of arguments.
- * @param num_fixed_args For variadic functions, the number of non-variadic arguments. For non-variadic functions, this
- * must equal `num_args`.
+ *          It also performs the "Just-Right" Arena Sizing optimization: if a `source_arena`
+ *          is provided (from the signature parser), it measures the memory used by the
+ *          source types and creates a new, tightly-sized arena for the final trampoline handle,
+ *          drastically reducing memory overhead.
+ *
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param source_arena An optional pointer to the arena from which the `infix_type` objects
+ *                     were created. Used for the memory optimization.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_trampoline,
-                                                       infix_type * return_type,
-                                                       infix_type ** arg_types,
-                                                       size_t num_args,
-                                                       size_t num_fixed_args) {
-    if (out_trampoline == nullptr)
+c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out_trampoline,
+                                                          infix_type * return_type,
+                                                          infix_type ** arg_types,
+                                                          size_t num_args,
+                                                          size_t num_fixed_args,
+                                                          infix_arena_t * source_arena) {
+    if (out_trampoline == nullptr || (arg_types == nullptr && num_args > 0))
         return INFIX_ERROR_INVALID_ARGUMENT;
+
+    // Validate the type graphs to ensure they don't contain unresolved placeholders.
+    if (!_is_type_graph_resolved(return_type))
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    for (size_t i = 0; i < num_args; ++i) {
+        if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i]))
+            return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     const infix_forward_abi_spec * spec = get_current_forward_abi_spec();
     if (spec == nullptr)
@@ -242,71 +362,79 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_tr
     infix_status status = INFIX_SUCCESS;
     infix_call_frame_layout * layout = nullptr;
     infix_forward_t * handle = nullptr;
-    infix_arena_t * arena = nullptr;
-    code_buffer buf;
-
-    // Use a larger arena (64KB) to handle extreme cases (I hope)
-    arena = infix_arena_create(65536);
-    if (!arena)
+    // Use a temporary arena for layout calculations and code generation.
+    infix_arena_t * temp_arena = infix_arena_create(65536);
+    if (!temp_arena)
         return INFIX_ERROR_ALLOCATION_FAILED;
 
-    code_buffer_init(&buf, arena);
+    code_buffer buf;
+    code_buffer_init(&buf, temp_arena);
 
-    INFIX_DEBUG_PRINTF("Generating Generic Forward Trampoline");
-
-    status = spec->prepare_forward_call_frame(arena, &layout, return_type, arg_types, num_args, num_fixed_args);
+    // --- JIT Compilation Pipeline ---
+    status = spec->prepare_forward_call_frame(temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-
     status = spec->generate_forward_prologue(&buf, layout);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-
     status = spec->generate_forward_argument_moves(&buf, layout, arg_types, num_args, num_fixed_args);
     if (status != INFIX_SUCCESS)
         goto cleanup;
 
-#if defined(INFIX_ARCH_X64)
-    EMIT_BYTES(&buf, 0x4D, 0x85, 0xE4);  // test r12, r12 (r12 holds the target function ptr)
-    EMIT_BYTES(&buf, 0x75, 0x02);        // jnz +2 (skip next instruction if not null)
-    EMIT_BYTES(&buf, 0x0F, 0x0B);        // ud2 (undefined instruction to cause a safe crash)
-    EMIT_BYTES(&buf, 0x41, 0xFF, 0xD4);  // call r12
-#elif defined(INFIX_ARCH_AARCH64)
-    EMIT_BYTES(&buf, 0x53, 0x00, 0x00, 0xb5);  // cbnz x19, +8 (x19 holds the target)
-    EMIT_BYTES(&buf, 0x00, 0x00, 0x20, 0xd4);  // brk #0 (break instruction for safe crash)
-    EMIT_BYTES(&buf, 0x60, 0x02, 0x3f, 0xd6);  // blr x19 (branch with link to register)
-#endif
+    status = spec->generate_forward_call_instruction(&buf, layout);
+    if (status != INFIX_SUCCESS)
+        goto cleanup;
 
     status = spec->generate_forward_epilogue(&buf, layout, return_type);
     if (status != INFIX_SUCCESS)
         goto cleanup;
 
-    // Check for memory allocation errors within the arena or code buffer.
-    if (buf.error || arena->error) {
+    if (buf.error || temp_arena->error) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
 
+    // --- Final Trampoline Handle Assembly ---
     handle = infix_calloc(1, sizeof(infix_forward_t));
     if (handle == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
 
-    handle->exec = infix_executable_alloc(buf.size);
-    if (handle->exec.rw_ptr == nullptr) {
+    // "Just-Right" Arena Sizing Optimization
+    size_t required_size = source_arena ? source_arena->current_offset : 8192;  // Fallback size
+    handle->arena = infix_arena_create(required_size + INFIX_TRAMPOLINE_HEADROOM);
+    if (handle->arena == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
-        infix_free(handle);  // Manually free handle as infix_forward_destroy won't be called
-        handle = nullptr;
         goto cleanup;
     }
 
+    // Deep copy all type info into the handle's own arena to make it self-contained.
+    handle->return_type = _copy_type_graph_to_arena(handle->arena, return_type);
+    handle->arg_types = infix_arena_alloc(handle->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+    if ((handle->return_type == nullptr && return_type != nullptr) || (num_args > 0 && handle->arg_types == nullptr)) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+    for (size_t i = 0; i < num_args; ++i) {
+        handle->arg_types[i] = _copy_type_graph_to_arena(handle->arena, arg_types[i]);
+        if (handle->arg_types[i] == nullptr && arg_types[i] != nullptr) {
+            status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
+        }
+    }
+    handle->num_args = num_args;
+    handle->num_fixed_args = num_fixed_args;
+
+    // Allocate executable memory and copy the generated code into it.
+    handle->exec = infix_executable_alloc(buf.size);
+    if (handle->exec.rw_ptr == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
     infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
 
     if (!infix_executable_make_executable(handle->exec)) {
-        infix_executable_free(handle->exec);
-        infix_free(handle);
-        handle = nullptr;
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -315,25 +443,45 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_tr
     *out_trampoline = handle;
 
 cleanup:
-    // All temporary allocations (layout, code buffer) are cleaned up at once.
-    infix_arena_destroy(arena);
+    if (status != INFIX_SUCCESS && handle != nullptr)
+        infix_forward_destroy(handle);
+    infix_arena_destroy(temp_arena);
     return status;
 }
 
-/**
- * @brief Frees a forward trampoline and its associated executable memory.
- * @param trampoline The trampoline to free. Can be `nullptr`, in which case it does nothing.
+/*
+ * Implementation for infix_forward_create_manual.
+ * This public API function is a simple wrapper around the internal implementation,
+ * calling it without a source arena to trigger the fallback to a default arena size.
+ */
+c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_trampoline,
+                                                       infix_type * return_type,
+                                                       infix_type ** arg_types,
+                                                       size_t num_args,
+                                                       size_t num_fixed_args) {
+    return _infix_forward_create_internal(out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr);
+}
+
+/*
+ * Implementation for infix_forward_destroy.
+ * Frees all resources associated with a forward trampoline.
  */
 void infix_forward_destroy(infix_forward_t * trampoline) {
     if (trampoline == nullptr)
         return;
+    if (trampoline->arena)
+        infix_arena_destroy(trampoline->arena);
     infix_executable_free(trampoline->exec);
     infix_free(trampoline);
 }
 
-/**
- * @brief Gets the system's memory page size.
- * @return The page size in bytes.
+//=================================================================================================
+// Reverse Trampoline Implementation
+//=================================================================================================
+
+/*
+ * @internal
+ * A helper to get the system's memory page size.
  */
 static size_t get_page_size() {
 #if defined(INFIX_OS_WINDOWS)
@@ -345,22 +493,10 @@ static size_t get_page_size() {
 #endif
 }
 
-/**
- * @brief Generates a reverse-call trampoline (callback) for a given function signature.
- * @details This function creates a native, C-callable function pointer that, when invoked,
- *          calls back into a user-provided handler. The process is highly optimized and
- *          follows a multi-stage generation process. A key part of this process is
- *          creating a **cached forward trampoline** that is used internally to call the
- *          user's C handler with the correct ABI.
- *
- * @param[out] out_context On success, will point to the context for the new reverse trampoline.
- * @param return_type The `infix_type` of the callback's return value.
- * @param arg_types An array of `infix_type*` for each argument.
- * @param num_args The total number of arguments.
- * @param num_fixed_args The number of non-variadic arguments.
- * @param user_callback_fn A pointer to the user's C function that will be called.
- * @param user_data An arbitrary pointer that will be stored in the context.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
+/*
+ * Implementation for infix_reverse_create_manual.
+ * This is a large, complex function that orchestrates the entire process of
+ * creating a reverse trampoline (callback).
  */
 c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_context,
                                                        infix_type * return_type,
@@ -372,26 +508,34 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
     if (out_context == nullptr || num_fixed_args > num_args)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
+    // Validate the user-provided type graphs.
+    if (!_is_type_graph_resolved(return_type))
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    if (arg_types == nullptr && num_args > 0)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    for (size_t i = 0; i < num_args; ++i) {
+        if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i]))
+            return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
     const infix_reverse_abi_spec * spec = get_current_reverse_abi_spec();
     if (spec == nullptr)
         return INFIX_ERROR_UNSUPPORTED_ABI;
 
-    INFIX_DEBUG_PRINTF("Generating Generic Reverse Trampoline");
-
     infix_status status = INFIX_SUCCESS;
     infix_reverse_call_frame_layout * layout = nullptr;
     infix_reverse_t * context = nullptr;
+    infix_arena_t * temp_arena = nullptr;  // For layout calculations and code generation.
     infix_protected_t prot = {.rw_ptr = nullptr, .size = 0};
-    infix_arena_t * arena = nullptr;
     code_buffer buf;
 
-    // Use a larger arena (64KB) to handle extreme cases (I hope)
-    arena = infix_arena_create(65536);
-    if (!arena)
+    temp_arena = infix_arena_create(65536);
+    if (!temp_arena)
         return INFIX_ERROR_ALLOCATION_FAILED;
 
-    code_buffer_init(&buf, arena);
+    code_buffer_init(&buf, temp_arena);
 
+    // Allocate page-aligned memory for the context struct itself, so it can be hardened.
     size_t page_size = get_page_size();
     size_t context_alloc_size = (sizeof(infix_reverse_t) + page_size - 1) & ~(page_size - 1);
     prot = infix_protected_alloc(context_alloc_size);
@@ -399,12 +543,18 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
-
     context = (infix_reverse_t *)prot.rw_ptr;
     infix_memset(context, 0, context_alloc_size);
+
+    // Create the persistent arena that will be owned by the context.
+    context->arena = infix_arena_create(8192);
+    if (context->arena == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+
+    // Initialize the context fields.
     context->protected_ctx = prot;
-    context->return_type = return_type;
-    context->arg_types = arg_types;
     context->num_args = num_args;
     context->num_fixed_args = num_fixed_args;
     context->is_variadic = (num_fixed_args < num_args);
@@ -412,112 +562,97 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
     context->user_data = user_data;
     context->internal_dispatcher = infix_internal_dispatch_callback_fn_impl;
 
-    // The user's callback handler expects the `infix_reverse_t*` context
-    // as its FIRST argument. We must create a new argument type list that reflects this.
-    // The new list will have `1 (for context) + num_args` elements.
-    infix_type ** callback_arg_types =
-        infix_arena_alloc(arena, (1 + num_args) * sizeof(infix_type *), _Alignof(infix_type *));
-    if (callback_arg_types == NULL) {
+    // Deep copy all type information into the context's own arena.
+    context->return_type = _copy_type_graph_to_arena(context->arena, return_type);
+    context->arg_types = infix_arena_alloc(context->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+    if ((context->return_type == nullptr && return_type != nullptr) ||
+        (num_args > 0 && context->arg_types == nullptr)) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
-
-    // The first argument is the context pointer.
-    callback_arg_types[0] = infix_type_create_pointer();
-
-    // Now, copy and promote the original user-defined arguments into the rest of the array.
-    if (context->is_variadic) {
-        for (size_t i = 0; i < num_args; ++i) {
-            infix_type * current_type = arg_types[i];
-            if (i >= num_fixed_args) {  // Apply default argument promotions for variadic part.
-                if (is_float(current_type))
-                    callback_arg_types[i + 1] = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-                else if (current_type->category == INFIX_TYPE_PRIMITIVE && current_type->size < sizeof(int))
-                    callback_arg_types[i + 1] = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-                else
-                    callback_arg_types[i + 1] = current_type;
-            }
-            else
-                callback_arg_types[i + 1] = current_type;
+    for (size_t i = 0; i < num_args; ++i) {
+        context->arg_types[i] = _copy_type_graph_to_arena(context->arena, arg_types[i]);
+        if (context->arg_types[i] == nullptr && arg_types[i] != nullptr) {
+            status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
         }
     }
-    else {
-        // For non-variadic functions, just copy the original types.
-        if (num_args > 0)
-            infix_memcpy(&callback_arg_types[1], arg_types, num_args * sizeof(infix_type *));
+
+    // The user's handler expects `context*` as its first argument. We must create a new
+    // argument type list that reflects this for the cached forward trampoline.
+    infix_type ** callback_arg_types =
+        infix_arena_alloc(temp_arena, (1 + num_args) * sizeof(infix_type *), _Alignof(infix_type *));
+    if (callback_arg_types == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
     }
+    callback_arg_types[0] = infix_type_create_pointer();  // The context pointer
+    if (context->num_args > 0)
+        infix_memcpy(&callback_arg_types[1], context->arg_types, context->num_args * sizeof(infix_type *));
 
-    // Generate the cached forward trampoline with the *correct, prepended* argument list.
-    // The total number of arguments and fixed arguments are each increased by one.
-    status = infix_forward_create_manual(
-        &context->cached_forward_trampoline, return_type, callback_arg_types, num_args + 1, num_fixed_args + 1);
-
+    // Generate the cached forward trampoline with the augmented argument list.
+    status = infix_forward_create_manual(&context->cached_forward_trampoline,
+                                         context->return_type,
+                                         callback_arg_types,
+                                         context->num_args + 1,
+                                         context->num_fixed_args + 1);
     if (status != INFIX_SUCCESS)
         goto cleanup;
 
-    status = spec->prepare_reverse_call_frame(arena, &layout, context);
+    // --- JIT Compilation Pipeline for Reverse Trampoline ---
+    status = spec->prepare_reverse_call_frame(temp_arena, &layout, context);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-
     status = spec->generate_reverse_prologue(&buf, layout);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-
     status = spec->generate_reverse_argument_marshalling(&buf, layout, context);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-
     status = spec->generate_reverse_dispatcher_call(&buf, layout, context);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-
     status = spec->generate_reverse_epilogue(&buf, layout, context);
     if (status != INFIX_SUCCESS)
         goto cleanup;
 
-    if (buf.error || arena->error) {
+    if (buf.error || temp_arena->error) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
 
+    // Allocate executable memory and finalize the JIT code.
     context->exec = infix_executable_alloc(buf.size);
     if (context->exec.rw_ptr == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
-
     infix_memcpy(context->exec.rw_ptr, buf.code, buf.size);
-    size_t code_size = buf.size;
 
     if (!infix_executable_make_executable(context->exec)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
 
+    // Harden the context struct itself to be read-only as a security measure.
     if (!infix_protected_make_readonly(context->protected_ctx)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
 
-    INFIX_DEBUG_PRINTF("Hardened reverse trampoline context at %p to be read-only.", (void *)context);
-    infix_dump_hex(context->exec.rx_ptr, code_size, "Reverse Trampoline Machine Code");
-
+    infix_dump_hex(context->exec.rx_ptr, buf.size, "Reverse Trampoline Machine Code");
     *out_context = context;
 
 cleanup:
     if (status != INFIX_SUCCESS && context != nullptr)
-        // If we failed, we must free the context and its nested resources.
-        // infix_reverse_destroy handles this correctly.
         infix_reverse_destroy(context);
-
-    infix_arena_destroy(arena);
+    infix_arena_destroy(temp_arena);
     return status;
 }
 
-/**
- * @brief Retrieves the executable code pointer from a reverse trampoline.
- * @param reverse_trampoline A handle to a previously created reverse trampoline.
- * @return A callable function pointer. Returns `nullptr` if the handle is invalid.
+/*
+ * Implementation for infix_reverse_get_code.
+ * A simple accessor for the public API.
  */
 c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t * reverse_trampoline) {
     if (reverse_trampoline == nullptr)
@@ -525,10 +660,9 @@ c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t * reverse_tram
     return reverse_trampoline->exec.rx_ptr;
 }
 
-/**
- * @brief Retrieves the user_data stored with a reverse trampoline.
- * @param reverse_trampoline A handle to a reverse trampoline context.
- * @return The opaque user_data pointer. Returns `nullptr` if the handle is invalid.
+/*
+ * Implementation for infix_reverse_get_user_data.
+ * A simple accessor for the public API.
  */
 c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t * reverse_trampoline) {
     if (reverse_trampoline == nullptr)
@@ -536,30 +670,32 @@ c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t * reverse
     return reverse_trampoline->user_data;
 }
 
-/**
- * @brief Frees a reverse trampoline, its JIT-compiled stub, and its context.
- * @details This function safely cleans up all resources associated with a reverse
- *          trampoline, including the cached forward trampoline, the executable stub,
- *          and the protected memory holding the context struct itself.
- * @param reverse_trampoline The reverse trampoline to free. Can be `nullptr`.
+/*
+ * Implementation for infix_reverse_destroy.
+ * Frees all resources associated with a reverse trampoline, including its
+ * cached forward trampoline, internal arena, executable stub, and protected context memory.
  */
 void infix_reverse_destroy(infix_reverse_t * reverse_trampoline) {
     if (reverse_trampoline == nullptr)
         return;
     if (reverse_trampoline->cached_forward_trampoline)
         infix_forward_destroy(reverse_trampoline->cached_forward_trampoline);
+    if (reverse_trampoline->arena)
+        infix_arena_destroy(reverse_trampoline->arena);
     infix_executable_free(reverse_trampoline->exec);
     infix_protected_free(reverse_trampoline->protected_ctx);
 }
 
-/**
- * @brief This section implements a unity build for the ABI-specific components.
- * @details Instead of relying on the build system to compile and link the correct
- * `abi_*.c` files, we include them directly into this compilation unit based on the
- * ABI selected in `infix.h`. This simplifies the build process and makes cross-ABI
- * fuzzing possible.
- */
+//=================================================================================================
+// Unity Build Section
+//=================================================================================================
 
+/*
+ * This section implements a unity build for the ABI-specific components.
+ * Instead of relying on the build system to compile and link the correct `abi_*.c`
+ * files, we include them directly into this compilation unit based on the ABI
+ * selected in `infix_config.h`. This simplifies the build process.
+ */
 #if defined(INFIX_ABI_WINDOWS_X64)
 #include "../arch/x64/abi_win_x64.c"
 #include "../arch/x64/abi_x64_emitters.c"

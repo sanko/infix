@@ -12,41 +12,30 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file double_tap.h
  * @brief A simple, header-only TAP14-compatible testing framework for C.
+ * @ingroup internal_testing
  *
- * @details This file provides a minimal but powerful testing harness inspired by
- *          the Test Anything Protocol (TAP). It allows developers to write tests
- *          in a structured way, plan the number of tests, create subtests, and
- *          produce standardized, machine-readable output. The entire framework
- *          is controlled by preprocessor macros, allowing it to be completely
- *          compiled out in non-test builds.
+ * @internal
+ * This file provides a minimal but powerful testing harness inspired by the
+ * Test Anything Protocol (TAP). It allows developers to write tests for the `infix`
+ * library in a structured way, plan the number of tests, create subtests, and
+ * produce standardized, machine-readable output. The entire framework is
+ * controlled by preprocessor macros, allowing it to be completely compiled out
+ * in non-test builds.
  *
- * USAGE:
+ * **Usage:**
+ * 1.  **Enable Testing:** Define `DBLTAP_ENABLE` before including this header.
+ * 2.  **Create Implementation:** In *exactly one* source file, define
+ *     `DBLTAP_IMPLEMENTATION` before including this header to generate the
+ *     function bodies.
  *
- * 1. To ENABLE testing:
- *    In your build system (or before including the header), define the macro:
- *    `#define DBLTAP_ENABLE`
- *
- * 2. To create the IMPLEMENTATION:
- *    In *exactly one* of your .c files (e.g., your main test runner),
- *    define `DBLTAP_IMPLEMENTATION` before including this header. This will
- *    generate the actual function bodies for the testing framework.
- *
- * THREAD SAFETY:
- * The implementation is thread-safe without using any locks. It achieves this by
- * storing all test state (plans, counts, failures) in Thread-Local Storage (TLS).
- * A global failure count for the final exit code is updated using lock-free atomics.
- * This design is faster and completely avoids the possibility of deadlocks.
+ * **Thread Safety:** The implementation is thread-safe without locks. It uses
+ * Thread-Local Storage (TLS) for all test state and lock-free atomics for the
+ * global failure count.
+ * @endinternal
  */
-
-// Define feature-test macros *before* any system headers are included.
-// This is critical for portability.
-#if (defined(__linux__) || defined(__gnu_linux__)) && !defined(_GNU_SOURCE)
-#define _GNU_SOURCE
-#endif
 
 // The main toggle for the entire framework.
 #ifdef DBLTAP_ENABLE
@@ -60,14 +49,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Platform-specific includes for one-time initialization.
+// Platform-specific includes for one-time global initialization.
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
 #elif defined(__unix__) || defined(__APPLE__)
 #include <pthread.h>
 #endif
 
-// C11 atomics for lock-free global counters.
+// C11 atomics with fallbacks for lock-free global counters.
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_ATOMICS__)
 #include <stdatomic.h>
 #define TAP_ATOMIC_SIZE_T _Atomic size_t
@@ -82,7 +71,7 @@
 #warning "Compiler does not support C11 atomics or GCC builtins; global counters will not be thread-safe."
 #endif
 
-// C11 thread-local storage with fallbacks for older standards.
+// C11 thread-local storage with fallbacks for older compilers.
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
 #define TAP_THREAD_LOCAL _Thread_local
 #elif defined(__GNUC__) || defined(__clang__)
@@ -94,81 +83,51 @@
 #warning "Compiler does not support thread-local storage; tests will not be thread-safe."
 #endif
 
-
-// For printf-like format checking
+// For printf-like format checking by GCC/Clang.
 #if defined(__GNUC__) || defined(__clang__)
 #define DBLTAP_PRINTF_FORMAT(fmt_index, arg_index) __attribute__((format(printf, fmt_index, arg_index)))
 #else
 #define DBLTAP_PRINTF_FORMAT(fmt_index, arg_index)
 #endif
-/** @brief Initializes the testing state and prints the TAP version header. */
+
 void tap_init(void);
-/** @brief Declares the number of tests expected to run. Must be called before any tests. */
 void tap_plan(size_t count);
-/** @brief Finalizes testing, checks plan completion, and returns the number of failures. */
 int tap_done(void);
-/** @brief Prints a "Bail out!" message and exits immediately with a failure code. */
 void tap_bail_out(const char * reason, ...) DBLTAP_PRINTF_FORMAT(1, 2);
-/**
- * @brief The core assertion function.
- * @return Returns the boolean value of the condition.
- */
 bool tap_ok(bool condition, const char * file, int line, const char * func, const char * expr, const char * name, ...)
     DBLTAP_PRINTF_FORMAT(6, 7);
-/** @brief Pushes a new state for a subtest and prints the subtest header. */
 bool tap_subtest_start(const char * name);
-/** @brief Pops the subtest state and reports its success or failure as a single test point. */
 bool tap_subtest_end(void);
-/** @brief Enters a "TODO" block where failing tests are noted but do not fail the overall suite. */
 void tap_todo_start(const char * reason, ...) DBLTAP_PRINTF_FORMAT(1, 2);
-/** @brief Exits the current "TODO" block. */
 void tap_todo_end(void);
-/** @brief Prints `count` "ok" test lines marked as skipped. */
 void tap_skip(size_t count, const char * reason, ...) DBLTAP_PRINTF_FORMAT(2, 3);
-/** @brief Sets a flag to skip all subsequent tests in the current context. */
 void tap_skip_all(const char * reason, ...) DBLTAP_PRINTF_FORMAT(1, 2);
-/** @brief Prints a diagnostic message to stderr, always prefixed with '# '. */
 void diag(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
-/** @brief Prints a diagnostic message to stdout, always prefixed with '# '. */
 void tap_note(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
 
-/** @brief Sets the total number of tests that are expected to run. */
 #define plan(count) tap_plan(count)
-/** @brief Concludes the test suite, checks the plan, and returns an exit code. */
 #define done() tap_done()
-/** @brief Immediately terminates the test suite with a failure message. */
 #define bail_out(...) tap_bail_out(__VA_ARGS__)
-/**
- * @brief The core assertion macro. Reports ok/not ok based on a condition.
- * @param cond The boolean condition to test.
- * @param ... An optional printf-style format string and arguments for the test name.
- */
 #define ok(cond, ...) tap_ok(!!(cond), __FILE__, __LINE__, __func__, #cond, __VA_ARGS__)
-/** @brief A convenience macro for a passing test. Equivalent to `ok(true, ...)` */
 #define pass(...) ok(true, __VA_ARGS__)
-/** @brief A convenience macro for a failing test. Equivalent to `ok(false, ...)` */
 #define fail(...) ok(false, __VA_ARGS__)
-/** @brief Creates a block for a named subtest, which can have its own plan. */
 #define subtest(name) \
     for (bool _tap_subtest_once = tap_subtest_start(name); _tap_subtest_once; _tap_subtest_once = tap_subtest_end())
-/** @brief Marks a specific number of upcoming tests as skipped with a reason. */
 #define skip(count, ...) tap_skip(count, __VA_ARGS__)
-/** @brief Skips all subsequent tests in the current plan. */
 #define skip_all(...) tap_skip_all(__VA_ARGS__)
-/** @brief Creates a block for tests that are expected to fail (work-in-progress). */
 #define TODO(reason) \
     for (int _tap_todo_once = (tap_todo_start(reason), 1); _tap_todo_once; _tap_todo_once = (tap_todo_end(), 0))
-/** @brief Prints a diagnostic message to stderr, prefixed with '#'. */
 #define diag(...) diag(__VA_ARGS__)
+
 #ifndef note
-/** @brief Prints a note to stdout, prefixed with '#'. Part of the TAP standard. */
 #define note(...) tap_note(__VA_ARGS__)
 #endif
-/** @brief Defines the main body of the test runner function. */
+
 #define TEST void test_body(void)
 void test_body(void);
 
 #else  // DBLTAP_ENABLE is NOT defined
+
 // No-Op Stubs for when testing is disabled.
 #define plan(count) ((void)0)
 #define done() (0)
@@ -187,25 +146,22 @@ void test_body(void);
 #define skip_all(...) ((void)0)
 #define TODO(reason, ...) if (0)
 #define diag(...) ((void)0)
+#ifndef note
 #define note(...) ((void)0)
+#endif
 #define TEST         \
     int main(void) { \
         return 0;    \
     }
 
-#endif
+#endif  // DBLTAP_ENABLE
 
 #if defined(DBLTAP_ENABLE) && defined(DBLTAP_IMPLEMENTATION)
 
-// Internal State and Configuration
-
-#define MAX_DEPTH 16
-#define NO_PLAN ((size_t)-1)
-
-/**
- * @struct tap_state_t
- * @brief (Internal) Holds the complete state for a single test context (main test or subtest).
+/*
  * @internal
+ * @brief Holds the complete state for a single test context (main test or subtest).
+ * Each thread gets its own stack of these structures to manage nested subtests.
  */
 typedef struct {
     size_t plan;
@@ -221,16 +177,29 @@ typedef struct {
     char skip_reason[256];
 } tap_state_t;
 
+#define MAX_DEPTH 16
+#define NO_PLAN ((size_t)-1)
+
 // Thread-Safe State Management
 
-// Each thread gets its own private state stack.
+/*
+ * Each thread gets its own private state stack using Thread-Local Storage (TLS).
+ * This is the key to achieving thread-safety without locks for most operations.
+ * `current_state` points to the active state on the current thread's stack.
+ */
 static TAP_THREAD_LOCAL tap_state_t state_stack[MAX_DEPTH];
 static TAP_THREAD_LOCAL tap_state_t * current_state = NULL;
 
-// A global counter for the final exit code, updated atomically.
+/*
+ * A global counter for the final exit code, updated using lock-free atomics.
+ * This is the only piece of state shared between threads.
+ */
 static TAP_ATOMIC_SIZE_T g_total_failed = 0;
 
-// One-time initialization for global setup (e.g., printing TAP header).
+/*
+ * One-time initialization for global setup (e.g., printing the TAP version header).
+ * This uses platform-specific, thread-safe "once" mechanisms.
+ */
 #if defined(_WIN32) || defined(__CYGWIN__)
 static INIT_ONCE g_tap_init_once = INIT_ONCE_STATIC_INIT;
 static BOOL CALLBACK _tap_init_routine(PINIT_ONCE initOnce, PVOID param, PVOID * context) {
@@ -249,7 +218,11 @@ static void _tap_init_routine(void) {
 }
 #endif
 
-// This function must be called at the start of every public API function.
+/*
+ * This internal function must be called at the start of every public API function.
+ * It ensures both global (TAP version) and thread-local (current_state) initialization
+ * have occurred for the current thread.
+ */
 static void _tap_ensure_initialized(void) {
 #if defined(_WIN32) || defined(__CYGWIN__)
     InitOnceExecuteOnce(&g_tap_init_once, _tap_init_routine, NULL, NULL);
@@ -267,30 +240,36 @@ static void _tap_ensure_initialized(void) {
 
 static void print_indent(FILE * stream) {
     _tap_ensure_initialized();
-    for (int i = 0; i < current_state->indent_level; ++i) {
+    for (int i = 0; i < current_state->indent_level; ++i)
         fprintf(stream, "    ");
-    }
 }
 
+/*
+ * Pushes a new, clean state onto the current thread's state stack.
+ * Used when entering a subtest.
+ */
 static void push_state(void) {
-    if (current_state >= &state_stack[MAX_DEPTH - 1]) {
+    if (current_state >= &state_stack[MAX_DEPTH - 1])
         tap_bail_out("Exceeded maximum subtest depth of %d", MAX_DEPTH);
-    }
     tap_state_t * parent = current_state;
     current_state++;
     memset(current_state, 0, sizeof(tap_state_t));
     current_state->plan = NO_PLAN;
     current_state->indent_level = parent->indent_level + 1;
-    current_state->todo = parent->todo;
+    // Inherit the 'todo' status from the parent.
     if (parent->todo) {
+        current_state->todo = true;
         snprintf(current_state->todo_reason, sizeof(current_state->todo_reason), "%s", parent->todo_reason);
     }
 }
 
+/*
+ * Pops the current state, returning to the parent's context.
+ * Used when exiting a subtest.
+ */
 static void pop_state(void) {
-    if (current_state <= &state_stack[0]) {
-        tap_bail_out("Attempted to pop state from base level");
-    }
+    if (current_state <= &state_stack[0])
+        tap_bail_out("Internal error: Attempted to pop base test state");
     current_state--;
 }
 
@@ -302,9 +281,8 @@ void tap_init(void) {
 
 void tap_plan(size_t count) {
     _tap_ensure_initialized();
-    if (current_state->has_plan || current_state->count > 0) {
-        tap_bail_out("Plan declared after tests have run");
-    }
+    if (current_state->has_plan || current_state->count > 0)
+        tap_bail_out("Plan declared after tests have run or a plan was already set");
     current_state->plan = count;
     current_state->has_plan = true;
     print_indent(stdout);
@@ -315,6 +293,7 @@ void tap_plan(size_t count) {
 bool tap_ok(bool condition, const char * file, int line, const char * func, const char * expr, const char * name, ...) {
     _tap_ensure_initialized();
     if (current_state->skipping) {
+        current_state->count++;  // Skipped tests still count towards the plan.
         return true;
     }
 
@@ -329,9 +308,8 @@ bool tap_ok(bool condition, const char * file, int line, const char * func, cons
     current_state->count++;
 
     if (!condition) {
-        if (current_state->todo) {
+        if (current_state->todo)
             current_state->failed_todo++;
-        }
         else {
             current_state->failed++;
             TAP_ATOMIC_FETCH_ADD(&g_total_failed, 1);
@@ -340,15 +318,16 @@ bool tap_ok(bool condition, const char * file, int line, const char * func, cons
 
     print_indent(stdout);
     printf("%s %llu", condition ? "ok" : "not ok", (unsigned long long)current_state->count);
-    if (name_buffer[0] != '\0') {
+    if (name_buffer[0] != '\0')
         printf(" - %s", name_buffer);
-    }
-    if (current_state->todo) {
+
+    if (current_state->todo)
         printf(" # TODO %s", current_state->todo_reason);
-    }
+
     printf("\n");
 
     if (!condition && !current_state->todo) {
+        // In case of failure, print diagnostic information in YAML block format.
         print_indent(stdout);
         fprintf(stdout, "#\n");
         print_indent(stdout);
@@ -415,12 +394,10 @@ void diag(const char * fmt, ...) {
     _tap_ensure_initialized();
     print_indent(stderr);
     fprintf(stderr, "# ");
-    char buffer[1024];
     va_list args;
     va_start(args, fmt);
-    vsnprintf(buffer, sizeof(buffer), fmt, args);
+    vfprintf(stderr, fmt, args);
     va_end(args);
-    fputs(buffer, stderr);
     fputs("\n", stderr);
     fflush(stderr);
 }
@@ -429,12 +406,10 @@ void tap_note(const char * fmt, ...) {
     _tap_ensure_initialized();
     print_indent(stdout);
     fprintf(stdout, "# ");
-    char buffer[1024];
     va_list args;
     va_start(args, fmt);
-    vsnprintf(buffer, sizeof(buffer), fmt, args);
+    vfprintf(stdout, fmt, args);
     va_end(args);
-    fputs(buffer, stdout);
     fputs("\n", stdout);
     fflush(stdout);
 }
@@ -457,12 +432,13 @@ bool tap_subtest_start(const char * name) {
     fflush(stdout);
     push_state();
     snprintf(current_state->subtest_name, sizeof(current_state->subtest_name), "%s", name);
-    return true;
+    return true;  // Allows use in a for-loop macro.
 }
 
 bool tap_subtest_end(void) {
     _tap_ensure_initialized();
 
+    // If the subtest didn't have an explicit plan, create one from the count.
     if (!current_state->has_plan) {
         current_state->plan = current_state->count;
         print_indent(stdout);
@@ -474,19 +450,22 @@ bool tap_subtest_end(void) {
     char name_buffer[256];
     snprintf(name_buffer, sizeof(name_buffer), "%s", current_state->subtest_name);
 
-    pop_state();  // Return to parent's context.
+    // Return to parent's context before reporting the subtest's result.
+    pop_state();
 
+    // Report the success/failure of the entire subtest as a single test point.
     ok(subtest_ok, "%s", name_buffer);
 
-    return false;  // Ensures the subtest for-loop only runs once.
+    return false;  // Ensures the `subtest()` for-loop only runs once.
 }
 
 int tap_done(void) {
     _tap_ensure_initialized();
-    if (current_state != &state_stack[0]) {
-        return (int)TAP_ATOMIC_FETCH_ADD(&g_total_failed, 0);
-    }
+    // tap_done() should only be called from the main test context.
+    if (current_state != &state_stack[0])
+        tap_bail_out("tap_done() called inside a subtest");
 
+    // If no plan was ever declared, create one from the total count.
     if (!current_state->has_plan) {
         current_state->plan = current_state->count;
         print_indent(stdout);
@@ -501,22 +480,22 @@ int tap_done(void) {
         return 0;
     }
 
-    if (current_state->plan != current_state->count) {
+    if (current_state->plan != current_state->count)
         fail("Test plan adherence (planned %llu, but ran %llu)",
              (unsigned long long)current_state->plan,
              (unsigned long long)current_state->count);
-    }
 
     size_t final_failed_count = (size_t)TAP_ATOMIC_FETCH_ADD(&g_total_failed, 0);
-    diag("Tests finished. Failed %llu of %llu planned tests.",
-         (unsigned long long)final_failed_count,
-         (unsigned long long)current_state->plan);
+    if (final_failed_count > 0)
+        diag("Looks like you failed %llu out of %llu tests.",
+             (unsigned long long)final_failed_count,
+             (unsigned long long)current_state->plan);
 
     return (int)final_failed_count;
 }
 
-/**
- * @brief (Internal) The entry point of the test program.
+/*
+ * The entry point of the test program when DBLTAP_ENABLE is defined.
  */
 int main(void) {
     tap_init();
@@ -524,4 +503,4 @@ int main(void) {
     return (int)tap_done();
 }
 
-#endif
+#endif  // defined(DBLTAP_ENABLE) && defined(DBLTAP_IMPLEMENTATION)

@@ -11,7 +11,7 @@ int main() {
     //    int printf(const char* format, int, const char*);
     //
     //    The semicolon ';' marks the start of the variadic arguments.
-    const char * signature = "c*;i,c*=>i";
+    const char * signature = "(*char; int, *char) -> int";
 
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);

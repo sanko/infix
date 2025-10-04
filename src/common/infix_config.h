@@ -15,9 +15,9 @@
 /**
  * @file infix_config.h
  * @brief Internal-only header for platform, architecture, and ABI detection.
- * @copyright Copyright (c) 2025 Sanko Robinson
+ * @ingroup internal_config
  *
- * @details
+ * @internal
  * This header contains the complete logic for detecting the build environment.
  * It is included by `infix_internals.h` and is NOT part of the public API.
  * Exposing these macros in the public API would make them part of the library's
@@ -67,7 +67,17 @@
  * - INFIX_ENV_MINGW:        MinGW/MinGW-w64 compilers
  * - INFIX_ENV_TERMUX:       Termux running on Android or Chrome OS
  *
+ * @endinternal
  */
+
+// Define feature-test macros to ensure declarations for shm_open, ftruncate, etc.,
+// are visible on all POSIX-compliant systems.
+#if !defined(_POSIX_C_SOURCE)
+#define _POSIX_C_SOURCE 200809L
+#endif
+#if (defined(__linux__) || defined(__gnu_linux__)) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
 
 // Host Platform and Architecture Detection
 // This block ALWAYS detects the native host. It is NOT overridden by the ABI flag.
@@ -149,10 +159,11 @@
 #error "Unsupported architecture. Only x86-64 and AArch64 are currently supported."
 #endif
 
-// Target ABI Logic Selection
-// This block determines which ABI implementation to use. It can be overridden
-// by a compiler flag, which is useful for cross-ABI testing and fuzzing.
-
+/*
+ * This block determines which ABI implementation to use. It can be overridden
+ * by a compiler flag (e.g., -DINFIX_FORCE_ABI_WINDOWS_X64), which is useful for
+ * cross-ABI testing and fuzzing on a single platform.
+ */
 #if defined(INFIX_FORCE_ABI_WINDOWS_X64)
 #define INFIX_ABI_WINDOWS_X64 1
 #define INFIX_ABI_FORCED 1
@@ -164,7 +175,10 @@
 #define INFIX_ABI_FORCED 1
 #endif
 
-// If no ABI was forced, detect it based on the host architecture.
+/*
+ * If no ABI was forced via a compiler flag, detect it automatically based on
+ * the host operating system and architecture.
+ */
 #ifndef INFIX_ABI_FORCED
 #if defined(INFIX_ARCH_AARCH64)
 #define INFIX_ABI_AAPCS64
@@ -176,3 +190,11 @@
 #endif
 #endif
 #endif
+
+/*
+ * @internal
+ * @brief The amount of extra headroom (in bytes) to add to a trampoline's
+ *        internal arena. This provides a small buffer for metadata beyond the
+ *        space needed for the deep-copied type graph.
+ */
+#define INFIX_TRAMPOLINE_HEADROOM 128

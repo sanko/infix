@@ -179,32 +179,32 @@ elsif ( $command eq 'memtest' ) {
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
     push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
-    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/810_memory_stress', 'memcheck' );
+    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '810_memory_stress', 'memcheck' );
 }
 elsif ( $command eq 'memtest:fault' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
     push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
-    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/811_fault_injection', 'memcheck' );
+    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '811_fault_injection', 'memcheck' );
 }
 elsif ( $command eq 'memtest:arena' ) {
     my %memtest_config = %config;
     @{ $memtest_config{cflags} } = @{ $config{cflags} };
     push @{ $memtest_config{cflags} }, '-DDBLTAP_ENABLE=1';
     push @{ $memtest_config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
-    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '800_security/840_arena_allocator', 'memcheck' );
+    $final_status = run_valgrind_test( \%memtest_config, $obj_suffix, '840_arena_allocator', 'memcheck' );
 }
 elsif ( $command eq 'helgrindtest' ) {
     my %helgrind_config = %config;
     @{ $helgrind_config{cflags} } = @{ $config{cflags} };
     push @{ $helgrind_config{cflags} }, '-DDBLTAP_ENABLE=1';
-    $final_status = run_valgrind_test( \%helgrind_config, $obj_suffix, '800_security/820_threading_helgrind', 'helgrind' );
+    $final_status = run_valgrind_test( \%helgrind_config, $obj_suffix, '820_threading_helgrind', 'helgrind' );
 }
 elsif ( $command eq 'helgrindtest:bare' ) {
     my %bare_config = %config;
     @{ $bare_config{cflags} } = @{ $config{cflags} };
-    $final_status = run_valgrind_test( \%bare_config, $obj_suffix, '800_security/821_threading_bare', 'helgrind' );
+    $final_status = run_valgrind_test( \%bare_config, $obj_suffix, '821_threading_bare', 'helgrind' );
 }
 elsif ( $command =~ /^fuzz(?::(\w+))?$/ ) {
     my $harness_name = $1;
@@ -367,12 +367,19 @@ sub compile_and_run_tests {
     print "\nCompiling all test executables...\n";
     my @test_executables;
     for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{800_security[/\\]821_threading_bare\.c$} ) {
+        if ( $test_c =~ m{821_threading_bare\.c$} ) {
             print "# INFO: Skipping '821_threading_bare.c' in regular test run. Use 'helgrindtest:bare' to run it.\n";
             next;
         }
         my @source_files = ($test_c);
-        my @local_cflags = @{ $config->{cflags} };
+        warn '$config{arch}: ' . $config{arch};
+        my @local_cflags = (
+            @{ $config->{cflags} }, (
+                $config{arch} eq 'x64'       ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
+                    $config{arch} eq 'arm64' ? '-march=armv8-a+sve' :
+                    ''
+            )
+        );
         if ( $test_c =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
@@ -400,7 +407,7 @@ sub compile_and_run_tests {
     my $use_prove = command_exists('prove') && !$opts{abi} && !( $config->{is_windows} && $config->{arch} eq 'arm64' );
     if ($use_prove) {
         print "\nRunning all tests with 'prove'\n";
-        return run_command( 'prove', '-v', @test_executables );
+        return run_command( 'prove', '--verbose', @test_executables );
     }
     else {
         if ( $opts{abi} ) {
@@ -453,7 +460,7 @@ sub run_coverage_gcov {
     my $lib_path     = create_static_library_from_objects( $config, \@obj_files );
     my @test_c_files = get_test_files($test_names_ref);
     for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{800_security[/\\]82\d_} ) { next; }
+        if ( $test_c =~ m{82\d_} ) { next; }
         my @source_files = ($test_c);
         my @local_cflags = @{ $config->{cflags} };
         if ( $test_c =~ /850_regression_cases\.c$/ ) {
@@ -501,7 +508,7 @@ sub run_coverage_msvc {
     my ( $config, $obj_suffix, $test_names_ref ) = @_;
     if ( $config->{arch} eq 'arm64' ) {
         warn "\n# Warning: Skipping OpenCppCoverage on Windows ARM64 as it is unsupported.\n";
-        return 0;
+        return compile_and_run_tests( \%config, $obj_suffix, $test_names_ref, 0 );
     }
     my $tool_path = File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
     warn "Error: OpenCppCoverage not found at '$tool_path'." unless -f $tool_path;
@@ -514,7 +521,7 @@ sub run_coverage_msvc {
     print "\nCompiling and running tests under OpenCppCoverage\n";
 
     for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{800_security[/\\]821_threading_bare\.c$} ) { next; }
+        if ( $test_c =~ m{821_threading_bare\.c$} ) { next; }
         my @source_files = ($test_c);
         my @local_cflags = @{ $config->{cflags} };
         if ( $test_c =~ /850_regression_cases\.c$/ ) {

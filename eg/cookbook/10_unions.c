@@ -13,8 +13,8 @@ int process_number_as_int(Number n) {
 }
 
 int main() {
-    // 1. Signature for int(Number). A Number is a union of int and float: <i,f>.
-    const char * signature = "<i,f>=>i";
+    // 1. Signature for int(Number). A Number is a union of int and float: <int, float>.
+    const char * signature = "(<int, float>) -> int";
     infix_forward_t * trampoline = NULL;
     infix_forward_create(&trampoline, signature);
 

@@ -105,7 +105,7 @@ TEST {
     if (child_test_name != NULL) {
         if (strcmp(child_test_name, "forward_uaf") == 0) {
             infix_forward_t * t = NULL;
-            infix_status status = infix_forward_create(&t, "i=>i");
+            infix_status status = infix_forward_create(&t, "(int32)->int32");
             if (status != INFIX_SUCCESS)
                 exit(2);
             infix_cif_func f = (infix_cif_func)infix_forward_get_code(t);
@@ -116,7 +116,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
             infix_reverse_t * rt = NULL;
-            infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
             if (status != INFIX_SUCCESS)
                 exit(2);
             void (*f)() = (void (*)())infix_reverse_get_code(rt);
@@ -125,7 +125,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "write_harden") == 0) {
             infix_reverse_t * rt = NULL;
-            infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
             if (status != INFIX_SUCCESS)
                 exit(2);
             rt->user_data = NULL;  // This line should crash
@@ -149,7 +149,7 @@ TEST {
             }
             else if (pid == 0) {  // Child process
                 infix_forward_t * trampoline = NULL;
-                infix_status status = infix_forward_create(&trampoline, "i=>i");
+                infix_status status = infix_forward_create(&trampoline, "(int32)->int32");
                 if (status != INFIX_SUCCESS)
                     exit(2);  // Exit with error if creation fails
                 infix_cif_func dangling_ptr = (infix_cif_func)infix_forward_get_code(trampoline);
@@ -182,7 +182,7 @@ TEST {
             }
             else if (pid == 0) {  // Child process
                 infix_reverse_t * rt = NULL;
-                infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+                infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
                 if (status != INFIX_SUCCESS)
                     exit(2);
                 void (*dangling_ptr)() = (void (*)())infix_reverse_get_code(rt);
@@ -217,7 +217,7 @@ TEST {
         }
         else if (pid == 0) {  // Child process
             infix_reverse_t * rt = NULL;
-            infix_status status = infix_reverse_create(&rt, "=>v", (void *)dummy_handler_func, NULL);
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
             if (status != INFIX_SUCCESS)
                 exit(2);
             rt->user_data = NULL;  // This write should trigger a SIGSEGV
@@ -242,12 +242,19 @@ TEST {
         subtest("infix_type_create_struct overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
-            infix_struct_member members[1];
-            members[0] =
-                infix_struct_member_create("bad", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), SIZE_MAX - 4);
+
+            // Test a real overflow scenario. Create a struct with two
+            // members whose combined size and padding would wrap around SIZE_MAX.
+            // This tests the library's internal calculation, not faulty user input.
+            infix_type malicious_type = {.size = SIZE_MAX / 2 + 10, .alignment = 8};
+            infix_struct_member members[2];
+            members[0] = infix_type_create_member("a", &malicious_type, 0);
+            members[1] = infix_type_create_member("b", &malicious_type, 0);
+
             infix_type * bad_type = NULL;
-            infix_status status = infix_type_create_struct(arena, &bad_type, members, 1);
-            ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_struct returned error on overflow");
+            infix_status status = infix_type_create_struct(arena, &bad_type, members, 2);
+            ok(status == INFIX_ERROR_INVALID_ARGUMENT,
+               "infix_type_create_struct returned error on calculated overflow");
             ok(bad_type == NULL, "Output type is NULL on failure");
             infix_arena_destroy(arena);
         }
@@ -265,10 +272,10 @@ TEST {
         subtest("infix_type_create_union overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
-            // Create a fake type on the stack just for this test
+            // This test is already correct. It tests the padding calculation overflow.
             infix_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
             infix_struct_member members[1];
-            members[0] = infix_struct_member_create("bad", &malicious_member_type, 0);
+            members[0] = infix_type_create_member("bad", &malicious_member_type, 0);
             infix_type * bad_type = NULL;
             infix_status status = infix_type_create_union(arena, &bad_type, members, 1);
             ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_union returned error on overflow");

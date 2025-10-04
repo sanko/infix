@@ -1,0 +1,168 @@
+# Doxyfile for the infix project, version 1.14.0
+# Configured for doxygen-awesome-css theme.
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "infix"
+## Updated to match the version in your source code
+PROJECT_NUMBER         = 0.1.0
+PROJECT_BRIEF          = "A powerful, JIT-powered Foreign Function Interface (FFI) library for C."
+PROJECT_LOGO           =
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ABBREVIATE_BRIEF       =
+ALWAYS_DETAILED_SEC    = NO
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        =
+JAVADOC_AUTOBRIEF      = YES
+QT_AUTOBRIEF           = YES
+MULTILINE_CPP_IS_BRIEF = YES
+INHERIT_DOCS           = YES
+SEPARATE_MEMBER_PAGES  = NO
+TAB_SIZE               = 4
+ALIASES                =
+
+## Crucial for C projects: Tailors output for C (e.g., "Functions" not "Methods").
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+## Crucial for C: Makes `typedef struct T_ {} T;` appear as a single `struct T`.
+TYPEDEF_HIDES_STRUCT   = YES
+
+MARKDOWN_SUPPORT       = YES
+AUTOLINK_SUPPORT       = YES
+NUM_PROC_THREADS       = 0
+
+#---------------------------------------------------------------------------
+# Build related configuration options
+#---------------------------------------------------------------------------
+## Ensures everything is documented, works well with HIDE_UNDOC_MEMBERS.
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+## For the unity build, ensures internal static functions are documented and cross-referenced.
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+## Hides members without Doxygen comments, reducing noise.
+HIDE_UNDOC_MEMBERS     = YES
+HIDE_UNDOC_CLASSES     = YES
+## Generates documentation for \internal sections, useful for developers.
+INTERNAL_DOCS          = YES
+CASE_SENSE_NAMES       = SYSTEM
+HIDE_SCOPE_NAMES       = NO
+SHOW_INCLUDE_FILES     = YES
+## Keep declaration order for functions, which is often more logical than alphabetical.
+SORT_MEMBER_DOCS       = NO
+SORT_BRIEF_DOCS        = NO
+SORT_GROUP_NAMES       = YES
+GENERATE_TODOLIST      = YES
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+SHOW_USED_FILES        = NO
+USE_MDFILE_AS_MAINPAGE = README.md
+
+#---------------------------------------------------------------------------
+# Input files configuration
+#---------------------------------------------------------------------------
+## Point to all directories and files containing documentation.
+INPUT                  = include \
+                         src \
+                         docs \
+                         README.md \
+                         INSTALL.md
+## Limit parsing to relevant file types.
+FILE_PATTERNS          = *.c *.h *.md
+RECURSIVE              = YES
+## Exclude build artifacts and the generated docs themselves.
+EXCLUDE                = build \
+                         docs/doxygen-awesome-css
+EXCLUDE_PATTERNS       = */.git/* */build/*
+
+#---------------------------------------------------------------------------
+# Source browsing configuration
+#---------------------------------------------------------------------------
+## Generate cross-referenced source code, useful for developers.
+SOURCE_BROWSER         = YES
+## Embed the function's source code directly on its documentation page.
+INLINE_SOURCES         = YES
+STRIP_CODE_COMMENTS    = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+VERBATIM_HEADERS       = NO
+
+#---------------------------------------------------------------------------
+# HTML output configuration - THEME CUSTOMIZATION
+#---------------------------------------------------------------------------
+GENERATE_HTML          = YES
+## The GitHub Action workflow will override this to a temporary build directory.
+HTML_OUTPUT            = docs
+
+## Point to the custom header file.
+HTML_HEADER            = docs/header.html
+#HTML_FOOTER            = docs/footer.html
+
+## Clear the default stylesheet; the theme replaces it.
+HTML_STYLESHEET        =
+
+## Add the doxygen-awesome-css theme files from the submodule.
+HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome-css/doxygen-awesome.css
+                         # docs/doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+
+## Add the theme's required JavaScript files.
+HTML_EXTRA_FILES       = docs/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
+                         docs/doxygen-awesome-css/doxygen-awesome-fragment-copy.js \
+                         docs/doxygen-awesome-css/doxygen-awesome-interactive-toc.js
+
+## Theme-specific options for the desired look and feel.
+HTML_DYNAMIC_SECTIONS  = YES
+DISABLE_INDEX          = NO
+GENERATE_TREEVIEW      = NO
+
+## Style tweaks for the blueish theme, similar to libsl3.
+HTML_COLORSTYLE        = LIGHT
+HTML_COLORSTYLE_HUE    = 200
+HTML_COLORSTYLE_SAT    = 100
+HTML_COLORSTYLE_GAMMA  = 40
+
+SEARCHENGINE           = YES
+
+#---------------------------------------------------------------------------
+# LaTeX output configuration
+#---------------------------------------------------------------------------
+GENERATE_LATEX         = NO
+
+#---------------------------------------------------------------------------
+# Preprocessor configuration
+#---------------------------------------------------------------------------
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = src/core/arch/x64 \
+                         src/core/arch/aarch64 \
+                         src
+INCLUDE_FILE_PATTERNS  = *.h
+## Predefine macros to help Doxygen parse the code correctly.
+PREDEFINED             = INFIX_DEBUG_ENABLED=0 \
+                         c23_nodiscard= \
+                         DBLTAP_ENABLE \
+                         DBLTAP_IMPLEMENTATION
+SKIP_FUNCTION_MACROS   = YES
+
+#---------------------------------------------------------------------------
+# Dot graph configuration
+#---------------------------------------------------------------------------
+HAVE_DOT               = YES
+DOT_IMAGE_FORMAT       = svg
+INTERACTIVE_SVG        = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+UML_LOOK               = YES
+UML_LIMIT_NUM_FIELDS   = 10
+DOT_GRAPH_MAX_NODES    = 100
+MAX_DOT_GRAPH_DEPTH    = 0
+GENERATE_LEGEND        = NO # The awesome theme has its own legend style

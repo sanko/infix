@@ -12,29 +12,28 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file utility.h
- * @brief A header for debugging utilities that are conditionally compiled.
+ * @brief A header for conditionally compiled debugging utilities.
+ * @ingroup internal_utils
  *
- * @details This header is the central point for the library's debugging
- * infrastructure. Its primary feature is that it behaves differently based on
- * the `INFIX_DEBUG_ENABLED` preprocessor macro. This allows debugging code to be
- * seamlessly integrated during development without affecting the performance or
- * size of the final production binary.
+ * @internal
+ * This header is the central point for the library's debugging infrastructure.
+ * Its primary feature is that it behaves differently based on the `INFIX_DEBUG_ENABLED`
+ * preprocessor macro. This allows debugging code to be seamlessly integrated
+ * during development without affecting the performance or size of the final
+ * production binary.
  *
  * - **When `INFIX_DEBUG_ENABLED` is defined and non-zero (Debug Mode):**
- *   - If `DBLTAP_ENABLE` is *also* defined, this header includes `double_tap.h`
- *     and defines `INFIX_DEBUG_PRINTF` to use its `note()` macro for integrated
- *     test logging.
- *   - If `DBLTAP_ENABLE` is *not* defined (e.g., for a bare test executable),
- *     it defines `INFIX_DEBUG_PRINTF` to fall back to a standard `printf`.
- *   - In both cases, it declares the `infix_dump_hex` function for memory inspection.
+ *   - It declares the `infix_dump_hex` function for memory inspection.
+ *   - It defines `INFIX_DEBUG_PRINTF` to use the `note()` macro from the `double_tap`
+ *     test harness (if available) or a standard `printf` fallback.
  *
  * - **When `INFIX_DEBUG_ENABLED` is not defined or is zero (Release Mode):**
- *   All debugging macros are defined as no-ops (`((void)0)`), and `infix_dump_hex` is
- *   defined as an empty `static inline` function. This ensures that all debugging
- *   code is completely compiled out by the optimizer.
+ *   - All debugging macros are defined as no-ops (`((void)0)`).
+ *   - `infix_dump_hex` is defined as an empty `static inline` function.
+ *   - This ensures all debugging code is completely compiled out by the optimizer.
+ * @endinternal
  */
 
 #include "common/compat_c23.h"
@@ -42,27 +41,27 @@
 
 // Check if INFIX_DEBUG_ENABLED is defined and set to a non-zero value.
 #if defined(INFIX_DEBUG_ENABLED) && INFIX_DEBUG_ENABLED
+
 // The double_tap framework is only included if both debug mode AND the main
 // test harness toggle are enabled. This allows for debug builds of non-test executables.
 #if defined(DBLTAP_ENABLE)
 #include "common/double_tap.h"
 /**
+ * @internal
  * @def INFIX_DEBUG_PRINTF(...)
  * @brief A macro for printing formatted debug messages during a debug build with the test harness.
- * @details In debug builds where the `double_tap.h` test harness is active, this macro
- *          wraps the `note()` macro, which prints a formatted string prefixed with `# `.
- *          This allows infix-specific debug output to be cleanly integrated into the test logs.
- *
- * **Example Usage:**
+ * @details In debug builds where `double_tap.h` is active, this macro wraps the `note()`
+ *          macro, integrating debug output cleanly into the test logs.
+ * @example
  * ```c
  * INFIX_DEBUG_PRINTF("Processing type %d with size %zu", type->id, type->size);
  * ```
  */
 #define INFIX_DEBUG_PRINTF(...) note("INFIX_DEBUG: " __VA_ARGS__)
 #else
-#include <stdio.h>  // Include for the printf fallback.
-
+#include <stdio.h>
 /**
+ * @internal
  * @def INFIX_DEBUG_PRINTF(...)
  * @brief A macro for printing formatted debug messages (printf fallback).
  * @details In debug builds where the `double_tap.h` harness is *not* active, this macro
@@ -76,21 +75,24 @@
 #endif  // DBLTAP_ENABLE
 
 /**
- * @brief Declares the function prototype for `infix_dump_hex` (available in debug builds only).
+ * @internal
+ * @brief Declares the function prototype for `infix_dump_hex` (debug builds only).
  * @details This function is invaluable for inspecting the raw machine code generated
  *          by the JIT compiler. It prints a detailed hexadecimal and ASCII dump of a
- *          memory region to the standard output, formatted for readability. See the
- *          implementation in `utility.c` for more details.
+ *          memory region to the standard output, formatted for readability.
  *
  * @param data A pointer to the start of the memory block to dump.
  * @param size The number of bytes to dump.
  * @param title A descriptive title to print before and after the hex dump.
  */
 void infix_dump_hex(const void * data, size_t size, const char * title);
+
 #else  // INFIX_DEBUG_ENABLED is NOT defined or is zero (Release Mode)
+
 /**
+ * @internal
  * @def INFIX_DEBUG_PRINTF(...)
- * @brief A macro for printing formatted debug messages (a no-op in release builds).
+ * @brief A no-op macro for printing debug messages in release builds.
  * @details In release builds, this macro is defined as `((void)0)`, a standard C idiom
  *          for creating a statement that does nothing and has no side effects. The
  *          compiler will completely remove any calls to it, ensuring zero performance impact.
@@ -98,13 +100,13 @@ void infix_dump_hex(const void * data, size_t size, const char * title);
 #define INFIX_DEBUG_PRINTF(...) ((void)0)
 
 /**
+ * @internal
  * @brief A no-op version of `infix_dump_hex` for release builds.
  * @details This function is defined as an empty `static inline` function.
  *          - `static`: Prevents linker errors if this header is included in multiple files.
  *          - `inline`: Suggests to the compiler that the function body is empty,
  *            allowing it to completely remove any calls to this function at the call site.
- *          - `c23_maybe_unused`: Explicitly tells the compiler that the parameters are
- *            intentionally unused in this version of the function, suppressing warnings.
+ *          - `c23_maybe_unused`: Suppresses compiler warnings about unused parameters.
  *
  * @param data Unused in release builds.
  * @param size Unused in release builds.

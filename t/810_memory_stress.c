@@ -75,10 +75,10 @@ TEST {
             // Level 1: Point struct
             infix_struct_member * point_members =
                 infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-            point_members[0] = infix_struct_member_create(
-                "x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
-            point_members[1] = infix_struct_member_create(
-                "y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+            point_members[0] =
+                infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
+            point_members[1] =
+                infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
             infix_type * point_type = NULL;
             if (infix_type_create_struct(arena, &point_type, point_members, 2) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
@@ -95,9 +95,9 @@ TEST {
             // Level 3 (Top): StressObject (contains array)
             infix_struct_member * object_members =
                 infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-            object_members[0] = infix_struct_member_create(
+            object_members[0] = infix_type_create_member(
                 "object_id", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), offsetof(StressObject, object_id));
-            object_members[1] = infix_struct_member_create("elements", array_type, offsetof(StressObject, elements));
+            object_members[1] = infix_type_create_member("elements", array_type, offsetof(StressObject, elements));
             infix_type * object_type = NULL;
             if (infix_type_create_struct(arena, &object_type, object_members, 2) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);

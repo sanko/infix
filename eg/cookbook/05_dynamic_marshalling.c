@@ -31,19 +31,19 @@ void marshal_ordered_data(void * dest_buffer, const char * signature, void ** so
     }
 
     // 2. Zero the destination buffer for safety.
-    memset(dest_buffer, 0, struct_type->size);
+    memset(dest_buffer, 0, infix_type_get_size(struct_type));
 
     // 3. Iterate through the members described by the parsed type.
-    for (size_t i = 0; i < struct_type->meta.aggregate_info.num_members; ++i) {
-        infix_struct_member * member = &struct_type->meta.aggregate_info.members[i];
+    for (size_t i = 0; i < infix_type_get_member_count(struct_type); ++i) {
+        const infix_struct_member * member = infix_type_get_member(struct_type, i);
         printf("Marshalling member %zu ('%s') to offset %zu (size %zu)\n",
                i,
                member->name,
                member->offset,
-               member->type->size);
+               infix_type_get_size(member->type));
 
         // 4. Copy the source data to the correct offset in the destination buffer.
-        memcpy((char *)dest_buffer + member->offset, source_values[i], member->type->size);
+        memcpy((char *)dest_buffer + member->offset, source_values[i], infix_type_get_size(member->type));
     }
 
     // 5. Clean up the parser's temporary memory.
@@ -58,7 +58,7 @@ int main() {
     void * my_data[] = {&id_val, &score_val, &name_val};
 
     // A signature matching the UserProfile C struct, with named fields.
-    const char * profile_sig = "{id:i, score:d, name:c*}";
+    const char * profile_sig = "{id:int32, score:double, name:*char}";
 
     // The destination C struct buffer.
     UserProfile profile_buffer;
@@ -70,12 +70,10 @@ int main() {
            profile_buffer.name);
 
     // Verify offsets match what the compiler decided.
-    if (offsetof(UserProfile, user_id) == 0 && offsetof(UserProfile, score) == 8 && offsetof(UserProfile, name) == 16) {
+    if (offsetof(UserProfile, user_id) == 0 && offsetof(UserProfile, score) == 8 && offsetof(UserProfile, name) == 16)
         printf("Offsets match compiler layout.\n");
-    }
-    else {
+    else
         printf("Warning: Offsets do not match expected compiler layout.\n");
-    }
 
     return 0;
 }

@@ -208,9 +208,9 @@ TEST {
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_struct_member_create(
+        members[0] = infix_type_create_member(
             "a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), offsetof(MacTestStruct, a));
-        members[1] = infix_struct_member_create(
+        members[1] = infix_type_create_member(
             "b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), offsetof(MacTestStruct, b));
         infix_type * struct_type = NULL;
         infix_type_create_struct(arena, &struct_type, members, 2);

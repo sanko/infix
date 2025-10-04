@@ -19,7 +19,7 @@ LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64
 LIB_CFLAGS   := $(BASE_CFLAGS) $(LIB_INC_DIRS) -DINFIX_DEBUG_ENABLED=1
 
 # Flags for compiling and linking TESTS ONLY.
-TEST_CFLAGS  := $(BASE_CFLAGS) $(LIB_INC_DIRS) -It/include -Ithird_party/double_tap -DDBLTAP_ENABLE=1 -DINFIX_DEBUG_ENABLED=1
+TEST_CFLAGS  := $(BASE_CFLAGS) $(LIB_INC_DIRS) -mavx2 -It/include -Ithird_party/double_tap -DDBLTAP_ENABLE=1 -DINFIX_DEBUG_ENABLED=1
 
 # --- Source Files ---
 # The list of library sources is now complete.
@@ -50,7 +50,7 @@ endif
 LIB_SRCS := $(BASE_SRCS)
 LIB_OBJS := $(LIB_SRCS:.c=.o)
 
-TEST_SRCS   := $(wildcard t/**/*.c)
+TEST_SRCS   := $(wildcard t/*.c)
 TEST_TARGETS:= $(patsubst %.c,%$(EXE_EXT),$(TEST_SRCS))
 TEST_RESULTS:= $(patsubst %.c,%.passed,$(TEST_SRCS))
 

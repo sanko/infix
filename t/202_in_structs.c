@@ -62,8 +62,8 @@ TEST {
     // 2. Define the infix_type for PointerStruct using the arena.
     infix_struct_member * members =
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-    members[0] = infix_struct_member_create("val_ptr", infix_type_create_pointer(), offsetof(PointerStruct, val_ptr));
-    members[1] = infix_struct_member_create("str_ptr", infix_type_create_pointer(), offsetof(PointerStruct, str_ptr));
+    members[0] = infix_type_create_member("val_ptr", infix_type_create_pointer(), offsetof(PointerStruct, val_ptr));
+    members[1] = infix_type_create_member("str_ptr", infix_type_create_pointer(), offsetof(PointerStruct, str_ptr));
     infix_type * struct_type = NULL;
     infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
 

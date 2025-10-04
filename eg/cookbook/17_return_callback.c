@@ -33,19 +33,21 @@ int call_harness(provider_func_t provider, int input_val) {
 int main() {
     // Step A: Create the inner "worker" trampoline for `int(int)`.
     infix_reverse_t * worker_rt = NULL;
-    infix_reverse_create(&worker_rt, "i=>i", (void *)final_multiply_handler, NULL);
+    infix_reverse_create(&worker_rt, "(int) -> int", (void *)final_multiply_handler, NULL);
 
     // Step B: Create the "provider" trampoline for `void*(void)`.
     // Store the callable pointer of the worker trampoline in the provider's user_data.
     infix_reverse_t * provider_rt = NULL;
     void * worker_ptr = infix_reverse_get_code(worker_rt);
-    infix_reverse_create(&provider_rt, "=>v*", (void *)callback_provider_handler, worker_ptr);
+    infix_reverse_create(&provider_rt, "() -> *void", (void *)callback_provider_handler, worker_ptr);
 
     // Step C: Create a forward trampoline to call the C harness.
-    // Signature: int( worker_func_t(*)(void), int ) => int
-    // The first argument is a pointer to a function that returns a pointer: "()=>v*"
+    // Signature: int( provider_func_t, int ) which is int( int(*(*)(void))(int), int )
+    // This is a function that takes a pointer to a function returning a function pointer.
+    // Simpler: the argument is a function pointer, `provider_ptr`.
+    const char * harness_sig = "(*(() -> *void), int) -> int";
     infix_forward_t * harness_ft = NULL;
-    infix_forward_create(&harness_ft, "()=>v*,i=>i");
+    infix_forward_create(&harness_ft, harness_sig);
 
     // Step D: Execute the call chain.
     provider_func_t provider_ptr = (provider_func_t)infix_reverse_get_code(provider_rt);
