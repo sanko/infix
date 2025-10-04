@@ -1,7 +1,0 @@
-<map id="emit_add_reg_imm8" name="emit_add_reg_imm8">
-<area shape="rect" id="Node000001" title="Emits an x86&#45;64 add r64, imm8 instruction." alt="" coords="5,31,161,56"/>
-<area shape="rect" id="Node000002" href="$abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1" title="Emits an x86&#45;64 ModR/M byte." alt="" coords="218,5,325,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,30,204,24,205,30,162,35"/>
-<area shape="rect" id="Node000003" href="$abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e" title="Emits an x86&#45;64 REX prefix byte." alt="" coords="209,55,333,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,51,196,55,195,60,161,56"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="code_buffer_append" name="code_buffer_append">
-<area shape="rect" id="Node000001" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="145,55,299,80"/>
-<area shape="rect" id="Node000002" href="$trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8" title="Appends a single byte to the code buffer." alt="" coords="7,5,95,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,53,95,33,97,28,165,48"/>
-<area shape="rect" id="Node000003" href="$trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="5,55,97,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,70,98,70,98,65,131,65"/>
-<area shape="rect" id="Node000004" href="$trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4" title="Appends a 64&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="5,104,97,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,87,97,106,96,101,163,81"/>
-</map>

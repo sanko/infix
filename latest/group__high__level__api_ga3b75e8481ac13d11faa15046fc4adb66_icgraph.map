@@ -1,5 +1,0 @@
-<map id="infix_reverse_get_code" name="infix_reverse_get_code">
-<area shape="rect" id="Node000001" title="Retrieves the executable code pointer from a reverse trampoline." alt="" coords="204,5,376,31"/>
-<area shape="rect" id="Node000002" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="5,5,156,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,21,156,21,156,15,190,15"/>
-</map>

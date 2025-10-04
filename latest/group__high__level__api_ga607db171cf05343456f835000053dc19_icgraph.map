@@ -1,9 +1,0 @@
-<map id="infix_signature_parse" name="infix_signature_parse">
-<area shape="rect" id="Node000001" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="236,55,397,80"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga91ee73b14244e9479da4cf40d077ceec" title="Generates a forward&#45;call trampoline from a signature string." alt="" coords="19,5,174,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,54,154,33,155,28,247,49"/>
-<area shape="rect" id="Node000003" href="$group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0" title="Generates a reverse&#45;call trampoline (callback) from a signature string." alt="" coords="19,55,174,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,70,174,70,174,65,222,65"/>
-<area shape="rect" id="Node000004" href="$fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="5,104,188,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="247,86,155,107,154,101,245,80"/>
-</map>

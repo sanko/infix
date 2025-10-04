@@ -1,5 +1,0 @@
-<map id="infix_internal_dispatch_callback_fn_impl" name="infix_internal_dispatch_callback_fn_impl">
-<area shape="rect" id="Node000001" title="The internal C dispatcher function for all reverse trampolines (cached)." alt="" coords="5,5,175,45"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#ga7b043799f03cb7e6d223991828b27822" title="Retrieves the executable code pointer from a forward trampoline." alt="" coords="223,13,396,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,23,209,23,209,28,175,28"/>
-</map>

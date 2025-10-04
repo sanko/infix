@@ -1,16 +1,12 @@
 var searchData=
 [
-  ['h_20tt_0',['Step 1: Platform Detection (&lt;tt&gt;infix.h&lt;/tt&gt;)',['../md_docs_2porting.html#autotoc_md157',1,'']]],
-  ['handler_20signature_20example_1',['Handler Signature Example',['../group__high__level__api.html#autotoc_md187',1,'']]],
-  ['handling_20and_20security_2',['Parser Error Handling and Security',['../md_docs_2internals.html#autotoc_md97',1,'']]],
-  ['handling_20complex_20data_20structures_3',['Chapter 2: Handling Complex Data Structures',['../md_docs_2cookbook.html#autotoc_md24',1,'']]],
-  ['hardening_4',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md237',1,'']]],
-  ['hardening_20against_20integer_20overflows_5',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md238',1,'']]],
-  ['hfa_6',['Deep Dive: AArch64 Homogeneous Floating-point Aggregates (HFA)',['../md_docs_2internals.html#autotoc_md113',1,'']]],
-  ['high_20level_20signature_20api_7',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
-  ['high_20priority_3a_20foundation_20stability_20strong_8',['&lt;strong&gt;High Priority: Foundation &amp; Stability&lt;/strong&gt;',['../md_TODO.html#autotoc_md242',1,'']]],
-  ['homogeneous_20floating_20point_20aggregates_20hfa_9',['Deep Dive: AArch64 Homogeneous Floating-point Aggregates (HFA)',['../md_docs_2internals.html#autotoc_md113',1,'']]],
-  ['how_20to_20add_20a_20new_20regression_20test_10',['How to Add a New Regression Test',['../850__regression__cases_8c.html#autotoc_md240',1,'']]],
-  ['how_20to_20contribute_11',['How to Contribute',['../md_CONTRIBUTING.html#autotoc_md12',1,'']]],
-  ['human_20first_20signature_20system_12',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md168',1,'']]]
+  ['learn_20more_0',['Learn More',['../md_README.html#autotoc_md64',1,'']]],
+  ['legal_1',['License &amp; Legal',['../md_README.html#autotoc_md65',1,'']]],
+  ['library_2',['Contributing to the infix FFI Library',['../md_CONTRIBUTING.html',1,'']]],
+  ['library_20for_20c_3',['&lt;tt&gt;infix&lt;/tt&gt;: A JIT-Powered FFI Library for C',['../md_README.html',1,'']]],
+  ['license_4',['license',['../md_README.html#autotoc_md66',1,'Code License'],['../md_README.html#autotoc_md67',1,'Documentation License']]],
+  ['license_20legal_5',['License &amp; Legal',['../md_README.html#autotoc_md65',1,'']]],
+  ['linux_20distributions_20deb_20rpm_6',['Linux Distributions (DEB/RPM)',['../md_INSTALL.html#autotoc_md41',1,'']]],
+  ['linux_20macos_20bsds_7',['GNU Make (Linux, macOS, BSDs)',['../md_INSTALL.html#autotoc_md27',1,'']]],
+  ['low_20priority_3a_20advanced_20features_20polish_20strong_8',['&lt;strong&gt;Low Priority: Advanced Features &amp; Polish&lt;/strong&gt;',['../md_TODO.html#autotoc_md70',1,'']]]
 ];

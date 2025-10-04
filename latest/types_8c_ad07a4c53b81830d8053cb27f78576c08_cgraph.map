@@ -1,7 +1,0 @@
-<map id="infix_type_create_pointer_to" name="infix_type_create_pointer_to">
-<area shape="rect" id="Node000001" title="Creates an infix_type for a pointer to a specific type, allocating from an arena." alt="" coords="5,31,212,56"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="287,5,419,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,30,274,24,274,29,213,35"/>
-<area shape="rect" id="Node000003" href="$types_8c.html#ac6cb3751246268621260b267de378d74" title="Creates an infix_type descriptor for a generic pointer." alt="" coords="260,55,447,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,51,246,54,246,59,212,56"/>
-</map>

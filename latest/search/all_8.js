@@ -1,11 +1,22 @@
 var searchData=
 [
-  ['810_5fmemory_5fstress_2ec_0',['810_memory_stress.c',['../810__memory__stress_8c.html',1,'']]],
-  ['811_5ffault_5finjection_2ec_1',['811_fault_injection.c',['../811__fault__injection_8c.html',1,'']]],
-  ['820_5fthreading_5fhelgrind_2ec_2',['820_threading_helgrind.c',['../820__threading__helgrind_8c.html',1,'']]],
-  ['821_5fthreading_5fbare_2ec_3',['821_threading_bare.c',['../821__threading__bare_8c.html',1,'']]],
-  ['830_5fsecurity_2ec_4',['830_security.c',['../830__security_8c.html',1,'']]],
-  ['840_5farena_5fallocator_2ec_5',['840_arena_allocator.c',['../840__arena__allocator_8c.html',1,'']]],
-  ['850_5fregression_5fcases_2ec_6',['850_regression_cases.c',['../850__regression__cases_8c.html',1,'']]],
-  ['8_3a_20common_20pitfalls_20troubleshooting_7',['Chapter 8: Common Pitfalls &amp; Troubleshooting',['../md_docs_2cookbook.html#autotoc_md74',1,'']]]
+  ['c_0',['&lt;tt&gt;infix&lt;/tt&gt;: A JIT-Powered FFI Library for C',['../md_README.html',1,'']]],
+  ['changelog_1',['Changelog',['../md_CHANGELOG.html',1,'']]],
+  ['changelog_2emd_2',['CHANGELOG.md',['../CHANGELOG_8md.html',1,'']]],
+  ['cheat_20sheet_3',['cheat sheet',['../md_README.html#autotoc_md60',1,'Manual API Cheat Sheet'],['../md_README.html#autotoc_md58',1,'Signature API Cheat Sheet']]],
+  ['cmake_4',['Using CMake',['../md_INSTALL.html#autotoc_md21',1,'']]],
+  ['cmake_20with_20tt_20find_5fpackage_20tt_5',['Using CMake with &lt;tt&gt;find_package&lt;/tt&gt;',['../md_INSTALL.html#autotoc_md34',1,'']]],
+  ['code_6',['Using in Visual Studio Code',['../md_INSTALL.html#autotoc_md37',1,'']]],
+  ['code_20license_7',['Code License',['../md_README.html#autotoc_md66',1,'']]],
+  ['code_20of_20conduct_8',['code of conduct',['../md_CONTRIBUTING.html#autotoc_md4',1,'Code of Conduct'],['../md_CODE__OF__CONDUCT.html',1,'Contributor Code of Conduct']]],
+  ['code_5fof_5fconduct_2emd_9',['CODE_OF_CONDUCT.md',['../CODE__OF__CONDUCT_8md.html',1,'']]],
+  ['compilation_20advanced_10',['Manual Compilation (Advanced)',['../md_INSTALL.html#autotoc_md31',1,'']]],
+  ['conduct_11',['conduct',['../md_CONTRIBUTING.html#autotoc_md4',1,'Code of Conduct'],['../md_CODE__OF__CONDUCT.html',1,'Contributor Code of Conduct']]],
+  ['config_12',['Using pkg-config',['../md_INSTALL.html#autotoc_md35',1,'']]],
+  ['context_20hardening_13',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md50',1,'']]],
+  ['continuous_20security_20validation_20fuzzing_14',['5. Continuous Security Validation (Fuzzing)',['../md_SECURITY.html#autotoc_md52',1,'']]],
+  ['contribute_15',['How to Contribute',['../md_CONTRIBUTING.html#autotoc_md5',1,'']]],
+  ['contributing_20to_20the_20infix_20ffi_20library_16',['Contributing to the infix FFI Library',['../md_CONTRIBUTING.html',1,'']]],
+  ['contributing_2emd_17',['CONTRIBUTING.md',['../CONTRIBUTING_8md.html',1,'']]],
+  ['contributor_20code_20of_20conduct_18',['Contributor Code of Conduct',['../md_CODE__OF__CONDUCT.html',1,'']]]
 ];

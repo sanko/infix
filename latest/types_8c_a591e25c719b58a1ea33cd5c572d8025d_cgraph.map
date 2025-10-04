@@ -1,5 +1,0 @@
-<map id="infix_type_create_complex" name="infix_type_create_complex">
-<area shape="rect" id="Node000001" title="Creates a new infix_type for a _Complex number from an arena." alt="" coords="5,5,203,31"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="251,5,383,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,15,237,15,237,21,203,21"/>
-</map>

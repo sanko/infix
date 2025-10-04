@@ -1,5 +1,0 @@
-<map id="infix_type_create_vector" name="infix_type_create_vector">
-<area shape="rect" id="Node000001" title="Creates a new infix_type for a SIMD vector from an arena." alt="" coords="5,5,188,31"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="236,5,368,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,15,222,15,222,21,188,21"/>
-</map>

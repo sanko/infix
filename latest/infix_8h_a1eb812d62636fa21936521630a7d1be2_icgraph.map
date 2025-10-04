@@ -1,5 +1,0 @@
-<map id="infix_type_create_void" name="infix_type_create_void">
-<area shape="rect" id="Node000001" title="Creates an infix_type descriptor for the void type." alt="" coords="204,5,373,31"/>
-<area shape="rect" id="Node000002" href="$821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0" title="The main function executed by each worker thread." alt="" coords="5,5,156,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,21,156,21,156,15,190,15"/>
-</map>

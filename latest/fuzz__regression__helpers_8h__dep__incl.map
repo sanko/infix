@@ -1,5 +1,0 @@
-<map id="t/include/fuzz_regression_helpers.h" name="t/include/fuzz_regression_helpers.h">
-<area shape="rect" id="Node000001" title="Helpers for creating regression tests from fuzzer&#45;discovered inputs." alt="" coords="6,5,190,45"/>
-<area shape="rect" id="Node000002" href="$850__regression__cases_8c.html" title="Contains a data&#45;driven suite of deterministic unit tests for specific bugs found by fuzzing." alt="" coords="5,93,191,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,59,101,93,95,93,95,59"/>
-</map>

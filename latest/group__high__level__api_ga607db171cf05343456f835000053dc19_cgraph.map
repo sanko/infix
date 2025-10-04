@@ -1,7 +1,0 @@
-<map id="infix_signature_parse" name="infix_signature_parse">
-<area shape="rect" id="Node000001" title="Parses a full function signature string into its constituent infix_type parts." alt="" coords="5,31,167,56"/>
-<area shape="rect" id="Node000002" href="$group__high__level__api.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates and initializes a new memory arena." alt="" coords="219,5,361,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,31,204,26,205,31,167,36"/>
-<area shape="rect" id="Node000003" href="$group__high__level__api.html#ga50b7219c58789fc03898690254f0280e" title="Frees an entire memory arena and all objects allocated within it." alt="" coords="215,55,365,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,50,201,54,200,59,167,55"/>
-</map>

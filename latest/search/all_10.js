@@ -1,28 +1,4 @@
 var searchData=
 [
-  ['g_20tt_20dyncall_20tt_0',['The Alternative: The Call VM / Interpreter Model (e.g., &lt;tt&gt;dyncall&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md142',1,'']]],
-  ['g_5farm64_5fforward_5fspec_1',['g_arm64_forward_spec',['../abi__arm64_8c.html#a7c5e92ab39f189170048020b8057da8c',1,'abi_arm64.c']]],
-  ['g_5farm64_5freverse_5fspec_2',['g_arm64_reverse_spec',['../abi__arm64_8c.html#a7423070977a2434eb61bc352204a4fb2',1,'abi_arm64.c']]],
-  ['g_5fsysv_5fx64_5fforward_5fspec_3',['g_sysv_x64_forward_spec',['../abi__sysv__x64_8c.html#ae0b297d249f204883fbeb6d155b20b70',1,'abi_sysv_x64.c']]],
-  ['g_5fsysv_5fx64_5freverse_5fspec_4',['g_sysv_x64_reverse_spec',['../abi__sysv__x64_8c.html#a713379357c03a1d1c1a87d956d12b866',1,'abi_sysv_x64.c']]],
-  ['g_5fwin_5fx64_5fforward_5fspec_5',['g_win_x64_forward_spec',['../abi__win__x64_8c.html#a99e66d16faae249a82106ddc979627bd',1,'abi_win_x64.c']]],
-  ['g_5fwin_5fx64_5freverse_5fspec_6',['g_win_x64_reverse_spec',['../abi__win__x64_8c.html#a9157b431e54a010a042164329c95e614',1,'abi_win_x64.c']]],
-  ['gdb_20linux_20macos_7',['Method 2: Live Debugging with GDB (Linux/macOS)',['../md_docs_2internals.html#autotoc_md118',1,'']]],
-  ['generate_5frandom_5ftype_8',['generate_random_type',['../fuzz__helpers_8h.html#a0eebcc9807a7062cc16d500a5b22424f',1,'generate_random_type(infix_arena_t *arena, fuzzer_input *in, int depth, size_t *total_fields):&#160;fuzz_helpers.c'],['../fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f',1,'generate_random_type(infix_arena_t *arena, fuzzer_input *in, int depth, size_t *total_fields):&#160;fuzz_helpers.c']]],
-  ['generation_9',['1. Type Mapping -&gt; Signature String Generation',['../md_docs_2cookbook.html#autotoc_md83',1,'']]],
-  ['generation_20and_20emitters_10',['Code Generation and Emitters',['../md_docs_2internals.html#autotoc_md145',1,'']]],
-  ['generation_20flow_11',['Trampoline Generation Flow',['../md_docs_2internals.html#autotoc_md104',1,'']]],
-  ['generator_20tt_20trampoline_20c_20tt_12',['5. The ABI Abstraction Layer and Trampoline Generator (&lt;tt&gt;trampoline.c&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md103',1,'']]],
-  ['get_5fcurrent_5fforward_5fabi_5fspec_13',['get_current_forward_abi_spec',['../trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a',1,'trampoline.c']]],
-  ['get_5fcurrent_5freverse_5fabi_5fspec_14',['get_current_reverse_abi_spec',['../trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b',1,'trampoline.c']]],
-  ['gnu_20make_20linux_20macos_20bsds_15',['GNU Make (Linux, macOS, BSDs)',['../md_INSTALL.html#autotoc_md200',1,'']]],
-  ['go_16',['Go',['../md_docs_2cookbook.html#autotoc_md56',1,'']]],
-  ['go_20code_20tt_20libgo_5fmath_20go_20tt_17',['Go Code (&lt;tt&gt;libgo_math.go&lt;/tt&gt;)',['../md_docs_2cookbook.html#autotoc_md57',1,'']]],
-  ['go_20tt_18',['Go Code (&lt;tt&gt;libgo_math.go&lt;/tt&gt;)',['../md_docs_2cookbook.html#autotoc_md57',1,'']]],
-  ['gpr_5fsave_5farea_5foffset_19',['gpr_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a845e2eb5c5d49d4a710ba8af9c2428fb',1,'infix_reverse_call_frame_layout']]],
-  ['grammar_20',['4.2 EBNF Grammar',['../md_docs_2signatures.html#autotoc_md182',1,'']]],
-  ['guard_20pages_21',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md236',1,'']]],
-  ['guard_20pages_20for_20freed_20trampolines_22',['Guard Pages for Freed Trampolines',['../md_docs_2internals.html#autotoc_md101',1,'']]],
-  ['guide_23',['The Debugging Guide',['../md_docs_2internals.html#autotoc_md115',1,'']]],
-  ['guiding_20principles_24',['Guiding Principles',['../md_docs_2internals.html#autotoc_md131',1,'']]]
+  ['key_20features_0',['Key Features',['../md_README.html#autotoc_md54',1,'']]]
 ];

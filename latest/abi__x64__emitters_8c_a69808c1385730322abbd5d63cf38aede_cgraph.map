@@ -1,5 +1,0 @@
-<map id="emit_mov_reg_imm64" name="emit_mov_reg_imm64">
-<area shape="rect" id="Node000001" title="Emits an x86&#45;64 mov r64, imm64 instruction." alt="" coords="5,5,175,31"/>
-<area shape="rect" id="Node000002" href="$abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e" title="Emits an x86&#45;64 REX prefix byte." alt="" coords="223,5,347,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,15,209,15,209,21,175,21"/>
-</map>

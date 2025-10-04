@@ -1,7 +1,0 @@
-<map id="emit_int32" name="emit_int32">
-<area shape="rect" id="Node000001" title="Appends a 32&#45;bit integer (little&#45;endian) to the code buffer." alt="" coords="5,5,97,31"/>
-<area shape="rect" id="Node000002" href="$trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970" title="Appends data to a code buffer, reallocating from the arena if necessary." alt="" coords="145,5,299,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,15,131,15,131,21,98,21"/>
-<area shape="rect" id="Node000003" href="$group__high__level__api.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from the arena with a specific alignment." alt="" coords="347,5,479,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="299,15,333,15,333,21,299,21"/>
-</map>

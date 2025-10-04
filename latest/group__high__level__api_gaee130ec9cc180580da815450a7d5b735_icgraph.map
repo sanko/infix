@@ -1,5 +1,0 @@
-<map id="infix_type_from_signature" name="infix_type_from_signature">
-<area shape="rect" id="Node000001" title="Parses a signature string representing a single data type." alt="" coords="236,5,428,31"/>
-<area shape="rect" id="Node000002" href="$fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60" title="The entry point called by the libFuzzer engine for each test case." alt="" coords="5,5,188,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,21,188,21,188,15,222,15"/>
-</map>

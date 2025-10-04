@@ -9,9 +9,18 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -23,7 +32,20 @@
   <td id="projectalign">
    <div id="projectname">infix FFI Library<span id="projectnumber">&#160;0.1.0</span>
    </div>
+   <div id="projectbrief">A powerful and flexible Foreign Function Interface (FFI) library for C.</div>
   </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
  </tr>
  </tbody>
 </table>
@@ -35,17 +57,23 @@
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
+$(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); });
 /* @license-end */
 </script>
-<div id="main-nav"></div>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -67,28 +95,27 @@ $(function() {
 </div>
 </div>
 
-</div><!-- top -->
 <div><div class="header">
   <div class="headertitle"><div class="title">&lt;strong&gt;Project Roadmap: infix FFI&lt;/strong&gt;</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md241"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
-<h1><a class="anchor" id="autotoc_md242"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md53"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
+<h1><a class="anchor" id="autotoc_md68"></a>
 &lt;strong&gt;High Priority: Foundation &amp; Stability&lt;/strong&gt;</h1>
 <p><em>These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.</em></p>
 <ul>
-<li>[x] <b>Design and Implement New Signature Parser (<code><a class="el" href="signature_8c.html" title="Implements the high-level v1.0 signature string parser.">signature.c</a></code>)**<ul>
+<li>[x] <b>Design and Implement New Signature Parser (<code>signature.c</code>)**<ul>
 <li><b>Context:</b> The current single-character signature system is minimal and lacks the expressiveness needed for rich introspection and clarity. The v1.0 specification is the path forward.</li>
-<li><b>Idea:</b> Replace the existing recursive-descent parser in <code><a class="el" href="signature_8c.html" title="Implements the high-level v1.0 signature string parser.">signature.c</a></code> with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.</li>
-<li><b>Goal:</b> The new <code>infix_signature_parse</code> can correctly parse all valid examples from the v1.0 specification, including nested structs, unions, and pointers. It must produce a valid <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> graph in an arena. The old parser will be completely removed.</li>
+<li><b>Idea:</b> Replace the existing recursive-descent parser in <code>signature.c</code> with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.</li>
+<li><b>Goal:</b> The new <code>infix_signature_parse</code> can correctly parse all valid examples from the v1.0 specification, including nested structs, unions, and pointers. It must produce a valid <code>infix_type</code> graph in an arena. The old parser will be completely removed.</li>
 <li><b>Possible Roadblocks:</b> This is the largest single task. It requires careful implementation to handle all grammatical rules, whitespace, and error conditions correctly.</li>
 </ul>
 </b></li>
-<li><b>[x] **Update Type System for New Concepts (<code><a class="el" href="types_8c.html" title="Implements the FFI type system for creating and managing type descriptions.">types.c</a></code>, <code><a class="el" href="infix_8h.html" title="The main public header for the infix FFI library.">infix.h</a></code>)**<ul>
+<li><b>[x] **Update Type System for New Concepts (<code>types.c</code>, <code>infix.h</code>)**<ul>
 <li><b>Context:</b> The v1.0 spec introduces concepts like <code>enum</code> that are not present in the current type system.</li>
 <li><b>Idea:</b><ol type="1">
 <li>Add a new <code>INFIX_TYPE_ENUM</code> category to the <code>infix_type_category</code> enum.</li>
-<li>Add a corresponding <code>enum_info</code> struct to the <code><a class="el" href="structinfix__type__t.html">infix_type_t</a></code> <code>meta</code> union to store the underlying integer type.</li>
+<li>Add a corresponding <code>enum_info</code> struct to the <code>infix_type_t</code> <code>meta</code> union to store the underlying integer type.</li>
 <li>Implement a new <code>infix_type_create_enum(arena, &amp;type, underlying_type)</code> function.</li>
 </ol>
 </li>
@@ -102,9 +129,9 @@ $(function() {
 <li><b>Possible Roadblocks:</b> This is a tedious but essential task. It will touch dozens of files and is a good opportunity to improve the clarity of existing tests.</li>
 </ul>
 </b></li>
-<li><b>[x] <b>Update All Public Documentation (<code>README.md</code>, <code>cookbook.md</code>, etc.)**<ul>
+<li><b>[x] <b>Update All Public Documentation (<code><a class="el" href="README_8md.html">README.md</a></code>, <code>cookbook.md</code>, etc.)**<ul>
 <li><b>Context:</b> The project's documentation is a key feature. It must be updated to reflect the new, more powerful signature language.</li>
-<li>**Idea: Replace the existing <code>signatures.md</code> with the new v1.0 specification. Update the <code>README.md</code>, <code>cookbook.md</code>, and all other documentation to use and explain the new syntax.</li>
+<li>**Idea: Replace the existing <code>signatures.md</code> with the new v1.0 specification. Update the <code><a class="el" href="README_8md.html">README.md</a></code>, <code>cookbook.md</code>, and all other documentation to use and explain the new syntax.</li>
 <li><b>Goal:</b> All documentation is consistent and accurately describes the v1.0 signature language. All code examples are updated to the new syntax.</li>
 </ul>
 </b></b></li>
@@ -115,9 +142,9 @@ $(function() {
 </ul>
 </b></b></li>
 <li><b><b>[x] <b>Refactor Platform-Specific Emitters</b><ul>
-<li><b>Context:</b> The initial design mixed platform-specific instruction emitters (e.g., for x86-64) into the generic <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> and public <code><a class="el" href="infix_8h.html" title="The main public header for the infix FFI library.">infix.h</a></code>, breaking the library's architectural abstraction.</li>
-<li><b>Idea:</b> Move all platform-specific emitter functions into their own dedicated, internal modules (e.g., <code><a class="el" href="abi__x64__emitters_8c.html" title="Implements the internal helper functions for emitting x86-64 machine code.">abi_x64_emitters.c</a></code>, <code><a class="el" href="abi__arm64__emitters_8c.html" title="Implements the internal helper functions for emitting AArch64 machine code.">abi_arm64_emitters.c</a></code>) with non-public headers.</li>
-<li><b>Goal:</b> The generic <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> is now 100% platform-agnostic. The public <code><a class="el" href="infix_8h.html" title="The main public header for the infix FFI library.">infix.h</a></code> no longer exposes any internal emitter functions. The architecture is cleaner, more maintainable, and easier to extend to new platforms.</li>
+<li><b>Context:</b> The initial design mixed platform-specific instruction emitters (e.g., for x86-64) into the generic <code>trampoline.c</code> and public <code>infix.h</code>, breaking the library's architectural abstraction.</li>
+<li><b>Idea:</b> Move all platform-specific emitter functions into their own dedicated, internal modules (e.g., <code>abi_x64_emitters.c</code>, <code>abi_arm64_emitters.c</code>) with non-public headers.</li>
+<li><b>Goal:</b> The generic <code>trampoline.c</code> is now 100% platform-agnostic. The public <code>infix.h</code> no longer exposes any internal emitter functions. The architecture is cleaner, more maintainable, and easier to extend to new platforms.</li>
 </ul>
 </b></b></li>
 <li><b><b>[x] <b>Implement Fuzzing</b><ul>
@@ -151,11 +178,11 @@ $(function() {
 <li><b><b>[x] <b>Add <code>long double</code> Support</b><ul>
 <li><b>Context:</b> <code>long double</code> was the last major C primitive type not supported by the library.</li>
 <li><b>Idea:</b> Add a new primitive type and implement the correct, platform-specific ABI handling for it.</li>
-<li><b>Goal:</b> <code>long double</code> is a recognized <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> and passes correctly in forward and reverse calls on all supported platforms (System V, Windows/GCC, AArch64).</li>
+<li><b>Goal:</b> <code>long double</code> is a recognized <code>infix_type</code> and passes correctly in forward and reverse calls on all supported platforms (System V, Windows/GCC, AArch64).</li>
 </ul>
 </b></b></li>
 <li><b><b>[x] <b>Read-Only Callback Contexts (RELRO for Callbacks)</b><ul>
-<li><b>Context:</b> The <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.</li>
+<li><b>Context:</b> The <code>infix_reverse_t</code> struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.</li>
 <li><b>Idea:</b> After a callback context is created, use <code>mprotect</code>/<code>VirtualProtect</code> on the memory page containing it to make it read-only.</li>
 <li><b>Goal:</b> The context is hardened by default. Any attempt to write to a hardened context struct will cause an immediate segmentation fault, preventing the attack.</li>
 <li><b>Possible Roadblocks:</b> <code>mprotect</code> operates on page boundaries, not on individual structs. This requires careful memory management to ensure unrelated writable data is not on the same page, which might make the implementation complex.</li>
@@ -163,7 +190,7 @@ $(function() {
 </b></b></li>
 </ul>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md243"></a>
+<h1><a class="anchor" id="autotoc_md69"></a>
 &lt;strong&gt;Medium Priority: Expansion &amp; Optimization&lt;/strong&gt;</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.</em></b></b></p>
@@ -171,7 +198,7 @@ $(function() {
 <li>[x] <b>Add <code>_Complex</code> Type Support</b><ul>
 <li><b>Context:</b> The C <code>_Complex</code> type is a standard feature used in scientific and engineering domains. Supporting it is a key step towards feature-completeness. The ABI rules for <code>_Complex</code> are generally straightforward, often mapping directly to existing logic for two-element structs or Homogeneous Floating-point Aggregates (HFAs).</li>
 <li><b>Idea:</b><ol type="1">
-<li>Introduce a new <code>INFIX_TYPE_COMPLEX</code> category to the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> system.</li>
+<li>Introduce a new <code>INFIX_TYPE_COMPLEX</code> category to the <code>infix_type</code> system.</li>
 <li>Add a new signature syntax, such as ~~<code>complex(f)</code> for <code>float _Complex</code> and <code>complex(d)</code> for <code>double _Complex</code>~~.</li>
 <li>Update the ABI backends to classify this new type. On System V/AArch64, it should be treated like a two-element float/double aggregate. On Windows x64, it will be passed by reference (as its size, 16 bytes, is not a power of two).</li>
 </ol>
@@ -207,7 +234,7 @@ $(function() {
 </ul>
 <p></b></b></p>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md244"></a>
+<h1><a class="anchor" id="autotoc_md70"></a>
 &lt;strong&gt;Low Priority: Advanced Features &amp; Polish&lt;/strong&gt;</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>These items are valuable but less critical. They can be addressed over time to round out the library's feature set.</em></b></b></p>
@@ -216,7 +243,7 @@ $(function() {
 <li><b>Context:</b> High-performance computing, multimedia processing, and cryptography rely heavily on SIMD vector types (<code>__m128</code>, NEON types). Direct support for these types is a critical feature for advanced use cases.</li>
 <li><b>Idea (Phased Approach):</b><ol type="1">
 <li><b>Phase 1 (128-bit Vectors):</b> Add an <code>INFIX_TYPE_VECTOR</code> category and a signature syntax like <code>vector(f, 4)</code> for <code>__m128</code>. Update ABI backends to pass these types in XMM (x64) or VFP (AArch64) registers.</li>
-<li><b>Phase 2 (256/512-bit Vectors):</b> Extend the x64 backends to be aware of YMM and ZMM registers. Implement new emitters in <code><a class="el" href="abi__x64__emitters_8c.html" title="Implements the internal helper functions for emitting x86-64 machine code.">abi_x64_emitters.c</a></code> for AVX/AVX512 instructions and update classifiers for their unique passing rules.</li>
+<li><b>Phase 2 (256/512-bit Vectors):</b> Extend the x64 backends to be aware of YMM and ZMM registers. Implement new emitters in <code>abi_x64_emitters.c</code> for AVX/AVX512 instructions and update classifiers for their unique passing rules.</li>
 </ol>
 </li>
 <li><b>Goal:</b><ul>
@@ -284,7 +311,7 @@ $(function() {
 </li>
 <li>[ ] <b>Add Bitfield Support in Structs</b><ul>
 <li><b>Context:</b> C allows structs to have bitfields, but their memory layout is highly compiler-specific. Supporting them is an advanced FFI feature.</li>
-<li><b>Idea:</b> Extend the <code><a class="el" href="structinfix__type.html" title="The central structure for describing any data type in the FFI system.">infix_type</a></code> system to describe bitfields and implement the packing/unpacking logic for each ABI.</li>
+<li><b>Idea:</b> Extend the <code>infix_type</code> system to describe bitfields and implement the packing/unpacking logic for each ABI.</li>
 <li><b>Goal:</b> Successfully call a function that takes a struct containing bitfields and get the correct result.</li>
 <li><b>Possible Roadblocks:</b> This is a notoriously difficult part of FFI implementation, as bitfield layout rules are often poorly documented and vary even between versions of the same compiler.</li>
 </ul>
@@ -292,7 +319,7 @@ $(function() {
 <li>[ ] <strike><b>Add Type System Builder API</b></strike><ul>
 <li><strike><b>Context:</b> The current Manual API for creating complex structs is verbose and requires manual memory management for the member array within the arena.</strike></li>
 <li><strike><b>Idea:</b> Create a fluent builder pattern API (e.g., <code>infix_struct_builder_*</code> functions) to simplify type creation.</strike></li>
-<li><strike><b>Goal:</b> A user can define a complex struct without manually allocating or managing the <code><a class="el" href="structinfix__struct__member.html" title="Describes a single member of an aggregate type (struct or union).">infix_struct_member</a></code> array, reducing boilerplate and potential for errors.</strike></li>
+<li><strike><b>Goal:</b> A user can define a complex struct without manually allocating or managing the <code>infix_struct_member</code> array, reducing boilerplate and potential for errors.</strike></li>
 <li>Supplanted by signature API.</li>
 </ul>
 </li>
@@ -303,10 +330,10 @@ $(function() {
 <li><b>Possible Roadblocks:</b> This is a very large undertaking, effectively doubling the number of supported ABIs that must be maintained and tested.</li>
 </ul>
 </li>
-<li>[x] <b>Decouple Debug Logging from <code><a class="el" href="double__tap_8h.html" title="A simple, header-only TAP14-compatible testing framework for C.">double_tap.h</a></code></b><ul>
+<li>[x] <b>Decouple Debug Logging from <code>double_tap.h</code></b><ul>
 <li><b>Context:</b> The library's internal <code>INFIX_DEBUG_PRINTF</code> macro should not be tied to the test framework's <code>note()</code> function, which improves modularity.</li>
-<li><b>Idea:</b> Refactor <code>INFIX_DEBUG_PRINTF</code> in <code><a class="el" href="utility_8h.html" title="A header for debugging utilities that are conditionally compiled.">utility.h</a></code> to use <code>fprintf(stderr, ...)</code> directly.</li>
-<li><b>Goal:</b> The library source code (<code>src/</code>) has no includes of <code><a class="el" href="double__tap_8h.html" title="A simple, header-only TAP14-compatible testing framework for C.">double_tap.h</a></code>. Internal debug messages are printed to <code>stderr</code> when <code>INFIX_DEBUG_ENABLED</code> is active.</li>
+<li><b>Idea:</b> Refactor <code>INFIX_DEBUG_PRINTF</code> in <code>utility.h</code> to use <code>fprintf(stderr, ...)</code> directly.</li>
+<li><b>Goal:</b> The library source code (<code>src/</code>) has no includes of <code>double_tap.h</code>. Internal debug messages are printed to <code>stderr</code> when <code>INFIX_DEBUG_ENABLED</code> is active.</li>
 <li><b>Possible Roadblocks:</b> Minimal; this is a straightforward refactoring task.</li>
 </ul>
 </li>
@@ -334,9 +361,12 @@ $(function() {
 <p></b></b></p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
 </body>
 </html>
