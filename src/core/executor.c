@@ -37,15 +37,12 @@
  *     bridge to invoke the user's C callback with the correctly marshalled arguments.
  */
 
-<<<<<<< HEAD
-=======
 // Define the POSIX source macro to ensure function declarations for shm_open,
 // ftruncate, etc., are visible on all POSIX-compliant systems.
 #if !defined(_POSIX_C_SOURCE)
 #define _POSIX_C_SOURCE 200809L
 #endif
 
->>>>>>> main
 #include "../common/infix_internals.h"
 #include "../common/utility.h"
 #include <stdio.h>
@@ -173,11 +170,10 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     // Fallback for systems like DragonFly BSD that may not define MAP_ANON.
     int fd = open("/dev/zero", O_RDWR);
     if (fd != -1) {
-        code = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+        code = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
         close(fd);
     }
 #endif
-
     if (code == MAP_FAILED)
         return exec;
 
@@ -232,10 +228,7 @@ void infix_executable_free(infix_executable_t exec) {
 #if defined(INFIX_OS_WINDOWS)
     if (exec.rw_ptr) {
         // Turn the page into a guard page by revoking all access.
-        // In a free function, we can't return an error, but in a debug
-        // build, we should at least be aware of the failure.
-        if (!VirtualProtect(exec.rw_ptr, exec.size, PAGE_NOACCESS, &(DWORD){0}))
-            INFIX_DEBUG_PRINTF("WARNING: VirtualProtect failed to set PAGE_NOACCESS on freed trampoline.");
+        VirtualProtect(exec.rw_ptr, exec.size, PAGE_NOACCESS, &(DWORD){0});
         // Now, release the memory reservation.
         VirtualFree(exec.rw_ptr, 0, MEM_RELEASE);
     }
@@ -327,20 +320,16 @@ c23_nodiscard infix_protected_t infix_protected_alloc(size_t size) {
         return prot;
 
 #if defined(INFIX_OS_WINDOWS)
-<<<<<<< HEAD
-    prot.rw_ptr = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-=======
     prot.rw_ptr = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
->>>>>>> main
 #else  // POSIX platforms
 #if defined(MAP_ANON)
-    prot.rw_ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    prot.rw_ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 #else
     int fd = open("/dev/zero", O_RDWR);
     if (fd == -1)
         prot.rw_ptr = MAP_FAILED;
     else {
-        prot.rw_ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+        prot.rw_ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
         close(fd);
     }
 #endif
@@ -382,6 +371,7 @@ void infix_protected_free(infix_protected_t prot) {
 c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
     if (prot.size == 0)
         return false;
+
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
     // On Linux and BSDs, this works as expected.

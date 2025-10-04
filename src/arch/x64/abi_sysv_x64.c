@@ -153,12 +153,6 @@ const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
  */
 static bool classify_recursive(
     infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
-<<<<<<< HEAD
-    // A recursive call can be made with a NULL type (e.g., from a malformed array from fuzzer).
-    if (type == nullptr)
-        return false;  // Terminate recusion path.
-=======
->>>>>>> main
     // Abort classification if the type is excessively complex or too deep. Give up and pass in memory.
     if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY || depth > MAX_CLASSIFY_DEPTH) {
         classes[0] = MEMORY;
@@ -215,12 +209,6 @@ static bool classify_recursive(
         return false;
     }
     if (type->category == INFIX_TYPE_ARRAY) {
-<<<<<<< HEAD
-        if (type->meta.array_info.element_type == nullptr)
-            return false;
-
-=======
->>>>>>> main
         // If the array elements have no size, iterating over them is pointless
         // and can cause a timeout if num_elements is large, as the offset never advances.
         // We only need to classify the element type once at the starting offset.
@@ -249,32 +237,7 @@ static bool classify_recursive(
         }
         return false;
     }
-<<<<<<< HEAD
-    if (type->category == INFIX_TYPE_COMPLEX) {
-        infix_type * base = type->meta.complex_info.base_type;
-        // A zero-sized base type would cause infinite recursion.
-        // Treat this as a malformed type and stop classification.
-        if (base == nullptr || base->size == 0)
-            return false;
-        // A complex number is just like a struct { base_type real; base_type imag; }
-        // So we classify the first element at offset 0.
-        if (classify_recursive(base, offset, classes, depth + 1, field_count))
-            return true;  // Propagate unaligned discovery
-        // And the second element at offset + size of the base.
-        if (classify_recursive(base, offset + base->size, classes, depth + 1, field_count))
-            return true;  // Propagate unaligned discovery
-        return false;
-    }
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION) {
-        // A generated type can have num_members > 0 but a NULL members pointer.
-        // This is invalid and must be passed in memory.
-        if (type->meta.aggregate_info.members == nullptr) {
-            classes[0] = MEMORY;
-            return true;
-        }
-=======
-    if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION) {
->>>>>>> main
         // Recursively classify each member of the struct/union.
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             // Check count *before* each recursive call inside the loop.
@@ -282,19 +245,7 @@ static bool classify_recursive(
                 classes[0] = MEMORY;
                 return true;
             }
-<<<<<<< HEAD
-
             infix_struct_member * member = &type->meta.aggregate_info.members[i];
-
-            // A generated type can have a NULL member type.
-            // This is invalid, and the aggregate must be passed in memory.
-            if (member->type == nullptr) {
-                classes[0] = MEMORY;
-                return true;
-            }
-=======
-            infix_struct_member * member = &type->meta.aggregate_info.members[i];
->>>>>>> main
             size_t member_offset = offset + member->offset;
             // If this member starts at or after the 16-byte boundary,
             // it cannot influence register classification, so we can skip it.
@@ -401,17 +352,10 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
 
     // Determine if the return value requires a hidden pointer argument passed in RDI.
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-<<<<<<< HEAD
-                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-=======
                              ret_type->category == INFIX_TYPE_ARRAY);
->>>>>>> main
 
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
-    // Exception: 256-bit vectors are returned in YMM0.
-    layout->return_value_in_memory =
-        (ret_is_aggregate && ret_type->size > 16) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size > 32);
-
+    layout->return_value_in_memory = (ret_is_aggregate && ret_type->size > 16);
 
     // Rule 2: Small aggregates (<= 16 bytes) must also be returned via hidden pointer
     // if their classification is MEMORY. This is critical for types like packed structs
@@ -441,11 +385,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
 
         // Security: Reject excessively large types before they reach the code generator.
         if (type->size > INFIX_MAX_ARG_SIZE) {
-<<<<<<< HEAD
-            *out_layout = nullptr;
-=======
             *out_layout = NULL;
->>>>>>> main
             return INFIX_ERROR_LAYOUT_FAILED;
         }
 
@@ -460,11 +400,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
         }
 
         bool is_aggregate = type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
-<<<<<<< HEAD
-            type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX;
-=======
             type->category == INFIX_TYPE_ARRAY;
->>>>>>> main
         arg_class_t classes[2] = {NO_CLASS, NO_CLASS};
         size_t num_classes = 0;
         bool placed_in_register = false;
@@ -473,24 +409,16 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             // Complex types need the full classification algorithm.
             classify_aggregate_sysv(type, classes, &num_classes);
         else {
-            // Simple primitive and vector types are classified directly.
-            if (is_float(type) || is_double(type) || type->category == INFIX_TYPE_VECTOR) {
+            // Simple primitive types are classified directly.
+            if (is_float(type) || is_double(type))
                 classes[0] = SSE;
-                num_classes = 1;
-                // Special classification for 256-bit AVX vectors.
-                // They are passed in a single YMM register, which we model as a single SSE class.
-                // The size check distinguishes it from 128-bit vectors.
-                if (type->category == INFIX_TYPE_VECTOR && type->size == 32)
-                    num_classes = 1;  // Treat as a single unit for classification
-            }
-            else {
+            else
                 classes[0] = INTEGER;
-                num_classes = 1;
-                // Primitives > 8 bytes (like __int128) are treated as two INTEGER parts.
-                if (type->size > 8) {
-                    classes[1] = INTEGER;
-                    num_classes = 2;
-                }
+            num_classes = 1;
+            // Primitives > 8 bytes (like __int128) are treated as two INTEGER parts.
+            if (type->size > 8) {
+                classes[1] = INTEGER;
+                num_classes = 2;
             }
         }
 
@@ -505,16 +433,6 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                     layout->arg_locations[i].reg_index = gpr_count++;
                     placed_in_register = true;
                 }
-<<<<<<< HEAD
-                else if (classes[0] == SSE && type->category == INFIX_TYPE_VECTOR && type->size == 32 &&
-                         xmm_count < NUM_XMM_ARGS) {
-                    // AVX/256-bit vector case
-                    layout->arg_locations[i].type = ARG_LOCATION_XMM;  // Re-use XMM type
-                    layout->arg_locations[i].reg_index = xmm_count++;
-                    placed_in_register = true;
-                }
-=======
->>>>>>> main
                 else if (classes[0] == SSE && xmm_count < NUM_XMM_ARGS) {
                     layout->arg_locations[i].type = ARG_LOCATION_XMM;
                     layout->arg_locations[i].reg_index = xmm_count++;
@@ -689,11 +607,6 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             if (is_float(arg_types[i]))
                 // movss xmm_reg, [r15] (Move Scalar Single-Precision)
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
-            else if (arg_types[i]->category == INFIX_TYPE_VECTOR && arg_types[i]->size == 32)
-                // AVX case: Use the new 256-bit move emitter
-                emit_vmovupd_ymm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
-            else if (arg_types[i]->category == INFIX_TYPE_VECTOR)
-                emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
                 // movsd xmm_reg, [r15] (Move Scalar Double-Precision)
                 emit_movsd_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
@@ -773,35 +686,13 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
         else {
             // For other types, we must classify the return type just like an argument.
             arg_class_t classes[2];
-            size_t num_classes = 0;
-            bool is_aggregate = ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-                ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX;
-
-            if (is_aggregate)
-                classify_aggregate_sysv(ret_type, classes, &num_classes);
-            else {
-                if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
-                    classes[0] = SSE;
-                    num_classes = 1;
-                }
-                else {
-                    classes[0] = INTEGER;
-                    num_classes = 1;
-                    if (ret_type->size > 8) {
-                        classes[1] = INTEGER;
-                        num_classes = 2;
-                    }
-                }
-            }
+            size_t num_classes;
+            classify_aggregate_sysv(ret_type, classes, &num_classes);
 
             if (num_classes == 1) {  // Returned in a single register
                 if (classes[0] == SSE) {
                     if (is_float(ret_type))
                         emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movss [r13], xmm0
-                    else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32)
-                        emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);  // AVX case
-                    else if (ret_type->category == INFIX_TYPE_VECTOR)
-                        emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
                     else
                         emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
                 }
@@ -817,7 +708,7 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                     case 4:
                         emit_mov_mem_reg32(buf, R13_REG, 0, RAX_REG);  // mov [r13], eax
                         break;
-                    default:
+                    case 8:
                         emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);  // mov [r13], rax
                         break;
                     }
@@ -829,18 +720,8 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_mem_reg(buf, R13_REG, 8, RDX_REG);  // mov [r13 + 8], rdx
                 }
                 else if (classes[0] == SSE && classes[1] == SSE) {
-                    if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32) {
-                        emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);
-                        emit_vmovupd_mem_ymm(buf, R13_REG, 32, XMM1_REG);
-                    }
-                    else if (ret_type->category == INFIX_TYPE_VECTOR) {
-                        emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
-                        emit_movups_mem_xmm(buf, R13_REG, 16, XMM1_REG);
-                    }
-                    else {
-                        emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
-                        emit_movsd_mem_xmm(buf, R13_REG, 8, XMM1_REG);  // movsd [r13 + 8], xmm1
-                    }
+                    emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
+                    emit_movsd_mem_xmm(buf, R13_REG, 8, XMM1_REG);  // movsd [r13 + 8], xmm1
                 }
                 else if (classes[0] == INTEGER && classes[1] == SSE) {
                     emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);     // mov [r13], rax
@@ -848,7 +729,7 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                 }
                 else {                                              // SSE, INTEGER
                     emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movsd [r13], xmm0
-                    emit_mov_mem_reg(buf, R13_REG, 8, RAX_REG);     // mov [r13 + 8], rax
+                    emit_mov_mem_reg(buf, R13_REG, 8, RDX_REG);     // mov [r13 + 8], rdx
                 }
             }
         }
@@ -899,11 +780,7 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
 
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
-<<<<<<< HEAD
-        *out_layout = nullptr;
-=======
         *out_layout = NULL;
->>>>>>> main
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -911,11 +788,7 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
 
     // Safety check against allocating too much stack.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
-<<<<<<< HEAD
-        *out_layout = nullptr;
-=======
         *out_layout = NULL;
->>>>>>> main
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
@@ -924,7 +797,7 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
 
     // Local variables are accessed via negative offsets from the frame pointer (RBP).
     // The layout is [ return_buffer | args_array | saved_args_data ]
-    layout->return_buffer_offset = -(int32_t)layout->total_stack_alloc;
+    layout->return_buffer_offset = -layout->total_stack_alloc;
     layout->args_array_offset = layout->return_buffer_offset + return_size;
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
 
@@ -969,11 +842,7 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     bool return_in_memory = false;
     infix_type * ret_type = context->return_type;
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-<<<<<<< HEAD
-                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-=======
                              ret_type->category == INFIX_TYPE_ARRAY);
->>>>>>> main
 
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
@@ -1081,11 +950,7 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
     bool return_in_memory = false;
     infix_type * ret_type = context->return_type;
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-<<<<<<< HEAD
-                             ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-=======
                              ret_type->category == INFIX_TYPE_ARRAY);
->>>>>>> main
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
             return_in_memory = true;
@@ -1137,15 +1002,12 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         bool return_in_memory = false;
         infix_type * ret_type = context->return_type;
         bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
-<<<<<<< HEAD
-                                 ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-=======
                                  ret_type->category == INFIX_TYPE_ARRAY);
->>>>>>> main
 
         if (ret_is_aggregate) {
-            if (ret_type->size > 16)
+            if (ret_type->size > 16) {
                 return_in_memory = true;
+            }
             else {
                 arg_class_t ret_classes[2];
                 size_t num_ret_classes;
@@ -1160,31 +1022,21 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         // Now, handle the return value based on the correct classification.
         if (is_long_double(context->return_type))
             emit_fldt_mem(buf, RBP_REG, layout->return_buffer_offset);
-<<<<<<< HEAD
-        else if (return_in_memory)
-=======
         else if (return_in_memory) {
->>>>>>> main
             // The return value was written directly via the hidden pointer.
             // The ABI requires this pointer to be returned in RAX.
             emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
+        }
         else {
             // Classify the return type to determine which registers to load.
             arg_class_t classes[2];
             size_t num_classes;
-            if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32) {
-                classes[0] = SSE;
-                num_classes = 1;
-            }
-            else
-                classify_aggregate_sysv(context->return_type, classes, &num_classes);
+            classify_aggregate_sysv(context->return_type, classes, &num_classes);
 
             if (num_classes >= 1) {  // First eightbyte
                 if (classes[0] == SSE) {
                     if (is_float(context->return_type))
                         emit_movss_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
-                    else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
-                        emit_vmovupd_ymm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else
                         emit_movsd_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                 }
@@ -1192,17 +1044,8 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
             }
             if (num_classes == 2) {  // Second eightbyte
-<<<<<<< HEAD
-                if (classes[1] == SSE) {
-                    if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
-                        emit_vmovupd_ymm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 32);
-                    else
-                        emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
-                }
-=======
                 if (classes[1] == SSE)
                     emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
->>>>>>> main
                 else  // INTEGER
                     emit_mov_reg_mem(buf, RDX_REG, RBP_REG, layout->return_buffer_offset + 8);
             }

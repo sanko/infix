@@ -28,10 +28,9 @@
 
 #include <inttypes.h>  // For uint64_t
 #include <stddef.h>    // For offsetof
-
 /**
  * @struct Point
- * @brief A simple struct with two doubles (16 bytes).
+ * @brief A simple struct with two doubles.
  * @details Used to test the passing and returning of small, simple aggregates.
  * On SysV x64 and AArch64, this should be passed in two floating-point registers.
  * On Windows x64, it will be passed by reference.
@@ -52,16 +51,6 @@ typedef struct {
 typedef struct {
     float v[4];
 } Vector4;
-
-/**
- * @struct LargeData
- * @brief A struct guaranteed to be larger than two registers (32 bytes).
- * @details This struct will be passed by reference on all currently supported
- *          platforms, testing the "pass-by-reference" ABI logic.
- */
-typedef struct {
-    long long data[4];
-} LargeData;
 
 /**
  * @union Number

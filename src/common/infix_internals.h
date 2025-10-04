@@ -75,16 +75,7 @@ typedef void (*infix_internal_dispatch_callback_fn)(infix_reverse_t *, void *, v
  * to keep it opaque in the public API (`infix.h`).
  */
 struct infix_forward_t {
-<<<<<<< HEAD
-    infix_arena_t * arena;     ///< The arena that owns all the type metadata for this trampoline.
-    infix_executable_t exec;   ///< Handle to the executable JIT-compiled stub.
-    infix_type * return_type;  ///< The infix_type of the trampoline's return value.
-    infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
-    size_t num_args;           ///< The total number of arguments.
-    size_t num_fixed_args;     ///< The number of non-variadic arguments.
-=======
     infix_executable_t exec;
->>>>>>> main
 };
 
 /**
@@ -94,10 +85,6 @@ struct infix_forward_t {
  * It is intentionally opaque in the public API.
  */
 struct infix_reverse_t {
-<<<<<<< HEAD
-    infix_arena_t * arena;     ///< The arena that owns all the type metadata for this callback.
-=======
->>>>>>> main
     infix_executable_t exec;   ///< Handle to the executable JIT-compiled stub.
     infix_type * return_type;  ///< The infix_type of the callback's return value.
     infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
@@ -252,45 +239,10 @@ typedef struct {
     infix_status (*generate_reverse_epilogue)(code_buffer *, infix_reverse_call_frame_layout *, infix_reverse_t *);
 } infix_reverse_abi_spec;
 
-<<<<<<< HEAD
-/**
- * @internal
- * @brief Aligns a value up to the next multiple of a given alignment.
- * @param value The value to align.
- * @param alignment The alignment boundary (must be a power of two).
- * @return The aligned value.
- */
-static inline size_t _infix_align_up(size_t value, size_t alignment) {
-    // This is a standard bit-twiddling hack for alignment.
-    // It is equivalent to: (value + alignment - 1) / alignment * alignment
-    return (value + alignment - 1) & ~(alignment - 1);
-}
-
-// trampoline.c
-/**
- * @internal
- * @brief Selects and returns the ABI-specific v-table for forward trampolines.
- * @details This function uses preprocessor defines to select the correct ABI
- *          implementation at compile time. It is the core of the library's
- *          platform abstraction for forward calls.
- * @return A constant pointer to the active `infix_forward_abi_spec`.
- */
-const infix_forward_abi_spec * get_current_forward_abi_spec();
-
-/**
- * @internal
- * @brief Selects and returns the ABI-specific v-table for reverse trampolines.
- * @details This function uses preprocessor defines to select the correct ABI
- *          implementation at compile time. It is the core of the library's
- *          platform abstraction for reverse calls.
- * @return A constant pointer to the active `infix_reverse_abi_spec`.
- */
-=======
 // trampoline.c
 /** @brief Selects the correct forward-call ABI spec at compile time. */
 const infix_forward_abi_spec * get_current_forward_abi_spec();
 /** @brief Selects the correct reverse-call ABI spec at compile time. */
->>>>>>> main
 const infix_reverse_abi_spec * get_current_reverse_abi_spec();
 
 /**
@@ -401,17 +353,7 @@ static inline bool is_long_double(const infix_type * type) {
     return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_LONG_DOUBLE;
 }
 
-<<<<<<< HEAD
-/**
- * @internal
- * @brief Determines if a type must be passed by reference on the Windows x64 ABI.
- * @details This function implements the core Windows x64 rule: any type whose
- *          size is not a power of two (1, 2, 4, or 8) is passed by reference.
- * @return true if the type should be passed by reference, false otherwise.
- */
-=======
 /** @brief Determines if an argument must be passed by reference according to Win x64 ABI rules. */
->>>>>>> main
 static inline bool is_passed_by_reference(infix_type * type) {
     // On Windows x64, aggregates whose size is not a power of two (1, 2, 4, 8 bytes)
     // are passed by reference. This also applies to sizes larger than 8 bytes on MSVC.
@@ -620,21 +562,3 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type *
  *       object graph will be freed when `infix_arena_destroy` is called.
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
-<<<<<<< HEAD
-
-/**
- * @internal
- * @brief The internal core logic for creating a forward trampoline.
- * @details This function contains the full logic for JIT-compiling a forward trampoline.
- *          It accepts an optional `source_arena` parameter. If provided, it measures the
- *          memory used by the source types and creates a new, tightly-sized arena for the
- *          trampoline handle. This drastically reduces memory overhead. If `source_arena` is
- *          NULL, it falls back to a default size.
- * @param source_arena An optional pointer to the arena from which the `infix_type` objects
- *                     were created. Used for memory optimization.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
- */
-c23_nodiscard infix_status
-_infix_forward_create_internal(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, infix_arena_t *);
-=======
->>>>>>> main

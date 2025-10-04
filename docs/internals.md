@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> main
 # infix FFI: Internals Documentation
 
 This document provides a deep dive into the architecture and internal workings of `infix`. It's a little disorganized but is intended for maintainers and developers looking to contribute or understand the library's design philosophy.
@@ -53,15 +50,9 @@ infix_type* create_packed_data_type(infix_arena_t* arena) {
 
     // 2. Allocate the list of members from the arena.
     infix_struct_member* members = infix_arena_alloc(arena, sizeof(infix_struct_member) * 3, _Alignof(infix_struct_member));
-<<<<<<< HEAD
-    members = infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT16), offsetof(PackedData, id));
-    members = infix_type_create_member(NULL, char_array_type, offsetof(PackedData, name));
-    members = infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT32), offsetof(PackedData, flags));
-=======
     members = infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT16), offsetof(PackedData, id));
     members = infix_struct_member_create(NULL, char_array_type, offsetof(PackedData, name));
     members = infix_struct_member_create(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_UINT32), offsetof(PackedData, flags));
->>>>>>> main
 
     // 3. Create the final packed struct type, also from the arena.
     infix_type* packed_type = NULL;
@@ -117,10 +108,6 @@ The parser is a primary attack surface and is hardened accordingly.
 The `infix_type` struct is the cornerstone of the library. It provides the generator with the metadata (size, alignment, and composition) needed to correctly handle arguments and return values.
 
 *   **Static vs. Dynamic Types**: Primitives (`int`, `float`, `void*`) are represented by static, singleton `infix_type` instances to avoid allocations. Complex types (structs, unions, arrays) are dynamically allocated from an arena and must not be freed individually.
-<<<<<<< HEAD
-*   **Rich Pointers**: A pointer type contains a `pointee_type` field, allowing the type system to represent not just a generic pointer, but a `pointer to int` or a `pointer to struct`, which is crucial for introspection.
-=======
->>>>>>> main
 *   **Compiler-Specific Nuances**: The type system is aware of compiler-specific type aliases. For example, it knows that `long double` on MSVC and Clang for Windows is an 8-byte alias for `double`, and returns the canonical `double` type to ensure correct ABI classification.
 *   **Security**: The type creation functions (`infix_type_create_struct`, etc.) contain explicit checks to prevent integer overflows.
 
@@ -544,25 +531,6 @@ Three high-level principles guide the library's development:
 
 **The Trade-off:** This approach adds a single layer of indirection (a function pointer call) in the *trampoline generation* code and makes `trampoline.c` slightly more verbose. This has zero impact on the performance of the final JIT-compiled code and is a tiny price to pay for the massive strategic advantage of comprehensive, multi-platform testing in a single environment.
 
-<<<<<<< HEAD
-### The Self-Contained Object Model: Trading Memory for Safety
-
-**The Decision:** Both `infix_forward_t` and `infix_reverse_t` are designed as **self-contained objects**. When a trampoline is created, it performs a **deep copy** of all the `infix_type` metadata it needs into its own private, internal memory arena.
-
-**The Rationale:** This architecture is a deliberate trade-off that prioritizes memory safety and API simplicity above all else.
-
-1.  **Elimination of Use-After-Free:** The primary motivation is to solve a critical dangling pointer problem. Without this model, a user would create types in a temporary arena, create a trampoline that points to them, and then destroy the arena, leaving the trampoline in a dangerously invalid state. By making an internal copy, the trampoline's lifetime is completely decoupled from the user's temporary data. The user can and should destroy their arena immediately after creation.
-2.  **Enabling Safe Introspection:** The introspection API (`infix_forward_get_arg_type`, etc.) would not be possible without this model. It can only work if the type information is guaranteed to be valid for the entire lifetime of the trampoline handle.
-3.  **Simplified Memory Management for the User:** The user's responsibility is clear: they manage their own arenas for type creation, and they manage the trampoline handles. The two are independent.
-
-**The Trade-off: Memory Overhead**
-
-The cost of this safety is a higher memory footprint per trampoline. Each handle now contains its own private arena (which automatically adjusts to usage) to store the type graph. For several hundred trampolines, this can add a few megabytes to the application's memory usage.
-
-This is considered an acceptable cost for the vast majority of applications (desktop, server, language runtimes) where the benefit of guaranteed memory safety far outweighs the modest increase in RAM usage. For highly constrained embedded environments, future versions of the library may offer a "tuned" creation function that allows the user to specify a smaller internal arena size.
-
-=======
->>>>>>> main
 ---
 
 ## Design Philosophy: A Stable Public API
@@ -626,11 +594,7 @@ In a Call VM model, the library provides a set of low-level functions to build a
     -   Dynamically pack data from a scripting language into a C struct buffer.
     -   Generate a schema for a user interface or a serializer.
     -   Validate data.
-<<<<<<< HEAD
--   **Ergonomics:** For the end-user, the complexity is hidden behind a single call: `infix_forward_create("({int, *double}, *char) -> int", ...)``.
-=======
 -   **Ergonomics:** For the end-user, the complexity is hidden behind a single call: `infix_forward_create("i,{d,c*}*=>v", ...)`.
->>>>>>> main
 
 **The Trade-off:** The upfront cost of trampoline generation is higher than a single interpreted call, and it requires allocating executable memory. This makes `infix`'s design philosophy clear: it is optimized for applications where a trampoline is **generated once and called many times**, and for systems that benefit from a **powerful, introspectable type system**.
 

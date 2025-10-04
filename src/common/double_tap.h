@@ -42,6 +42,12 @@
  * This design is faster and completely avoids the possibility of deadlocks.
  */
 
+// Define feature-test macros *before* any system headers are included.
+// This is critical for portability.
+#if (defined(__linux__) || defined(__gnu_linux__)) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+
 // The main toggle for the entire framework.
 #ifdef DBLTAP_ENABLE
 
