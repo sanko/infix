@@ -195,6 +195,32 @@ static bool consume_keyword(parser_state * state, const char * keyword) {
 
 /**
  * @internal
+ * @brief Parses an optional name and colon prefix for a member/argument.
+ * @param state The current parser state.
+ * @return The parsed name string, or `nullptr` if the member is anonymous.
+ *         The parser position is only advanced if a `name:` pattern is found.
+ */
+static const char * parse_optional_name_prefix(parser_state * state) {
+    skip_whitespace(state);
+    const char * p_before = state->p;
+
+    const char * name = parse_identifier(state);
+    if (name) {
+        skip_whitespace(state);
+        if (*state->p == ':') {
+            state->p++;  // Consume colon
+            return name;
+        }
+    }
+
+    // If it wasn't a "name:" pattern, backtrack.
+    state->p = p_before;
+    return nullptr;
+}
+
+
+/**
+ * @internal
  * @brief Parses a primitive type keyword from the input string.
  * @details This function attempts to match and consume one of the keywords
  *          defined in the v1.0 specification for primitive types. The order of
@@ -400,39 +426,14 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
     // Handle empty aggregates like `{}` or `<>` by checking for the end character immediately.
     if (*state->p != end_char) {
         while (1) {
-            skip_whitespace(state);
-            const char * p_before_member = state->p;
+            const char * name = parse_optional_name_prefix(state);
+            infix_type * member_type = parse_type(state);
 
-            // Tentatively parse an identifier. This could be a member name.
-            const char * name = parse_identifier(state);
-            skip_whitespace(state);
-
-            // A valid named member has the form "name : type". If we found an
-            // identifier and it's followed by a colon, we treat it as a name.
-            if (name && *state->p == ':') {
-                state->p++;  // Consume the colon.
-                skip_whitespace(state);
-            }
-            else {
-                // If there's no colon, the identifier was actually the start of a
-                // type keyword (e.g., "int"). We must backtrack the parser to the
-                // position before we tried to parse it as a name.
-                name = nullptr;
-                state->p = p_before_member;
-            }
-
-            // A syntax error: `{name:}` with no type.
-            if (name && (*state->p == end_char || *state->p == ',')) {
+            if (!member_type) {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
                 return nullptr;
             }
 
-            // Now, recursively parse the member's type.
-            infix_type * member_type = parse_type(state);
-            if (!member_type) {
-                // Propagate the error from the recursive call.
-                return nullptr;
-            }
             // The C standard forbids members of type void.
             if (member_type->category == INFIX_TYPE_VOID) {
                 state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
@@ -459,6 +460,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             // After a member, we expect either a comma or the end character.
             if (*state->p == ',') {
                 state->p++;
+                skip_whitespace(state);
                 // A trailing comma like `{int,}` is a syntax error.
                 if (*state->p == end_char) {
                     state->last_error = INFIX_ERROR_INVALID_ARGUMENT;
@@ -994,16 +996,7 @@ static infix_status parse_function_signature_details(parser_state * state,
             if (*state->p == ')' || *state->p == ';')
                 break;
 
-            const char * p_before_arg = state->p;
-            const char * name = parse_identifier(state);
-            skip_whitespace(state);
-            if (name && *state->p == ':')
-                state->p++;
-            else {
-                name = nullptr;
-                state->p = p_before_arg;
-            }
-
+            const char * name = parse_optional_name_prefix(state);
             infix_type * arg_type = parse_type(state);
             if (!arg_type)
                 return state->last_error;
@@ -1051,16 +1044,7 @@ static infix_status parse_function_signature_details(parser_state * state,
                 if (*state->p == ')')
                     break;  // End of variadic list.
 
-                const char * p_before_arg = state->p;
-                const char * name = parse_identifier(state);
-                skip_whitespace(state);
-                if (name && *state->p == ':')
-                    state->p++;
-                else {
-                    name = nullptr;
-                    state->p = p_before_arg;
-                }
-
+                const char * name = parse_optional_name_prefix(state);
                 infix_type * arg_type = parse_type(state);
                 if (!arg_type)
                     return state->last_error;

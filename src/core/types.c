@@ -234,27 +234,17 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
 }
 
 /**
- * @brief Creates an `infix_type` for a struct, allocating from an arena.
- * @details This function calculates the size and alignment of the struct based on its
- *          members, adhering to standard C layout rules. It iterates through the members
- *          to find the maximum alignment requirement and calculates the total size, including
- *          any trailing padding needed to satisfy the struct's overall alignment.
- *
- *          To ensure the created `infix_type` is self-contained, this function
- *          allocates memory for the `members` array from the provided arena and
- *          copies the caller's member data into it. This prevents dangling
- *          pointers if the caller's `members` array was allocated on the stack.
- *
- * @param arena The memory arena from which to allocate the new `infix_type`.
- * @param[out] out_type On success, a pointer to an `infix_type*` that will receive the new type.
- * @param members An array of `infix_struct_member` describing the struct's layout.
- * @param num_members The number of members in the array.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @internal
+ * @brief (Internal) Common setup for creating an aggregate type.
+ * @details Validates members, allocates the main type struct, and copies the member
+ *          definitions into the arena to make the type self-contained.
+ * @return `INFIX_SUCCESS` and populates `out_type` and `out_arena_members`, or an error code.
  */
-c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
-                                                    infix_type ** out_type,
-                                                    infix_struct_member * members,
-                                                    size_t num_members) {
+static infix_status _create_aggregate_setup(infix_arena_t * arena,
+                                            infix_type ** out_type,
+                                            infix_struct_member ** out_arena_members,
+                                            infix_struct_member * members,
+                                            size_t num_members) {
     if (out_type == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -285,6 +275,41 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
         memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
     }
 
+    *out_type = type;
+    *out_arena_members = arena_members;
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @brief Creates an `infix_type` for a struct, allocating from an arena.
+ * @details This function calculates the size and alignment of the struct based on its
+ *          members, adhering to standard C layout rules. It iterates through the members
+ *          to find the maximum alignment requirement and calculates the total size, including
+ *          any trailing padding needed to satisfy the struct's overall alignment.
+ *
+ *          To ensure the created `infix_type` is self-contained, this function
+ *          allocates memory for the `members` array from the provided arena and
+ *          copies the caller's member data into it. This prevents dangling
+ *          pointers if the caller's `members` array was allocated on the stack.
+ *
+ * @param arena The memory arena from which to allocate the new `infix_type`.
+ * @param[out] out_type On success, a pointer to an `infix_type*` that will receive the new type.
+ * @param members An array of `infix_struct_member` describing the struct's layout.
+ * @param num_members The number of members in the array.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
+                                                    infix_type ** out_type,
+                                                    infix_struct_member * members,
+                                                    size_t num_members) {
+    infix_type * type = nullptr;
+    infix_struct_member * arena_members = nullptr;
+    infix_status status = _create_aggregate_setup(arena, &type, &arena_members, members, num_members);
+    if (status != INFIX_SUCCESS) {
+        *out_type = nullptr;
+        return status;
+    }
+
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_STRUCT;
     type->meta.aggregate_info.members = arena_members;
@@ -305,15 +330,15 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
 
-        // Calculate padding required to align the current offset for this member.
-        size_t padding = (member_align - (current_offset % member_align)) % member_align;
+        // Align the current offset for this member.
+        size_t aligned_offset = _infix_align_up(current_offset, member_align);
 
-        // Security: Check for integer overflow before adding padding.
-        if (current_offset > SIZE_MAX - padding) {
+        // Security: Check for integer overflow.
+        if (aligned_offset < current_offset) {
             *out_type = nullptr;
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
-        current_offset += padding;
+        current_offset = aligned_offset;
 
         // Set the final calculated offset for this member.
         member->offset = current_offset;
@@ -332,15 +357,13 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
 
     type->alignment = max_alignment;
 
-    // Security: Check for overflow when calculating the final rounded-up size.
-    if (max_alignment > 0 && current_offset > SIZE_MAX - (max_alignment - 1)) {
+    // The final size is the calculated offset rounded up to the nearest multiple
+    // of the struct's overall alignment to account for trailing padding.
+    type->size = _infix_align_up(current_offset, max_alignment);
+    if (type->size < current_offset) {  // Overflow check for final alignment
         *out_type = nullptr;
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
-    // The final size is the calculated offset rounded up to the nearest multiple
-    // of the struct's overall alignment to account for trailing padding.
-    type->size = (current_offset + max_alignment - 1) & ~(max_alignment - 1);
 
     INFIX_DEBUG_PRINTF("Created struct type. Size: %llu, Alignment: %llu",
                        (unsigned long long)type->size,
@@ -477,34 +500,12 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
                                                    infix_type ** out_type,
                                                    infix_struct_member * members,
                                                    size_t num_members) {
-    if (out_type == nullptr)
-        return INFIX_ERROR_INVALID_ARGUMENT;
-
-    // Validate that all member types are non-null before proceeding.
-    for (size_t i = 0; i < num_members; ++i) {
-        if (members[i].type == nullptr) {
-            *out_type = nullptr;
-            return INFIX_ERROR_INVALID_ARGUMENT;
-        }
-    }
-
-    // Allocate the infix_type struct itself from the arena.
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
-    if (type == nullptr) {
-        *out_type = nullptr;
-        return INFIX_ERROR_ALLOCATION_FAILED;
-    }
-
-    // Robustness: Copy the caller's member data into the arena.
+    infix_type * type = nullptr;
     infix_struct_member * arena_members = nullptr;
-    if (num_members > 0) {
-        arena_members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member) * num_members, _Alignof(infix_struct_member));
-        if (arena_members == nullptr) {
-            *out_type = nullptr;
-            return INFIX_ERROR_ALLOCATION_FAILED;
-        }
-        memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
+    infix_status status = _create_aggregate_setup(arena, &type, &arena_members, members, num_members);
+    if (status != INFIX_SUCCESS) {
+        *out_type = nullptr;
+        return status;
     }
 
     // Mark this type as arena-allocated so infix_type_destroy will ignore it.
@@ -527,15 +528,13 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     }
     type->alignment = max_alignment;
 
-    // Security: Check for integer overflow before calculating the final padded size.
-    if (max_alignment > 0 && max_size > SIZE_MAX - (max_alignment - 1)) {
-        *out_type = nullptr;
-        return INFIX_ERROR_INVALID_ARGUMENT;  // Overflow would occur
-    }
-
     // The final size is the size of the largest member, rounded up to a
     // multiple of the union's overall alignment.
-    type->size = (max_size + max_alignment - 1) & ~(max_alignment - 1);
+    type->size = _infix_align_up(max_size, max_alignment);
+    if (type->size < max_size) {  // Overflow check
+        *out_type = nullptr;
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     INFIX_DEBUG_PRINTF("Created arena union type. Size: %llu, Alignment: %llu",
                        (unsigned long long)type->size,
@@ -790,8 +789,38 @@ c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forwa
  *         handle is `nullptr` or the index is out of bounds.
  */
 c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t * trampoline, size_t index) {
-    if (!trampoline || index >= trampoline->num_args) {
+    if (!trampoline || index >= trampoline->num_args)
         return nullptr;
-    }
+    return trampoline->arg_types[index];
+}
+
+/**
+ * @brief Retrieves the number of arguments for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return The total number of arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t * trampoline) {
+    return trampoline ? trampoline->num_args : 0;
+}
+
+/**
+ * @brief Retrieves the return type for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
+ */
+c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t * trampoline) {
+    return trampoline ? trampoline->return_type : nullptr;
+}
+
+/**
+ * @brief Retrieves the type of a specific argument for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         handle is `nullptr` or the index is out of bounds.
+ */
+c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t * trampoline, size_t index) {
+    if (!trampoline || index >= trampoline->num_args)
+        return nullptr;
     return trampoline->arg_types[index];
 }

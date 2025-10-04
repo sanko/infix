@@ -243,12 +243,23 @@ static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const 
 
             memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
 
-            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i)
+            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
                 dest_type->meta.aggregate_info.members[i].type =
                     _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
+
+                // Deep copy the member name string to avoid dangling pointers.
+                const char * src_name = src_type->meta.aggregate_info.members[i].name;
+                if (src_name) {
+                    size_t name_len = strlen(src_name) + 1;
+                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                    if (!dest_name)
+                        return nullptr;
+                    memcpy(dest_name, src_name, name_len);
+                    *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+                }
+            }
         }
         break;
-    // Other cases like ENUM, COMPLEX, VECTOR, etc. would follow the same pattern.
     case INFIX_TYPE_ENUM:
         dest_type->meta.enum_info.underlying_type =
             _copy_type_graph_to_arena(dest_arena, src_type->meta.enum_info.underlying_type);
@@ -261,10 +272,49 @@ static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const 
         dest_type->meta.vector_info.element_type =
             _copy_type_graph_to_arena(dest_arena, src_type->meta.vector_info.element_type);
         break;
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+        dest_type->meta.func_ptr_info.return_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.return_type);
+
+        if (src_type->meta.func_ptr_info.num_args > 0) {
+            size_t args_size = sizeof(infix_function_argument) * src_type->meta.func_ptr_info.num_args;
+            dest_type->meta.func_ptr_info.args =
+                infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
+            if (dest_type->meta.func_ptr_info.args == nullptr)
+                return nullptr;
+
+            memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
+
+            for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
+                dest_type->meta.func_ptr_info.args[i].type =
+                    _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.args[i].type);
+                const char * src_name = src_type->meta.func_ptr_info.args[i].name;
+                if (src_name) {
+                    size_t name_len = strlen(src_name) + 1;
+                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                    if (!dest_name)
+                        return nullptr;
+                    memcpy(dest_name, src_name, name_len);
+                    *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
+                }
+            }
+        }
+        break;
+    case INFIX_TYPE_NAMED_REFERENCE:
+        {
+            const char * src_name = src_type->meta.named_reference.name;
+            if (src_name) {
+                size_t name_len = strlen(src_name) + 1;
+                char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                if (!dest_name)
+                    return nullptr;
+                memcpy(dest_name, src_name, name_len);
+                dest_type->meta.named_reference.name = dest_name;
+            }
+        }
+        break;
     default:
-        // For PRIMITIVE, VOID, NAMED_REFERENCE, etc., the initial shallow copy is sufficient.
-        // For REVERSE_TRAMPOLINE (function pointers), a deep copy of its signature is also needed.
-        // This case would need to be handled if we support introspection of function pointer members.
+        // For PRIMITIVE, VOID, etc., the initial shallow copy is sufficient.
         break;
     }
     return dest_type;

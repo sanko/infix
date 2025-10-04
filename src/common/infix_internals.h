@@ -245,6 +245,19 @@ typedef struct {
     infix_status (*generate_reverse_epilogue)(code_buffer *, infix_reverse_call_frame_layout *, infix_reverse_t *);
 } infix_reverse_abi_spec;
 
+/**
+ * @internal
+ * @brief Aligns a value up to the next multiple of a given alignment.
+ * @param value The value to align.
+ * @param alignment The alignment boundary (must be a power of two).
+ * @return The aligned value.
+ */
+static inline size_t _infix_align_up(size_t value, size_t alignment) {
+    // This is a standard bit-twiddling hack for alignment.
+    // It is equivalent to: (value + alignment - 1) / alignment * alignment
+    return (value + alignment - 1) & ~(alignment - 1);
+}
+
 // trampoline.c
 /**
  * @internal

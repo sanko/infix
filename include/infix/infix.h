@@ -908,3 +908,32 @@ c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forwa
  */
 c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t *, size_t);
 /** @} */
+
+/**
+ * @defgroup reverse_introspection_api Reverse Trampoline Introspection API
+ * @brief Functions for safely querying the signature of a reverse trampoline (callback).
+ * @{
+ */
+/**
+ * @brief Retrieves the number of arguments for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return The total number of arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t *);
+
+/**
+ * @brief Retrieves the return type for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
+ */
+c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t *);
+
+/**
+ * @brief Retrieves the type of a specific argument for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @param index The zero-based index of the argument to retrieve.
+ * @return A constant pointer to the argument's `infix_type`. Returns `nullptr` if the
+ *         handle is `nullptr` or the index is out of bounds.
+ */
+c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t *, size_t);
+/** @} */
