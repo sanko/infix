@@ -1,9 +1,0 @@
-<map id="Public API" name="Public API">
-<area shape="rect" id="Node000002" href="$group__high__level__api.html" title="Recommended functions for creating trampolines from a signature string." alt="" coords="143,5,326,31"/>
-<area shape="rect" id="Node000005" href="$group__introspection__api.html" title="Functions for querying the properties of trampolines and types." alt="" coords="169,55,301,80"/>
-<area shape="rect" id="Node000003" href="$group__manual__api.html" title="Advanced functions for manually building infix_type objects." alt="" coords="140,104,329,129"/>
-<area shape="rect" id="Node000006" href="$group__memory__management.html" title="The arena allocator and configurable memory functions." alt="" coords="151,153,318,179"/>
-<area shape="rect" id="Node000001" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,129,92,155"/>
-<area shape="rect" id="Node000004" href="$group__type__system.html" title="Structures and functions for describing C data types." alt="" coords="182,203,287,228"/>
-<area shape="rect" id="Node000007" href="$group__version__macros.html" title="Macros defining the semantic version of the infix library." alt="" coords="159,252,310,277"/>
-</map>
