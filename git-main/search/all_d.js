@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['b_0',['B',['../classB.html',1,'B'],['../memgrp_8cpp.html#a7ddc550b157ed6f8db58e462b504ab0f',1,'B:&#160;memgrp.cpp']]],
+  ['b64_5finput_1',['b64_input',['../structregression__test__case__t.html#a66bf29f7276856355ce26052dd630494',1,'regression_test_case_t']]],
+  ['bare_5fhelgrind_5fhandler_2',['bare_helgrind_handler',['../821__threading__bare_8c.html#af448e091d2070a727de081103318b90a',1,'821_threading_bare.c']]],
+  ['bare_5fthread_5fworker_3',['bare_thread_worker',['../821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0',1,'821_threading_bare.c']]],
+  ['base_4',['base',['../structVehicle.html#ad7970f528d429f6fc1725173e93a77c2',1,'Vehicle::base'],['../structCar.html#ab8ff28306286da5a8b14fa9bdccaafaa',1,'Car::base'],['../structTruck.html#ad0ac321609dda1a6c552488b05ec7ac8',1,'Truck::base']]],
+  ['base_5ftype_5',['base_type',['../structinfix__type__t.html#ac70541d021d87d720c38b176fb39e4fc',1,'infix_type_t']]],
+  ['based_20manual_20api_6',['Memory Safety by Default: The Arena-Based Manual API',['../md_internals.html#autotoc_md81',1,'']]],
+  ['basic_20usage_7',['Basic Usage',['..//home/runner/work/infix/infix/include/infix/infix.h#usage_sec',1,'']]],
+  ['basics_20forward_20calls_8',['Chapter 1: The Basics (Forward Calls)',['../md_cookbook.html#autotoc_md19',1,'']]],
+  ['best_20practice_3a_20caching_20trampolines_9',['Best Practice: Caching Trampolines',['../md_cookbook.html#autotoc_md63',1,'']]],
+  ['best_20practices_20and_20usage_10',['Part 3: Examples, Best Practices, and Usage',['../md_signatures.html#autotoc_md124',1,'']]],
+  ['bindings_11',['Chapter 9: Building Language Bindings',['../md_cookbook.html#autotoc_md70',1,'']]],
+  ['bridge_12',['4. Implementing the Callback Bridge',['../md_cookbook.html#autotoc_md74',1,'']]],
+  ['bsds_13',['GNU Make (Linux, macOS, BSDs)',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md145',1,'']]],
+  ['buffer_14',['buffer',['../structinfix__arena__t.html#a2bafad85c37fba52aaa3dd3311fec20d',1,'infix_arena_t']]],
+  ['bug_20list_15',['Bug List',['../bug.html',1,'']]],
+  ['build_16',['The Unity Build',['../md_internals.html#autotoc_md79',1,'']]],
+  ['building_20and_20integrating_17',['Building and Integrating',['../md__2home_2runner_2work_2infix_2infix_2README.html#autotoc_md166',1,'']]],
+  ['building_20and_20integrating_20tt_20infix_20tt_18',['Building and Integrating &lt;tt&gt;infix&lt;/tt&gt;',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html',1,'']]],
+  ['building_20language_20bindings_19',['Chapter 9: Building Language Bindings',['../md_cookbook.html#autotoc_md70',1,'']]],
+  ['building_20tt_20infix_20tt_20from_20source_20',['1. Building &lt;tt&gt;infix&lt;/tt&gt; from Source',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md136',1,'']]],
+  ['by_20default_3a_20the_20arena_20based_20manual_20api_21',['Memory Safety by Default: The Arena-Based Manual API',['../md_internals.html#autotoc_md81',1,'']]],
+  ['by_20reference_22',['Recipe: Large Structs Passed by Reference',['../md_cookbook.html#autotoc_md28',1,'']]],
+  ['by_20value_23',['Recipe: Small Structs Passed by Value',['../md_cookbook.html#autotoc_md27',1,'']]]
+];
