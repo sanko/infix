@@ -94,6 +94,9 @@ c23_nodiscard void *&#160;</td><td class="memItemRight" valign="bottom"><b>infix
 <tr class="memitem:ga7b7e73aa032acb4185433f40720ec126" id="r_ga7b7e73aa032acb4185433f40720ec126"><td class="memItemLeft" align="right" valign="top"><a id="ga7b7e73aa032acb4185433f40720ec126" name="ga7b7e73aa032acb4185433f40720ec126"></a>
 c23_nodiscard size_t&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_get_num_args</b> (const <a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *)</td></tr>
 <tr class="separator:ga7b7e73aa032acb4185433f40720ec126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga218ac4c8f7f2b30d125d8a733d8ee8dc" id="r_ga218ac4c8f7f2b30d125d8a733d8ee8dc"><td class="memItemLeft" align="right" valign="top">c23_nodiscard size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga218ac4c8f7f2b30d125d8a733d8ee8dc">infix_forward_get_num_fixed_args</a> (const <a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *)</td></tr>
+<tr class="memdesc:ga218ac4c8f7f2b30d125d8a733d8ee8dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the number of fixed (non-variadic) arguments for a forward trampoline.  <br /></td></tr>
+<tr class="separator:ga218ac4c8f7f2b30d125d8a733d8ee8dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga25901aeda151af1e91692dbe6776b162" id="r_ga25901aeda151af1e91692dbe6776b162"><td class="memItemLeft" align="right" valign="top"><a id="ga25901aeda151af1e91692dbe6776b162" name="ga25901aeda151af1e91692dbe6776b162"></a>
 c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_get_return_type</b> (const <a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *)</td></tr>
 <tr class="separator:ga25901aeda151af1e91692dbe6776b162"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,6 +109,9 @@ c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3
 <tr class="memitem:ga50a6028388baf020c5bdbf0dd5bbd3f1" id="r_ga50a6028388baf020c5bdbf0dd5bbd3f1"><td class="memItemLeft" align="right" valign="top">c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga50a6028388baf020c5bdbf0dd5bbd3f1">infix_reverse_get_return_type</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
 <tr class="memdesc:ga50a6028388baf020c5bdbf0dd5bbd3f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the return type for a reverse trampoline.  <br /></td></tr>
 <tr class="separator:ga50a6028388baf020c5bdbf0dd5bbd3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae266bb4c63346afa5c4e0e1111bb7345" id="r_gae266bb4c63346afa5c4e0e1111bb7345"><td class="memItemLeft" align="right" valign="top">c23_nodiscard size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae266bb4c63346afa5c4e0e1111bb7345">infix_reverse_get_num_fixed_args</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
+<tr class="memdesc:gae266bb4c63346afa5c4e0e1111bb7345"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the number of fixed (non-variadic) arguments for a reverse trampoline.  <br /></td></tr>
+<tr class="separator:gae266bb4c63346afa5c4e0e1111bb7345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae00f0a3ebc8b0e4035382589dac25730" id="r_gae00f0a3ebc8b0e4035382589dac25730"><td class="memItemLeft" align="right" valign="top">c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae00f0a3ebc8b0e4035382589dac25730">infix_reverse_get_arg_type</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *, size_t)</td></tr>
 <tr class="memdesc:gae00f0a3ebc8b0e4035382589dac25730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the type of a specific argument for a reverse trampoline.  <br /></td></tr>
 <tr class="separator:gae00f0a3ebc8b0e4035382589dac25730"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,6 +142,34 @@ c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions for querying the properties of trampolines and types. </p>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga218ac4c8f7f2b30d125d8a733d8ee8dc" name="ga218ac4c8f7f2b30d125d8a733d8ee8dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga218ac4c8f7f2b30d125d8a733d8ee8dc">&#9670;&#160;</a></span>infix_forward_get_num_fixed_args()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard size_t infix_forward_get_num_fixed_args </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *</td>          <td class="paramname"><span class="paramname"><em>trampoline</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the number of fixed (non-variadic) arguments for a forward trampoline. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">trampoline</td><td><a class="el" href="classA.html">A</a> handle to a forward trampoline. Can be <code>nullptr</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of fixed arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a73">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
 <a id="gae00f0a3ebc8b0e4035382589dac25730" name="gae00f0a3ebc8b0e4035382589dac25730"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae00f0a3ebc8b0e4035382589dac25730">&#9670;&#160;</a></span>infix_reverse_get_arg_type()</h2>
 
@@ -164,7 +198,7 @@ c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classA.html">A</a> constant pointer to the argument's <code>infix_type</code>. Returns <code>nullptr</code> if the handle is <code>nullptr</code> or the index is out of bounds. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a75">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a77">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 
 </div>
@@ -192,7 +226,35 @@ c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The total number of arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a73">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a74">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gae266bb4c63346afa5c4e0e1111bb7345" name="gae266bb4c63346afa5c4e0e1111bb7345"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae266bb4c63346afa5c4e0e1111bb7345">&#9670;&#160;</a></span>infix_reverse_get_num_fixed_args()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard size_t infix_reverse_get_num_fixed_args </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *</td>          <td class="paramname"><span class="paramname"><em>trampoline</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the number of fixed (non-variadic) arguments for a reverse trampoline. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">trampoline</td><td><a class="el" href="classA.html">A</a> handle to a reverse trampoline. Can be <code>nullptr</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of fixed arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a76">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 
 </div>
@@ -220,7 +282,7 @@ c23_nodiscard const <a class="el" href="group__type__system.html#ga0ab49e30398b3
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classA.html">A</a> constant pointer to the return <code>infix_type</code>. Returns <code>nullptr</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a74">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a75">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 
 </div>

@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['x_0',['Write XOR Execute (W^X)',['../md_internals.html#autotoc_md93',1,'']]],
+  ['x_0',['Write XOR Execute (W^X)',['../md_internals.html#autotoc_md137',1,'']]],
   ['x_1',['x',['../structCoordStruct.html#a183d7226fc5a8470ce9b9f04f9cb69bb',1,'CoordStruct']]],
-  ['x_20write_20xor_20execute_20memory_20policy_2',['1. W^X (Write XOR Execute) Memory Policy',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md176',1,'']]],
+  ['x_20write_20xor_20execute_20memory_20policy_2',['1. W^X (Write XOR Execute) Memory Policy',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md220',1,'']]],
   ['x0_5freg_3',['X0_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aa0689257e9ed3bccebcb22a48336fc26',1,'abi_arm64_common.h']]],
   ['x10_5freg_4',['X10_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aff751fdf3e687c6e979b821e648ce1e2',1,'abi_arm64_common.h']]],
   ['x11_5freg_5',['X11_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a8bbc3234a80956b6d6b83d4fee59cfb1',1,'abi_arm64_common.h']]],
@@ -36,9 +36,9 @@ var searchData=
   ['x7_5freg_33',['X7_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a45d807a6fb62dd94432a1b257a1f37e1',1,'abi_arm64_common.h']]],
   ['x8_5freg_34',['X8_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a8eb432408cb01a824e1a17c059daa51d',1,'abi_arm64_common.h']]],
   ['x9_5freg_35',['X9_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1ae68729324bef088e6624776653a8d475',1,'abi_arm64_common.h']]],
-  ['xmake_36',['Using xmake',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md153',1,'']]],
-  ['xmake_20recommended_37',['Using xmake (Recommended)',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md137',1,'']]],
-  ['xmake_20repository_38',['xmake Repository',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md159',1,'']]],
+  ['xmake_36',['Using xmake',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md197',1,'']]],
+  ['xmake_20recommended_37',['Using xmake (Recommended)',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md181',1,'']]],
+  ['xmake_20repository_38',['xmake Repository',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md203',1,'']]],
   ['xmm0_5freg_39',['XMM0_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca7f7dd044d21d061cb237870e1fb1d9da',1,'abi_x64_common.h']]],
   ['xmm10_5freg_40',['XMM10_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cad32577b3a79c6eb194a68194eb0f9c46',1,'abi_x64_common.h']]],
   ['xmm11_5freg_41',['XMM11_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caee90d003aefd04b52ee634086530bd52',1,'abi_x64_common.h']]],
@@ -56,6 +56,7 @@ var searchData=
   ['xmm8_5freg_53',['XMM8_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caccd2561dad55622472de05cc5f26f626',1,'abi_x64_common.h']]],
   ['xmm9_5freg_54',['XMM9_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca367f9cc2a1b55e531bdbcb1091c5fc9a',1,'abi_x64_common.h']]],
   ['xmm_5fsave_5farea_5foffset_55',['xmm_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662',1,'infix_reverse_call_frame_layout']]],
-  ['xor_20execute_20memory_20policy_56',['1. W^X (Write XOR Execute) Memory Policy',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md176',1,'']]],
-  ['xor_20execute_20w_20x_57',['Write XOR Execute (W^X)',['../md_internals.html#autotoc_md93',1,'']]]
+  ['xor_20execute_20memory_20policy_56',['1. W^X (Write XOR Execute) Memory Policy',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md220',1,'']]],
+  ['xor_20execute_20w_20x_57',['Write XOR Execute (W^X)',['../md_internals.html#autotoc_md137',1,'']]],
+  ['xpm_20dependency_58',['npm/xpm dependency',['../md__2home_2runner_2work_2infix_2infix_2build_2__deps_2doxygen-awesome-css-src_2README.html#autotoc_md38',1,'']]]
 ];

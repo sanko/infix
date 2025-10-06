@@ -1,18 +1,18 @@
 var searchData=
 [
-  ['3_201_20syntax_20showcase_0',['3.1 Syntax Showcase',['../md_signatures.html#autotoc_md125',1,'']]],
-  ['3_202_20architectural_20pattern_3a_20define_20and_20use_1',['3.2 Architectural Pattern: Define and Use',['../md_signatures.html#autotoc_md126',1,'']]],
-  ['3_20advanced_20numeric_20and_20vector_20types_2',['2.3 Advanced Numeric and Vector Types',['../md_signatures.html#autotoc_md122',1,'']]],
-  ['3_20design_20rationale_3a_20why_20this_20syntax_3',['4.3 Design Rationale: Why This Syntax?',['../md_signatures.html#autotoc_md130',1,'']]],
-  ['3_20executable_20memory_20management_20and_20security_20tt_20executor_20c_20tt_4',['3. Executable Memory Management and Security (&lt;tt&gt;executor.c&lt;/tt&gt;)',['../md_internals.html#autotoc_md92',1,'']]],
-  ['3_20managing_20memory_20object_20lifetimes_5',['3. Managing Memory &amp; Object Lifetimes',['../md_cookbook.html#autotoc_md73',1,'']]],
-  ['3_20our_20solution_3a_20a_20human_20first_20signature_20system_6',['1.3 Our Solution: A Human-First Signature System',['../md_signatures.html#autotoc_md117',1,'']]],
-  ['3_20packaging_20tt_20infix_20tt_20for_20maintainers_7',['3. Packaging &lt;tt&gt;infix&lt;/tt&gt; (For Maintainers)',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md157',1,'']]],
-  ['3_20read_20only_20context_20hardening_8',['3. Read-Only Context Hardening',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md178',1,'']]],
+  ['3_201_20syntax_20showcase_0',['3.1 Syntax Showcase',['../md_signatures.html#autotoc_md169',1,'']]],
+  ['3_202_20architectural_20pattern_3a_20define_20and_20use_1',['3.2 Architectural Pattern: Define and Use',['../md_signatures.html#autotoc_md170',1,'']]],
+  ['3_20advanced_20numeric_20and_20vector_20types_2',['2.3 Advanced Numeric and Vector Types',['../md_signatures.html#autotoc_md166',1,'']]],
+  ['3_20design_20rationale_3a_20why_20this_20syntax_3',['4.3 Design Rationale: Why This Syntax?',['../md_signatures.html#autotoc_md174',1,'']]],
+  ['3_20executable_20memory_20management_20and_20security_20tt_20executor_20c_20tt_4',['3. Executable Memory Management and Security (&lt;tt&gt;executor.c&lt;/tt&gt;)',['../md_internals.html#autotoc_md136',1,'']]],
+  ['3_20managing_20memory_20object_20lifetimes_5',['3. Managing Memory &amp; Object Lifetimes',['../md_cookbook.html#autotoc_md117',1,'']]],
+  ['3_20our_20solution_3a_20a_20human_20first_20signature_20system_6',['1.3 Our Solution: A Human-First Signature System',['../md_signatures.html#autotoc_md161',1,'']]],
+  ['3_20packaging_20tt_20infix_20tt_20for_20maintainers_7',['3. Packaging &lt;tt&gt;infix&lt;/tt&gt; (For Maintainers)',['../md__2home_2runner_2work_2infix_2infix_2INSTALL.html#autotoc_md201',1,'']]],
+  ['3_20read_20only_20context_20hardening_8',['3. Read-Only Context Hardening',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md222',1,'']]],
   ['301_5fprimitives_2ec_9',['301_primitives.c',['../301__primitives_8c.html',1,'']]],
   ['302_5faggregates_2ec_10',['302_aggregates.c',['../302__aggregates_8c.html',1,'']]],
   ['303_5fadvanced_2ec_11',['303_advanced.c',['../303__advanced_8c.html',1,'']]],
-  ['3_3a_20examples_20best_20practices_20and_20usage_12',['Part 3: Examples, Best Practices, and Usage',['../md_signatures.html#autotoc_md124',1,'']]],
-  ['3_3a_20implement_20the_20instruction_20emitters_13',['Step 3: Implement the Instruction Emitters',['../md_porting.html#autotoc_md110',1,'']]],
-  ['3_3a_20the_20power_20of_20callbacks_20reverse_20calls_14',['Chapter 3: The Power of Callbacks (Reverse Calls)',['../md_cookbook.html#autotoc_md37',1,'']]]
+  ['3_3a_20examples_20best_20practices_20and_20usage_12',['Part 3: Examples, Best Practices, and Usage',['../md_signatures.html#autotoc_md168',1,'']]],
+  ['3_3a_20implement_20the_20instruction_20emitters_13',['Step 3: Implement the Instruction Emitters',['../md_porting.html#autotoc_md154',1,'']]],
+  ['3_3a_20the_20power_20of_20callbacks_20reverse_20calls_14',['Chapter 3: The Power of Callbacks (Reverse Calls)',['../md_cookbook.html#autotoc_md81',1,'']]]
 ];

@@ -77,9 +77,9 @@ $(function() {
   <div class="headertitle"><div class="title">&lt;tt&gt;infix&lt;/tt&gt;: A JIT-Powered FFI Library for C</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md160"></a> <code>infix</code> is a modern, security-conscious Foreign Function Interface (FFI) library for <a class="el" href="classC.html">C</a>. It lets you call any <a class="el" href="classC.html">C</a> function—or create <a class="el" href="classC.html">C</a> callbacks—by describing them in a simple, human-readable string like <code>({int, *double}, *char) -&gt; int</code>.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md204"></a> <code>infix</code> is a modern, security-conscious Foreign Function Interface (FFI) library for <a class="el" href="classC.html">C</a>. It lets you call any <a class="el" href="classC.html">C</a> function—or create <a class="el" href="classC.html">C</a> callbacks—by describing them in a simple, human-readable string like <code>({int, *double}, *char) -&gt; int</code>.</p>
 <p>At its core, <code>infix</code> is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code wrappers at runtime. These "trampolines" handle all the low-level details of the target platform's calling convention (ABI) behind a clean, uniform API, making <code>infix</code> a powerful tool for embedding scripting languages, building plugin systems, and simplifying complex <a class="el" href="classC.html">C</a> interoperability.</p>
-<h1><a class="anchor" id="autotoc_md161"></a>
+<h1><a class="anchor" id="autotoc_md205"></a>
 Key Features</h1>
 <ul>
 <li><b>Simple, Powerful APIs:</b> Use the high-level <b>Signature API</b> to create trampolines from a single string, or drop down to the memory-safe <b>Manual API</b> for dynamic, performance-critical use cases.</li>
@@ -93,7 +93,7 @@ Key Features</h1>
 <li><b>Stateful Callbacks Made Easy:</b> The reverse-call API is designed to make stateful callbacks simple and safe, even when the <a class="el" href="classC.html">C</a> library you're calling doesn't provide a <code>user_data</code> parameter.</li>
 <li><b>Zero Dependencies &amp; Simple Integration:</b> <code>infix</code> uses a unity build, making integration into any C/C++ project trivial by simply compiling <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code>.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md162"></a>
+<h1><a class="anchor" id="autotoc_md206"></a>
 Who is this for?</h1>
 <p><code>infix</code> is designed for developers who need to bridge the gap between different codebases or language runtimes. You'll find it especially useful if you are:</p>
 <ul>
@@ -102,10 +102,10 @@ Who is this for?</h1>
 <li><b><a class="el" href="classA.html">A</a> C/C++ Developer:</b> Dynamically call functions from system libraries (<code>user32.dll</code>, <code>libc.so.6</code>, etc.) without needing to link against them at compile time.</li>
 <li><b><a class="el" href="classA.html">A</a> Security Researcher:</b> <code>infix</code> provides a powerful, fuzz-tested toolkit for analyzing and interacting with native code.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md163"></a>
+<h1><a class="anchor" id="autotoc_md207"></a>
 Quick Start: The Two APIs</h1>
 <p><code>infix</code> provides two APIs for creating trampolines. Most users should start with the Signature API.</p>
-<h2><a class="anchor" id="autotoc_md164"></a>
+<h2><a class="anchor" id="autotoc_md208"></a>
 1. The Signature API (Recommended)</h2>
 <p>This is the easiest and safest way to use the library. You describe a function in a string, and <code>infix</code> handles the rest.</p>
 <p><b>Example: Calling a Simple Function</b>```c #include &lt;<a class="el" href="infix_8h.html" title="The main public header for the infix FFI library.">infix/infix.h</a>&gt; #include &lt;stdio.h&gt;</p>
@@ -239,7 +239,7 @@ Quick Start: The Two APIs</h1>
 <li>Member 'name': offset=16, size=8 ```</li>
 </ul>
 <p>This runtime layout information allows you to, for example, take a Perl hash and correctly pack its key/value pairs into a <a class="el" href="classC.html">C</a> <code><a class="el" href="structUserProfile.html">UserProfile</a></code> struct in memory, byte by byte.</p>
-<h1><a class="anchor" id="autotoc_md165"></a>
+<h1><a class="anchor" id="autotoc_md209"></a>
 Supported Platforms</h1>
 <p><code>infix</code> is rigorously tested on a wide array of operating systems, compilers, and architectures with every commit.</p>
 <details >
@@ -283,11 +283,11 @@ Supported Platforms</h1>
 </table>
 <p></p>
 </details>
-<h1><a class="anchor" id="autotoc_md166"></a>
+<h1><a class="anchor" id="autotoc_md210"></a>
 Building and Integrating</h1>
 <p>Full build instructions for <code>xmake</code>, <code>cmake</code>, GNU <code>make</code>, and other systems are available in <b><a class="el" href="md__2home_2runner_2work_2infix_2infix_2INSTALL.html">INSTALL.md</a></b>.</p>
 <p>Because <code>infix</code> uses a unity build, integration into an existing project is simple: add <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> to your list of source files and add the <code>include/</code> directory to your include paths.</p>
-<h1><a class="anchor" id="autotoc_md167"></a>
+<h1><a class="anchor" id="autotoc_md211"></a>
 Learn More</h1>
 <ul>
 <li><b><a class="el" href="md_cookbook.html">Cookbook</a>:</b> Practical, copy-pasteable recipes for common FFI tasks.</li>
@@ -296,14 +296,14 @@ Learn More</h1>
 <li><b><a class="el" href="md_porting.html">Porting Guide</a>:</b> Instructions for adding support for new architectures.</li>
 <li><b><a class="el" href="md__2home_2runner_2work_2infix_2infix_2INSTALL.html">INSTALL.md</a>:</b> Detailed build and integration instructions.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md168"></a>
+<h1><a class="anchor" id="autotoc_md212"></a>
 License &amp; Legal</h1>
 <p><code>infix</code> is provided under multiple licenses to maximize its usability for all.</p>
-<h2><a class="anchor" id="autotoc_md169"></a>
+<h2><a class="anchor" id="autotoc_md213"></a>
 Code License</h2>
 <p>Source code, including header files (<code>.h</code>) and implementation files (<code>.c</code>), is dual-licensed under the <b>Artistic License 2.0</b> or the <b>MIT License</b>. You may choose to use the code under the terms of either license.</p>
 <p>See the [LICENSE-A2](LICENSE-A2) and/or [LICENSE-MIT](LICENSE-MIT) for the full text of both licenses.</p>
-<h2><a class="anchor" id="autotoc_md170"></a>
+<h2><a class="anchor" id="autotoc_md214"></a>
 Documentation License</h2>
 <p>All standalone documentation (<code>.md</code>), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the <b>Creative Commons Attribution 4.0 International License (CC BY 4.0)</b>. I encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.</p>
 <p>See the [LICENSE-CC](LICENSE-CC) for details. </p>

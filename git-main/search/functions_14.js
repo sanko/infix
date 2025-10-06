@@ -4,5 +4,6 @@ var searchData=
   ['vector4_5fcallback_5fhandler_1',['vector4_callback_handler',['../302__aggregates_8c.html#aae76761188b2d389cd00a2bb9c6c29ee',1,'302_aggregates.c']]],
   ['vehiclestart_2',['vehicleStart',['../structVehicle.html#a6891d3d28853bc3fdd075596dc6de9f8',1,'Vehicle']]],
   ['vehiclestop_3',['vehicleStop',['../structVehicle.html#a4dcbcba43792dcd673a552b14479ab77',1,'Vehicle']]],
-  ['void_5fcallback_5fhandler_4',['void_callback_handler',['../301__primitives_8c.html#afb4ece8c6bb2cc5243c4f00a6276b2ac',1,'301_primitives.c']]]
+  ['virtualfunc_4',['virtualfunc',['../classMyLibrary_1_1SubclassExample.html#a08668a9f16511ad37fb547c985d62764',1,'MyLibrary::SubclassExample']]],
+  ['void_5fcallback_5fhandler_5',['void_callback_handler',['../301__primitives_8c.html#afb4ece8c6bb2cc5243c4f00a6276b2ac',1,'301_primitives.c']]]
 ];
