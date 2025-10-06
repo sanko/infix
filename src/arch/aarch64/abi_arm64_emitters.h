@@ -114,3 +114,6 @@ void emit_arm64_cbnz(code_buffer * buf, bool is64, arm64_gpr reg, int32_t offset
 
 /** @internal @brief Emits `BRK #imm` to cause a software breakpoint exception. */
 void emit_arm64_brk(code_buffer * buf, uint16_t imm);
+
+/** @internal @brief Emits `BR <Xn>` to branch to an address in a register. */
+void emit_arm64_b_reg(code_buffer * buf, arm64_gpr reg);

@@ -176,6 +176,9 @@ void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2);
 /** @internal @brief Emits `jnz rel8` for a short conditional jump if not zero. */
 void emit_jnz_short(code_buffer * buf, int8_t offset);
 
+/** @internal @brief Emits `jmp r64` to jump to an address in a register. */
+void emit_jmp_reg(code_buffer * buf, x64_gpr reg);
+
 /** @internal @brief Emits `ud2`, an undefined instruction that causes an invalid opcode exception. */
 void emit_ud2(code_buffer * buf);
 

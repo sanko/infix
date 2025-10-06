@@ -460,3 +460,16 @@ void emit_arm64_brk(code_buffer * buf, uint16_t imm) {
     instr |= (uint32_t)(imm & 0xFFFF) << 5;
     emit_int32(buf, instr);
 }
+
+/**
+ * Emits `BR <Xn>` (Branch to Register).
+ * This instruction performs an indirect, unconditional branch to the
+ * address contained in the specified register. It is functionally similar to
+ * `JMP` on x86.
+ * Opcode: 1101011000011111000000... (0xD61F0000)
+ */
+void emit_arm64_b_reg(code_buffer * buf, arm64_gpr reg) {
+    uint32_t instr = 0xD61F0000;
+    instr |= (uint32_t)(reg & 0x1F) << 5;
+    emit_int32(buf, instr);
+}

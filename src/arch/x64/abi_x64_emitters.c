@@ -864,6 +864,22 @@ void emit_jnz_short(code_buffer * buf, int8_t offset) {
     EMIT_BYTES(buf, 0x75, (uint8_t)offset);
 }
 
+/**
+ * Emits a `jmp r64` instruction.
+ * This instruction performs an indirect jump to the address contained in the
+ * specified 64-bit register.
+ * Opcode format: [REX.B] FF /4
+ */
+void emit_jmp_reg(code_buffer * buf, x64_gpr reg) {
+    uint8_t rex = 0;
+    if (reg >= R8_REG)
+        rex = 0x40 | REX_B;
+    if (rex)
+        emit_byte(buf, rex);
+    emit_byte(buf, 0xFF);
+    emit_modrm(buf, 3, 4, reg % 8);  // mod=11 (register), reg=/4 for JMP
+}
+
 /*
  * Implementation for emit_ud2.
  * Opcode format: 0F 0B
