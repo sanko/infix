@@ -28,5 +28,6 @@ var searchData=
   ['live_20debugging_20with_20gdb_20lldb_25',['Method 2: Live Debugging with GDB/LLDB',['../md_internals.html#autotoc_md103',1,'']]],
   ['lldb_26',['Method 2: Live Debugging with GDB/LLDB',['../md_internals.html#autotoc_md103',1,'']]],
   ['llvmfuzzertestoneinput_27',['LLVMFuzzerTestOneInput',['../fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_signature.c'],['../fuzz__trampoline_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_trampoline.c'],['../fuzz__types_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_types.c']]],
-  ['low_20priority_3a_20advanced_20features_20polish_20strong_28',['&lt;strong&gt;Low Priority: Advanced Features &amp; Polish&lt;/strong&gt;',['../md__2home_2runner_2work_2infix_2infix_2TODO.html#autotoc_md185',1,'']]]
+  ['loader_2ec_28',['loader.c',['../loader_8c.html',1,'']]],
+  ['low_20priority_3a_20advanced_20features_20polish_20strong_29',['&lt;strong&gt;Low Priority: Advanced Features &amp; Polish&lt;/strong&gt;',['../md__2home_2runner_2work_2infix_2infix_2TODO.html#autotoc_md185',1,'']]]
 ];

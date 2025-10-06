@@ -34,5 +34,6 @@ var searchData=
   ['expansion_20optimization_20strong_31',['&lt;strong&gt;Medium Priority: Expansion &amp; Optimization&lt;/strong&gt;',['../md__2home_2runner_2work_2infix_2infix_2TODO.html#autotoc_md184',1,'']]],
   ['expected_5fstatus_32',['expected_status',['../structregression__test__case__t.html#a8d84cddb4f622127b503bc8b1c82a956',1,'regression_test_case_t']]],
   ['explicit_20fixed_20width_20types_33',['2.2 Tier 2: Explicit Fixed-Width Types',['../md_signatures.html#autotoc_md121',1,'']]],
-  ['external_20abi_20documentation_34',['External ABI Documentation',['../md_internals.html#autotoc_md105',1,'']]]
+  ['exports_5fapi_34',['Exports_api',['../group__exports__api.html',1,'']]],
+  ['external_20abi_20documentation_35',['External ABI Documentation',['../md_internals.html#autotoc_md105',1,'']]]
 ];
