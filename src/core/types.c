@@ -657,12 +657,20 @@ c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func
     return func_type->meta.func_ptr_info.args[index].type;
 }
 
-
 /*
  * Simple null-safe getter for the forward trampoline's argument count.
  */
 c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->num_args : 0;
+}
+
+/**
+ * @brief Retrieves the number of fixed (non-variadic) arguments for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return The number of fixed arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_forward_get_num_fixed_args(const infix_forward_t * trampoline) {
+    return trampoline ? trampoline->num_fixed_args : 0;
 }
 
 /*
@@ -688,6 +696,14 @@ c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t * trampoli
     return trampoline ? trampoline->num_args : 0;
 }
 
+/**
+ * @brief Retrieves the number of fixed (non-variadic) arguments for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return The number of fixed arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t * trampoline) {
+    return trampoline ? trampoline->num_fixed_args : 0;
+}
 /*
  * Simple null-safe getter for the reverse trampoline's return type.
  */

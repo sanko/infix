@@ -209,6 +209,8 @@ typedef struct infix_reverse_t infix_reverse_t;
 typedef infix_reverse_t infix_context_t;
 /** @brief An opaque handle to a memory arena for fast, temporary allocations. */
 typedef struct infix_arena_t infix_arena_t;
+/** @brief An opaque handle to a shared library. */
+typedef struct infix_library_t infix_library_t;
 
 /**
  * @enum infix_type_category
@@ -613,9 +615,33 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_
 
 /** @} */
 
-//=================================================================================================
-// Manual Type-Creation API
-//=================================================================================================
+
+/** @addtogroup exports_api */
+/** @{ */
+
+/**
+ * @brief Reads the value of a global variable from a loaded library.
+ *
+ * @param lib A handle to a loaded dynamic library.
+ * @param symbol_name The name of the global variable.
+ * @param type_signature A signature string describing the variable's type.
+ * @param buffer A pointer to a buffer to store the value.
+ * @return INFIX_SUCCESS on success.
+ */
+infix_status infix_read_global(infix_library_t *, const char *, const char *, void *);
+
+/**
+ * @brief Writes a value to a global variable in a loaded library.
+ *
+ * @param lib A handle to a loaded dynamic library.
+ * @param symbol_name The name of the global variable.
+ * @param type_signature A signature string describing the variable's type.
+ * @param buffer A pointer to the new value.
+ * @return INFIX_SUCCESS on success.
+ */
+infix_status infix_write_global(infix_library_t *, const char *, const char *, void *);
+
+/** @} */
 
 /** @addtogroup manual_api */
 /** @{ */
@@ -1104,6 +1130,13 @@ c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *);
 c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t *);
 
 /**
+ * @brief Retrieves the number of fixed (non-variadic) arguments for a forward trampoline.
+ * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
+ * @return The number of fixed arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_forward_get_num_fixed_args(const infix_forward_t *);
+
+/**
  * @brief Retrieves the return type for a forward trampoline.
  * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
  * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
@@ -1148,6 +1181,13 @@ c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t *);
  * @return A constant pointer to the return `infix_type`. Returns `nullptr` if the handle is `nullptr`.
  */
 c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t *);
+
+/**
+ * @brief Retrieves the number of fixed (non-variadic) arguments for a reverse trampoline.
+ * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
+ * @return The number of fixed arguments. Returns `0` if the handle is `nullptr`.
+ */
+c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t *);
 
 /**
  * @brief Retrieves the type of a specific argument for a reverse trampoline.

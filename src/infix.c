@@ -33,10 +33,12 @@
 #include "core/executor.c"
 // 3. Signature Parser: Implements the high-level string-based API; depends on types and arena.
 #include "core/signature.c"
-// 4. Type System: Defines and manages `infix_type` objects; depends on the arena.
+// 4. Loader: Implements the low-level file loading and parsing logic; depends on types and arena. Platform independent.
+#include "core/loader.c"
+// 5. Type System: Defines and manages `infix_type` objects; depends on the arena.
 #include "core/types.c"
-// 5. Debugging Utilities: Low-level helpers for logging and inspection.
+// 6. Debugging Utilities: Low-level helpers for logging and inspection.
 #include "core/utility.c"
-// 6. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all
+// 7. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all
 //    other components and includes the final ABI- and architecture-specific C files itself.
 #include "core/trampoline.c"
