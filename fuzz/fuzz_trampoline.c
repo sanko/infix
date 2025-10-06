@@ -27,6 +27,9 @@
 
 #include "fuzz_helpers.h"
 
+// A dummy function pointer to use as a target for bound trampolines.
+void dummy_target_for_fuzzing(void) {}
+
 // Fuzzing Logic Core
 // This function contains the actual test logic, shared by both entry points.
 static void FuzzTest(fuzzer_input in) {
@@ -73,11 +76,21 @@ static void FuzzTest(fuzzer_input in) {
             for (size_t i = 0; i < num_args; ++i)
                 arg_types[i] = type_pool[i % type_count];
 
-            // Fuzz the forward trampoline generator.
-            infix_forward_t * trampoline = NULL;
-            if (infix_forward_create_manual(&trampoline, return_type, arg_types, num_args, num_fixed_args) ==
+            // Fuzz the unbound forward trampoline generator.
+            infix_forward_t * unbound_trampoline = NULL;
+            if (infix_forward_create_manual(&unbound_trampoline, return_type, arg_types, num_args, num_fixed_args) ==
                 INFIX_SUCCESS)
-                infix_forward_destroy(trampoline);
+                infix_forward_destroy(unbound_trampoline);
+
+            // Fuzz the bound forward trampoline generator.
+            infix_forward_t * bound_trampoline = NULL;
+            if (infix_forward_create_bound_manual(&bound_trampoline,
+                                                  return_type,
+                                                  arg_types,
+                                                  num_args,
+                                                  num_fixed_args,
+                                                  (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
+                infix_forward_destroy(bound_trampoline);
 
             // Fuzz the reverse trampoline generator.
             infix_reverse_t * reverse_trampoline = NULL;

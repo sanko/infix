@@ -188,10 +188,8 @@ TEST {
     plan(6);  // One subtest for each major scenario.
 
     subtest("Simple struct (Point) passed and returned by value") {
-        plan(5);
+        plan(7);
         infix_arena_t * arena = infix_arena_create(4096);
-
-        // First, create the infix_type for the Point struct. This will be reused.
         infix_struct_member * point_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         point_members[0] =
@@ -199,39 +197,52 @@ TEST {
         point_members[1] =
             infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
         infix_type * point_type = nullptr;
-        infix_status status = infix_type_create_struct(arena, &point_type, point_members, 2);
-        if (!ok(status == INFIX_SUCCESS, "infix_type for Point created successfully")) {
-            skip(4, "Cannot proceed without Point type");
+        if (!ok(infix_type_create_struct(arena, &point_type, point_members, 2) == INFIX_SUCCESS,
+                "Point type created")) {
+            skip(6, "Cannot proceed");
             infix_arena_destroy(arena);
+            return;
         }
-        else {
-            // Test 1: Pass Point as an argument
-            infix_type * arg_ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-            infix_forward_t * arg_trampoline = nullptr;
-            status = infix_forward_create_manual(&arg_trampoline, arg_ret_type, &point_type, 1, 1);
-            ok(status == INFIX_SUCCESS, "Trampoline for process_point_by_value created");
 
-            infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
-            Point p_in = {10.5, 20.5};
-            double sum_result = 0.0;
-            void * arg_args[] = {&p_in};
-            arg_cif((void *)process_point_by_value, &sum_result, arg_args);
-            ok(fabs(sum_result - 31.0) < 0.001, "Struct passed as argument correctly");
-            infix_forward_destroy(arg_trampoline);
+        // Test Pass Arg
+        infix_forward_t *unbound_pass = NULL, *bound_pass = NULL;
+        ok(infix_forward_create_manual(
+               &unbound_pass, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), &point_type, 1, 1) == INFIX_SUCCESS,
+           "Pass arg (unbound) created");
+        ok(infix_forward_create_bound_manual(&bound_pass,
+                                             infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                             &point_type,
+                                             1,
+                                             1,
+                                             (void *)process_point_by_value) == INFIX_SUCCESS,
+           "Pass arg (bound) created");
+        Point p_in = {10.5, 20.5};
+        void * pass_args[] = {&p_in};
+        double unbound_pass_res = 0.0, bound_pass_res = 0.0;
+        ((infix_cif_func)infix_forward_get_code(unbound_pass))(
+            (void *)process_point_by_value, &unbound_pass_res, pass_args);
+        ((infix_bound_cif_func)infix_forward_get_code(bound_pass))(&bound_pass_res, pass_args);
+        ok(fabs(unbound_pass_res - 31.0) < 0.001 && fabs(bound_pass_res - 31.0) < 0.001, "Pass arg correct");
 
-            // Test 2: Return Point as a value
-            infix_forward_t * ret_trampoline = nullptr;
-            status = infix_forward_create_manual(&ret_trampoline, point_type, nullptr, 0, 0);
-            ok(status == INFIX_SUCCESS, "Trampoline for return_point_by_value created");
+        // Test Return
+        infix_forward_t *unbound_ret = NULL, *bound_ret = NULL;
+        ok(infix_forward_create_manual(&unbound_ret, point_type, NULL, 0, 0) == INFIX_SUCCESS,
+           "Ret val (unbound) created");
+        ok(infix_forward_create_bound_manual(&bound_ret, point_type, NULL, 0, 0, (void *)return_point_by_value) ==
+               INFIX_SUCCESS,
+           "Ret val (bound) created");
+        Point unbound_ret_res = {0, 0}, bound_ret_res = {0, 0};
+        ((infix_cif_func)infix_forward_get_code(unbound_ret))((void *)return_point_by_value, &unbound_ret_res, NULL);
+        ((infix_bound_cif_func)infix_forward_get_code(bound_ret))(&bound_ret_res, NULL);
+        ok(unbound_ret_res.x == 100.0 && unbound_ret_res.y == 200.0 && bound_ret_res.x == 100.0 &&
+               bound_ret_res.y == 200.0,
+           "Return val correct");
 
-            infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
-            Point p_out = {0.0, 0.0};
-            ret_cif((void *)return_point_by_value, &p_out, nullptr);
-            ok(fabs(p_out.x - 100.0) < 0.001 && fabs(p_out.y - 200.0) < 0.001, "Struct returned by value correctly");
-            infix_forward_destroy(ret_trampoline);
-
-            infix_arena_destroy(arena);
-        }
+        infix_forward_destroy(unbound_pass);
+        infix_forward_destroy(bound_pass);
+        infix_forward_destroy(unbound_ret);
+        infix_forward_destroy(bound_ret);
+        infix_arena_destroy(arena);
     }
 
     subtest("ABI Specific: System V x64 mixed-register struct") {
@@ -248,7 +259,7 @@ TEST {
         infix_type * mixed_type = nullptr;
         (void)infix_type_create_struct(arena, &mixed_type, members, 2);
 
-        infix_forward_t * trampoline = nullptr;
+        infix_forward_t * trampoline = NULL;
         infix_status status = infix_forward_create_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for mixed-type struct created");
@@ -292,7 +303,7 @@ TEST {
                 return;
             }
 
-            infix_forward_t * trampoline = nullptr;
+            infix_forward_t * trampoline = NULL;
             status = infix_forward_create_manual(
                 &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
             ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
@@ -324,7 +335,7 @@ TEST {
         else {
             // 2. Create the trampoline for __m128d(__m128d, __m128d)
             infix_type * arg_types[] = {vector_type, vector_type};
-            infix_forward_t * trampoline = nullptr;
+            infix_forward_t * trampoline = NULL;
             status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
 
             // 3. Prepare arguments and call
@@ -360,7 +371,7 @@ TEST {
         }
         else {
             infix_type * arg_types[] = {neon_vector_type, neon_vector_type};
-            infix_forward_t * trampoline = nullptr;
+            infix_forward_t * trampoline = NULL;
             status = infix_forward_create_manual(&trampoline, neon_vector_type, arg_types, 2, 2);
             float64_t a_data[] = {10.0, 20.0};
             float64_t b_data[] = {32.0, 22.0};

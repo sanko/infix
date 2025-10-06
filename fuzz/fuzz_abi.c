@@ -75,8 +75,11 @@ static void FuzzTest(fuzzer_input in) {
             infix_arena_t * fwd_arena = infix_arena_create(16384);
             if (fwd_arena) {
                 infix_call_frame_layout * layout = NULL;
+                // Fuzz both bound and unbound classifiers
                 fwd_spec->prepare_forward_call_frame(
-                    fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args);
+                    fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args, nullptr);
+                fwd_spec->prepare_forward_call_frame(
+                    fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args, (void *)0x1);
                 infix_arena_destroy(fwd_arena);
             }
         }

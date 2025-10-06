@@ -54,49 +54,43 @@ int process_pointer_struct(PointerStruct ps) {
 
 
 TEST {
-    plan(3);  // One for type creation, one for trampoline, one for the final result.
+    plan(5);
 
-    // 1. Create an arena to hold the type definitions for this test.
     infix_arena_t * arena = infix_arena_create(4096);
-
-    // 2. Define the infix_type for PointerStruct using the arena.
     infix_struct_member * members =
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
     members[0] = infix_type_create_member("val_ptr", infix_type_create_pointer(), offsetof(PointerStruct, val_ptr));
     members[1] = infix_type_create_member("str_ptr", infix_type_create_pointer(), offsetof(PointerStruct, str_ptr));
     infix_type * struct_type = NULL;
-    infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
-
-    if (!ok(status == INFIX_SUCCESS, "infix_type for PointerStruct created successfully")) {
-        fail("Cannot proceed with test without a valid infix_type.");
-        skip(2, "Skipping remaining tests");
+    if (!ok(infix_type_create_struct(arena, &struct_type, members, 2) == INFIX_SUCCESS, "Type created")) {
+        skip(4, "Cannot proceed");
         infix_arena_destroy(arena);
         return;
     }
 
-    // 3. Generate the trampoline for `int(PointerStruct)`
     infix_type * return_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-    infix_forward_t * trampoline = NULL;
-    status = infix_forward_create_manual(&trampoline, return_type, &struct_type, 1, 1);
-    ok(status == INFIX_SUCCESS, "Trampoline created successfully");
-
-    // 4. Prepare data and execute the FFI call
-    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-
     int value_to_point_to = 500;
     const char * string_to_point_to = "Hello Pointers";
     PointerStruct struct_instance = {&value_to_point_to, string_to_point_to};
-
-    int result = 0;
     void * args[] = {&struct_instance};
 
-    cif_func((void *)process_pointer_struct, &result, args);
+    // Unbound
+    infix_forward_t * unbound_t = NULL;
+    ok(infix_forward_create_manual(&unbound_t, return_type, &struct_type, 1, 1) == INFIX_SUCCESS, "Unbound created");
+    int unbound_result = 0;
+    ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)process_pointer_struct, &unbound_result, args);
+    ok(unbound_result == 550, "Unbound call correct");
 
-    // 5. Verify the result
-    ok(result == 550, "Struct with pointer members passed correctly");
-    diag("Function returned: %d (expected 550)", result);
+    // Bound
+    infix_forward_t * bound_t = NULL;
+    ok(infix_forward_create_bound_manual(&bound_t, return_type, &struct_type, 1, 1, (void *)process_pointer_struct) ==
+           INFIX_SUCCESS,
+       "Bound created");
+    int bound_result = 0;
+    ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+    ok(bound_result == 550, "Bound call correct");
 
-    // 6. Cleanup
-    infix_forward_destroy(trampoline);
-    infix_arena_destroy(arena);  // Frees all type-related memory.
+    infix_forward_destroy(unbound_t);
+    infix_forward_destroy(bound_t);
+    infix_arena_destroy(arena);
 }

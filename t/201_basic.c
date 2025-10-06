@@ -65,80 +65,93 @@ TEST {
     plan(3);
 
     subtest("Passing and returning pointers") {
-        plan(2);
+        plan(4);
         infix_type * ret_type = infix_type_create_pointer();
         infix_type * arg_types[] = {infix_type_create_pointer(), infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == INFIX_SUCCESS, "Trampoline created successfully");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         const char * str = "Hello, FFI World!";
         int char_to_find = 'F';
-        const char * result = NULL;
-        // The `args` array must contain pointers to the actual arguments.
         void * args[] = {&str, &char_to_find};
 
-        cif_func((void *)find_char_in_string, &result, args);
+        // Unbound
+        infix_forward_t * unbound_t = NULL;
+        ok(infix_forward_create_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS, "Unbound created");
+        const char * unbound_result = NULL;
+        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)find_char_in_string, &unbound_result, args);
+        ok(unbound_result && strcmp(unbound_result, "FFI World!") == 0, "Unbound call correct");
 
-        ok(result != NULL && strcmp(result, "FFI World!") == 0,
-           "find_char_in_string returned the correct pointer offset");
-        diag("Returned substring: \"%s\"", result ? result : "(null)");
+        // Bound
+        infix_forward_t * bound_t = NULL;
+        ok(infix_forward_create_bound_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)find_char_in_string) ==
+               INFIX_SUCCESS,
+           "Bound created");
+        const char * bound_result = NULL;
+        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+        ok(bound_result && strcmp(bound_result, "FFI World!") == 0, "Bound call correct");
 
-        infix_forward_destroy(trampoline);
+        infix_forward_destroy(unbound_t);
+        infix_forward_destroy(bound_t);
     }
 
     subtest("Modifying data via pointer arguments") {
-        plan(2);
+        plan(4);
         infix_type * ret_type = infix_type_create_void();
         infix_type * arg_types[] = {infix_type_create_pointer(), infix_type_create_pointer()};
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == INFIX_SUCCESS, "Trampoline created successfully");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         int val_a = 1;
         double val_b = 2.0;
         int * ptr_a = &val_a;
         double * ptr_b = &val_b;
-
-        // The arguments are the pointers themselves (ptr_a, ptr_b).
-        // The `args` array must hold the addresses of these pointers.
         void * args[] = {&ptr_a, &ptr_b};
 
-        cif_func((void *)modify_data_via_pointers, NULL, args);
+        // Unbound
+        infix_forward_t * unbound_t = NULL;
+        ok(infix_forward_create_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS, "Unbound created");
+        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)modify_data_via_pointers, NULL, args);
+        ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Unbound call correct");
+        val_a = 1;
+        val_b = 2.0;  // Reset for next test
 
-        ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Data was correctly modified by the callee via pointers");
-        diag("After call: val_a = %d, val_b = %f", val_a, val_b);
+        // Bound
+        infix_forward_t * bound_t = NULL;
+        ok(infix_forward_create_bound_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)modify_data_via_pointers) ==
+               INFIX_SUCCESS,
+           "Bound created");
+        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(NULL, args);
+        ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Bound call correct");
 
-        infix_forward_destroy(trampoline);
+        infix_forward_destroy(unbound_t);
+        infix_forward_destroy(bound_t);
     }
 
     subtest("Passing NULL pointers") {
-        plan(3);
+        plan(6);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
         infix_type * arg_types[] = {infix_type_create_pointer()};
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 1, 1);
-        ok(status == INFIX_SUCCESS, "Trampoline created successfully");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-
-        // Case 1: Pass a NULL pointer
         void * null_ptr = NULL;
-        bool result_is_null = false;
-        void * args_null[] = {&null_ptr};
-        cif_func((void *)check_if_null, &result_is_null, args_null);
-        ok(result_is_null == true, "NULL pointer was correctly passed as NULL");
-
-        // Case 2: Pass a valid pointer
         int dummy_data = 42;
         void * valid_ptr = &dummy_data;
-        bool result_is_valid = true;
+        void * args_null[] = {&null_ptr};
         void * args_valid[] = {&valid_ptr};
-        cif_func((void *)check_if_null, &result_is_valid, args_valid);
-        ok(result_is_valid == false, "Non-NULL pointer was correctly passed as non-NULL");
+        bool res_null, res_valid;
 
-        infix_forward_destroy(trampoline);
+        // Unbound
+        infix_forward_t * unbound_t = NULL;
+        ok(infix_forward_create_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS, "Unbound created");
+        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)check_if_null, &res_null, args_null);
+        ok(res_null == true, "Unbound NULL correct");
+        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)check_if_null, &res_valid, args_valid);
+        ok(res_valid == false, "Unbound non-NULL correct");
+
+        // Bound
+        infix_forward_t * bound_t = NULL;
+        ok(infix_forward_create_bound_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)check_if_null) ==
+               INFIX_SUCCESS,
+           "Bound created");
+        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&res_null, args_null);
+        ok(res_null == true, "Bound NULL correct");
+        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&res_valid, args_valid);
+        ok(res_valid == false, "Bound non-NULL correct");
+
+        infix_forward_destroy(unbound_t);
+        infix_forward_destroy(bound_t);
     }
 }

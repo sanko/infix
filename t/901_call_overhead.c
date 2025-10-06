@@ -50,10 +50,7 @@ int add_for_benchmark(int a, int b) {
 
 TEST {
     plan(1);
-    // Use a large number of iterations to get a stable average and minimize
-    // the impact of clock resolution.
     const int BENCHMARK_ITERATIONS = 10000000;
-    // Use volatile to prevent the compiler from optimizing away the loop bodies.
     volatile int accumulator = 0;
     clock_t start, end;
 
@@ -71,33 +68,59 @@ TEST {
     double direct_ns_per_call = (direct_time / BENCHMARK_ITERATIONS) * 1e9;
     diag("Direct Call Time: %.4f s (%.2f ns/call)", direct_time, direct_ns_per_call);
 
-    // Phase 2: infix Trampoline Call
+    // Common setup for infix tests
     infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
     infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                 infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
-    infix_forward_t * trampoline = NULL;
-    infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
-    if (status != INFIX_SUCCESS) {
-        bail_out("Failed to create trampoline for benchmark");
-    }
-    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+
+    // Phase 2: Unbound infix Trampoline Call
+    infix_forward_t * unbound_t = NULL;
+    if (infix_forward_create_manual(&unbound_t, ret_type, arg_types, 2, 2) != INFIX_SUCCESS)
+        bail_out("Failed to create unbound trampoline");
+    infix_cif_func unbound_cif = (infix_cif_func)infix_forward_get_code(unbound_t);
 
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
         int a = i, b = i + 1, result;
         void * args[] = {&a, &b};
-        cif_func((void *)add_for_benchmark, &result, args);
+        unbound_cif((void *)add_for_benchmark, &result, args);
         accumulator += result;
     }
     end = clock();
-    double trampoline_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    double trampoline_ns_per_call = (trampoline_time / BENCHMARK_ITERATIONS) * 1e9;
-    double infix_overhead_ns = trampoline_ns_per_call - direct_ns_per_call;
-    diag("infix Time:       %.4f s (%.2f ns/call)", trampoline_time, trampoline_ns_per_call);
-    diag("infix Overhead:  ~%.2f ns/call", infix_overhead_ns);
-    infix_forward_destroy(trampoline);
+    double unbound_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    double unbound_ns = (unbound_time / BENCHMARK_ITERATIONS) * 1e9;
+    diag("infix (Unbound):    %.4f s (%.2f ns/call) -> Overhead: ~%.2f ns",
+         unbound_time,
+         unbound_ns,
+         unbound_ns - direct_ns_per_call);
 
-    // Phase 3: Optional Dyncall Comparison
+    // Phase 3: Bound infix Trampoline Call
+    infix_forward_t * bound_t = NULL;
+    if (infix_forward_create_bound_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_for_benchmark) !=
+        INFIX_SUCCESS)
+        bail_out("Failed to create bound trampoline");
+    infix_bound_cif_func bound_cif = (infix_bound_cif_func)infix_forward_get_code(bound_t);
+
+    start = clock();
+    for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
+        int a = i, b = i + 1, result;
+        void * args[] = {&a, &b};
+        bound_cif(&result, args);
+        accumulator += result;
+    }
+    end = clock();
+    double bound_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    double bound_ns = (bound_time / BENCHMARK_ITERATIONS) * 1e9;
+    diag("infix (Bound):      %.4f s (%.2f ns/call) -> Overhead: ~%.2f ns",
+         bound_time,
+         bound_ns,
+         bound_ns - direct_ns_per_call);
+
+    infix_forward_destroy(unbound_t);
+    infix_forward_destroy(bound_t);
+
+
+    // Phase 4: Optional Dyncall Comparison
 #ifdef DYNCALL_BENCHMARK
     DCCallVM * vm = dcNewCallVM(4096);
     start = clock();
@@ -111,14 +134,14 @@ TEST {
     double dyncall_time = ((double)(end - start)) / CLOCKS_PER_SEC;
     double dyncall_ns_per_call = (dyncall_time / BENCHMARK_ITERATIONS) * 1e9;
     double dyncall_overhead_ns = dyncall_ns_per_call - direct_ns_per_call;
-    diag("dyncall Time:     %.4f s (%.2f ns/call)", dyncall_time, dyncall_ns_per_call);
-    diag("dyncall Overhead:~%.2f ns/call", dyncall_overhead_ns);
+    diag("dyncall:            %.4f s (%.2f ns/call) -> Overhead: ~%.2f ns",
+         dyncall_time,
+         dyncall_ns_per_call,
+         dyncall_overhead_ns);
     dcFree(vm);
 #else
     note("dyncall benchmarking was not enabled.");
 #endif
 
-    // The single 'pass' here is just to satisfy the test harness.
-    // The real result is the diagnostic output printed above.
     pass("Benchmark completed (final accumulator value: %d)", accumulator);
 }

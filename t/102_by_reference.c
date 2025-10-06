@@ -71,9 +71,8 @@ TEST {
     plan(2);
 
     subtest("Large struct (>16 bytes) passed and returned by reference/stack") {
-        plan(5);
+        plan(7);
         infix_arena_t * arena = infix_arena_create(4096);
-        // 1. Create the infix_type for LargeStruct. This is used for both tests.
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
@@ -81,39 +80,46 @@ TEST {
             members[i] = infix_type_create_member(NULL, s32_type, sizeof(int) * i);
         }
         infix_type * large_struct_type = NULL;
-        infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
-        if (!ok(status == INFIX_SUCCESS, "infix_type for LargeStruct created successfully")) {
-            skip(4, "Cannot proceed without LargeStruct type");
+        if (!ok(infix_type_create_struct(arena, &large_struct_type, members, 6) == INFIX_SUCCESS, "Type created")) {
+            skip(6, "Cannot proceed");
             infix_arena_destroy(arena);
             return;
         }
 
-        // Test 1: Passing LargeStruct as an argument
-        infix_forward_t * arg_trampoline = NULL;
-        status = infix_forward_create_manual(
-            &arg_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &large_struct_type, 1, 1);
-        ok(status == INFIX_SUCCESS, "Trampoline for process_large_struct created");
-
-        infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
+        // Test Pass Arg
+        infix_forward_t *unbound_pass, *bound_pass;
+        ok(infix_forward_create_manual(&unbound_pass, s32_type, &large_struct_type, 1, 1) == INFIX_SUCCESS,
+           "Unbound pass created");
+        ok(infix_forward_create_bound_manual(
+               &bound_pass, s32_type, &large_struct_type, 1, 1, (void *)process_large_struct) == INFIX_SUCCESS,
+           "Bound pass created");
         LargeStruct s_in = {10, 20, 30, 40, 50, 60};
-        int result = 0;
-        void * arg_args[] = {&s_in};
-        arg_cif((void *)process_large_struct, &result, arg_args);
-        ok(result == 70, "Large struct passed as argument correctly");
-        infix_forward_destroy(arg_trampoline);
+        void * pass_args[] = {&s_in};
+        int unbound_pass_res = 0, bound_pass_res = 0;
+        ((infix_cif_func)infix_forward_get_code(unbound_pass))(
+            (void *)process_large_struct, &unbound_pass_res, pass_args);
+        ((infix_bound_cif_func)infix_forward_get_code(bound_pass))(&bound_pass_res, pass_args);
+        ok(unbound_pass_res == 70 && bound_pass_res == 70, "Pass arg correct");
 
-        // Test 2: Returning LargeStruct by value
-        infix_forward_t * ret_trampoline = NULL;
-        infix_type * ret_arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        status = infix_forward_create_manual(&ret_trampoline, large_struct_type, &ret_arg_type, 1, 1);
-        ok(status == INFIX_SUCCESS, "Trampoline for return_large_struct created");
-        infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
-        LargeStruct s_out;
+        // Test Return
+        infix_forward_t *unbound_ret, *bound_ret;
+        ok(infix_forward_create_manual(&unbound_ret, large_struct_type, &s32_type, 1, 1) == INFIX_SUCCESS,
+           "Unbound ret created");
+        ok(infix_forward_create_bound_manual(
+               &bound_ret, large_struct_type, &s32_type, 1, 1, (void *)return_large_struct) == INFIX_SUCCESS,
+           "Bound ret created");
         int base_val = 100;
         void * ret_args[] = {&base_val};
-        ret_cif((void *)return_large_struct, &s_out, ret_args);
-        ok(s_out.a == 100 && s_out.f == 105, "Large struct returned via hidden pointer correctly");
-        infix_forward_destroy(ret_trampoline);
+        LargeStruct unbound_ret_res, bound_ret_res;
+        ((infix_cif_func)infix_forward_get_code(unbound_ret))((void *)return_large_struct, &unbound_ret_res, ret_args);
+        ((infix_bound_cif_func)infix_forward_get_code(bound_ret))(&bound_ret_res, ret_args);
+        ok(unbound_ret_res.a == 100 && unbound_ret_res.f == 105 && bound_ret_res.a == 100 && bound_ret_res.f == 105,
+           "Return val correct");
+
+        infix_forward_destroy(unbound_pass);
+        infix_forward_destroy(bound_pass);
+        infix_forward_destroy(unbound_ret);
+        infix_forward_destroy(bound_ret);
         infix_arena_destroy(arena);
     }
 

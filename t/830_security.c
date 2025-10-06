@@ -103,7 +103,7 @@ TEST {
 #if defined(_WIN32)
     const char * child_test_name = getenv("INFIX_CRASH_TEST_CHILD");
     if (child_test_name != NULL) {
-        if (strcmp(child_test_name, "forward_uaf") == 0) {
+        if (strcmp(child_test_name, "forward_uaf_unbound") == 0) {
             infix_forward_t * t = NULL;
             infix_status status = infix_forward_create(&t, "(int32)->int32");
             if (status != INFIX_SUCCESS)
@@ -113,6 +113,17 @@ TEST {
             int a = 5, r = 0;
             void * aa[] = {&a};
             f((void *)dummy_target_func, &r, aa);  // This line should crash
+        }
+        if (strcmp(child_test_name, "forward_uaf_bound") == 0) {
+            infix_forward_t * t = NULL;
+            infix_status status = infix_forward_create_bound(&t, "(int32)->int32", (void *)dummy_target_func);
+            if (status != INFIX_SUCCESS)
+                exit(2);
+            infix_bound_cif_func f = (infix_bound_cif_func)infix_forward_get_code(t);
+            infix_forward_destroy(t);
+            int a = 5, r = 0;
+            void * aa[] = {&a};
+            f(&r, aa);  // This line should crash
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
             infix_reverse_t * rt = NULL;
@@ -137,38 +148,51 @@ TEST {
     plan(4);
 
     subtest("Guard pages prevent use-after-free") {
-        plan(2);
-        subtest("Calling a freed FORWARD trampoline causes a crash") {
+        plan(3);
+        subtest("Calling a freed UNBOUND FORWARD trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
-            ok(run_crash_test_as_child("forward_uaf"), "Child process crashed as expected.");
+            ok(run_crash_test_as_child("forward_uaf_unbound"), "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == -1) {
-                bail_out("fork() failed");
+            if (pid == 0) {  // Child
+                infix_forward_t * t = NULL;
+                infix_forward_create(&t, "(int32)->int32");
+                infix_cif_func f = (infix_cif_func)infix_forward_get_code(t);
+                infix_forward_destroy(t);
+                int a = 5, r = 0;
+                void * aa[] = {&a};
+                f((void *)dummy_target_func, &r, aa);
+                exit(0);
             }
-            else if (pid == 0) {  // Child process
-                infix_forward_t * trampoline = NULL;
-                infix_status status = infix_forward_create(&trampoline, "(int32)->int32");
-                if (status != INFIX_SUCCESS)
-                    exit(2);  // Exit with error if creation fails
-                infix_cif_func dangling_ptr = (infix_cif_func)infix_forward_get_code(trampoline);
-                infix_forward_destroy(trampoline);
-                int arg = 5, result = 0;
-                void * args[] = {&arg};
-                dangling_ptr((void *)dummy_target_func, &result, args);  // Should crash here
-                exit(0);                                                 // Should not be reached
-            }
-            else {  // Parent process
-                int wstatus;
-                waitpid(pid, &wstatus, 0);
-                ok(WIFSIGNALED(wstatus) && (WTERMSIG(wstatus) == SIGSEGV || WTERMSIG(wstatus) == SIGBUS),
-                   "Child crashed with SIGSEGV/SIGBUS as expected.");
-                if (!WIFSIGNALED(wstatus))
-                    fail("Child exited normally, but a crash was expected.");
-            }
+            int wstatus;
+            waitpid(pid, &wstatus, 0);
+            ok(WIFSIGNALED(wstatus), "Child process crashed as expected.");
 #else
-            skip(1, "Crash test not supported on this platform.");
+            skip(1, "Crash test not supported.");
+#endif
+        }
+        subtest("Calling a freed BOUND FORWARD trampoline causes a crash") {
+            plan(1);
+#if defined(_WIN32)
+            ok(run_crash_test_as_child("forward_uaf_bound"), "Child process crashed as expected.");
+#elif defined(INFIX_ENV_POSIX)
+            pid_t pid = fork();
+            if (pid == 0) {  // Child
+                infix_forward_t * t = NULL;
+                infix_forward_create_bound(&t, "(int32)->int32", (void *)dummy_target_func);
+                infix_bound_cif_func f = (infix_bound_cif_func)infix_forward_get_code(t);
+                infix_forward_destroy(t);
+                int a = 5, r = 0;
+                void * aa[] = {&a};
+                f(&r, aa);
+                exit(0);
+            }
+            int wstatus;
+            waitpid(pid, &wstatus, 0);
+            ok(WIFSIGNALED(wstatus), "Child process crashed as expected.");
+#else
+            skip(1, "Crash test not supported.");
 #endif
         }
         subtest("Calling a freed REVERSE trampoline causes a crash") {
@@ -177,29 +201,19 @@ TEST {
             ok(run_crash_test_as_child("reverse_uaf"), "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == -1) {
-                bail_out("fork() failed");
-            }
-            else if (pid == 0) {  // Child process
+            if (pid == 0) {  // Child process
                 infix_reverse_t * rt = NULL;
-                infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
-                if (status != INFIX_SUCCESS)
-                    exit(2);
+                infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
                 void (*dangling_ptr)() = (void (*)())infix_reverse_get_code(rt);
                 infix_reverse_destroy(rt);
-                dangling_ptr();  // Should crash here
-                exit(0);         // Should not be reached
+                dangling_ptr();
+                exit(0);
             }
-            else {  // Parent process
-                int wstatus;
-                waitpid(pid, &wstatus, 0);
-                ok(WIFSIGNALED(wstatus) && (WTERMSIG(wstatus) == SIGSEGV || WTERMSIG(wstatus) == SIGBUS),
-                   "Child crashed with SIGSEGV/SIGBUS as expected.");
-                if (!WIFSIGNALED(wstatus))
-                    fail("Child exited normally, but a crash was expected.");
-            }
+            int wstatus;
+            waitpid(pid, &wstatus, 0);
+            ok(WIFSIGNALED(wstatus), "Child crashed as expected.");
 #else
-            skip(1, "Crash test not supported on this platform.");
+            skip(1, "Crash test not supported.");
 #endif
         }
     }

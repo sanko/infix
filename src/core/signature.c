@@ -1129,18 +1129,31 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
  * 4. Clean up the temporary arena used for parsing.
  */
 c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampoline, const char * signature) {
+    return infix_forward_create_bound(out_trampoline, signature, NULL);
+}
+
+/**
+ * @brief Generates a "bound" forward-call trampoline from a signature string.
+ * @details Creates a trampoline where the target function address is hardcoded into
+ * the JIT-compiled code.
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param signature A null-terminated string describing the function signature.
+ * @param target_function The native C function pointer to bind to the trampoline.
+ * @return `INFIX_SUCCESS` on success.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
+ */
+c23_nodiscard infix_status infix_forward_create_bound(infix_forward_t ** out_trampoline,
+                                                      const char * signature,
+                                                      void * target_function) {
     infix_arena_t * arena = nullptr;
     infix_type * ret_type = nullptr;
     infix_function_argument * args = nullptr;
     size_t num_args, num_fixed;
 
-    // First, parse the signature string into a type graph.
     infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed);
     if (status != INFIX_SUCCESS)
         return status;
 
-    // Bridge: The manual API expects an array of `infix_type*`. We must extract
-    // the type pointers from our parsed arguments to build this temporary array.
     infix_type ** arg_types =
         (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
     if (num_args > 0 && !arg_types) {
@@ -1150,13 +1163,9 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
     for (size_t i = 0; i < num_args; ++i)
         arg_types[i] = args[i].type;
 
-    //  Instead of calling the public manual API, we now need
-    // a way to tell the creation function about our temporary arena so it can
-    // calculate the exact memory needed. Let's assume an internal function
-    // _infix_forward_create_from_parsed_arena exists for this.
-    status = _infix_forward_create_internal(out_trampoline, ret_type, arg_types, num_args, num_fixed, arena);
+    status = _infix_forward_create_internal(
+        out_trampoline, ret_type, arg_types, num_args, num_fixed, arena, target_function);
 
-    // The temporary arena has now been measured and its types copied. It can be safely destroyed.
     infix_arena_destroy(arena);
     return status;
 }

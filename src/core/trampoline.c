@@ -336,6 +336,7 @@ c23_nodiscard void * infix_forward_get_code(infix_forward_t * trampoline) {
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param source_arena An optional pointer to the arena from which the `infix_type` objects
  *                     were created. Used for the memory optimization.
+ * @param target_fn If not NULL, creates a "bound" trampoline with a hardcoded target.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out_trampoline,
@@ -343,7 +344,8 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
                                                           infix_type ** arg_types,
                                                           size_t num_args,
                                                           size_t num_fixed_args,
-                                                          infix_arena_t * source_arena) {
+                                                          infix_arena_t * source_arena,
+                                                          void * target_fn) {
     if (out_trampoline == nullptr || (arg_types == nullptr && num_args > 0))
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -371,7 +373,8 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     code_buffer_init(&buf, temp_arena);
 
     // --- JIT Compilation Pipeline ---
-    status = spec->prepare_forward_call_frame(temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args);
+    status = spec->prepare_forward_call_frame(
+        temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args, target_fn);
     if (status != INFIX_SUCCESS)
         goto cleanup;
     status = spec->generate_forward_prologue(&buf, layout);
@@ -425,6 +428,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     }
     handle->num_args = num_args;
     handle->num_fixed_args = num_fixed_args;
+    handle->target_fn = target_fn;
 
     // Allocate executable memory and copy the generated code into it.
     handle->exec = infix_executable_alloc(buf.size);
@@ -452,14 +456,36 @@ cleanup:
 /*
  * Implementation for infix_forward_create_manual.
  * This public API function is a simple wrapper around the internal implementation,
- * calling it without a source arena to trigger the fallback to a default arena size.
+ * calling it without a source arena or target function to create a standard unbound trampoline.
  */
 c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_trampoline,
                                                        infix_type * return_type,
                                                        infix_type ** arg_types,
                                                        size_t num_args,
                                                        size_t num_fixed_args) {
-    return _infix_forward_create_internal(out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr);
+    return _infix_forward_create_internal(out_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, NULL);
+}
+
+/**
+ * @brief Creates a "bound" forward-call trampoline for a given function signature.
+ * @details Creates a trampoline where the target function pointer is hardcoded into the JIT-compiled code.
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param return_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type*` for each argument.
+ * @param num_args The total number of arguments.
+ * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
+ * @param target_function The native C function pointer to bind to the trampoline.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
+ */
+c23_nodiscard infix_status infix_forward_create_bound_manual(infix_forward_t ** out_trampoline,
+                                                             infix_type * return_type,
+                                                             infix_type ** arg_types,
+                                                             size_t num_args,
+                                                             size_t num_fixed_args,
+                                                             void * target_function) {
+    return _infix_forward_create_internal(
+        out_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, target_function);
 }
 
 /*

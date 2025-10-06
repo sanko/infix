@@ -68,7 +68,8 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
                                                      infix_type * ret_type,
                                                      infix_type ** arg_types,
                                                      size_t num_args,
-                                                     size_t num_fixed_args);
+                                                     size_t num_fixed_args,
+                                                     void * target_fn);
 static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout);
 static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                                                           infix_call_frame_layout * layout,
@@ -230,7 +231,8 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
                                                      infix_type * ret_type,
                                                      infix_type ** arg_types,
                                                      size_t num_args,
-                                                     size_t num_fixed_args) {
+                                                     size_t num_fixed_args,
+                                                     void * target_fn) {
     if (out_layout == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
     infix_call_frame_layout * layout =
@@ -248,6 +250,7 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 
     size_t gpr_count = 0, vpr_count = 0, stack_offset = 0;
     layout->is_variadic = (num_fixed_args < num_args);
+    layout->target_fn = target_fn;
     layout->num_args = num_args;
     layout->num_stack_args = 0;
 
@@ -391,9 +394,17 @@ static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_cal
                              SP_REG,
                              -16);  // stp x19, x20, [sp, #-16]! (Save callee-saved regs for our context)
     emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);  // stp x21, x22, [sp, #-16]!
-    emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0               (x19 = target_func)
-    emit_arm64_mov_reg(buf, true, X20_REG, X1_REG);  // mov x20, x1               (x20 = return_value_ptr)
-    emit_arm64_mov_reg(buf, true, X21_REG, X2_REG);  // mov x21, x2               (x21 = args_array)
+
+    if (layout->target_fn == NULL) {                     // Unbound trampoline (target_fn, ret_ptr, args_ptr)
+        emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0 (x19 = target_fn)
+        emit_arm64_mov_reg(buf, true, X20_REG, X1_REG);  // mov x20, x1 (x20 = ret_ptr)
+        emit_arm64_mov_reg(buf, true, X21_REG, X2_REG);  // mov x21, x2 (x21 = args_ptr)
+    }
+    else {                                               // Bound trampoline (ret_ptr, args_ptr)
+        emit_arm64_mov_reg(buf, true, X20_REG, X0_REG);  // mov x20, x0 (x20 = ret_ptr)
+        emit_arm64_mov_reg(buf, true, X21_REG, X1_REG);  // mov x21, x1 (x21 = args_ptr)
+    }
+
 
     if (layout->total_stack_alloc > 0)
         emit_arm64_sub_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);
@@ -555,6 +566,12 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
  */
 static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
                                                             c23_maybe_unused infix_call_frame_layout * layout) {
+    if (layout->target_fn) {
+        // For a bound trampoline, the target is hardcoded. Load it into X19.
+        emit_arm64_load_u64_immediate(buf, X19_REG, (uint64_t)layout->target_fn);
+    }
+    // For an unbound trampoline, X19 was already loaded from the first argument in the prologue.
+
     // On AArch64, the target function pointer is stored in X19.
     // cbnz x19, #8   ; if x19 is not zero, branch 8 bytes forward (over the brk)
     emit_arm64_cbnz(buf, true, X19_REG, 8);

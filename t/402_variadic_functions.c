@@ -143,24 +143,14 @@ TEST {
 
     subtest("Forward variadic call") {
         plan(3);
-        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_type * arg_types[] = {
-            infix_type_create_pointer(),                          // char* buffer
-            infix_type_create_primitive(INFIX_PRIMITIVE_UINT64),  // size_t size
-            infix_type_create_pointer(),                          // const char* format
-            infix_type_create_pointer(),                          // variadic: const char*
-            infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),  // variadic: int
-            infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)   // variadic: double
-        };
+        const char * signature = "(*char, uint64, *char; *char, int32, double) -> int32";
 
         infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 6, 3);
+        infix_status status = infix_forward_create(&trampoline, signature);
         ok(status == INFIX_SUCCESS, "Variadic forward trampoline created");
 
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-
-        char buffer[1] = {0};  // Dummy buffer for signature match
-        size_t size = 1;       // Dummy size for signature match
+        char buffer[1] = {0};
+        size_t size = 1;
         const char * fmt = "format string";
         const char * str_arg = "hello";
         int int_arg = 123;
@@ -168,7 +158,7 @@ TEST {
         int result = 0;
         void * args[] = {&buffer, &size, &fmt, &str_arg, &int_arg, &dbl_arg};
 
-        cif_func((void *)forward_variadic_checker, &result, args);
+        ((infix_cif_func)infix_forward_get_code(trampoline))((void *)forward_variadic_checker, &result, args);
         ok(result == 1, "Custom variadic checker function returned success");
 
         infix_forward_destroy(trampoline);
@@ -176,15 +166,10 @@ TEST {
 
     subtest("Reverse variadic callback") {
         plan(3);
-        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_type * arg_types[] = {infix_type_create_pointer(),
-                                    infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
-                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
-                                    infix_type_create_pointer()};
+        const char * signature = "(*char; int, double, *char) -> int";
 
         infix_reverse_t * rt = NULL;
-        infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 4, 1, (void *)variadic_reverse_handler, NULL);
+        infix_status status = infix_reverse_create(&rt, signature, (void *)variadic_reverse_handler, NULL);
         ok(status == INFIX_SUCCESS, "Variadic reverse trampoline created");
 
         if (rt) {
@@ -203,24 +188,9 @@ TEST {
 #if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
         plan(2);
         note("Testing variadic call with struct argument on macOS/ARM (must go on stack)");
-        infix_arena_t * arena = infix_arena_create(4096);
-
-        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_type_create_member(
-            "a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), offsetof(MacTestStruct, a));
-        members[1] = infix_type_create_member(
-            "b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), offsetof(MacTestStruct, b));
-        infix_type * struct_type = NULL;
-        infix_type_create_struct(arena, &struct_type, members, 2);
-
-        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
-                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
-                                    struct_type};
-
+        const char * signature = "(int32; double, {int64, int64}) -> int32";
         infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 3, 1);
+        infix_status status = infix_forward_create(&trampoline, signature);
         ok(status == INFIX_SUCCESS, "Trampoline for macOS variadic test created");
 
         infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
@@ -233,7 +203,6 @@ TEST {
         ok(result == 100, "macOS variadic arguments passed correctly (10+20+30+40)");
 
         infix_forward_destroy(trampoline);
-        infix_arena_destroy(arena);
 #else
         plan(1);
         skip(1, "Test is only for macOS on AArch64");
@@ -245,11 +214,9 @@ TEST {
         plan(2);
         note("Testing if a variadic double is passed correctly on Windows x64");
 
-        infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-        infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
-                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)};
+        const char * signature = "(int32; double) -> double";
         infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 1);
+        infix_status status = infix_forward_create(&trampoline, signature);
         ok(status == INFIX_SUCCESS, "Trampoline for Windows variadic test created");
 
         infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);

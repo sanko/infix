@@ -154,9 +154,38 @@ void * test_realloc(void * ptr, size_t new_size) {
 void fault_injection_handler(void) {}
 
 TEST {
-    plan(2);
+    plan(3);
 
     ALLOCATOR_INIT();  // Initialize mutexes if needed (for Windows)
+
+    subtest("Leak test for infix_forward_create_bound failures") {
+        const int MAX_FAILS_TO_TEST = 20;
+        plan(MAX_FAILS_TO_TEST);
+        note("Testing for leaks when infix_forward_create_bound fails at every possible allocation.");
+        const char * signature = "({*char, int}) -> void";
+        bool success_was_reached = false;
+
+        for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
+            setup_fault_injector(i);
+            infix_forward_t * trampoline = NULL;
+            infix_status status = infix_forward_create_bound(&trampoline, signature, (void *)fault_injection_handler);
+            if (fault_triggered) {
+                ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
+            }
+            else {
+                success_was_reached = true;
+                pass("Successfully created bound trampoline with %d allocations.", i);
+                infix_forward_destroy(trampoline);
+                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j) {
+                    skip(1, "Success point found.");
+                }
+                break;
+            }
+        }
+        if (!success_was_reached)
+            fail("Test loop finished without succeeding. Increase MAX_FAILS_TO_TEST.");
+        reset_fault_injector();
+    }
 
     subtest("Leak test for infix_reverse_create failures") {
         const int MAX_FAILS_TO_TEST = 20;  // A reasonable upper bound on heap allocations
