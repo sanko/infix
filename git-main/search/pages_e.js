@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['new_20platform_0',['Porting &lt;tt&gt;infix&lt;/tt&gt; to a New Platform',['../md_porting.html',1,'']]]
+  ['of_20conduct_0',['Contributor Code of Conduct',['../md__2home_2runner_2work_2infix_2infix_2CODE__OF__CONDUCT.html',1,'']]]
 ];

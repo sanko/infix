@@ -77,16 +77,16 @@ $(function() {
   <div class="headertitle"><div class="title">FFI Signature Format Specification v1.0</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md157"></a> </p>
-<h2><a class="anchor" id="autotoc_md158"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md113"></a> </p>
+<h2><a class="anchor" id="autotoc_md114"></a>
 Part 1: Introduction</h2>
-<h3><a class="anchor" id="autotoc_md159"></a>
+<h3><a class="anchor" id="autotoc_md115"></a>
 1.1 The Challenge of Interoperability</h3>
 <p>The core challenge of any FFI is establishing a precise, unambiguous contract between the caller and the callee. Both sides must agree on the exact size, alignment, and representation of every piece of data.</p>
-<h3><a class="anchor" id="autotoc_md160"></a>
+<h3><a class="anchor" id="autotoc_md116"></a>
 1.2 The Limitations of C Declarations</h3>
 <p><a class="el" href="classC.html">C</a>'s declaration syntax, while powerful, is notoriously difficult for both humans and machines to parse, often hiding the true memory layout of data. <a class="el" href="classA.html">A</a> declaration like <code>void (*(*f[])())()</code> is a testament to this complexity.</p>
-<h3><a class="anchor" id="autotoc_md161"></a>
+<h3><a class="anchor" id="autotoc_md117"></a>
 1.3 Our Solution: A Human-First Signature System</h3>
 <p>This document specifies a string-based representation of <a class="el" href="classC.html">C</a> types and function signatures, built on three core principles:</p>
 <ol type="1">
@@ -94,14 +94,14 @@ Part 1: Introduction</h2>
 <li><b>Unambiguous and Consistent:</b> The grammar is designed to be parsed linearly without ambiguity.</li>
 <li><b>Developer-Centric Type System:</b> It provides two tiers of types: abstract C-style keywords for portability, and explicit fixed-width keywords for precise layout control.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md162"></a>
+<h3><a class="anchor" id="autotoc_md118"></a>
 1.4 A Stateless, Composable Core</h3>
 <p>The core FFI library is <b>stateless</b> and does not maintain a global type registry. This empowers the user to manage named types in their own application space (e.g., in a hash map). The user is responsible for resolving these named types into a final, fully-qualified signature string before passing it to the stateless FFI core.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md163"></a>
+<h1><a class="anchor" id="autotoc_md119"></a>
 Part 2: The Type System Reference</h1>
 <p>The signature system is composed of primitive types, type constructors, and composite data structures.</p>
-<h2><a class="anchor" id="autotoc_md164"></a>
+<h2><a class="anchor" id="autotoc_md120"></a>
 2.1 Tier 1: Abstract C Types</h2>
 <p>These keywords represent standard <a class="el" href="classC.html">C</a> types whose size can vary by platform.</p>
 <table class="markdownTable">
@@ -136,7 +136,7 @@ Part 2: The Type System Reference</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><code>long double</code>   </td><td class="markdownTableBodyLeft"><b>Varies</b>   </td><td class="markdownTableBodyLeft"><code>long double</code>   </td><td class="markdownTableBodyLeft">80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md165"></a>
+<h2><a class="anchor" id="autotoc_md121"></a>
 2.2 Tier 2: Explicit Fixed-Width Types</h2>
 <p>These keywords are used when the exact size of a type is known and required.</p>
 <table class="markdownTable">
@@ -161,7 +161,7 @@ Part 2: The Type System Reference</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>float128</code>   </td><td class="markdownTableBodyLeft"><code>long double</code> (PPC/AArch64)   </td><td class="markdownTableBodyLeft">128 bits   </td><td class="markdownTableBodyLeft"><a class="el" href="classA.html">A</a> 128-bit quadruple-precision float.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md166"></a>
+<h2><a class="anchor" id="autotoc_md122"></a>
 2.3 Advanced Numeric and Vector Types</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -171,7 +171,7 @@ Part 2: The Type System Reference</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><b>SIMD Vector</b>   </td><td class="markdownTableBodyLeft"><code>v[&lt;N&gt;:&lt;type&gt;]</code>   </td><td class="markdownTableBodyLeft"><code>__m128d</code>, etc.   </td><td class="markdownTableBodyLeft"><a class="el" href="classA.html">A</a> SIMD vector with <code>N</code> elements of a primitive <code>&lt;type&gt;</code>.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md167"></a>
+<h2><a class="anchor" id="autotoc_md123"></a>
 2.4 Type Constructors and Composite Structures</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -200,9 +200,9 @@ Part 2: The Type System Reference</h1>
 <td class="markdownTableBodyLeft"><b>Function Pointer</b>   </td><td class="markdownTableBodyLeft"><code>*((&lt;arg_types&gt;) -&gt; &lt;return_type&gt;)</code>   </td><td class="markdownTableBodyLeft"><a class="el" href="classA.html">A</a> pointer to a function.   </td></tr>
 </table>
 <hr  />
-<h2><a class="anchor" id="autotoc_md168"></a>
+<h2><a class="anchor" id="autotoc_md124"></a>
 Part 3: Examples, Best Practices, and Usage</h2>
-<h3><a class="anchor" id="autotoc_md169"></a>
+<h3><a class="anchor" id="autotoc_md125"></a>
 3.1 Syntax Showcase</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -242,16 +242,16 @@ Part 3: Examples, Best Practices, and Usage</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>v[4:float]</code>   </td><td class="markdownTableBodyLeft"><a class="el" href="classA.html">A</a> 128-bit SIMD vector containing four 32-bit floats.   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md170"></a>
+<h3><a class="anchor" id="autotoc_md126"></a>
 3.2 Architectural Pattern: Define and Use</h3>
 <p>This example demonstrates the "define once, use by reference" pattern that the stateless FFI architecture enables. The user's application or binding is responsible for resolving named types into a complete, self-contained signature string before passing it to the <code>infix</code> core.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md171"></a>
+<h1><a class="anchor" id="autotoc_md127"></a>
 Part 4: Technical Specification and Design Rationale</h1>
-<h3><a class="anchor" id="autotoc_md172"></a>
+<h3><a class="anchor" id="autotoc_md128"></a>
 4.1 Whitespace and Comments</h3>
 <p>Insignificant whitespace (spaces, tabs, newlines) is permitted between any two tokens and should be ignored. Comments begin with a hash symbol (<code>#</code>) and continue to the end of the line.</p>
-<h3><a class="anchor" id="autotoc_md173"></a>
+<h3><a class="anchor" id="autotoc_md129"></a>
 4.2 EBNF Grammar</h3>
 <p>This Extended Backus-Naur Form grammar formally defines the signature format.</p>
 <div class="fragment"><div class="line">signature           ::= function_type | value_type</div>
@@ -282,14 +282,14 @@ Part 4: Technical Specification and Design Rationale</h1>
 <div class="line"> </div>
 <div class="line">Identifier          ::= [a-zA-Z_] [a-zA-Z0-9_]*</div>
 <div class="line">Integer             ::= [0-9]+</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md174"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md130"></a>
 4.3 Design Rationale: Why This Syntax?</h3>
 <ol type="1">
 <li><b>Readability over Brevity:</b> The two-tier type system (<code>int</code> vs. <code>int32</code>) directly maps to developer intent ("portability" vs. "specific layout").</li>
 <li><b>Unambiguous Grammar:</b> Using a pure prefix for pointers (<code>*</code>) and clear delimiters for all other composites (<code>[]</code>, <code>{}</code>, <code>&lt;&gt;</code>) eliminates ambiguity and allows for simple, linear parsing.</li>
 <li><b>Consistency:</b> The <code>c[...]</code> and <code>v[...]</code> syntax for complex and vector types creates a consistent "family" of specialized numeric constructors.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md175"></a>
+<h3><a class="anchor" id="autotoc_md131"></a>
 4.4 Comparison with Other Systems</h3>
 <ul>
 <li><b>vs. Itanium C++ ABI:</b> Itanium is a "write-only" format designed for linkers. Our system is designed for humans to read and write.</li>

@@ -16,5 +16,5 @@ var searchData=
   ['07_5flarge_5fstruct_5fby_5freference_2ec_13',['07_large_struct_by_reference.c',['../07__large__struct__by__reference_8c.html',1,'']]],
   ['08_5freturn_5fstruct_2ec_14',['08_return_struct.c',['../08__return__struct_8c.html',1,'']]],
   ['09_5fpacked_5fstruct_2ec_15',['09_packed_struct.c',['../09__packed__struct_8c.html',1,'']]],
-  ['0_3a_20research_20and_20preparation_16',['Step 0: Research and Preparation',['../md_porting.html#autotoc_md151',1,'']]]
+  ['0_3a_20research_20and_20preparation_16',['Step 0: Research and Preparation',['../md_porting.html#autotoc_md107',1,'']]]
 ];

@@ -77,9 +77,9 @@ $(function() {
   <div class="headertitle"><div class="title">Porting &lt;tt&gt;infix&lt;/tt&gt; to a New Platform</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md150"></a> This guide outlines the steps required to add support for a new CPU architecture or Application Binary Interface (ABI) to the infix FFI library. We will use <b>RISC-V 64-bit (RV64GC)</b> with the standard <b>LP64D ABI</b> as a practical example.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md106"></a> This guide outlines the steps required to add support for a new CPU architecture or Application Binary Interface (ABI) to the infix FFI library. We will use <b>RISC-V 64-bit (RV64GC)</b> with the standard <b>LP64D ABI</b> as a practical example.</p>
 <p>The library is designed to be highly portable, with a clean separation between platform-agnostic logic and ABI-specific implementations.</p>
-<h1><a class="anchor" id="autotoc_md151"></a>
+<h1><a class="anchor" id="autotoc_md107"></a>
 Step 0: Research and Preparation</h1>
 <p>This is the most critical step. Before writing any code, you must have a solid understanding of the target ABI specification. For RISC-V, this means studying the official calling convention document.</p>
 <p>You need to answer these key questions:</p>
@@ -112,7 +112,7 @@ Step 0: Research and Preparation</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md152"></a>
+<h1><a class="anchor" id="autotoc_md108"></a>
 Step 1: Platform Detection (<code>src/common/infix_config.h</code>)</h1>
 <p>The first step is to teach the library how to recognize the new platform. Open <code><a class="el" href="infix__config_8h.html" title="Internal-only header for platform, architecture, and ABI detection.">src/common/infix_config.h</a></code> and locate the architecture and ABI detection sections.</p>
 <ol type="1">
@@ -123,7 +123,7 @@ Step 1: Platform Detection (<code>src/common/infix_config.h</code>)</h1>
 <p class="startli"><code>c // In <a class="el" href="infix__config_8h.html" title="Internal-only header for platform, architecture, and ABI detection.">src/common/infix_config.h</a>, inside the #ifndef INFIX_ABI_FORCED block... #if defined(INFIX_ARCH_AARCH64) // ... #elif defined(INFIX_ARCH_RISCV64) #define INFIX_ABI_LP64D #elif defined(INFIX_ARCH_X64) // ... #endif </code></p>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md153"></a>
+<h1><a class="anchor" id="autotoc_md109"></a>
 Step 2: Implement the ABI Specification</h1>
 <p>This is the core of the porting effort. You must provide a concrete implementation of the two ABI "specification" structs: <code><a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a></code> and <code><a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a></code>.</p>
 <ol type="1">
@@ -145,7 +145,7 @@ Step 2: Implement the ABI Specification</h1>
 <p class="startli">// Implementation of all 10 functions... static infix_status prepare_forward_call_frame_riscv64(/*...*/) { // Core classification logic: // 1. Allocate the layout struct. // 2. Check for return-by-reference (consumes a0). // 3. Loop through arguments, assigning them to a0-a7, fa0-fa7, or the stack. // 4. Calculate total stack space and return the layout. } // ... ```</p>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md154"></a>
+<h1><a class="anchor" id="autotoc_md110"></a>
 Step 3: Implement the Instruction Emitters</h1>
 <p>In <code>src/arch/riscv64/abi_riscv64_emitters.c</code>, you will write functions to generate the 32-bit RISC-V machine code instructions by assembling the bitfields specified in the ISA manual.</p>
 <p><b>Example Emitter for <code>LD</code> (Load Doubleword):</b> </p><div class="fragment"><div class="line"><span class="comment">// In src/arch/riscv64/abi_riscv64_emitters.h</span></div>
@@ -163,7 +163,7 @@ Step 3: Implement the Instruction Emitters</h1>
 <div class="line">    emit_int32(buf, instruction);</div>
 <div class="line">}</div>
 <div class="ttc" id="astructcode__buffer_html"><div class="ttname"><a href="structcode__buffer.html">code_buffer</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:123</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md155"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md111"></a>
 Step 4: Integrate the New ABI</h1>
 <ol type="1">
 <li><p class="startli"><b>Update <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code></b>: This is the final step.</p><ul>
@@ -177,7 +177,7 @@ Step 4: Integrate the New ABI</h1>
 <p class="startli">// ... at the very bottom (unity build section) ... #elif defined(INFIX_ABI_LP64D) #include "../arch/riscv64/abi_riscv64.c" #include "../arch/riscv64/abi_riscv64_emitters.c" #endif ```</p>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md156"></a>
+<h1><a class="anchor" id="autotoc_md112"></a>
 Step 5: Testing</h1>
 <p>Compile and run the entire test suite on your new target platform (either real hardware or an emulator like QEMU). Pay special attention to tests for aggregate passing (<code>struct</code>s and <code>union</code>s) and variadic functions. </p>
 </div></div><!-- contents -->
