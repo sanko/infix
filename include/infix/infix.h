@@ -1027,26 +1027,48 @@ typedef enum {
     INFIX_CATEGORY_GENERAL,     ///< A general or miscellaneous error.
     INFIX_CATEGORY_ALLOCATION,  ///< An error related to memory allocation.
     INFIX_CATEGORY_PARSER,      ///< An error that occurred while parsing a signature string.
-    INFIX_CATEGORY_ABI,         ///< An error related to ABI classification or JIT generation.
+    INFIX_CATEGORY_ABI          ///< An error related to ABI classification or JIT generation.
 } infix_error_category_t;
 
 /**
+ * @ingroup public_api
  * @enum infix_error_code_t
  * @brief Specific error codes providing detailed information about a failure.
+ * @details This enumeration provides fine-grained details about why an operation failed.
+ *          It is designed to be used in conjunction with `infix_get_last_error()` to
+ *          enable robust, programmatic error handling and clear diagnostic messages.
  */
 typedef enum {
-    INFIX_CODE_SUCCESS = 0,               ///< Operation was successful.
-    INFIX_CODE_UNKNOWN,                   ///< An unknown error occurred.
-    INFIX_CODE_OUT_OF_MEMORY,             ///< A memory allocation failed.
-    INFIX_CODE_UNEXPECTED_TOKEN,          ///< The parser encountered an unexpected character.
-    INFIX_CODE_UNEXPECTED_END,            ///< The parser encountered an unexpected null or string termination.
-    INFIX_CODE_UNTERMINATED_STRING,       ///< A string literal was not properly terminated.
-    INFIX_CODE_UNTERMINATED_AGGREGATE,    ///< A struct, union, or array was not closed.
-    INFIX_CODE_INVALID_KEYWORD,           ///< An unrecognized keyword was found.
-    INFIX_CODE_MISSING_RETURN_TYPE,       ///< A function signature was missing its return type.
-    INFIX_CODE_INTEGER_OVERFLOW,          ///< An integer overflow was detected during a calculation.
-    INFIX_CODE_RECURSION_DEPTH_EXCEEDED,  ///< The parser exceeded the maximum nesting depth for types.
-    INFIX_CODE_EMPTY_MEMBER_NAME          ///< A named type (e.g., struct<>) had an empty name.
+    // General & Success (0-99)
+    INFIX_CODE_SUCCESS = 0,  ///< The operation completed successfully.
+    INFIX_CODE_UNKNOWN,      ///< An unknown or unspecified error occurred. This is a fallback code.
+
+    // Allocation Errors (100-199)
+    INFIX_CODE_OUT_OF_MEMORY = 100,        ///< Failure to allocate memory. Likely due to lack of system resources.
+    INFIX_CODE_EXECUTABLE_MEMORY_FAILURE,  ///< Failed to allocate memory for JIT compiler. Check `system_error_code`.
+    INFIX_CODE_PROTECTION_FAILURE,         ///< Failed to change memory protection flags. Check `system_error_code`.
+
+    // Signature Parsing Errors (200-299)
+    INFIX_CODE_UNEXPECTED_TOKEN = 200,  ///< Parser ran into an invalid character at a given `position`.
+    INFIX_CODE_UNTERMINATED_AGGREGATE,  ///< A `{...}`, `<...>`, or `[...]` was not properly closed.
+    INFIX_CODE_INVALID_KEYWORD,         ///< Parser found an unknown keyword (e.g., "integer" instead of "int").
+    INFIX_CODE_MISSING_RETURN_TYPE,     ///< A function signature was missing the `->` or a return type.
+    INFIX_CODE_INTEGER_OVERFLOW,  ///< An integer overflow was detected, typically when calculating the size of a very
+                                  ///< large array or struct.
+    INFIX_CODE_RECURSION_DEPTH_EXCEEDED,  ///< The parser exceeded the max nesting depth (e.g., `{{{{...}}}}`).
+    INFIX_CODE_EMPTY_MEMBER_NAME,         ///< A named type was declared with empty angle brackets, such as `struct<>`.
+
+    // ABI & Layout Errors (300-399)
+    INFIX_CODE_UNSUPPORTED_ABI = 300,  ///< infix doesn't (yet?) have an implementation for the requested ABI.
+    INFIX_CODE_TYPE_TOO_LARGE,         ///< A type was too large to be handled by the ABI.
+    INFIX_CODE_UNRESOLVED_NAMED_TYPE,  ///< The type graph that contains an unresolved named reference.
+    INFIX_CODE_INVALID_MEMBER_TYPE,    ///< An aggregate contained an illegal member type (e.g., `{int, void}`)
+
+    // Loader Errors (400-499)
+    INFIX_CODE_LIBRARY_NOT_FOUND = 400,  ///< The requested lib could not be found or loaded. Check the `message` field.
+    INFIX_CODE_SYMBOL_NOT_FOUND,         ///< The requested symbol could not be found within the lib.
+    INFIX_CODE_LIBRARY_LOAD_FAILED       ///< Loading the lib failed for a reason other. Check `message` and
+                                         ///< `system_error_code`
 } infix_error_code_t;
 
 /**
@@ -1057,7 +1079,9 @@ typedef enum {
 typedef struct {
     infix_error_category_t category;  ///< The general category of the error.
     infix_error_code_t code;          ///< The specific error code.
-    size_t position;  ///< For parser errors, the 0-based index in the input string where the error occurred.
+    size_t position;         ///< For parser errors, the 0-based index in the input string where the error occurred.
+    long system_error_code;  ///< For OS-level errors (errno, GetLastError())
+    char message[256];       ///< For descriptive strings (dlerror(), etc.)
 } infix_error_details_t;
 
 /**

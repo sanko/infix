@@ -21,6 +21,7 @@
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <stdarg.h>
+#include <string.h>
 
 // Use the same thread-local storage mechanism as the test harness for consistency.
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
@@ -34,7 +35,7 @@
 #endif
 
 // The thread-local variable that stores the last error.
-static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE, INFIX_CODE_SUCCESS, 0};
+static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE, INFIX_CODE_SUCCESS, 0, 0, {0}};
 
 /**
  * @internal
@@ -44,6 +45,28 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
     g_infix_last_error.category = category;
     g_infix_last_error.code = code;
     g_infix_last_error.position = position;
+    g_infix_last_error.system_error_code = 0;
+    g_infix_last_error.message[0] = '\0';
+}
+
+/**
+ * @internal
+ * @brief Sets a detailed system error with a message.
+ */
+void _infix_set_system_error(infix_error_category_t category,
+                             infix_error_code_t code,
+                             long system_code,
+                             const char * msg) {
+    g_infix_last_error.category = category;
+    g_infix_last_error.code = code;
+    g_infix_last_error.position = 0;
+    g_infix_last_error.system_error_code = system_code;
+    if (msg) {
+        strncpy(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
+        g_infix_last_error.message[sizeof(g_infix_last_error.message) - 1] = '\0';
+    }
+    else
+        g_infix_last_error.message[0] = '\0';
 }
 
 /**
@@ -54,6 +77,8 @@ void _infix_clear_error(void) {
     g_infix_last_error.category = INFIX_CATEGORY_NONE;
     g_infix_last_error.code = INFIX_CODE_SUCCESS;
     g_infix_last_error.position = 0;
+    g_infix_last_error.system_error_code = 0;
+    g_infix_last_error.message[0] = '\0';
 }
 
 /**

@@ -360,8 +360,10 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Validate the type graphs to ensure they don't contain unresolved placeholders.
-    if (!_is_type_graph_resolved(return_type))
+    if (!_is_type_graph_resolved(return_type)) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     for (size_t i = 0; i < num_args; ++i) {
         if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i]))
             return INFIX_ERROR_INVALID_ARGUMENT;

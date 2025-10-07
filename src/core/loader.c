@@ -87,6 +87,11 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
 
     // Both LoadLibraryA and dlopen return NULL on failure.
     if (lib->handle == nullptr) {
+#if defined(INFIX_OS_WINDOWS)
+        _infix_set_system_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_LIBRARY_LOAD_FAILED, GetLastError(), nullptr);
+#else
+        _infix_set_system_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_LIBRARY_LOAD_FAILED, 0, dlerror());
+#endif
         // If the OS call failed, we must free the wrapper struct we allocated
         // to prevent a memory leak.
         infix_free(lib);

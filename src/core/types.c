@@ -252,6 +252,7 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
     // Security: Check for integer overflow before calculating the total array size.
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
@@ -435,6 +436,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
                                                     infix_type ** out_type,
                                                     infix_struct_member * members,
                                                     size_t num_members) {
+    _infix_clear_error();
     infix_type * type = nullptr;
     infix_struct_member * arena_members = nullptr;
     infix_status status = _create_aggregate_setup(arena, &type, &arena_members, members, num_members);
