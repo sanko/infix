@@ -214,26 +214,40 @@ static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const 
         break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
-        if (src_type->meta.aggregate_info.num_members > 0) {
-            size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
-            dest_type->meta.aggregate_info.members =
-                infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
-            if (dest_type->meta.aggregate_info.members == nullptr)
-                return nullptr;
-            memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+        {
+            // Deep copy the aggregate's own name, if it has one.
+            const char * src_agg_name = src_type->meta.aggregate_info.name;
+            if (src_agg_name) {
+                size_t name_len = strlen(src_agg_name) + 1;
+                char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
+                if (!dest_agg_name)
+                    return nullptr;  // Allocation failed
+                memcpy(dest_agg_name, src_agg_name, name_len);
+                // We need to cast away const to write to the destination struct field.
+                *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
+            }
 
-            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
-                dest_type->meta.aggregate_info.members[i].type =
-                    _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
-                // Deep copy the member name string to avoid dangling pointers.
-                const char * src_name = src_type->meta.aggregate_info.members[i].name;
-                if (src_name) {
-                    size_t name_len = strlen(src_name) + 1;
-                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
-                    if (!dest_name)
-                        return nullptr;
-                    memcpy(dest_name, src_name, name_len);
-                    *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+            if (src_type->meta.aggregate_info.num_members > 0) {
+                size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
+                dest_type->meta.aggregate_info.members =
+                    infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
+                if (dest_type->meta.aggregate_info.members == nullptr)
+                    return nullptr;
+                memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+
+                for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
+                    dest_type->meta.aggregate_info.members[i].type =
+                        _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
+                    // Deep copy the member name string to avoid dangling pointers.
+                    const char * src_name = src_type->meta.aggregate_info.members[i].name;
+                    if (src_name) {
+                        size_t name_len = strlen(src_name) + 1;
+                        char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                        if (!dest_name)
+                            return nullptr;
+                        memcpy(dest_name, src_name, name_len);
+                        *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+                    }
                 }
             }
         }

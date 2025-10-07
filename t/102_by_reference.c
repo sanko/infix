@@ -58,10 +58,6 @@ LargeStruct return_large_struct(int base_val) {
     };
 }
 
-// A struct whose size (12 bytes) is not a power of two.
-typedef struct {
-    int a, b, c;
-} NonPowerOfTwoStruct;
 int process_npot_struct(NonPowerOfTwoStruct s) {
     note("process_npot_struct received s = { .a=%d, .b=%d, .c=%d }", s.a, s.b, s.c);
     return s.a + s.b + s.c;

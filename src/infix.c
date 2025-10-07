@@ -40,7 +40,3 @@
 // 8. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all
 //    other components and includes the final ABI- and architecture-specific C files itself.
 #include "core/trampoline.c"
-// 9. Type Serialization: Stringification of types.
-#include "core/serialization.c"
-// 10. Coverage Initializer: Fixes linking issues with clang static libraries on ARM while running coverage tests.
-#include "core/coverage_init.c"

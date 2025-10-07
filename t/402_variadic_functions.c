@@ -85,6 +85,36 @@ int forward_variadic_checker(char * buffer, size_t size, const char * format, ..
     return 1;
 }
 
+/**
+ * @brief A custom checker for variadic aggregate arguments.
+ * @details This function's behavior depends on the ABI.
+ * - On System V, the struct is passed by value on the stack, and `va_arg`
+ *   retrieves the struct directly.
+ * - On Windows x64, a pointer to the struct is passed on the stack, so we
+ *   must use `va_arg(args, Point*)` and dereference it.
+ */
+int forward_variadic_aggregate_checker(int fixed_arg, ...) {
+    va_list args;
+    va_start(args, fixed_arg);
+
+#if defined(INFIX_ABI_WINDOWS_X64)
+    // Windows ABI: va_arg for a struct returns a pointer to it.
+    NonPowerOfTwoStruct * s_ptr = va_arg(args, NonPowerOfTwoStruct *);
+    note("Windows variadic checker received struct pointer: %p", (void *)s_ptr);
+    if (s_ptr)
+        ok(s_ptr->a == 1 && s_ptr->b == 2 && s_ptr->c == 3, "Variadic NonPowerOfTwoStruct correct on Windows x64");
+    else
+        fail("Received a null pointer for variadic struct on Windows x64");
+#else
+    // System V / AAPCS64 ABI: va_arg returns the struct itself.
+    Point p = va_arg(args, Point);
+    note("System V/AAPCS64 variadic checker received Point: {%.1f, %.1f}", p.x, p.y);
+    ok(fabs(p.x - 10.5) < 1e-9 && fabs(p.y - 20.5) < 1e-9, "Variadic Point struct correct on SysV/AAPCS64");
+#endif
+    va_end(args);
+    return 1;
+}
+
 /** @brief A handler for a reverse trampoline with a variadic signature. */
 int variadic_reverse_handler(infix_context_t * context, const char * topic, ...) {
     (void)context;
@@ -140,7 +170,7 @@ double win_variadic_float_checker(int fixed_arg, ...) {
 #endif
 
 TEST {
-    plan(4);
+    plan(5);
 
     subtest("Forward variadic call") {
         plan(3);
@@ -164,6 +194,34 @@ TEST {
         // The subtest inside the checker performs its own ok() calls, so we don't check the return value here.
         // We just need to ensure the test plan in the outer scope is correct.
         pass("Custom variadic checker function was called.");
+
+        infix_forward_destroy(trampoline);
+    }
+
+    subtest("Forward variadic call (aggregates)") {
+#if defined(INFIX_ABI_WINDOWS_X64)
+        plan(3);
+        note("Testing variadic NonPowerOfTwoStruct on Windows x64 (pass-by-reference)");
+        const char * signature = "(int;{int,int,int}) -> int";
+        NonPowerOfTwoStruct s = {1, 2, 3};
+#else  // SysV and AAPCS64
+        plan(3);
+        note("Testing variadic Point struct on System V / AAPCS64 (pass-on-stack)");
+        const char * signature = "(int;{double,double}) -> int";
+        Point s = {10.5, 20.5};
+#endif
+        infix_forward_t * trampoline = nullptr;
+        infix_status status = infix_forward_create_unbound(&trampoline, signature);
+        ok(status == INFIX_SUCCESS, "Variadic aggregate trampoline created");
+
+        int fixed_arg = 1;
+        void * args[] = {&fixed_arg, &s};
+        int result = 0;
+
+        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+        cif((void *)forward_variadic_aggregate_checker, &result, args);
+
+        pass("Aggregate checker function was called.");
 
         infix_forward_destroy(trampoline);
     }

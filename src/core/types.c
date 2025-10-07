@@ -207,6 +207,20 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
         memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
+        // Deep copy the member names to make the type fully self-contained.
+        for (size_t i = 0; i < num_members; ++i) {
+            const char * src_name = members[i].name;
+            if (src_name) {
+                size_t name_len = strlen(src_name) + 1;
+                char * dest_name = infix_arena_alloc(arena, name_len, 1);
+                if (!dest_name) {
+                    *out_type = nullptr;
+                    return INFIX_ERROR_ALLOCATION_FAILED;
+                }
+                memcpy(dest_name, src_name, name_len);
+                arena_members[i].name = dest_name;
+            }
+        }
     }
 
     *out_type = type;

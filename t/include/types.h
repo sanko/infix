@@ -121,3 +121,13 @@ typedef struct {
     uint64_t b;
 } PackedStruct;
 #pragma pack(pop)
+
+/**
+ * @struct NonPowerOfTwoStruct
+ * @brief A struct whose size is not a power of two (12 bytes on most 64-bit systems).
+ * @details This is specifically for testing the Windows x64 ABI rule that requires
+ *          such structs to be passed by reference.
+ */
+typedef struct {
+    int a, b, c;
+} NonPowerOfTwoStruct;

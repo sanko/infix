@@ -289,18 +289,24 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 
         bool pass_fp_in_vpr =
             is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+
+        infix_type * hfa_base_type = nullptr;
+
+        // Classification for non-variadic arguments (or all arguments on non-Apple platforms).
+        bool is_hfa_candidate = is_hfa(type, &hfa_base_type);
+
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI: If the function is variadic, ALL floating-point
-        // arguments are passed in general-purpose registers.
-        if (layout->is_variadic)
+        // arguments and HFAs are passed in general-purpose registers (or by reference in GPR).
+        if (layout->is_variadic) {
             pass_fp_in_vpr = false;
+            is_hfa_candidate = false;
+        }
 #endif
-        infix_type * hfa_base_type = nullptr;
         // The order of these checks is critical to prevent incorrect classification.
         // Check for HFA first, as it's the most specific aggregate rule.
 
-        // Classification for non-variadic arguments (or all arguments on non-Apple platforms).
-        if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
+        if (is_hfa_candidate) {
             size_t num_elements = type->size / hfa_base_type->size;
             if (vpr_count + num_elements <= NUM_VPR_ARGS) {
                 layout->arg_locations[i].type = ARG_LOCATION_VPR_HFA;
@@ -326,12 +332,19 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
         }
         else {                     // Integers, pointers, small aggregates, and variadic floats on Windows.
             if (type->size > 8) {  // Types > 8 and <= 16 bytes are passed in a pair of GPRs.
-#if !defined(INFIX_OS_MACOS)
-                // AAPCS64 requires 16-byte arguments to be aligned to an even-numbered GPR.
-                // This rule does not apply to Apple's ABI interpretation.
-                if (gpr_count % 2 != 0)
-                    gpr_count++;
+                bool needs_alignment = true;
+#if defined(INFIX_OS_MACOS)
+                // On macOS, the alignment rule applies to aggregates but not __int128_t.
+                if (type->category == INFIX_TYPE_PRIMITIVE)
+                    needs_alignment = false;
+#elif defined(INFIX_OS_WINDOWS)
+                // On Windows, variadic 16-byte arguments do not follow the even-GPR alignment rule.
+                if (is_variadic_arg)
+                    needs_alignment = false;
 #endif
+                if (needs_alignment && (gpr_count % 2 != 0))
+                    gpr_count++;
+
                 if (gpr_count + 1 < NUM_GPR_ARGS) {
                     layout->arg_locations[i].type = ARG_LOCATION_GPR_PAIR;
                     layout->arg_locations[i].reg_index = (uint8_t)gpr_count;
@@ -632,7 +645,7 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
     }
 
     if (layout->total_stack_alloc > 0)
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, layout->total_stack_alloc);  // add sp, sp, #...
+        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);  // add sp, sp, #...
 
     emit_arm64_ldp_post_index(buf, true, X21_REG, X22_REG, SP_REG, 16);        // ldp x21, x22, [sp], #16
     emit_arm64_ldp_post_index(buf, true, X19_REG, X20_REG, SP_REG, 16);        // ldp x19, x20, [sp], #16
@@ -783,9 +796,16 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         int32_t arg_save_loc = (int32_t)(layout->saved_args_offset + current_saved_data_offset);
 
         infix_type * hfa_base_type = nullptr;
+        bool is_hfa_candidate = !is_variadic_arg && is_hfa(type, &hfa_base_type);
+
+#if defined(INFIX_OS_WINDOWS)
+        // Windows on ARM ABI disables HFA for variadic arguments.
+        if (context->is_variadic)
+            is_hfa_candidate = false;
+#endif
 
         if (!is_from_stack) {
-            if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
+            if (is_hfa_candidate) {
                 size_t num_elements = type->size / hfa_base_type->size;
                 if (vpr_idx + num_elements <= NUM_VPR_ARGS) {
                     const int scale = is_double(hfa_base_type) ? 8 : 4;
@@ -824,14 +844,18 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             }
             else {                     // Argument is in a GPR
                 if (type->size > 8) {  // 16-byte value in two GPRs
-                    if (gpr_idx + 1 < NUM_GPR_ARGS) {
-
-#if !defined(INFIX_OS_MACOS)
-                        // AAPCS64 requires 16-byte arguments to be aligned to an even-numbered GPR.
-                        // Note that this rule does not seem to apply to Apple's interpretation.
-                        if (gpr_idx % 2 != 0)
-                            gpr_idx++;
+                    bool needs_alignment = true;
+#if defined(INFIX_OS_MACOS)
+                    if (type->category == INFIX_TYPE_PRIMITIVE)
+                        needs_alignment = false;
+#elif defined(INFIX_OS_WINDOWS)
+                    if (is_variadic_arg)
+                        needs_alignment = false;
 #endif
+                    if (needs_alignment && (gpr_idx % 2 != 0))
+                        gpr_idx++;
+
+                    if (gpr_idx + 1 < NUM_GPR_ARGS) {
                         if (arg_save_loc >= 0 && (((unsigned)arg_save_loc + 8) / 8) <= 0xFFF &&
                             (arg_save_loc % 8 == 0)) {
                             emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
