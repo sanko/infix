@@ -119,7 +119,7 @@ TEST {
             infix_status status = infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func);
             if (status != INFIX_SUCCESS)
                 exit(2);
-            infix_bound_cif_func f = infix_forward_get_bound_code(t);
+            infix_bound_cif_func f = infix_forward_get_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
             void * aa[] = {&a};
@@ -195,7 +195,7 @@ TEST {
                 infix_forward_t * t = nullptr;
                 if (infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func) != INFIX_SUCCESS)
                     exit(2);
-                infix_bound_cif_func f = infix_forward_get_bound_code(t);
+                infix_bound_cif_func f = infix_forward_get_code(t);
                 infix_forward_destroy(t);
                 int a = 5, r = 0;
                 void * aa[] = {&a};

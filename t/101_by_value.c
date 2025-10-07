@@ -221,7 +221,7 @@ TEST {
         double unbound_pass_res = 0.0, bound_pass_res = 0.0;
         infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_pass);
         unbound_cif((void *)process_point_by_value, &unbound_pass_res, pass_args);
-        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_pass);
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_pass);
         bound_cif(&bound_pass_res, pass_args);
         ok(fabs(unbound_pass_res - 31.0) < 0.001 && fabs(bound_pass_res - 31.0) < 0.001, "Pass arg correct");
 
@@ -235,7 +235,7 @@ TEST {
         Point unbound_ret_res = {0, 0}, bound_ret_res = {0, 0};
         infix_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
         unbound_ret_cif((void *)return_point_by_value, &unbound_ret_res, nullptr);
-        infix_bound_cif_func bound_ret_cif = infix_forward_get_bound_code(bound_ret);
+        infix_bound_cif_func bound_ret_cif = infix_forward_get_code(bound_ret);
         bound_ret_cif(&bound_ret_res, nullptr);
         ok(unbound_ret_res.x == 100.0 && unbound_ret_res.y == 200.0 && bound_ret_res.x == 100.0 &&
                bound_ret_res.y == 200.0,

@@ -12,7 +12,7 @@ int add_ints(int a, int b) {
 }
 
 int main() {
-    // 1. Describe the signature: int(int, int) using the v1.0 signature language.
+    // 1. Describe the signature: int(int, int) using the signature language.
     const char * signature = "(int32, int32) -> int32";
 
     // 2. Generate the trampoline. This is the one-time setup cost.

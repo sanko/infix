@@ -87,7 +87,7 @@ TEST {
                INFIX_SUCCESS,
            "Bound created");
         const char * bound_result = nullptr;
-        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result && strcmp(bound_result, "FFI World!") == 0, "Bound call correct");
 
@@ -120,7 +120,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)modify_data_via_pointers) ==
                INFIX_SUCCESS,
            "Bound created");
-        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(nullptr, args);
         ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Bound call correct");
 
@@ -153,7 +153,7 @@ TEST {
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)check_if_null) == INFIX_SUCCESS,
            "Bound created");
-        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&res_null, args_null);
         ok(res_null == true, "Bound nullptr correct");
         bound_cif(&res_valid, args_valid);

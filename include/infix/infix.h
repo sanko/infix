@@ -92,7 +92,7 @@
  *         return 1;
  *     }
  *
- *     infix_bound_cif_func cif = infix_forward_get_bound_code(trampoline);
+ *     infix_bound_cif_func cif = infix_forward_get_code(trampoline);
  *
  *     const char* my_string = "Hello, Infix! The number is %d\n";
  *     int my_int = 42;
@@ -122,10 +122,6 @@
  * SPDX-License-Identifier: CC-BY-4.0
  */
 
-//=================================================================================================
-// Doxygen Modules
-//=================================================================================================
-
 /**
  * @defgroup public_api Public API
  * @brief The primary public-facing functions for using the infix library.
@@ -149,11 +145,11 @@
  * @defgroup memory_management Memory Management
  * @ingroup public_api
  * @brief The arena allocator and configurable memory functions.
+ *
+ * @defgroup error_api Error Reporting
+ * @ingroup public_api
+ * @brief Public structures and enumerations for detailed error reporting.
  */
-
-//=================================================================================================
-// Version Information
-//=================================================================================================
 
 /**
  * @defgroup version_macros Version Information
@@ -186,10 +182,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-
-//=================================================================================================
-// Core Types & Handles
-//=================================================================================================
 
 /** @addtogroup type_system */
 /** @{ */
@@ -334,10 +326,6 @@ struct infix_function_argument_t {
 
 #include "common/compat_c23.h"
 
-//=================================================================================================
-// Configurable Memory Allocators
-//=================================================================================================
-
 /** @addtogroup memory_management */
 /** @{ */
 
@@ -423,10 +411,6 @@ struct infix_function_argument_t {
 #endif
 /** @} */
 
-//=================================================================================================
-// Public Types & Enums
-//=================================================================================================
-
 /** @addtogroup public_api */
 /** @{ */
 
@@ -442,7 +426,7 @@ typedef void (*infix_cif_func)(void *, void *, void **);
 
 /**
  * @brief The signature for a "bound" forward-call trampoline.
- * @details This is the function pointer type returned by `infix_forward_get_bound_code`.
+ * @details This is the function pointer type returned by `infix_forward_get_code`.
  * The target function is hardcoded, so it is not needed as an argument at the call site.
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
@@ -464,10 +448,6 @@ typedef enum {
 
 /** @} */
 
-//=================================================================================================
-// High-Level Signature API
-//=================================================================================================
-
 /** @addtogroup high_level_api */
 /** @{ */
 
@@ -482,7 +462,7 @@ typedef enum {
  * @param signature A null-terminated string describing the function signature.
  * @param target_function A pointer to the native C function to be bound to the trampoline.
  * @return `INFIX_SUCCESS` on success.
- * @note The function pointer returned by `infix_forward_get_bound_code` should be used.
+ * @note The function pointer returned by `infix_forward_get_code` should be used.
  */
 c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *);
 
@@ -501,7 +481,7 @@ c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, cons
 
 /**
  * @brief Generates a reverse-call trampoline (callback) from a signature string.
- * @details This function parses a v1.0 signature string to create a native, C-callable function
+ * @details This function parses a signature string to create a native, C-callable function
  * pointer that invokes the provided user handler.
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
@@ -591,7 +571,7 @@ infix_status infix_write_global(infix_library_t *, const char *, const char *, v
  * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
  * @param target_function A pointer to the native C function to be bound to the trampoline.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
- * @note The function pointer returned by `infix_forward_get_bound_code` should be used.
+ * @note The function pointer returned by `infix_forward_get_code` should be used.
  */
 c23_nodiscard infix_status
 infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, void *);
@@ -641,9 +621,6 @@ void infix_reverse_destroy(infix_reverse_t *);
 
 /** @} */
 
-//=================================================================================================
-// Type System Creation API
-//=================================================================================================
 /** @addtogroup type_system */
 /** @{ */
 
@@ -770,10 +747,6 @@ infix_struct_member infix_type_create_member(const char *, infix_type *, size_t)
 
 /** @} */
 
-//=================================================================================================
-// Memory Management API
-//=================================================================================================
-
 /** @addtogroup memory_management */
 /** @{ */
 
@@ -811,12 +784,84 @@ c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t)
 
 /** @} */
 
-//=================================================================================================
-// Introspection API
-//=================================================================================================
-
 /** @addtogroup introspection_api */
 /** @{ */
+
+/** @name Type Introspection */
+/** @{ */
+
+/**
+ * @enum infix_print_dialect_t
+ * @brief Specifies the output format for type-to-string serialization functions.
+ */
+typedef enum {
+    INFIX_DIALECT_SIGNATURE,         ///< The standard Infix signature language format.
+    INFIX_DIALECT_ITANIUM_MANGLING,  ///< Itanium C++ ABI name mangling (used by GCC/Clang). (Not yet implemented)
+    INFIX_DIALECT_MSVC_MANGLING      ///< Microsoft C++ ABI name mangling. (Not yet implemented)
+} infix_print_dialect_t;
+
+/** @name Type Serialization */
+/** @{ */
+
+/**
+ * @brief Serializes an infix_type object graph into a string representation.
+ *
+ * @details This function recursively walks an `infix_type` graph and writes its
+ *          string representation into the provided buffer. This is useful for
+ *          debugging, logging, or generating code.
+ *
+ * @param[out] buffer The character buffer to write the string into.
+ * @param[in]  buffer_size The total size of the `buffer`.
+ * @param[in]  type The `infix_type` to serialize.
+ * @param[in]  dialect The output format to use (e.g., `INFIX_DIALECT_SIGNATURE`).
+ * @return `INFIX_SUCCESS` on success. Returns `INFIX_ERROR_INVALID_ARGUMENT` if the
+ *         buffer is too small to hold the entire string.
+ *
+ * @code
+ * infix_type* type = NULL;
+ * infix_arena_t* arena = NULL;
+ * infix_type_from_signature(&type, &arena, "{int, *void}");
+ *
+ * char buffer[128];
+ * if (infix_type_print(buffer, sizeof(buffer), type, INFIX_DIALECT_SIGNATURE) == INFIX_SUCCESS) {
+ *     printf("Serialized type: %s\n", buffer); // Output: {int,*void}
+ * }
+ *
+ * infix_arena_destroy(arena);
+ * @endcode
+ */
+c23_nodiscard infix_status infix_type_print(char * buffer,
+                                            size_t buffer_size,
+                                            const infix_type * type,
+                                            infix_print_dialect_t dialect);
+
+/**
+ * @brief Serializes a full function signature into a string representation.
+ *
+ * @details This is a convenience wrapper around `infix_type_print` for serializing
+ *          function types, with future support for including a function name for
+ *          C++ name mangling.
+ *
+ * @param[out] buffer The character buffer to write the string into.
+ * @param[in]  buffer_size The total size of the `buffer`.
+ * @param[in]  function_name The name of the function (optional, for mangling). Can be `nullptr`.
+ * @param[in]  ret_type The return type of the function.
+ * @param[in]  args An array of `infix_function_argument`.
+ * @param[in]  num_args The total number of arguments.
+ * @param[in]  num_fixed_args The number of non-variadic arguments.
+ * @param[in]  dialect The output format to use.
+ * @return `INFIX_SUCCESS` on success.
+ */
+c23_nodiscard infix_status infix_function_print(char * buffer,
+                                                size_t buffer_size,
+                                                const char * function_name,
+                                                const infix_type * ret_type,
+                                                const infix_function_argument * args,
+                                                size_t num_args,
+                                                size_t num_fixed_args,
+                                                infix_print_dialect_t dialect);
+
+/** @} */
 
 /** @name Trampoline Introspection */
 /** @{ */
@@ -835,7 +880,7 @@ c23_nodiscard infix_cif_func infix_forward_get_unbound_code(infix_forward_t *);
  * @return A callable function pointer of type `infix_bound_cif_func`. Returns `nullptr`
  *         if the handle is invalid or if it points to an unbound trampoline.
  */
-c23_nodiscard infix_bound_cif_func infix_forward_get_bound_code(infix_forward_t *);
+c23_nodiscard infix_bound_cif_func infix_forward_get_code(infix_forward_t *);
 
 /**
  * @brief Retrieves the executable code pointer from a reverse trampoline.
@@ -968,5 +1013,75 @@ c23_nodiscard const char * infix_type_get_arg_name(const infix_type *, size_t);
  */
 c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type *, size_t);
 /** @} */
+
+/** @} */
+
+/** @addtogroup error_api */
+/** @{ */
+/**
+ * @enum infix_error_category_t
+ * @brief Broad categories for errors that can occur in the library.
+ */
+typedef enum {
+    INFIX_CATEGORY_NONE,        ///< No error.
+    INFIX_CATEGORY_GENERAL,     ///< A general or miscellaneous error.
+    INFIX_CATEGORY_ALLOCATION,  ///< An error related to memory allocation.
+    INFIX_CATEGORY_PARSER,      ///< An error that occurred while parsing a signature string.
+    INFIX_CATEGORY_ABI,         ///< An error related to ABI classification or JIT generation.
+} infix_error_category_t;
+
+/**
+ * @enum infix_error_code_t
+ * @brief Specific error codes providing detailed information about a failure.
+ */
+typedef enum {
+    INFIX_CODE_SUCCESS = 0,               ///< Operation was successful.
+    INFIX_CODE_UNKNOWN,                   ///< An unknown error occurred.
+    INFIX_CODE_OUT_OF_MEMORY,             ///< A memory allocation failed.
+    INFIX_CODE_UNEXPECTED_TOKEN,          ///< The parser encountered an unexpected character.
+    INFIX_CODE_UNEXPECTED_END,            ///< The parser encountered an unexpected null or string termination.
+    INFIX_CODE_UNTERMINATED_STRING,       ///< A string literal was not properly terminated.
+    INFIX_CODE_UNTERMINATED_AGGREGATE,    ///< A struct, union, or array was not closed.
+    INFIX_CODE_INVALID_KEYWORD,           ///< An unrecognized keyword was found.
+    INFIX_CODE_MISSING_RETURN_TYPE,       ///< A function signature was missing its return type.
+    INFIX_CODE_INTEGER_OVERFLOW,          ///< An integer overflow was detected during a calculation.
+    INFIX_CODE_RECURSION_DEPTH_EXCEEDED,  ///< The parser exceeded the maximum nesting depth for types.
+    INFIX_CODE_EMPTY_MEMBER_NAME          ///< A named type (e.g., struct<>) had an empty name.
+} infix_error_code_t;
+
+/**
+ * @struct infix_error_details_t
+ * @brief A structure holding detailed information about the last error that occurred
+ *        on the current thread.
+ */
+typedef struct {
+    infix_error_category_t category;  ///< The general category of the error.
+    infix_error_code_t code;          ///< The specific error code.
+    size_t position;  ///< For parser errors, the 0-based index in the input string where the error occurred.
+} infix_error_details_t;
+
+/**
+ * @brief Retrieves detailed information about the last error that occurred on the current thread.
+ *
+ * @details This function is thread-safe. Each thread maintains its own error state.
+ *          A successful API call will reset the error state for the current thread.
+ *
+ * @return An `infix_error_details_t` struct containing the details of the last error.
+ *         If no error has occurred since the last successful operation, the `category`
+ *         will be `INFIX_CATEGORY_NONE` and the `code` will be `INFIX_CODE_SUCCESS`.
+ *
+ * @code
+ * infix_arena_t* arena = NULL;
+ * infix_type* type = NULL;
+ * infix_status status = infix_type_from_signature(&type, &arena, "{int, ^float}"); // Invalid token '^'
+ *
+ * if (status != INFIX_SUCCESS) {
+ *     infix_error_details_t err = infix_get_last_error();
+ *     fprintf(stderr, "Parser error: %d at position %zu\n", err.code, err.position);
+ *     // Prints: Parser error: 3 at position 7
+ * }
+ * @endcode
+ */
+infix_error_details_t infix_get_last_error(void);
 
 /** @} */

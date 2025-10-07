@@ -13,7 +13,7 @@
  */
 /**
  * @file 004_signatures.c
- * @brief Hardened test suite for the high-level v1.0 signature API.
+ * @brief Hardened test suite for the high-level signature API.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -59,7 +59,7 @@ void dummy_handler() {}
 TEST {
     plan(5);
 
-    subtest("Valid Single Types (v1.0 Syntax)") {
+    subtest("Valid Single Types") {
         plan(15);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
         test_type_ok("int32", INFIX_TYPE_PRIMITIVE, "int32");
@@ -94,7 +94,7 @@ TEST {
         test_type_ok("{a:int, b:union<U>}", INFIX_TYPE_STRUCT, "Struct with a named union reference member");
     }
 
-    subtest("Valid Full Function Signatures (v1.0 Syntax)") {
+    subtest("Valid Full Function Signatures") {
         plan(8);  // Increased plan for new variadic tests
         subtest("Simple function: (int32, double) -> int64") {
             plan(4);

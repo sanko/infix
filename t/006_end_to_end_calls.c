@@ -82,7 +82,7 @@ TEST {
                    "Bound trampoline created");
                 if (bound_t) {
                     Point bound_result = {0.0, 0.0};
-                    infix_bound_cif_func cif = infix_forward_get_bound_code(bound_t);
+                    infix_bound_cif_func cif = infix_forward_get_code(bound_t);
                     cif(&bound_result, args);
                     ok(fabs(bound_result.x - 15.5) < 1e-9 && fabs(bound_result.y - 17.5) < 1e-9, "Bound call correct");
                 }

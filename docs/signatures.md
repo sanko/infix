@@ -1,4 +1,4 @@
-# FFI Signature Format Specification v1.0
+# FFI Signature Format Specification
 
 ### Part 1: Introduction
 

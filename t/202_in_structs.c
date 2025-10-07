@@ -89,7 +89,7 @@ TEST {
            INFIX_SUCCESS,
        "Bound created");
     int bound_result = 0;
-    infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+    infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
     bound_cif(&bound_result, args);
     ok(bound_result == 550, "Bound call correct");
 

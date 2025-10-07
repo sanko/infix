@@ -98,7 +98,7 @@ TEST {
         int unbound_pass_res = 0, bound_pass_res = 0;
         infix_cif_func unbound_pass_cif = infix_forward_get_unbound_code(unbound_pass);
         unbound_pass_cif((void *)process_large_struct, &unbound_pass_res, pass_args);
-        infix_bound_cif_func bound_pass_cif = infix_forward_get_bound_code(bound_pass);
+        infix_bound_cif_func bound_pass_cif = infix_forward_get_code(bound_pass);
         bound_pass_cif(&bound_pass_res, pass_args);
         ok(unbound_pass_res == 70 && bound_pass_res == 70, "Pass arg correct");
 
@@ -114,7 +114,7 @@ TEST {
         LargeStruct unbound_ret_res, bound_ret_res;
         infix_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
         unbound_ret_cif((void *)return_large_struct, &unbound_ret_res, ret_args);
-        infix_bound_cif_func bound_ret_cif = infix_forward_get_bound_code(bound_ret);
+        infix_bound_cif_func bound_ret_cif = infix_forward_get_code(bound_ret);
         bound_ret_cif(&bound_ret_res, ret_args);
         ok(unbound_ret_res.a == 100 && unbound_ret_res.f == 105 && bound_ret_res.a == 100 && bound_ret_res.f == 105,
            "Return val correct");

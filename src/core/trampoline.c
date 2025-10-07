@@ -322,10 +322,10 @@ c23_nodiscard infix_cif_func infix_forward_get_unbound_code(infix_forward_t * tr
 }
 
 /*
- * Implementation for infix_forward_get_bound_code.
+ * Implementation for infix_forward_get_code.
  * This is a type-safe accessor for the public API.
  */
-c23_nodiscard infix_bound_cif_func infix_forward_get_bound_code(infix_forward_t * trampoline) {
+c23_nodiscard infix_bound_cif_func infix_forward_get_code(infix_forward_t * trampoline) {
     if (trampoline == nullptr || trampoline->target_fn == nullptr)
         return nullptr;
     return (infix_bound_cif_func)trampoline->exec.rx_ptr;

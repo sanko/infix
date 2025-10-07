@@ -19,26 +19,26 @@
  * @endinternal
  */
 
-//=================================================================================================
-// Source File Inclusions
-//=================================================================================================
 /*
  * The order of inclusion is important to respect dependencies. The files are ordered
  * from the most foundational components to the highest-level ones.
  */
-
-// 1. Arena Allocator: The fundamental memory management component.
+// 1. Error Messages: Provides information about internal errors.
+#include "core/error.c"
+// 2. Arena Allocator: The fundamental memory management component.
 #include "core/arena.c"
-// 2. OS Executor: Handles OS-level memory management for executable code.
+// 3. OS Executor: Handles OS-level memory management for executable code.
 #include "core/executor.c"
-// 3. Signature Parser: Implements the high-level string-based API; depends on types and arena.
+// 4. Signature Parser: Implements the high-level string-based API; depends on types and arena.
 #include "core/signature.c"
-// 4. Loader: Implements the low-level file loading and parsing logic; depends on types and arena. Platform independent.
+// 5. Loader: Implements the low-level file loading and parsing logic; depends on types and arena. Platform independent.
 #include "core/loader.c"
-// 5. Type System: Defines and manages `infix_type` objects; depends on the arena.
+// 6. Type System: Defines and manages `infix_type` objects; depends on the arena.
 #include "core/types.c"
-// 6. Debugging Utilities: Low-level helpers for logging and inspection.
+// 7. Debugging Utilities: Low-level helpers for logging and inspection.
 #include "core/utility.c"
-// 7. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all
+// 8. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all
 //    other components and includes the final ABI- and architecture-specific C files itself.
 #include "core/trampoline.c"
+// 9. Type Serialization: Stringification of types.
+#include "core/serialization.c"
