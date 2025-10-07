@@ -42,3 +42,5 @@
 #include "core/trampoline.c"
 // 9. Type Serialization: Stringification of types.
 #include "core/serialization.c"
+// 10. Coverage Initializer: Fixes linking issues with clang static libraries on ARM while running coverage tests.
+#include "core/coverage_init.c"
