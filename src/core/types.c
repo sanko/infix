@@ -394,6 +394,7 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_UNION;
+    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous union
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -447,6 +448,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_STRUCT;
+    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous struct
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -536,6 +538,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
     type->size = total_size;
     type->alignment = alignment;
     type->category = INFIX_TYPE_STRUCT;
+    type->meta.aggregate_info.name = nullptr;  // Packed structs are anonymous by default via this API
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -550,7 +553,8 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
  */
 c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * arena,
                                                              infix_type ** out_type,
-                                                             const char * name) {
+                                                             const char * name,
+                                                             infix_aggregate_category_t agg_cat) {
     if (out_type == nullptr || name == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -569,6 +573,7 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
     type->size = 0;
     type->alignment = 1;
     type->meta.named_reference.name = name;
+    type->meta.named_reference.aggregate_category = agg_cat;
 
     *out_type = type;
     return INFIX_SUCCESS;

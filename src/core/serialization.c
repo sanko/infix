@@ -59,8 +59,11 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
  * @brief The recursive worker for printing a type graph in Infix Signature format.
  */
 static void _infix_type_print_signature_recursive(printer_state * state, const infix_type * type) {
-    if (state->status != INFIX_SUCCESS || !type)
+    if (state->status != INFIX_SUCCESS || !type) {
+        if (state->status == INFIX_SUCCESS)
+            state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
+    }
 
     switch (type->category) {
     case INFIX_TYPE_VOID:
@@ -69,7 +72,7 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
     case INFIX_TYPE_POINTER:
         _print(state, "*");
         // For a generic void*, the pointee can be itself. Avoid infinite recursion.
-        if (type->meta.pointer_info.pointee_type == type ||
+        if (type->meta.pointer_info.pointee_type == type || type->meta.pointer_info.pointee_type == nullptr ||
             type->meta.pointer_info.pointee_type->category == INFIX_TYPE_VOID)
             _print(state, "void");
         else
@@ -81,6 +84,8 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "]");
         break;
     case INFIX_TYPE_STRUCT:
+        if (type->meta.aggregate_info.name)
+            _print(state, "struct<%s>", type->meta.aggregate_info.name);
         _print(state, "{");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
@@ -90,6 +95,8 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "}");
         break;
     case INFIX_TYPE_UNION:
+        if (type->meta.aggregate_info.name)
+            _print(state, "union<%s>", type->meta.aggregate_info.name);
         _print(state, "<");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
@@ -107,14 +114,11 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             _infix_type_print_signature_recursive(state, type->meta.func_ptr_info.args[i].type);
         }
 
-        // Check if there is a variadic part to the signature.
-        if (type->meta.func_ptr_info.num_args >= type->meta.func_ptr_info.num_fixed_args) {
-            // Always print the separator if the signature was intended to be variadic,
-            // which is true if num_args != num_fixed_args OR if there are no fixed args but some variadic ones.
-            bool is_variadic = type->meta.func_ptr_info.num_args != type->meta.func_ptr_info.num_fixed_args;
-            if (is_variadic)
-                _print(state, ";");
-
+        // The parser does not distinguish between "(int)->void" and "(int;)->void".
+        // The presence of variadic args is determined by num_args > num_fixed_args.
+        bool is_variadic = type->meta.func_ptr_info.num_args > type->meta.func_ptr_info.num_fixed_args;
+        if (is_variadic) {
+            _print(state, ";");
             // Print variadic arguments, separated by commas.
             for (size_t i = type->meta.func_ptr_info.num_fixed_args; i < type->meta.func_ptr_info.num_args; ++i) {
                 // Add a comma only if it's not the very first variadic argument.
@@ -141,7 +145,10 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "]");
         break;
     case INFIX_TYPE_NAMED_REFERENCE:
-        _print(state, "struct<%s>", type->meta.named_reference.name);
+        if (type->meta.named_reference.aggregate_category == INFIX_AGGREGATE_UNION)
+            _print(state, "union<%s>", type->meta.named_reference.name);
+        else
+            _print(state, "struct<%s>", type->meta.named_reference.name);
         break;
     case INFIX_TYPE_PRIMITIVE:
         switch (type->meta.primitive_id) {
@@ -206,6 +213,7 @@ infix_status infix_type_print(char * buffer,
     }
 
     printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    *buffer = '\0';  // Ensure buffer is empty initially
 
     switch (dialect) {
     case INFIX_DIALECT_SIGNATURE:
@@ -213,6 +221,7 @@ infix_status infix_type_print(char * buffer,
         break;
     case INFIX_DIALECT_ITANIUM_MANGLING:
     case INFIX_DIALECT_MSVC_MANGLING:
+        // Not yet implemented
         _print(&state, "mangling_not_implemented");
         break;
     default:
@@ -222,12 +231,18 @@ infix_status infix_type_print(char * buffer,
 
     if (state.status == INFIX_SUCCESS) {
         if (state.remaining > 0)
-            *state.p = '\0';
+            *state.p = '\0';  // Null-terminate the string
         else {
+            // Buffer was too small, but vsnprintf might not have returned an error.
+            // Ensure the last character is null to prevent overflow.
+            buffer[buffer_size - 1] = '\0';
             _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            return INFIX_ERROR_INVALID_ARGUMENT;  // Indicate buffer was too small
         }
     }
+    else if (buffer_size > 0)
+        buffer[buffer_size - 1] = '\0';
+
     return state.status;
 }
 
@@ -240,17 +255,16 @@ infix_status infix_function_print(char * buffer,
                                   size_t num_fixed_args,
                                   infix_print_dialect_t dialect) {
     _infix_clear_error();
-    if (!buffer || buffer_size == 0 || !ret_type) {
+    if (!buffer || buffer_size == 0 || !ret_type || (num_args > 0 && !args)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
     printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    *buffer = '\0';
 
     (void)function_name;  // Will be used for mangling dialects.
 
-    // This block is essentially a duplication of the recursive helper's logic,
-    // but operating on the raw components of a signature.
     switch (dialect) {
     case INFIX_DIALECT_SIGNATURE:
         _print(&state, "(");
@@ -259,6 +273,7 @@ infix_status infix_function_print(char * buffer,
                 _print(&state, ",");
             _infix_type_print_signature_recursive(&state, args[i].type);
         }
+
         if (num_args > num_fixed_args) {
             _print(&state, ";");
             for (size_t i = num_fixed_args; i < num_args; ++i) {
@@ -279,9 +294,14 @@ infix_status infix_function_print(char * buffer,
         if (state.remaining > 0)
             *state.p = '\0';
         else {
+            if (buffer_size > 0)
+                buffer[buffer_size - 1] = '\0';
             _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
     }
+    else if (buffer_size > 0)
+        buffer[buffer_size - 1] = '\0';
+
     return state.status;
 }

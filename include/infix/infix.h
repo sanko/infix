@@ -243,6 +243,9 @@ typedef enum {
     INFIX_PRIMITIVE_LONG_DOUBLE  ///< `long double`
 } infix_primitive_type_id;
 
+/** @brief Distinguishes between struct and union for named references. */
+typedef enum { INFIX_AGGREGATE_STRUCT, INFIX_AGGREGATE_UNION } infix_aggregate_category_t;
+
 /**
  * @struct infix_type_t
  * @brief The central structure for describing any data type in the FFI system.
@@ -266,6 +269,7 @@ struct infix_type_t {
         } pointer_info;
         /** @brief For `INFIX_TYPE_STRUCT` and `INFIX_TYPE_UNION`. */
         struct {
+            const char * name;              ///< Optional name of the aggregate.
             infix_struct_member * members;  ///< Array of members for the aggregate.
             size_t num_members;             ///< Number of members in the aggregate.
         } aggregate_info;
@@ -297,6 +301,7 @@ struct infix_type_t {
         /** @brief For `INFIX_TYPE_NAMED_REFERENCE`. */
         struct {
             const char * name;
+            infix_aggregate_category_t aggregate_category;
         } named_reference;
     } meta;
 };
@@ -715,7 +720,10 @@ c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  * @note A type graph containing a named reference is "unresolved".
  */
-c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t *, infix_type **, const char *);
+c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t *,
+                                                             infix_type **,
+                                                             const char *,
+                                                             infix_aggregate_category_t);
 
 /**
  * @brief Creates a new `infix_type` for a `_Complex` number from an arena.

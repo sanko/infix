@@ -632,7 +632,21 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
         state->depth--;
         return nullptr;
     }
-    (void)name;  // Name is stored for introspection but not used by the core ABI.
+
+    // If a name was parsed, copy it into the arena and store it in the new type.
+    if (name) {
+        size_t name_len = strlen(name) + 1;
+        char * arena_name = infix_arena_alloc(state->arena, name_len, 1);
+        if (arena_name) {
+            memcpy(arena_name, name, name_len);
+            agg_type->meta.aggregate_info.name = arena_name;
+        }
+        else {  // If allocation fails, we can't store the name but the type is still valid.
+                // TODO: This is a soft failure, but we should log it for debugging...
+            ;
+        }
+    }
+
 
     state->depth--;
     return agg_type;
@@ -672,7 +686,9 @@ static infix_type * parse_type(parser_state * state) {
         }  // Propagate failure.
         // Create the final pointer type.
         if (infix_type_create_pointer_to(state->arena, &result_type, pointee_type) != INFIX_SUCCESS) {
-            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+            if (infix_get_last_error().code == INFIX_CODE_SUCCESS)
+                _infix_set_error(
+                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
             result_type = nullptr;
         }
     }
@@ -735,7 +751,10 @@ static infix_type * parse_type(parser_state * state) {
         }
         state->p++;
         if (infix_type_create_array(state->arena, &result_type, element_type, num_elements) != INFIX_SUCCESS) {
-            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+            if (infix_get_last_error().code == INFIX_CODE_SUCCESS)
+                _infix_set_error(
+                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+
             result_type = nullptr;
         }
     }
@@ -774,9 +793,12 @@ static infix_type * parse_type(parser_state * state) {
             result_type = parse_aggregate(state, '{', '}', name);
         else {
             // Otherwise, it's a forward declaration (a named reference).
-            if (infix_type_create_named_reference(state->arena, &result_type, name) != INFIX_SUCCESS) {
-                _infix_set_error(
-                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+            if (infix_type_create_named_reference(state->arena, &result_type, name, INFIX_AGGREGATE_STRUCT) !=
+                INFIX_SUCCESS) {
+                if (infix_get_last_error().code == INFIX_CODE_SUCCESS)
+                    _infix_set_error(
+                        INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+
                 result_type = nullptr;
             }
         }
@@ -807,9 +829,12 @@ static infix_type * parse_type(parser_state * state) {
             result_type = parse_aggregate(state, '<', '>', name);
         else {
             // Otherwise, it's a forward declaration (a named reference).
-            if (infix_type_create_named_reference(state->arena, &result_type, name) != INFIX_SUCCESS) {
-                _infix_set_error(
-                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+            if (infix_type_create_named_reference(state->arena, &result_type, name, INFIX_AGGREGATE_UNION) !=
+                INFIX_SUCCESS) {
+                if (infix_get_last_error().code == INFIX_CODE_SUCCESS)
+                    _infix_set_error(
+                        INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+
                 result_type = nullptr;
             }
         }
@@ -855,7 +880,10 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         if (infix_type_create_enum(state->arena, &result_type, underlying_type) != INFIX_SUCCESS) {
-            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+            if (infix_get_last_error().code == INFIX_CODE_SUCCESS)
+                _infix_set_error(
+                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+
             result_type = nullptr;
         }
         (void)name;
@@ -883,7 +911,10 @@ static infix_type * parse_type(parser_state * state) {
         }
         state->p++;
         if (infix_type_create_complex(state->arena, &result_type, base_type) != INFIX_SUCCESS) {
-            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+            if (infix_get_last_error().code == INFIX_CODE_SUCCESS)
+                _infix_set_error(
+                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+
             result_type = nullptr;
         }
     }
