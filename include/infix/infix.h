@@ -86,13 +86,13 @@
  *     // Signature for: int printf(const char*, ...);
  *     const char* signature = "(*char; int32) -> int32";
  *
- *     infix_status status = infix_forward_create(&trampoline, signature);
+ *     infix_status status = infix_forward_create(&trampoline, signature, printf);
  *     if (status != INFIX_SUCCESS) {
  *         // Handle error
  *         return 1;
  *     }
  *
- *     infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
+ *     infix_bound_cif_func cif = infix_forward_get_bound_code(trampoline);
  *
  *     const char* my_string = "Hello, Infix! The number is %d\n";
  *     int my_int = 42;
@@ -100,8 +100,7 @@
  *
  *     void* args[] = { &my_string, &my_int };
  *
- *     // The target function is passed at the call site.
- *     cif(&printf, &printf_ret, args);
+ *     cif(&printf_ret, args);
  *
  *     printf("printf returned: %d\n", printf_ret); // Should match the number of chars printed
  *
@@ -433,9 +432,8 @@ struct infix_function_argument_t {
 
 /**
  * @brief The signature for a generic "unbound" forward-call trampoline.
- * @details This is the function pointer type returned by `infix_forward_get_code` for
- * a standard (unbound) trampoline. It provides a standardized way to invoke any
- * C function for which a trampoline was generated.
+ * @details This is the function pointer type returned by `infix_forward_get_unbound_code`.
+ * It provides a standardized way to invoke any C function for which a trampoline was generated.
  * @param target_function A pointer to the native C function to be called.
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
@@ -444,9 +442,8 @@ typedef void (*infix_cif_func)(void *, void *, void **);
 
 /**
  * @brief The signature for a "bound" forward-call trampoline.
- * @details This is the function pointer type returned by `infix_forward_get_code` for
- * a bound trampoline. The target function is hardcoded, so it is not needed as
- * an argument at the call site.
+ * @details This is the function pointer type returned by `infix_forward_get_bound_code`.
+ * The target function is hardcoded, so it is not needed as an argument at the call site.
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
  */
@@ -475,34 +472,32 @@ typedef enum {
 /** @{ */
 
 /**
- * @brief Generates an unbound forward-call trampoline from a signature string.
- * @details This is the primary function of the high-level API. It parses a signature
- * string, constructs the necessary `infix_type` objects internally, generates the
- * trampoline, and cleans up all intermediate type descriptions. The resulting
- * trampoline is self-contained and ready for use. The target function must be
- * provided at the call site.
- *
- * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
- * @param signature A null-terminated string describing the function signature.
- * @return `INFIX_SUCCESS` on success.
- * @note The returned trampoline must be freed with `infix_forward_destroy`.
- */
-c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *);
-
-/**
  * @brief Generates a bound forward-call trampoline from a signature string.
- * @details Creates a trampoline where the target function address is hardcoded into
- * the JIT-compiled code. This can offer a small performance improvement as the
- * target address does not need to be passed at every call.
+ * @details This is the primary and recommended function for creating forward trampolines.
+ * It creates a trampoline where the target function address is hardcoded into
+ * the JIT-compiled code. This can offer a small performance improvement and a
+ * simpler call signature.
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
  * @param target_function A pointer to the native C function to be bound to the trampoline.
  * @return `INFIX_SUCCESS` on success.
- * @note The function pointer returned by `infix_forward_get_code` for a bound
- *       trampoline should be cast to `infix_bound_cif_func`.
+ * @note The function pointer returned by `infix_forward_get_bound_code` should be used.
  */
-c23_nodiscard infix_status infix_forward_create_bound(infix_forward_t **, const char *, void *);
+c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *);
+
+/**
+ * @brief Generates an unbound forward-call trampoline from a signature string.
+ * @details Creates a flexible trampoline where the target function is not known at creation
+ * time and must be provided at each call. This is useful for interpreters or plugin
+ * systems where one trampoline may be used to call multiple functions of the same type.
+ *
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param signature A null-terminated string describing the function signature.
+ * @return `INFIX_SUCCESS` on success.
+ * @note The function pointer returned by `infix_forward_get_unbound_code` must be used.
+ */
+c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *);
 
 /**
  * @brief Generates a reverse-call trampoline (callback) from a signature string.
@@ -588,19 +583,6 @@ infix_status infix_write_global(infix_library_t *, const char *, const char *, v
 /** @{ */
 
 /**
- * @brief Generates an unbound forward-call trampoline for a given function signature.
- * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
- * @param return_type The `infix_type` of the function's return value.
- * @param arg_types An array of `infix_type*` for each argument.
- * @param num_args The total number of arguments.
- * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
- * @note The returned trampoline must be freed with `infix_forward_destroy`.
- * @note **Memory Ownership:** The generated `infix_forward_t` is self-contained.
- */
-c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t);
-
-/**
  * @brief Generates a bound forward-call trampoline for a given function signature.
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param return_type The `infix_type` of the function's return value.
@@ -609,10 +591,23 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t **, infix
  * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
  * @param target_function A pointer to the native C function to be bound to the trampoline.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
- * @note The function pointer returned by `infix_forward_get_code` should be cast to `infix_bound_cif_func`.
+ * @note The function pointer returned by `infix_forward_get_bound_code` should be used.
  */
 c23_nodiscard infix_status
-infix_forward_create_bound_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, void *);
+infix_forward_create_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, void *);
+
+/**
+ * @brief Generates an unbound forward-call trampoline for a given function signature.
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param return_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type*` for each argument.
+ * @param num_args The total number of arguments.
+ * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The function pointer returned by `infix_forward_get_unbound_code` must be used.
+ */
+c23_nodiscard infix_status
+infix_forward_create_unbound_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t);
 
 /**
  * @brief Generates a reverse-call trampoline (a native callable function pointer for a callback).
@@ -757,7 +752,7 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t *, infix_type
 /**
  * @brief Creates a new `infix_type` for a SIMD vector from an arena.
  * @param arena The arena from which to allocate.
- * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param element_type The primitive `infix_type` of the vector's elements.
  * @param num_elements The number of elements in the vector.
  * @return `INFIX_SUCCESS` on success.
@@ -827,13 +822,20 @@ c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t)
 /** @{ */
 
 /**
- * @brief Retrieves the executable code pointer from a forward trampoline.
- * @param trampoline A handle to a previously created forward trampoline.
- * @return A callable function pointer. For unbound trampolines, cast to `infix_cif_func`.
- *         For bound trampolines, cast to `infix_bound_cif_func`. Returns `nullptr`
- *         if the handle is invalid.
+ * @brief Retrieves the executable code pointer from an unbound forward trampoline.
+ * @param trampoline A handle to a previously created unbound forward trampoline.
+ * @return A callable function pointer of type `infix_cif_func`. Returns `nullptr` if the
+ *         handle is invalid or if it points to a bound trampoline.
  */
-c23_nodiscard void * infix_forward_get_code(infix_forward_t *);
+c23_nodiscard infix_cif_func infix_forward_get_unbound_code(infix_forward_t *);
+
+/**
+ * @brief Retrieves the executable code pointer from a bound forward trampoline.
+ * @param trampoline A handle to a previously created bound forward trampoline.
+ * @return A callable function pointer of type `infix_bound_cif_func`. Returns `nullptr`
+ *         if the handle is invalid or if it points to an unbound trampoline.
+ */
+c23_nodiscard infix_bound_cif_func infix_forward_get_bound_code(infix_forward_t *);
 
 /**
  * @brief Retrieves the executable code pointer from a reverse trampoline.

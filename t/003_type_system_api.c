@@ -25,7 +25,7 @@
  *     calculate the size and alignment of types in a way that matches the C
  *     compiler's own `sizeof` and `_Alignof` operators.
  * 2.  **Error Handling:** That the creation functions correctly reject invalid
- *     arguments (e.g., NULL pointers for required parameters) and return the
+ *     arguments (e.g., nullptr pointers for required parameters) and return the
  *     appropriate error status.
  */
 
@@ -37,8 +37,9 @@
 
 // Reference C types for comparison
 typedef struct {
-    char c;    // size=1, align=1
-    double d;  // size=8, align=8
+    char c;  // size=1, align=1
+    // 3 bytes padding
+    int b;     // size 4, align 4
 } TestStruct;  // Expected align=8, size=16 (7 bytes padding after 'c')
 
 typedef union {
@@ -61,11 +62,11 @@ TEST {
         members[0] =
             infix_type_create_member("c", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), offsetof(TestStruct, c));
         members[1] =
-            infix_type_create_member("d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestStruct, d));
-        infix_type * struct_type = NULL;
+            infix_type_create_member("b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestStruct, b));
+        infix_type * struct_type = nullptr;
         infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
 
-        if (ok(status == INFIX_SUCCESS && struct_type != NULL, "Successfully created a valid struct type")) {
+        if (ok(status == INFIX_SUCCESS && struct_type != nullptr, "Successfully created a valid struct type")) {
             diag("Expected size: %llu, alignment: %llu",
                  (unsigned long long)sizeof(TestStruct),
                  (unsigned long long)_Alignof(TestStruct));
@@ -78,13 +79,13 @@ TEST {
         else
             skip(1, "Cannot verify layout due to creation failure");
 
-        // 2. Error Handling: Pass a NULL member type.
+        // 2. Error Handling: Pass a nullptr member type.
         infix_struct_member * bad_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        bad_members[0] = infix_type_create_member("bad", NULL, 0);
-        infix_type * bad_struct_type = NULL;
+        bad_members[0] = infix_type_create_member("bad", nullptr, 0);
+        infix_type * bad_struct_type = nullptr;
         status = infix_type_create_struct(arena, &bad_struct_type, bad_members, 1);
-        ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_struct rejects NULL member type");
+        ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_struct rejects nullptr member type");
 
         infix_arena_destroy(arena);
     }
@@ -100,10 +101,10 @@ TEST {
             infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestUnion, i));
         members[1] =
             infix_type_create_member("d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(TestUnion, d));
-        infix_type * union_type = NULL;
+        infix_type * union_type = nullptr;
         infix_status status = infix_type_create_union(arena, &union_type, members, 2);
 
-        if (ok(status == INFIX_SUCCESS && union_type != NULL, "Successfully created a valid union type")) {
+        if (ok(status == INFIX_SUCCESS && union_type != nullptr, "Successfully created a valid union type")) {
             diag("Expected size: %llu, alignment: %llu",
                  (unsigned long long)sizeof(TestUnion),
                  (unsigned long long)_Alignof(TestUnion));
@@ -125,10 +126,10 @@ TEST {
 
         // 1. Happy Path: Verify correct size and alignment.
         infix_type * element_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT64);
-        infix_type * array_type = NULL;
+        infix_type * array_type = nullptr;
         infix_status status = infix_type_create_array(arena, &array_type, element_type, 10);
 
-        if (ok(status == INFIX_SUCCESS && array_type != NULL, "Successfully created a valid array type")) {
+        if (ok(status == INFIX_SUCCESS && array_type != nullptr, "Successfully created a valid array type")) {
             diag("Expected size: %llu, alignment: %llu",
                  (unsigned long long)sizeof(TestArray),
                  (unsigned long long)_Alignof(TestArray));
@@ -141,10 +142,10 @@ TEST {
         else
             skip(1, "Cannot verify layout due to creation failure");
 
-        // 2. Error Handling: Pass a NULL element type.
-        infix_type * bad_array_type = NULL;
-        status = infix_type_create_array(arena, &bad_array_type, NULL, 10);
-        ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array rejects NULL element type");
+        // 2. Error Handling: Pass a nullptr element type.
+        infix_type * bad_array_type = nullptr;
+        status = infix_type_create_array(arena, &bad_array_type, nullptr, 10);
+        ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array rejects nullptr element type");
 
         infix_arena_destroy(arena);
     }
@@ -155,10 +156,10 @@ TEST {
 
         // 1. Happy Path: Verify correct size and alignment.
         infix_type * underlying_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_type * enum_type = NULL;
+        infix_type * enum_type = nullptr;
         infix_status status = infix_type_create_enum(arena, &enum_type, underlying_type);
 
-        if (ok(status == INFIX_SUCCESS && enum_type != NULL, "Successfully created a valid enum type"))
+        if (ok(status == INFIX_SUCCESS && enum_type != nullptr, "Successfully created a valid enum type"))
             ok(enum_type->size == sizeof(int32_t) && enum_type->alignment == (size_t)_Alignof(int32_t),
                "Enum size and alignment match underlying integer type");
         else
@@ -166,7 +167,7 @@ TEST {
 
         // 2. Error Handling: Pass a non-integer underlying type.
         infix_type * bad_underlying_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-        infix_type * bad_enum_type = NULL;
+        infix_type * bad_enum_type = nullptr;
         status = infix_type_create_enum(arena, &bad_enum_type, bad_underlying_type);
         ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_enum rejects non-integer underlying type");
 
@@ -186,7 +187,7 @@ TEST {
         infix_type * arg_types[] = {arg1_type, arg2_type};
 
         infix_forward_t * trampoline = nullptr;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
+        infix_status status = infix_forward_create_unbound_manual(&trampoline, ret_type, arg_types, 2, 2);
         ok(status == INFIX_SUCCESS && trampoline != nullptr, "Trampoline created for introspection test");
 
         if (trampoline) {

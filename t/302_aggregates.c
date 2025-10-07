@@ -113,7 +113,7 @@ TEST {
             infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         members[1] =
             infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
-        infix_type * point_type = NULL;
+        infix_type * point_type = nullptr;
 
         infix_status status = infix_type_create_struct(arena, &point_type, members, 2);
         if (!ok(status == INFIX_SUCCESS, "Point infix_type created")) {
@@ -122,8 +122,9 @@ TEST {
             return;
         }
 
-        infix_reverse_t * rt = NULL;
-        status = infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)point_callback_handler, NULL);
+        infix_reverse_t * rt = nullptr;
+        status =
+            infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)point_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -143,8 +144,8 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         for (int i = 0; i < 6; ++i)
             members[i] =
-                infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
-        infix_type * large_struct_type = NULL;
+                infix_type_create_member(nullptr, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
+        infix_type * large_struct_type = nullptr;
 
         infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
         if (!ok(status == INFIX_SUCCESS, "LargeStruct infix_type created")) {
@@ -153,9 +154,9 @@ TEST {
             return;
         }
 
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         status = infix_reverse_create_manual(
-            &rt, ret_type, &large_struct_type, 1, 1, (void *)large_struct_pass_handler, NULL);
+            &rt, ret_type, &large_struct_type, 1, 1, (void *)large_struct_pass_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -175,8 +176,8 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         for (int i = 0; i < 6; ++i)
             members[i] =
-                infix_type_create_member(NULL, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
-        infix_type * large_struct_type = NULL;
+                infix_type_create_member(nullptr, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
+        infix_type * large_struct_type = nullptr;
 
         infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
         if (!ok(status == INFIX_SUCCESS, "LargeStruct infix_type created")) {
@@ -186,9 +187,9 @@ TEST {
         }
         infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
 
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         status = infix_reverse_create_manual(
-            &rt, large_struct_type, &arg_type, 1, 1, (void *)large_struct_return_handler, NULL);
+            &rt, large_struct_type, &arg_type, 1, 1, (void *)large_struct_return_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -204,7 +205,7 @@ TEST {
         plan(4);
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_type * array_type = NULL;
+        infix_type * array_type = nullptr;
 
         infix_status status =
             infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 4);
@@ -217,7 +218,7 @@ TEST {
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
         members[0] = infix_type_create_member("v", array_type, offsetof(Vector4, v));
-        infix_type * struct_type = NULL;
+        infix_type * struct_type = nullptr;
 
         status = infix_type_create_struct(arena, &struct_type, members, 1);
         if (!ok(status == INFIX_SUCCESS, "Vector4 infix_type created")) {
@@ -226,8 +227,9 @@ TEST {
             return;
         }
 
-        infix_reverse_t * rt = NULL;
-        status = infix_reverse_create_manual(&rt, ret_type, &struct_type, 1, 1, (void *)vector4_callback_handler, NULL);
+        infix_reverse_t * rt = nullptr;
+        status =
+            infix_reverse_create_manual(&rt, ret_type, &struct_type, 1, 1, (void *)vector4_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -247,7 +249,7 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         members[0] = infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0);
         members[1] = infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 0);
-        infix_type * union_type = NULL;
+        infix_type * union_type = nullptr;
 
         infix_status status = infix_type_create_union(arena, &union_type, members, 2);
         if (!ok(status == INFIX_SUCCESS, "Number union infix_type created")) {
@@ -257,9 +259,9 @@ TEST {
         }
         infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
 
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         status =
-            infix_reverse_create_manual(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler, NULL);
+            infix_reverse_create_manual(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -282,7 +284,7 @@ TEST {
         members[1] = infix_type_create_member(
             "b", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), offsetof(PackedStruct, b));
 
-        infix_type * packed_type = NULL;
+        infix_type * packed_type = nullptr;
         infix_status status = infix_type_create_packed_struct(
             arena, &packed_type, sizeof(PackedStruct), _Alignof(PackedStruct), members, 2);
 
@@ -297,10 +299,10 @@ TEST {
 
         // Action: Generate and call the trampoline
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_forward_t * trampoline = NULL;
-        status = infix_forward_create_manual(&trampoline, ret_type, &packed_type, 1, 1);
+        infix_forward_t * trampoline = nullptr;
+        status = infix_forward_create_unbound_manual(&trampoline, ret_type, &packed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Successfully generated trampoline for packed struct.");
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+        infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
 
         PackedStruct arg_struct = {'X', 0xDEADBEEFCAFEBABE};
         int result = 0;

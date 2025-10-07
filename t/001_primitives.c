@@ -108,50 +108,49 @@ __int128_t passthrough_sint128(__int128_t v) {
  * @param input_val A literal value to use for testing.
  * @param format_specifier A printf format specifier for diagnostic messages.
  */
-#define TEST_PRIMITIVE(test_name, c_type, infix_id, passthrough_func, input_val, format_specifier)    \
-    subtest(test_name) {                                                                              \
-        plan(4);                                                                                      \
-        infix_type * type = infix_type_create_primitive(infix_id);                                    \
-        c_type input = (input_val);                                                                   \
-        void * args[] = {&input};                                                                     \
-                                                                                                      \
-        /* Test Unbound Trampoline */                                                                 \
-        infix_forward_t * unbound_t = NULL;                                                           \
-        infix_status unbound_s = infix_forward_create_manual(&unbound_t, type, &type, 1, 1);          \
-        ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");                  \
-                                                                                                      \
-        c_type unbound_result = 0;                                                                    \
-        infix_cif_func unbound_cif = (infix_cif_func)infix_forward_get_code(unbound_t);               \
-        if (unbound_cif) {                                                                            \
-            unbound_cif((void *)passthrough_func, &unbound_result, args);                             \
-            ok(unbound_result == input,                                                               \
-               "Unbound call correct (" format_specifier " == " format_specifier ")",                 \
-               input,                                                                                 \
-               unbound_result);                                                                       \
-        }                                                                                             \
-        else                                                                                          \
-            fail("Unbound trampoline code pointer was NULL");                                         \
-                                                                                                      \
-        /* Test Bound Trampoline */                                                                   \
-        infix_forward_t * bound_t = NULL;                                                             \
-        infix_status bound_s =                                                                        \
-            infix_forward_create_bound_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_func); \
-        ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");                      \
-                                                                                                      \
-        c_type bound_result = 0;                                                                      \
-        infix_bound_cif_func bound_cif = (infix_bound_cif_func)infix_forward_get_code(bound_t);       \
-        if (bound_cif) {                                                                              \
-            bound_cif(&bound_result, args);                                                           \
-            ok(bound_result == input,                                                                 \
-               "Bound call correct (" format_specifier " == " format_specifier ")",                   \
-               input,                                                                                 \
-               bound_result);                                                                         \
-        }                                                                                             \
-        else                                                                                          \
-            fail("Bound trampoline code pointer was NULL");                                           \
-                                                                                                      \
-        infix_forward_destroy(unbound_t);                                                             \
-        infix_forward_destroy(bound_t);                                                               \
+#define TEST_PRIMITIVE(test_name, c_type, infix_id, passthrough_func, input_val, format_specifier)                 \
+    subtest(test_name) {                                                                                           \
+        plan(4);                                                                                                   \
+        infix_type * type = infix_type_create_primitive(infix_id);                                                 \
+        c_type input = (input_val);                                                                                \
+        void * args[] = {&input};                                                                                  \
+                                                                                                                   \
+        /* Test Unbound Trampoline */                                                                              \
+        infix_forward_t * unbound_t = nullptr;                                                                     \
+        infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);               \
+        ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");                               \
+                                                                                                                   \
+        c_type unbound_result = 0;                                                                                 \
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);                                    \
+        if (unbound_cif) {                                                                                         \
+            unbound_cif((void *)passthrough_func, &unbound_result, args);                                          \
+            ok(unbound_result == input,                                                                            \
+               "Unbound call correct (" format_specifier " == " format_specifier ")",                              \
+               input,                                                                                              \
+               unbound_result);                                                                                    \
+        }                                                                                                          \
+        else                                                                                                       \
+            fail("Unbound trampoline code pointer was nullptr");                                                   \
+                                                                                                                   \
+        /* Test Bound Trampoline */                                                                                \
+        infix_forward_t * bound_t = nullptr;                                                                       \
+        infix_status bound_s = infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_func); \
+        ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");                                   \
+                                                                                                                   \
+        c_type bound_result = 0;                                                                                   \
+        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);                                    \
+        if (bound_cif) {                                                                                           \
+            bound_cif(&bound_result, args);                                                                        \
+            ok(bound_result == input,                                                                              \
+               "Bound call correct (" format_specifier " == " format_specifier ")",                                \
+               input,                                                                                              \
+               bound_result);                                                                                      \
+        }                                                                                                          \
+        else                                                                                                       \
+            fail("Bound trampoline code pointer was nullptr");                                                     \
+                                                                                                                   \
+        infix_forward_destroy(unbound_t);                                                                          \
+        infix_forward_destroy(bound_t);                                                                            \
     }
 
 TEST {
@@ -177,20 +176,22 @@ TEST {
         void * args[] = {&input};
 
         // Unbound
-        infix_forward_t * unbound_t = NULL;
-        infix_status unbound_s = infix_forward_create_manual(&unbound_t, type, &type, 1, 1);
+        infix_forward_t * unbound_t = nullptr;
+        infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");
         long double unbound_result = 0.0L;
-        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)passthrough_long_double, &unbound_result, args);
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)passthrough_long_double, &unbound_result, args);
         ok(unbound_result == input, "Unbound long double correct");
 
         // Bound
-        infix_forward_t * bound_t = NULL;
+        infix_forward_t * bound_t = nullptr;
         infix_status bound_s =
-            infix_forward_create_bound_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_long_double);
+            infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_long_double);
         ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");
         long double bound_result = 0.0L;
-        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+        bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound long double correct");
 
         infix_forward_destroy(unbound_t);
@@ -204,17 +205,19 @@ TEST {
         __uint128_t input = (((__uint128_t)0xFFFFFFFFFFFFFFFF) << 64) | 0xFFFFFFFFFFFFFFFF;
         void * args[] = {&input};
 
-        infix_forward_t * unbound_t = NULL;
-        ok(infix_forward_create_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
+        infix_forward_t * unbound_t = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
         __uint128_t unbound_result = 0;
-        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)passthrough_uint128, &unbound_result, args);
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)passthrough_uint128, &unbound_result, args);
         ok(unbound_result == input, "Unbound correct");
 
-        infix_forward_t * bound_t = NULL;
-        ok(infix_forward_create_bound_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_uint128) == INFIX_SUCCESS,
+        infix_forward_t * bound_t = nullptr;
+        ok(infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_uint128) == INFIX_SUCCESS,
            "Bound created");
         __uint128_t bound_result = 0;
-        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+        bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound correct");
 
         infix_forward_destroy(unbound_t);
@@ -227,17 +230,19 @@ TEST {
         __int128_t input = -(((__int128_t)0x7FFFFFFFFFFFFFFF) << 64) - 1;
         void * args[] = {&input};
 
-        infix_forward_t * unbound_t = NULL;
-        ok(infix_forward_create_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
+        infix_forward_t * unbound_t = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
         __int128_t unbound_result = 0;
-        ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)passthrough_sint128, &unbound_result, args);
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)passthrough_sint128, &unbound_result, args);
         ok(unbound_result == input, "Unbound correct");
 
-        infix_forward_t * bound_t = NULL;
-        ok(infix_forward_create_bound_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_sint128) == INFIX_SUCCESS,
+        infix_forward_t * bound_t = nullptr;
+        ok(infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_sint128) == INFIX_SUCCESS,
            "Bound created");
         __int128_t bound_result = 0;
-        ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+        bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound correct");
 
         infix_forward_destroy(unbound_t);

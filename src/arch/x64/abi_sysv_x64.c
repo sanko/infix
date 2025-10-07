@@ -550,7 +550,7 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
     emit_push_reg(buf, R15_REG);  // push r15
 
     // Move Trampoline Arguments to Persistent Registers
-    if (layout->target_fn == NULL) {  // Unbound trampoline
+    if (layout->target_fn == nullptr) {  // Unbound trampoline
         // The trampoline is called with (target_fn, ret_ptr, args_ptr) in RDI, RSI, RDX.
         // We move these into our saved callee-saved registers to protect them.
         emit_mov_reg_reg(buf, R12_REG, RDI_REG);  // r12 = target_fn

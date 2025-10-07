@@ -263,7 +263,7 @@ static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_c
     emit_push_reg(buf, R15_REG);  // push r15 (will be a scratch register for data moves)
 
     // Move incoming trampoline arguments to non-volatile registers.
-    if (layout->target_fn == NULL) {              // Unbound: (target_fn, ret_ptr, args_ptr) in RCX, RDX, R8
+    if (layout->target_fn == nullptr) {           // Unbound: (target_fn, ret_ptr, args_ptr) in RCX, RDX, R8
         emit_mov_reg_reg(buf, R12_REG, RCX_REG);  // R12 = target function
         emit_mov_reg_reg(buf, R13_REG, RDX_REG);  // R13 = return value buffer
         emit_mov_reg_reg(buf, R14_REG, R8_REG);   // R14 = argument values array

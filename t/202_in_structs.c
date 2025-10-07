@@ -61,7 +61,7 @@ TEST {
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
     members[0] = infix_type_create_member("val_ptr", infix_type_create_pointer(), offsetof(PointerStruct, val_ptr));
     members[1] = infix_type_create_member("str_ptr", infix_type_create_pointer(), offsetof(PointerStruct, str_ptr));
-    infix_type * struct_type = NULL;
+    infix_type * struct_type = nullptr;
     if (!ok(infix_type_create_struct(arena, &struct_type, members, 2) == INFIX_SUCCESS, "Type created")) {
         skip(4, "Cannot proceed");
         infix_arena_destroy(arena);
@@ -75,19 +75,22 @@ TEST {
     void * args[] = {&struct_instance};
 
     // Unbound
-    infix_forward_t * unbound_t = NULL;
-    ok(infix_forward_create_manual(&unbound_t, return_type, &struct_type, 1, 1) == INFIX_SUCCESS, "Unbound created");
+    infix_forward_t * unbound_t = nullptr;
+    ok(infix_forward_create_unbound_manual(&unbound_t, return_type, &struct_type, 1, 1) == INFIX_SUCCESS,
+       "Unbound created");
     int unbound_result = 0;
-    ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)process_pointer_struct, &unbound_result, args);
+    infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+    unbound_cif((void *)process_pointer_struct, &unbound_result, args);
     ok(unbound_result == 550, "Unbound call correct");
 
     // Bound
-    infix_forward_t * bound_t = NULL;
-    ok(infix_forward_create_bound_manual(&bound_t, return_type, &struct_type, 1, 1, (void *)process_pointer_struct) ==
+    infix_forward_t * bound_t = nullptr;
+    ok(infix_forward_create_manual(&bound_t, return_type, &struct_type, 1, 1, (void *)process_pointer_struct) ==
            INFIX_SUCCESS,
        "Bound created");
     int bound_result = 0;
-    ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+    infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_t);
+    bound_cif(&bound_result, args);
     ok(bound_result == 550, "Bound call correct");
 
     infix_forward_destroy(unbound_t);

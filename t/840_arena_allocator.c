@@ -18,11 +18,11 @@
  * @details This test validates the core functionality of the arena (bump)
  * allocator in isolation. It verifies:
  * 1.  Correct creation and destruction of the arena.
- * 2.  That `infix_arena_alloc` returns non-NULL pointers for valid requests.
+ * 2.  That `infix_arena_alloc` returns non-nullptr pointers for valid requests.
  * 3.  That pointers returned by `infix_arena_alloc` are correctly aligned.
  * 4.  That `infix_arena_calloc` returns zero-initialized memory.
  * 5.  That the allocator correctly detects out-of-memory conditions and returns
- *     NULL without crashing when the arena's capacity is exceeded.
+ *     nullptr without crashing when the arena's capacity is exceeded.
  */
 
 // We must define our own allocators for this test to be self-contained
@@ -46,7 +46,7 @@ TEST {
 
         // 1. Test Creation and Destruction
         infix_arena_t * arena = infix_arena_create(1024);
-        ok(arena != NULL && arena->buffer != NULL, "infix_arena_create succeeds");
+        ok(arena != nullptr && arena->buffer != nullptr, "infix_arena_create succeeds");
         if (!arena) {
             skip(6, "Cannot proceed without a valid arena");
             return;
@@ -54,13 +54,13 @@ TEST {
 
         // 2. Test Basic Allocation
         void * p1 = infix_arena_alloc(arena, 10, 1);
-        ok(p1 != NULL, "infix_arena_alloc returns a valid pointer");
+        ok(p1 != nullptr, "infix_arena_alloc returns a valid pointer");
 
         // 3. Test Alignment
         // Allocate a single byte to misalign the offset, then allocate an aligned type.
         (void)infix_arena_alloc(arena, 1, 1);
         uint64_t * aligned_ptr = infix_arena_alloc(arena, sizeof(uint64_t), _Alignof(uint64_t));
-        ok(aligned_ptr != NULL, "infix_arena_alloc for aligned type succeeds");
+        ok(aligned_ptr != nullptr, "infix_arena_alloc for aligned type succeeds");
         ok(((uintptr_t)aligned_ptr % _Alignof(uint64_t)) == 0, "Pointer is correctly aligned");
 
         // 4. Test infix_arena_calloc
@@ -76,7 +76,7 @@ TEST {
 
         // 5. Test Out-of-Memory Condition
         void * p_fail = infix_arena_alloc(arena, 2048, 1);  // Request more than is available
-        ok(p_fail == NULL, "infix_arena_alloc returns NULL when out of memory");
+        ok(p_fail == nullptr, "infix_arena_alloc returns nullptr when out of memory");
         ok(arena->error == true, "Arena error flag is set on allocation failure");
 
         infix_arena_destroy(arena);

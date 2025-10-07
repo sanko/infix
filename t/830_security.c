@@ -64,7 +64,7 @@ void dummy_handler_func(void) { /* Should never be called. */ }
 #if defined(_WIN32)
 static bool run_crash_test_as_child(const char * test_name) {
     char exe_path[MAX_PATH];
-    if (GetModuleFileName(NULL, exe_path, MAX_PATH) == 0) {
+    if (GetModuleFileName(nullptr, exe_path, MAX_PATH) == 0) {
         fail("GetModuleFileName() failed.");
         return false;
     }
@@ -77,12 +77,12 @@ static bool run_crash_test_as_child(const char * test_name) {
     si.dwFlags |= STARTF_USESTDHANDLES;
     si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
     // Redirect child's stdout/stderr to NUL to keep test output clean.
-    si.hStdOutput = CreateFileA("NUL", GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    si.hStdOutput = CreateFileA("NUL", GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     si.hStdError = si.hStdOutput;
 
-    if (!CreateProcessA(exe_path, NULL, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
+    if (!CreateProcessA(exe_path, nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi)) {
         fail("CreateProcess() failed.");
-        SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", NULL);
+        SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", nullptr);
         if (si.hStdOutput != INVALID_HANDLE_VALUE)
             CloseHandle(si.hStdOutput);
         return false;
@@ -94,7 +94,7 @@ static bool run_crash_test_as_child(const char * test_name) {
     CloseHandle(pi.hThread);
     if (si.hStdOutput != INVALID_HANDLE_VALUE)
         CloseHandle(si.hStdOutput);
-    SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", NULL);
+    SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", nullptr);
     return exit_code == EXCEPTION_ACCESS_VIOLATION;
 }
 #endif
@@ -102,32 +102,32 @@ static bool run_crash_test_as_child(const char * test_name) {
 TEST {
 #if defined(_WIN32)
     const char * child_test_name = getenv("INFIX_CRASH_TEST_CHILD");
-    if (child_test_name != NULL) {
+    if (child_test_name != nullptr) {
         if (strcmp(child_test_name, "forward_uaf_unbound") == 0) {
-            infix_forward_t * t = NULL;
-            infix_status status = infix_forward_create(&t, "(int32)->int32");
+            infix_forward_t * t = nullptr;
+            infix_status status = infix_forward_create_unbound(&t, "(int32)->int32");
             if (status != INFIX_SUCCESS)
                 exit(2);
-            infix_cif_func f = (infix_cif_func)infix_forward_get_code(t);
+            infix_cif_func f = infix_forward_get_unbound_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
             void * aa[] = {&a};
             f((void *)dummy_target_func, &r, aa);  // This line should crash
         }
-        if (strcmp(child_test_name, "forward_uaf_bound") == 0) {
-            infix_forward_t * t = NULL;
-            infix_status status = infix_forward_create_bound(&t, "(int32)->int32", (void *)dummy_target_func);
+        else if (strcmp(child_test_name, "forward_uaf_bound") == 0) {
+            infix_forward_t * t = nullptr;
+            infix_status status = infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func);
             if (status != INFIX_SUCCESS)
                 exit(2);
-            infix_bound_cif_func f = (infix_bound_cif_func)infix_forward_get_code(t);
+            infix_bound_cif_func f = infix_forward_get_bound_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
             void * aa[] = {&a};
             f(&r, aa);  // This line should crash
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
-            infix_reverse_t * rt = NULL;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
+            infix_reverse_t * rt = nullptr;
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             void (*f)() = (void (*)())infix_reverse_get_code(rt);
@@ -135,11 +135,11 @@ TEST {
             f();  // This line should crash
         }
         else if (strcmp(child_test_name, "write_harden") == 0) {
-            infix_reverse_t * rt = NULL;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
+            infix_reverse_t * rt = nullptr;
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
-            rt->user_data = NULL;  // This line should crash
+            rt->user_data = nullptr;  // This line should crash
         }
         exit(1);  // Exit with a non-crash code if the crash didn't happen
     }
@@ -155,21 +155,31 @@ TEST {
             ok(run_crash_test_as_child("forward_uaf_unbound"), "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == 0) {  // Child
-                infix_forward_t * t = NULL;
-                infix_forward_create(&t, "(int32)->int32");
-                infix_cif_func f = (infix_cif_func)infix_forward_get_code(t);
-                infix_forward_destroy(t);
-                int a = 5, r = 0;
-                void * aa[] = {&a};
-                f((void *)dummy_target_func, &r, aa);
-                exit(0);
+            if (pid == -1) {
+                bail_out("fork() failed");
             }
-            int wstatus;
-            waitpid(pid, &wstatus, 0);
-            ok(WIFSIGNALED(wstatus), "Child process crashed as expected.");
+            else if (pid == 0) {  // Child process
+                infix_forward_t * trampoline = nullptr;
+                infix_status status = infix_forward_create_unbound(&trampoline, "(int32)->int32");
+                if (status != INFIX_SUCCESS)
+                    exit(2);  // Exit with error if creation fails
+                infix_cif_func dangling_ptr = infix_forward_get_unbound_code(trampoline);
+                infix_forward_destroy(trampoline);
+                int arg = 5, result = 0;
+                void * args[] = {&arg};
+                dangling_ptr((void *)dummy_target_func, &result, args);  // Should crash here
+                exit(0);                                                 // Should not be reached
+            }
+            else {  // Parent process
+                int wstatus;
+                waitpid(pid, &wstatus, 0);
+                ok(WIFSIGNALED(wstatus) && (WTERMSIG(wstatus) == SIGSEGV || WTERMSIG(wstatus) == SIGBUS),
+                   "Child crashed with SIGSEGV/SIGBUS as expected.");
+                if (!WIFSIGNALED(wstatus))
+                    fail("Child exited normally, but a crash was expected.");
+            }
 #else
-            skip(1, "Crash test not supported.");
+            skip(1, "Crash test not supported on this platform.");
 #endif
         }
         subtest("Calling a freed BOUND FORWARD trampoline causes a crash") {
@@ -178,10 +188,14 @@ TEST {
             ok(run_crash_test_as_child("forward_uaf_bound"), "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == 0) {  // Child
-                infix_forward_t * t = NULL;
-                infix_forward_create_bound(&t, "(int32)->int32", (void *)dummy_target_func);
-                infix_bound_cif_func f = (infix_bound_cif_func)infix_forward_get_code(t);
+            if (pid == -1) {
+                bail_out("fork() failed");
+            }
+            else if (pid == 0) {  // Child
+                infix_forward_t * t = nullptr;
+                if (infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func) != INFIX_SUCCESS)
+                    exit(2);
+                infix_bound_cif_func f = infix_forward_get_bound_code(t);
                 infix_forward_destroy(t);
                 int a = 5, r = 0;
                 void * aa[] = {&a};
@@ -201,19 +215,29 @@ TEST {
             ok(run_crash_test_as_child("reverse_uaf"), "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
-            if (pid == 0) {  // Child process
-                infix_reverse_t * rt = NULL;
-                infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
+            if (pid == -1) {
+                bail_out("fork() failed");
+            }
+            else if (pid == 0) {  // Child process
+                infix_reverse_t * rt = nullptr;
+                infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
+                if (status != INFIX_SUCCESS)
+                    exit(2);
                 void (*dangling_ptr)() = (void (*)())infix_reverse_get_code(rt);
                 infix_reverse_destroy(rt);
-                dangling_ptr();
-                exit(0);
+                dangling_ptr();  // Should crash here
+                exit(0);         // Should not be reached
             }
-            int wstatus;
-            waitpid(pid, &wstatus, 0);
-            ok(WIFSIGNALED(wstatus), "Child crashed as expected.");
+            else {  // Parent process
+                int wstatus;
+                waitpid(pid, &wstatus, 0);
+                ok(WIFSIGNALED(wstatus) && (WTERMSIG(wstatus) == SIGSEGV || WTERMSIG(wstatus) == SIGBUS),
+                   "Child crashed with SIGSEGV/SIGBUS as expected.");
+                if (!WIFSIGNALED(wstatus))
+                    fail("Child exited normally, but a crash was expected.");
+            }
 #else
-            skip(1, "Crash test not supported.");
+            skip(1, "Crash test not supported on this platform.");
 #endif
         }
     }
@@ -230,12 +254,12 @@ TEST {
             bail_out("fork() failed");
         }
         else if (pid == 0) {  // Child process
-            infix_reverse_t * rt = NULL;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, NULL);
+            infix_reverse_t * rt = nullptr;
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
-            rt->user_data = NULL;  // This write should trigger a SIGSEGV
-            exit(0);               // Should not be reached
+            rt->user_data = nullptr;  // This write should trigger a SIGSEGV
+            exit(0);                  // Should not be reached
         }
         else {  // Parent process
             int status_write;
@@ -265,11 +289,11 @@ TEST {
             members[0] = infix_type_create_member("a", &malicious_type, 0);
             members[1] = infix_type_create_member("b", &malicious_type, 0);
 
-            infix_type * bad_type = NULL;
+            infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_struct(arena, &bad_type, members, 2);
             ok(status == INFIX_ERROR_INVALID_ARGUMENT,
                "infix_type_create_struct returned error on calculated overflow");
-            ok(bad_type == NULL, "Output type is NULL on failure");
+            ok(bad_type == nullptr, "Output type is nullptr on failure");
             infix_arena_destroy(arena);
         }
         subtest("infix_type_create_array overflow") {
@@ -277,10 +301,10 @@ TEST {
             infix_arena_t * arena = infix_arena_create(256);
             infix_type * element_type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT64);
             size_t malicious_num_elements = (SIZE_MAX / element_type->size) + 1;
-            infix_type * bad_type = NULL;
+            infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_array(arena, &bad_type, element_type, malicious_num_elements);
             ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array returned error on overflow");
-            ok(bad_type == NULL, "Output type is NULL on failure");
+            ok(bad_type == nullptr, "Output type is nullptr on failure");
             infix_arena_destroy(arena);
         }
         subtest("infix_type_create_union overflow") {
@@ -290,10 +314,10 @@ TEST {
             infix_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
             infix_struct_member members[1];
             members[0] = infix_type_create_member("bad", &malicious_member_type, 0);
-            infix_type * bad_type = NULL;
+            infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_union(arena, &bad_type, members, 1);
             ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_union returned error on overflow");
-            ok(bad_type == NULL, "Output type is NULL on failure");
+            ok(bad_type == nullptr, "Output type is nullptr on failure");
             infix_arena_destroy(arena);
         }
     }
@@ -304,7 +328,7 @@ TEST {
     !defined(INFIX_OS_OPENBSD) && !defined(INFIX_OS_DRAGONFLY)
         note("Verifying that dual-mapping allocator works on this platform (e.g., Linux/FreeBSD).");
         infix_executable_t exec = infix_executable_alloc(16);
-        ok(exec.rw_ptr != NULL && exec.rx_ptr != NULL, "infix_executable_alloc succeeded on hardened POSIX path");
+        ok(exec.rw_ptr != nullptr && exec.rx_ptr != nullptr, "infix_executable_alloc succeeded on hardened POSIX path");
         if (exec.size > 0)
             infix_executable_free(exec);
 #else

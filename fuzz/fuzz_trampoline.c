@@ -78,18 +78,18 @@ static void FuzzTest(fuzzer_input in) {
 
             // Fuzz the unbound forward trampoline generator.
             infix_forward_t * unbound_trampoline = NULL;
-            if (infix_forward_create_manual(&unbound_trampoline, return_type, arg_types, num_args, num_fixed_args) ==
-                INFIX_SUCCESS)
+            if (infix_forward_create_unbound_manual(
+                    &unbound_trampoline, return_type, arg_types, num_args, num_fixed_args) == INFIX_SUCCESS)
                 infix_forward_destroy(unbound_trampoline);
 
             // Fuzz the bound forward trampoline generator.
             infix_forward_t * bound_trampoline = NULL;
-            if (infix_forward_create_bound_manual(&bound_trampoline,
-                                                  return_type,
-                                                  arg_types,
-                                                  num_args,
-                                                  num_fixed_args,
-                                                  (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
+            if (infix_forward_create_manual(&bound_trampoline,
+                                            return_type,
+                                            arg_types,
+                                            num_args,
+                                            num_fixed_args,
+                                            (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
                 infix_forward_destroy(bound_trampoline);
 
             // Fuzz the reverse trampoline generator.

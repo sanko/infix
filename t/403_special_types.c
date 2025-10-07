@@ -80,14 +80,14 @@ TEST {
         note("Testing 80-bit or 128-bit long double on SysV/AArch64");
 
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, type, &type, 1, 1);
+        infix_forward_t * trampoline = nullptr;
+        infix_status status = infix_forward_create_unbound_manual(&trampoline, type, &type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
         long double input = 1.234567890123456789L;
         long double result = 0.0L;
         void * args[] = {&input};
-        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
+        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
         cif((void *)passthrough_long_double, &result, args);
 
         ok(result == input, "long double passed and returned correctly");
@@ -108,12 +108,13 @@ TEST {
         infix_status status;
 
         // Test 1: Forward call passing __int128_t
-        infix_forward_t * pass_trampoline = NULL;
-        status = infix_forward_create_manual(&pass_trampoline, bool_type, &s128_type, 1, 1);
+        infix_forward_t * pass_trampoline = nullptr;
+        status = infix_forward_create_unbound_manual(&pass_trampoline, bool_type, &s128_type, 1, 1);
         if (ok(status == INFIX_SUCCESS, "Pass trampoline created for __int128_t")) {
             bool pass_result = false;
             void * pass_args[] = {(void *)&S128_CONSTANT};
-            ((infix_cif_func)infix_forward_get_code(pass_trampoline))((void *)check_s128, &pass_result, pass_args);
+            infix_cif_func cif = infix_forward_get_unbound_code(pass_trampoline);
+            cif((void *)check_s128, &pass_result, pass_args);
             ok(pass_result, "Forward call: __int128_t passed correctly as argument");
         }
         else
@@ -122,11 +123,12 @@ TEST {
         infix_forward_destroy(pass_trampoline);
 
         // Test 2: Forward call returning __int128_t
-        infix_forward_t * ret_trampoline = NULL;
-        status = infix_forward_create_manual(&ret_trampoline, s128_type, NULL, 0, 0);
+        infix_forward_t * ret_trampoline = nullptr;
+        status = infix_forward_create_unbound_manual(&ret_trampoline, s128_type, nullptr, 0, 0);
         if (ok(status == INFIX_SUCCESS, "Return trampoline created for __int128_t")) {
             __int128_t ret_result = 0;
-            ((infix_cif_func)infix_forward_get_code(ret_trampoline))((void *)return_s128, &ret_result, NULL);
+            infix_cif_func cif = infix_forward_get_unbound_code(ret_trampoline);
+            cif((void *)return_s128, &ret_result, nullptr);
             ok(ret_result == S128_CONSTANT, "Forward call: __int128_t returned correctly");
         }
         else
@@ -135,8 +137,8 @@ TEST {
         infix_forward_destroy(ret_trampoline);
 
         // Test 3: Reverse call with __int128_t
-        infix_reverse_t * rt = NULL;
-        status = infix_reverse_create_manual(&rt, bool_type, &s128_type, 1, 1, (void *)s128_callback_handler, NULL);
+        infix_reverse_t * rt = nullptr;
+        status = infix_reverse_create_manual(&rt, bool_type, &s128_type, 1, 1, (void *)s128_callback_handler, nullptr);
         if (ok(status == INFIX_SUCCESS, "Reverse trampoline created for __int128_t")) {
             typedef bool (*s128_harness_fn)(__int128_t);
             s128_harness_fn harness = (s128_harness_fn)infix_reverse_get_code(rt);
@@ -159,12 +161,13 @@ TEST {
         infix_type * u128_type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
         infix_type * bool_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
 
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, bool_type, &u128_type, 1, 1);
+        infix_forward_t * trampoline = nullptr;
+        infix_status status = infix_forward_create_unbound_manual(&trampoline, bool_type, &u128_type, 1, 1);
         if (ok(status == INFIX_SUCCESS, "Trampoline created for __uint128_t")) {
             bool result = false;
             void * args[] = {(void *)&U128_CONSTANT};
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)check_u128, &result, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)check_u128, &result, args);
             ok(result, "Forward call: __uint128_t passed correctly as argument");
         }
         else

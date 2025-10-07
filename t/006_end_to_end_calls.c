@@ -51,7 +51,7 @@ TEST {
             Point bad_result = {0, 0};
             ok(fabs(bad_result.x - 15.5) > 1e-9, "Sanity check: non-matching result fails");
 
-            // Define the signature for: Point move_point(Point, double, double)
+            // 1. Define the signature for: Point move_point(Point, double, double)
             const char * signature = "({double, double}, double, double) -> {double, double}";
             Point start_point = {10.0, 20.0};
             double offset_x = 5.5;
@@ -61,26 +61,29 @@ TEST {
             subtest("Unbound trampoline") {
                 plan(2);
                 infix_forward_t * unbound_t = nullptr;
-                ok(infix_forward_create(&unbound_t, signature) == INFIX_SUCCESS, "Unbound trampoline created");
+                ok(infix_forward_create_unbound(&unbound_t, signature) == INFIX_SUCCESS, "Unbound trampoline created");
                 if (unbound_t) {
                     Point unbound_result = {0.0, 0.0};
-                    ((infix_cif_func)infix_forward_get_code(unbound_t))((void *)move_point, &unbound_result, args);
+                    infix_cif_func cif = infix_forward_get_unbound_code(unbound_t);
+                    cif((void *)move_point, &unbound_result, args);
                     ok(fabs(unbound_result.x - 15.5) < 1e-9 && fabs(unbound_result.y - 17.5) < 1e-9,
                        "Unbound call correct");
                 }
                 else
                     skip(1, "Skipping unbound call");
+
                 infix_forward_destroy(unbound_t);
-            };
+            }
 
             subtest("Bound trampoline") {
                 plan(2);
                 infix_forward_t * bound_t = nullptr;
-                ok(infix_forward_create_bound(&bound_t, signature, (void *)move_point) == INFIX_SUCCESS,
+                ok(infix_forward_create(&bound_t, signature, (void *)move_point) == INFIX_SUCCESS,
                    "Bound trampoline created");
                 if (bound_t) {
                     Point bound_result = {0.0, 0.0};
-                    ((infix_bound_cif_func)infix_forward_get_code(bound_t))(&bound_result, args);
+                    infix_bound_cif_func cif = infix_forward_get_bound_code(bound_t);
+                    cif(&bound_result, args);
                     ok(fabs(bound_result.x - 15.5) < 1e-9 && fabs(bound_result.y - 17.5) < 1e-9, "Bound call correct");
                 }
                 else

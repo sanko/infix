@@ -1121,15 +1121,11 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
 }
 
 /*
- * Implementation for infix_forward_create.
- * This is the primary high-level API. It orchestrates the process:
- * 1. Parse the signature string into a temporary type graph.
- * 2. Bridge the parsed `infix_function_argument` array to an `infix_type*` array.
- * 3. Call the internal trampoline creation logic, which deep-copies the types.
- * 4. Clean up the temporary arena used for parsing.
+ * Implementation for infix_forward_create_unbound.
+ * This is the high-level API for creating unbound trampolines.
  */
-c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampoline, const char * signature) {
-    return infix_forward_create_bound(out_trampoline, signature, NULL);
+c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t ** out_trampoline, const char * signature) {
+    return infix_forward_create(out_trampoline, signature, NULL);
 }
 
 /**
@@ -1142,9 +1138,9 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
  * @return `INFIX_SUCCESS` on success.
  * @note The returned trampoline must be freed with `infix_forward_destroy`.
  */
-c23_nodiscard infix_status infix_forward_create_bound(infix_forward_t ** out_trampoline,
-                                                      const char * signature,
-                                                      void * target_function) {
+c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampoline,
+                                                const char * signature,
+                                                void * target_function) {
     infix_arena_t * arena = nullptr;
     infix_type * ret_type = nullptr;
     infix_function_argument * args = nullptr;

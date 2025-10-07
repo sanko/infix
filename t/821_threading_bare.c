@@ -70,10 +70,10 @@ void * bare_thread_worker(void * arg) {
     typedef void (*my_func_ptr)(int, int);
 
     for (int i = 0; i < ITERATIONS_PER_THREAD; ++i) {
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         // Generate the reverse trampoline. This is a critical area for thread-safety.
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler, NULL);
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler, nullptr);
         if (status != INFIX_SUCCESS) {
             fprintf(stderr, "# Thread failed to generate reverse trampoline.\n");
 #if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
@@ -113,8 +113,8 @@ int main(void) {
 #if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
     HANDLE threads[NUM_THREADS];
     for (int i = 0; i < NUM_THREADS; ++i) {
-        threads[i] = CreateThread(NULL, 0, bare_thread_worker, NULL, 0, NULL);
-        if (threads[i] == NULL) {
+        threads[i] = CreateThread(nullptr, 0, bare_thread_worker, nullptr, 0, nullptr);
+        if (threads[i] == nullptr) {
             fprintf(stderr, "# FATAL: CreateThread failed.\n");
             any_thread_failed = true;
             break;
@@ -126,7 +126,7 @@ int main(void) {
     }
 
     for (int i = 0; i < NUM_THREADS; ++i) {
-        if (threads[i] == NULL)
+        if (threads[i] == nullptr)
             continue;
         DWORD exit_code;
         GetExitCodeThread(threads[i], &exit_code);
@@ -139,7 +139,7 @@ int main(void) {
 #else  // POSIX
     pthread_t threads[NUM_THREADS] = {0};
     for (int i = 0; i < NUM_THREADS; ++i) {
-        if (pthread_create(&threads[i], NULL, bare_thread_worker, NULL) != 0) {
+        if (pthread_create(&threads[i], nullptr, bare_thread_worker, nullptr) != 0) {
             perror("# FATAL: pthread_create failed");
             any_thread_failed = true;
             break;

@@ -205,35 +205,38 @@ TEST {
         }
 
         // Test Pass Arg
-        infix_forward_t *unbound_pass = NULL, *bound_pass = NULL;
-        ok(infix_forward_create_manual(
+        infix_forward_t *unbound_pass = nullptr, *bound_pass = nullptr;
+        ok(infix_forward_create_unbound_manual(
                &unbound_pass, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), &point_type, 1, 1) == INFIX_SUCCESS,
            "Pass arg (unbound) created");
-        ok(infix_forward_create_bound_manual(&bound_pass,
-                                             infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
-                                             &point_type,
-                                             1,
-                                             1,
-                                             (void *)process_point_by_value) == INFIX_SUCCESS,
+        ok(infix_forward_create_manual(&bound_pass,
+                                       infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                       &point_type,
+                                       1,
+                                       1,
+                                       (void *)process_point_by_value) == INFIX_SUCCESS,
            "Pass arg (bound) created");
         Point p_in = {10.5, 20.5};
         void * pass_args[] = {&p_in};
         double unbound_pass_res = 0.0, bound_pass_res = 0.0;
-        ((infix_cif_func)infix_forward_get_code(unbound_pass))(
-            (void *)process_point_by_value, &unbound_pass_res, pass_args);
-        ((infix_bound_cif_func)infix_forward_get_code(bound_pass))(&bound_pass_res, pass_args);
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_pass);
+        unbound_cif((void *)process_point_by_value, &unbound_pass_res, pass_args);
+        infix_bound_cif_func bound_cif = infix_forward_get_bound_code(bound_pass);
+        bound_cif(&bound_pass_res, pass_args);
         ok(fabs(unbound_pass_res - 31.0) < 0.001 && fabs(bound_pass_res - 31.0) < 0.001, "Pass arg correct");
 
         // Test Return
-        infix_forward_t *unbound_ret = NULL, *bound_ret = NULL;
-        ok(infix_forward_create_manual(&unbound_ret, point_type, NULL, 0, 0) == INFIX_SUCCESS,
+        infix_forward_t *unbound_ret = nullptr, *bound_ret = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_ret, point_type, nullptr, 0, 0) == INFIX_SUCCESS,
            "Ret val (unbound) created");
-        ok(infix_forward_create_bound_manual(&bound_ret, point_type, NULL, 0, 0, (void *)return_point_by_value) ==
+        ok(infix_forward_create_manual(&bound_ret, point_type, nullptr, 0, 0, (void *)return_point_by_value) ==
                INFIX_SUCCESS,
            "Ret val (bound) created");
         Point unbound_ret_res = {0, 0}, bound_ret_res = {0, 0};
-        ((infix_cif_func)infix_forward_get_code(unbound_ret))((void *)return_point_by_value, &unbound_ret_res, NULL);
-        ((infix_bound_cif_func)infix_forward_get_code(bound_ret))(&bound_ret_res, NULL);
+        infix_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
+        unbound_ret_cif((void *)return_point_by_value, &unbound_ret_res, nullptr);
+        infix_bound_cif_func bound_ret_cif = infix_forward_get_bound_code(bound_ret);
+        bound_ret_cif(&bound_ret_res, nullptr);
         ok(unbound_ret_res.x == 100.0 && unbound_ret_res.y == 200.0 && bound_ret_res.x == 100.0 &&
                bound_ret_res.y == 200.0,
            "Return val correct");
@@ -259,12 +262,12 @@ TEST {
         infix_type * mixed_type = nullptr;
         (void)infix_type_create_struct(arena, &mixed_type, members, 2);
 
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(
+        infix_forward_t * trampoline = nullptr;
+        infix_status status = infix_forward_create_unbound_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for mixed-type struct created");
 
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+        infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
         MixedIntDouble arg_val = {-500, 3.14};
         int result = 0;
         void * args[] = {&arg_val};
@@ -303,12 +306,12 @@ TEST {
                 return;
             }
 
-            infix_forward_t * trampoline = NULL;
-            status = infix_forward_create_manual(
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(
                 &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
             ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
 
-            infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+            infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
             Vector4 vec = {{1.5f, 2.5f, 3.5f, 4.5f}};
             float result = 0.0f;
             void * args[] = {&vec};
@@ -335,8 +338,8 @@ TEST {
         else {
             // 2. Create the trampoline for __m128d(__m128d, __m128d)
             infix_type * arg_types[] = {vector_type, vector_type};
-            infix_forward_t * trampoline = NULL;
-            status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
 
             // 3. Prepare arguments and call
             __m128d vec_a = _mm_set_pd(20.0, 10.0);  // Vector [10.0, 20.0]
@@ -347,7 +350,8 @@ TEST {
                 double d[2];
             } result;
             result.v = _mm_setzero_pd();
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add, &result.v, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add, &result.v, args);
 
             ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
                "SIMD vector passed/returned correctly");
@@ -371,15 +375,16 @@ TEST {
         }
         else {
             infix_type * arg_types[] = {neon_vector_type, neon_vector_type};
-            infix_forward_t * trampoline = NULL;
-            status = infix_forward_create_manual(&trampoline, neon_vector_type, arg_types, 2, 2);
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(&trampoline, neon_vector_type, arg_types, 2, 2);
             float64_t a_data[] = {10.0, 20.0};
             float64_t b_data[] = {32.0, 22.0};
             float64x2_t vec_a = vld1q_f64(a_data);
             float64x2_t vec_b = vld1q_f64(b_data);
             void * args[] = {&vec_a, &vec_b};
             float64x2_t result_vec;
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)neon_vector_add, &result_vec, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)neon_vector_add, &result_vec, args);
             float64_t result_data[2];
             vst1q_f64(result_data, result_vec);
             ok(fabs(result_data[0] - 42.0) < 1e-9 && fabs(result_data[1] - 42.0) < 1e-9,
@@ -400,7 +405,7 @@ TEST {
         infix_arena_t * arena = infix_arena_create(4096);
 
         // 1. Create the infix_type for v[4:double] to represent __m256d.
-        infix_type * vector_type = NULL;
+        infix_type * vector_type = nullptr;
         infix_status status =
             infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 4);
 
@@ -411,8 +416,8 @@ TEST {
         else {
             // 2. Create the trampoline for __m256d(__m256d, __m256d)
             infix_type * arg_types[] = {vector_type, vector_type};
-            infix_forward_t * trampoline = NULL;
-            status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
 
             // 3. Prepare arguments and call
             __m256d vec_a = _mm256_set_pd(40.0, 30.0, 20.0, 10.0);  // Vector [10, 20, 30, 40]
@@ -423,7 +428,8 @@ TEST {
                 double d[4];
             } result;
             result.v = _mm256_setzero_pd();
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add_256, &result.v, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add_256, &result.v, args);
 
             ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9 && fabs(result.d[2] - 42.0) < 1e-9 &&
                    fabs(result.d[3] - 42.0) < 1e-9,
@@ -463,7 +469,7 @@ TEST {
             // 3. Create the trampoline for svfloat64_t(svfloat64_t, svfloat64_t)
             infix_type * arg_types[] = {sve_vector_type, sve_vector_type};
             infix_forward_t * trampoline = nullptr;
-            status = infix_forward_create_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
+            status = infix_forward_create_unbound_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
 
             // 4. Prepare data arrays, call the trampoline, and verify the result.
             // Allocate memory for the data arrays based on the runtime size.
@@ -483,7 +489,8 @@ TEST {
 
             void * args[] = {&vec_a, &vec_b};
 
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_sve_vector_add, &result_vec, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_sve_vector_add, &result_vec, args);
 
             svst1_f64(pg, result_data, result_vec);
 

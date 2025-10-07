@@ -95,7 +95,7 @@ static const regression_test_case_t regression_tests[] = {
      .expected_status = INFIX_SUCCESS},
     {.name = "Stack Overflow in Signature Parser (Deep Nesting)",
      .b64_input = "e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7e3t7aX19fX19fX19fX19fX19fX19fX19fX19f"
-                  "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
+                  "X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fQ==",
      .target = TARGET_SIGNATURE_PARSER,
      .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
     {.name = "Timeout in SysV Classifier (Zero-Sized Array)",
@@ -161,11 +161,11 @@ static const regression_test_case_t regression_tests[] = {
      .b64_input = "AQAAAAAAAAAAAAAAAAAAAAAAAAAQUwAAAP///wD//+np5+l6AA==",
      .target = TARGET_TYPE_GENERATOR,
      .expected_status = INFIX_SUCCESS},
-    {.name = "SysV Classifier NULL member type dereference",
+    {.name = "SysV Classifier nullptr member type dereference",
      .b64_input = "/////////////////////////////////wDJAIAAAAAA/////////////////////////////////////7//////CA==",
      .target = TARGET_TYPE_GENERATOR,
      .expected_status = INFIX_SUCCESS},
-    {.name = "NULL type in arg_types for reverse trampoline (case 1)",
+    {.name = "nullptr type in arg_types for reverse trampoline (case 1)",
      .b64_input = "iAOysoiVA7L////////////////N////C////////////////4X/////////////9///////zf////8L////////////////////"
                   "////////9/8=",
      .target = TARGET_TRAMPOLINE_GENERATOR,
@@ -183,7 +183,7 @@ static void run_regression_case(const regression_test_case_t * test) {
         size_t data_size;
         unsigned char * data = b64_decode(test->b64_input, &data_size);
 
-        ok(data != NULL, "Base64 decoded successfully");
+        ok(data != nullptr, "Base64 decoded successfully");
         if (!data) {
             fail("Skipping test due to Base64 decode failure.");
             return;
@@ -210,7 +210,7 @@ static void run_regression_case(const regression_test_case_t * test) {
                 }
             }
             else {
-                ok(generated_type == NULL || arena->error, "Generator correctly failed on invalid input.");
+                ok(generated_type == nullptr || arena->error, "Generator correctly failed on invalid input.");
             }
             infix_arena_destroy(arena);
         }
@@ -219,8 +219,8 @@ static void run_regression_case(const regression_test_case_t * test) {
             memcpy(signature, data, data_size);
             signature[data_size] = '\0';
 
-            infix_type * type = NULL;
-            infix_arena_t * arena = NULL;
+            infix_type * type = nullptr;
+            infix_arena_t * arena = nullptr;
             infix_status status = infix_type_from_signature(&type, &arena, signature);
 
             ok(status == test->expected_status,
@@ -243,18 +243,19 @@ static void run_regression_case(const regression_test_case_t * test) {
             // This logic mirrors fuzz_trampoline.c to reproduce the bug.
             size_t total_fields = 0;
             infix_type * type_pool[1] = {generate_random_type(arena, &in, 0, &total_fields)};
-            if (type_pool[0] == NULL)
+            if (type_pool[0] == nullptr)
                 type_pool[0] = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
 
-            // The key part of the bug: create an args array with a NULL type.
-            infix_type * arg_types[] = {NULL};
+            // The key part of the bug: create an args array with a nullptr type.
+            infix_type * arg_types[] = {nullptr};
 
-            infix_forward_t * fwd = NULL;
-            infix_status fwd_status = infix_forward_create_manual(&fwd, type_pool[0], arg_types, 1, 1);
+            infix_forward_t * fwd = nullptr;
+            infix_status fwd_status = infix_forward_create_unbound_manual(&fwd, type_pool[0], arg_types, 1, 1);
             infix_forward_destroy(fwd);
 
-            infix_reverse_t * rev = NULL;
-            infix_status rev_status = infix_reverse_create_manual(&rev, type_pool[0], arg_types, 1, 1, NULL, NULL);
+            infix_reverse_t * rev = nullptr;
+            infix_status rev_status =
+                infix_reverse_create_manual(&rev, type_pool[0], arg_types, 1, 1, nullptr, nullptr);
             infix_reverse_destroy(rev);
 
             ok(fwd_status == test->expected_status && rev_status == test->expected_status,

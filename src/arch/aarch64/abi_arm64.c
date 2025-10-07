@@ -395,7 +395,7 @@ static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_cal
                              -16);  // stp x19, x20, [sp, #-16]! (Save callee-saved regs for our context)
     emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);  // stp x21, x22, [sp, #-16]!
 
-    if (layout->target_fn == NULL) {                     // Unbound trampoline (target_fn, ret_ptr, args_ptr)
+    if (layout->target_fn == nullptr) {                  // Unbound trampoline (target_fn, ret_ptr, args_ptr)
         emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0 (x19 = target_fn)
         emit_arm64_mov_reg(buf, true, X20_REG, X1_REG);  // mov x20, x1 (x20 = ret_ptr)
         emit_arm64_mov_reg(buf, true, X21_REG, X2_REG);  // mov x21, x2 (x21 = args_ptr)

@@ -77,9 +77,9 @@ TEST {
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         for (int i = 0; i < 6; ++i) {
-            members[i] = infix_type_create_member(NULL, s32_type, sizeof(int) * i);
+            members[i] = infix_type_create_member(nullptr, s32_type, sizeof(int) * i);
         }
-        infix_type * large_struct_type = NULL;
+        infix_type * large_struct_type = nullptr;
         if (!ok(infix_type_create_struct(arena, &large_struct_type, members, 6) == INFIX_SUCCESS, "Type created")) {
             skip(6, "Cannot proceed");
             infix_arena_destroy(arena);
@@ -88,31 +88,34 @@ TEST {
 
         // Test Pass Arg
         infix_forward_t *unbound_pass, *bound_pass;
-        ok(infix_forward_create_manual(&unbound_pass, s32_type, &large_struct_type, 1, 1) == INFIX_SUCCESS,
+        ok(infix_forward_create_unbound_manual(&unbound_pass, s32_type, &large_struct_type, 1, 1) == INFIX_SUCCESS,
            "Unbound pass created");
-        ok(infix_forward_create_bound_manual(
-               &bound_pass, s32_type, &large_struct_type, 1, 1, (void *)process_large_struct) == INFIX_SUCCESS,
+        ok(infix_forward_create_manual(&bound_pass, s32_type, &large_struct_type, 1, 1, (void *)process_large_struct) ==
+               INFIX_SUCCESS,
            "Bound pass created");
         LargeStruct s_in = {10, 20, 30, 40, 50, 60};
         void * pass_args[] = {&s_in};
         int unbound_pass_res = 0, bound_pass_res = 0;
-        ((infix_cif_func)infix_forward_get_code(unbound_pass))(
-            (void *)process_large_struct, &unbound_pass_res, pass_args);
-        ((infix_bound_cif_func)infix_forward_get_code(bound_pass))(&bound_pass_res, pass_args);
+        infix_cif_func unbound_pass_cif = infix_forward_get_unbound_code(unbound_pass);
+        unbound_pass_cif((void *)process_large_struct, &unbound_pass_res, pass_args);
+        infix_bound_cif_func bound_pass_cif = infix_forward_get_bound_code(bound_pass);
+        bound_pass_cif(&bound_pass_res, pass_args);
         ok(unbound_pass_res == 70 && bound_pass_res == 70, "Pass arg correct");
 
         // Test Return
         infix_forward_t *unbound_ret, *bound_ret;
-        ok(infix_forward_create_manual(&unbound_ret, large_struct_type, &s32_type, 1, 1) == INFIX_SUCCESS,
+        ok(infix_forward_create_unbound_manual(&unbound_ret, large_struct_type, &s32_type, 1, 1) == INFIX_SUCCESS,
            "Unbound ret created");
-        ok(infix_forward_create_bound_manual(
-               &bound_ret, large_struct_type, &s32_type, 1, 1, (void *)return_large_struct) == INFIX_SUCCESS,
+        ok(infix_forward_create_manual(&bound_ret, large_struct_type, &s32_type, 1, 1, (void *)return_large_struct) ==
+               INFIX_SUCCESS,
            "Bound ret created");
         int base_val = 100;
         void * ret_args[] = {&base_val};
         LargeStruct unbound_ret_res, bound_ret_res;
-        ((infix_cif_func)infix_forward_get_code(unbound_ret))((void *)return_large_struct, &unbound_ret_res, ret_args);
-        ((infix_bound_cif_func)infix_forward_get_code(bound_ret))(&bound_ret_res, ret_args);
+        infix_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
+        unbound_ret_cif((void *)return_large_struct, &unbound_ret_res, ret_args);
+        infix_bound_cif_func bound_ret_cif = infix_forward_get_bound_code(bound_ret);
+        bound_ret_cif(&bound_ret_res, ret_args);
         ok(unbound_ret_res.a == 100 && unbound_ret_res.f == 105 && bound_ret_res.a == 100 && bound_ret_res.f == 105,
            "Return val correct");
 
@@ -134,7 +137,7 @@ TEST {
         members[1] = infix_type_create_member("b", s32_type, offsetof(NonPowerOfTwoStruct, b));
         members[2] = infix_type_create_member("c", s32_type, offsetof(NonPowerOfTwoStruct, c));
 
-        infix_type * npot_type = NULL;
+        infix_type * npot_type = nullptr;
         infix_status status = infix_type_create_struct(arena, &npot_type, members, 3);
         if (!ok(status == INFIX_SUCCESS, "infix_type for NonPowerOfTwoStruct created")) {
             skip(2, "Cannot proceed");
@@ -142,12 +145,12 @@ TEST {
             return;
         }
 
-        infix_forward_t * trampoline = NULL;
-        status = infix_forward_create_manual(
+        infix_forward_t * trampoline = nullptr;
+        status = infix_forward_create_unbound_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &npot_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for non-power-of-two struct created");
 
-        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
+        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
         NonPowerOfTwoStruct s_in = {10, 20, 30};
         int result = 0;
         void * args[] = {&s_in};

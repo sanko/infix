@@ -95,9 +95,9 @@ TEST {
                                     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
 
         // 2. Generate the reverse trampoline.
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)int_callback_handler, NULL);
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)int_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS && rt && infix_reverse_get_code(rt), "Reverse trampoline created");
 
         // 3. Cast the executable code to the correct native type and execute.
@@ -116,9 +116,9 @@ TEST {
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT),
                                     infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT)};
 
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)float_callback_handler, NULL);
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)float_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS && rt && infix_reverse_get_code(rt), "Reverse trampoline created");
 
         if (rt && infix_reverse_get_code(rt))
@@ -135,9 +135,9 @@ TEST {
         infix_type * ret_type = infix_type_create_void();
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
 
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 1, 1, (void *)void_callback_handler, NULL);
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 1, 1, (void *)void_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS && rt && infix_reverse_get_code(rt), "Reverse trampoline created");
 
         if (rt && infix_reverse_get_code(rt))
