@@ -94,8 +94,22 @@ void emit_arm64_load_u64_immediate(code_buffer * buf, arm64_gpr dest, uint64_t v
  * Implementation for emit_arm64_mov_reg.
  * Encodes `MOV Xd, Xn` which is an alias for `ORR Xd, XZR, Xn`.
  * Opcode (64-bit): 10101010000111110000001111100000 (0xAA1F03E0) + dest
+ * This requires a special case for moving the stack pointer.
  */
 void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr src) {
+    // Special case: MOV to/from SP is an alias for ADD Xd, SP, #0.
+    // The generic ORR-based alias treats register 31 as XZR, not SP.
+    if (dest == SP_REG || src == SP_REG) {
+        uint32_t instr = 0x11000000;  // ADD Wd, Wn, #0
+        if (is64)
+            instr |= (1u << 31);
+        instr |= (uint32_t)(src & 0x1F) << 5;  // Rn
+        instr |= (uint32_t)(dest & 0x1F);      // Rd
+        emit_int32(buf, instr);
+        return;
+    }
+
+    // Standard case: MOV is an alias for ORR Xd, XZR, Xn
     uint32_t instr = 0x2A0003E0;  // ORR Wd, WZR, Wm
     if (is64)
         instr |= (1u << 31);
@@ -103,6 +117,7 @@ void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
     instr |= (uint32_t)(dest & 0x1F);
     emit_int32(buf, instr);
 }
+
 
 //=================================================================================================
 // Memory <-> GPR Load/Store Emitters

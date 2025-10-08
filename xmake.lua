@@ -6,15 +6,47 @@ set_version("0.1.0", {build = "%Y%m%d%H%M", soname = true})
 set_languages("c17", "cxx17")
 
 -- Config
-option("examples", {showmenu = true, default = true, description = "Build the cookbook example programs."})
+option("examples",     {showmenu = true, default = true,   description = "Build the cookbook example programs."})
+option("enable_debug", {showmenu = true, default = false,  description = "Enable library debug features (-DINFIX_DEBUG_ENABLED=1)."})
+option("abi",          {showmenu = true, default = "auto", description = "Force a specific ABI for code generation.", values = {"auto", "windows_x64", "sysv_x64", "aapcs64"}})
 
 -- Add all necessary include directories for the build process.
 add_includedirs("include", "src", "src/core", "src/arch/x64", "src/arch/aarch64")
 
+add_rules("mode.valgrind", "mode.coverage", "mode.release","mode.check")
+
 -- Add compiler-specific flags globally.
-after_load(function (target)
-    if target:toolchain("msvc") then
-        target:add("cxflags", "/experimental:c11atomics")
+--~ after_load(function (target)
+--~     if target:toolchain("msvc") then
+--~         target:add("cxflags", "/experimental:c11atomics")
+--~     end
+--~ end)
+
+-- Apply global flags after the project has been configured and the toolchain is known.
+-- This block runs for EVERY target in the project.
+on_config(function (target)
+    -- Only apply C/C++ compiler flags to buildable targets, not script targets.
+    if target:has_tool("c") or target:has_tool("cxx") then
+        if target:toolchain("msvc") then
+            target:add("cxflags", "/experimental:c11atomics", "/W3")
+            target:add("defines", "_CRT_SECURE_NO_WARNINGS")
+        else
+            target:add("cxflags", "-Wall", "-Wextra")
+            target:add("links", "m")
+            if not target:is_plat("windows") then
+                 target:add("cxflags", "-pthread")
+                 target:add("ldflags", "-pthread")
+            end
+        end
+    end
+
+    if get_config("enable_debug") then
+        target:add("defines", "INFIX_DEBUG_ENABLED=1")
+    end
+
+    if get_config("abi") ~= "auto" then
+--~         local abi_def = "INFIX_FORCE_ABI_" .. get_config("abi"):upper()
+        target:add("defines", abi_def)
     end
 end)
 
@@ -157,3 +189,7 @@ end
 --~ xmake build -a   # build everything
 --~ xmake run 18_cpp_example
 --~ xmake config --examples=true
+--~ xmake f -m coverage
+--~ xmake f -m valgrind
+--~ xmake f -m release
+--~ xmake f --policies=build.sanitizer.address,build.sanitizer.undefined

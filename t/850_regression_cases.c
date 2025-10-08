@@ -60,8 +60,8 @@
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
+#include "fuzz_helpers.h"             // From the fuzz/ directory
 #include "fuzz_regression_helpers.h"  // The Base64 decoder
-#include <fuzz_helpers.h>             // From the fuzz/ directory
 #include <infix/infix.h>
 
 /**

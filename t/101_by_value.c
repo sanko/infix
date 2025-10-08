@@ -104,7 +104,7 @@
 #elif defined(INFIX_ARCH_ARM_NEON)
 #include <arm_neon.h>
 #endif
-#if defined(INFIX_ARCH_ARM_SVE) || defined(INFIX_ARCH_ARM_SVE2)
+#if defined(INFIX_ARCH_ARM_SVE)
 #include <arm_sve.h>
 #endif
 #if defined(INFIX_ARCH_RISCV_RVV)
@@ -112,7 +112,6 @@
 #endif
 #endif
 /** @} */  // end simd_macros
-
 
 // Platform-specific headers and functions for SIMD tests
 #if defined(INFIX_ARCH_X86_SSE2)
@@ -129,7 +128,6 @@
 #if defined(INFIX_ARCH_ARM_SVE)
 #include <arm_sve.h>
 #endif
-
 
 // Native C Target Functions
 /** @brief Processes a Point struct passed by value, returning a sum of its members. */
@@ -183,6 +181,48 @@ svfloat64_t native_sve_vector_add(svfloat64_t a, svfloat64_t b) {
     return svadd_z(pg, a, b);
 }
 #endif
+
+#if defined(INFIX_ARCH_ARM_SVE)
+#if defined(INFIX_OS_LINUX)
+#include <sys/auxv.h>
+#ifndef HWCAP_SVE
+#define HWCAP_SVE (1 << 22)  // Define if missing from old headers
+#endif
+#elif defined(INFIX_OS_MACOS)
+#include <sys/sysctl.h>
+#elif defined(INFIX_OS_WINDOWS)
+#include <windows.h>
+#endif
+#endif
+
+/**
+ * @brief Performs a runtime check to see if the CPU supports the ARM SVE feature set.
+ */
+static bool is_sve_supported(void) {
+#if defined(INFIX_ARCH_ARM_SVE)
+#if defined(INFIX_OS_LINUX)
+    unsigned long hwcaps = getauxval(AT_HWCAP);
+    return (hwcaps & HWCAP_SVE) != 0;
+#elif defined(INFIX_OS_MACOS)
+    int sve_present = 0;
+    size_t size = sizeof(sve_present);
+    // This sysctl key returns 1 if SVE is available, 0 otherwise.
+    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0) {
+        return sve_present == 1;
+    }
+    return false;  // sysctl failed, assume no support.
+#elif defined(INFIX_OS_WINDOWS)
+    return IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE);
+#else
+    // For other POSIX-like systems (e.g., BSDs), this would need their specific
+    // mechanism. For now, we conservatively assume no support.
+    return false;
+#endif
+#else
+    // If the compiler doesn't even support SVE, then it's definitely not available.
+    return false;
+#endif
+}
 
 TEST {
     plan(6);  // One subtest for each major scenario.
@@ -446,72 +486,76 @@ TEST {
     subtest("ABI Specific: ARM64 Scalable Vector (SVE)") {
         plan(2);
 #if defined(INFIX_ARCH_ARM_SVE)
-        note("Testing ARM64 Scalable Vector Extension (SVE).");
-        infix_arena_t * arena = infix_arena_create(4096);
+        if (is_sve_supported()) {
+            note("Testing ARM64 Scalable Vector Extension (SVE).");
+            infix_arena_t * arena = infix_arena_create(4096);
 
-        // 1. Determine the vector size at RUNTIME. This is the key to SVE.
-        // Use svcntb() (count bytes) which is the canonical intrinsic for vector length.
-        // svlen_b() is often an alias but is less portable and can cause linker errors.
-        size_t vector_len_bytes = svcntb();
-        size_t num_elements = svcntd();  // Count of 64-bit (double) elements.
-        note("Detected SVE vector width: %zu bits (%zu double elements).", vector_len_bytes * 8, num_elements);
+            // 1. Determine the vector size at RUNTIME. This is the key to SVE.
+            // Use svcntb() (count bytes) which is the canonical intrinsic for vector length.
+            // svlen_b() is often an alias but is less portable and can cause linker errors.
+            size_t vector_len_bytes = svcntb();
+            size_t num_elements = svcntd();  // Count of 64-bit (double) elements.
+            note("Detected SVE vector width: %zu bits (%zu double elements).", vector_len_bytes * 8, num_elements);
 
-        // 2. Create the infix_type for the dynamically sized vector.
-        infix_type * sve_vector_type = nullptr;
-        infix_status status = infix_type_create_vector(
-            arena, &sve_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), num_elements);
+            // 2. Create the infix_type for the dynamically sized vector.
+            infix_type * sve_vector_type = nullptr;
+            infix_status status = infix_type_create_vector(
+                arena, &sve_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), num_elements);
 
-        if (!ok(status == INFIX_SUCCESS, "infix_type for svfloat64_t created successfully")) {
-            skip(1, "Cannot proceed without SVE vector type");
-            infix_arena_destroy(arena);
-        }
-        else {
-            // 3. Create the trampoline for svfloat64_t(svfloat64_t, svfloat64_t)
-            infix_type * arg_types[] = {sve_vector_type, sve_vector_type};
-            infix_forward_t * trampoline = nullptr;
-            status = infix_forward_create_unbound_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
-
-            // 4. Prepare data arrays, call the trampoline, and verify the result.
-            // Allocate memory for the data arrays based on the runtime size.
-            double * vec_a_data = malloc(sizeof(double) * num_elements);
-            double * vec_b_data = malloc(sizeof(double) * num_elements);
-            double * result_data = malloc(sizeof(double) * num_elements);
-
-            for (size_t i = 0; i < num_elements; ++i) {
-                vec_a_data[i] = 10.0 + i;
-                vec_b_data[i] = 32.0 - i;
+            if (!ok(status == INFIX_SUCCESS, "infix_type for svfloat64_t created successfully")) {
+                skip(1, "Cannot proceed without SVE vector type");
+                infix_arena_destroy(arena);
             }
+            else {
+                // 3. Create the trampoline for svfloat64_t(svfloat64_t, svfloat64_t)
+                infix_type * arg_types[] = {sve_vector_type, sve_vector_type};
+                infix_forward_t * trampoline = nullptr;
+                status = infix_forward_create_unbound_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
 
-            svbool_t pg = svptrue_b64();
-            svfloat64_t vec_a = svld1_f64(pg, vec_a_data);
-            svfloat64_t vec_b = svld1_f64(pg, vec_b_data);
-            svfloat64_t result_vec;
+                // 4. Prepare data arrays, call the trampoline, and verify the result.
+                // Allocate memory for the data arrays based on the runtime size.
+                double * vec_a_data = malloc(sizeof(double) * num_elements);
+                double * vec_b_data = malloc(sizeof(double) * num_elements);
+                double * result_data = malloc(sizeof(double) * num_elements);
 
-            void * args[] = {&vec_a, &vec_b};
-
-            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
-            cif((void *)native_sve_vector_add, &result_vec, args);
-
-            svst1_f64(pg, result_data, result_vec);
-
-            bool all_correct = true;
-            for (size_t i = 0; i < num_elements; ++i) {
-                if (fabs(result_data[i] - 42.0) > 1e-9) {
-                    all_correct = false;
-                    diag("Mismatch at element %zu: expected 42.0, got %f", i, result_data[i]);
+                for (size_t i = 0; i < num_elements; ++i) {
+                    vec_a_data[i] = 10.0 + i;
+                    vec_b_data[i] = 32.0 - i;
                 }
+
+                svbool_t pg = svptrue_b64();
+                svfloat64_t vec_a = svld1_f64(pg, vec_a_data);
+                svfloat64_t vec_b = svld1_f64(pg, vec_b_data);
+                svfloat64_t result_vec;
+
+                void * args[] = {&vec_a, &vec_b};
+
+                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                cif((void *)native_sve_vector_add, &result_vec, args);
+
+                svst1_f64(pg, result_data, result_vec);
+
+                bool all_correct = true;
+                for (size_t i = 0; i < num_elements; ++i) {
+                    if (fabs(result_data[i] - 42.0) > 1e-9) {
+                        all_correct = false;
+                        diag("Mismatch at element %zu: expected 42.0, got %f", i, result_data[i]);
+                    }
+                }
+
+                ok(all_correct, "SVE vector passed/returned correctly for all %zu elements", num_elements);
+
+                free(vec_a_data);
+                free(vec_b_data);
+                free(result_data);
+                infix_forward_destroy(trampoline);
+                infix_arena_destroy(arena);
             }
-
-            ok(all_correct, "SVE vector passed/returned correctly for all %zu elements", num_elements);
-
-            free(vec_a_data);
-            free(vec_b_data);
-            free(result_data);
-            infix_forward_destroy(trampoline);
-            infix_arena_destroy(arena);
         }
+        else
+            skip(2, "SVE is not supported by the CPU at runtime.");
 #else
-        skip(2, "No SVE support on this platform (requires -march=armv8-a+sve or similar).");
+        skip(2, "SVE tests skipped: not compiled with SVE support (e.g., -march=armv8-a+sve).");
 #endif
     }
 }

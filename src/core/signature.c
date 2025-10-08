@@ -37,11 +37,11 @@
 
 #include "common/infix_internals.h"
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 
 /*
  * @internal

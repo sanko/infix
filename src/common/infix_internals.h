@@ -310,7 +310,7 @@ static inline bool is_long_double(const infix_type * type) {
 //=================================================================================================
 
 #if defined(INFIX_ABI_SYSV_X64) || defined(INFIX_ABI_WINDOWS_X64)
-#include "abi_x64_emitters.h"
+#include "arch/x64/abi_x64_emitters.h"
 #elif defined(INFIX_ABI_AAPCS64)
-#include "abi_arm64_emitters.h"
+#include "arch/aarch64/abi_arm64_emitters.h"
 #endif

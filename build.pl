@@ -375,8 +375,10 @@ sub compile_and_run_tests {
         warn '$config{arch}: ' . $config{arch};
         my @local_cflags = (
             @{ $config->{cflags} }, (
-                $config{arch} eq 'x64'       ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
-                    $config{arch} eq 'arm64' ? '-march=armv8-a+sve' :
+                $config{arch} eq 'x64' ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
+                    $config{arch} eq 'arm64' ?
+                    ''    #~ '-march=armv8-a+sve'
+                :
                     ''
             )
         );
@@ -404,7 +406,9 @@ sub compile_and_run_tests {
             run_command(@compile_cmd);
         }
     }
-    my $use_prove = command_exists('prove') && !$opts{abi} && !( $config->{is_windows} && $config->{arch} eq 'arm64' );
+    my $use_prove = command_exists('prove --version') && !$opts{abi} && !(
+        $config->{is_windows}    # && $config->{arch} eq 'arm64'
+    );
     if ($use_prove) {
         print "\nRunning all tests with 'prove'\n";
         return run_command( 'prove', '--verbose', @test_executables );
@@ -606,7 +610,7 @@ sub upload_to_codecov {
 }
 
 sub run_command {
-    my @cmd = @_;
+    my @cmd = grep { defined && length } @_;
     print "Executing: " . join( ' ', @_ ) . "\n";
     my $exit_code = system(@cmd);
     my $status    = $exit_code >> 8;
