@@ -79,7 +79,8 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_type * ret_type,
                                                         infix_type ** arg_types,
                                                         size_t num_args,
-                                                        size_t num_fixed_args);
+                                                        size_t num_fixed_args,
+                                                        void * target_fn);
 static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_call_frame_layout * layout);
 static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                                                              infix_call_frame_layout * layout,
@@ -336,7 +337,8 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_type * ret_type,
                                                         infix_type ** arg_types,
                                                         size_t num_args,
-                                                        size_t num_fixed_args) {
+                                                        size_t num_fixed_args,
+                                                        void * target_fn) {
     if (out_layout == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -348,6 +350,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     layout->is_variadic = num_args > num_fixed_args;
+    layout->target_fn = target_fn;
     layout->arg_locations =
         infix_arena_calloc(arena, num_args, sizeof(infix_arg_location), _Alignof(infix_arg_location));
     if (layout->arg_locations == nullptr && num_args > 0) {
@@ -547,11 +550,19 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
     emit_push_reg(buf, R15_REG);  // push r15
 
     // Move Trampoline Arguments to Persistent Registers
-    // The trampoline itself is called with (target_fn, ret_ptr, args_ptr) in RDI, RSI, RDX.
-    // We move these into our saved callee-saved registers to protect them.
-    emit_mov_reg_reg(buf, R12_REG, RDI_REG);  // r12 = target_fn
-    emit_mov_reg_reg(buf, R13_REG, RSI_REG);  // r13 = ret_ptr
-    emit_mov_reg_reg(buf, R14_REG, RDX_REG);  // r14 = args_ptr
+    if (layout->target_fn == nullptr) {  // Unbound trampoline
+        // The trampoline is called with (target_fn, ret_ptr, args_ptr) in RDI, RSI, RDX.
+        // We move these into our saved callee-saved registers to protect them.
+        emit_mov_reg_reg(buf, R12_REG, RDI_REG);  // r12 = target_fn
+        emit_mov_reg_reg(buf, R13_REG, RSI_REG);  // r13 = ret_ptr
+        emit_mov_reg_reg(buf, R14_REG, RDX_REG);  // r14 = args_ptr
+    }
+    else {  // Bound trampoline
+        // The trampoline is called with (ret_ptr, args_ptr) in RDI, RSI.
+        emit_mov_reg_reg(buf, R13_REG, RDI_REG);  // r13 = ret_ptr
+        emit_mov_reg_reg(buf, R14_REG, RSI_REG);  // r14 = args_ptr
+    }
+
 
     // Allocate Stack Space
     // If any arguments are passed on the stack, allocate space for them.
@@ -685,6 +696,12 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
  */
 static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf,
                                                                c23_maybe_unused infix_call_frame_layout * layout) {
+    // For a bound trampoline, load the hardcoded address into R12.
+    // For an unbound trampoline, R12 was already loaded from RDI in the prologue.
+    if (layout->target_fn) {
+        emit_mov_reg_imm64(buf, R12_REG, (uint64_t)layout->target_fn);
+    }
+
     // On SysV x64, the target function pointer is stored in R12.
     emit_test_reg_reg(buf, R12_REG, R12_REG);  // test r12, r12 ; check if function pointer is null
     emit_jnz_short(buf, 2);                    // jnz +2       ; if not null, skip the crash instruction

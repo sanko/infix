@@ -207,6 +207,20 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
         memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
+        // Deep copy the member names to make the type fully self-contained.
+        for (size_t i = 0; i < num_members; ++i) {
+            const char * src_name = members[i].name;
+            if (src_name) {
+                size_t name_len = strlen(src_name) + 1;
+                char * dest_name = infix_arena_alloc(arena, name_len, 1);
+                if (!dest_name) {
+                    *out_type = nullptr;
+                    return INFIX_ERROR_ALLOCATION_FAILED;
+                }
+                memcpy(dest_name, src_name, name_len);
+                arena_members[i].name = dest_name;
+            }
+        }
     }
 
     *out_type = type;
@@ -252,6 +266,7 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
     // Security: Check for integer overflow before calculating the total array size.
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
@@ -393,6 +408,7 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_UNION;
+    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous union
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -435,6 +451,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
                                                     infix_type ** out_type,
                                                     infix_struct_member * members,
                                                     size_t num_members) {
+    _infix_clear_error();
     infix_type * type = nullptr;
     infix_struct_member * arena_members = nullptr;
     infix_status status = _create_aggregate_setup(arena, &type, &arena_members, members, num_members);
@@ -445,6 +462,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_STRUCT;
+    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous struct
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -534,6 +552,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
     type->size = total_size;
     type->alignment = alignment;
     type->category = INFIX_TYPE_STRUCT;
+    type->meta.aggregate_info.name = nullptr;  // Packed structs are anonymous by default via this API
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -548,7 +567,8 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
  */
 c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * arena,
                                                              infix_type ** out_type,
-                                                             const char * name) {
+                                                             const char * name,
+                                                             infix_aggregate_category_t agg_cat) {
     if (out_type == nullptr || name == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -567,6 +587,7 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
     type->size = 0;
     type->alignment = 1;
     type->meta.named_reference.name = name;
+    type->meta.named_reference.aggregate_category = agg_cat;
 
     *out_type = type;
     return INFIX_SUCCESS;

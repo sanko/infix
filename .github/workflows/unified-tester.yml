@@ -55,7 +55,7 @@ jobs:
         shell: bash
         run: |
           ${{ inputs.prepare }}
-          perl build.pl --compiler=${{ inputs.toolchain }} coverage
+          perl build.pl --compiler=${{ inputs.toolchain }} test
 
       - name: Build and Test in FreeBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'freebsd'
@@ -66,7 +66,7 @@ jobs:
           arch: ${{ inputs.arch }}
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} coverage
+            perl build.pl --compiler=${{ inputs.toolchain }} test
 
       - name: Build and Test in OpenBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'openbsd'
@@ -77,7 +77,7 @@ jobs:
           arch: ${{ inputs.arch }}
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} coverage
+            perl build.pl --compiler=${{ inputs.toolchain }} test
 
       - name: Build and Test in NetBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'netbsd'
@@ -88,7 +88,7 @@ jobs:
           arch: ${{ inputs.arch }}
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} coverage
+            perl build.pl --compiler=${{ inputs.toolchain }} test
 
       - name: Build and Test in DragonflyBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'dragonflybsd'
@@ -98,7 +98,7 @@ jobs:
           usesh: true
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} coverage
+            perl build.pl --compiler=${{ inputs.toolchain }} test
 
       - name: Build and Test in Solaris
         if: inputs.runner_type == 'vm' && inputs.os == 'solaris'
@@ -108,7 +108,7 @@ jobs:
           usesh: true
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} coverage
+            perl build.pl --compiler=${{ inputs.toolchain }} test
 
       - name: Build and Test in OmniOS
         if: inputs.runner_type == 'vm' && inputs.os == 'omnios'
@@ -118,13 +118,13 @@ jobs:
           usesh: true
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} coverage
+            perl build.pl --compiler=${{ inputs.toolchain }} test
 
       #~ - name: Upload coverage reports to Codecov
         #~ uses: codecov/codecov-action@v5
         #~ with:
           #~ token: ${{ secrets.CODECOV_TOKEN }}
-          root_dir: src
+          #~ root_dir: src
           #~ flags: ${{inputs.os}}, ${{inputs.arch}}, ${{ inputs.toolchain }}
           #~ name: ${{ inputs.platform_name }}-${{ inputs.arch }}-${{ inputs.toolchain }}
           #~ verbose: true

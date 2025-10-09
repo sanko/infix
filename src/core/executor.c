@@ -379,7 +379,9 @@ void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * 
         return;
     }
 
-    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+    // The cached trampoline is always a "bound" one, as its target (the user's C
+    // handler) is known at creation time.
+    infix_bound_cif_func cif_func = infix_forward_get_code(trampoline);
 
     // The cached forward trampoline was generated to expect `num_args + 1` arguments,
     // with the first one being the `infix_reverse_t*` context. We must construct a
@@ -399,7 +401,7 @@ void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * 
         infix_memcpy(&callback_args[1], args_array, context->num_args * sizeof(void *));
 
     // Call the user's handler through the trampoline with the complete, prepended argument list.
-    cif_func(context->user_callback_fn, return_value_ptr, callback_args);
+    cif_func(return_value_ptr, callback_args);
 
     INFIX_DEBUG_PRINTF("Exiting callback dispatcher.");
 }

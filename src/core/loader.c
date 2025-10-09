@@ -68,8 +68,10 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
 
     // Allocate memory for our opaque wrapper struct.
     infix_library_t * lib = infix_malloc(sizeof(infix_library_t));
-    if (lib == nullptr)
+    if (lib == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
+    }
 
 #if defined(INFIX_OS_WINDOWS)
     // On Windows, use LoadLibraryA to load the DLL.
@@ -87,6 +89,11 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
 
     // Both LoadLibraryA and dlopen return NULL on failure.
     if (lib->handle == nullptr) {
+#if defined(INFIX_OS_WINDOWS)
+        _infix_set_system_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_LIBRARY_LOAD_FAILED, GetLastError(), nullptr);
+#else
+        _infix_set_system_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_LIBRARY_LOAD_FAILED, 0, dlerror());
+#endif
         // If the OS call failed, we must free the wrapper struct we allocated
         // to prevent a memory leak.
         infix_free(lib);
@@ -169,8 +176,10 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
 
     // Find the address of the global variable in the library.
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
-    if (symbol_addr == nullptr)
+    if (symbol_addr == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     // Parse the type signature to determine the size of the variable.
     // This creates a temporary arena to hold the type information.
@@ -210,8 +219,10 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
 
     // Find the address of the global variable in the library.
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
-    if (symbol_addr == nullptr)
+    if (symbol_addr == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     // Parse the type signature to determine the size of the variable.
     infix_type * type = nullptr;

@@ -53,7 +53,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 **Problem**: You want to call a standard C function, like `int add(int, int);`.
 
-**Solution**: Describe the function's signature using the v1.0 format (`"(int32, int32) -> int32"`), prepare pointers to your arguments, and invoke the function through the generated trampoline.
+**Solution**: Describe the function's signature using the current format (`"(int32, int32) -> int32"`), prepare pointers to your arguments, and invoke the function through the generated trampoline.
 
 ```c
 #include <infix/infix.h>

@@ -18,9 +18,9 @@
  *
  * @internal
  * This file provides the concrete implementation of the ABI spec for the ARM64
- * architecture, following the standard Procedure Call Standard for the ARM 64-bit
- * Architecture (AAPCS64). It also handles specific deviations for platforms
- * like Apple macOS.
+ * architecture. It primarily follows the standard "Procedure Call Standard for the
+ * ARM 64-bit Architecture" (AAPCS64), but it also contains critical conditional
+ * logic to handle specific deviations for platforms like Apple macOS and Windows on ARM.
  *
  * Key features of the AAPCS64 implemented here:
  *
@@ -28,17 +28,27 @@
  *   - GPRs (X0-X7) for integers, pointers, and small aggregates.
  *   - VPRs (V0-V7) for floats, doubles, and vectors.
  *
- * - **Homogeneous Aggregates (HFAs):** Structs/arrays composed entirely of 1-4
- *   identical floating-point types are passed in consecutive VPRs.
+ * - **Homogeneous Floating-point Aggregates (HFAs):** Structs/arrays composed
+ *   entirely of 1-4 identical floating-point types are passed in consecutive VPRs.
+ *   This rule also applies to variadic arguments on standard AAPCS64.
  *
  * - **Return Values:**
  *   - Large aggregates (> 16 bytes) are returned via a hidden pointer passed by
  *     the caller in the dedicated indirect result location register, `X8`.
  *
- * - **Platform-Specific Variadic Calls:**
+ * - **Platform-Specific Variadic Call Deviations:**
  *   - **Standard (Linux):** Variadic arguments are passed in registers if available.
  *   - **Apple (macOS):** All variadic arguments are passed on the stack, with smaller
  *     types promoted to fill 8-byte slots.
+ *   - **Windows on ARM (MSVC):** The HFA rule is disabled for variadic arguments.
+ *     All floating-point scalars are passed in GPRs. 16-byte aggregates do not
+ *     follow the even-GPR alignment rule.
+ *
+ * - **16-Byte Argument Alignment:**
+ *   - **Standard/macOS:** 16-byte aggregates passed in GPRs must start in an
+ *     even-numbered register (X0, X2, X4, X6).
+ *   - **macOS Exception:** `__int128_t` does NOT require even-GPR alignment.
+ *   - **Windows Exception:** Variadic 16-byte aggregates do NOT require even-GPR alignment.
  * @endinternal
  */
 
@@ -68,7 +78,8 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
                                                      infix_type * ret_type,
                                                      infix_type ** arg_types,
                                                      size_t num_args,
-                                                     size_t num_fixed_args);
+                                                     size_t num_fixed_args,
+                                                     void * target_fn);
 static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout);
 static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                                                           infix_call_frame_layout * layout,
@@ -218,19 +229,23 @@ static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
     return true;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 1 (Forward): Analyzes a signature and creates a call frame layout for AAPCS64.
  * @details This function assigns each argument to a location (GPR, VPR, or Stack) according
- *          to the AAPCS64 rules, including special handling for HFAs and platform-specific
- *          variadic argument conventions (e.g., Apple's stack-based approach).
+ *          to the AAPCS64 rules. It contains extensive conditional logic to handle ABI
+ *          deviations on Apple and Windows platforms, especially for variadic arguments
+ *          and 16-byte aggregate alignment.
+ *
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
                                                      infix_call_frame_layout ** out_layout,
                                                      infix_type * ret_type,
                                                      infix_type ** arg_types,
                                                      size_t num_args,
-                                                     size_t num_fixed_args) {
+                                                     size_t num_fixed_args,
+                                                     void * target_fn) {
     if (out_layout == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
     infix_call_frame_layout * layout =
@@ -248,6 +263,7 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 
     size_t gpr_count = 0, vpr_count = 0, stack_offset = 0;
     layout->is_variadic = (num_fixed_args < num_args);
+    layout->target_fn = target_fn;
     layout->num_args = num_args;
     layout->num_stack_args = 0;
 
@@ -275,8 +291,7 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
             layout->arg_locations[i].stack_offset = (uint32_t)stack_offset;
 
-            // Any argument smaller than 8 bytes must be promoted to an 8-byte slot on the stack. This calculation
-            // ensures the stack offset for subsequent arguments is correct.
+            // Any argument smaller than 8 bytes must be promoted to an 8-byte slot on the stack.
             size_t arg_size_on_stack = (type->size < 8) ? 8 : type->size;
             stack_offset += (arg_size_on_stack + 7) & ~7;
             layout->num_stack_args++;
@@ -286,18 +301,23 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 
         bool pass_fp_in_vpr =
             is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
-#if defined(INFIX_OS_WINDOWS)
-        // Windows on ARM ABI: If the function is variadic, ALL floating-point
-        // arguments are passed in general-purpose registers.
-        if (layout->is_variadic)
-            pass_fp_in_vpr = false;
-#endif
+
         infix_type * hfa_base_type = nullptr;
-        // The order of these checks is critical to prevent incorrect classification.
-        // Check for HFA first, as it's the most specific aggregate rule.
 
         // Classification for non-variadic arguments (or all arguments on non-Apple platforms).
-        if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
+        bool is_hfa_candidate = is_hfa(type, &hfa_base_type);
+
+#if defined(INFIX_OS_WINDOWS)
+        // Windows on ARM ABI: If the function is variadic, HFA rules are ignored and
+        // all floating-point scalars are passed in GPRs.
+        if (layout->is_variadic) {
+            pass_fp_in_vpr = false;
+            is_hfa_candidate = false;
+        }
+#endif
+        // The order of these checks is critical to prevent incorrect classification.
+        // Check for HFA first, as it's the most specific aggregate rule.
+        if (is_hfa_candidate) {
             size_t num_elements = type->size / hfa_base_type->size;
             if (vpr_count + num_elements <= NUM_VPR_ARGS) {
                 layout->arg_locations[i].type = ARG_LOCATION_VPR_HFA;
@@ -323,12 +343,19 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
         }
         else {                     // Integers, pointers, small aggregates, and variadic floats on Windows.
             if (type->size > 8) {  // Types > 8 and <= 16 bytes are passed in a pair of GPRs.
-#if !defined(INFIX_OS_MACOS)
-                // AAPCS64 requires 16-byte arguments to be aligned to an even-numbered GPR.
-                // This rule does not apply to Apple's ABI interpretation.
-                if (gpr_count % 2 != 0)
-                    gpr_count++;
+                bool needs_alignment = true;
+#if defined(INFIX_OS_MACOS)
+                // On macOS, the alignment rule applies to aggregates but not __int128_t.
+                if (type->category == INFIX_TYPE_PRIMITIVE)
+                    needs_alignment = false;
+#elif defined(INFIX_OS_WINDOWS)
+                // On Windows, variadic 16-byte arguments do not follow the even-GPR alignment rule.
+                if (is_variadic_arg)
+                    needs_alignment = false;
 #endif
+                if (needs_alignment && (gpr_count % 2 != 0))
+                    gpr_count++;
+
                 if (gpr_count + 1 < NUM_GPR_ARGS) {
                     layout->arg_locations[i].type = ARG_LOCATION_GPR_PAIR;
                     layout->arg_locations[i].reg_index = (uint8_t)gpr_count;
@@ -370,30 +397,33 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 2 (Forward): Generates the function prologue for the AArch64 trampoline.
- * @details Sets up the stack frame, saves callee-saved registers (X19-X22) for the
- *          trampoline's context, and allocates stack space.
+ * @details Sets up the stack frame by saving the frame pointer (X29) and link register (X30),
+ *          saves callee-saved registers (X19-X22) that will be used to hold the trampoline's
+ *          context, moves the trampoline's arguments into those preserved registers, and
+ *          allocates the necessary stack space for stack-passed arguments.
  */
 static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout) {
-    emit_arm64_stp_pre_index(buf,
-                             true,
-                             X29_FP_REG,
-                             X30_LR_REG,
-                             SP_REG,
-                             -16);  // stp x29, x30, [sp, #-16]! (Save Frame Pointer and Link Register)
-    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);  // mov x29, sp               (Set new Frame Pointer)
-    emit_arm64_stp_pre_index(buf,
-                             true,
-                             X19_REG,
-                             X20_REG,
-                             SP_REG,
-                             -16);  // stp x19, x20, [sp, #-16]! (Save callee-saved regs for our context)
-    emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);  // stp x21, x22, [sp, #-16]!
-    emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0               (x19 = target_func)
-    emit_arm64_mov_reg(buf, true, X20_REG, X1_REG);  // mov x20, x1               (x20 = return_value_ptr)
-    emit_arm64_mov_reg(buf, true, X21_REG, X2_REG);  // mov x21, x2               (x21 = args_array)
+    // stp x29, x30, [sp, #-16]! (Save Frame Pointer and Link Register)
+    emit_arm64_stp_pre_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, -16);
+    // mov x29, sp               (Set new Frame Pointer)
+    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
+    // stp x19, x20, [sp, #-16]! (Save callee-saved regs for our context)
+    emit_arm64_stp_pre_index(buf, true, X19_REG, X20_REG, SP_REG, -16);
+    // stp x21, x22, [sp, #-16]!
+    emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);
+
+    if (layout->target_fn == nullptr) {                  // Unbound trampoline (target_fn, ret_ptr, args_ptr)
+        emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0 (x19 = target_fn)
+        emit_arm64_mov_reg(buf, true, X20_REG, X1_REG);  // mov x20, x1 (x20 = ret_ptr)
+        emit_arm64_mov_reg(buf, true, X21_REG, X2_REG);  // mov x21, x2 (x21 = args_ptr)
+    }
+    else {                                               // Bound trampoline (ret_ptr, args_ptr)
+        emit_arm64_mov_reg(buf, true, X20_REG, X0_REG);  // mov x20, x0 (x20 = ret_ptr)
+        emit_arm64_mov_reg(buf, true, X21_REG, X1_REG);  // mov x21, x1 (x21 = args_ptr)
+    }
 
     if (layout->total_stack_alloc > 0)
         emit_arm64_sub_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);
@@ -401,19 +431,19 @@ static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_cal
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 3 (Forward): Generates code to move arguments into their native locations.
- * @details This function marshals arguments from the generic `void**` array into the correct
- *          GPRs, VPRs, or stack slots, respecting HFA rules and platform-specific
- *          variadic conventions.
+ * @details This function marshals arguments from the generic `void**` array (pointed to by X21)
+ *          into the correct GPRs, VPRs, or stack slots, respecting HFA rules and platform-specific
+ *          variadic conventions like Apple's stack-only approach.
  */
 static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                                                           infix_call_frame_layout * layout,
                                                           infix_type ** arg_types,
                                                           size_t num_args,
                                                           c23_maybe_unused size_t num_fixed_args) {
-    // If returning a large struct, the ABI requires the hidden pointer (our return buffer)
+    // If returning a large struct, the ABI requires the hidden pointer (our return buffer, in X20)
     // to be passed in the indirect result location register, x8.
     if (layout->return_value_in_memory)
         emit_arm64_mov_reg(buf, true, X8_REG, X20_REG);  // mov x8, x20
@@ -514,7 +544,6 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                             else  // Unsigned types < 64-bit
                                 emit_arm64_ldr_imm(buf, false, X10_REG, X9_REG, 0);
 
-
                             // Store the promoted 64-bit value.
                             if (loc->stack_offset < (unsigned)max_imm_offset)
                                 emit_arm64_str_imm(buf, true, X10_REG, SP_REG, loc->stack_offset);
@@ -549,12 +578,21 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
- * @brief Stage 3.5 (Forward): Generates the null-check and call instruction.
+ * @brief Stage 3.5 (Forward): Generates the call instruction.
+ * @details Emits a null-check on the target function pointer (held in X19)
+ *          followed by a `BLR` (Branch with Link to Register) instruction.
+ *          If the pointer is null, a `BRK` instruction is executed to crash safely.
  */
 static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
                                                             c23_maybe_unused infix_call_frame_layout * layout) {
+    if (layout->target_fn)
+        // For a bound trampoline, the target is hardcoded. Load it into X19.
+        emit_arm64_load_u64_immediate(buf, X19_REG, (uint64_t)layout->target_fn);
+
+    // For an unbound trampoline, X19 was already loaded from the first argument in the prologue.
+
     // On AArch64, the target function pointer is stored in X19.
     // cbnz x19, #8   ; if x19 is not zero, branch 8 bytes forward (over the brk)
     emit_arm64_cbnz(buf, true, X19_REG, 8);
@@ -565,11 +603,11 @@ static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 4 (Forward): Generates the function epilogue.
- * @details Handles the return value (from X0/X1 or V0-V3), deallocates the stack frame,
- *          restores callee-saved registers, and returns.
+ * @details Emits code to handle the return value (from X0/X1 or V0-V3), deallocates
+ *          the stack frame, restores callee-saved registers, and returns to the caller.
  */
 static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
                                                     infix_call_frame_layout * layout,
@@ -615,7 +653,7 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
     }
 
     if (layout->total_stack_alloc > 0)
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, layout->total_stack_alloc);  // add sp, sp, #...
+        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);  // add sp, sp, #...
 
     emit_arm64_ldp_post_index(buf, true, X21_REG, X22_REG, SP_REG, 16);        // ldp x21, x22, [sp], #16
     emit_arm64_ldp_post_index(buf, true, X19_REG, X20_REG, SP_REG, 16);        // ldp x19, x20, [sp], #16
@@ -624,7 +662,7 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 1 (Reverse): Calculates the stack layout for a reverse trampoline stub.
  * @details Determines stack space needed for the return buffer, the `void**` args_array,
@@ -663,9 +701,8 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
     }
     layout->total_stack_alloc = (total_local_space + 15) & ~15;
 
-    // Define layout of our local stack variables relative to SP after allocation.
-    // Offsets are positive from the stack pointer.
-    // We must perform these checks sequentially to prevent overflow when calculating each offset.
+    // Local variables are accessed via positive offsets from the stack pointer (SP).
+    // The layout is [ return_buffer | args_array | saved_args_data ]
     layout->return_buffer_offset = 0;
     layout->args_array_offset = layout->return_buffer_offset + return_size;
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
@@ -674,7 +711,7 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 2 (Reverse): Generates the prologue for the reverse trampoline stub.
  * @details This function emits the standard AArch64 function entry code. It saves the
@@ -698,13 +735,13 @@ static infix_status generate_reverse_prologue_arm64(code_buffer * buf, infix_rev
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 3 (Reverse): Generates code to un-marshal arguments into the `void**` array.
  * @details This generates `STR` instructions to copy argument data from their native
  *          locations (GPRs, VPRs, or the caller's stack) into a contiguous "saved args"
  *          area on the stub's local stack. It then populates the `args_array` with
- *          pointers to this saved data.
+ *          pointers to this saved data, respecting all platform-specific ABI deviations.
  */
 static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
                                                                 infix_reverse_call_frame_layout * layout,
@@ -723,9 +760,47 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
     size_t gpr_idx = 0, vpr_idx = 0, current_saved_data_offset = 0;
     size_t caller_stack_offset = 16;  // Caller args start at [fp, #16]
 
-    for (size_t i = 0; i < context->num_args; i++) {
+    for (size_t i = 0; i < context->num_args; ++i) {
         infix_type * type = context->arg_types[i];
         bool is_variadic_arg = i >= context->num_fixed_args;
+        int32_t arg_save_loc = (int32_t)(layout->saved_args_offset + current_saved_data_offset);
+
+#if defined(INFIX_OS_MACOS)
+        // On macOS, all variadic arguments are passed on the stack.
+        // This is a special case that bypasses all register logic.
+        if (is_variadic_arg) {
+            // On macOS, variadic args smaller than 8 bytes are promoted to an 8-byte stack slot.
+            // We must copy the entire slot, not just the type's smaller size.
+            size_t size_on_stack = (type->size < 8) ? 8 : type->size;
+            size_on_stack = (size_on_stack + 7) & ~7;  // Ensure it's a multiple of 8
+
+            for (size_t offset = 0; offset < size_on_stack; offset += 8) {
+                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, caller_stack_offset + offset);
+                int32_t dest_offset = arg_save_loc + offset;
+                if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
+                    emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
+                else {
+                    emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
+                    emit_arm64_str_imm(buf, true, X9_REG, X10_REG, 0);
+                }
+            }
+            caller_stack_offset += size_on_stack;
+
+            // Set the pointer in args_array to point to the saved data
+            int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
+            emit_arm64_add_imm(buf, true, false, X9_REG, SP_REG, arg_save_loc);
+            if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
+                emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
+            else {
+                emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
+                emit_arm64_str_imm(buf, true, X9_REG, X10_REG, 0);
+            }
+            current_saved_data_offset += (type->size + 15) & ~15;
+            continue;  // Skip to the next argument
+        }
+#endif
+
+        // Standard logic for non-macOS or non-variadic arguments
         bool is_pass_by_ref = (type->size > 16) && !is_variadic_arg;
         bool is_from_stack = false;
 
@@ -734,12 +809,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
 #if defined(INFIX_OS_WINDOWS)
         if (context->is_variadic)
             expect_in_vpr = false;
-#elif defined(INFIX_OS_MACOS)
-        // On macOS, all variadic arguments are on the stack.
-        if (is_variadic_arg)
-            is_from_stack = true;
 #endif
-        // Case 1: Argument is passed by reference (a pointer in a GPR).
         if (is_pass_by_ref) {
             int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
             arm64_gpr src_reg;
@@ -762,90 +832,100 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             continue;
         }
 
-        // Case 2: Argument is passed by value.
-        int32_t arg_save_loc = (int32_t)(layout->saved_args_offset + current_saved_data_offset);
-
         infix_type * hfa_base_type = nullptr;
+        bool is_hfa_candidate = !is_variadic_arg && is_hfa(type, &hfa_base_type);
 
-        if (!is_from_stack) {
-            if (!is_variadic_arg && is_hfa(type, &hfa_base_type)) {
-                size_t num_elements = type->size / hfa_base_type->size;
-                if (vpr_idx + num_elements <= NUM_VPR_ARGS) {
-                    const int scale = is_double(hfa_base_type) ? 8 : 4;
-                    for (size_t j = 0; j < num_elements; ++j) {
-                        int32_t dest_offset = arg_save_loc + j * hfa_base_type->size;
-                        if (dest_offset >= 0 && ((unsigned)dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
-                            emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
-                        else {
-                            emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
-                            emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], X10_REG, 0);
-                        }
+#if defined(INFIX_OS_WINDOWS)
+        // Windows on ARM ABI disables HFA for variadic arguments.
+        if (context->is_variadic)
+            is_hfa_candidate = false;
+#endif
+
+        if (is_hfa_candidate) {
+            size_t num_elements = type->size / hfa_base_type->size;
+            if (vpr_idx + num_elements <= NUM_VPR_ARGS) {
+                const int scale = is_double(hfa_base_type) ? 8 : 4;
+                for (size_t j = 0; j < num_elements; ++j) {
+                    int32_t dest_offset = arg_save_loc + j * hfa_base_type->size;
+                    if (dest_offset >= 0 && ((unsigned)dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
+                        emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
+                    else {
+                        emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
+                        emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], X10_REG, 0);
                     }
                 }
-                else
-                    is_from_stack = true;
             }
-            else if (expect_in_vpr) {
-                if (vpr_idx < NUM_VPR_ARGS) {
-                    const int scale = is_long_double(type) ? 16 : (is_double(type) ? 8 : 4);
-                    if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / scale) <= 0xFFF && (arg_save_loc % scale == 0)) {
-                        if (is_long_double(type))
-                            emit_arm64_str_q_imm(buf, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
-                        else
-                            emit_arm64_str_vpr(buf, is_double(type), VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
+            else
+                is_from_stack = true;
+        }
+        else if (expect_in_vpr) {
+            if (vpr_idx < NUM_VPR_ARGS) {
+                const int scale = is_long_double(type) ? 16 : (is_double(type) ? 8 : 4);
+                if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / scale) <= 0xFFF && (arg_save_loc % scale == 0)) {
+                    if (is_long_double(type))
+                        emit_arm64_str_q_imm(buf, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
+                    else
+                        emit_arm64_str_vpr(buf, is_double(type), VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
+                }
+                else {
+                    emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
+                    if (is_long_double(type))
+                        emit_arm64_str_q_imm(buf, VPR_ARGS[vpr_idx++], X10_REG, 0);
+                    else
+                        emit_arm64_str_vpr(buf, is_double(type), VPR_ARGS[vpr_idx++], X10_REG, 0);
+                }
+            }
+            else
+                is_from_stack = true;
+        }
+        else {                     // Argument is in a GPR
+            if (type->size > 8) {  // 16-byte value in two GPRs
+                bool needs_alignment = true;
+#if defined(INFIX_OS_MACOS)
+                if (type->category == INFIX_TYPE_PRIMITIVE)
+                    needs_alignment = false;
+#elif defined(INFIX_OS_WINDOWS)
+                if (is_variadic_arg)
+                    needs_alignment = false;
+#endif
+                if (needs_alignment && (gpr_idx % 2 != 0))
+                    gpr_idx++;
+
+                if (gpr_idx + 1 < NUM_GPR_ARGS) {
+                    if (arg_save_loc >= 0 && (((unsigned)arg_save_loc + 8) / 8) <= 0xFFF && (arg_save_loc % 8 == 0)) {
+                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
+                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc + 8);
                     }
                     else {
                         emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                        if (is_long_double(type))
-                            emit_arm64_str_q_imm(buf, VPR_ARGS[vpr_idx++], X10_REG, 0);
-                        else
-                            emit_arm64_str_vpr(buf, is_double(type), VPR_ARGS[vpr_idx++], X10_REG, 0);
+                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
+                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 8);
                     }
                 }
                 else
                     is_from_stack = true;
             }
-            else {                     // Argument is in a GPR
-                if (type->size > 8) {  // 16-byte value in two GPRs
-                    if (gpr_idx + 1 < NUM_GPR_ARGS) {
-
-#if !defined(INFIX_OS_MACOS)
-                        // AAPCS64 requires 16-byte arguments to be aligned to an even-numbered GPR.
-                        // Note that this rule does not seem to apply to Apple's interpretation.
-                        if (gpr_idx % 2 != 0)
-                            gpr_idx++;
-#endif
-                        if (arg_save_loc >= 0 && (((unsigned)arg_save_loc + 8) / 8) <= 0xFFF &&
-                            (arg_save_loc % 8 == 0)) {
-                            emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
-                            emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc + 8);
-                        }
-                        else {
-                            emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                            emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
-                            emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 8);
-                        }
+            else {
+                if (gpr_idx < NUM_GPR_ARGS) {
+                    if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
+                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
+                    else {
+                        emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
+                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
                     }
-                    else
-                        is_from_stack = true;
                 }
-                else {  // <= 8-byte value in one GPR
-                    if (gpr_idx < NUM_GPR_ARGS) {
-                        if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
-                            emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
-                        else {
-                            emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                            emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
-                        }
-                    }
-                    else
-                        is_from_stack = true;
-                }
+                else
+                    is_from_stack = true;
             }
         }
 
         if (is_from_stack) {
-            for (size_t offset = 0; offset < type->size; offset += 8) {
+            // On macOS, variadic args smaller than 8 bytes are promoted to an 8-byte stack slot.
+            // We must copy the entire slot, not just the type's smaller size.
+            size_t size_on_stack = (is_variadic_arg && type->size < 8) ? 8 : type->size;
+            size_on_stack = (size_on_stack + 7) & ~7;  // Ensure it's a multiple of 8
+
+            for (size_t offset = 0; offset < size_on_stack; offset += 8) {
                 emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, caller_stack_offset + offset);
                 int32_t dest_offset = arg_save_loc + offset;
                 if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
@@ -855,7 +935,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                     emit_arm64_str_imm(buf, true, X9_REG, X10_REG, 0);
                 }
             }
-            caller_stack_offset += (type->size + 7) & ~7;
+            caller_stack_offset += size_on_stack;
         }
 
         int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
@@ -871,7 +951,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 4 (Reverse): Generates the code to call the high-level C dispatcher function.
  * @details This emits the instructions to load the three arguments for the dispatcher
@@ -912,23 +992,13 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 5 (Reverse): Generates the epilogue for the reverse trampoline stub.
  * @details After the C dispatcher returns, this code retrieves the return value from the
- *          return buffer on the stub's stack and places it into the correct native return
- *          registers (X0, X1, V0, etc.) as required by the AAPCS64.
- *
- *          It correctly handles all return types:
- *          - **By-Reference:** If the return value was handled via a hidden pointer in X8,
- *            no action is needed here as the user's C code has already written to the memory.
- *          - **HFA:** Loads the 1-4 float/double elements from the buffer into V0-V3.
- *          - **Primitives:** Loads the value from the buffer into the correct register (X0 for
- *            integers/pointers, V0 for floats/doubles, etc.), using the correct size.
- *          - **Aggregates <= 16 bytes:** Loads the value into one or two GPRs (X0, X1).
- *
- *          Finally, it deallocates the stack frame, restores the caller's frame pointer (X29)
- *          and link register (X30), and executes a `ret` instruction.
+ *          return buffer on the stub's local stack and places it into the correct native return
+ *          registers (X0, X1, V0, etc.) as required by the AAPCS64. It then tears down the
+ *          stack frame and returns control to the native caller.
  */
 static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
                                                     infix_reverse_call_frame_layout * layout,
@@ -941,9 +1011,10 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
         infix_type * base = nullptr;
         if (is_hfa(context->return_type, &base)) {
             size_t num_elements = context->return_type->size / base->size;
-            for (size_t i = 0; i < num_elements; ++i)
+            for (size_t i = 0; i < num_elements; ++i) {
                 emit_arm64_ldr_vpr(
                     buf, is_double(base), VPR_ARGS[i], SP_REG, layout->return_buffer_offset + i * base->size);
+            }
         }
         else if (is_long_double(context->return_type))
             emit_arm64_ldr_q_imm(buf, V0_REG, SP_REG, layout->return_buffer_offset);

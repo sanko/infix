@@ -13,11 +13,12 @@
  */
 /**
  * @file 004_signatures.c
- * @brief Hardened test suite for the high-level v1.0 signature API.
+ * @brief Hardened test suite for the high-level signature API.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
+#include <ctype.h>
 #include <infix/infix.h>
 #include <string.h>
 
@@ -27,8 +28,8 @@
 static void test_type_ok(const char * signature, infix_type_category expected_cat, const char * name) {
     subtest(name) {
         plan(2);
-        infix_type * type = NULL;
-        infix_arena_t * arena = NULL;
+        infix_type * type = nullptr;
+        infix_arena_t * arena = nullptr;
         infix_status status = infix_type_from_signature(&type, &arena, signature);
 
         ok(status == INFIX_SUCCESS, "Parsing should succeed for '%s'", signature);
@@ -46,8 +47,8 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
 static void test_type_fail(const char * signature, const char * name) {
     subtest(name) {
         plan(1);
-        infix_type * type = NULL;
-        infix_arena_t * arena = NULL;
+        infix_type * type = nullptr;
+        infix_arena_t * arena = nullptr;
         infix_status status = infix_type_from_signature(&type, &arena, signature);
         ok(status != INFIX_SUCCESS, "Parsing should fail for invalid signature '%s'", signature);
         infix_arena_destroy(arena);
@@ -56,10 +57,59 @@ static void test_type_fail(const char * signature, const char * name) {
 
 void dummy_handler() {}
 
-TEST {
-    plan(5);
+// Helper to remove all whitespace from a string for canonical comparison.
+static void normalize_string(char * s) {
+    if (!s)
+        return;
+    char * d = s;
+    do {
+        while (isspace((unsigned char)*s)) {
+            s++;
+        }
+    } while ((*d++ = *s++));
+}
 
-    subtest("Valid Single Types (v1.0 Syntax)") {
+static void test_print_roundtrip(const char * signature) {
+    subtest(signature) {
+        plan(1);
+        infix_type * type = NULL;
+        infix_arena_t * arena = NULL;
+        infix_status status = infix_type_from_signature(&type, &arena, signature);
+
+        if (status != INFIX_SUCCESS) {
+            fail("Parsing failed, cannot test printing.");
+            infix_arena_destroy(arena);
+            return;
+        }
+
+        char buffer[1024];
+        status = infix_type_print(buffer, sizeof(buffer), type, INFIX_DIALECT_SIGNATURE);
+        if (status != INFIX_SUCCESS)
+            fail("Printing failed.");
+        else {
+            char original_normalized[1024];
+            char printed_normalized[1024];
+            snprintf(original_normalized, sizeof(original_normalized), "%s", signature);
+            snprintf(printed_normalized, sizeof(printed_normalized), "%s", buffer);
+
+            normalize_string(original_normalized);
+            normalize_string(printed_normalized);
+
+            ok(strcmp(original_normalized, printed_normalized) == 0, "Printed string should match original signature");
+            if (strcmp(original_normalized, printed_normalized) != 0) {
+                diag("Original (normalized): %s", original_normalized);
+                diag("Printed  (normalized): %s", printed_normalized);
+            }
+        }
+
+        infix_arena_destroy(arena);
+    }
+}
+
+TEST {
+    plan(6);
+
+    subtest("Valid Single Types") {
         plan(15);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
         test_type_ok("int32", INFIX_TYPE_PRIMITIVE, "int32");
@@ -94,13 +144,13 @@ TEST {
         test_type_ok("{a:int, b:union<U>}", INFIX_TYPE_STRUCT, "Struct with a named union reference member");
     }
 
-    subtest("Valid Full Function Signatures (v1.0 Syntax)") {
+    subtest("Valid Full Function Signatures") {
         plan(8);  // Increased plan for new variadic tests
         subtest("Simple function: (int32, double) -> int64") {
             plan(4);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * at = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * at = nullptr;
             size_t na, nf;
             infix_status s = infix_signature_parse("(int32, double) -> int64", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
@@ -116,9 +166,9 @@ TEST {
         }
         subtest("No-arg function: () -> void") {
             plan(3);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * at = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * at = nullptr;
             size_t na, nf;
             infix_status s = infix_signature_parse("() -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
@@ -132,9 +182,9 @@ TEST {
         }
         subtest("Variadic function with args: (int32; double) -> void") {
             plan(4);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * at = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * at = nullptr;
             size_t na, nf;
             infix_status s = infix_signature_parse("(int32; double) -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
@@ -149,9 +199,9 @@ TEST {
         }
         subtest("Variadic function with no variadic args passed: (int32;) -> void") {
             plan(4);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * at = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * at = nullptr;
             size_t na, nf;
             infix_status s = infix_signature_parse("(int32;) -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds for empty variadic part");
@@ -166,9 +216,9 @@ TEST {
         }
         subtest("Variadic-only function: (;int) -> void") {
             plan(4);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * at = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * at = nullptr;
             size_t na, nf;
             infix_status s = infix_signature_parse("(;int) -> void", &a, &rt, &at, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds for variadic-only function");
@@ -183,9 +233,9 @@ TEST {
         }
         subtest("Complex nested function: (*( (int32) -> void )) -> void") {
             plan(4);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * args = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * args = nullptr;
             size_t na, nf;
             infix_status s = infix_signature_parse("(*((int32) -> void)) -> void", &a, &rt, &args, &na, &nf);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
@@ -201,21 +251,21 @@ TEST {
         }
         subtest("High-level API now active") {
             plan(2);
-            infix_forward_t * fwd = NULL;
-            infix_status fwd_status = infix_forward_create(&fwd, "() -> void");
-            ok(fwd_status == INFIX_SUCCESS, "infix_forward_create now parses successfully");
+            infix_forward_t * fwd = nullptr;
+            infix_status fwd_status = infix_forward_create_unbound(&fwd, "() -> void");
+            ok(fwd_status == INFIX_SUCCESS, "infix_forward_create_unbound now parses successfully");
             infix_forward_destroy(fwd);
 
-            infix_reverse_t * rev = NULL;
-            infix_status rev_status = infix_reverse_create(&rev, "() -> void", dummy_handler, NULL);
+            infix_reverse_t * rev = nullptr;
+            infix_status rev_status = infix_reverse_create(&rev, "() -> void", dummy_handler, nullptr);
             ok(rev_status == INFIX_SUCCESS, "infix_reverse_create now parses successfully");
             infix_reverse_destroy(rev);
         }
         subtest("Function with named arguments") {
             plan(6);
-            infix_arena_t * a = NULL;
-            infix_type * rt = NULL;
-            infix_function_argument * args = NULL;
+            infix_arena_t * a = nullptr;
+            infix_type * rt = nullptr;
+            infix_function_argument * args = nullptr;
             size_t na, nf;
             const char * sig = "(count: int32, name: *char) -> void";
             infix_status s = infix_signature_parse(sig, &a, &rt, &args, &na, &nf);
@@ -265,8 +315,8 @@ TEST {
         plan(1);
         subtest("Complex Introspection") {
             plan(8);
-            infix_type * type = NULL;
-            infix_arena_t * arena = NULL;
+            infix_type * type = nullptr;
+            infix_arena_t * arena = nullptr;
             const char * sig = "*[10:struct<Node>{val:e<V>:int, next:*struct<Node>}]";
             infix_status status = infix_type_from_signature(&type, &arena, sig);
             ok(status == INFIX_SUCCESS, "Parsing complex nested signature succeeds");
@@ -293,5 +343,18 @@ TEST {
                 skip(7, "Skipping detail checks");
             infix_arena_destroy(arena);
         }
+    }
+    subtest("Round trip") {
+        plan(10);
+        test_print_roundtrip("int");
+        test_print_roundtrip("*[10:{int,float}]");
+        test_print_roundtrip("<*void, double>");
+        test_print_roundtrip("(*char;int,double)->void");
+        test_print_roundtrip("{<int,char>, *char}");
+        test_print_roundtrip("struct<Node>{int,*struct<Node>}");
+        test_print_roundtrip("e:longlong");
+        test_print_roundtrip("v[4:float]");
+        test_print_roundtrip("struct<MyStruct>");
+        test_print_roundtrip("union<MyUnion>");
     }
 }

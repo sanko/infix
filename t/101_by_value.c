@@ -104,7 +104,7 @@
 #elif defined(INFIX_ARCH_ARM_NEON)
 #include <arm_neon.h>
 #endif
-#if defined(INFIX_ARCH_ARM_SVE) || defined(INFIX_ARCH_ARM_SVE2)
+#if defined(INFIX_ARCH_ARM_SVE)
 #include <arm_sve.h>
 #endif
 #if defined(INFIX_ARCH_RISCV_RVV)
@@ -112,7 +112,6 @@
 #endif
 #endif
 /** @} */  // end simd_macros
-
 
 // Platform-specific headers and functions for SIMD tests
 #if defined(INFIX_ARCH_X86_SSE2)
@@ -129,7 +128,6 @@
 #if defined(INFIX_ARCH_ARM_SVE)
 #include <arm_sve.h>
 #endif
-
 
 // Native C Target Functions
 /** @brief Processes a Point struct passed by value, returning a sum of its members. */
@@ -184,14 +182,54 @@ svfloat64_t native_sve_vector_add(svfloat64_t a, svfloat64_t b) {
 }
 #endif
 
+#if defined(INFIX_ARCH_ARM_SVE)
+#if defined(INFIX_OS_LINUX)
+#include <sys/auxv.h>
+#ifndef HWCAP_SVE
+#define HWCAP_SVE (1 << 22)  // Define if missing from old headers
+#endif
+#elif defined(INFIX_OS_MACOS)
+#include <sys/sysctl.h>
+#elif defined(INFIX_OS_WINDOWS)
+#include <windows.h>
+#endif
+#endif
+
+/**
+ * @brief Performs a runtime check to see if the CPU supports the ARM SVE feature set.
+ */
+static bool is_sve_supported(void) {
+#if defined(INFIX_ARCH_ARM_SVE)
+#if defined(INFIX_OS_LINUX)
+    unsigned long hwcaps = getauxval(AT_HWCAP);
+    return (hwcaps & HWCAP_SVE) != 0;
+#elif defined(INFIX_OS_MACOS)
+    int sve_present = 0;
+    size_t size = sizeof(sve_present);
+    // This sysctl key returns 1 if SVE is available, 0 otherwise.
+    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0) {
+        return sve_present == 1;
+    }
+    return false;  // sysctl failed, assume no support.
+#elif defined(INFIX_OS_WINDOWS)
+    return IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE);
+#else
+    // For other POSIX-like systems (e.g., BSDs), this would need their specific
+    // mechanism. For now, we conservatively assume no support.
+    return false;
+#endif
+#else
+    // If the compiler doesn't even support SVE, then it's definitely not available.
+    return false;
+#endif
+}
+
 TEST {
     plan(6);  // One subtest for each major scenario.
 
     subtest("Simple struct (Point) passed and returned by value") {
-        plan(5);
+        plan(7);
         infix_arena_t * arena = infix_arena_create(4096);
-
-        // First, create the infix_type for the Point struct. This will be reused.
         infix_struct_member * point_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         point_members[0] =
@@ -199,39 +237,55 @@ TEST {
         point_members[1] =
             infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
         infix_type * point_type = nullptr;
-        infix_status status = infix_type_create_struct(arena, &point_type, point_members, 2);
-        if (!ok(status == INFIX_SUCCESS, "infix_type for Point created successfully")) {
-            skip(4, "Cannot proceed without Point type");
+        if (!ok(infix_type_create_struct(arena, &point_type, point_members, 2) == INFIX_SUCCESS,
+                "Point type created")) {
+            skip(6, "Cannot proceed");
             infix_arena_destroy(arena);
+            return;
         }
-        else {
-            // Test 1: Pass Point as an argument
-            infix_type * arg_ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-            infix_forward_t * arg_trampoline = nullptr;
-            status = infix_forward_create_manual(&arg_trampoline, arg_ret_type, &point_type, 1, 1);
-            ok(status == INFIX_SUCCESS, "Trampoline for process_point_by_value created");
 
-            infix_cif_func arg_cif = (infix_cif_func)infix_forward_get_code(arg_trampoline);
-            Point p_in = {10.5, 20.5};
-            double sum_result = 0.0;
-            void * arg_args[] = {&p_in};
-            arg_cif((void *)process_point_by_value, &sum_result, arg_args);
-            ok(fabs(sum_result - 31.0) < 0.001, "Struct passed as argument correctly");
-            infix_forward_destroy(arg_trampoline);
+        // Test Pass Arg
+        infix_forward_t *unbound_pass = nullptr, *bound_pass = nullptr;
+        ok(infix_forward_create_unbound_manual(
+               &unbound_pass, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), &point_type, 1, 1) == INFIX_SUCCESS,
+           "Pass arg (unbound) created");
+        ok(infix_forward_create_manual(&bound_pass,
+                                       infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                       &point_type,
+                                       1,
+                                       1,
+                                       (void *)process_point_by_value) == INFIX_SUCCESS,
+           "Pass arg (bound) created");
+        Point p_in = {10.5, 20.5};
+        void * pass_args[] = {&p_in};
+        double unbound_pass_res = 0.0, bound_pass_res = 0.0;
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_pass);
+        unbound_cif((void *)process_point_by_value, &unbound_pass_res, pass_args);
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_pass);
+        bound_cif(&bound_pass_res, pass_args);
+        ok(fabs(unbound_pass_res - 31.0) < 0.001 && fabs(bound_pass_res - 31.0) < 0.001, "Pass arg correct");
 
-            // Test 2: Return Point as a value
-            infix_forward_t * ret_trampoline = nullptr;
-            status = infix_forward_create_manual(&ret_trampoline, point_type, nullptr, 0, 0);
-            ok(status == INFIX_SUCCESS, "Trampoline for return_point_by_value created");
+        // Test Return
+        infix_forward_t *unbound_ret = nullptr, *bound_ret = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_ret, point_type, nullptr, 0, 0) == INFIX_SUCCESS,
+           "Ret val (unbound) created");
+        ok(infix_forward_create_manual(&bound_ret, point_type, nullptr, 0, 0, (void *)return_point_by_value) ==
+               INFIX_SUCCESS,
+           "Ret val (bound) created");
+        Point unbound_ret_res = {0, 0}, bound_ret_res = {0, 0};
+        infix_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
+        unbound_ret_cif((void *)return_point_by_value, &unbound_ret_res, nullptr);
+        infix_bound_cif_func bound_ret_cif = infix_forward_get_code(bound_ret);
+        bound_ret_cif(&bound_ret_res, nullptr);
+        ok(unbound_ret_res.x == 100.0 && unbound_ret_res.y == 200.0 && bound_ret_res.x == 100.0 &&
+               bound_ret_res.y == 200.0,
+           "Return val correct");
 
-            infix_cif_func ret_cif = (infix_cif_func)infix_forward_get_code(ret_trampoline);
-            Point p_out = {0.0, 0.0};
-            ret_cif((void *)return_point_by_value, &p_out, nullptr);
-            ok(fabs(p_out.x - 100.0) < 0.001 && fabs(p_out.y - 200.0) < 0.001, "Struct returned by value correctly");
-            infix_forward_destroy(ret_trampoline);
-
-            infix_arena_destroy(arena);
-        }
+        infix_forward_destroy(unbound_pass);
+        infix_forward_destroy(bound_pass);
+        infix_forward_destroy(unbound_ret);
+        infix_forward_destroy(bound_ret);
+        infix_arena_destroy(arena);
     }
 
     subtest("ABI Specific: System V x64 mixed-register struct") {
@@ -249,11 +303,11 @@ TEST {
         (void)infix_type_create_struct(arena, &mixed_type, members, 2);
 
         infix_forward_t * trampoline = nullptr;
-        infix_status status = infix_forward_create_manual(
+        infix_status status = infix_forward_create_unbound_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for mixed-type struct created");
 
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+        infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
         MixedIntDouble arg_val = {-500, 3.14};
         int result = 0;
         void * args[] = {&arg_val};
@@ -293,11 +347,11 @@ TEST {
             }
 
             infix_forward_t * trampoline = nullptr;
-            status = infix_forward_create_manual(
+            status = infix_forward_create_unbound_manual(
                 &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
             ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
 
-            infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
+            infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
             Vector4 vec = {{1.5f, 2.5f, 3.5f, 4.5f}};
             float result = 0.0f;
             void * args[] = {&vec};
@@ -325,7 +379,7 @@ TEST {
             // 2. Create the trampoline for __m128d(__m128d, __m128d)
             infix_type * arg_types[] = {vector_type, vector_type};
             infix_forward_t * trampoline = nullptr;
-            status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+            status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
 
             // 3. Prepare arguments and call
             __m128d vec_a = _mm_set_pd(20.0, 10.0);  // Vector [10.0, 20.0]
@@ -336,7 +390,8 @@ TEST {
                 double d[2];
             } result;
             result.v = _mm_setzero_pd();
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add, &result.v, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add, &result.v, args);
 
             ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
                "SIMD vector passed/returned correctly");
@@ -361,14 +416,15 @@ TEST {
         else {
             infix_type * arg_types[] = {neon_vector_type, neon_vector_type};
             infix_forward_t * trampoline = nullptr;
-            status = infix_forward_create_manual(&trampoline, neon_vector_type, arg_types, 2, 2);
+            status = infix_forward_create_unbound_manual(&trampoline, neon_vector_type, arg_types, 2, 2);
             float64_t a_data[] = {10.0, 20.0};
             float64_t b_data[] = {32.0, 22.0};
             float64x2_t vec_a = vld1q_f64(a_data);
             float64x2_t vec_b = vld1q_f64(b_data);
             void * args[] = {&vec_a, &vec_b};
             float64x2_t result_vec;
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)neon_vector_add, &result_vec, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)neon_vector_add, &result_vec, args);
             float64_t result_data[2];
             vst1q_f64(result_data, result_vec);
             ok(fabs(result_data[0] - 42.0) < 1e-9 && fabs(result_data[1] - 42.0) < 1e-9,
@@ -389,7 +445,7 @@ TEST {
         infix_arena_t * arena = infix_arena_create(4096);
 
         // 1. Create the infix_type for v[4:double] to represent __m256d.
-        infix_type * vector_type = NULL;
+        infix_type * vector_type = nullptr;
         infix_status status =
             infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 4);
 
@@ -400,8 +456,8 @@ TEST {
         else {
             // 2. Create the trampoline for __m256d(__m256d, __m256d)
             infix_type * arg_types[] = {vector_type, vector_type};
-            infix_forward_t * trampoline = NULL;
-            status = infix_forward_create_manual(&trampoline, vector_type, arg_types, 2, 2);
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
 
             // 3. Prepare arguments and call
             __m256d vec_a = _mm256_set_pd(40.0, 30.0, 20.0, 10.0);  // Vector [10, 20, 30, 40]
@@ -412,7 +468,8 @@ TEST {
                 double d[4];
             } result;
             result.v = _mm256_setzero_pd();
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_vector_add_256, &result.v, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add_256, &result.v, args);
 
             ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9 && fabs(result.d[2] - 42.0) < 1e-9 &&
                    fabs(result.d[3] - 42.0) < 1e-9,
@@ -429,71 +486,76 @@ TEST {
     subtest("ABI Specific: ARM64 Scalable Vector (SVE)") {
         plan(2);
 #if defined(INFIX_ARCH_ARM_SVE)
-        note("Testing ARM64 Scalable Vector Extension (SVE).");
-        infix_arena_t * arena = infix_arena_create(4096);
+        if (is_sve_supported()) {
+            note("Testing ARM64 Scalable Vector Extension (SVE).");
+            infix_arena_t * arena = infix_arena_create(4096);
 
-        // 1. Determine the vector size at RUNTIME. This is the key to SVE.
-        // Use svcntb() (count bytes) which is the canonical intrinsic for vector length.
-        // svlen_b() is often an alias but is less portable and can cause linker errors.
-        size_t vector_len_bytes = svcntb();
-        size_t num_elements = svcntd();  // Count of 64-bit (double) elements.
-        note("Detected SVE vector width: %zu bits (%zu double elements).", vector_len_bytes * 8, num_elements);
+            // 1. Determine the vector size at RUNTIME. This is the key to SVE.
+            // Use svcntb() (count bytes) which is the canonical intrinsic for vector length.
+            // svlen_b() is often an alias but is less portable and can cause linker errors.
+            size_t vector_len_bytes = svcntb();
+            size_t num_elements = svcntd();  // Count of 64-bit (double) elements.
+            note("Detected SVE vector width: %zu bits (%zu double elements).", vector_len_bytes * 8, num_elements);
 
-        // 2. Create the infix_type for the dynamically sized vector.
-        infix_type * sve_vector_type = nullptr;
-        infix_status status = infix_type_create_vector(
-            arena, &sve_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), num_elements);
+            // 2. Create the infix_type for the dynamically sized vector.
+            infix_type * sve_vector_type = nullptr;
+            infix_status status = infix_type_create_vector(
+                arena, &sve_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), num_elements);
 
-        if (!ok(status == INFIX_SUCCESS, "infix_type for svfloat64_t created successfully")) {
-            skip(1, "Cannot proceed without SVE vector type");
-            infix_arena_destroy(arena);
-        }
-        else {
-            // 3. Create the trampoline for svfloat64_t(svfloat64_t, svfloat64_t)
-            infix_type * arg_types[] = {sve_vector_type, sve_vector_type};
-            infix_forward_t * trampoline = nullptr;
-            status = infix_forward_create_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
-
-            // 4. Prepare data arrays, call the trampoline, and verify the result.
-            // Allocate memory for the data arrays based on the runtime size.
-            double * vec_a_data = malloc(sizeof(double) * num_elements);
-            double * vec_b_data = malloc(sizeof(double) * num_elements);
-            double * result_data = malloc(sizeof(double) * num_elements);
-
-            for (size_t i = 0; i < num_elements; ++i) {
-                vec_a_data[i] = 10.0 + i;
-                vec_b_data[i] = 32.0 - i;
+            if (!ok(status == INFIX_SUCCESS, "infix_type for svfloat64_t created successfully")) {
+                skip(1, "Cannot proceed without SVE vector type");
+                infix_arena_destroy(arena);
             }
+            else {
+                // 3. Create the trampoline for svfloat64_t(svfloat64_t, svfloat64_t)
+                infix_type * arg_types[] = {sve_vector_type, sve_vector_type};
+                infix_forward_t * trampoline = nullptr;
+                status = infix_forward_create_unbound_manual(&trampoline, sve_vector_type, arg_types, 2, 2);
 
-            svbool_t pg = svptrue_b64();
-            svfloat64_t vec_a = svld1_f64(pg, vec_a_data);
-            svfloat64_t vec_b = svld1_f64(pg, vec_b_data);
-            svfloat64_t result_vec;
+                // 4. Prepare data arrays, call the trampoline, and verify the result.
+                // Allocate memory for the data arrays based on the runtime size.
+                double * vec_a_data = malloc(sizeof(double) * num_elements);
+                double * vec_b_data = malloc(sizeof(double) * num_elements);
+                double * result_data = malloc(sizeof(double) * num_elements);
 
-            void * args[] = {&vec_a, &vec_b};
-
-            ((infix_cif_func)infix_forward_get_code(trampoline))((void *)native_sve_vector_add, &result_vec, args);
-
-            svst1_f64(pg, result_data, result_vec);
-
-            bool all_correct = true;
-            for (size_t i = 0; i < num_elements; ++i) {
-                if (fabs(result_data[i] - 42.0) > 1e-9) {
-                    all_correct = false;
-                    diag("Mismatch at element %zu: expected 42.0, got %f", i, result_data[i]);
+                for (size_t i = 0; i < num_elements; ++i) {
+                    vec_a_data[i] = 10.0 + i;
+                    vec_b_data[i] = 32.0 - i;
                 }
+
+                svbool_t pg = svptrue_b64();
+                svfloat64_t vec_a = svld1_f64(pg, vec_a_data);
+                svfloat64_t vec_b = svld1_f64(pg, vec_b_data);
+                svfloat64_t result_vec;
+
+                void * args[] = {&vec_a, &vec_b};
+
+                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                cif((void *)native_sve_vector_add, &result_vec, args);
+
+                svst1_f64(pg, result_data, result_vec);
+
+                bool all_correct = true;
+                for (size_t i = 0; i < num_elements; ++i) {
+                    if (fabs(result_data[i] - 42.0) > 1e-9) {
+                        all_correct = false;
+                        diag("Mismatch at element %zu: expected 42.0, got %f", i, result_data[i]);
+                    }
+                }
+
+                ok(all_correct, "SVE vector passed/returned correctly for all %zu elements", num_elements);
+
+                free(vec_a_data);
+                free(vec_b_data);
+                free(result_data);
+                infix_forward_destroy(trampoline);
+                infix_arena_destroy(arena);
             }
-
-            ok(all_correct, "SVE vector passed/returned correctly for all %zu elements", num_elements);
-
-            free(vec_a_data);
-            free(vec_b_data);
-            free(result_data);
-            infix_forward_destroy(trampoline);
-            infix_arena_destroy(arena);
         }
+        else
+            skip(2, "SVE is not supported by the CPU at runtime.");
 #else
-        skip(2, "No SVE support on this platform (requires -march=armv8-a+sve or similar).");
+        skip(2, "SVE tests skipped: not compiled with SVE support (e.g., -march=armv8-a+sve).");
 #endif
     }
 }

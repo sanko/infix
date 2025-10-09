@@ -62,81 +62,115 @@ TEST {
     plan(4);  // One subtest for each simple signature.
 
     subtest("int(int, int)") {
-        plan(2);
+        plan(4);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         int a = 10, b = 25;
-        int result = 0;
         void * args[] = {&a, &b};
-        cif_func((void *)add_ints, &result, args);
-        ok(result == 35, "add_ints(10, 25) returned 35");
 
-        infix_forward_destroy(trampoline);
+        // Unbound
+        infix_forward_t * unbound_t = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
+           "Unbound created");
+        int unbound_result = 0;
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)add_ints, &unbound_result, args);
+        ok(unbound_result == 35, "Unbound call correct");
+        infix_forward_destroy(unbound_t);
+
+        // Bound
+        infix_forward_t * bound_t = nullptr;
+        ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_ints) == INFIX_SUCCESS,
+           "Bound created");
+        int bound_result = 0;
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        bound_cif(&bound_result, args);
+        ok(bound_result == 35, "Bound call correct");
+        infix_forward_destroy(bound_t);
     }
 
     subtest("float(float, float)") {
-        plan(2);
+        plan(4);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT),
                                     infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT)};
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 2, 2);
-        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
         float a = 2.5f, b = 4.0f;
-        float result = 0.0f;
         void * args[] = {&a, &b};
-        cif_func((void *)multiply_floats, &result, args);
-        ok(fabs(result - 10.0f) < 0.001, "multiply_floats(2.5, 4.0) returned 10.0");
 
-        infix_forward_destroy(trampoline);
+        // Unbound
+        infix_forward_t * unbound_t = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
+           "Unbound created");
+        float unbound_result = 0.0f;
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)multiply_floats, &unbound_result, args);
+        ok(fabs(unbound_result - 10.0f) < 0.001, "Unbound call correct");
+        infix_forward_destroy(unbound_t);
+
+        // Bound
+        infix_forward_t * bound_t = nullptr;
+        ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)multiply_floats) == INFIX_SUCCESS,
+           "Bound created");
+        float bound_result = 0.0f;
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        bound_cif(&bound_result, args);
+        ok(fabs(bound_result - 10.0f) < 0.001, "Bound call correct");
+        infix_forward_destroy(bound_t);
     }
 
     subtest("void(void)") {
-        plan(2);  // One for creation, one for the side-effect `pass()` in the target.
+        plan(4);  // Two for creation, two for the side-effect `pass()` calls.
         infix_type * ret_type = infix_type_create_void();
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, NULL, 0, 0);
-        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
 
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-        cif_func((void *)do_nothing, NULL, NULL);
+        // Unbound
+        infix_forward_t * unbound_t = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, nullptr, 0, 0) == INFIX_SUCCESS,
+           "Unbound created");
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)do_nothing, nullptr, nullptr);
+        infix_forward_destroy(unbound_t);
 
-        infix_forward_destroy(trampoline);
+        // Bound
+        infix_forward_t * bound_t = nullptr;
+        ok(infix_forward_create_manual(&bound_t, ret_type, nullptr, 0, 0, (void *)do_nothing) == INFIX_SUCCESS,
+           "Bound created");
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        bound_cif(nullptr, nullptr);
+        infix_forward_destroy(bound_t);
     }
 
     subtest("Argument Sign-Extension: bool(int)") {
-        plan(3);
+        plan(6);
         note("Verifying that negative integers are correctly sign-extended.");
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
-        infix_forward_t * trampoline = NULL;
-        infix_status status = infix_forward_create_manual(&trampoline, ret_type, arg_types, 1, 1);
-        ok(status == INFIX_SUCCESS, "Trampoline generated successfully");
-
-        infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-
-        // Test case 1: Negative number
-        int neg_val = -100;
-        bool neg_result = false;
+        int neg_val = -100, pos_val = 100;
         void * neg_args[] = {&neg_val};
-        cif_func((void *)is_negative, &neg_result, neg_args);
-        ok(neg_result == true, "is_negative(-100) returned true");
-
-        // Test case 2: Positive number
-        int pos_val = 100;
-        bool pos_result = true;
         void * pos_args[] = {&pos_val};
-        cif_func((void *)is_negative, &pos_result, pos_args);
-        ok(pos_result == false, "is_negative(100) returned false");
 
-        infix_forward_destroy(trampoline);
+        // Unbound
+        infix_forward_t * unbound_t = nullptr;
+        ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS,
+           "Unbound created");
+        bool neg_result_u = false, pos_result_u = true;
+        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        unbound_cif((void *)is_negative, &neg_result_u, neg_args);
+        ok(neg_result_u == true, "Unbound is_negative(-100) returned true");
+        unbound_cif((void *)is_negative, &pos_result_u, pos_args);
+        ok(pos_result_u == false, "Unbound is_negative(100) returned false");
+        infix_forward_destroy(unbound_t);
+
+        // Bound
+        infix_forward_t * bound_t = nullptr;
+        ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)is_negative) == INFIX_SUCCESS,
+           "Bound created");
+        bool neg_result_b = false, pos_result_b = true;
+        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        bound_cif(&neg_result_b, neg_args);
+        ok(neg_result_b == true, "Bound is_negative(-100) returned true");
+        bound_cif(&pos_result_b, pos_args);
+        ok(pos_result_b == false, "Bound is_negative(100) returned false");
+        infix_forward_destroy(bound_t);
     }
 }

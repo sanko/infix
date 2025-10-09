@@ -23,7 +23,7 @@
  * By centralizing this logic, individual fuzzing harnesses can be kept clean and
  * focused on their specific targets.
  */
-#include "../src/common/infix_internals.h"
+#include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <stdbool.h>
 #include <stddef.h>

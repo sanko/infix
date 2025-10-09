@@ -312,7 +312,8 @@ bool tap_ok(bool condition, const char * file, int line, const char * func, cons
             current_state->failed_todo++;
         else {
             current_state->failed++;
-            TAP_ATOMIC_FETCH_ADD(&g_total_failed, 1);
+            if (current_state == &state_stack[0])
+                TAP_ATOMIC_FETCH_ADD(&g_total_failed, 1);
         }
     }
 

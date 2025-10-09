@@ -73,6 +73,7 @@ struct infix_forward_t {
     infix_type ** arg_types;   ///< An array of infix_type pointers for each argument.
     size_t num_args;           ///< The total number of arguments.
     size_t num_fixed_args;     ///< The number of non-variadic arguments.
+    void * target_fn;          ///< If non-NULL, the hardcoded target function for a bound trampoline.
 };
 
 /**
@@ -199,6 +200,7 @@ typedef struct {
     bool is_variadic;                    ///< True if the call is variadic.
     size_t num_stack_args;               ///< The number of arguments passed on the stack.
     size_t num_args;                     ///< The total number of arguments.
+    void * target_fn;                    ///< If non-NULL, the target function for a bound trampoline.
 } infix_call_frame_layout;
 
 /**
@@ -225,7 +227,7 @@ typedef struct {
  */
 typedef struct {
     infix_status (*prepare_forward_call_frame)(
-        infix_arena_t *, infix_call_frame_layout **, infix_type *, infix_type **, size_t, size_t);
+        infix_arena_t *, infix_call_frame_layout **, infix_type *, infix_type **, size_t, size_t, void *);
     infix_status (*generate_forward_prologue)(code_buffer *, infix_call_frame_layout *);
     infix_status (*generate_forward_argument_moves)(
         code_buffer *, infix_call_frame_layout *, infix_type **, size_t, size_t);
@@ -257,8 +259,8 @@ void code_buffer_append(code_buffer *, const void *, size_t);
 void emit_byte(code_buffer *, uint8_t);
 void emit_int32(code_buffer *, int32_t);
 void emit_int64(code_buffer *, int64_t);
-c23_nodiscard infix_status
-_infix_forward_create_internal(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, infix_arena_t *);
+c23_nodiscard infix_status _infix_forward_create_internal(
+    infix_forward_t **, infix_type *, infix_type **, size_t, size_t, infix_arena_t *, void *);
 
 // --- From executor.c ---
 c23_nodiscard infix_executable_t infix_executable_alloc(size_t);
@@ -308,7 +310,7 @@ static inline bool is_long_double(const infix_type * type) {
 //=================================================================================================
 
 #if defined(INFIX_ABI_SYSV_X64) || defined(INFIX_ABI_WINDOWS_X64)
-#include "abi_x64_emitters.h"
+#include "arch/x64/abi_x64_emitters.h"
 #elif defined(INFIX_ABI_AAPCS64)
-#include "abi_arm64_emitters.h"
+#include "arch/aarch64/abi_arm64_emitters.h"
 #endif

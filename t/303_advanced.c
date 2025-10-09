@@ -102,9 +102,9 @@ TEST {
         plan(2);
         infix_type * ret_type = infix_type_create_void();
         infix_type * arg_types[] = {infix_type_create_pointer()};
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 1, 1, (void *)pointer_modify_handler, NULL);
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 1, 1, (void *)pointer_modify_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline for pointer modification created");
 
         if (rt) {
@@ -119,23 +119,23 @@ TEST {
 
     subtest("Callback passed as an argument") {
         plan(3);
-        infix_reverse_t * inner_rt = NULL;
+        infix_reverse_t * inner_rt = nullptr;
         infix_type * inner_arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
         infix_status status = infix_reverse_create_manual(
-            &inner_rt, infix_type_create_void(), inner_arg_types, 1, 1, (void *)inner_callback_handler, NULL);
+            &inner_rt, infix_type_create_void(), inner_arg_types, 1, 1, (void *)inner_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Inner reverse trampoline (the argument) created");
 
         // The harness takes a `void (*)(int)` which is a pointer.
-        infix_forward_t * fwd_trampoline = NULL;
+        infix_forward_t * fwd_trampoline = nullptr;
         infix_type * fwd_arg_types[] = {infix_type_create_pointer()};
-        status = infix_forward_create_manual(&fwd_trampoline, infix_type_create_void(), fwd_arg_types, 1, 1);
+        status = infix_forward_create_unbound_manual(&fwd_trampoline, infix_type_create_void(), fwd_arg_types, 1, 1);
         ok(status == INFIX_SUCCESS, "Forward trampoline (for the harness) created");
 
         if (inner_rt && fwd_trampoline) {
             void * callback_ptr_arg = infix_reverse_get_code(inner_rt);
             void * args[] = {&callback_ptr_arg};
-            infix_cif_func cif = (infix_cif_func)infix_forward_get_code(fwd_trampoline);
-            cif((void *)execute_callback_as_arg_harness, NULL, args);
+            infix_cif_func cif = infix_forward_get_unbound_code(fwd_trampoline);
+            cif((void *)execute_callback_as_arg_harness, nullptr, args);
         }
         else
             skip(1, "Test skipped");
@@ -147,7 +147,7 @@ TEST {
     subtest("Callback returns a function pointer (via user_data)") {
         plan(3);
 
-        infix_reverse_t * inner_t = NULL;
+        infix_reverse_t * inner_t = nullptr;
         infix_type * inner_arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
         infix_status status = infix_reverse_create_manual(&inner_t,
                                                           infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
@@ -155,13 +155,13 @@ TEST {
                                                           1,
                                                           1,
                                                           (void *)final_multiply_handler,
-                                                          NULL);
+                                                          nullptr);
         ok(status == INFIX_SUCCESS, "Inner callback created");
 
-        infix_reverse_t * provider_t = NULL;
-        void * user_data_ptr = inner_t ? infix_reverse_get_code(inner_t) : NULL;
+        infix_reverse_t * provider_t = nullptr;
+        void * user_data_ptr = inner_t ? infix_reverse_get_code(inner_t) : nullptr;
         status = infix_reverse_create_manual(
-            &provider_t, infix_type_create_pointer(), NULL, 0, 0, (void *)callback_provider_handler, user_data_ptr);
+            &provider_t, infix_type_create_pointer(), nullptr, 0, 0, (void *)callback_provider_handler, user_data_ptr);
         ok(status == INFIX_SUCCESS, "Provider callback created");
 
         if (inner_t && provider_t) {

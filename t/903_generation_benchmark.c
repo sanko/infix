@@ -60,16 +60,16 @@ TEST {
             infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         point_members[1] =
             infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
-        infix_type * point_type = NULL;
+        infix_type * point_type = nullptr;
         if (infix_type_create_struct(arena, &point_type, point_members, 2) != INFIX_SUCCESS) {
             infix_arena_destroy(arena);
             bail_out("Failed to create infix_type for benchmark.");
         }
 
         // 2. Generate the trampoline.
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
         infix_status status =
-            infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)benchmark_handler, NULL);
+            infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)benchmark_handler, nullptr);
         if (status != INFIX_SUCCESS) {
             infix_arena_destroy(arena);
             bail_out("Trampoline generation failed mid-benchmark on iteration %d.", i);

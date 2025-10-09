@@ -214,26 +214,40 @@ static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const 
         break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
-        if (src_type->meta.aggregate_info.num_members > 0) {
-            size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
-            dest_type->meta.aggregate_info.members =
-                infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
-            if (dest_type->meta.aggregate_info.members == nullptr)
-                return nullptr;
-            memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+        {
+            // Deep copy the aggregate's own name, if it has one.
+            const char * src_agg_name = src_type->meta.aggregate_info.name;
+            if (src_agg_name) {
+                size_t name_len = strlen(src_agg_name) + 1;
+                char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
+                if (!dest_agg_name)
+                    return nullptr;  // Allocation failed
+                memcpy(dest_agg_name, src_agg_name, name_len);
+                // We need to cast away const to write to the destination struct field.
+                *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
+            }
 
-            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
-                dest_type->meta.aggregate_info.members[i].type =
-                    _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
-                // Deep copy the member name string to avoid dangling pointers.
-                const char * src_name = src_type->meta.aggregate_info.members[i].name;
-                if (src_name) {
-                    size_t name_len = strlen(src_name) + 1;
-                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
-                    if (!dest_name)
-                        return nullptr;
-                    memcpy(dest_name, src_name, name_len);
-                    *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+            if (src_type->meta.aggregate_info.num_members > 0) {
+                size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
+                dest_type->meta.aggregate_info.members =
+                    infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
+                if (dest_type->meta.aggregate_info.members == nullptr)
+                    return nullptr;
+                memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+
+                for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
+                    dest_type->meta.aggregate_info.members[i].type =
+                        _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
+                    // Deep copy the member name string to avoid dangling pointers.
+                    const char * src_name = src_type->meta.aggregate_info.members[i].name;
+                    if (src_name) {
+                        size_t name_len = strlen(src_name) + 1;
+                        char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                        if (!dest_name)
+                            return nullptr;
+                        memcpy(dest_name, src_name, name_len);
+                        *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+                    }
                 }
             }
         }
@@ -312,13 +326,23 @@ static bool _is_type_graph_resolved(infix_type * type) {
 //=================================================================================================
 
 /*
- * Implementation for infix_forward_get_code.
- * This is a simple accessor for the public API.
+ * Implementation for infix_forward_get_unbound_code.
+ * This is a type-safe accessor for the public API.
  */
-c23_nodiscard void * infix_forward_get_code(infix_forward_t * trampoline) {
-    if (trampoline == nullptr)
+c23_nodiscard infix_cif_func infix_forward_get_unbound_code(infix_forward_t * trampoline) {
+    if (trampoline == nullptr || trampoline->target_fn != nullptr)
         return nullptr;
-    return trampoline->exec.rx_ptr;
+    return (infix_cif_func)trampoline->exec.rx_ptr;
+}
+
+/*
+ * Implementation for infix_forward_get_code.
+ * This is a type-safe accessor for the public API.
+ */
+c23_nodiscard infix_bound_cif_func infix_forward_get_code(infix_forward_t * trampoline) {
+    if (trampoline == nullptr || trampoline->target_fn == nullptr)
+        return nullptr;
+    return (infix_bound_cif_func)trampoline->exec.rx_ptr;
 }
 
 /**
@@ -336,6 +360,7 @@ c23_nodiscard void * infix_forward_get_code(infix_forward_t * trampoline) {
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param source_arena An optional pointer to the arena from which the `infix_type` objects
  *                     were created. Used for the memory optimization.
+ * @param target_fn If not NULL, creates a "bound" trampoline with a hardcoded target.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out_trampoline,
@@ -343,13 +368,16 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
                                                           infix_type ** arg_types,
                                                           size_t num_args,
                                                           size_t num_fixed_args,
-                                                          infix_arena_t * source_arena) {
+                                                          infix_arena_t * source_arena,
+                                                          void * target_fn) {
     if (out_trampoline == nullptr || (arg_types == nullptr && num_args > 0))
         return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Validate the type graphs to ensure they don't contain unresolved placeholders.
-    if (!_is_type_graph_resolved(return_type))
+    if (!_is_type_graph_resolved(return_type)) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     for (size_t i = 0; i < num_args; ++i) {
         if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i]))
             return INFIX_ERROR_INVALID_ARGUMENT;
@@ -371,7 +399,8 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     code_buffer_init(&buf, temp_arena);
 
     // --- JIT Compilation Pipeline ---
-    status = spec->prepare_forward_call_frame(temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args);
+    status = spec->prepare_forward_call_frame(
+        temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args, target_fn);
     if (status != INFIX_SUCCESS)
         goto cleanup;
     status = spec->generate_forward_prologue(&buf, layout);
@@ -425,6 +454,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     }
     handle->num_args = num_args;
     handle->num_fixed_args = num_fixed_args;
+    handle->target_fn = target_fn;
 
     // Allocate executable memory and copy the generated code into it.
     handle->exec = infix_executable_alloc(buf.size);
@@ -450,16 +480,36 @@ cleanup:
 }
 
 /*
- * Implementation for infix_forward_create_manual.
- * This public API function is a simple wrapper around the internal implementation,
- * calling it without a source arena to trigger the fallback to a default arena size.
+ * Implementation for infix_forward_create_manual (bound).
  */
 c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_trampoline,
                                                        infix_type * return_type,
                                                        infix_type ** arg_types,
                                                        size_t num_args,
-                                                       size_t num_fixed_args) {
-    return _infix_forward_create_internal(out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr);
+                                                       size_t num_fixed_args,
+                                                       void * target_function) {
+    return _infix_forward_create_internal(
+        out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr, target_function);
+}
+
+/**
+ * @brief Creates an "unbound" forward-call trampoline for a given function signature.
+ * @details Creates a trampoline where the target function pointer is not hardcoded.
+ * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
+ * @param return_type The `infix_type` of the function's return value.
+ * @param arg_types An array of `infix_type*` for each argument.
+ * @param num_args The total number of arguments.
+ * @param num_fixed_args For variadic functions, the number of non-variadic arguments.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * @note The returned trampoline must be freed with `infix_forward_destroy`.
+ */
+c23_nodiscard infix_status infix_forward_create_unbound_manual(infix_forward_t ** out_trampoline,
+                                                               infix_type * return_type,
+                                                               infix_type ** arg_types,
+                                                               size_t num_args,
+                                                               size_t num_fixed_args) {
+    return _infix_forward_create_internal(
+        out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr, nullptr);
 }
 
 /*
@@ -595,7 +645,8 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
                                          context->return_type,
                                          callback_arg_types,
                                          context->num_args + 1,
-                                         context->num_fixed_args + 1);
+                                         context->num_fixed_args + 1,
+                                         user_callback_fn);
     if (status != INFIX_SUCCESS)
         goto cleanup;
 

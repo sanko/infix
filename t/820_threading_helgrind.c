@@ -68,11 +68,11 @@ void * helgrind_thread_worker(void * arg) {
     typedef void (*my_func_ptr)(int, int);
 
     for (int i = 0; i < ITERATIONS_PER_THREAD; ++i) {
-        infix_reverse_t * rt = NULL;
+        infix_reverse_t * rt = nullptr;
 
         // Generate the reverse trampoline. This is a critical area for thread-safety.
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)helgrind_test_handler, NULL);
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)helgrind_test_handler, nullptr);
         if (status != INFIX_SUCCESS)
 // Return a failure status that the main thread can check.
 #if defined(_WIN32)
@@ -111,8 +111,8 @@ TEST {
 #if defined(INFIX_OS_WINDOWS)
         HANDLE threads[NUM_THREADS] = {0};
         for (int i = 0; i < NUM_THREADS; ++i) {
-            threads[i] = CreateThread(NULL, 0, helgrind_thread_worker, NULL, 0, NULL);
-            if (threads[i] == NULL) {
+            threads[i] = CreateThread(nullptr, 0, helgrind_thread_worker, nullptr, 0, nullptr);
+            if (threads[i] == nullptr) {
                 diag("FATAL: CreateThread failed for thread %d.", i);
                 any_thread_failed = true;
                 break;
@@ -123,7 +123,7 @@ TEST {
             WaitForMultipleObjects(NUM_THREADS, threads, TRUE, INFINITE);
 
         for (int i = 0; i < NUM_THREADS; ++i) {
-            if (threads[i] == NULL)
+            if (threads[i] == nullptr)
                 continue;
             DWORD exit_code;
             if (GetExitCodeThread(threads[i], &exit_code)) {
@@ -141,7 +141,7 @@ TEST {
 #else  // POSIX
         pthread_t threads[NUM_THREADS] = {0};
         for (int i = 0; i < NUM_THREADS; ++i) {
-            if (pthread_create(&threads[i], NULL, helgrind_thread_worker, NULL) != 0) {
+            if (pthread_create(&threads[i], nullptr, helgrind_thread_worker, nullptr) != 0) {
                 perror("FATAL: pthread_create failed");
                 any_thread_failed = true;
                 break;

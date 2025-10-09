@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2025 Sanko Robinson
  *
@@ -165,14 +166,15 @@ TEST {
                 expected_sum += arg_values[i];
             }
 
-            infix_forward_t * trampoline = NULL;
+            infix_forward_t * trampoline = nullptr;
             infix_status status =
-                infix_forward_create_manual(&trampoline, ret_type, arg_types, MAX_REG_DOUBLES, MAX_REG_DOUBLES);
+                infix_forward_create_unbound_manual(&trampoline, ret_type, arg_types, MAX_REG_DOUBLES, MAX_REG_DOUBLES);
             ok(status == INFIX_SUCCESS, "Trampoline created");
 
             double result = 0.0;
             if (trampoline) {
-                ((infix_cif_func)infix_forward_get_code(trampoline))((void *)sum_max_reg_doubles, &result, args);
+                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                cif((void *)sum_max_reg_doubles, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for max register args");
             }
             else
@@ -196,14 +198,15 @@ TEST {
                 expected_sum += arg_values[i];
             }
 
-            infix_forward_t * trampoline = NULL;
-            infix_status status =
-                infix_forward_create_manual(&trampoline, ret_type, arg_types, ONE_STACK_DOUBLE, ONE_STACK_DOUBLE);
+            infix_forward_t * trampoline = nullptr;
+            infix_status status = infix_forward_create_unbound_manual(
+                &trampoline, ret_type, arg_types, ONE_STACK_DOUBLE, ONE_STACK_DOUBLE);
             ok(status == INFIX_SUCCESS, "Trampoline created");
 
             double result = 0.0;
             if (trampoline) {
-                ((infix_cif_func)infix_forward_get_code(trampoline))((void *)sum_one_stack_double, &result, args);
+                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                cif((void *)sum_one_stack_double, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for one stack arg");
             }
             else
@@ -230,17 +233,19 @@ TEST {
             double expected_result = arg_values[0] + arg_values[519];
             diag("Expected result (arg0 + arg519): %.1f", expected_result);
 
-            infix_forward_t * trampoline = NULL;
-            infix_status status = infix_forward_create_manual(&trampoline,
-                                                              infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
-                                                              arg_types,
-                                                              NUM_LARGE_ARGS,
-                                                              NUM_LARGE_ARGS);
+            infix_forward_t * trampoline = nullptr;
+            infix_status status =
+                infix_forward_create_unbound_manual(&trampoline,
+                                                    infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE),
+                                                    arg_types,
+                                                    NUM_LARGE_ARGS,
+                                                    NUM_LARGE_ARGS);
             ok(status == INFIX_SUCCESS, "Trampoline for large stack created");
 
             double result = 0.0;
             if (trampoline) {
-                ((infix_cif_func)infix_forward_get_code(trampoline))((void *)large_stack_callee, &result, args);
+                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                cif((void *)large_stack_callee, &result, args);
                 ok(fabs(result - expected_result) < 0.001,
                    "Large stack call returned correct sum (got %.1f, expected %.1f)",
                    result,
@@ -262,7 +267,7 @@ TEST {
             infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
         point_members[1] =
             infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
-        infix_type * point_type = NULL;
+        infix_type * point_type = nullptr;
         infix_status status = infix_type_create_struct(arena, &point_type, point_members, 2);
         if (!ok(status == INFIX_SUCCESS, "Point infix_type created")) {
             skip(3, "Test skipped");
@@ -277,8 +282,9 @@ TEST {
                                     point_type,
                                     infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT)};
 
-        infix_reverse_t * rt = NULL;
-        status = infix_reverse_create_manual(&rt, ret_type, arg_types, 6, 6, (void *)many_args_callback_handler, NULL);
+        infix_reverse_t * rt = nullptr;
+        status =
+            infix_reverse_create_manual(&rt, ret_type, arg_types, 6, 6, (void *)many_args_callback_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Reverse trampoline with stack args created");
 
         if (rt) {

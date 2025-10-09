@@ -202,3 +202,5 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** This would require a major architectural redesign. The JIT code would need to query the hardware's vector length at runtime and dynamically adjust its behavior.
     *   **Goal:** Basic support for a function taking a scalable vector type.
     *   **Possible Roadblocks:** Monumental implementation effort. Likely out of scope for the current library
+
+- [ ] **Typedef System**

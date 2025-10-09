@@ -70,7 +70,7 @@ TEST {
     members[0] =
         infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(Number, i));
     members[1] = infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), offsetof(Number, f));
-    infix_type * union_type = NULL;
+    infix_type * union_type = nullptr;
     infix_status status = infix_type_create_union(arena, &union_type, members, 2);
 
     if (!ok(status == INFIX_SUCCESS, "infix_type for Number union created successfully")) {
@@ -84,12 +84,12 @@ TEST {
         plan(4);
 
         // Test 1: Pass as integer
-        infix_forward_t * int_trampoline = NULL;
-        status = infix_forward_create_manual(
+        infix_forward_t * int_trampoline = nullptr;
+        status = infix_forward_create_unbound_manual(
             &int_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &union_type, 1, 1);
-        ok(status == INFIX_SUCCESS && int_trampoline != NULL, "Trampoline for process_number_union_as_int created");
+        ok(status == INFIX_SUCCESS && int_trampoline != nullptr, "Trampoline for process_number_union_as_int created");
 
-        infix_cif_func int_cif = (infix_cif_func)infix_forward_get_code(int_trampoline);
+        infix_cif_func int_cif = infix_forward_get_unbound_code(int_trampoline);
         Number num_int;
         num_int.i = 123;
         int int_result = 0;
@@ -99,12 +99,13 @@ TEST {
         infix_forward_destroy(int_trampoline);
 
         // Test 2: Pass as float
-        infix_forward_t * flt_trampoline = NULL;
-        status = infix_forward_create_manual(
+        infix_forward_t * flt_trampoline = nullptr;
+        status = infix_forward_create_unbound_manual(
             &flt_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &union_type, 1, 1);
-        ok(status == INFIX_SUCCESS && flt_trampoline != NULL, "Trampoline for process_number_union_as_float created");
+        ok(status == INFIX_SUCCESS && flt_trampoline != nullptr,
+           "Trampoline for process_number_union_as_float created");
 
-        infix_cif_func flt_cif = (infix_cif_func)infix_forward_get_code(flt_trampoline);
+        infix_cif_func flt_cif = infix_forward_get_unbound_code(flt_trampoline);
         Number num_flt;
         num_flt.f = 99.5f;
         float flt_result = 0.0f;
@@ -116,12 +117,12 @@ TEST {
 
     subtest("Returning union by value") {
         plan(3);
-        infix_forward_t * trampoline = NULL;
+        infix_forward_t * trampoline = nullptr;
         infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        status = infix_forward_create_manual(&trampoline, union_type, &arg_type, 1, 1);
-        ok(status == INFIX_SUCCESS && trampoline != NULL, "Trampoline for return_number_union created");
+        status = infix_forward_create_unbound_manual(&trampoline, union_type, &arg_type, 1, 1);
+        ok(status == INFIX_SUCCESS && trampoline != nullptr, "Trampoline for return_number_union created");
 
-        infix_cif_func cif = (infix_cif_func)infix_forward_get_code(trampoline);
+        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
 
         // Test 1: Return as integer
         Number int_result;

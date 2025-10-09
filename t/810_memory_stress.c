@@ -79,14 +79,14 @@ TEST {
                 infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
             point_members[1] =
                 infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
-            infix_type * point_type = NULL;
+            infix_type * point_type = nullptr;
             if (infix_type_create_struct(arena, &point_type, point_members, 2) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
                 bail_out("Failed to create point_type");
             }
 
             // Level 2: Array of Point
-            infix_type * array_type = NULL;
+            infix_type * array_type = nullptr;
             if (infix_type_create_array(arena, &array_type, point_type, 10) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
                 bail_out("Failed to create array_type");
@@ -98,30 +98,30 @@ TEST {
             object_members[0] = infix_type_create_member(
                 "object_id", infix_type_create_primitive(INFIX_PRIMITIVE_UINT64), offsetof(StressObject, object_id));
             object_members[1] = infix_type_create_member("elements", array_type, offsetof(StressObject, elements));
-            infix_type * object_type = NULL;
+            infix_type * object_type = nullptr;
             if (infix_type_create_struct(arena, &object_type, object_members, 2) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
                 bail_out("Failed to create object_type");
             }
 
             // 3. Generate and Destroy a Forward Trampoline
-            infix_forward_t * forward_trampoline = NULL;
-            if (infix_forward_create_manual(&forward_trampoline, infix_type_create_void(), &object_type, 1, 1) !=
-                INFIX_SUCCESS) {
+            infix_forward_t * forward_trampoline = nullptr;
+            if (infix_forward_create_unbound_manual(
+                    &forward_trampoline, infix_type_create_void(), &object_type, 1, 1) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
                 bail_out("Failed to generate forward trampoline");
             }
             infix_forward_destroy(forward_trampoline);
 
             // 4. Generate and Destroy a Reverse Trampoline
-            infix_reverse_t * reverse_trampoline = NULL;
+            infix_reverse_t * reverse_trampoline = nullptr;
             if (infix_reverse_create_manual(&reverse_trampoline,
                                             infix_type_create_void(),
                                             &object_type,
                                             1,
                                             1,
                                             (void *)dummy_stress_handler_rev,
-                                            NULL) != INFIX_SUCCESS) {
+                                            nullptr) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
                 bail_out("Failed to generate reverse trampoline");
             }
