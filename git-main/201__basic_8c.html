@@ -105,7 +105,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>modify_data_via_point
 <tr class="separator:a753d781a50523af33317e7a04580755b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ec4678338fe4607df715d80d8fea0e5" id="r_a9ec4678338fe4607df715d80d8fea0e5"><td class="memItemLeft" align="right" valign="top"><a id="a9ec4678338fe4607df715d80d8fea0e5" name="a9ec4678338fe4607df715d80d8fea0e5"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>check_if_null</b> (void *ptr)</td></tr>
-<tr class="memdesc:a9ec4678338fe4607df715d80d8fea0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the pointer it received is NULL. <br /></td></tr>
+<tr class="memdesc:a9ec4678338fe4607df715d80d8fea0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the pointer it received is nullptr. <br /></td></tr>
 <tr class="separator:a9ec4678338fe4607df715d80d8fea0e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ef021ab86822fb9247e295884218690" id="r_a7ef021ab86822fb9247e295884218690"><td class="memItemLeft" align="right" valign="top"><a id="a7ef021ab86822fb9247e295884218690" name="a7ef021ab86822fb9247e295884218690"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Passing and returning pointers&quot;)</td></tr>
@@ -113,9 +113,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>check_if_null</b> (vo
 <tr class="memitem:adf3e46fc76093dad934035b5db8c005a" id="r_adf3e46fc76093dad934035b5db8c005a"><td class="memItemLeft" align="right" valign="top"><a id="adf3e46fc76093dad934035b5db8c005a" name="adf3e46fc76093dad934035b5db8c005a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Modifying data via pointer arguments&quot;)</td></tr>
 <tr class="separator:adf3e46fc76093dad934035b5db8c005a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90be1a63de7201da7ad5504a418038d5" id="r_a90be1a63de7201da7ad5504a418038d5"><td class="memItemLeft" align="right" valign="top"><a id="a90be1a63de7201da7ad5504a418038d5" name="a90be1a63de7201da7ad5504a418038d5"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Passing NULL pointers&quot;)</td></tr>
-<tr class="separator:a90be1a63de7201da7ad5504a418038d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee1d15606a4ed4744a5e8f05bdc0d5cd" id="r_aee1d15606a4ed4744a5e8f05bdc0d5cd"><td class="memItemLeft" align="right" valign="top"><a id="aee1d15606a4ed4744a5e8f05bdc0d5cd" name="aee1d15606a4ed4744a5e8f05bdc0d5cd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Passing nullptr pointers&quot;)</td></tr>
+<tr class="separator:aee1d15606a4ed4744a5e8f05bdc0d5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -133,7 +133,7 @@ Variables</h2></td></tr>
 <ol type="1">
 <li><b>Passing and Returning Pointers:</b> <a class="el" href="classA.html">A</a> function similar to <code>strchr</code> is called to ensure that a pointer passed into a function and a pointer returned from a function both retain their correct values.</li>
 <li><b>Modifying Data Via Pointers:</b> <a class="el" href="classA.html">A</a> function is called with pointers to local variables. The test verifies that the native function can dereference these pointers and modify the original data in the caller's stack frame, a common <a class="el" href="classC.html">C</a> idiom.</li>
-<li><b>Passing NULL Pointers:</b> <a class="el" href="classA.html">A</a> <code>NULL</code> pointer is passed to a native function to ensure it is transmitted correctly without being corrupted or causing a crash. </li>
+<li><b>Passing nullptr Pointers:</b> <a class="el" href="classA.html">A</a> <code>nullptr</code> pointer is passed to a native function to ensure it is transmitted correctly without being corrupted or causing a crash. </li>
 </ol>
 </div><h2 class="groupheader">Variable Documentation</h2>
 <a id="a67c1cbb549407d754fe1894f74b40c3e" name="a67c1cbb549407d754fe1894f74b40c3e"></a>

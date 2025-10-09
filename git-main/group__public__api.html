@@ -102,6 +102,9 @@ Topics</h2></td></tr>
 <tr class="memitem:group__memory__management" id="r_group__memory__management"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html">Memory Management</a></td></tr>
 <tr class="memdesc:group__memory__management"><td class="mdescLeft">&#160;</td><td class="mdescRight">The arena allocator and configurable memory functions. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__error__api" id="r_group__error__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__api.html">Error Reporting</a></td></tr>
+<tr class="memdesc:group__error__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public structures and enumerations for detailed error reporting. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__version__macros" id="r_group__version__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__macros.html">Version Information</a></td></tr>
 <tr class="memdesc:group__version__macros"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macros defining the semantic version of the infix library. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,8 +112,11 @@ Topics</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga34ef26a155a3861d5172b7c07239ee43" id="r_ga34ef26a155a3861d5172b7c07239ee43"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>) (void *, void *, void **)</td></tr>
-<tr class="memdesc:ga34ef26a155a3861d5172b7c07239ee43"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a generic forward-call trampoline, the "Call InterFace" function.  <br /></td></tr>
+<tr class="memdesc:ga34ef26a155a3861d5172b7c07239ee43"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a generic "unbound" forward-call trampoline.  <br /></td></tr>
 <tr class="separator:ga34ef26a155a3861d5172b7c07239ee43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa424eb35854d3fa968995851e690c9f8" id="r_gaa424eb35854d3fa968995851e690c9f8"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa424eb35854d3fa968995851e690c9f8">infix_bound_cif_func</a>) (void *, void **)</td></tr>
+<tr class="memdesc:gaa424eb35854d3fa968995851e690c9f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a "bound" forward-call trampoline.  <br /></td></tr>
+<tr class="separator:gaa424eb35854d3fa968995851e690c9f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -131,6 +137,31 @@ Enumerations</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>The primary public-facing functions for using the infix library. </p>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="gaa424eb35854d3fa968995851e690c9f8" name="gaa424eb35854d3fa968995851e690c9f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa424eb35854d3fa968995851e690c9f8">&#9670;&#160;</a></span>infix_bound_cif_func</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* infix_bound_cif_func) (void *, void **)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The signature for a "bound" forward-call trampoline. </p>
+<p>This is the function pointer type returned by <code>infix_forward_get_code</code>. The target function is hardcoded, so it is not needed as an argument at the call site. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">return_value</td><td><a class="el" href="classA.html">A</a> pointer to a buffer where the return value will be stored. </td></tr>
+    <tr><td class="paramname">args</td><td>An array of pointers, where each element points to an argument's value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a68">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
 <a id="ga34ef26a155a3861d5172b7c07239ee43" name="ga34ef26a155a3861d5172b7c07239ee43"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga34ef26a155a3861d5172b7c07239ee43">&#9670;&#160;</a></span>infix_cif_func</h2>
 
@@ -143,8 +174,8 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The signature for a generic forward-call trampoline, the "Call InterFace" function. </p>
-<p>This is the function pointer type returned by <code>infix_forward_get_code</code>. It provides a standardized way to invoke any <a class="el" href="classC.html">C</a> function for which a trampoline was generated. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>The signature for a generic "unbound" forward-call trampoline. </p>
+<p>This is the function pointer type returned by <code>infix_forward_get_unbound_code</code>. It provides a standardized way to invoke any <a class="el" href="classC.html">C</a> function for which a trampoline was generated. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">target_function</td><td><a class="el" href="classA.html">A</a> pointer to the native <a class="el" href="classC.html">C</a> function to be called. </td></tr>
     <tr><td class="paramname">return_value</td><td><a class="el" href="classA.html">A</a> pointer to a buffer where the return value will be stored. </td></tr>
@@ -152,7 +183,7 @@ Enumerations</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a65">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a67">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 
 </div>
@@ -187,7 +218,7 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7a3fad92c0e35ba68a75ac0f22339958d5" name="gga8643667be6ea1ef9269c2e46d8f11ff7a3fad92c0e35ba68a75ac0f22339958d5"></a>INFIX_ERROR_&#160;</td><td class="fielddoc"><p>An unspecified error occurred. </p>
 </td></tr>
 </table>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a73">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a76">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 
 </div>

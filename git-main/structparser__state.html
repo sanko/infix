@@ -85,12 +85,12 @@ $(function() {
 Public Attributes</h2></td></tr>
 <tr class="memitem:aea570eb7befddade4737dbe6d22f03da" id="r_aea570eb7befddade4737dbe6d22f03da"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea570eb7befddade4737dbe6d22f03da">p</a></td></tr>
 <tr class="separator:aea570eb7befddade4737dbe6d22f03da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a027ec8ff26e2c7ab32f4867afd1a3ea2" id="r_a027ec8ff26e2c7ab32f4867afd1a3ea2"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a027ec8ff26e2c7ab32f4867afd1a3ea2">start</a></td></tr>
+<tr class="separator:a027ec8ff26e2c7ab32f4867afd1a3ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04f15c3f4309338ad5f298eeac23bd6" id="r_aa04f15c3f4309338ad5f298eeac23bd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa04f15c3f4309338ad5f298eeac23bd6">arena</a></td></tr>
 <tr class="separator:aa04f15c3f4309338ad5f298eeac23bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6acb3fad5e4ab8d8a0a656402ff13a4" id="r_aa6acb3fad5e4ab8d8a0a656402ff13a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6acb3fad5e4ab8d8a0a656402ff13a4">depth</a></td></tr>
 <tr class="separator:aa6acb3fad5e4ab8d8a0a656402ff13a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec169142e1e627e92491cad871bf677a" id="r_aec169142e1e627e92491cad871bf677a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec169142e1e627e92491cad871bf677a">last_error</a></td></tr>
-<tr class="separator:aec169142e1e627e92491cad871bf677a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="aa04f15c3f4309338ad5f298eeac23bd6" name="aa04f15c3f4309338ad5f298eeac23bd6"></a>
@@ -123,21 +123,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aec169142e1e627e92491cad871bf677a" name="aec169142e1e627e92491cad871bf677a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec169142e1e627e92491cad871bf677a">&#9670;&#160;</a></span>last_error</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> parser_state::last_error</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Stores the reason for the most recent parsing failure. </p>
-
-</div>
-</div>
 <a id="aea570eb7befddade4737dbe6d22f03da" name="aea570eb7befddade4737dbe6d22f03da"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea570eb7befddade4737dbe6d22f03da">&#9670;&#160;</a></span>p</h2>
 
@@ -150,6 +135,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>The current position (pointer) in the input string. </p>
+
+</div>
+</div>
+<a id="a027ec8ff26e2c7ab32f4867afd1a3ea2" name="a027ec8ff26e2c7ab32f4867afd1a3ea2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a027ec8ff26e2c7ab32f4867afd1a3ea2">&#9670;&#160;</a></span>start</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* parser_state::start</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The start of the original string (for calculating error positions). </p>
 
 </div>
 </div>

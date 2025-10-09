@@ -13,10 +13,9 @@ var searchData=
   ['2_20use_20after_20free_20prevention_20guard_20pages_10',['2. Use-After-Free Prevention (Guard Pages)',['../md__2home_2runner_2work_2infix_2infix_2SECURITY.html#autotoc_md177',1,'']]],
   ['201_5fbasic_2ec_11',['201_basic.c',['../201__basic_8c.html',1,'']]],
   ['202_5fin_5fstructs_2ec_12',['202_in_structs.c',['../202__in__structs_8c.html',1,'']]],
-  ['203_5fcomplex_2ec_13',['203_complex.c',['../203__complex_8c.html',1,'']]],
-  ['2_3a_20explicit_20fixed_20width_20types_14',['2.2 Tier 2: Explicit Fixed-Width Types',['../md_signatures.html#autotoc_md121',1,'']]],
-  ['2_3a_20handling_20complex_20data_20structures_15',['Chapter 2: Handling Complex Data Structures',['../md_cookbook.html#autotoc_md25',1,'']]],
-  ['2_3a_20implement_20the_20abi_20specification_16',['Step 2: Implement the ABI Specification',['../md_porting.html#autotoc_md109',1,'']]],
-  ['2_3a_20live_20debugging_20with_20gdb_20lldb_17',['Method 2: Live Debugging with GDB/LLDB',['../md_internals.html#autotoc_md103',1,'']]],
-  ['2_3a_20the_20type_20system_20reference_18',['Part 2: The Type System Reference',['../md_signatures.html#autotoc_md119',1,'']]]
+  ['2_3a_20explicit_20fixed_20width_20types_13',['2.2 Tier 2: Explicit Fixed-Width Types',['../md_signatures.html#autotoc_md121',1,'']]],
+  ['2_3a_20handling_20complex_20data_20structures_14',['Chapter 2: Handling Complex Data Structures',['../md_cookbook.html#autotoc_md25',1,'']]],
+  ['2_3a_20implement_20the_20abi_20specification_15',['Step 2: Implement the ABI Specification',['../md_porting.html#autotoc_md109',1,'']]],
+  ['2_3a_20live_20debugging_20with_20gdb_20lldb_16',['Method 2: Live Debugging with GDB/LLDB',['../md_internals.html#autotoc_md103',1,'']]],
+  ['2_3a_20the_20type_20system_20reference_17',['Part 2: The Type System Reference',['../md_signatures.html#autotoc_md119',1,'']]]
 ];

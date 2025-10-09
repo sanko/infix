@@ -82,9 +82,9 @@ $(function() {
 <b>High Priority: Foundation &amp; Stability</b></h1>
 <p><em>These tasks focus on critical infrastructure, core reliability, and essential <a class="el" href="classC.html">C</a> language feature completeness. They must be addressed before major new features are added.</em></p>
 <ul>
-<li>[x] <b>Design and Implement New Signature Parser (<code><a class="el" href="signature_8c.html" title="Implements the high-level v1.0 signature string parser.">signature.c</a></code>)**<ul>
+<li>[x] <b>Design and Implement New Signature Parser (<code><a class="el" href="signature_8c.html" title="Implements the high-level signature string parser.">signature.c</a></code>)**<ul>
 <li><b>Context:</b> The current single-character signature system is minimal and lacks the expressiveness needed for rich introspection and clarity. The v1.0 specification is the path forward.</li>
-<li><b>Idea:</b> Replace the existing recursive-descent parser in <code><a class="el" href="signature_8c.html" title="Implements the high-level v1.0 signature string parser.">signature.c</a></code> with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.</li>
+<li><b>Idea:</b> Replace the existing recursive-descent parser in <code><a class="el" href="signature_8c.html" title="Implements the high-level signature string parser.">signature.c</a></code> with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.</li>
 <li><b>Goal:</b> The new <code>infix_signature_parse</code> can correctly parse all valid examples from the v1.0 specification, including nested structs, unions, and pointers. It must produce a valid <code>infix_type</code> graph in an arena. The old parser will be completely removed.</li>
 <li><b>Possible Roadblocks:</b> This is the largest single task. It requires careful implementation to handle all grammatical rules, whitespace, and error conditions correctly.</li>
 </ul>
@@ -332,9 +332,10 @@ $(function() {
 <li><b>Context:</b> This is the future of SIMD on these architectures, where the vector size is determined by the hardware at runtime.</li>
 <li><b>Idea:</b> This would require a major architectural redesign. The JIT code would need to query the hardware's vector length at runtime and dynamically adjust its behavior.</li>
 <li><b>Goal:</b> Basic support for a function taking a scalable vector type.</li>
-<li><b>Possible Roadblocks:</b> Monumental implementation effort. Likely out of scope for the current library </li>
+<li><b>Possible Roadblocks:</b> Monumental implementation effort. Likely out of scope for the current library</li>
 </ul>
 </li>
+<li>[ ] <b>Typedef System</b> </li>
 </ul>
 <p></b></b></p>
 </div></div><!-- contents -->

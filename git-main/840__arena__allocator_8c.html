@@ -132,10 +132,10 @@ Variables</h2></td></tr>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
 <p>This test validates the core functionality of the arena (bump) allocator in isolation. It verifies:</p><ol type="1">
 <li>Correct creation and destruction of the arena.</li>
-<li>That <code>infix_arena_alloc</code> returns non-NULL pointers for valid requests.</li>
+<li>That <code>infix_arena_alloc</code> returns non-nullptr pointers for valid requests.</li>
 <li>That pointers returned by <code>infix_arena_alloc</code> are correctly aligned.</li>
 <li>That <code>infix_arena_calloc</code> returns zero-initialized memory.</li>
-<li>That the allocator correctly detects out-of-memory conditions and returns NULL without crashing when the arena's capacity is exceeded. </li>
+<li>That the allocator correctly detects out-of-memory conditions and returns nullptr without crashing when the arena's capacity is exceeded. </li>
 </ol>
 </div><h2 class="groupheader">Variable Documentation</h2>
 <a id="a67c1cbb549407d754fe1894f74b40c3e" name="a67c1cbb549407d754fe1894f74b40c3e"></a>

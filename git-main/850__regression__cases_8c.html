@@ -91,8 +91,8 @@ $(function() {
 <p>Contains a data-driven suite of deterministic unit tests for specific bugs found by fuzzing.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="fuzz__regression__helpers_8h_source.html">fuzz_regression_helpers.h</a>&quot;</code><br />
-<code>#include &lt;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -144,7 +144,7 @@ How to Add a New Regression Test</h3>
 <li><code>.b64_input</code>: The Base64 string you copied.</li>
 <li><code>.target</code>: Which part of the code is being tested?<ul>
 <li><code>TARGET_TYPE_GENERATOR</code>: For bugs found in <code>fuzz_types</code>, <code>fuzz_trampoline</code>, or <code>fuzz_abi</code>. The test will call <code><a class="el" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr...">generate_random_type()</a></code>.</li>
-<li><code>TARGET_SIGNATURE_PARSER</code>: For bugs found in <code>fuzz_signature</code>. The test will call <code>infix_type_from_signature()</code>.</li>
+<li><code>TARGET_SIGNATURE_PARSER</code>: For bugs found in <code>fuzz_signature</code>. The test will call <code><a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type.">infix_type_from_signature()</a></code>.</li>
 </ul>
 </li>
 <li><code>.expected_status</code>: The correct <code>infix_status</code> the function should now return.<ul>

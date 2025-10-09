@@ -6,5 +6,6 @@ var searchData=
   ['821_5fthreading_5fbare_2ec_3',['821_threading_bare.c',['../821__threading__bare_8c.html',1,'']]],
   ['830_5fsecurity_2ec_4',['830_security.c',['../830__security_8c.html',1,'']]],
   ['840_5farena_5fallocator_2ec_5',['840_arena_allocator.c',['../840__arena__allocator_8c.html',1,'']]],
-  ['850_5fregression_5fcases_2ec_6',['850_regression_cases.c',['../850__regression__cases_8c.html',1,'']]]
+  ['850_5fregression_5fcases_2ec_6',['850_regression_cases.c',['../850__regression__cases_8c.html',1,'']]],
+  ['860_5ferror_5fhandling_2ec_7',['860_error_handling.c',['../860__error__handling_8c.html',1,'']]]
 ];

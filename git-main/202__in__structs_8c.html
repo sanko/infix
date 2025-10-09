@@ -98,24 +98,30 @@ Functions</h2></td></tr>
 <tr class="memitem:a0558d4c740ea348155e956bfdd914b61" id="r_a0558d4c740ea348155e956bfdd914b61"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a> (<a class="el" href="structPointerStruct.html">PointerStruct</a> ps)</td></tr>
 <tr class="memdesc:a0558d4c740ea348155e956bfdd914b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a <a class="el" href="structPointerStruct.html" title="A struct containing pointer members.">PointerStruct</a> and dereferences its members to verify them.  <br /></td></tr>
 <tr class="separator:a0558d4c740ea348155e956bfdd914b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a209e2f4f629adb794f0e2ce69573cc7f" id="r_a209e2f4f629adb794f0e2ce69573cc7f"><td class="memItemLeft" align="right" valign="top"><a id="a209e2f4f629adb794f0e2ce69573cc7f" name="a209e2f4f629adb794f0e2ce69573cc7f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (!ok(status==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;infix_type for <a class="el" href="structPointerStruct.html">PointerStruct</a> created successfully&quot;))</td></tr>
-<tr class="separator:a209e2f4f629adb794f0e2ce69573cc7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab83f301cf2c785d88f6543868ec14a61" id="r_ab83f301cf2c785d88f6543868ec14a61"><td class="memItemLeft" align="right" valign="top"><a id="ab83f301cf2c785d88f6543868ec14a61" name="ab83f301cf2c785d88f6543868ec14a61"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ok</b> (status==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Trampoline created successfully&quot;)</td></tr>
-<tr class="separator:ab83f301cf2c785d88f6543868ec14a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6d651f622c879ada5445d796cb33f29" id="r_ab6d651f622c879ada5445d796cb33f29"><td class="memItemLeft" align="right" valign="top"><a id="ab6d651f622c879ada5445d796cb33f29" name="ab6d651f622c879ada5445d796cb33f29"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>cif_func</b> ((void *) <a class="el" href="#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a>, &amp;result, args)</td></tr>
-<tr class="separator:ab6d651f622c879ada5445d796cb33f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a357a9092a0ba47d9cf735ee689aa78f2" id="r_a357a9092a0ba47d9cf735ee689aa78f2"><td class="memItemLeft" align="right" valign="top"><a id="a357a9092a0ba47d9cf735ee689aa78f2" name="a357a9092a0ba47d9cf735ee689aa78f2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ok</b> (result==550, &quot;Struct with pointer members passed correctly&quot;)</td></tr>
-<tr class="separator:a357a9092a0ba47d9cf735ee689aa78f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3844fb2ecc1d232a73fe9943a7e1b288" id="r_a3844fb2ecc1d232a73fe9943a7e1b288"><td class="memItemLeft" align="right" valign="top"><a id="a3844fb2ecc1d232a73fe9943a7e1b288" name="a3844fb2ecc1d232a73fe9943a7e1b288"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>diag</b> (&quot;Function returned: %d (expected 550)&quot;, result)</td></tr>
-<tr class="separator:a3844fb2ecc1d232a73fe9943a7e1b288"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a813bf03d4ae4b58e786391e079644484" id="r_a813bf03d4ae4b58e786391e079644484"><td class="memItemLeft" align="right" valign="top"><a id="a813bf03d4ae4b58e786391e079644484" name="a813bf03d4ae4b58e786391e079644484"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_destroy</b> (trampoline)</td></tr>
-<tr class="separator:a813bf03d4ae4b58e786391e079644484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0132bc6a84c11aa72fbedf0e08150824" id="r_a0132bc6a84c11aa72fbedf0e08150824"><td class="memItemLeft" align="right" valign="top"><a id="a0132bc6a84c11aa72fbedf0e08150824" name="a0132bc6a84c11aa72fbedf0e08150824"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (!ok(<a class="el" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a>(arena, &amp;struct_type, members, 2)==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Type created&quot;))</td></tr>
+<tr class="separator:a0132bc6a84c11aa72fbedf0e08150824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a1b4aca5407326b0e3afbdfa4a45dfe" id="r_a3a1b4aca5407326b0e3afbdfa4a45dfe"><td class="memItemLeft" align="right" valign="top"><a id="a3a1b4aca5407326b0e3afbdfa4a45dfe" name="a3a1b4aca5407326b0e3afbdfa4a45dfe"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ok</b> (<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a>(&amp;unbound_t, return_type, &amp;struct_type, 1, 1)==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Unbound created&quot;)</td></tr>
+<tr class="separator:a3a1b4aca5407326b0e3afbdfa4a45dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4b60b0e2fb863ab8698c9b411ef24bf" id="r_ab4b60b0e2fb863ab8698c9b411ef24bf"><td class="memItemLeft" align="right" valign="top"><a id="ab4b60b0e2fb863ab8698c9b411ef24bf" name="ab4b60b0e2fb863ab8698c9b411ef24bf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_cif</b> ((void *) <a class="el" href="#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a>, &amp;unbound_result, args)</td></tr>
+<tr class="separator:ab4b60b0e2fb863ab8698c9b411ef24bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19c44ea5fe85ed18a39c7781c4a5d07e" id="r_a19c44ea5fe85ed18a39c7781c4a5d07e"><td class="memItemLeft" align="right" valign="top"><a id="a19c44ea5fe85ed18a39c7781c4a5d07e" name="a19c44ea5fe85ed18a39c7781c4a5d07e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ok</b> (unbound_result==550, &quot;Unbound call correct&quot;)</td></tr>
+<tr class="separator:a19c44ea5fe85ed18a39c7781c4a5d07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a058e4209ac6ae408eff75a9893f9f9cd" id="r_a058e4209ac6ae408eff75a9893f9f9cd"><td class="memItemLeft" align="right" valign="top"><a id="a058e4209ac6ae408eff75a9893f9f9cd" name="a058e4209ac6ae408eff75a9893f9f9cd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ok</b> (<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a>(&amp;bound_t, return_type, &amp;struct_type, 1, 1,(void *) <a class="el" href="#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a>)==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Bound created&quot;)</td></tr>
+<tr class="separator:a058e4209ac6ae408eff75a9893f9f9cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a174053e67b86029e7ca202ff79079f92" id="r_a174053e67b86029e7ca202ff79079f92"><td class="memItemLeft" align="right" valign="top"><a id="a174053e67b86029e7ca202ff79079f92" name="a174053e67b86029e7ca202ff79079f92"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ok</b> (bound_result==550, &quot;Bound call correct&quot;)</td></tr>
+<tr class="separator:a174053e67b86029e7ca202ff79079f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135e615d18daec14ebf61bed5869abf1" id="r_a135e615d18daec14ebf61bed5869abf1"><td class="memItemLeft" align="right" valign="top"><a id="a135e615d18daec14ebf61bed5869abf1" name="a135e615d18daec14ebf61bed5869abf1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_destroy</b> (unbound_t)</td></tr>
+<tr class="separator:a135e615d18daec14ebf61bed5869abf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0139eb891f44c7b12e3dd3d383acfe" id="r_a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memItemLeft" align="right" valign="top"><a id="a9f0139eb891f44c7b12e3dd3d383acfe" name="a9f0139eb891f44c7b12e3dd3d383acfe"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_destroy</b> (bound_t)</td></tr>
+<tr class="separator:a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ed0b0ec6a212b3f77cd56e9c2e30beb" id="r_a3ed0b0ec6a212b3f77cd56e9c2e30beb"><td class="memItemLeft" align="right" valign="top"><a id="a3ed0b0ec6a212b3f77cd56e9c2e30beb" name="a3ed0b0ec6a212b3f77cd56e9c2e30beb"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>infix_arena_destroy</b> (arena)</td></tr>
 <tr class="separator:a3ed0b0ec6a212b3f77cd56e9c2e30beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,25 +131,16 @@ Variables</h2></td></tr>
 <tr class="memitem:a67c1cbb549407d754fe1894f74b40c3e" id="r_a67c1cbb549407d754fe1894f74b40c3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67c1cbb549407d754fe1894f74b40c3e">TEST</a></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb7c3f5e091eb15b03c0a427c1a3ad1e" id="r_afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memItemLeft" align="right" valign="top"><a id="afb7c3f5e091eb15b03c0a427c1a3ad1e" name="afb7c3f5e091eb15b03c0a427c1a3ad1e"></a>
-<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>arena</b> = infix_arena_create(4096)</td></tr>
+<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>arena</b> = <a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a>(4096)</td></tr>
 <tr class="separator:afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7fe37bb07add2b1981130a458016adb" id="r_ab7fe37bb07add2b1981130a458016adb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7fe37bb07add2b1981130a458016adb">members</a></td></tr>
 <tr class="separator:ab7fe37bb07add2b1981130a458016adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a844037a22f98c1dcb5892a0ac2948a74" id="r_a844037a22f98c1dcb5892a0ac2948a74"><td class="memItemLeft" align="right" valign="top"><a id="a844037a22f98c1dcb5892a0ac2948a74" name="a844037a22f98c1dcb5892a0ac2948a74"></a>
-<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>struct_type</b> = NULL</td></tr>
+<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>struct_type</b> = nullptr</td></tr>
 <tr class="separator:a844037a22f98c1dcb5892a0ac2948a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a015eb90e0de9f16e87bd149d4b9ce959" id="r_a015eb90e0de9f16e87bd149d4b9ce959"><td class="memItemLeft" align="right" valign="top"><a id="a015eb90e0de9f16e87bd149d4b9ce959" name="a015eb90e0de9f16e87bd149d4b9ce959"></a>
-<a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>status</b> = infix_type_create_struct(arena, &amp;struct_type, members, 2)</td></tr>
-<tr class="separator:a015eb90e0de9f16e87bd149d4b9ce959"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ce0ce0c7e8fe28259fbbb5a3638c5d5" id="r_a0ce0ce0c7e8fe28259fbbb5a3638c5d5"><td class="memItemLeft" align="right" valign="top"><a id="a0ce0ce0c7e8fe28259fbbb5a3638c5d5" name="a0ce0ce0c7e8fe28259fbbb5a3638c5d5"></a>
-<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b> = infix_type_create_primitive(<a class="el" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)</td></tr>
+<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b> = <a class="el" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="el" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)</td></tr>
 <tr class="separator:a0ce0ce0c7e8fe28259fbbb5a3638c5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10c1baa628918ef95490af23e71909db" id="r_a10c1baa628918ef95490af23e71909db"><td class="memItemLeft" align="right" valign="top"><a id="a10c1baa628918ef95490af23e71909db" name="a10c1baa628918ef95490af23e71909db"></a>
-<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>trampoline</b> = NULL</td></tr>
-<tr class="separator:a10c1baa628918ef95490af23e71909db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07afe7340efb25add015244f2d5633df" id="r_a07afe7340efb25add015244f2d5633df"><td class="memItemLeft" align="right" valign="top"><a id="a07afe7340efb25add015244f2d5633df" name="a07afe7340efb25add015244f2d5633df"></a>
-<a class="el" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cif_func</b> = (<a class="el" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>)infix_forward_get_code(trampoline)</td></tr>
-<tr class="separator:a07afe7340efb25add015244f2d5633df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a967834f8c66312326ad73ac499258454" id="r_a967834f8c66312326ad73ac499258454"><td class="memItemLeft" align="right" valign="top"><a id="a967834f8c66312326ad73ac499258454" name="a967834f8c66312326ad73ac499258454"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>value_to_point_to</b> = 500</td></tr>
 <tr class="separator:a967834f8c66312326ad73ac499258454"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,12 +150,27 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>string_to_poi
 <tr class="memitem:a74398c81444ad279e4770d09b534ddc5" id="r_a74398c81444ad279e4770d09b534ddc5"><td class="memItemLeft" align="right" valign="top"><a id="a74398c81444ad279e4770d09b534ddc5" name="a74398c81444ad279e4770d09b534ddc5"></a>
 <a class="el" href="structPointerStruct.html">PointerStruct</a>&#160;</td><td class="memItemRight" valign="bottom"><b>struct_instance</b> = {&amp;value_to_point_to, string_to_point_to}</td></tr>
 <tr class="separator:a74398c81444ad279e4770d09b534ddc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b2e13c78efca330f06b6ddcd7464b41" id="r_a8b2e13c78efca330f06b6ddcd7464b41"><td class="memItemLeft" align="right" valign="top"><a id="a8b2e13c78efca330f06b6ddcd7464b41" name="a8b2e13c78efca330f06b6ddcd7464b41"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>result</b> = 0</td></tr>
-<tr class="separator:a8b2e13c78efca330f06b6ddcd7464b41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ad795b9f107bb50006cfa54f5671f2e" id="r_a0ad795b9f107bb50006cfa54f5671f2e"><td class="memItemLeft" align="right" valign="top"><a id="a0ad795b9f107bb50006cfa54f5671f2e" name="a0ad795b9f107bb50006cfa54f5671f2e"></a>
 void *&#160;</td><td class="memItemRight" valign="bottom"><b>args</b> [] = {&amp;struct_instance}</td></tr>
 <tr class="separator:a0ad795b9f107bb50006cfa54f5671f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a783f3f2953f385e8223af2d3568e4a92" id="r_a783f3f2953f385e8223af2d3568e4a92"><td class="memItemLeft" align="right" valign="top"><a id="a783f3f2953f385e8223af2d3568e4a92" name="a783f3f2953f385e8223af2d3568e4a92"></a>
+<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_t</b> = nullptr</td></tr>
+<tr class="separator:a783f3f2953f385e8223af2d3568e4a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab80bd7eb7c7fa41c5f703d92d33be76b" id="r_ab80bd7eb7c7fa41c5f703d92d33be76b"><td class="memItemLeft" align="right" valign="top"><a id="ab80bd7eb7c7fa41c5f703d92d33be76b" name="ab80bd7eb7c7fa41c5f703d92d33be76b"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_result</b> = 0</td></tr>
+<tr class="separator:ab80bd7eb7c7fa41c5f703d92d33be76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a917a69b3079e1e09f797eff9fa1edc7e" id="r_a917a69b3079e1e09f797eff9fa1edc7e"><td class="memItemLeft" align="right" valign="top"><a id="a917a69b3079e1e09f797eff9fa1edc7e" name="a917a69b3079e1e09f797eff9fa1edc7e"></a>
+<a class="el" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_cif</b> = <a class="el" href="group__introspection__api.html#gad881dff0c196a8a91f2c38d4c2d5e2ff">infix_forward_get_unbound_code</a>(unbound_t)</td></tr>
+<tr class="separator:a917a69b3079e1e09f797eff9fa1edc7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a235edff479963a1a75ebc21f02111491" id="r_a235edff479963a1a75ebc21f02111491"><td class="memItemLeft" align="right" valign="top"><a id="a235edff479963a1a75ebc21f02111491" name="a235edff479963a1a75ebc21f02111491"></a>
+<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>bound_t</b> = nullptr</td></tr>
+<tr class="separator:a235edff479963a1a75ebc21f02111491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01588550c9a130fe9706ef3335716f7a" id="r_a01588550c9a130fe9706ef3335716f7a"><td class="memItemLeft" align="right" valign="top"><a id="a01588550c9a130fe9706ef3335716f7a" name="a01588550c9a130fe9706ef3335716f7a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>bound_result</b> = 0</td></tr>
+<tr class="separator:a01588550c9a130fe9706ef3335716f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2798b6d609034611efb3120044fcdd6a" id="r_a2798b6d609034611efb3120044fcdd6a"><td class="memItemLeft" align="right" valign="top"><a id="a2798b6d609034611efb3120044fcdd6a" name="a2798b6d609034611efb3120044fcdd6a"></a>
+<a class="el" href="group__public__api.html#gaa424eb35854d3fa968995851e690c9f8">infix_bound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><b>bound_cif</b> = <a class="el" href="group__introspection__api.html#gafe563c6ded8b7937f0a803fbf6938a4b">infix_forward_get_code</a>(bound_t)</td></tr>
+<tr class="separator:a2798b6d609034611efb3120044fcdd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tests passing structs that contain pointer members. </p>
@@ -203,8 +215,9 @@ void *&#160;</td><td class="memItemRight" valign="bottom"><b>args</b> [] = {&amp
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        infix_arena_alloc(arena, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
-<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:319</div></div>
+<div class="line">        <a class="code hl_function" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a>(arena, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
+<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from the arena with a specific alignment.</div><div class="ttdef"><b>Definition</b> arena.c:86</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:322</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -220,7 +233,7 @@ void *&#160;</td><td class="memItemRight" valign="bottom"><b>args</b> [] = {&amp
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    plan(3)</div>
+<div class="line">    plan(5)</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -141,7 +141,7 @@ Variables</h2></td></tr>
 <p>This test suite focuses on the internal consistency of the type system's public API, rather than its use in FFI calls. It ensures that the functions for creating structs, unions, and arrays behave as expected under both normal and exceptional conditions.</p>
 <p>The tests verify:</p><ol type="1">
 <li><b>Correctness:</b> That <code>infix_type_create_struct</code>, <code>_union</code>, and <code>_array</code> calculate the size and alignment of types in a way that matches the <a class="el" href="classC.html">C</a> compiler's own <code>sizeof</code> and <code>_Alignof</code> operators.</li>
-<li><b>Error Handling:</b> That the creation functions correctly reject invalid arguments (e.g., NULL pointers for required parameters) and return the appropriate error status. </li>
+<li><b>Error Handling:</b> That the creation functions correctly reject invalid arguments (e.g., nullptr pointers for required parameters) and return the appropriate error status. </li>
 </ol>
 </div><h2 class="groupheader">Variable Documentation</h2>
 <a id="a67c1cbb549407d754fe1894f74b40c3e" name="a67c1cbb549407d754fe1894f74b40c3e"></a>

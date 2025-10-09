@@ -89,6 +89,7 @@ $(function() {
 <p>Tests FFI calls for variadic functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
 <code>#include &quot;types.h&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
@@ -101,6 +102,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae984df7920796a4871aeec5b6f167b48" id="r_ae984df7920796a4871aeec5b6f167b48"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae984df7920796a4871aeec5b6f167b48">forward_variadic_checker</a> (char *buffer, size_t size, const char *format,...)</td></tr>
 <tr class="memdesc:ae984df7920796a4871aeec5b6f167b48"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classA.html">A</a> custom checker function to transparently validate variadic arguments.  <br /></td></tr>
 <tr class="separator:ae984df7920796a4871aeec5b6f167b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac932e22334e2b910918d5ccecc0a36ce" id="r_ac932e22334e2b910918d5ccecc0a36ce"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac932e22334e2b910918d5ccecc0a36ce">forward_variadic_aggregate_checker</a> (int fixed_arg,...)</td></tr>
+<tr class="memdesc:ac932e22334e2b910918d5ccecc0a36ce"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classA.html">A</a> custom checker for variadic aggregate arguments.  <br /></td></tr>
+<tr class="separator:ac932e22334e2b910918d5ccecc0a36ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abba62c9f786a29b54b9a5b6b100b8f78" id="r_abba62c9f786a29b54b9a5b6b100b8f78"><td class="memItemLeft" align="right" valign="top"><a id="abba62c9f786a29b54b9a5b6b100b8f78" name="abba62c9f786a29b54b9a5b6b100b8f78"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>variadic_reverse_handler</b> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, const char *topic,...)</td></tr>
 <tr class="memdesc:abba62c9f786a29b54b9a5b6b100b8f78"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classA.html">A</a> handler for a reverse trampoline with a variadic signature. <br /></td></tr>
@@ -108,6 +112,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>variadic_reverse_handl
 <tr class="memitem:a147a00e71c08f245bd8a01a6c7355644" id="r_a147a00e71c08f245bd8a01a6c7355644"><td class="memItemLeft" align="right" valign="top"><a id="a147a00e71c08f245bd8a01a6c7355644" name="a147a00e71c08f245bd8a01a6c7355644"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Forward variadic call&quot;)</td></tr>
 <tr class="separator:a147a00e71c08f245bd8a01a6c7355644"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a204f7b4b88494ec00f310d14a34935db" id="r_a204f7b4b88494ec00f310d14a34935db"><td class="memItemLeft" align="right" valign="top"><a id="a204f7b4b88494ec00f310d14a34935db" name="a204f7b4b88494ec00f310d14a34935db"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Forward variadic call (aggregates)&quot;)</td></tr>
+<tr class="separator:a204f7b4b88494ec00f310d14a34935db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbebd6d2de4edb973f7a899162b575aa" id="r_adbebd6d2de4edb973f7a899162b575aa"><td class="memItemLeft" align="right" valign="top"><a id="adbebd6d2de4edb973f7a899162b575aa" name="adbebd6d2de4edb973f7a899162b575aa"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Reverse variadic callback&quot;)</td></tr>
 <tr class="separator:adbebd6d2de4edb973f7a899162b575aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,6 +145,33 @@ Variables</h2></td></tr>
 <li><b>Platform: macOS on AArch64:</b> <a class="el" href="classA.html">A</a> specific test, compiled only on macOS ARM, that verifies the unique rule where all variadic arguments (including structs) are passed on the stack. </li>
 </ol>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="ac932e22334e2b910918d5ccecc0a36ce" name="ac932e22334e2b910918d5ccecc0a36ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac932e22334e2b910918d5ccecc0a36ce">&#9670;&#160;</a></span>forward_variadic_aggregate_checker()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int forward_variadic_aggregate_checker </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>fixed_arg</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>...</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classA.html">A</a> custom checker for variadic aggregate arguments. </p>
+<p>This function's behavior depends on the ABI.</p><ul>
+<li>On System V, the struct is passed by value on the stack, and <code>va_arg</code> retrieves the struct directly.</li>
+<li>On Windows x64, a pointer to the struct is passed on the stack, so we must use <code>va_arg(args, Point*)</code> and dereference it. </li>
+</ul>
+
+</div>
+</div>
 <a id="ae984df7920796a4871aeec5b6f167b48" name="ae984df7920796a4871aeec5b6f167b48"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae984df7920796a4871aeec5b6f167b48">&#9670;&#160;</a></span>forward_variadic_checker()</h2>
 
@@ -185,7 +219,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    plan(4)</div>
+<div class="line">    plan(5)</div>
 </div><!-- fragment -->
 </div>
 </div>

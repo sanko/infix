@@ -86,9 +86,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Hardened test suite for the high-level v1.0 signature API.  
+<p>Hardened test suite for the high-level signature API.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
@@ -97,21 +98,24 @@ Functions</h2></td></tr>
 <tr class="memitem:afde8060cdaa4da8e4b27cc4d9cc73422" id="r_afde8060cdaa4da8e4b27cc4d9cc73422"><td class="memItemLeft" align="right" valign="top"><a id="afde8060cdaa4da8e4b27cc4d9cc73422" name="afde8060cdaa4da8e4b27cc4d9cc73422"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_handler</b> ()</td></tr>
 <tr class="separator:afde8060cdaa4da8e4b27cc4d9cc73422"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09e8ec124c065c9098451850fe42344c" id="r_a09e8ec124c065c9098451850fe42344c"><td class="memItemLeft" align="right" valign="top"><a id="a09e8ec124c065c9098451850fe42344c" name="a09e8ec124c065c9098451850fe42344c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Valid Single Types (v1.0 Syntax)&quot;)</td></tr>
-<tr class="separator:a09e8ec124c065c9098451850fe42344c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c0cdba54b3d63d544c29d2eaa22870d" id="r_a3c0cdba54b3d63d544c29d2eaa22870d"><td class="memItemLeft" align="right" valign="top"><a id="a3c0cdba54b3d63d544c29d2eaa22870d" name="a3c0cdba54b3d63d544c29d2eaa22870d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Valid Single Types&quot;)</td></tr>
+<tr class="separator:a3c0cdba54b3d63d544c29d2eaa22870d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adafe4b06cad3d72b8925badaa776d1eb" id="r_adafe4b06cad3d72b8925badaa776d1eb"><td class="memItemLeft" align="right" valign="top"><a id="adafe4b06cad3d72b8925badaa776d1eb" name="adafe4b06cad3d72b8925badaa776d1eb"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Valid Edge Cases (Whitespace, Nesting, Empty, References)&quot;)</td></tr>
 <tr class="separator:adafe4b06cad3d72b8925badaa776d1eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a128a769c958ec0a999ba0e46534a9f8f" id="r_a128a769c958ec0a999ba0e46534a9f8f"><td class="memItemLeft" align="right" valign="top"><a id="a128a769c958ec0a999ba0e46534a9f8f" name="a128a769c958ec0a999ba0e46534a9f8f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Valid Full Function Signatures (v1.0 Syntax)&quot;)</td></tr>
-<tr class="separator:a128a769c958ec0a999ba0e46534a9f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae61ba6a7e3622d1a48d8caa5ca0d2c35" id="r_ae61ba6a7e3622d1a48d8caa5ca0d2c35"><td class="memItemLeft" align="right" valign="top"><a id="ae61ba6a7e3622d1a48d8caa5ca0d2c35" name="ae61ba6a7e3622d1a48d8caa5ca0d2c35"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Valid Full Function Signatures&quot;)</td></tr>
+<tr class="separator:ae61ba6a7e3622d1a48d8caa5ca0d2c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a590b5e3d87ffe270379ac162fc5a0a07" id="r_a590b5e3d87ffe270379ac162fc5a0a07"><td class="memItemLeft" align="right" valign="top"><a id="a590b5e3d87ffe270379ac162fc5a0a07" name="a590b5e3d87ffe270379ac162fc5a0a07"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Invalid Syntax and Logic&quot;)</td></tr>
 <tr class="separator:a590b5e3d87ffe270379ac162fc5a0a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a678a0def19528c96a0ab4c8a0a0e2755" id="r_a678a0def19528c96a0ab4c8a0a0e2755"><td class="memItemLeft" align="right" valign="top"><a id="a678a0def19528c96a0ab4c8a0a0e2755" name="a678a0def19528c96a0ab4c8a0a0e2755"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Introspection Checks&quot;)</td></tr>
 <tr class="separator:a678a0def19528c96a0ab4c8a0a0e2755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32e5ed3c170e4a27fa5b64dd5a06b55" id="r_ab32e5ed3c170e4a27fa5b64dd5a06b55"><td class="memItemLeft" align="right" valign="top"><a id="ab32e5ed3c170e4a27fa5b64dd5a06b55" name="ab32e5ed3c170e4a27fa5b64dd5a06b55"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>subtest</b> (&quot;Round trip&quot;)</td></tr>
+<tr class="separator:ab32e5ed3c170e4a27fa5b64dd5a06b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -119,7 +123,7 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Hardened test suite for the high-level v1.0 signature API. </p>
+<div class="textblock"><p>Hardened test suite for the high-level signature API. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
@@ -138,7 +142,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    plan(5)</div>
+<div class="line">    plan(6)</div>
 </div><!-- fragment -->
 </div>
 </div>

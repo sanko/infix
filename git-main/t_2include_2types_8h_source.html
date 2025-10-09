@@ -136,9 +136,16 @@ $(function() { codefold.init(0); });
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    uint64_t b;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>} <a class="code hl_struct" href="structPackedStruct.html">PackedStruct</a>;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="preprocessor">#pragma pack(pop)</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="foldopen" id="foldopen00131" data-start="{" data-end="};">
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="structNonPowerOfTwoStruct.html">  131</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordtype">int</span> a, b, c;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>} <a class="code hl_struct" href="structNonPowerOfTwoStruct.html">NonPowerOfTwoStruct</a>;</div>
+</div>
 <div class="ttc" id="astructLargeData_html"><div class="ttname"><a href="structLargeData.html">LargeData</a></div><div class="ttdoc">A struct guaranteed to be larger than two registers (32 bytes).</div><div class="ttdef"><b>Definition</b> types.h:62</div></div>
 <div class="ttc" id="astructLargeStruct_html"><div class="ttname"><a href="structLargeStruct.html">LargeStruct</a></div><div class="ttdoc">A struct larger than 16 bytes, guaranteed to be passed by reference.</div><div class="ttdef"><b>Definition</b> types.h:22</div></div>
 <div class="ttc" id="astructMixedIntDouble_html"><div class="ttname"><a href="structMixedIntDouble.html">MixedIntDouble</a></div><div class="ttdoc">A struct with mixed integer and floating-point members.</div><div class="ttdef"><b>Definition</b> types.h:96</div></div>
+<div class="ttc" id="astructNonPowerOfTwoStruct_html"><div class="ttname"><a href="structNonPowerOfTwoStruct.html">NonPowerOfTwoStruct</a></div><div class="ttdoc">A struct whose size is not a power of two (12 bytes on most 64-bit systems).</div><div class="ttdef"><b>Definition</b> types.h:131</div></div>
 <div class="ttc" id="astructPackedStruct_html"><div class="ttname"><a href="structPackedStruct.html">PackedStruct</a></div><div class="ttdoc">A struct with a non-standard, packed memory layout.</div><div class="ttdef"><b>Definition</b> types.h:42</div></div>
 <div class="ttc" id="astructPoint_html"><div class="ttname"><a href="structPoint.html">Point</a></div><div class="ttdoc">A simple struct with two doubles. Small enough to be passed in registers on some ABIs.</div><div class="ttdef"><b>Definition</b> types.h:13</div></div>
 <div class="ttc" id="astructPointerStruct_html"><div class="ttname"><a href="structPointerStruct.html">PointerStruct</a></div><div class="ttdoc">A struct containing pointer members.</div><div class="ttdef"><b>Definition</b> types.h:107</div></div>

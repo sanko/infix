@@ -112,8 +112,8 @@ Functions</h2></td></tr>
 Fuzzing Targets</h3>
 <p>This harness tests two key public API functions:</p>
 <ol type="1">
-<li>**<code>infix_signature_parse()</code>**: This function parses a full function signature (arguments and return type). <a class="el" href="classA.html">A</a> successful parse results in a complex graph of <code>infix_type</code> objects allocated within a dedicated memory arena. The test verifies that if parsing succeeds, the entire arena can be safely destroyed without leaking memory.</li>
-<li>**<code>infix_type_from_signature()</code>**: This function parses a string representing a single data type. It follows the same test-and-destroy pattern as the full signature parser.</li>
+<li>**<code><a class="el" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19" title="Parses a full function signature string into its constituent infix_type parts.">infix_signature_parse()</a></code>**: This function parses a full function signature (arguments and return type). <a class="el" href="classA.html">A</a> successful parse results in a complex graph of <code>infix_type</code> objects allocated within a dedicated memory arena. The test verifies that if parsing succeeds, the entire arena can be safely destroyed without leaking memory.</li>
+<li>**<code><a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735" title="Parses a signature string representing a single data type.">infix_type_from_signature()</a></code>**: This function parses a string representing a single data type. It follows the same test-and-destroy pattern as the full signature parser.</li>
 </ol>
 <p>By fuzzing both functions, we ensure that all code paths within the recursive-descent parser are exercised with a wide variety of valid, invalid, and malicious inputs. This harness is intended to be compiled with Clang and run with AddressSanitizer (<code>-fsanitize=address,fuzzer</code>) to automatically detect memory errors. </p>
 </div><h2 class="groupheader">Function Documentation</h2>

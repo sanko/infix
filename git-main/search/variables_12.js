@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['underlying_5ftype_0',['underlying_type',['../structinfix__type__t.html#aeeeeac278209a4aa5f3024b196d89292',1,'infix_type_t']]],
-  ['user_5fcallback_5ffn_1',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],
-  ['user_5fdata_2',['user_data',['../structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1',1,'infix_reverse_t']]]
+  ['value_0',['value',['../classAfterdoc__Test.html#a9287a08830e5cdfd9c732bb7932694a0',1,'Afterdoc_Test']]],
+  ['var_1',['var',['../classAutolink__Test.html#a8de85603114bc9b9e53bd40764e9b499',1,'Autolink_Test']]],
+  ['vector_5finfo_2',['vector_info',['../structinfix__type__t.html#a07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t']]]
 ];

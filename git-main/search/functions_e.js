@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['point_5fcallback_5fhandler_0',['point_callback_handler',['../302__aggregates_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35',1,'302_aggregates.c']]],
+  ['point_5fcallback_5fhandler_0',['point_callback_handler',['../006__end__to__end__calls_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35',1,'point_callback_handler(infix_context_t *context, Point p):&#160;006_end_to_end_calls.c'],['../302__aggregates_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35',1,'point_callback_handler(infix_context_t *context, Point p):&#160;302_aggregates.c']]],
   ['pointer_5fmodify_5fhandler_1',['pointer_modify_handler',['../303__advanced_8c.html#aad1328421ce73cf43f2fd3e4fa83a03c',1,'303_advanced.c']]],
   ['process_5flarge_5fstruct_2',['process_large_struct',['../102__by__reference_8c.html#ac636dc1477b7068c2c53a515809232b8',1,'102_by_reference.c']]],
   ['process_5fmixed_5fstruct_3',['process_mixed_struct',['../101__by__value_8c.html#a62b10b0c8a49ea3416056aa70b146deb',1,'101_by_value.c']]],

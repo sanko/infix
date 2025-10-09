@@ -125,15 +125,15 @@ Variables</h2></td></tr>
 <tr class="memitem:a67c1cbb549407d754fe1894f74b40c3e" id="r_a67c1cbb549407d754fe1894f74b40c3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67c1cbb549407d754fe1894f74b40c3e">TEST</a></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb7c3f5e091eb15b03c0a427c1a3ad1e" id="r_afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memItemLeft" align="right" valign="top"><a id="afb7c3f5e091eb15b03c0a427c1a3ad1e" name="afb7c3f5e091eb15b03c0a427c1a3ad1e"></a>
-<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>arena</b> = infix_arena_create(4096)</td></tr>
+<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>arena</b> = <a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a>(4096)</td></tr>
 <tr class="separator:afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7fe37bb07add2b1981130a458016adb" id="r_ab7fe37bb07add2b1981130a458016adb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7fe37bb07add2b1981130a458016adb">members</a></td></tr>
 <tr class="separator:ab7fe37bb07add2b1981130a458016adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a009bce9a7a96f39a5bc9ba080de9aa61" id="r_a009bce9a7a96f39a5bc9ba080de9aa61"><td class="memItemLeft" align="right" valign="top"><a id="a009bce9a7a96f39a5bc9ba080de9aa61" name="a009bce9a7a96f39a5bc9ba080de9aa61"></a>
-<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>union_type</b> = NULL</td></tr>
+<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>union_type</b> = nullptr</td></tr>
 <tr class="separator:a009bce9a7a96f39a5bc9ba080de9aa61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a id="a433468dce2d10c4f34424732ef15ebdd" name="a433468dce2d10c4f34424732ef15ebdd"></a>
-<a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>status</b> = infix_type_create_union(arena, &amp;union_type, members, 2)</td></tr>
+<a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>status</b> = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(arena, &amp;union_type, members, 2)</td></tr>
 <tr class="separator:a433468dce2d10c4f34424732ef15ebdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -161,8 +161,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        infix_arena_alloc(arena, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
-<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:319</div></div>
+<div class="line">        <a class="code hl_function" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a>(arena, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
+<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from the arena with a specific alignment.</div><div class="ttdef"><b>Definition</b> arena.c:86</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:322</div></div>
 </div><!-- fragment -->
 </div>
 </div>

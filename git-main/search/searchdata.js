@@ -5,14 +5,14 @@ var indexSectionsWithContent =
   2: "dnp",
   3: "0123489acdefgilmrstu",
   4: "_abcdefgijlmnopqrstuvw~",
-  5: "_abcdefghilmnoprstuvxy",
+  5: "_abcdefghimnoprstuvxy",
   6: "ciotuv",
   7: "aefgitx",
   8: "aegimnrstvx",
   9: "s",
   10: "abdmnst",
-  11: "acdefghilmpstv",
-  12: "05:abcdfgijlmnoprstv"
+  11: "acdefghilmprstv",
+  12: "5:abcdfgijlmnoprst"
 };
 
 var indexSectionNames =

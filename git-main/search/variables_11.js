@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['target_0',['target',['../structregression__test__case__t.html#af90a3e3c9b148c3d159737f30829fb7b',1,'regression_test_case_t']]],
-  ['total_5fstack_5falloc_1',['total_stack_alloc',['../structinfix__call__frame__layout.html#a743d543342256cf155458951d48c613e',1,'infix_call_frame_layout::total_stack_alloc'],['../structinfix__reverse__call__frame__layout.html#aedb51aeb6365d359bcb27d1e9920a0d8',1,'infix_reverse_call_frame_layout::total_stack_alloc']]],
-  ['type_2',['type',['../structinfix__struct__member__t.html#aa89e6621da98f5115dcc807599c4ac77',1,'infix_struct_member_t::type'],['../structinfix__function__argument__t.html#a1bd256c75cb6ec767cec121370e6a0ed',1,'infix_function_argument_t::type'],['../structinfix__arg__location.html#a4f53bb713bc5749863d8ba2633b74604',1,'infix_arg_location::type']]]
+  ['underlying_5ftype_0',['underlying_type',['../structinfix__type__t.html#aeeeeac278209a4aa5f3024b196d89292',1,'infix_type_t']]],
+  ['user_5fcallback_5ffn_1',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],
+  ['user_5fdata_2',['user_data',['../structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1',1,'infix_reverse_t']]]
 ];

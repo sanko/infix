@@ -182,47 +182,52 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ga2cd7b00c1f2606249654a8e8b7cbc044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the specific primitive <a class="el" href="classC.html">C</a> types supported by the FFI system.  <a href="#ga2cd7b00c1f2606249654a8e8b7cbc044">More...</a><br /></td></tr>
 <tr class="separator:ga2cd7b00c1f2606249654a8e8b7cbc044"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaad7a91cc786d4cec1dbbddb5d7b165b7" id="r_gaad7a91cc786d4cec1dbbddb5d7b165b7"><td class="memItemLeft" align="right" valign="top"><a id="gaad7a91cc786d4cec1dbbddb5d7b165b7" name="gaad7a91cc786d4cec1dbbddb5d7b165b7"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a> { <b>INFIX_AGGREGATE_STRUCT</b>
+, <b>INFIX_AGGREGATE_UNION</b>
+ }</td></tr>
+<tr class="memdesc:gaad7a91cc786d4cec1dbbddb5d7b165b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distinguishes between struct and union for named references. <br /></td></tr>
+<tr class="separator:gaad7a91cc786d4cec1dbbddb5d7b165b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae323d599fbc081976a99a1e3b726a0b8" id="r_gae323d599fbc081976a99a1e3b726a0b8"><td class="memItemLeft" align="right" valign="top"><a id="gae323d599fbc081976a99a1e3b726a0b8" name="gae323d599fbc081976a99a1e3b726a0b8"></a>
-c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_primitive</b> (<a class="el" href="#ga2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a>)</td></tr>
+<tr class="memitem:gae323d599fbc081976a99a1e3b726a0b8" id="r_gae323d599fbc081976a99a1e3b726a0b8"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a> (<a class="el" href="#ga2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a>)</td></tr>
+<tr class="memdesc:gae323d599fbc081976a99a1e3b726a0b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <code>infix_type</code> descriptor for a primitive <a class="el" href="classC.html">C</a> type.  <br /></td></tr>
 <tr class="separator:gae323d599fbc081976a99a1e3b726a0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga58f759e56e12c39603c391886dd6857f" id="r_ga58f759e56e12c39603c391886dd6857f"><td class="memItemLeft" align="right" valign="top"><a id="ga58f759e56e12c39603c391886dd6857f" name="ga58f759e56e12c39603c391886dd6857f"></a>
-c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_pointer</b> (void)</td></tr>
+<tr class="memitem:ga58f759e56e12c39603c391886dd6857f" id="r_ga58f759e56e12c39603c391886dd6857f"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga58f759e56e12c39603c391886dd6857f">infix_type_create_pointer</a> (void)</td></tr>
+<tr class="memdesc:ga58f759e56e12c39603c391886dd6857f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <code>infix_type</code> descriptor for a generic <code>void*</code> pointer.  <br /></td></tr>
 <tr class="separator:ga58f759e56e12c39603c391886dd6857f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa186076fa232503f1f781fb3cd2e9cc7" id="r_gaa186076fa232503f1f781fb3cd2e9cc7"><td class="memItemLeft" align="right" valign="top"><a id="gaa186076fa232503f1f781fb3cd2e9cc7" name="gaa186076fa232503f1f781fb3cd2e9cc7"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_pointer_to</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memitem:gaa186076fa232503f1f781fb3cd2e9cc7" id="r_gaa186076fa232503f1f781fb3cd2e9cc7"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa186076fa232503f1f781fb3cd2e9cc7">infix_type_create_pointer_to</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:gaa186076fa232503f1f781fb3cd2e9cc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <code>infix_type</code> for a pointer to a specific type from an arena.  <br /></td></tr>
 <tr class="separator:gaa186076fa232503f1f781fb3cd2e9cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1eb812d62636fa21936521630a7d1be2" id="r_ga1eb812d62636fa21936521630a7d1be2"><td class="memItemLeft" align="right" valign="top"><a id="ga1eb812d62636fa21936521630a7d1be2" name="ga1eb812d62636fa21936521630a7d1be2"></a>
-c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_void</b> (void)</td></tr>
+<tr class="memitem:ga1eb812d62636fa21936521630a7d1be2" id="r_ga1eb812d62636fa21936521630a7d1be2"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1eb812d62636fa21936521630a7d1be2">infix_type_create_void</a> (void)</td></tr>
+<tr class="memdesc:ga1eb812d62636fa21936521630a7d1be2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <code>infix_type</code> descriptor for the <code>void</code> type.  <br /></td></tr>
 <tr class="separator:ga1eb812d62636fa21936521630a7d1be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac80d3ec096ade5b991048b61fecfe7b2" id="r_gac80d3ec096ade5b991048b61fecfe7b2"><td class="memItemLeft" align="right" valign="top"><a id="gac80d3ec096ade5b991048b61fecfe7b2" name="gac80d3ec096ade5b991048b61fecfe7b2"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_struct</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *, size_t)</td></tr>
+<tr class="memitem:gac80d3ec096ade5b991048b61fecfe7b2" id="r_gac80d3ec096ade5b991048b61fecfe7b2"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *, size_t)</td></tr>
+<tr class="memdesc:gac80d3ec096ade5b991048b61fecfe7b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a struct from an arena.  <br /></td></tr>
 <tr class="separator:gac80d3ec096ade5b991048b61fecfe7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga013ec0163fd36e611251d1a0897f773e" id="r_ga013ec0163fd36e611251d1a0897f773e"><td class="memItemLeft" align="right" valign="top"><a id="ga013ec0163fd36e611251d1a0897f773e" name="ga013ec0163fd36e611251d1a0897f773e"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_packed_struct</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, <a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *, size_t)</td></tr>
+<tr class="memitem:ga013ec0163fd36e611251d1a0897f773e" id="r_ga013ec0163fd36e611251d1a0897f773e"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga013ec0163fd36e611251d1a0897f773e">infix_type_create_packed_struct</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, <a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *, size_t)</td></tr>
+<tr class="memdesc:ga013ec0163fd36e611251d1a0897f773e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a packed struct from an arena.  <br /></td></tr>
 <tr class="separator:ga013ec0163fd36e611251d1a0897f773e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4027aa78465a98b270d1d6e54e7c5e90" id="r_ga4027aa78465a98b270d1d6e54e7c5e90"><td class="memItemLeft" align="right" valign="top"><a id="ga4027aa78465a98b270d1d6e54e7c5e90" name="ga4027aa78465a98b270d1d6e54e7c5e90"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_union</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *, size_t)</td></tr>
+<tr class="memitem:ga4027aa78465a98b270d1d6e54e7c5e90" id="r_ga4027aa78465a98b270d1d6e54e7c5e90"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *, size_t)</td></tr>
+<tr class="memdesc:ga4027aa78465a98b270d1d6e54e7c5e90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a union from an arena.  <br /></td></tr>
 <tr class="separator:ga4027aa78465a98b270d1d6e54e7c5e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9f0d8a41015262d2dcffc97cf5f87772" id="r_ga9f0d8a41015262d2dcffc97cf5f87772"><td class="memItemLeft" align="right" valign="top"><a id="ga9f0d8a41015262d2dcffc97cf5f87772" name="ga9f0d8a41015262d2dcffc97cf5f87772"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_array</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, size_t)</td></tr>
+<tr class="memitem:ga9f0d8a41015262d2dcffc97cf5f87772" id="r_ga9f0d8a41015262d2dcffc97cf5f87772"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9f0d8a41015262d2dcffc97cf5f87772">infix_type_create_array</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:ga9f0d8a41015262d2dcffc97cf5f87772"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a fixed-size array from an arena.  <br /></td></tr>
 <tr class="separator:ga9f0d8a41015262d2dcffc97cf5f87772"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga44df1ec1de746a0be838b55567d07cae" id="r_ga44df1ec1de746a0be838b55567d07cae"><td class="memItemLeft" align="right" valign="top"><a id="ga44df1ec1de746a0be838b55567d07cae" name="ga44df1ec1de746a0be838b55567d07cae"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_enum</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memitem:ga44df1ec1de746a0be838b55567d07cae" id="r_ga44df1ec1de746a0be838b55567d07cae"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga44df1ec1de746a0be838b55567d07cae">infix_type_create_enum</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga44df1ec1de746a0be838b55567d07cae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for an enum from an arena.  <br /></td></tr>
 <tr class="separator:ga44df1ec1de746a0be838b55567d07cae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaee217899ccae9a128e95673e8f2f69cc" id="r_gaee217899ccae9a128e95673e8f2f69cc"><td class="memItemLeft" align="right" valign="top"><a id="gaee217899ccae9a128e95673e8f2f69cc" name="gaee217899ccae9a128e95673e8f2f69cc"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_named_reference</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, const char *)</td></tr>
-<tr class="separator:gaee217899ccae9a128e95673e8f2f69cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga642b11fa95d575f407b33a9dc28d81bf" id="r_ga642b11fa95d575f407b33a9dc28d81bf"><td class="memItemLeft" align="right" valign="top"><a id="ga642b11fa95d575f407b33a9dc28d81bf" name="ga642b11fa95d575f407b33a9dc28d81bf"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_complex</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memitem:gad83c177871541f45a24c9df3e780d341" id="r_gad83c177871541f45a24c9df3e780d341"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad83c177871541f45a24c9df3e780d341">infix_type_create_named_reference</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, const char *, <a class="el" href="#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a>)</td></tr>
+<tr class="memdesc:gad83c177871541f45a24c9df3e780d341"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a named reference from an arena.  <br /></td></tr>
+<tr class="separator:gad83c177871541f45a24c9df3e780d341"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga642b11fa95d575f407b33a9dc28d81bf" id="r_ga642b11fa95d575f407b33a9dc28d81bf"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga642b11fa95d575f407b33a9dc28d81bf">infix_type_create_complex</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga642b11fa95d575f407b33a9dc28d81bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a <code>_Complex</code> number from an arena.  <br /></td></tr>
 <tr class="separator:ga642b11fa95d575f407b33a9dc28d81bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4781802742cdd8472f6db7d039ab1fde" id="r_ga4781802742cdd8472f6db7d039ab1fde"><td class="memItemLeft" align="right" valign="top"><a id="ga4781802742cdd8472f6db7d039ab1fde" name="ga4781802742cdd8472f6db7d039ab1fde"></a>
-c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_vector</b> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, size_t)</td></tr>
+<tr class="memitem:ga4781802742cdd8472f6db7d039ab1fde" id="r_ga4781802742cdd8472f6db7d039ab1fde"><td class="memItemLeft" align="right" valign="top">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4781802742cdd8472f6db7d039ab1fde">infix_type_create_vector</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:ga4781802742cdd8472f6db7d039ab1fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <code>infix_type</code> for a SIMD vector from an arena.  <br /></td></tr>
 <tr class="separator:ga4781802742cdd8472f6db7d039ab1fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaed99b57de2c839a66eb54c9e82d703d9" id="r_gaed99b57de2c839a66eb54c9e82d703d9"><td class="memItemLeft" align="right" valign="top"><a id="gaed99b57de2c839a66eb54c9e82d703d9" name="gaed99b57de2c839a66eb54c9e82d703d9"></a>
-<a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a>&#160;</td><td class="memItemRight" valign="bottom"><b>infix_type_create_member</b> (const char *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, size_t)</td></tr>
+<tr class="memitem:gaed99b57de2c839a66eb54c9e82d703d9" id="r_gaed99b57de2c839a66eb54c9e82d703d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a> (const char *, <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, size_t)</td></tr>
+<tr class="memdesc:gaed99b57de2c839a66eb54c9e82d703d9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classA.html">A</a> factory function to create an <code>infix_struct_member</code>.  <br /></td></tr>
 <tr class="separator:gaed99b57de2c839a66eb54c9e82d703d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -315,6 +320,520 @@ c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c
 </td></tr>
 </table>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a19">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga9f0d8a41015262d2dcffc97cf5f87772" name="ga9f0d8a41015262d2dcffc97cf5f87772"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9f0d8a41015262d2dcffc97cf5f87772">&#9670;&#160;</a></span>infix_type_create_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_array </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *</td>          <td class="paramname"><span class="paramname"><em>element_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_elements</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a fixed-size array from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">element_type</td><td>An <code>infix_type</code> describing the type of each element in the array. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_elements</td><td>The number of elements in the array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a96">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga642b11fa95d575f407b33a9dc28d81bf" name="ga642b11fa95d575f407b33a9dc28d81bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga642b11fa95d575f407b33a9dc28d81bf">&#9670;&#160;</a></span>infix_type_create_complex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_complex </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *</td>          <td class="paramname"><span class="paramname"><em>base_type</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a <code>_Complex</code> number from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">base_type</td><td>The floating-point <code>infix_type</code> of the real and imaginary parts. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a99">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga44df1ec1de746a0be838b55567d07cae" name="ga44df1ec1de746a0be838b55567d07cae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga44df1ec1de746a0be838b55567d07cae">&#9670;&#160;</a></span>infix_type_create_enum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_enum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *</td>          <td class="paramname"><span class="paramname"><em>underlying_type</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for an enum from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">underlying_type</td><td>The integer <code>infix_type</code> that this enum is based on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a97">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gaed99b57de2c839a66eb54c9e82d703d9" name="gaed99b57de2c839a66eb54c9e82d703d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaed99b57de2c839a66eb54c9e82d703d9">&#9670;&#160;</a></span>infix_type_create_member()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> infix_type_create_member </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *</td>          <td class="paramname"><span class="paramname"><em>type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>offset</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classA.html">A</a> factory function to create an <code>infix_struct_member</code>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The member's name (for debugging; can be <code>nullptr</code>). </td></tr>
+    <tr><td class="paramname">type</td><td><a class="el" href="classA.html">A</a> pointer to the member's <code>infix_type</code>. </td></tr>
+    <tr><td class="paramname">offset</td><td>The byte offset of the member, obtained via the <code>offsetof</code> macro. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An initialized <code>infix_struct_member</code>. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a101">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gad83c177871541f45a24c9df3e780d341" name="gad83c177871541f45a24c9df3e780d341"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad83c177871541f45a24c9df3e780d341">&#9670;&#160;</a></span>infix_type_create_named_reference()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_named_reference </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a></td>          <td class="paramname"><span class="paramname"><em>agg_cat</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a named reference from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">name</td><td>The name of the type being referenced. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="classA.html">A</a> type graph containing a named reference is "unresolved". </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a98">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga013ec0163fd36e611251d1a0897f773e" name="ga013ec0163fd36e611251d1a0897f773e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga013ec0163fd36e611251d1a0897f773e">&#9670;&#160;</a></span>infix_type_create_packed_struct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_packed_struct </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>total_size</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>alignment</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *</td>          <td class="paramname"><span class="paramname"><em>members</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_members</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a packed struct from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">total_size</td><td>The exact size of the packed struct in bytes. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">alignment</td><td>The alignment of the packed struct in bytes (often 1). </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">members</td><td>An array of <code>infix_struct_member</code> describing each member. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_members</td><td>The number of elements in the <code>members</code> array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a94">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga58f759e56e12c39603c391886dd6857f" name="ga58f759e56e12c39603c391886dd6857f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga58f759e56e12c39603c391886dd6857f">&#9670;&#160;</a></span>infix_type_create_pointer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * infix_type_create_pointer </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an <code>infix_type</code> descriptor for a generic <code>void*</code> pointer. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classA.html">A</a> pointer to the static <code>infix_type</code> descriptor for a pointer. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Do not free the returned pointer. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a90">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gaa186076fa232503f1f781fb3cd2e9cc7" name="gaa186076fa232503f1f781fb3cd2e9cc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa186076fa232503f1f781fb3cd2e9cc7">&#9670;&#160;</a></span>infix_type_create_pointer_to()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_pointer_to </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *</td>          <td class="paramname"><span class="paramname"><em>pointee_type</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an <code>infix_type</code> for a pointer to a specific type from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate memory for the new pointer type. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">pointee_type</td><td>An <code>infix_type</code> describing the type the pointer points to. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a91">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gae323d599fbc081976a99a1e3b726a0b8" name="gae323d599fbc081976a99a1e3b726a0b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae323d599fbc081976a99a1e3b726a0b8">&#9670;&#160;</a></span>infix_type_create_primitive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * infix_type_create_primitive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ga2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a></td>          <td class="paramname"><span class="paramname"><em>id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an <code>infix_type</code> descriptor for a primitive <a class="el" href="classC.html">C</a> type. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The enumerator for the desired primitive type (e.g., <code>INFIX_PRIMITIVE_SINT32</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classA.html">A</a> pointer to the static <code>infix_type</code> descriptor. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The returned pointer points to a static global and must NOT be freed. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a89">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gac80d3ec096ade5b991048b61fecfe7b2" name="gac80d3ec096ade5b991048b61fecfe7b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac80d3ec096ade5b991048b61fecfe7b2">&#9670;&#160;</a></span>infix_type_create_struct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_struct </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *</td>          <td class="paramname"><span class="paramname"><em>members</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_members</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a struct from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate memory for the new type. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">members</td><td>An array of <code>infix_struct_member</code> describing each member. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_members</td><td>The number of elements in the <code>members</code> array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a93">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga4027aa78465a98b270d1d6e54e7c5e90" name="ga4027aa78465a98b270d1d6e54e7c5e90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4027aa78465a98b270d1d6e54e7c5e90">&#9670;&#160;</a></span>infix_type_create_union()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_union </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *</td>          <td class="paramname"><span class="paramname"><em>members</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_members</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a union from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">members</td><td>An array of <code>infix_struct_member</code> describing each member of the union. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_members</td><td>The number of elements in the <code>members</code> array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a95">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga4781802742cdd8472f6db7d039ab1fde" name="ga4781802742cdd8472f6db7d039ab1fde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4781802742cdd8472f6db7d039ab1fde">&#9670;&#160;</a></span>infix_type_create_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_create_vector </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *</td>          <td class="paramname"><span class="paramname"><em>arena</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **</td>          <td class="paramname"><span class="paramname"><em>out_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *</td>          <td class="paramname"><span class="paramname"><em>element_type</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>num_elements</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new <code>infix_type</code> for a SIMD vector from an arena. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">element_type</td><td>The primitive <code>infix_type</code> of the vector's elements. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">num_elements</td><td>The number of elements in the vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a100">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga1eb812d62636fa21936521630a7d1be2" name="ga1eb812d62636fa21936521630a7d1be2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1eb812d62636fa21936521630a7d1be2">&#9670;&#160;</a></span>infix_type_create_void()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">c23_nodiscard <a class="el" href="#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * infix_type_create_void </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an <code>infix_type</code> descriptor for the <code>void</code> type. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classA.html">A</a> pointer to the static <code>infix_type</code> for <code>void</code>. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Do not free the returned pointer. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a92">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 
 </div>

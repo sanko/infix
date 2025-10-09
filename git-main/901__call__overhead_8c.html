@@ -112,18 +112,24 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>add_for_benchmark</b> 
 <tr class="memitem:a8a94952f2ada02faaf8fe8571b069622" id="r_a8a94952f2ada02faaf8fe8571b069622"><td class="memItemLeft" align="right" valign="top"><a id="a8a94952f2ada02faaf8fe8571b069622" name="a8a94952f2ada02faaf8fe8571b069622"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>diag</b> (&quot;Direct Call Time: %.4f s (%.2f ns/call)&quot;, direct_time, direct_ns_per_call)</td></tr>
 <tr class="separator:a8a94952f2ada02faaf8fe8571b069622"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d2966c3b3509f70bef7bbfaf6c29070" id="r_a5d2966c3b3509f70bef7bbfaf6c29070"><td class="memItemLeft" align="right" valign="top"><a id="a5d2966c3b3509f70bef7bbfaf6c29070" name="a5d2966c3b3509f70bef7bbfaf6c29070"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (status !=<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>)</td></tr>
-<tr class="separator:a5d2966c3b3509f70bef7bbfaf6c29070"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac327f58044abc4610347be8e83d599f6" id="r_ac327f58044abc4610347be8e83d599f6"><td class="memItemLeft" align="right" valign="top"><a id="ac327f58044abc4610347be8e83d599f6" name="ac327f58044abc4610347be8e83d599f6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>diag</b> (&quot;infix Time:       %.4f s (%.2f ns/call)&quot;, trampoline_time, trampoline_ns_per_call)</td></tr>
-<tr class="separator:ac327f58044abc4610347be8e83d599f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adefcb9ad375de0fe74009172c97831e3" id="r_adefcb9ad375de0fe74009172c97831e3"><td class="memItemLeft" align="right" valign="top"><a id="adefcb9ad375de0fe74009172c97831e3" name="adefcb9ad375de0fe74009172c97831e3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>diag</b> (&quot;infix Overhead:  ~%.2f ns/call&quot;, infix_overhead_ns)</td></tr>
-<tr class="separator:adefcb9ad375de0fe74009172c97831e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a813bf03d4ae4b58e786391e079644484" id="r_a813bf03d4ae4b58e786391e079644484"><td class="memItemLeft" align="right" valign="top"><a id="a813bf03d4ae4b58e786391e079644484" name="a813bf03d4ae4b58e786391e079644484"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_destroy</b> (trampoline)</td></tr>
-<tr class="separator:a813bf03d4ae4b58e786391e079644484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25ec5bf2371dba8ff1cdb1cb6d499dbd" id="r_a25ec5bf2371dba8ff1cdb1cb6d499dbd"><td class="memItemLeft" align="right" valign="top"><a id="a25ec5bf2371dba8ff1cdb1cb6d499dbd" name="a25ec5bf2371dba8ff1cdb1cb6d499dbd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> &amp;,,, 2, 2arg_types !=<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>)</td></tr>
+<tr class="separator:a25ec5bf2371dba8ff1cdb1cb6d499dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4069e3c9baaa2e23160001053f7ec5f4" id="r_a4069e3c9baaa2e23160001053f7ec5f4"><td class="memItemLeft" align="right" valign="top"><a id="a4069e3c9baaa2e23160001053f7ec5f4" name="a4069e3c9baaa2e23160001053f7ec5f4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>diag</b> (&quot;infix (Unbound):    %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;, unbound_time, unbound_ns, unbound_ns - direct_ns_per_call)</td></tr>
+<tr class="separator:a4069e3c9baaa2e23160001053f7ec5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad36da003b2b775d02bc4b5e57d3a2332" id="r_ad36da003b2b775d02bc4b5e57d3a2332"><td class="memItemLeft" align="right" valign="top"><a id="ad36da003b2b775d02bc4b5e57d3a2332" name="ad36da003b2b775d02bc4b5e57d3a2332"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a>(&amp;bound_t, ret_type, arg_types, 2, 2,(void *) add_for_benchmark) !=<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) bail_out(&quot;Failed to create bound trampoline&quot;)</td></tr>
+<tr class="separator:ad36da003b2b775d02bc4b5e57d3a2332"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30d28852aed20dadb7729ee5835b9d99" id="r_a30d28852aed20dadb7729ee5835b9d99"><td class="memItemLeft" align="right" valign="top"><a id="a30d28852aed20dadb7729ee5835b9d99" name="a30d28852aed20dadb7729ee5835b9d99"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>diag</b> (&quot;infix (Bound):      %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;, bound_time, bound_ns, bound_ns - direct_ns_per_call)</td></tr>
+<tr class="separator:a30d28852aed20dadb7729ee5835b9d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135e615d18daec14ebf61bed5869abf1" id="r_a135e615d18daec14ebf61bed5869abf1"><td class="memItemLeft" align="right" valign="top"><a id="a135e615d18daec14ebf61bed5869abf1" name="a135e615d18daec14ebf61bed5869abf1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_destroy</b> (unbound_t)</td></tr>
+<tr class="separator:a135e615d18daec14ebf61bed5869abf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0139eb891f44c7b12e3dd3d383acfe" id="r_a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memItemLeft" align="right" valign="top"><a id="a9f0139eb891f44c7b12e3dd3d383acfe" name="a9f0139eb891f44c7b12e3dd3d383acfe"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>infix_forward_destroy</b> (bound_t)</td></tr>
+<tr class="separator:a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fdc4d0e57bebf474e34348ed3ed74c3" id="r_a7fdc4d0e57bebf474e34348ed3ed74c3"><td class="memItemLeft" align="right" valign="top"><a id="a7fdc4d0e57bebf474e34348ed3ed74c3" name="a7fdc4d0e57bebf474e34348ed3ed74c3"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>note</b> (&quot;dyncall benchmarking was not enabled.&quot;)</td></tr>
 <tr class="separator:a7fdc4d0e57bebf474e34348ed3ed74c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,28 +160,31 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>direct_time</b> = (
 double&#160;</td><td class="memItemRight" valign="bottom"><b>direct_ns_per_call</b> = (direct_time / BENCHMARK_ITERATIONS) * 1e9</td></tr>
 <tr class="separator:a165c1c6b8f1e6ca33eb1518edbf3da50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f79aa6bd01b66791b7e5ee78dea11aa" id="r_a5f79aa6bd01b66791b7e5ee78dea11aa"><td class="memItemLeft" align="right" valign="top"><a id="a5f79aa6bd01b66791b7e5ee78dea11aa" name="a5f79aa6bd01b66791b7e5ee78dea11aa"></a>
-<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ret_type</b> = infix_type_create_primitive(<a class="el" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)</td></tr>
+<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ret_type</b> = <a class="el" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="el" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)</td></tr>
 <tr class="separator:a5f79aa6bd01b66791b7e5ee78dea11aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ee7905532888ac403e1bf46e306b3ce" id="r_a5ee7905532888ac403e1bf46e306b3ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a> []</td></tr>
 <tr class="separator:a5ee7905532888ac403e1bf46e306b3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10c1baa628918ef95490af23e71909db" id="r_a10c1baa628918ef95490af23e71909db"><td class="memItemLeft" align="right" valign="top"><a id="a10c1baa628918ef95490af23e71909db" name="a10c1baa628918ef95490af23e71909db"></a>
-<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>trampoline</b> = NULL</td></tr>
-<tr class="separator:a10c1baa628918ef95490af23e71909db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a id="a433468dce2d10c4f34424732ef15ebdd" name="a433468dce2d10c4f34424732ef15ebdd"></a>
-<a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><b>status</b> = infix_forward_create_manual(&amp;trampoline, ret_type, arg_types, 2, 2)</td></tr>
-<tr class="separator:a433468dce2d10c4f34424732ef15ebdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07afe7340efb25add015244f2d5633df" id="r_a07afe7340efb25add015244f2d5633df"><td class="memItemLeft" align="right" valign="top"><a id="a07afe7340efb25add015244f2d5633df" name="a07afe7340efb25add015244f2d5633df"></a>
-<a class="el" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cif_func</b> = (<a class="el" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>)infix_forward_get_code(trampoline)</td></tr>
-<tr class="separator:a07afe7340efb25add015244f2d5633df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67b497a17232954d8d19bcd8324daab6" id="r_a67b497a17232954d8d19bcd8324daab6"><td class="memItemLeft" align="right" valign="top"><a id="a67b497a17232954d8d19bcd8324daab6" name="a67b497a17232954d8d19bcd8324daab6"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>trampoline_time</b> = ((double)(end - start)) / CLOCKS_PER_SEC</td></tr>
-<tr class="separator:a67b497a17232954d8d19bcd8324daab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c44d3d64a2edf6eece5f56c1bcf00e7" id="r_a0c44d3d64a2edf6eece5f56c1bcf00e7"><td class="memItemLeft" align="right" valign="top"><a id="a0c44d3d64a2edf6eece5f56c1bcf00e7" name="a0c44d3d64a2edf6eece5f56c1bcf00e7"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>trampoline_ns_per_call</b> = (trampoline_time / BENCHMARK_ITERATIONS) * 1e9</td></tr>
-<tr class="separator:a0c44d3d64a2edf6eece5f56c1bcf00e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d784db5dfc5f502ae2e2269b4acdf54" id="r_a2d784db5dfc5f502ae2e2269b4acdf54"><td class="memItemLeft" align="right" valign="top"><a id="a2d784db5dfc5f502ae2e2269b4acdf54" name="a2d784db5dfc5f502ae2e2269b4acdf54"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>infix_overhead_ns</b> = trampoline_ns_per_call - direct_ns_per_call</td></tr>
-<tr class="separator:a2d784db5dfc5f502ae2e2269b4acdf54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a783f3f2953f385e8223af2d3568e4a92" id="r_a783f3f2953f385e8223af2d3568e4a92"><td class="memItemLeft" align="right" valign="top"><a id="a783f3f2953f385e8223af2d3568e4a92" name="a783f3f2953f385e8223af2d3568e4a92"></a>
+<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_t</b> = nullptr</td></tr>
+<tr class="separator:a783f3f2953f385e8223af2d3568e4a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a583bc4a446d7d34ba26ee2d9c3b70268" id="r_a583bc4a446d7d34ba26ee2d9c3b70268"><td class="memItemLeft" align="right" valign="top"><a id="a583bc4a446d7d34ba26ee2d9c3b70268" name="a583bc4a446d7d34ba26ee2d9c3b70268"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_time</b> = ((double)(end - start)) / CLOCKS_PER_SEC</td></tr>
+<tr class="separator:a583bc4a446d7d34ba26ee2d9c3b70268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e5cffb4af7f4131c94b742415f779cc" id="r_a4e5cffb4af7f4131c94b742415f779cc"><td class="memItemLeft" align="right" valign="top"><a id="a4e5cffb4af7f4131c94b742415f779cc" name="a4e5cffb4af7f4131c94b742415f779cc"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>unbound_ns</b> = (unbound_time / BENCHMARK_ITERATIONS) * 1e9</td></tr>
+<tr class="separator:a4e5cffb4af7f4131c94b742415f779cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a235edff479963a1a75ebc21f02111491" id="r_a235edff479963a1a75ebc21f02111491"><td class="memItemLeft" align="right" valign="top"><a id="a235edff479963a1a75ebc21f02111491" name="a235edff479963a1a75ebc21f02111491"></a>
+<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>bound_t</b> = nullptr</td></tr>
+<tr class="separator:a235edff479963a1a75ebc21f02111491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2798b6d609034611efb3120044fcdd6a" id="r_a2798b6d609034611efb3120044fcdd6a"><td class="memItemLeft" align="right" valign="top"><a id="a2798b6d609034611efb3120044fcdd6a" name="a2798b6d609034611efb3120044fcdd6a"></a>
+<a class="el" href="group__public__api.html#gaa424eb35854d3fa968995851e690c9f8">infix_bound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><b>bound_cif</b> = <a class="el" href="group__introspection__api.html#gafe563c6ded8b7937f0a803fbf6938a4b">infix_forward_get_code</a>(bound_t)</td></tr>
+<tr class="separator:a2798b6d609034611efb3120044fcdd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5223524456d9df67af038068758386e" id="r_af5223524456d9df67af038068758386e"><td class="memItemLeft" align="right" valign="top"><a id="af5223524456d9df67af038068758386e" name="af5223524456d9df67af038068758386e"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>bound_time</b> = ((double)(end - start)) / CLOCKS_PER_SEC</td></tr>
+<tr class="separator:af5223524456d9df67af038068758386e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c00e10e354a6c5a7759581e3ac956a7" id="r_a8c00e10e354a6c5a7759581e3ac956a7"><td class="memItemLeft" align="right" valign="top"><a id="a8c00e10e354a6c5a7759581e3ac956a7" name="a8c00e10e354a6c5a7759581e3ac956a7"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>bound_ns</b> = (bound_time / BENCHMARK_ITERATIONS) * 1e9</td></tr>
+<tr class="separator:a8c00e10e354a6c5a7759581e3ac956a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classA.html">A</a> microbenchmark to measure the performance overhead of an FFI call. </p>
@@ -203,9 +212,10 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>infix_overhead_ns</
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {infix_type_create_primitive(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>),</div>
-<div class="line">                                infix_type_create_primitive(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)}</div>
-<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdoc">signed int, int32_t</div><div class="ttdef"><b>Definition</b> infix.h:245</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {<a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>),</div>
+<div class="line">                                <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)}</div>
+<div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:102</div></div>
+<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdoc">signed int, int32_t</div><div class="ttdef"><b>Definition</b> infix.h:243</div></div>
 </div><!-- fragment -->
 </div>
 </div>

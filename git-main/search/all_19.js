@@ -1,7 +1,7 @@
 var searchData=
 [
   ['n1_0',['N1',['../namespaceN1.html',1,'']]],
-  ['name_1',['name',['../structinfix__struct__member__t.html#a8dad067a06c5efd90028fb1cab9e2911',1,'infix_struct_member_t::name'],['../structinfix__function__argument__t.html#a8789f5063ea8ce9896f44c1c9d8f365c',1,'infix_function_argument_t::name'],['../structregression__test__case__t.html#aed98b5d214919be70209e911177611e5',1,'regression_test_case_t::name']]],
+  ['name_1',['name',['../structinfix__type__t.html#a736c003e9eef685d02153e46a46ad461',1,'infix_type_t::name'],['../structinfix__struct__member__t.html#a8dad067a06c5efd90028fb1cab9e2911',1,'infix_struct_member_t::name'],['../structinfix__function__argument__t.html#a8789f5063ea8ce9896f44c1c9d8f365c',1,'infix_function_argument_t::name'],['../structregression__test__case__t.html#aed98b5d214919be70209e911177611e5',1,'regression_test_case_t::name']]],
   ['named_5freference_2',['named_reference',['../structinfix__type__t.html#aefbba96a3cadf0e38ba54f1ff7cb93b1',1,'infix_type_t']]],
   ['naming_3a_20the_20tt_20infix_5f_20tt_20prefix_3',['API Naming: The &lt;tt&gt;infix_&lt;/tt&gt; Prefix',['../md_internals.html#autotoc_md80',1,'']]],
   ['nasm_20on_20system_20v_4',['Assembly (NASM on System V)',['../md_cookbook.html#autotoc_md57',1,'']]],

@@ -101,8 +101,11 @@ $(function() {
 
 
 <h3><a id="index_e" name="index_e"></a>- e -</h3><ul>
+<li>emit_arm64_b_reg()&#160;:&#160;<a class="el" href="abi__arm64__emitters_8c.html#af8b09b107e091e1b5d940266441c960f">abi_arm64_emitters.c</a>, <a class="el" href="abi__arm64__emitters_8h.html#af8b09b107e091e1b5d940266441c960f">abi_arm64_emitters.h</a></li>
+<li>emit_jmp_reg()&#160;:&#160;<a class="el" href="abi__x64__emitters_8c.html#a792c75d3780343d6ab4fc818bf1f4c18">abi_x64_emitters.c</a>, <a class="el" href="abi__x64__emitters_8h.html#a792c75d3780343d6ab4fc818bf1f4c18">abi_x64_emitters.h</a></li>
 <li>execute_callback_as_arg_harness()&#160;:&#160;<a class="el" href="303__advanced_8c.html#a935cb020b1f28fd5550626d771a808a5">303_advanced.c</a></li>
 <li>execute_many_args_callback()&#160;:&#160;<a class="el" href="401__large__stack_8c.html#a5bbfbfc732971dfdd40e6e8e1370150e">401_large_stack.c</a></li>
+<li>execute_point_callback()&#160;:&#160;<a class="el" href="006__end__to__end__calls_8c.html#a78937d529c148a400d750f91275ed7f9">006_end_to_end_calls.c</a></li>
 <li>execute_pointer_modify_callback()&#160;:&#160;<a class="el" href="303__advanced_8c.html#a59bbb40c988d1a3c7a422c19848e03ea">303_advanced.c</a></li>
 </ul>
 
@@ -111,6 +114,7 @@ $(function() {
 <li>final_multiply_handler()&#160;:&#160;<a class="el" href="303__advanced_8c.html#a9593dfbf5450b75b6915dd41944df4ad">303_advanced.c</a></li>
 <li>find_char_in_string()&#160;:&#160;<a class="el" href="201__basic_8c.html#a021325335442088553d22be0cd27cf58">201_basic.c</a></li>
 <li>float_callback_handler()&#160;:&#160;<a class="el" href="301__primitives_8c.html#ad80f5c82da708830d5001239d52010db">301_primitives.c</a></li>
+<li>forward_variadic_aggregate_checker()&#160;:&#160;<a class="el" href="402__variadic__functions_8c.html#ac932e22334e2b910918d5ccecc0a36ce">402_variadic_functions.c</a></li>
 <li>forward_variadic_checker()&#160;:&#160;<a class="el" href="402__variadic__functions_8c.html#ae984df7920796a4871aeec5b6f167b48">402_variadic_functions.c</a></li>
 <li>func()&#160;:&#160;<a class="el" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">group.cpp</a></li>
 <li>func2()&#160;:&#160;<a class="el" href="group__group1.html#ga053929c0809a5f56f7548fd7d9968f31">group.cpp</a></li>
@@ -124,12 +128,56 @@ $(function() {
 
 
 <h3><a id="index_i" name="index_i"></a>- i -</h3><ul>
-<li>infix_forward_get_num_fixed_args()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga218ac4c8f7f2b30d125d8a733d8ee8dc">types.c</a>, <a class="el" href="group__introspection__api.html#ga218ac4c8f7f2b30d125d8a733d8ee8dc">infix.h</a></li>
+<li>infix_arena_alloc()&#160;:&#160;<a class="el" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">arena.c</a>, <a class="el" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix.h</a></li>
+<li>infix_arena_calloc()&#160;:&#160;<a class="el" href="group__memory__management.html#ga624819bf3bc628f63575001ed9c6ffd5">arena.c</a>, <a class="el" href="group__memory__management.html#ga624819bf3bc628f63575001ed9c6ffd5">infix.h</a></li>
+<li>infix_arena_create()&#160;:&#160;<a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">arena.c</a>, <a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix.h</a></li>
+<li>infix_arena_destroy()&#160;:&#160;<a class="el" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix.h</a>, <a class="el" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">arena.c</a></li>
+<li>infix_forward_create()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga56ddc9d4b66442e38ea41e5954b92880">infix.h</a>, <a class="el" href="group__high__level__api.html#ga56ddc9d4b66442e38ea41e5954b92880">signature.c</a></li>
+<li>infix_forward_create_manual()&#160;:&#160;<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix.h</a>, <a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">trampoline.c</a></li>
+<li>infix_forward_create_unbound()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga6a860861c599876344a86f52872b51c3">infix.h</a>, <a class="el" href="group__high__level__api.html#ga6a860861c599876344a86f52872b51c3">signature.c</a></li>
+<li>infix_forward_create_unbound_manual()&#160;:&#160;<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">trampoline.c</a>, <a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix.h</a></li>
+<li>infix_forward_destroy()&#160;:&#160;<a class="el" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix.h</a>, <a class="el" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">trampoline.c</a></li>
+<li>infix_forward_get_arg_type()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga3c1734cc40973646abcbf439a047021a">infix.h</a>, <a class="el" href="group__introspection__api.html#ga3c1734cc40973646abcbf439a047021a">types.c</a></li>
+<li>infix_forward_get_code()&#160;:&#160;<a class="el" href="group__introspection__api.html#gafe563c6ded8b7937f0a803fbf6938a4b">infix.h</a>, <a class="el" href="group__introspection__api.html#gafe563c6ded8b7937f0a803fbf6938a4b">trampoline.c</a></li>
+<li>infix_forward_get_num_args()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga7b7e73aa032acb4185433f40720ec126">infix.h</a>, <a class="el" href="group__introspection__api.html#ga7b7e73aa032acb4185433f40720ec126">types.c</a></li>
+<li>infix_forward_get_num_fixed_args()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga218ac4c8f7f2b30d125d8a733d8ee8dc">infix.h</a>, <a class="el" href="group__introspection__api.html#ga218ac4c8f7f2b30d125d8a733d8ee8dc">types.c</a></li>
+<li>infix_forward_get_return_type()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga25901aeda151af1e91692dbe6776b162">types.c</a>, <a class="el" href="group__introspection__api.html#ga25901aeda151af1e91692dbe6776b162">infix.h</a></li>
+<li>infix_forward_get_unbound_code()&#160;:&#160;<a class="el" href="group__introspection__api.html#gad881dff0c196a8a91f2c38d4c2d5e2ff">infix.h</a>, <a class="el" href="group__introspection__api.html#gad881dff0c196a8a91f2c38d4c2d5e2ff">trampoline.c</a></li>
+<li>infix_function_print()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga59d1f86e5c3369688b664c2e428c1962">infix.h</a>, <a class="el" href="group__introspection__api.html#ga59d1f86e5c3369688b664c2e428c1962">signature.c</a></li>
+<li>infix_get_last_error()&#160;:&#160;<a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b">infix.h</a>, <a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b">error.c</a></li>
 <li>infix_read_global()&#160;:&#160;<a class="el" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix.h</a>, <a class="el" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">loader.c</a></li>
+<li>infix_reverse_create()&#160;:&#160;<a class="el" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0">infix.h</a>, <a class="el" href="group__high__level__api.html#gac6039fa88ca992d2f89b005df46525d0">signature.c</a></li>
+<li>infix_reverse_create_manual()&#160;:&#160;<a class="el" href="group__manual__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c">infix.h</a>, <a class="el" href="group__manual__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c">trampoline.c</a></li>
+<li>infix_reverse_destroy()&#160;:&#160;<a class="el" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix.h</a>, <a class="el" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">trampoline.c</a></li>
 <li>infix_reverse_get_arg_type()&#160;:&#160;<a class="el" href="group__introspection__api.html#gae00f0a3ebc8b0e4035382589dac25730">infix.h</a>, <a class="el" href="group__introspection__api.html#gae00f0a3ebc8b0e4035382589dac25730">types.c</a></li>
+<li>infix_reverse_get_code()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix.h</a>, <a class="el" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">trampoline.c</a></li>
 <li>infix_reverse_get_num_args()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga65883b662c2625a8b54a79a6d52923da">infix.h</a>, <a class="el" href="group__introspection__api.html#ga65883b662c2625a8b54a79a6d52923da">types.c</a></li>
 <li>infix_reverse_get_num_fixed_args()&#160;:&#160;<a class="el" href="group__introspection__api.html#gae266bb4c63346afa5c4e0e1111bb7345">infix.h</a>, <a class="el" href="group__introspection__api.html#gae266bb4c63346afa5c4e0e1111bb7345">types.c</a></li>
 <li>infix_reverse_get_return_type()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga50a6028388baf020c5bdbf0dd5bbd3f1">infix.h</a>, <a class="el" href="group__introspection__api.html#ga50a6028388baf020c5bdbf0dd5bbd3f1">types.c</a></li>
+<li>infix_reverse_get_user_data()&#160;:&#160;<a class="el" href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix.h</a>, <a class="el" href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">trampoline.c</a></li>
+<li>infix_signature_parse()&#160;:&#160;<a class="el" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19">infix.h</a>, <a class="el" href="group__high__level__api.html#ga607db171cf05343456f835000053dc19">signature.c</a></li>
+<li>infix_type_create_array()&#160;:&#160;<a class="el" href="group__type__system.html#ga9f0d8a41015262d2dcffc97cf5f87772">infix.h</a>, <a class="el" href="group__type__system.html#ga9f0d8a41015262d2dcffc97cf5f87772">types.c</a></li>
+<li>infix_type_create_complex()&#160;:&#160;<a class="el" href="group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf">infix.h</a>, <a class="el" href="group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf">types.c</a></li>
+<li>infix_type_create_enum()&#160;:&#160;<a class="el" href="group__type__system.html#ga44df1ec1de746a0be838b55567d07cae">infix.h</a>, <a class="el" href="group__type__system.html#ga44df1ec1de746a0be838b55567d07cae">types.c</a></li>
+<li>infix_type_create_member()&#160;:&#160;<a class="el" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">infix.h</a>, <a class="el" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">types.c</a></li>
+<li>infix_type_create_named_reference()&#160;:&#160;<a class="el" href="group__type__system.html#gad83c177871541f45a24c9df3e780d341">infix.h</a>, <a class="el" href="group__type__system.html#gad83c177871541f45a24c9df3e780d341">types.c</a></li>
+<li>infix_type_create_packed_struct()&#160;:&#160;<a class="el" href="group__type__system.html#ga013ec0163fd36e611251d1a0897f773e">types.c</a>, <a class="el" href="group__type__system.html#ga013ec0163fd36e611251d1a0897f773e">infix.h</a></li>
+<li>infix_type_create_pointer()&#160;:&#160;<a class="el" href="group__type__system.html#ga58f759e56e12c39603c391886dd6857f">infix.h</a>, <a class="el" href="group__type__system.html#ga58f759e56e12c39603c391886dd6857f">types.c</a></li>
+<li>infix_type_create_pointer_to()&#160;:&#160;<a class="el" href="group__type__system.html#gaa186076fa232503f1f781fb3cd2e9cc7">infix.h</a>, <a class="el" href="group__type__system.html#gaa186076fa232503f1f781fb3cd2e9cc7">types.c</a></li>
+<li>infix_type_create_primitive()&#160;:&#160;<a class="el" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix.h</a>, <a class="el" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">types.c</a></li>
+<li>infix_type_create_struct()&#160;:&#160;<a class="el" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix.h</a>, <a class="el" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">types.c</a></li>
+<li>infix_type_create_union()&#160;:&#160;<a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix.h</a>, <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">types.c</a></li>
+<li>infix_type_create_vector()&#160;:&#160;<a class="el" href="group__type__system.html#ga4781802742cdd8472f6db7d039ab1fde">types.c</a>, <a class="el" href="group__type__system.html#ga4781802742cdd8472f6db7d039ab1fde">infix.h</a></li>
+<li>infix_type_create_void()&#160;:&#160;<a class="el" href="group__type__system.html#ga1eb812d62636fa21936521630a7d1be2">infix.h</a>, <a class="el" href="group__type__system.html#ga1eb812d62636fa21936521630a7d1be2">types.c</a></li>
+<li>infix_type_from_signature()&#160;:&#160;<a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735">infix.h</a>, <a class="el" href="group__high__level__api.html#gaee130ec9cc180580da815450a7d5b735">signature.c</a></li>
+<li>infix_type_get_alignment()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">infix.h</a>, <a class="el" href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">types.c</a></li>
+<li>infix_type_get_arg_name()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga797871621d591d441be67d42be2d1efa">infix.h</a>, <a class="el" href="group__introspection__api.html#ga797871621d591d441be67d42be2d1efa">types.c</a></li>
+<li>infix_type_get_arg_type()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga184bcb5102d6315b8ff8d6defe1387f9">infix.h</a>, <a class="el" href="group__introspection__api.html#ga184bcb5102d6315b8ff8d6defe1387f9">types.c</a></li>
+<li>infix_type_get_category()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga9d8374030d014a748fd0d2b26e5415e3">infix.h</a>, <a class="el" href="group__introspection__api.html#ga9d8374030d014a748fd0d2b26e5415e3">types.c</a></li>
+<li>infix_type_get_member()&#160;:&#160;<a class="el" href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix.h</a>, <a class="el" href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">types.c</a></li>
+<li>infix_type_get_member_count()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix.h</a>, <a class="el" href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">types.c</a></li>
+<li>infix_type_get_size()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix.h</a>, <a class="el" href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">types.c</a></li>
+<li>infix_type_print()&#160;:&#160;<a class="el" href="group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb">infix.h</a>, <a class="el" href="group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb">signature.c</a></li>
 <li>infix_write_global()&#160;:&#160;<a class="el" href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f">infix.h</a>, <a class="el" href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f">loader.c</a></li>
 <li>inner_callback_handler()&#160;:&#160;<a class="el" href="303__advanced_8c.html#a9fc9fa6a3868072b8b3303cf29cb43c4">303_advanced.c</a></li>
 <li>int_callback_handler()&#160;:&#160;<a class="el" href="301__primitives_8c.html#ab04632b49a27b13e24c176d4e1483df8">301_primitives.c</a></li>
@@ -165,7 +213,7 @@ $(function() {
 
 
 <h3><a id="index_p" name="index_p"></a>- p -</h3><ul>
-<li>point_callback_handler()&#160;:&#160;<a class="el" href="302__aggregates_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35">302_aggregates.c</a></li>
+<li>point_callback_handler()&#160;:&#160;<a class="el" href="006__end__to__end__calls_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35">006_end_to_end_calls.c</a>, <a class="el" href="302__aggregates_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35">302_aggregates.c</a></li>
 <li>pointer_modify_handler()&#160;:&#160;<a class="el" href="303__advanced_8c.html#aad1328421ce73cf43f2fd3e4fa83a03c">303_advanced.c</a></li>
 <li>process_large_struct()&#160;:&#160;<a class="el" href="102__by__reference_8c.html#ac636dc1477b7068c2c53a515809232b8">102_by_reference.c</a></li>
 <li>process_mixed_struct()&#160;:&#160;<a class="el" href="101__by__value_8c.html#a62b10b0c8a49ea3416056aa70b146deb">101_by_value.c</a></li>

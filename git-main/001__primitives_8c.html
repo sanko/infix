@@ -249,32 +249,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    subtest(test_name) {                                                                                           \</div>
-<div class="line">        plan(2);                                                                                                   \</div>
-<div class="line">        <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a> * type = infix_type_create_primitive(infix_id);                                                 \</div>
-<div class="line">        <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a> * trampoline = NULL;                                                                       \</div>
-<div class="line">        <a class="code hl_enumeration" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status = infix_forward_create_manual(&amp;trampoline, type, &amp;type, 1, 1);                         \</div>
-<div class="line">        ok(status == <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, <span class="stringliteral">&quot;Trampoline generated successfully&quot;</span>);                                          \</div>
-<div class="line">                                                                                                                   \</div>
-<div class="line">        c_type input = (input_val);                                                                                \</div>
-<div class="line">        c_type result = 0;                                                                                         \</div>
-<div class="line">        <span class="keywordtype">void</span> * args[] = {&amp;input};                                                                                  \</div>
-<div class="line">        <a class="code hl_typedef" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a> cif = (<a class="code hl_typedef" href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a>)infix_forward_get_code(trampoline);                                   \</div>
-<div class="line">        if (cif) {                                                                                                 \</div>
-<div class="line">            cif((<span class="keywordtype">void</span> *)passthrough_func, &amp;result, args);                                                          \</div>
-<div class="line">            ok(result == input, <span class="stringliteral">&quot;Value is correct (&quot;</span> format_specifier <span class="stringliteral">&quot; == &quot;</span> format_specifier <span class="stringliteral">&quot;)&quot;</span>, input, result); \</div>
-<div class="line">        }                                                                                                          \</div>
-<div class="line">        else                                                                                                       \</div>
-<div class="line">            fail(<span class="stringliteral">&quot;Trampoline code pointer was NULL&quot;</span>);                                                              \</div>
-<div class="line">                                                                                                                   \</div>
-<div class="line">        infix_forward_destroy(trampoline);                                                                         \</div>
-<div class="line">    }</div>
-<div class="ttc" id="agroup__public__api_html_ga34ef26a155a3861d5172b7c07239ee43"><div class="ttname"><a href="group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void *, void **)</div><div class="ttdoc">The signature for a generic forward-call trampoline, the &quot;Call InterFace&quot; function.</div><div class="ttdef"><b>Definition</b> infix.h:442</div></div>
-<div class="ttc" id="agroup__public__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">An enumeration of all possible success or failure codes from the public API.</div><div class="ttdef"><b>Definition</b> infix.h:447</div></div>
-<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:448</div></div>
-<div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:69</div></div>
-<div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div><div class="ttdef"><b>Definition</b> infix.h:263</div></div>
-</div><!-- fragment -->
+
 <p><a class="el" href="classA.html">A</a> helper macro to generate a subtest for a specific primitive type. </p>
 <p>This macro encapsulates the repetitive logic for testing a single primitive type. It creates a subtest, generates a trampoline, performs the FFI call, checks the result, and cleans up resources. This reduces code duplication and makes the test suite easier to read and maintain.</p>
 <dl class="params"><dt>Parameters</dt><dd>
