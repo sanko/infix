@@ -49,6 +49,12 @@
 #include <unistd.h>
 #endif
 
+// On Apple platforms, pthread.h provides the necessary `pthread_jit_write_protect_np` function.
+#if defined(INFIX_OS_MACOS)
+// https://developer.apple.com/documentation/apple-silicon/porting-just-in-time-compilers-to-apple-silicon
+#include <pthread.h>
+#endif
+
 // Portability shim for mmap anonymous flag.
 #if defined(INFIX_ENV_POSIX) && !defined(INFIX_OS_WINDOWS)
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
@@ -117,9 +123,9 @@ static int shm_open_anonymous() {
  *
  * It employs different strategies based on the OS to achieve W^X:
  * - Windows: Uses `VirtualAlloc` for a single region, initially RW.
- * - macOS, OpenBSD, Termux: Uses a simple, single `mmap` with `MAP_PRIVATE | MAP_ANON`. This
- *   approach is more reliable and avoids `SIGBUS` errors common with more complex JIT
- *   setups on these specific platforms.
+ * - macOS, OpenBSD, Termux: Uses a simple, single `mmap` with `MAP_PRIVATE | MAP_ANON`. On
+ *   macOS, the `MAP_JIT` flag is now required by the OS for memory that will
+ *   be made executable.
  * - Linux & other POSIX: Uses a "dual-mapping" technique with an anonymous shared memory
  *   object to create separate writable (`rw_ptr`) and executable (`rx_ptr`) virtual
  *   mappings to the same physical memory, satisfying strict security policies.
@@ -144,6 +150,9 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
 #if defined(MAP_ANON)
     int flags = MAP_PRIVATE | MAP_ANON;
 #if defined(INFIX_OS_MACOS)
+    // On modern macOS, especially Apple Silicon, MAP_JIT is required to create
+    // memory that can later be made executable. The app must be signed with
+    // the `com.apple.security.cs.allow-jit` entitlement for this to succeed.
     flags |= MAP_JIT;
 #endif
     code = mmap(nullptr, size, PROT_READ | PROT_WRITE, flags, -1, 0);
@@ -213,6 +222,10 @@ void infix_executable_free(infix_executable_t exec) {
     }
 #elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     if (exec.rw_ptr) {
+#if defined(INFIX_OS_MACOS)
+        // Before freeing, we must make the JIT memory writable again.
+        pthread_jit_write_protect_np(true);
+#endif
         // On single-map platforms, rw_ptr == rx_ptr.
         mprotect(exec.rw_ptr, exec.size, PROT_NONE);
         munmap(exec.rw_ptr, exec.size);
@@ -238,9 +251,11 @@ void infix_executable_free(infix_executable_t exec) {
  * It performs two critical, platform-specific actions:
  * 1.  On AArch64, it flushes the instruction cache to ensure the CPU sees the newly
  *     written code bytes. This is done *before* changing permissions.
- * 2.  On single-map platforms (Windows, macOS), it changes the memory protection
- *     from Read/Write to Read/Execute, thereby enforcing W^X. On dual-map platforms
- *     (Linux), this is a no-op as `rx_ptr` was already created with PROT_EXEC.
+ * 2.  On single-map platforms, it enforces W^X by changing memory protection from
+ *     Read/Write to Read/Execute.
+ *     - macOS: Uses the Apple-specific `pthread_jit_write_protect_np` for reliability.
+ *     - Windows: Uses `VirtualProtect`.
+ *     - Other POSIX: Uses standard `mprotect`.
  */
 c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     if (exec.rw_ptr == nullptr || exec.size == 0)
@@ -260,8 +275,13 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
 #if defined(INFIX_OS_WINDOWS)
     // On single-map Windows, change protection from RW to RX.
     result = VirtualProtect(exec.rw_ptr, exec.size, PAGE_EXECUTE_READ, &(DWORD){0});
-#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
-    // On single-map POSIX, change protection from RW to RX.
+#elif defined(INFIX_OS_MACOS)
+    // Use the Apple-recommended API to make JIT memory executable.
+    // This call is thread-specific and correctly handles cache coherency.
+    pthread_jit_write_protect_np(false);
+    result = true;  // This function does not return a status. Assume success.
+#elif defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
+    // On other single-map POSIX, change protection from RW to RX.
     result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
 #else
     // On dual-map platforms, the rx_ptr is already executable.
@@ -329,8 +349,6 @@ void infix_protected_free(infix_protected_t prot) {
  * This is a security hardening step. After the reverse trampoline context is fully
  * initialized, it is made read-only to prevent it from being modified at runtime,
  * which could otherwise lead to security vulnerabilities.
- * Note: This feature is currently disabled on macOS because `mprotect` on
- * general-purpose `mmap`'d memory has been observed to be unreliable.
  */
 c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
     if (prot.size == 0)
@@ -338,15 +356,9 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
     result = VirtualProtect(prot.rw_ptr, prot.size, PAGE_READONLY, &(DWORD){0});
-#elif !defined(INFIX_OS_MACOS)
-    // On Linux and other BSDs, this works as expected.
-    result = (mprotect(prot.rw_ptr, prot.size, PROT_READ) == 0);
 #else
-    // On macOS, mprotect on mmap'd data pages can be unreliable.
-    // We skip this hardening step for now to ensure stability.
-    // https://developer.apple.com/documentation/apple-silicon/porting-just-in-time-compilers-to-apple-silicon
-    (void)prot;
-    result = true;
+    // On all POSIX platforms (Linux, macOS, BSDs), this works as expected for data pages.
+    result = (mprotect(prot.rw_ptr, prot.size, PROT_READ) == 0);
 #endif
     return result;
 }

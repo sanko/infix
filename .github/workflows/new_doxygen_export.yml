@@ -1,8 +1,8 @@
 name: Doxygen GitHub Pages
 
 on:
-  pull_request: ~
-  push: ~
+  #~ pull_request: ~
+  #~ push: ~
   schedule:
     - cron: '42 5 * * 0'
   workflow_dispatch: ~
@@ -20,11 +20,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
       - name: Clone Doxygen Awesome CSS theme
-        run: git clone --depth 1 https://github.com/jothepro/doxygen-awesome-css.git doxygen-awesome-css
-
-      - name: Copy theme files to the HTML output directory
-        # We copy the theme files directly where they will be needed, simplifying Doxyfile paths.
-        run: mkdir -p docs/api/html && cp doxygen-awesome-css/doxygen-awesome-* docs/api/html/
+        run: git clone --depth 1 https://github.com/jothepro/doxygen-awesome-css.git docs/api/html/
 
       - name: Generate Doxygen documentation
         # Run doxygen, specifying the path to our Doxyfile.
