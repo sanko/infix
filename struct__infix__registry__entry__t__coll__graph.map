@@ -1,0 +1,13 @@
+<map id="_infix_registry_entry_t" name="_infix_registry_entry_t">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,141,172,167"/>
+<area shape="poly" id="edge7_Node000001_Node000001" title=" " alt="" coords="187,146,199,154,190,161,173,164,172,159,188,156,193,154,185,151"/>
+<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="The central structure for describing any data type in the FFI system." alt="" coords="331,29,430,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="338,62,120,144,118,139,336,57"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="445,29,453,34,457,42,449,53,431,57,429,52,446,49,451,42,449,38,442,34"/>
+<area shape="rect" id="Node000003" href="$structinfix__struct__member__t.html" title="Describes a single member of an aggregate type (struct or union)." alt="" coords="254,141,422,167"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="351,65,331,82,316,104,315,113,317,122,329,140,324,143,312,124,310,113,312,102,327,79,347,61"/>
+<area shape="rect" id="Node000004" href="$structinfix__function__argument__t.html" title="Describes a single argument to a function, pairing an optional name with its type." alt="" coords="446,141,638,167"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="405,61,475,115,519,139,516,144,473,120,402,66"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="345,127,374,54,379,56,350,129"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="530,130,511,105,467,76,421,57,424,52,470,71,515,101,534,127"/>
+</map>

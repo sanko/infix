@@ -1,0 +1,104 @@
+<map id="src/common/compat_c23.h" name="src/common/compat_c23.h">
+<area shape="rect" id="Node000001" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="4433,5,4631,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title=" " alt="" coords="4373,79,4518,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="4509,41,4461,81,4458,76,4506,37"/>
+<area shape="rect" id="Node000076" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="4543,79,4697,104"/>
+<area shape="poly" id="edge52_Node000001_Node000076" title=" " alt="" coords="4558,37,4607,76,4604,81,4555,41"/>
+<area shape="rect" id="Node000003" href="$01__simple__call_8c.html" title="Recipe: Calling a Simple C Function." alt="" coords="5,152,181,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="4359,96,3529,100,2224,110,945,128,472,140,194,155,182,156,181,151,193,149,472,135,945,122,2224,105,3529,94,4359,90"/>
+<area shape="rect" id="Node000004" href="$02__pointers_8c.html" title="Recipe: Passing and Receiving Pointers." alt="" coords="206,159,402,185"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="4359,96,2332,112,1124,130,677,142,414,155,361,162,360,157,413,149,677,136,1123,125,2332,107,4359,90"/>
+<area shape="rect" id="Node000005" href="$03__opaque__pointers_8c.html" title="Recipe: Working with Opaque Pointers (Incomplete Types)." alt="" coords="426,152,606,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="4359,96,2433,112,1290,130,868,141,619,155,606,156,606,151,618,149,867,136,1290,125,2433,107,4359,90"/>
+<area shape="rect" id="Node000006" href="$04__fixed__arrays_8c.html" title="Recipe: Working with Fixed&#45;Size Arrays." alt="" coords="631,152,793,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="4359,96,3637,101,2524,112,1441,129,1041,141,806,155,794,156,793,151,805,149,1041,136,1441,124,2524,106,3637,95,4359,90"/>
+<area shape="rect" id="Node000007" href="$05__dynamic__marshalling_8c.html" title="Recipe: Dynamic Struct Marshalling with the Signature Parser." alt="" coords="818,152,1006,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="4359,95,3737,95,2769,100,2251,107,1761,118,1338,133,1019,155,1006,156,1006,151,1018,149,1337,128,1761,113,2251,102,2769,95,3737,89,4359,90"/>
+<area shape="rect" id="Node000008" href="$06__small__struct__by__value_8c.html" title="Recipe: Small Structs Passed by Value." alt="" coords="1031,152,1199,192"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="4359,96,2725,114,1770,132,1418,143,1211,155,1199,156,1199,151,1210,149,1418,137,1770,126,2724,109,4359,91"/>
+<area shape="rect" id="Node000009" href="$07__large__struct__by__reference_8c.html" title="Recipe: Large Structs Passed by Reference." alt="" coords="1223,152,1393,192"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="4359,95,3799,95,2943,101,2488,108,2057,119,1686,134,1406,155,1393,156,1392,151,1405,149,1685,129,2057,114,2488,103,2943,96,3799,90,4359,90"/>
+<area shape="rect" id="Node000010" href="$08__return__struct_8c.html" title="Recipe: Receiving a Struct from a Function." alt="" coords="1417,152,1588,192"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="4358,95,3830,96,3031,103,2607,110,2207,121,1861,135,1600,155,1588,156,1588,151,1600,149,1861,130,2206,115,2607,105,3031,97,3830,91,4358,90"/>
+<area shape="rect" id="Node000011" href="$09__packed__struct_8c.html" title="Recipe: Working with Packed Structs via the Signature API." alt="" coords="1612,152,1791,192"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="4359,95,3864,98,3124,106,2363,123,2044,137,1803,155,1791,156,1790,151,1802,149,2043,132,2362,118,3124,100,3864,92,4359,90"/>
+<area shape="rect" id="Node000012" href="$10__unions_8c.html" title="Recipe: Working with Unions." alt="" coords="1815,159,2001,185"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="4359,96,3900,99,3221,108,2525,126,2234,139,2014,155,1963,162,1963,157,2013,149,2233,133,2525,121,3221,103,3900,94,4359,90"/>
+<area shape="rect" id="Node000013" href="$11__pointer__to__array_8c.html" title="Recipe: Working with Pointers to Arrays." alt="" coords="2025,152,2204,192"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="4359,96,3933,100,3314,109,2681,127,2416,139,2216,155,2204,156,2204,151,2216,149,2416,134,2681,122,3314,104,3933,94,4359,91"/>
+<area shape="rect" id="Node000014" href="$12__callback__qsort_8c.html" title="Recipe: Creating a Stateless Callback for qsort." alt="" coords="2228,152,2415,192"/>
+<area shape="poly" id="edge13_Node000002_Node000014" title=" " alt="" coords="4359,96,3969,101,3411,112,2843,129,2606,141,2427,155,2415,156,2415,151,2426,149,2606,136,2843,124,3411,107,3969,96,4359,91"/>
+<area shape="rect" id="Node000015" href="$13__stateful__callback_8c.html" title="Recipe: Creating a Stateful Callback (The Modern Way)." alt="" coords="2439,152,2622,192"/>
+<area shape="poly" id="edge14_Node000002_Node000015" title=" " alt="" coords="4359,97,3507,114,3004,131,2794,142,2635,155,2623,156,2622,151,2634,149,2794,137,3004,126,3507,108,4359,91"/>
+<area shape="rect" id="Node000016" href="$14__variadic__printf_8c.html" title="Recipe: Calling Variadic Functions like printf." alt="" coords="2647,152,2831,192"/>
+<area shape="poly" id="edge15_Node000002_Node000016" title=" " alt="" coords="4359,97,3604,116,3165,133,2982,143,2843,155,2831,156,2831,151,2842,149,2981,138,3165,128,3604,111,4359,92"/>
+<area shape="rect" id="Node000017" href="$15__variadic__callback_8c.html" title="Recipe: Creating a Variadic Callback." alt="" coords="2855,152,3039,192"/>
+<area shape="poly" id="edge16_Node000002_Node000017" title=" " alt="" coords="4359,95,4131,97,3807,104,3432,122,3240,136,3051,155,3039,156,3039,151,3050,149,3239,131,3432,117,3807,99,4131,91,4359,90"/>
+<area shape="rect" id="Node000018" href="$16__nested__calls_8c.html" title="Recipe: Proving Reentrancy with Nested FFI Calls." alt="" coords="3063,152,3239,192"/>
+<area shape="poly" id="edge17_Node000002_Node000018" title=" " alt="" coords="4359,96,4161,99,3886,108,3571,125,3251,155,3239,156,3239,151,3250,149,3570,120,3886,102,4161,93,4359,90"/>
+<area shape="rect" id="Node000019" href="$17__return__callback_8c.html" title="Recipe: Receiving and Calling a Function Pointer." alt="" coords="3263,152,3433,192"/>
+<area shape="poly" id="edge18_Node000002_Node000019" title=" " alt="" coords="4359,97,4190,101,3963,111,3706,128,3446,155,3434,156,3433,151,3445,149,3705,123,3963,106,4190,96,4359,91"/>
+<area shape="rect" id="Node000020" href="$18__cpp__example_8c.html" title="Recipe: Interoperating with a C++ Class via a C Wrapper." alt="" coords="3457,152,3612,192"/>
+<area shape="poly" id="edge19_Node000002_Node000020" title=" " alt="" coords="4359,98,4035,114,3830,131,3624,155,3612,156,3612,151,3624,149,3830,125,4035,109,4359,92"/>
+<area shape="rect" id="Node000021" href="$19__system__libraries_8c.html" title="Recipe: Calling System Libraries on Windows, macOS, and Linux." alt="" coords="3637,152,3817,192"/>
+<area shape="poly" id="edge20_Node000002_Node000021" title=" " alt="" coords="4359,101,4120,121,3828,155,3818,156,3817,151,3828,149,4119,116,4359,96"/>
+<area shape="rect" id="Node000022" href="$20__complex_8c.html" title=" " alt="" coords="3841,159,4039,185"/>
+<area shape="poly" id="edge21_Node000002_Node000022" title=" " alt="" coords="4359,108,4051,155,4007,162,4006,157,4050,149,4359,103"/>
+<area shape="rect" id="Node000023" href="$win32__msgbox_8c.html" title=" " alt="" coords="4063,159,4214,185"/>
+<area shape="poly" id="edge22_Node000002_Node000023" title=" " alt="" coords="4388,110,4184,162,4183,157,4387,105"/>
+<area shape="rect" id="Node000024" href="$fuzz__helpers_8h.html" title="Shared helper functions and types for infix FFI fuzzing harnesses." alt="" coords="4289,240,4436,265"/>
+<area shape="poly" id="edge23_Node000002_Node000024" title=" " alt="" coords="4386,111,4354,128,4330,153,4325,175,4330,198,4342,220,4354,238,4350,241,4337,223,4325,200,4319,175,4326,151,4351,124,4383,107"/>
+<area shape="rect" id="Node000027" href="$fuzz__signature_8c.html" title="A libFuzzer&#45;based harness for the infix FFI signature parser." alt="" coords="4227,313,4386,339"/>
+<area shape="poly" id="edge25_Node000002_Node000027" title=" " alt="" coords="4390,111,4353,129,4319,154,4296,180,4281,204,4276,231,4280,265,4289,290,4301,312,4297,314,4285,293,4275,266,4270,231,4276,202,4291,177,4316,150,4350,124,4388,106"/>
+<area shape="rect" id="Node000031" href="$infix__internals_8h.html" title="Declarations for internal&#45;only functions, types, and constants." alt="" coords="4340,159,4551,185"/>
+<area shape="poly" id="edge26_Node000002_Node000031" title=" " alt="" coords="4448,118,4448,159,4443,159,4443,118"/>
+<area shape="rect" id="Node000042" href="$error_8c.html" title="Implements the thread&#45;local error reporting system." alt="" coords="4494,240,4613,265"/>
+<area shape="poly" id="edge29_Node000002_Node000042" title=" " alt="" coords="4508,107,4540,124,4565,151,4573,174,4573,199,4561,241,4556,239,4567,199,4568,175,4560,153,4536,128,4505,111"/>
+<area shape="rect" id="Node000050" href="$001__primitives_8c.html" title="Tests FFI functionality with all supported primitive C types." alt="" coords="4625,159,4764,185"/>
+<area shape="poly" id="edge30_Node000002_Node000050" title=" " alt="" coords="4495,106,4659,157,4658,162,4494,111"/>
+<area shape="rect" id="Node000051" href="$002__simple__calls_8c.html" title="Tests basic FFI calls with simple function signatures." alt="" coords="4788,159,4943,185"/>
+<area shape="poly" id="edge31_Node000002_Node000051" title=" " alt="" coords="4526,104,4777,149,4813,157,4811,162,4775,155,4525,109"/>
+<area shape="rect" id="Node000052" href="$003__type__system__api_8c.html" title="Tests the infix_type_* API functions for correctness and error handling." alt="" coords="4967,159,5151,185"/>
+<area shape="poly" id="edge32_Node000002_Node000052" title=" " alt="" coords="4532,101,4746,124,4955,149,4999,157,4998,162,4954,155,4745,129,4531,107"/>
+<area shape="rect" id="Node000053" href="$004__signatures_8c.html" title="Hardened test suite for the high&#45;level signature API." alt="" coords="5175,159,5316,185"/>
+<area shape="poly" id="edge33_Node000002_Node000053" title=" " alt="" coords="4532,101,4711,115,4850,121,4988,128,5163,149,5201,157,5200,162,5162,155,4988,134,4850,126,4710,120,4532,107"/>
+<area shape="rect" id="Node000054" href="$005__layouts_8c.html" title="Tests the correctness of the ABI&#45;aware layout calculation for aggregates." alt="" coords="5341,159,5462,185"/>
+<area shape="poly" id="edge34_Node000002_Node000054" title=" " alt="" coords="4532,101,4654,111,4757,115,4933,117,5108,124,5209,133,5328,149,5363,157,5362,162,5328,155,5209,138,5107,129,4933,123,4757,121,4654,116,4532,107"/>
+<area shape="rect" id="Node000055" href="$006__end__to__end__calls_8c.html" title="End&#45;to&#45;end integration tests for the entire FFI call process." alt="" coords="5486,159,5671,185"/>
+<area shape="poly" id="edge35_Node000002_Node000055" title=" " alt="" coords="4532,101,4676,112,4798,118,5006,122,5212,127,5333,135,5475,149,5523,157,5522,162,5474,155,5333,141,5212,132,5006,127,4798,123,4676,118,4532,107"/>
+<area shape="rect" id="Node000056" href="$007__type__registry_8c.html" title=" " alt="" coords="5696,159,5853,185"/>
+<area shape="poly" id="edge36_Node000002_Node000056" title=" " alt="" coords="4532,101,4708,113,4857,118,5111,118,5233,118,5363,122,5511,131,5684,149,5727,157,5726,162,5684,155,5510,137,5363,127,5233,124,5111,124,4857,124,4707,119,4532,107"/>
+<area shape="rect" id="Node000057" href="$101__by__value_8c.html" title="Tests passing and returning small aggregate types (structs) by value." alt="" coords="5878,159,6010,185"/>
+<area shape="poly" id="edge37_Node000002_Node000057" title=" " alt="" coords="4532,101,4736,114,4908,118,5202,114,5343,112,5494,115,5665,127,5866,149,5903,157,5902,162,5865,155,5665,132,5494,121,5343,118,5202,119,4908,124,4735,119,4532,107"/>
+<area shape="rect" id="Node000058" href="$102__by__reference_8c.html" title="Tests passing and returning aggregates that are handled by reference." alt="" coords="6034,159,6193,185"/>
+<area shape="poly" id="edge38_Node000002_Node000058" title=" " alt="" coords="4532,101,4760,116,4952,120,5280,116,5438,114,5607,117,5798,127,6023,149,6066,157,6065,162,6022,155,5798,133,5607,122,5438,120,5280,122,4952,126,4759,121,4532,107"/>
+<area shape="rect" id="Node000059" href="$103__unions_8c.html" title="Tests passing and returning C unions by value." alt="" coords="6217,159,6333,185"/>
+<area shape="poly" id="edge39_Node000002_Node000059" title=" " alt="" coords="4532,101,4787,116,5004,118,5195,114,5373,107,5550,102,5740,105,5954,119,6206,149,6239,157,6238,162,6205,155,5953,124,5739,110,5550,108,5373,112,5195,119,5004,124,4787,121,4532,107"/>
+<area shape="rect" id="Node000060" href="$201__basic_8c.html" title="Tests fundamental FFI operations involving pointers." alt="" coords="6357,159,6464,185"/>
+<area shape="poly" id="edge40_Node000002_Node000060" title=" " alt="" coords="4532,101,4715,110,4938,113,5449,114,5710,116,5955,121,6172,131,6346,149,6378,157,6377,162,6345,155,6171,136,5955,126,5710,121,5449,120,4938,119,4715,115,4532,107"/>
+<area shape="rect" id="Node000061" href="$202__in__structs_8c.html" title="Tests passing structs that contain pointer members." alt="" coords="6488,159,6624,185"/>
+<area shape="poly" id="edge41_Node000002_Node000061" title=" " alt="" coords="4532,101,4828,118,5080,121,5301,117,5508,109,5713,104,5934,105,6183,119,6476,149,6515,157,6514,162,6476,155,6183,124,5933,111,5713,109,5508,115,5301,122,5080,127,4828,123,4532,107"/>
+<area shape="rect" id="Node000062" href="$203__complex_8c.html" title=" " alt="" coords="6649,159,6778,185"/>
+<area shape="poly" id="edge42_Node000002_Node000062" title=" " alt="" coords="4532,101,4743,111,5002,115,5594,116,5897,117,6182,121,6434,131,6636,149,6674,157,6673,162,6636,155,6433,137,6182,127,5897,122,5594,121,5001,121,4743,116,4532,107"/>
+<area shape="rect" id="Node000063" href="$301__primitives_8c.html" title="Tests reverse trampolines (callbacks) with primitive type signatures." alt="" coords="6803,159,6941,185"/>
+<area shape="poly" id="edge43_Node000002_Node000063" title=" " alt="" coords="4532,101,4758,112,5035,116,5671,116,5996,117,6303,121,6573,131,6791,149,6831,157,6830,162,6790,155,6573,137,6302,127,5996,122,5671,122,5035,121,4758,117,4532,107"/>
+<area shape="rect" id="Node000064" href="$302__aggregates_8c.html" title="Tests reverse trampolines (callbacks) with struct and union arguments/returns." alt="" coords="6965,159,7112,185"/>
+<area shape="poly" id="edge44_Node000002_Node000064" title=" " alt="" coords="4532,101,4774,112,5071,117,5753,117,6101,117,6430,121,6720,131,6954,149,6995,157,6994,162,6953,155,6720,136,6430,126,6101,122,5753,122,5071,122,4774,118,4532,107"/>
+<area shape="rect" id="Node000065" href="$303__advanced_8c.html" title="Tests advanced reverse trampoline (callback) patterns." alt="" coords="7136,159,7272,185"/>
+<area shape="poly" id="edge45_Node000002_Node000065" title=" " alt="" coords="4532,101,4791,113,5108,117,5838,115,6211,114,6563,118,6874,129,7008,138,7124,149,7163,157,7162,162,7124,155,7008,143,6874,134,6563,123,6211,120,5838,120,5108,122,4791,118,4532,107"/>
+<area shape="rect" id="Node000066" href="$401__large__stack_8c.html" title="Tests FFI calls with a large number of arguments, forcing stack usage." alt="" coords="7297,159,7445,185"/>
+<area shape="poly" id="edge46_Node000002_Node000066" title=" " alt="" coords="4532,101,4806,113,5143,118,5918,116,6314,115,6688,119,7018,129,7161,138,7284,149,7326,157,7326,162,7284,155,7160,143,7018,134,6688,124,6314,121,5918,121,5143,123,4806,119,4532,107"/>
+<area shape="rect" id="Node000067" href="$402__variadic__functions_8c.html" title="Tests FFI calls for variadic functions." alt="" coords="7469,159,7661,185"/>
+<area shape="poly" id="edge47_Node000002_Node000067" title=" " alt="" coords="4532,101,4765,116,4977,126,5355,132,5688,126,5997,116,6307,106,6638,104,6819,108,7014,116,7226,130,7458,149,7510,157,7509,162,7457,155,7226,135,7014,122,6819,113,6638,109,6307,111,5998,121,5688,132,5355,137,4977,131,4764,122,4532,107"/>
+<area shape="rect" id="Node000068" href="$403__special__types_8c.html" title="Tests FFI calls with types that have unique ABI handling rules." alt="" coords="7685,159,7848,185"/>
+<area shape="poly" id="edge48_Node000002_Node000068" title=" " alt="" coords="4532,101,4845,115,5228,120,6113,117,6565,115,6992,118,7370,128,7532,137,7674,149,7719,157,7718,162,7673,155,7532,143,7370,134,6992,123,6565,120,6113,122,5228,125,4845,120,4532,107"/>
+<area shape="rect" id="Node000069" href="$810__memory__stress_8c.html" title="A stress test for detecting memory leaks in the infix FFI library." alt="" coords="7873,159,8047,185"/>
+<area shape="poly" id="edge49_Node000002_Node000069" title=" " alt="" coords="4532,101,4863,116,5269,121,6206,118,6685,116,7138,118,7538,128,7711,137,7860,149,7909,157,7908,162,7860,155,7710,143,7538,134,7138,124,6685,121,6206,123,5269,126,4862,121,4532,107"/>
+<area shape="rect" id="Node000070" href="$811__fault__injection_8c.html" title="An advanced stress test that uses fault injection to find memory leaks in the library&#39;s error&#45;handlin..." alt="" coords="8071,159,8238,185"/>
+<area shape="poly" id="edge50_Node000002_Node000070" title=" " alt="" coords="4532,101,4695,110,4882,116,5313,121,6306,116,6815,113,7294,116,7719,126,7902,136,8060,149,8106,157,8105,162,8060,155,7901,141,7719,132,7294,121,6815,119,6306,121,5313,126,4882,121,4695,115,4532,107"/>
+<area shape="rect" id="Node000071" href="$820__threading__helgrind_8c.html" title="A cross&#45;platform test for thread&#45;safety issues using Valgrind&#39;s Helgrind tool or other thread sanitiz..." alt="" coords="8263,159,8457,185"/>
+<area shape="poly" id="edge51_Node000002_Node000071" title=" " alt="" coords="4532,101,4704,111,4901,117,5355,123,6401,119,6937,117,7443,119,7891,128,8083,137,8251,149,8304,157,8303,162,8250,155,8083,142,7890,134,7443,124,6937,122,6401,125,5355,128,4901,123,4704,116,4532,107"/>
+<area shape="poly" id="edge24_Node000024_Node000027" title=" " alt="" coords="4347,278,4318,315,4314,312,4343,275"/>
+<area shape="poly" id="edge27_Node000031_Node000024" title=" " alt="" coords="4425,196,4377,242,4373,238,4421,192"/>
+<area shape="poly" id="edge28_Node000031_Node000042" title=" " alt="" coords="4474,191,4539,238,4536,242,4471,195"/>
+</map>

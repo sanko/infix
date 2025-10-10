@@ -1,0 +1,10 @@
+<map id="infix_type_t" name="infix_type_t">
+<area shape="rect" id="Node000001" title="The central structure for describing any data type in the FFI system." alt="" coords="147,29,245,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="260,29,268,34,272,42,264,53,246,57,245,52,261,49,267,42,265,38,258,34"/>
+<area shape="rect" id="Node000002" href="$structinfix__struct__member__t.html" title="Describes a single member of an aggregate type (struct or union)." alt="" coords="5,141,173,167"/>
+<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="140,62,110,79,86,104,83,122,87,140,82,142,77,122,82,101,106,75,137,57"/>
+<area shape="rect" id="Node000003" href="$structinfix__function__argument__t.html" title="Describes a single argument to a function, pairing an optional name with its type." alt="" coords="208,141,400,167"/>
+<area shape="poly" id="edge5_Node000003_Node000001" title=" " alt="" coords="209,66,224,91,243,115,278,139,276,143,240,119,219,94,204,69"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="109,129,183,53,186,57,112,133"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="293,130,278,104,248,77,217,57,219,52,251,73,282,101,298,127"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="parser_state" name="parser_state">
+<area shape="rect" id="Node000001" title=" " alt="" coords="29,317,131,343"/>
+<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title=" " alt="" coords="5,141,112,167"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,180,73,254,81,317,76,317,68,255,59,181"/>
+<area shape="rect" id="Node000003" href="$structinfix__registry__t.html" title=" " alt="" coords="125,229,243,255"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="88,172,168,227,165,231,85,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,265,96,319,92,315,158,261"/>
+<area shape="rect" id="Node000004" href="$struct__infix__registry__entry__t.html" title=" " alt="" coords="137,141,303,167"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="212,181,191,230,187,228,207,179"/>
+<area shape="poly" id="edge11_Node000004_Node000004" title=" " alt="" coords="319,146,330,154,322,161,304,164,303,159,320,156,325,154,316,151"/>
+<area shape="rect" id="Node000005" href="$structinfix__type__t.html" title="The central structure for describing any data type in the FFI system." alt="" coords="463,29,561,55"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="469,62,251,144,249,139,468,57"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="576,29,584,34,588,42,580,53,562,57,561,52,577,49,583,42,581,38,574,34"/>
+<area shape="rect" id="Node000006" href="$structinfix__struct__member__t.html" title="Describes a single member of an aggregate type (struct or union)." alt="" coords="385,141,553,167"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="482,65,463,82,448,104,446,113,448,122,460,140,455,143,444,124,441,113,443,102,459,79,479,61"/>
+<area shape="rect" id="Node000007" href="$structinfix__function__argument__t.html" title="Describes a single argument to a function, pairing an optional name with its type." alt="" coords="577,141,769,167"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="537,61,607,115,650,139,647,144,604,120,533,66"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="476,127,505,54,510,56,481,129"/>
+<area shape="poly" id="edge9_Node000005_Node000007" title=" " alt="" coords="661,130,642,105,599,76,553,57,555,52,601,71,646,101,665,127"/>
+</map>

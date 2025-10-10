@@ -1,0 +1,23 @@
+<map id="eg/cookbook/09_packed_struct.c" name="eg/cookbook/09_packed_struct.c">
+<area shape="rect" id="Node000001" title="Recipe: Working with Packed Structs via the Signature API." alt="" coords="65,5,243,45"/>
+<area shape="rect" id="Node000002" href="$eg_2cookbook_2lib_2types_8h.html" title="Defines common data structures used across the cookbook examples." alt="" coords="26,93,117,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,47,95,86,92,82,132,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="91,240,166,265"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="79,48,44,67,29,80,16,95,9,114,10,132,17,151,29,170,63,204,99,230,96,235,59,208,25,173,12,154,4,133,4,113,12,92,25,76,41,62,76,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="93,167,164,192"/>
+<area shape="poly" id="edge12_Node000001_Node000004" title=" " alt="" coords="154,46,136,153,130,153,148,45"/>
+<area shape="rect" id="Node000005" href="$infix_8h.html" title=" " alt="" coords="192,93,287,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="177,44,218,82,215,86,173,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="311,93,378,119"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="201,43,305,86,303,91,199,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,119,74,152,83,191,95,211,109,228,105,232,90,214,78,193,69,153,68,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="83,117,113,154,109,158,79,121"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="233,121,178,194,149,231,144,227,173,190,229,117"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="223,121,160,161,157,157,220,116"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="349,240,431,265"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="286,116,374,141,410,154,430,165,436,182,433,199,414,231,409,228,428,198,430,182,425,168,408,159,372,146,284,121"/>
+<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="240,167,415,192"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="255,117,304,156,301,160,252,121"/>
+<area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="296,195,175,238,173,233,295,190"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="340,191,373,228,369,231,336,194"/>
+</map>

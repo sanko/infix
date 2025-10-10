@@ -1,0 +1,29 @@
+<map id="fuzz/fuzz_helpers.h" name="fuzz/fuzz_helpers.h">
+<area shape="rect" id="Node000001" title="Shared helper functions and types for infix FFI fuzzing harnesses." alt="" coords="345,5,492,31"/>
+<area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Declarations for internal&#45;only functions, types, and constants." alt="" coords="119,79,305,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="386,33,259,77,258,72,385,28"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title=" " alt="" coords="250,152,345,177"/>
+<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="411,33,318,143,314,140,407,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,299,88,324"/>
+<area shape="poly" id="edge11_Node000001_Node000005" title=" " alt="" coords="345,22,291,27,229,37,167,54,108,81,85,96,69,110,57,128,47,153,38,188,37,223,44,285,38,286,31,224,33,187,41,151,52,125,65,107,82,91,105,76,165,49,228,32,290,22,345,17"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="260,299,335,324"/>
+<area shape="poly" id="edge12_Node000001_Node000006" title=" " alt="" coords="425,30,436,70,445,127,446,159,443,192,435,223,421,252,407,269,389,283,349,301,347,296,386,278,403,265,416,249,430,221,438,191,440,159,440,128,431,71,420,32"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="335,225,406,251"/>
+<area shape="poly" id="edge13_Node000001_Node000007" title=" " alt="" coords="419,32,379,212,374,211,413,30"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="481,79,548,104"/>
+<area shape="poly" id="edge14_Node000001_Node000009" title=" " alt="" coords="436,29,489,68,486,72,433,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="573,79,643,104"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="450,28,565,71,563,76,448,33"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="667,79,738,104"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="465,28,655,75,653,80,464,33"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="57,152,226,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="202,106,164,144,160,140,198,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="227,102,275,141,271,145,224,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="250,179,143,204,97,217,74,227,64,240,57,255,50,285,45,284,52,253,59,237,70,223,96,212,142,198,249,173"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="300,178,300,285,295,285,295,178"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="311,176,351,214,347,218,308,180"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="85,225,259,251"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="279,180,206,221,203,216,276,175"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="153,253,80,294,78,289,151,248"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="193,248,266,289,264,294,191,253"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="t/001_primitives.c" name="t/001_primitives.c">
+<area shape="rect" id="Node000001" title="Tests FFI functionality with all supported primitive C types." alt="" coords="289,5,427,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="315,33,146,78,145,73,314,28"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="196,79,365,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="347,33,305,71,302,67,344,29"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title=" " alt="" coords="389,79,484,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="372,29,416,68,412,71,369,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="508,79,595,104"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="390,28,508,71,506,76,388,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="265,225,347,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="390,105,315,126,284,139,266,154,261,168,264,184,285,214,281,217,259,186,255,168,261,150,281,135,314,121,388,100"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="382,225,457,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="483,102,516,114,546,130,558,141,564,152,566,165,560,179,542,199,520,214,471,232,470,227,517,209,539,195,556,176,561,164,559,154,553,144,543,135,514,119,481,107"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="475,152,545,177"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="451,102,490,140,486,144,447,106"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="276,152,451,177"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="426,106,387,144,383,140,423,102"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="356,179,326,216,322,213,352,176"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="375,176,404,213,400,216,370,179"/>
+</map>

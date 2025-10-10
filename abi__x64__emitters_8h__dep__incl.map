@@ -1,0 +1,9 @@
+<map id="src/arch/x64/abi_x64_emitters.h" name="src/arch/x64/abi_x64_emitters.h">
+<area shape="rect" id="Node000001" title="Declares internal helper functions for emitting x86&#45;64 machine code." alt="" coords="191,5,347,45"/>
+<area shape="rect" id="Node000002" href="$abi__sysv__x64_8c.html" title="Implements the FFI logic for the System V AMD64 ABI." alt="" coords="5,93,168,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,54,128,96,126,91,216,49"/>
+<area shape="rect" id="Node000003" href="$abi__win__x64_8c.html" title="Implements the FFI logic for the Windows x64 calling convention." alt="" coords="192,93,347,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="272,59,272,93,267,93,267,59"/>
+<area shape="rect" id="Node000004" href="$abi__x64__emitters_8c.html" title="Implements internal helper functions for emitting x86&#45;64 machine code." alt="" coords="371,93,527,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="322,49,411,91,409,96,320,54"/>
+</map>

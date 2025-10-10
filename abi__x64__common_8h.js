@@ -1,0 +1,39 @@
+var abi__x64__common_8h =
+[
+    [ "x64_gpr", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95", [
+      [ "RAX_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95aa7084485e4390b99030433e9bdee2505", null ],
+      [ "RCX_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a6c4c420884eb2e6eea658360b9e0d84e", null ],
+      [ "RDX_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a465b442663d65e7ec5748ea2d9f05e0b", null ],
+      [ "RBX_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a001075c7f551d7ae9e8bafd4949465d5", null ],
+      [ "RSP_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a27ffb3542e05cc57d618b4ee5883b040", null ],
+      [ "RBP_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a87e3aff8654e88ae2f05459caf6ecff1", null ],
+      [ "RSI_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95ae38ef6f72ee34ccb76883bf8bceb51fb", null ],
+      [ "RDI_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a823daad255e565e9569dda070cd9c428", null ],
+      [ "R8_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a10b597de1ddb4cf1c84ea703d8706917", null ],
+      [ "R9_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a0e8cf45b3c4f123e5531af1b6695762c", null ],
+      [ "R10_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a52efbe83eabafb7ce73c85223bc5ff02", null ],
+      [ "R11_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a359380821fd0f0b75d8945a667b3ed84", null ],
+      [ "R12_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95af4b77a815ecaa686f611f75814d4516f", null ],
+      [ "R13_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95ac9786a82400e043e9ed8f646d094633a", null ],
+      [ "R14_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a495b420b96d7310500ab7de237c5bd01", null ],
+      [ "R15_REG", "abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95a1564d1ad09033bec8a20d438a4d5747c", null ]
+    ] ],
+    [ "x64_xmm", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c", [
+      [ "XMM0_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca7f7dd044d21d061cb237870e1fb1d9da", null ],
+      [ "XMM1_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca06dd72fe83df58d7125110e607234158", null ],
+      [ "XMM2_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caa09b62eb7b317e05acf3dd2231ed15ca", null ],
+      [ "XMM3_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cab6908d046c48edc5f57c1fed0182e89e", null ],
+      [ "XMM4_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca5edaf31b20b883142751f78be957e9a5", null ],
+      [ "XMM5_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca79f84822393fe6f0b22915d46a6314d4", null ],
+      [ "XMM6_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caf3f49d0d16db7934b18cfd47377d5b74", null ],
+      [ "XMM7_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cafd6b7890692fd70bc41505877be9e2ab", null ],
+      [ "XMM8_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caccd2561dad55622472de05cc5f26f626", null ],
+      [ "XMM9_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca367f9cc2a1b55e531bdbcb1091c5fc9a", null ],
+      [ "XMM10_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cad32577b3a79c6eb194a68194eb0f9c46", null ],
+      [ "XMM11_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caee90d003aefd04b52ee634086530bd52", null ],
+      [ "XMM12_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cacaad43cc3535a6f188320b0e1b9e9de4", null ],
+      [ "XMM13_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca0e20fdaa048d50414994b617c22975b4", null ],
+      [ "XMM14_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca6a3162426c7499c0fc957e9bcb7955c9", null ],
+      [ "XMM15_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cac4591fdcf5c89e987d4a22cd6134bddd", null ]
+    ] ]
+];
