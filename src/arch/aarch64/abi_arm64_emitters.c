@@ -105,7 +105,9 @@ void emit_arm64_load_u64_immediate(code_buffer * buf, arm64_gpr dest, uint64_t v
  *          For moves involving the Stack Pointer, it's an alias for `ADD Xd, SP, #0`.
  *
  *          Encodes `MOV Xd, Xn` which is an alias for `ORR Xd, XZR, Xn`.
+ *
  *          Opcode (64-bit): 10101010000111110000001111100000 (0xAA1F03E0) + dest
+ *
  *          This requires a special case for moving the stack pointer.
  * @param buf The code buffer.
  * @param is64 True for a 64-bit move (X registers), false for 32-bit (W registers).
@@ -138,6 +140,7 @@ void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
  * @internal
  * @brief Emits a `LDR` (Load Register) instruction with an unsigned immediate offset.
  * @details Assembly: `LDR <Wt|Xt>, [<Xn|SP>, #pimm]`
+ *
  *          Opcode (64-bit): 11_111_00_1_01_... (base 0xB9400000)
  *          Opcode (32-bit): 10_111_00_1_01_... (base 0x79400000)
  *
@@ -169,7 +172,7 @@ void emit_arm64_ldr_imm(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
  * @details Assembly: `LDRSW <Xt>, [<Xn|SP>, #pimm]`
  *          This loads a 32-bit value from memory and sign-extends it to 64 bits.
  *
- * Opcode: 10_111_00_1_10_... (base 0xB9800000)
+ *          Opcode: 10_111_00_1_10_... (base 0xB9800000)
  *
  * @param buf The code buffer.
  * @param dest The 64-bit destination GPR (`Xt`).
@@ -190,24 +193,30 @@ void emit_arm64_ldrsw_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int
     emit_int32(buf, instr);
 }
 
-/*
- * Implementation for emit_arm64_str_imm.
- * Encodes `STR <Wt|Xt>, [<Xn|SP>, #pimm]`.
- * Opcode (64-bit): 11_111_00_1_00_... (base 0xB9000000)
- * Opcode (32-bit): 10_111_00_1_00_... (base 0x79000000)
+/**
+ * @internal
+ * @brief Emits a `STR` (Store Register) instruction with an unsigned immediate offset.
+ * @details Assembly: `STR <Wt|Xt>, [<Xn|SP>, #pimm]`
+ *
+ *          Opcode (64-bit): 11_111_00_1_00_... (base 0xB9000000)
+ *          Opcode (32-bit): 10_111_00_1_00_... (base 0x79000000)
+ *
+ * @param buf The code buffer.
+ * @param is64 True to store 64 bits (`Xt`), false to store 32 bits (`Wt`).
+ * @param src The source GPR.
+ * @param base The base address register.
+ * @param offset The byte offset, a multiple of the access size.
  */
 void emit_arm64_str_imm(code_buffer * buf, bool is64, arm64_gpr src, arm64_gpr base, int32_t offset) {
     if (buf->error)
         return;
     const int scale = is64 ? 8 : 4;
-    assert(offset >= 0 && offset % scale == 0 && (offset / scale) <= 0xFFF);
     if (offset < 0 || offset % scale != 0 || (offset / scale) > 0xFFF) {
         buf->error = true;
         return;
     }
-    uint32_t instr = 0xb9000000;
-    if (is64)
-        instr |= (1u << 30);
+    uint32_t size_bits = is64 ? (0b11U << 30) : (0b10U << 30);
+    uint32_t instr = size_bits | A64_OP_LOAD_STORE_IMM_UNSIGNED;  // STR opcode (LDR_OP bit is 0)
     instr |= ((uint32_t)(offset / scale) & 0xFFF) << 10;
     instr |= (uint32_t)(base & 0x1F) << 5;
     instr |= (uint32_t)(src & 0x1F);
