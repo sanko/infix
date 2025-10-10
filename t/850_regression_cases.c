@@ -221,7 +221,7 @@ static void run_regression_case(const regression_test_case_t * test) {
 
             infix_type * type = nullptr;
             infix_arena_t * arena = nullptr;
-            infix_status status = infix_type_from_signature(&type, &arena, signature);
+            infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
 
             ok(status == test->expected_status,
                "Parser returned correct status (expected %d, got %d)",

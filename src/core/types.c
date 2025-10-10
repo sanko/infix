@@ -578,6 +578,15 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
+    // Allocate a copy of the name into the arena to make the type self-contained.
+    size_t name_len = strlen(name) + 1;
+    char * arena_name = infix_arena_alloc(arena, name_len, 1);
+    if (arena_name == nullptr) {
+        *out_type = nullptr;
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    memcpy(arena_name, name, name_len);
+
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_NAMED_REFERENCE;
     // References are conceptual placeholders. Give them a minimal valid alignment
@@ -586,20 +595,128 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
     // attempt to generate a trampoline from a type graph containing this type.
     type->size = 0;
     type->alignment = 1;
-    type->meta.named_reference.name = name;
+    type->meta.named_reference.name = arena_name;
     type->meta.named_reference.aggregate_category = agg_cat;
 
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
+/**
+ * @internal
+ * @brief Recursively performs a deep copy of an `infix_type` object graph.
+ * @details This function is the core of making trampolines self-contained. It walks a type
+ *          graph and duplicates it in the destination arena. This prevents use-after-free
+ *          errors if the user destroys the original arena used to create the types.
+ * @param dest_arena The destination arena to copy the type graph into.
+ * @param src_type The source type to copy.
+ * @return A pointer to the newly-copied type, or `nullptr` on allocation failure.
+ */
+infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type) {
+    if (src_type == nullptr)
+        return nullptr;
+
+    // Optimization: If the source type is a static primitive, we don't need to copy it.
+    if (!src_type->is_arena_allocated)
+        return (infix_type *)src_type;
+
+    // Allocate space for the new type in the destination arena and copy the base struct.
+    infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
+    if (dest_type == nullptr)
+        return nullptr;
+    memcpy(dest_type, src_type, sizeof(infix_type));
+
+    // Recursively copy any nested types based on the category.
+    switch (src_type->category) {
+    case INFIX_TYPE_POINTER:
+        dest_type->meta.pointer_info.pointee_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.pointer_info.pointee_type);
+        break;
+    case INFIX_TYPE_ARRAY:
+        dest_type->meta.array_info.element_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.array_info.element_type);
+        break;
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        {
+            // Deep copy the aggregate's own name, if it has one.
+            const char * src_agg_name = src_type->meta.aggregate_info.name;
+            if (src_agg_name) {
+                size_t name_len = strlen(src_agg_name) + 1;
+                char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
+                if (!dest_agg_name)
+                    return nullptr;  // Allocation failed
+                memcpy(dest_agg_name, src_agg_name, name_len);
+                // We need to cast away const to write to the destination struct field.
+                *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
+            }
+
+            if (src_type->meta.aggregate_info.num_members > 0) {
+                size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
+                dest_type->meta.aggregate_info.members =
+                    infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
+                if (dest_type->meta.aggregate_info.members == nullptr)
+                    return nullptr;
+                memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+
+                for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
+                    dest_type->meta.aggregate_info.members[i].type =
+                        _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
+                    // Deep copy the member name string to avoid dangling pointers.
+                    const char * src_name = src_type->meta.aggregate_info.members[i].name;
+                    if (src_name) {
+                        size_t name_len = strlen(src_name) + 1;
+                        char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                        if (!dest_name)
+                            return nullptr;
+                        memcpy(dest_name, src_name, name_len);
+                        *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+                    }
+                }
+            }
+        }
+        break;
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+        dest_type->meta.func_ptr_info.return_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.return_type);
+        if (src_type->meta.func_ptr_info.num_args > 0) {
+            size_t args_size = sizeof(infix_function_argument) * src_type->meta.func_ptr_info.num_args;
+            dest_type->meta.func_ptr_info.args =
+                infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
+            if (dest_type->meta.func_ptr_info.args == nullptr)
+                return nullptr;
+            memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
+
+            for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
+                dest_type->meta.func_ptr_info.args[i].type =
+                    _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.args[i].type);
+                const char * src_name = src_type->meta.func_ptr_info.args[i].name;
+                if (src_name) {
+                    size_t name_len = strlen(src_name) + 1;
+                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                    if (!dest_name)
+                        return nullptr;
+                    memcpy(dest_name, src_name, name_len);
+                    *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
+                }
+            }
+        }
+        break;
+    default:
+        // For PRIMITIVE, VOID, ENUM, etc., the initial shallow copy is sufficient.
+        break;
+    }
+    return dest_type;
+}
 /*
  * The following functions are simple, null-safe getters that form the public
  * Introspection API. They provide a stable way for users to query type and
  * trampoline properties without needing to know the internal layout of the
  * opaque `infix_type_t`, `infix_forward_t`, or `infix_reverse_t` structs.
  * The trampoline-related functions are implemented here for organizational
- * consistency, as they are part of the same conceptual API group.
+- * consistency, as they are part of the same conceptual API group.
++ * consistency, as they are part of the same conceptual API group. It also includes
++ * the new introspection functions for the type registry.
  */
 
 /*

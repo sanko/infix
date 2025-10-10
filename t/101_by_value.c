@@ -195,11 +195,11 @@ svfloat64_t native_sve_vector_add(svfloat64_t a, svfloat64_t b) {
 #endif
 #endif
 
+#if defined(INFIX_ARCH_ARM_SVE)
 /**
  * @brief Performs a runtime check to see if the CPU supports the ARM SVE feature set.
  */
 static bool is_sve_supported(void) {
-#if defined(INFIX_ARCH_ARM_SVE)
 #if defined(INFIX_OS_LINUX)
     unsigned long hwcaps = getauxval(AT_HWCAP);
     return (hwcaps & HWCAP_SVE) != 0;
@@ -218,11 +218,8 @@ static bool is_sve_supported(void) {
     // mechanism. For now, we conservatively assume no support.
     return false;
 #endif
-#else
-    // If the compiler doesn't even support SVE, then it's definitely not available.
-    return false;
-#endif
 }
+#endif
 
 TEST {
     plan(6);  // One subtest for each major scenario.

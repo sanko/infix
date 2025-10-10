@@ -168,7 +168,8 @@ TEST {
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);
             infix_forward_t * trampoline = nullptr;
-            infix_status status = infix_forward_create(&trampoline, signature, (void *)fault_injection_handler);
+            infix_status status =
+                infix_forward_create(&trampoline, signature, (void *)fault_injection_handler, nullptr);
             if (fault_triggered) {
                 ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
             }
@@ -193,13 +194,14 @@ TEST {
         note("Testing for leaks when infix_reverse_create fails at every possible allocation.");
 
         // A complex signature to exercise the parser and JIT engine.
-        const char * signature = "i*,d,p(1,1){c@0}=>v";
+        const char * signature = "({*char,int})->void";
         bool success_was_reached = false;
 
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);  // Fail on the i-th allocation
             infix_reverse_t * context = nullptr;
-            infix_status status = infix_reverse_create(&context, signature, (void *)fault_injection_handler, nullptr);
+            infix_status status =
+                infix_reverse_create(&context, signature, (void *)fault_injection_handler, nullptr, nullptr);
 
             if (fault_triggered) {
                 ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
@@ -231,7 +233,7 @@ TEST {
         plan(MAX_FAILS_TO_TEST);
         note("Testing for leaks when creating a complex type from signature fails.");
 
-        const char * signature = "{i, d, [10]{c*, s}}";  // Nested struct/array
+        const char * signature = "{int, double, [10:{*char, short}]}";  // Nested struct/array
         bool success_was_reached = false;
 
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
@@ -239,7 +241,7 @@ TEST {
             infix_type * final_type = nullptr;
             infix_arena_t * arena = nullptr;
 
-            infix_status status = infix_type_from_signature(&final_type, &arena, signature);
+            infix_status status = infix_type_from_signature(&final_type, &arena, signature, nullptr);
 
             if (fault_triggered) {
                 ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);

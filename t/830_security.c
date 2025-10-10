@@ -105,7 +105,7 @@ TEST {
     if (child_test_name != nullptr) {
         if (strcmp(child_test_name, "forward_uaf_unbound") == 0) {
             infix_forward_t * t = nullptr;
-            infix_status status = infix_forward_create_unbound(&t, "(int32)->int32");
+            infix_status status = infix_forward_create_unbound(&t, "(int32)->int32", nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             infix_cif_func f = infix_forward_get_unbound_code(t);
@@ -116,7 +116,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "forward_uaf_bound") == 0) {
             infix_forward_t * t = nullptr;
-            infix_status status = infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func);
+            infix_status status = infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             infix_bound_cif_func f = infix_forward_get_code(t);
@@ -127,7 +127,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
             infix_reverse_t * rt = nullptr;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             void (*f)() = (void (*)())infix_reverse_get_code(rt);
@@ -136,7 +136,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "write_harden") == 0) {
             infix_reverse_t * rt = nullptr;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
+            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             rt->user_data = nullptr;  // This line should crash
@@ -160,7 +160,7 @@ TEST {
             }
             else if (pid == 0) {  // Child process
                 infix_forward_t * trampoline = nullptr;
-                infix_status status = infix_forward_create_unbound(&trampoline, "(int32)->int32");
+                infix_status status = infix_forward_create_unbound(&trampoline, "(int32)->int32", nullptr);
                 if (status != INFIX_SUCCESS)
                     exit(2);  // Exit with error if creation fails
                 infix_cif_func dangling_ptr = infix_forward_get_unbound_code(trampoline);
@@ -193,7 +193,7 @@ TEST {
             }
             else if (pid == 0) {  // Child
                 infix_forward_t * t = nullptr;
-                if (infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func) != INFIX_SUCCESS)
+                if (infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func, nullptr) != INFIX_SUCCESS)
                     exit(2);
                 infix_bound_cif_func f = infix_forward_get_code(t);
                 infix_forward_destroy(t);
@@ -220,8 +220,8 @@ TEST {
             }
             else if (pid == 0) {  // Child process
                 infix_reverse_t * rt = nullptr;
-                infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
-                if (status != INFIX_SUCCESS)
+                if (infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr) !=
+                    INFIX_SUCCESS)
                     exit(2);
                 void (*dangling_ptr)() = (void (*)())infix_reverse_get_code(rt);
                 infix_reverse_destroy(rt);
@@ -255,8 +255,7 @@ TEST {
         }
         else if (pid == 0) {  // Child process
             infix_reverse_t * rt = nullptr;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr);
-            if (status != INFIX_SUCCESS)
+            if (infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr) != INFIX_SUCCESS)
                 exit(2);
             rt->user_data = nullptr;  // This write should trigger a SIGSEGV
             exit(0);                  // Should not be reached

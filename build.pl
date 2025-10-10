@@ -225,6 +225,7 @@ else {
 exit $final_status;
 
 sub clean {
+    return;
     rmtree( $config{lib_dir},      { verbose => 0 } );
     rmtree( $config{coverage_dir}, { verbose => 0 } );
     rmtree( 'build_tools',         { verbose => 0 } );

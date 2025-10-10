@@ -20,6 +20,7 @@
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <limits.h>
+#include <stdio.h>  // For snprintf
 
 TEST {
     plan(2);
@@ -35,7 +36,7 @@ TEST {
         infix_type * ret_type = nullptr;
         infix_function_argument * args = nullptr;
         size_t num_args, num_fixed;
-        status = infix_signature_parse("(int, ^) -> void", &arena, &ret_type, &args, &num_args, &num_fixed);
+        status = infix_signature_parse("(int, ^) -> void", &arena, &ret_type, &args, &num_args, &num_fixed, nullptr);
         infix_arena_destroy(arena);  // Must destroy even on failure
         arena = nullptr;
 
@@ -50,7 +51,7 @@ TEST {
             skip(3, "Error detail tests skipped on unexpected success");
 
         // Test 2: Unterminated aggregate
-        status = infix_type_from_signature(&type, &arena, "{int, double");
+        status = infix_type_from_signature(&type, &arena, "{int, double", nullptr);
         infix_arena_destroy(arena);
         arena = nullptr;
         ok(status != INFIX_SUCCESS, "Parser fails on unclosed aggregate");
@@ -64,7 +65,7 @@ TEST {
             skip(3, "Error detail tests skipped on unexpected success");
 
         // Test 3: Invalid keyword
-        status = infix_type_from_signature(&type, &arena, "integer");
+        status = infix_type_from_signature(&type, &arena, "integer", nullptr);
         infix_arena_destroy(arena);
         arena = nullptr;
         ok(status != INFIX_SUCCESS, "Parser fails on invalid keyword");
@@ -89,7 +90,7 @@ TEST {
         // Create a signature like "[<SIZE_MAX/2 + 1>:short]" which should overflow
         snprintf(overflow_sig, sizeof(overflow_sig), "[%llu:short]", (unsigned long long)((SIZE_MAX / 2) + 1));
 
-        status = infix_type_from_signature(&type, &arena, overflow_sig);
+        status = infix_type_from_signature(&type, &arena, overflow_sig, nullptr);
         ok(status != INFIX_SUCCESS, "infix_type_from_signature fails on integer overflow");
         if (status != INFIX_SUCCESS) {
             infix_error_details_t err = infix_get_last_error();

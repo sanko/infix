@@ -185,7 +185,7 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
     // This creates a temporary arena to hold the type information.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
-    infix_status status = infix_type_from_signature(&type, &arena, type_signature);
+    infix_status status = infix_type_from_signature(&type, &arena, type_signature, nullptr);
 
     if (status != INFIX_SUCCESS)
         return status;
@@ -227,7 +227,7 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
     // Parse the type signature to determine the size of the variable.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
-    infix_status status = infix_type_from_signature(&type, &arena, type_signature);
+    infix_status status = infix_type_from_signature(&type, &arena, type_signature, nullptr);
 
     if (status != INFIX_SUCCESS)
         return status;

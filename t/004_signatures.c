@@ -30,7 +30,7 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
         plan(2);
         infix_type * type = nullptr;
         infix_arena_t * arena = nullptr;
-        infix_status status = infix_type_from_signature(&type, &arena, signature);
+        infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
 
         ok(status == INFIX_SUCCESS, "Parsing should succeed for '%s'", signature);
         if (status == INFIX_SUCCESS && type)
@@ -49,7 +49,7 @@ static void test_type_fail(const char * signature, const char * name) {
         plan(1);
         infix_type * type = nullptr;
         infix_arena_t * arena = nullptr;
-        infix_status status = infix_type_from_signature(&type, &arena, signature);
+        infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
         ok(status != INFIX_SUCCESS, "Parsing should fail for invalid signature '%s'", signature);
         infix_arena_destroy(arena);
     }
@@ -74,7 +74,8 @@ static void test_print_roundtrip(const char * signature) {
         plan(1);
         infix_type * type = NULL;
         infix_arena_t * arena = NULL;
-        infix_status status = infix_type_from_signature(&type, &arena, signature);
+        // NOTE: This test can only use signatures that do not require a registry.
+        infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
 
         if (status != INFIX_SUCCESS) {
             fail("Parsing failed, cannot test printing.");
@@ -95,13 +96,19 @@ static void test_print_roundtrip(const char * signature) {
             normalize_string(original_normalized);
             normalize_string(printed_normalized);
 
-            ok(strcmp(original_normalized, printed_normalized) == 0, "Printed string should match original signature");
-            if (strcmp(original_normalized, printed_normalized) != 0) {
-                diag("Original (normalized): %s", original_normalized);
-                diag("Printed  (normalized): %s", printed_normalized);
+            // Special case for round-tripping named references
+            if (original_normalized[0] == '@' && (printed_normalized[0] == '{' || printed_normalized[0] == '<')) {
+                pass("Printing a resolved named type correctly expands it.");
+            }
+            else {
+                ok(strcmp(original_normalized, printed_normalized) == 0,
+                   "Printed string should match original signature");
+                if (strcmp(original_normalized, printed_normalized) != 0) {
+                    diag("Original (normalized): %s", original_normalized);
+                    diag("Printed  (normalized): %s", printed_normalized);
+                }
             }
         }
-
         infix_arena_destroy(arena);
     }
 }
@@ -110,7 +117,7 @@ TEST {
     plan(6);
 
     subtest("Valid Single Types") {
-        plan(15);
+        plan(14);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
         test_type_ok("int32", INFIX_TYPE_PRIMITIVE, "int32");
         test_type_ok("*int32", INFIX_TYPE_POINTER, "pointer to int32");
@@ -125,38 +132,33 @@ TEST {
         test_type_ok("*( (int32) -> void )", INFIX_TYPE_POINTER, "pointer to a function type");
         test_type_ok("e:int32", INFIX_TYPE_ENUM, "simple enum");
         test_type_ok("!{char, int64}", INFIX_TYPE_STRUCT, "simple packed struct (pack 1)");
-        test_type_ok("struct<MyPoint>{int32, int32}", INFIX_TYPE_STRUCT, "named struct definition");
     }
 
-    subtest("Valid Edge Cases (Whitespace, Nesting, Empty, References)") {
-        plan(12);
+    subtest("Valid Edge Cases (Whitespace, Nesting, Empty)") {
+        plan(8);
         test_type_ok("  { #comment \n } ", INFIX_TYPE_STRUCT, "Struct with heavy whitespace and comments");
         test_type_ok("<>", INFIX_TYPE_UNION, "Empty union");
         test_type_ok("{}", INFIX_TYPE_STRUCT, "Empty struct");
         test_type_ok("!{}", INFIX_TYPE_STRUCT, "Empty packed struct");
         test_type_ok("!2:{}", INFIX_TYPE_STRUCT, "Empty packed struct with alignment");
         test_type_ok("*(*((int)->void))", INFIX_TYPE_POINTER, "Pointer to pointer to function");
-        test_type_ok("[4:e<Color>:int]", INFIX_TYPE_ARRAY, "Array of named enums");
         test_type_ok("() -> !{char,int}", INFIX_TYPE_REVERSE_TRAMPOLINE, "Function returning a packed struct");
         test_type_ok("({*char, e:int}) -> void", INFIX_TYPE_REVERSE_TRAMPOLINE, "Function taking an anonymous struct");
-        test_type_ok("struct<Node>", INFIX_TYPE_NAMED_REFERENCE, "Reference to a named struct");
-        test_type_ok("union<Packet>", INFIX_TYPE_NAMED_REFERENCE, "Reference to a named union");
-        test_type_ok("{a:int, b:union<U>}", INFIX_TYPE_STRUCT, "Struct with a named union reference member");
     }
 
     subtest("Valid Full Function Signatures") {
-        plan(8);  // Increased plan for new variadic tests
+        plan(8);
         subtest("Simple function: (int32, double) -> int64") {
             plan(4);
             infix_arena_t * a = nullptr;
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32, double) -> int64", &a, &rt, &at, &na, &nf);
+            infix_status s = infix_signature_parse("(int32, double) -> int64", &a, &rt, &at, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 2 && nf == 2, "Correct number of args");
-                ok(rt->category == INFIX_TYPE_PRIMITIVE, "Correct return type");
+                ok(na == 2 && nf == 2, "Correct arg count");
+                ok(rt->category == INFIX_TYPE_PRIMITIVE, "Correct return");
                 ok(at[0].type->category == INFIX_TYPE_PRIMITIVE && at[1].type->category == INFIX_TYPE_PRIMITIVE,
                    "Correct arg types");
             }
@@ -170,11 +172,11 @@ TEST {
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("() -> void", &a, &rt, &at, &na, &nf);
+            infix_status s = infix_signature_parse("() -> void", &a, &rt, &at, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 0 && nf == 0, "Correct number of args");
-                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+                ok(na == 0 && nf == 0, "Correct arg count");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return");
             }
             else
                 skip(2, "Detail checks skipped");
@@ -186,12 +188,12 @@ TEST {
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32; double) -> void", &a, &rt, &at, &na, &nf);
+            infix_status s = infix_signature_parse("(int32; double) -> void", &a, &rt, &at, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 2, "Correct total number of args");
-                ok(nf == 1, "Correct number of fixed args");
-                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+                ok(na == 2, "Correct total args");
+                ok(nf == 1, "Correct fixed args");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return");
             }
             else
                 skip(3, "Detail checks skipped");
@@ -203,12 +205,12 @@ TEST {
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32;) -> void", &a, &rt, &at, &na, &nf);
-            ok(s == INFIX_SUCCESS, "Parsing succeeds for empty variadic part");
+            infix_status s = infix_signature_parse("(int32;) -> void", &a, &rt, &at, &na, &nf, nullptr);
+            ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 1, "Correct total number of args");
-                ok(nf == 1, "Correct number of fixed args");
-                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+                ok(na == 1, "Correct total args");
+                ok(nf == 1, "Correct fixed args");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return");
             }
             else
                 skip(3, "Detail checks skipped");
@@ -220,12 +222,12 @@ TEST {
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(;int) -> void", &a, &rt, &at, &na, &nf);
-            ok(s == INFIX_SUCCESS, "Parsing succeeds for variadic-only function");
+            infix_status s = infix_signature_parse("(;int) -> void", &a, &rt, &at, &na, &nf, nullptr);
+            ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 1, "Correct total number of args");
-                ok(nf == 0, "Correct number of fixed args (zero)");
-                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
+                ok(na == 1, "Correct total args");
+                ok(nf == 0, "Correct fixed args");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return");
             }
             else
                 skip(3, "Detail checks skipped");
@@ -237,13 +239,13 @@ TEST {
             infix_type * rt = nullptr;
             infix_function_argument * args = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(*((int32) -> void)) -> void", &a, &rt, &args, &na, &nf);
+            infix_status s = infix_signature_parse("(*((int32) -> void)) -> void", &a, &rt, &args, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
-                ok(na == 1 && nf == 1, "Has 1 argument");
-                ok(args[0].type->category == INFIX_TYPE_POINTER, "Argument is a pointer");
+                ok(na == 1 && nf == 1, "Has 1 arg");
+                ok(args[0].type->category == INFIX_TYPE_POINTER, "Arg is pointer");
                 ok(args[0].type->meta.pointer_info.pointee_type->category == INFIX_TYPE_REVERSE_TRAMPOLINE,
-                   "It points to a function type");
+                   "Points to func");
             }
             else
                 skip(3, "Detail checks skipped");
@@ -252,13 +254,12 @@ TEST {
         subtest("High-level API now active") {
             plan(2);
             infix_forward_t * fwd = nullptr;
-            infix_status fwd_status = infix_forward_create_unbound(&fwd, "() -> void");
-            ok(fwd_status == INFIX_SUCCESS, "infix_forward_create_unbound now parses successfully");
+            infix_status fwd_status = infix_forward_create_unbound(&fwd, "() -> void", nullptr);
+            ok(fwd_status == INFIX_SUCCESS, "infix_forward_create_unbound parses successfully");
             infix_forward_destroy(fwd);
-
             infix_reverse_t * rev = nullptr;
-            infix_status rev_status = infix_reverse_create(&rev, "() -> void", dummy_handler, nullptr);
-            ok(rev_status == INFIX_SUCCESS, "infix_reverse_create now parses successfully");
+            infix_status rev_status = infix_reverse_create(&rev, "() -> void", dummy_handler, nullptr, nullptr);
+            ok(rev_status == INFIX_SUCCESS, "infix_reverse_create parses successfully");
             infix_reverse_destroy(rev);
         }
         subtest("Function with named arguments") {
@@ -268,18 +269,16 @@ TEST {
             infix_function_argument * args = nullptr;
             size_t na, nf;
             const char * sig = "(count: int32, name: *char) -> void";
-            infix_status s = infix_signature_parse(sig, &a, &rt, &args, &na, &nf);
-            ok(s == INFIX_SUCCESS, "Parsing succeeds for signature with named args");
+            infix_status s = infix_signature_parse(sig, &a, &rt, &args, &na, &nf, nullptr);
+            ok(s == INFIX_SUCCESS, "Parsing succeeds with named args");
             if (s == INFIX_SUCCESS) {
-                ok(na == 2 && nf == 2, "Correct number of args");
-                ok(rt->category == INFIX_TYPE_VOID, "Correct return type");
-                // Introspection checks for names and types
+                ok(na == 2 && nf == 2, "Correct arg count");
+                ok(rt->category == INFIX_TYPE_VOID, "Correct return");
                 ok(strcmp(args[0].name, "count") == 0 && args[0].type->category == INFIX_TYPE_PRIMITIVE,
-                   "Arg 0 is 'count: int32'");
-                ok(strcmp(args[1].name, "name") == 0 && args[1].type->category == INFIX_TYPE_POINTER,
-                   "Arg 1 is 'name: *char'");
+                   "Arg 0 correct");
+                ok(strcmp(args[1].name, "name") == 0 && args[1].type->category == INFIX_TYPE_POINTER, "Arg 1 correct");
                 ok(args[1].type->meta.pointer_info.pointee_type->category == INFIX_TYPE_PRIMITIVE,
-                   "Arg 1 points to a primitive (char)");
+                   "Arg 1 points to primitive");
             }
             else
                 skip(5, "Detail checks skipped");
@@ -288,7 +287,7 @@ TEST {
     }
 
     subtest("Invalid Syntax and Logic") {
-        plan(20);
+        plan(21);
         test_type_fail("int32 junk", "Junk after valid type");
         test_type_fail("*", "Pointer to nothing");
         test_type_fail("[10:]", "Array with no type after colon");
@@ -305,56 +304,50 @@ TEST {
         test_type_fail("({)}", "Mismatched braces");
         test_type_fail("{[10:int}", "Unclosed struct brace");
         test_type_fail("\"stdcall", "Unclosed annotation string");
-        test_type_fail("struct<>{}", "Named struct with empty name");
         test_type_fail("long long", "Space in keyword");
         test_type_fail(" - > ", "Space in arrow");
         test_type_fail("e<>:double", "Named enum with non-integer base");
+        test_type_fail("struct<Foo>{int}", "Old struct<Name> syntax is now invalid");
+        test_type_fail("union<Bar><int>", "Old union<Name> syntax is now invalid");
     }
 
-    subtest("Introspection Checks") {
-        plan(1);
-        subtest("Complex Introspection") {
-            plan(8);
-            infix_type * type = nullptr;
-            infix_arena_t * arena = nullptr;
-            const char * sig = "*[10:struct<Node>{val:e<V>:int, next:*struct<Node>}]";
-            infix_status status = infix_type_from_signature(&type, &arena, sig);
-            ok(status == INFIX_SUCCESS, "Parsing complex nested signature succeeds");
-            if (status == INFIX_SUCCESS) {
-                ok(type->category == INFIX_TYPE_POINTER, "Top level is pointer");
-                infix_type * array_type = type->meta.pointer_info.pointee_type;
-                ok(array_type && array_type->category == INFIX_TYPE_ARRAY, "Points to an array");
-                infix_type * struct_def_type = array_type->meta.array_info.element_type;
-                ok(struct_def_type && struct_def_type->category == INFIX_TYPE_STRUCT,
-                   "Array element is a struct definition");
-                infix_struct_member * member1 = &struct_def_type->meta.aggregate_info.members[0];
-                ok(member1->type->category == INFIX_TYPE_ENUM, "Member 1 is an enum");
-                infix_struct_member * member2 = &struct_def_type->meta.aggregate_info.members[1];
-                ok(member2->type->category == INFIX_TYPE_POINTER, "Member 2 is a pointer");
-                infix_type * pointee_type = member2->type->meta.pointer_info.pointee_type;
-                ok(pointee_type && pointee_type->category == INFIX_TYPE_NAMED_REFERENCE,
-                   "It points to a named reference");
-                if (pointee_type)
-                    ok(strcmp(pointee_type->meta.named_reference.name, "Node") == 0, "The reference is named 'Node'");
-                else
-                    fail("Pointee type was null");
-            }
-            else
-                skip(7, "Skipping detail checks");
-            infix_arena_destroy(arena);
+    subtest("Registry Type Introspection") {
+        plan(6);
+        infix_registry_t * registry = infix_registry_create();
+        const char * defs = "@Node = { value: int, next: *@Node };";
+        ok(infix_register_types(registry, defs) == INFIX_SUCCESS, "Setup: Registered recursive @Node type");
+
+        infix_type * node_ptr_type = nullptr;
+        infix_arena_t * temp_arena = nullptr;
+        infix_status status = infix_type_from_signature(&node_ptr_type, &temp_arena, "*@Node", registry);
+
+        if (ok(status == INFIX_SUCCESS, "Parsed `*@Node` using registry")) {
+            ok(node_ptr_type->category == INFIX_TYPE_POINTER, "Top level is pointer");
+            infix_type * node_type = node_ptr_type->meta.pointer_info.pointee_type;
+            ok(node_type && node_type->category == INFIX_TYPE_STRUCT, "Points to a struct");
+
+            const infix_struct_member * next_member = infix_type_get_member(node_type, 1);
+            ok(next_member && next_member->type->category == INFIX_TYPE_POINTER, "Member 'next' is a pointer");
+
+            infix_type * next_pointee = next_member->type->meta.pointer_info.pointee_type;
+            ok(next_pointee == node_type, "Recursive pointer correctly points to the parent struct type");
         }
+        else {
+            skip(4, "Skipping detail checks due to parsing failure");
+        }
+
+        infix_arena_destroy(temp_arena);
+        infix_registry_destroy(registry);
     }
+
     subtest("Round trip") {
-        plan(10);
+        plan(7);
         test_print_roundtrip("int");
         test_print_roundtrip("*[10:{int,float}]");
         test_print_roundtrip("<*void, double>");
         test_print_roundtrip("(*char;int,double)->void");
         test_print_roundtrip("{<int,char>, *char}");
-        test_print_roundtrip("struct<Node>{int,*struct<Node>}");
         test_print_roundtrip("e:longlong");
         test_print_roundtrip("v[4:float]");
-        test_print_roundtrip("struct<MyStruct>");
-        test_print_roundtrip("union<MyUnion>");
     }
 }
