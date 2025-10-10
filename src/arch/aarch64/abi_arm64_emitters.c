@@ -223,20 +223,27 @@ void emit_arm64_str_imm(code_buffer * buf, bool is64, arm64_gpr src, arm64_gpr b
     emit_int32(buf, instr);
 }
 
-/*
- * Implementation for emit_arm64_strb_imm.
- * Encodes `STRB <Wt>, [<Xn|SP>, #imm]`. Stores the low 8 bits of a register.
- * Opcode: 00_111_00_1_00_... (base 0x39000000)
+/**
+ * @internal
+ * @brief Emits a `STRB` (Store Register Byte) instruction.
+ * @details Assembly: `STRB <Wt>, [<Xn|SP>, #pimm]`
+ *
+ *          Opcode: 00_111_00_1_00_... (base 0x39000000)
+*
+ * @param buf The code buffer.
+ * @param is64 True to store 64 bits (`Xt`), false to store 32 bits (`Wt`).
+ * @param src The source GPR.
+ * @param base The base address register.
+ * @param offset The byte offset, a multiple of the access size.
  */
 void emit_arm64_strb_imm(code_buffer * buf, arm64_gpr src, arm64_gpr base, int32_t offset) {
     if (buf->error)
         return;
-    assert(offset >= 0 && offset <= 0xFFF);
     if (offset < 0 || offset > 0xFFF) {
         buf->error = true;
         return;
     }
-    uint32_t instr = 0x39000000;
+    uint32_t instr = (0b00U << 30) | A64_OP_LOAD_STORE_IMM_UNSIGNED;  // STRB opcode
     instr |= ((uint32_t)offset & 0xFFF) << 10;
     instr |= (uint32_t)(base & 0x1F) << 5;
     instr |= (uint32_t)(src & 0x1F);
