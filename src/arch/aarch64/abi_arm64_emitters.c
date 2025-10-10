@@ -516,12 +516,18 @@ void emit_arm64_cbnz(code_buffer * buf, bool is64, arm64_gpr reg, int32_t offset
     emit_int32(buf, instr);
 }
 
-/*
- * Implementation for emit_arm64_brk (Breakpoint).
+/**
+ * @internal
+ * @brief Emits a `BRK` (Breakpoint) instruction.
+ * @details Assembly: `BRK #imm`. This causes a software breakpoint exception,
+ *          useful for safely crashing on fatal errors (like a null function call).
+ *
  * Opcode: 11010100001... (0xD42...)
  */
 void emit_arm64_brk(code_buffer * buf, uint16_t imm) {
-    uint32_t instr = 0xD4200000;
+    if (buf->error)
+        return;
+    uint32_t instr = A64_OP_SYSTEM | A64_OP_BRK;
     instr |= (uint32_t)(imm & 0xFFFF) << 5;
     emit_int32(buf, instr);
 }
