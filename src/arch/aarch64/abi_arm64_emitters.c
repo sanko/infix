@@ -501,16 +501,25 @@ void emit_arm64_ret(code_buffer * buf, arm64_gpr reg) {
     emit_int32(buf, instr);
 }
 
-/*
- * Implementation for emit_arm64_cbnz (Compare and Branch on Non-Zero).
- * Opcode (64-bit): 10110101... (0xB5...)
+/**
+ * @internal
+ * @brief Emits a `CBNZ` (Compare and Branch on Non-Zero) instruction.
+ * @details Assembly: `CBNZ <Xt>, #imm`.
+ *
+ *          Opcode (64-bit): 10110101... (0xB5...)
+ *
+ * @param offset A signed byte offset from the current instruction, which must be a multiple of 4.
  */
 void emit_arm64_cbnz(code_buffer * buf, bool is64, arm64_gpr reg, int32_t offset) {
-    uint32_t instr = 0x35000000;
-    if (is64)
-        instr |= (1u << 31);
+    if (buf->error)
+        return;
     // Offset is encoded as a 19-bit immediate, scaled by 4 bytes.
-    assert(offset % 4 == 0 && (offset / 4) >= -262144 && (offset / 4) <= 262143);
+    // 262144 is the max alloc size
+    if (offset % 4 != 0 || (offset / 4) < -262144 || (offset / 4) > 262143) {
+        buf->error = true;
+        return;
+    }
+    uint32_t instr = (is64 ? A64_SF_64BIT : A64_SF_32BIT) | A64_OP_COMPARE_BRANCH_IMM | A64_OPC_CBNZ;
     instr |= ((uint32_t)(offset / 4) & 0x7FFFF) << 5;
     instr |= (uint32_t)(reg & 0x1F);
     emit_int32(buf, instr);
