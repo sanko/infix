@@ -273,18 +273,28 @@ void emit_arm64_strh_imm(code_buffer * buf, arm64_gpr src, arm64_gpr base, int32
     emit_int32(buf, instr);
 }
 
-/*
- * Implementation for emit_arm64_stp_pre_index (Store Pair).
- * Encodes `STP <Xt1>, <Xt2>, [Xn|SP, #imm]!`.
- * Opcode (64-bit): 1010100110...
+/**
+ * @internal
+ * @brief Emits an `STP` (Store Pair) instruction with pre-indexing.
+ * @details Assembly: `STP <Xt1>, <Xt2>, [Xn|SP, #imm]!`
+ *          This instruction stores two registers and updates the base register.
+ *
+ *          Opcode (64-bit): 1010100110...
+ *
+ * @param offset A signed, scaled immediate offset.
  */
 void emit_arm64_stp_pre_index(
     code_buffer * buf, bool is64, arm64_gpr src1, arm64_gpr src2, arm64_gpr base, int32_t offset) {
-    uint32_t instr = 0xA9800000;  // Base for STP pre-indexed
-    if (is64)
-        instr |= (1u << 31);
+    if (buf->error)
+        return;
     int scale = is64 ? 8 : 4;
-    assert(offset % scale == 0 && (offset / scale) >= -64 && (offset / scale) <= 63);
+    if (offset % scale != 0 || (offset / scale) < -64 || (offset / scale) > 63) {
+        buf->error = true;
+        return;
+    }
+    // Instruction format: sf:opc:101001:L:imm7:Rt2:Rn:Rt
+    // For STP: sf=?, opc=00, L=0
+    uint32_t instr = (is64 ? A64_SF_64BIT : A64_SF_32BIT) | A64_OP_LOAD_STORE_PAIR_BASE | A64_ADDR_PRE_INDEX;
     instr |= ((uint32_t)(offset / scale) & 0x7F) << 15;
     instr |= (uint32_t)(src2 & 0x1F) << 10;
     instr |= (uint32_t)(base & 0x1F) << 5;

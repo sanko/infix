@@ -138,6 +138,7 @@ typedef enum {
 // Common bitfields
 #define A64_SF_64BIT (1U << 31)  // 'sf' bit for 64-bit operations
 #define A64_SF_32BIT (0U << 31)
+#define A64_V_VECTOR (1U << 26)  // Vector bit for SIMD/FP instructions
 
 // Data Processing -- Immediate
 #define A64_OPC_ADD (0b00U << 29)
@@ -159,21 +160,19 @@ typedef enum {
 // Load/Store -- Immediate Unsigned Offset
 #define A64_OP_LOAD_STORE_IMM_UNSIGNED (0b111001U << 24)
 #define A64_LDR_OP (1U << 22)
-#define A64_V_VECTOR (1U << 26)  // Vector bit for SIMD/FP instructions
+#define A64_OP_LOAD_STORE_PAIR_BASE (0b101000U << 24)  // Base for all LDP/STP variants
+#define A64_L_BIT_LOAD (1U << 22)                      // The 'L' bit: 1 for Load, 0 for Store
 
-// Load/Store -- Pair
-#define A64_OPC_STP (0b00U << 30)
-#define A64_OPC_LDP (0b01U << 30)
-#define A64_OP_LOAD_STORE_PAIR (0b1010100U << 23)
-#define A64_LSPAIR_PRE_INDEX (0b11U << 23)
-#define A64_LSPAIR_POST_INDEX (0b01U << 23)
+// Addressing modes for LDP/STP
+#define A64_ADDR_POST_INDEX (0b01U << 23)
+#define A64_ADDR_PRE_INDEX (0b11U << 23)
+#define A64_ADDR_SIGNED_OFFSET (0b10U << 23)
 
 // Branching
 #define A64_OP_BRANCH_REG (0b1101011U << 25)
 #define A64_OPC_BR (0b0000U << 21)
 #define A64_OPC_BLR (0b0001U << 21)
 #define A64_OPC_RET (0b0010U << 21)
-#define A64_OP_BRANCH_COND_IMM (0b01010100U << 24)
 #define A64_OP_COMPARE_BRANCH_IMM (0b011010U << 25)
 #define A64_OPC_CBNZ (1U << 24)
 
