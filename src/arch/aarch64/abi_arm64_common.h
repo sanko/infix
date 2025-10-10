@@ -161,6 +161,8 @@ typedef enum {
 #define A64_OP_LOAD_STORE_IMM_UNSIGNED (0b111001U << 24)
 #define A64_LDR_OP (1U << 22)
 #define A64_OP_LOAD_STORE_PAIR_BASE (0b101000U << 24)  // Base for all LDP/STP variants
+#define A64_OPC_STP (0b00U << 30)                      // opc field for Store Pair
+#define A64_OPC_LDP (0b01U << 30)                      // opc field for Load Pair
 #define A64_L_BIT_LOAD (1U << 22)                      // The 'L' bit: 1 for Load, 0 for Store
 
 // Addressing modes for LDP/STP

@@ -292,9 +292,10 @@ void emit_arm64_stp_pre_index(
         buf->error = true;
         return;
     }
-    // Instruction format: sf:opc:101001:L:imm7:Rt2:Rn:Rt
-    // For STP: sf=?, opc=00, L=0
-    uint32_t instr = (is64 ? A64_SF_64BIT : A64_SF_32BIT) | A64_OP_LOAD_STORE_PAIR_BASE | A64_ADDR_PRE_INDEX;
+    // Instruction format: opc:101001:L=0:imm7:Rt2:Rn:Rt
+    // For STP: opc=?, L=0
+    uint32_t instr =
+        (is64 ? A64_SF_64BIT : A64_SF_32BIT) | A64_OPC_STP | A64_OP_LOAD_STORE_PAIR_BASE | A64_ADDR_PRE_INDEX;
     instr |= ((uint32_t)(offset / scale) & 0x7F) << 15;
     instr |= (uint32_t)(src2 & 0x1F) << 10;
     instr |= (uint32_t)(base & 0x1F) << 5;
@@ -321,10 +322,7 @@ void emit_arm64_ldp_post_index(
     emit_int32(buf, instr);
 }
 
-
 // Memory <-> VPR (SIMD/FP) Emitters
-
-
 /*
  * Implementation for emit_arm64_ldr_vpr.
  * Encodes `LDR <St|Dt>, [<Xn|SP>, #imm]`.
