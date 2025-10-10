@@ -292,7 +292,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     code_buffer buf;
     code_buffer_init(&buf, temp_arena);
 
-    // --- JIT Compilation Pipeline ---
+    // JIT Compilation Pipeline
     status = spec->prepare_forward_call_frame(
         temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args, target_fn);
     if (status != INFIX_SUCCESS)
@@ -317,7 +317,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
         goto cleanup;
     }
 
-    // --- Final Trampoline Handle Assembly ---
+    // Final Trampoline Handle Assembly
     handle = infix_calloc(1, sizeof(infix_forward_t));
     if (handle == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
@@ -544,7 +544,7 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
     if (status != INFIX_SUCCESS)
         goto cleanup;
 
-    // --- JIT Compilation Pipeline for Reverse Trampoline ---
+    // JIT Compilation Pipeline for Reverse Trampoline
     status = spec->prepare_reverse_call_frame(temp_arena, &layout, context);
     if (status != INFIX_SUCCESS)
         goto cleanup;

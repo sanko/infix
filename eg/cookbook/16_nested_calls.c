@@ -6,7 +6,7 @@
 #include <infix/infix.h>
 #include <stdio.h>
 
-// --- Mock C Library ---
+// Mock C Library
 // This simulates a C library that takes a callback.
 static void (*g_handler)(int) = NULL;
 void log_event(const char * msg) {
@@ -22,7 +22,7 @@ void run_loop() {
     }
     printf("C library 'run_loop' finished.\n");
 }
-// --- End Mock ---
+// End Mock
 
 // A global forward trampoline for the log_event function, which will be
 // called from *inside* our callback handler.

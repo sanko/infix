@@ -125,10 +125,11 @@ struct infix_arena_t {
  *          separate-chaining hash table.
  */
 typedef struct _infix_registry_entry_t {
-    const char* name;                   /**< The key (e.g., "UI::Point"). This string is owned by the registry's arena. */
-    infix_type* type;                   /**< The value (pointer to the type definition). Also owned by the arena. */
-    bool is_forward_declaration;        /**< True if defined like "@Name;" and not yet fully resolved. */
-    struct _infix_registry_entry_t* next; /**< Pointer to the next entry in the same bucket for collision resolution. */
+    const char * name;           /**< The key (e.g., "UI::Point"). This string is owned by the registry's arena. */
+    infix_type * type;           /**< The value (pointer to the type definition). Also owned by the arena. */
+    bool is_forward_declaration; /**< True if defined like "@Name;" and not yet fully resolved. */
+    struct _infix_registry_entry_t *
+        next; /**< Pointer to the next entry in the same bucket for collision resolution. */
 } _infix_registry_entry_t;
 
 /**
@@ -136,10 +137,10 @@ typedef struct _infix_registry_entry_t {
  * @brief The concrete, internal definition of the type registry handle.
  */
 struct infix_registry_t {
-    infix_arena_t* arena;           /**< Owns all memory for the hash table, names, and its types. */
-    size_t num_buckets;             /**< The size of the 'buckets' array. */
-    size_t num_items;               /**< The total number of items stored in the hash table. */
-    _infix_registry_entry_t** buckets; /**< The array of pointers to the heads of the collision chains. */
+    infix_arena_t * arena;              /**< Owns all memory for the hash table, names, and its types. */
+    size_t num_buckets;                 /**< The size of the 'buckets' array. */
+    size_t num_items;                   /**< The total number of items stored in the hash table. */
+    _infix_registry_entry_t ** buckets; /**< The array of pointers to the heads of the collision chains. */
 };
 
 /**

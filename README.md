@@ -1,19 +1,11 @@
 # `infix`: A JIT-Powered FFI Library for C
 
-`infix` is a modern, security-conscious Foreign Function Interface (FFI) library for C. It lets you call any C function—or create C callbacks—by describing them in a simple, human-readable string like `({int, *double}, *char) -> int`.
+[![CI/CD](https://github.com/your-repo/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/your-repo/infix/actions/workflows/ci.yml)
+[![License: MIT/Artistic-2.0](https://img.shields.io/badge/License-MIT%20%2F%20Artistic--2.0-blue.svg)](https://opensource.org/licenses/MIT)
 
-At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code wrappers at runtime. These "trampolines" handle all the low-level details of the target platform's calling convention (ABI) behind a clean, uniform API, making `infix` a powerful tool for embedding scripting languages, building plugin systems, and simplifying complex C interoperability.
+`infix` is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It simplifies the process of calling native C functions from other environments and creating C-callable function pointers from your own handlers. All with a simple, human-readable string like `({int, *double}, *char) -> int`.
 
-## Key Features
-
-*   **Simple, Powerful APIs:** Use the high-level **Signature API** to create trampolines from a single string, or drop down to the memory-safe **Manual API** for dynamic, performance-critical use cases.
-*   **Powerful Introspection:** Parse signature strings to get detailed type information at runtime—including member names, offsets, pointer targets, and array sizes—ideal for dynamic data marshalling and building language bindings.
-*   **Secure by Design:** `infix` is hardened against vulnerabilities and validated through extensive fuzz testing:
-    *   **W^X Memory Protection:** JIT-compiled code is never writable and executable at the same time.
-    *   **Guard Pages:** Freed trampolines are made inaccessible to prevent use-after-free bugs.
-    *   **Read-Only Contexts:** Callback context data is made read-only to guard against runtime memory corruption.
-*   **Stateful Callbacks Made Easy:** The reverse-call API is designed to make stateful callbacks simple and safe, even when the C library you're calling doesn't provide a `user_data` parameter.
-*   **Zero Dependencies & Simple Integration:** `infix` uses a unity build, making integration into any C/C++ project trivial by simply compiling `src/infix.c`.
+At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code "trampolines" at runtime. These trampolines correctly handle the low-level Application Binary Interface (ABI) for the target platform, ensuring seamless and performant interoperability.
 
 ## Who is this for?
 
@@ -21,44 +13,85 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
 
 *   **A Language Binding Author:** `infix` is the ideal engine for allowing a high-level language like Python, Ruby, Perl, or Lua to call C libraries. The introspectable type system simplifies the complex task of data marshalling.
 *   **A Plugin System Architect:** Build a stable, ABI-agnostic plugin system. `infix` can provide the boundary layer, allowing you to load and call functions from shared libraries without tight coupling.
-*   **A C/C++ Developer:** Dynamically call functions from system libraries (`user32.dll`, `libc.so.6`, etc.) without needing to link against them at compile time.
+*   **A C/C++ Developer:** Dynamically call functions from system libraries (`user32.dll`, `libc.so.6`, etc.) without needing to link against them at compile time, or create complex stateful callbacks for C APIs.
 *   **A Security Researcher:** `infix` provides a powerful, fuzz-tested toolkit for analyzing and interacting with native code.
 
-## Quick Start: The Two APIs
+## Key Features
 
-`infix` provides two APIs for creating trampolines. Most users should start with the Signature API.
+-   **Zero Dependencies & Simple Integration:** `infix` uses a unity build, making integration into any C/C++ project trivial by simply compiling `src/infix.c`.
+-   **Simple, Powerful APIs:** Use the high-level **Signature API** to create trampolines from a single string, or drop down to the memory-safe **Manual API** for dynamic, performance-critical use cases.
+-   **Advanced Type System:** Full support for primitives, pointers, structs, unions, arrays, enums, `_Complex` numbers, and SIMD vectors.
+-   **Named Type Registry:** Define complex types like structs and unions once, and reuse them by name (`@Name`) across all your signatures for unparalleled readability and maintainability.
+-   **Stateful Callbacks Made Easy:** The reverse-call API is designed to make stateful callbacks simple and safe, even when the C library you're calling doesn't provide a `user_data` parameter.
+-   **Secure by Design:** `infix` is hardened against vulnerabilities and validated through extensive fuzz testing:
+    *   **W^X Memory Protection:** JIT-compiled code is never writable and executable at the same time.
+    *   **Guard Pages:** Freed trampolines are made inaccessible to prevent **use-after-free** bugs.
+    *   **Read-Only Contexts:** Callback context data is made read-only to guard against runtime **memory corruption**.
+-   **Cross-Platform and Cross-Architecture:** Designed for portability, with initial support for **x86-64** (System V and Windows x64) and **AArch64** (AAPCS64).
+-   **Arena-Based Memory:** Utilizes an efficient arena allocator for all type descriptions, ensuring fast performance and leak-free memory management.
+-   **Dynamic Library Tools**: A cross-platform API to load shared libraries (`.so`, `.dll`, `.dylib`), look up symbols, and read/write global variables using the same powerful signature system.
 
-### 1. The Signature API (Recommended)
+## Getting Started
 
-This is the easiest and safest way to use the library. You describe a function in a string, and `infix` handles the rest.
+### Prerequisites
 
-**Example: Calling a Simple Function**```c
-#include <infix/infix.h>
+-   A C11-compatible compiler (GCC, Clang, or MSVC).
+-   (Optional) A build tool like `cmake`, `xmake`, `make`, etc.
+
+### Building the Library
+
+While you can use the provided build scripts, the simplest way to build `infix` is to compile its single translation unit directly.
+
+```bash
+# Build a static library on Linux/macOS
+gcc -c -std=c11 -O2 -I/path/to/infix/include src/infix.c -o infix.o
+ar rcs libinfix.a infix.o
+
+# Build a static library with MSVC
+cl.exe /c /I C:\path\to\infix\include /O2 src\infix.c /Foinfix.obj
+lib.exe /OUT:infix.lib infix.obj
+```
+
+### Integrating into Your Project
+
+1.  **Include the Header:**
+    ```c
+    #include <infix/infix.h>
+    ```
+
+2.  **Link the Library:** When compiling your application, link against the `libinfix.a` (or `infix.lib`) library.
+    ```bash
+    gcc my_app.c -I/path/to/infix/include -L/path/to/build/dir -linfix -o my_app
+    ```
+
+### Quick Start: A 60-Second Example
+
+Here is a complete, runnable example that calls the standard C library function `puts`.
+
+```c
 #include <stdio.h>
-
-// The C function we want to call dynamically.
-int add_ints(int a, int b) {
-    return a + b;
-}
+#include <infix/infix.h>
 
 int main() {
-    // 1. Describe the signature: int(int, int).
-    const char* signature = "(int32, int32) -> int32";
+    // 1. Describe the function signature: int puts(const char*);
+    const char* signature = "(*char) -> int32";
+
+    // 2. Create a "bound" trampoline, hardcoding the address of `puts`.
+    //    Pass nullptr for the registry as we are not using named types.
     infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, signature, (void*)puts, NULL);
 
-    // 2. Generate the trampoline. This is a one-time setup cost.
-    infix_forward_create(&trampoline, signature);
+    // 3. Get the callable function pointer.
+    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
 
-    // 3. Prepare arguments. The args array holds *pointers* to the values.
-    int a = 40, b = 2;
-    void* args[] = { &a, &b };
-    int result = 0;
+    // 4. Prepare arguments and call.
+    //    The `args` array must contain *pointers* to your argument values.
+    const char* my_string = "Hello from Infix!";
+    void* args[] = { &my_string };
+    int return_value;
+    cif(&return_value, args); // A non-negative value is returned on success.
 
-    // 4. Get the callable function pointer and invoke it.
-    infix_cif_func cif_func = (infix_cif_func)infix_forward_get_code(trampoline);
-    cif_func((void*)add_ints, &result, args);
-
-    printf("Result: %d\n", result); // Expected: 42
+    printf("puts returned: %d\n", return_value);
 
     // 5. Clean up.
     infix_forward_destroy(trampoline);
@@ -66,138 +99,187 @@ int main() {
 }
 ```
 
-#### Signature API Cheat Sheet
+## Usage Guide
 
-> For a complete guide, see the **[Signature Language Reference](docs/signatures.md)**.
+### Part 1: The Signature Language
 
-| Concept | Syntax Example | C Equivalent |
-| :--- | :--- | :--- |
-| **Primitives** | `int`, `double`, `uint64` | `int`, `double`, `uint64_t` |
-| **Pointer** | `*char` | `char*` |
-| **Array** | `[16:int]` | `int arr[16]` |
-| **Struct** | `{int, double}` | `struct { int; double; }` |
-| **Union** | `<int, double>` | `union { int; double; }` |
-| **Packed Struct**| `!{char, int}` | `struct { char; int; } __attribute__((packed))` |
-| **Complex** | `c[double]` | `double _Complex` |
-| **SIMD Vector** | `v[4:float]` | `__m128` (SSE) |
-|                 | `v[4:double]` | `__m256d` (AVX) |
-| **Function Ptr**| `*((int) -> void)` | `void (*func)(int)` |
-| **Variadic** | `(*char; int)` | `const char*, int, ...` |
+The signature language is the most powerful and convenient way to use `infix`.
 
-### 2. The Manual API (Advanced)
+| Name                 | `infix` Syntax                | Example Signature              | C/C++ Equivalent                 |
+| :------------------- | :---------------------------- | :----------------------------- | :------------------------------- |
+| **Primitives**       | C type names                  | `"int"`, `"double"`, `"uint64"`| `int`, `double`, `uint64_t`      |
+| **Pointers**         | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
+| **Structs**          | `{<members>}`                 | `"{int, double, *char}"`       | `struct { ... }`                 |
+| **Unions**           | `<<members>>`                 | `"<int, float>"`               | `union { ... }`                  |
+| **Arrays**           | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                     |
+| **Function Pointers**| `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`              |
+| **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                |
+| **SIMD Vectors**     | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`         |
+| **Enums**            | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                   |
+| **Packed Structs**   | `!{...}` or `!<N>:{...}`       | `"!{char, longlong}"`          | `__attribute__((packed))`        |
+| **Variadic Functions**| `(<fixed>;<variadic>)`       | `"(*char; int)->int"`          | `printf(const char*, ...)`      |
+| **Named Types**      | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`      | `typedef struct Point {...}`     |
+| **Named Arguments**  | `<name>:<type>`               | `"(count:int, data:*void)"`    | (For reflection only)            |
 
-For performance-critical or highly dynamic applications, you can build type descriptions manually. This API is **exclusively arena-based** to guarantee memory safety.
+### Part 2: Common Recipes
 
-**Example: Manually Describing a `Point` Struct**
+#### Forward Call (Calling C from your code)
 
 ```c
+#include <stdio.h>
 #include <infix/infix.h>
-#include <stddef.h>
-
-typedef struct { double x; double y; } Point;
 
 int main() {
-    // 1. Create an arena. All type objects will be allocated from here.
-    infix_arena_t* arena = infix_arena_create(4096);
+    // 1. Describe the function signature: int puts(const char*);
+    const char* signature = "(*char) -> int32";
 
-    // 2. Describe the members of the Point struct.
-    infix_struct_member members[] = {
-        infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
-        infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))
-    };
+    // 2. Create a "bound" trampoline, hardcoding the address of `puts`.
+    //    Pass nullptr for the registry as we are not using named types.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, signature, (void*)puts, nullptr);
 
-    // 3. Create the struct type from the arena.
-    infix_type* point_type = NULL;
-    infix_type_create_struct(arena, &point_type, members, 2);
+    // 3. Get the callable function pointer.
+    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
 
-    // Now 'point_type' can be used to generate a trampoline...
+    // 4. Prepare arguments and call.
+    const char* my_string = "Hello from Infix!";
+    void* args[] = { &my_string };
+    int return_value;
+    cif(&return_value, args);
 
-    // 4. Destroy the arena to free the 'point_type' and all other allocations.
-    // Note: Once a trampoline is created with these types, it is safe to destroy
-    // this arena. The trampoline handle now owns its own internal copy of all
-    // necessary type information.
-    infix_arena_destroy(arena);
+    printf("puts returned: %d\n", return_value);
+
+    // 5. Clean up.
+    infix_forward_destroy(trampoline);
     return 0;
 }
 ```
 
-#### Manual API Cheat Sheet
+#### Reverse Call (Creating a C callback)
 
-<details>
-<summary><strong>Click to expand the full Manual API reference</strong></summary>
+```c
+// 1. The custom handler function. Its signature must start with infix_context_t*.
+int my_adder_handler(infix_context_t* context, int a, int b) {
+    (void)context; // Unused in this simple example
+    return a + b;
+}
 
-**Arena Management**
+// 2. The native C code that will receive and call our callback.
+void run_callback(int (*func_ptr)(int, int)) {
+    int result = func_ptr(20, 22);
+    printf("Native code received result: %d\n", result); // Prints 42
+}
 
-| Function | Purpose |
-| :--- | :--- |
-| `infix_arena_create(size)` | Create a memory arena for fast allocations. |
-| `infix_arena_alloc(arena, size, align)` | Allocate raw, uninitialized memory from the arena. |
-| `infix_arena_calloc(arena, n, size, align)` | Allocate zero-initialized memory from the arena. |
-| `infix_arena_destroy(arena)` | Free an arena and **all** objects allocated within it. |
+int main() {
+    // 3. Create the reverse trampoline (the callback).
+    infix_reverse_t* context = NULL;
+    const char* signature = "(int32, int32) -> int32";
+    infix_reverse_create(&context, signature, (void*)my_adder_handler, NULL, NULL);
 
-**Signature Parsing**
+    // 4. Get the native C function pointer and pass it to the C code.
+    typedef int (*AdderFunc)(int, int);
+    run_callback((AdderFunc)infix_reverse_get_code(context));
 
-| Function | Purpose |
-| :--- | :--- |
-| `infix_signature_parse(...)` | Parse a full function signature string into its parts. |
-| `infix_type_from_signature(...)` | Parse a single data type signature string. |
+    // 5. Clean up.
+    infix_reverse_destroy(context);
+    return 0;
+}
+```
 
-**Type Creation**
+#### Using the Named Type Registry
 
-| Function | Purpose |
-| :--- | :--- |
-| `infix_type_create_primitive(...)` | Get a static descriptor for `int`, `double`, etc. |
-| `infix_type_create_pointer()` | Get a static descriptor for a generic `void*`. |
-| `infix_type_create_void()` | Get a static descriptor for `void` (for return types). |
-| `infix_type_create_pointer_to(arena, ...)`| Create a pointer type with introspection info. |
-| `infix_type_create_array(arena, ...)` | Build an array type. |
-| `infix_type_create_struct(arena, ...)` | Build a struct type, calculating standard padding. |
-| `infix_type_create_packed_struct(arena, ...)`| Build a struct type with explicit size and alignment. |
-| `infix_type_create_union(arena, ...)` | Build a union type from its members. |
-| `infix_type_create_enum(arena, ...)` | Build an enum type from an underlying integer type. |
-| `infix_type_create_complex(arena, ...)` | Build a `_Complex` number type. |
-| `infix_type_create_vector(arena, ...)` | Build a SIMD vector type. |
-| `infix_type_create_named_reference(arena, ...)` | Create a placeholder for a named type (for parsers). |
-| `infix_type_create_member(...)` | Helper to create a member for a struct or union. |
+```c
+// 1. Create a registry.
+infix_registry_t* registry = infix_registry_create();
 
-**Trampoline Management**
+// 2. Define your types as a semicolon-separated string.
+const char* my_types =
+    "@UserID = uint64;"                          // Create a readable alias.
+    "@UI::Point = { x: double, y: double };"     // Define a struct in a namespace.
+    "@Node = { value: int, next: *@Node };";     // Define a recursive linked-list node.
 
-| Function | Purpose |
-| :--- | :--- |
-| `infix_forward_create_manual(...)` | Generate a forward trampoline from manual `infix_type` objects. |
-| `infix_forward_destroy(tramp)` | Free a forward trampoline and its executable memory. |
-| `infix_reverse_create_manual(...)` | Generate a reverse trampoline (callback) from manual types. |
-| `infix_reverse_destroy(ctx)` | Free a reverse trampoline, its stub, and its context. |
+// 3. Register the types.
+infix_register_types(registry, my_types);
 
-**Trampoline Introspection**
+// 4. Use the named types in any signature by passing the registry.
+infix_forward_t* trampoline = NULL;
+// Assume `get_user_id_from_node` is a C function you want to call.
+// infix_forward_create(&trampoline, "(*@Node) -> @UserID", (void*)get_user_id_from_node, registry);
 
-| Function | Purpose |
-| :--- | :--- |
-| `infix_forward_get_code(tramp)` | Get the callable `infix_cif_func` pointer from a forward trampoline. |
-| `infix_forward_get_num_args(tramp)` | Get the number of arguments for a forward trampoline. |
-| `infix_forward_get_return_type(tramp)` | Get the return type for a forward trampoline. |
-| `infix_forward_get_arg_type(tramp, i)` | Get the type of a specific argument for a forward trampoline. |
-| `infix_reverse_get_code(ctx)` | Get the native C function pointer from a callback context. |
-| `infix_reverse_get_user_data(ctx)` | Get the state pointer from within a callback handler. |
-| `infix_reverse_get_num_args(ctx)` | Get the number of arguments for a reverse trampoline. |
-| `infix_reverse_get_return_type(ctx)` | Get the return type for a reverse trampoline. |
-| `infix_reverse_get_arg_type(ctx, i)` | Get the type of a specific argument for a reverse trampoline. |
+// 5. Clean up.
+infix_forward_destroy(trampoline);
+infix_registry_destroy(registry);
+```
 
-**Type Introspection**
+#### Reading Global Variables from a Shared Library
 
-| Function | Purpose |
-| :--- | :--- |
-| `infix_type_get_category(type)` | Get the fundamental kind of a type (struct, pointer, etc.). |
-| `infix_type_get_size(type)` | Get the `sizeof` a type. |
-| `infix_type_get_alignment(type)` | Get the `_Alignof` a type. |
-| `infix_type_get_member_count(type)` | Get the number of members in a struct or union. |
-| `infix_type_get_member(type, index)` | Get a specific member's info (name, type, offset) by index. |
-| `infix_type_get_arg_name(type, index)` | Get the name of a function argument from a function type. |
-| `infix_type_get_arg_type(type, index)` | Get the type of a function argument from a function type. |
+`infix` can read and write to global variables exported from a dynamic library.
 
-</details>
+**Library Code (`libglobals.c`):**
+```c
+#if defined(_WIN32)
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
 
-## Powerful Introspection for Dynamic Data Marshalling
+EXPORT int my_global_counter = 42;
+```
+Compile this into `libglobals.so` or `libglobals.dll`.
+
+**Main Application Code:**
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+
+void main() {
+    infix_library_t* lib = infix_library_open("./libglobals.so");
+    if (!lib) return;
+
+    int counter_value = 0;
+    // 1. Use a signature to describe the variable's type.
+    infix_status status = infix_read_global(lib, "my_global_counter", "int32", &counter_value);
+    if (status == INFIX_SUCCESS) {
+        printf("Initial global value: %d\n", counter_value); // Expected: 42
+    }
+
+    // 2. Write a new value.
+    int new_value = 100;
+    infix_write_global(lib, "my_global_counter", "int32", &new_value);
+
+    // 3. Read it back to confirm.
+    infix_read_global(lib, "my_global_counter", "int32", &counter_value);
+    printf("Updated global value: %d\n", counter_value); // Expected: 100
+
+    infix_library_close(lib);
+}
+```
+
+### Part 3: The Manual C API (Advanced)
+
+For dynamic use cases, you can build `infix_type` objects programmatically. All types are allocated from an `infix_arena_t`.
+
+```c
+#include <stddef.h> // For offsetof
+typedef struct { double x; double y; } Point; // C struct for reference
+
+void build_point_manually() {
+    infix_arena_t* arena = infix_arena_create(4096);
+
+    infix_struct_member members;
+    members = infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
+    members = infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+
+    infix_type* point_type = NULL;
+    infix_type_create_struct(arena, &point_type, members, 2);
+
+    // Now `point_type` can be used to create trampolines.
+
+    infix_arena_destroy(arena); // Frees the arena and all types within it.
+}
+```
+
+### Powerful Introspection for Dynamic Data Marshalling
 
 Beyond just calling functions, `infix` provides a powerful introspection API that allows you to parse a signature string and examine the complete memory layout of a C type at runtime. This is the key feature that makes `infix` an ideal engine for building language bindings, serializers, or any tool that needs to dynamically interact with C data structures.
 
@@ -221,7 +303,7 @@ int main() {
     infix_arena_t* arena = NULL;
 
     // 2. Parse the signature to get a detailed, introspectable type object.
-    if (infix_type_from_signature(&struct_type, &arena, profile_sig) != INFIX_SUCCESS) {
+    if (infix_type_from_signature(&struct_type, &arena, profile_sig, nullptr) != INFIX_SUCCESS) {
         return 1;
     }
 
@@ -245,7 +327,7 @@ int main() {
 }
 ```
 
-**Output:**
+**Output on a typical 64-bit system:**
 ```
 Inspecting struct layout for: {id:int32, score:double, name:*char}
 Total size: 24 bytes, Alignment: 8 bytes
@@ -255,6 +337,95 @@ Total size: 24 bytes, Alignment: 8 bytes
 ```
 
 This runtime layout information allows you to, for example, take a Perl hash and correctly pack its key/value pairs into a C `UserProfile` struct in memory, byte by byte.
+
+### Error Handling
+
+Nearly all `infix` API functions return an `infix_status` enum. If an operation fails, you can get detailed, thread-safe error information.
+
+```c
+infix_forward_t* trampoline = NULL;
+// This will fail if `registry` is NULL or doesn't contain `@MissingType`.
+// infix_status status = infix_forward_create(&trampoline, "(@MissingType)->void", my_func, registry);
+
+if (status != INFIX_SUCCESS) {
+    infix_error_details_t err = infix_get_last_error();
+    fprintf(stderr, "Error creating trampoline!\n");
+    fprintf(stderr, "  Category: %d\n", err.category); // e.g., INFIX_CATEGORY_PARSER
+    fprintf(stderr, "  Code: %d\n", err.code);       // e.g., INFIX_CODE_UNRESOLVED_NAMED_TYPE
+    fprintf(stderr, "  Position: %zu\n", err.position); // Byte offset in signature string
+}
+```
+
+## API Reference
+
+A brief overview of the complete public API, grouped by functionality.
+
+<details>
+<summary><b>Click to expand Full API Reference</b></summary>
+
+### Named Type Registry (`registry_api`)
+- `infix_registry_create()`: Creates a new, empty type registry.
+- `infix_registry_destroy()`: Frees a registry and all types defined within it.
+- `infix_register_types()`: Parses a string of definitions to populate a registry.
+
+### High-Level Signature API (`high_level_api`)
+- `infix_forward_create()`: Creates a bound forward trampoline from a signature.
+- `infix_forward_create_unbound()`: Creates an unbound forward trampoline from a signature.
+- `infix_reverse_create()`: Creates a reverse trampoline (callback) from a signature.
+- `infix_signature_parse()`: Parses a full function signature into its `infix_type` components.
+- `infix_type_from_signature()`: Parses a string representing a single data type.
+
+### Dynamic Library & Globals API (`exports_api`)
+- `infix_library_open()`: Opens a dynamic library (`.so`, `.dll`).
+- `infix_library_close()`: Closes a dynamic library handle.
+- `infix_library_get_symbol()`: Retrieves a function or variable address from a library.
+- `infix_read_global()`: Reads a global variable from a library using a signature.
+- `infix_write_global()`: Writes to a global variable in a library using a signature.
+
+### Manual API (`manual_api`)
+- `infix_forward_create_manual()`: Creates a bound forward trampoline from `infix_type` objects.
+- `infix_forward_create_unbound_manual()`: Creates an unbound forward trampoline from `infix_type` objects.
+- `infix_reverse_create_manual()`: Creates a reverse trampoline from `infix_type` objects.
+- `infix_forward_destroy()`: Frees a forward trampoline.
+- `infix_reverse_destroy()`: Frees a reverse trampoline.
+
+### Type System (`type_system`)
+- `infix_type_create_primitive()`: Gets a static descriptor for a primitive C type.
+- `infix_type_create_pointer()`: Gets a static descriptor for `void*`.
+- `infix_type_create_pointer_to()`: Creates a pointer type with a specific pointee type.
+- `infix_type_create_void()`: Gets the static descriptor for the `void` type.
+- `infix_type_create_struct()`: Creates a struct type from an array of members.
+- `infix_type_create_packed_struct()`: Creates a struct with non-standard packing.
+- `infix_type_create_union()`: Creates a union type from an array of members.
+- `infix_type_create_array()`: Creates a fixed-size array type.
+- `infix_type_create_enum()`: Creates an enum type with an underlying integer type.
+- `infix_type_create_complex()`: Creates a `_Complex` number type.
+- `infix_type_create_vector()`: Creates a SIMD vector type.
+- `infix_type_create_named_reference()`: (Internal) Creates a placeholder for a named type.
+- `infix_type_create_member()`: A factory function for `infix_struct_member`.
+
+### Memory Management (`memory_management`)
+- `infix_arena_create()`: Creates a new memory arena.
+- `infix_arena_destroy()`: Frees an arena and all memory allocated from it.
+- `infix_arena_alloc()`: Allocates aligned memory from an arena.
+- `infix_arena_calloc()`: Allocates zero-initialized memory from an arena.
+
+### Introspection API (`introspection_api`)
+- `infix_forward_get_code()`, `infix_forward_get_unbound_code()`
+- `infix_reverse_get_code()`, `infix_reverse_get_user_data()`
+- `infix_forward_get_num_args()`, `infix_reverse_get_num_args()`
+- `infix_forward_get_return_type()`, `infix_reverse_get_return_type()`
+- `infix_forward_get_arg_type()`, `infix_reverse_get_arg_type()`
+- `infix_type_get_category()`, `infix_type_get_size()`, `infix_type_get_alignment()`
+- `infix_type_get_member_count()`, `infix_type_get_member()`
+- `infix_type_get_arg_name()`, `infix_type_get_arg_type()`
+- `infix_type_print()`: Serializes an `infix_type` graph to a string.
+- `infix_function_print()`: Serializes a full function signature to a string.
+
+### Error Handling API (`error_api`)
+- `infix_get_last_error()`: Retrieves detailed information about the last error on the current thread.
+
+</details>
 
 ## Supported Platforms
 
@@ -290,6 +461,10 @@ Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are 
 
 Because `infix` uses a unity build, integration into an existing project is simple: add `src/infix.c` to your list of source files and add the `include/` directory to your include paths.
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs, feature requests, or documentation improvements.
+
 ## Learn More
 
 *   **[Cookbook](docs/cookbook.md):** Practical, copy-pasteable recipes for common FFI tasks.
@@ -310,6 +485,6 @@ See the [LICENSE-A2](LICENSE-A2) and/or [LICENSE-MIT](LICENSE-MIT) for the full 
 
 ### Documentation License
 
-All standalone documentation (`.md`), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**. I encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.
+All standalone documentation (`.md`), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**. We encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.
 
 See the [LICENSE-CC](LICENSE-CC) for details.

@@ -32,24 +32,17 @@
 #include "abi_arm64_common.h"
 #include "common/infix_internals.h"
 
-//=================================================================================================
 // GPR <-> Immediate Value Emitters
-//=================================================================================================
-
 /** @internal @brief Emits a MOVZ/MOVK sequence to load an arbitrary 64-bit immediate into a GPR. */
 void emit_arm64_load_u64_immediate(code_buffer * buf, arm64_gpr dest, uint64_t value);
 
-//=================================================================================================
-// GPR <-> GPR Move Emitters
-//=================================================================================================
 
+// GPR <-> GPR Move Emitters
 /** @internal @brief Emits `MOV <Xd|Wd>, <Xn|Wn>` for a register-to-register move. */
 void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr src);
 
-//=================================================================================================
-// Memory <-> GPR Load/Store Emitters
-//=================================================================================================
 
+// Memory <-> GPR Load/Store Emitters
 /** @internal @brief Emits `LDR <Wt|Xt>, [<Xn|SP>, #imm]` to load a GPR from memory. */
 void emit_arm64_ldr_imm(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr base, int32_t offset);
 
@@ -73,10 +66,7 @@ void emit_arm64_stp_pre_index(
 void emit_arm64_ldp_post_index(
     code_buffer * buf, bool is64, arm64_gpr dest1, arm64_gpr dest2, arm64_gpr base, int32_t offset);
 
-//=================================================================================================
 // Memory <-> VPR (SIMD/FP) Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `LDR <St|Dt>, [<Xn|SP>, #imm]` to load a 32/64-bit FP value from memory. */
 void emit_arm64_ldr_vpr(code_buffer * buf, bool is64, arm64_vpr dest, arm64_gpr base, int32_t offset);
 
@@ -89,20 +79,14 @@ void emit_arm64_ldr_q_imm(code_buffer * buf, arm64_vpr dest, arm64_gpr base, int
 /** @internal @brief Emits `STR <Qt>, [<Xn|SP>, #imm]` for a 128-bit store from a SIMD&FP register. */
 void emit_arm64_str_q_imm(code_buffer * buf, arm64_vpr src, arm64_gpr base, int32_t offset);
 
-//=================================================================================================
 // Arithmetic Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `ADD(S) <Xd|Wd>, <Xn|Wn>, #imm` to add an immediate to a GPR. */
 void emit_arm64_add_imm(code_buffer * buf, bool is64, bool set_flags, arm64_gpr dest, arm64_gpr base, uint32_t imm);
 
 /** @internal @brief Emits `SUB(S) <Xd|Wd>, <Xn|Wn>, #imm` to subtract an immediate from a GPR. */
 void emit_arm64_sub_imm(code_buffer * buf, bool is64, bool set_flags, arm64_gpr dest, arm64_gpr base, uint32_t imm);
 
-//=================================================================================================
 // Control Flow Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `BLR <Xn>` to branch with link to a register. */
 void emit_arm64_blr_reg(code_buffer * buf, arm64_gpr reg);
 

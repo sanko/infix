@@ -23,9 +23,11 @@
  * These enums provide a clear, type-safe, and self-documenting way to refer to
  * specific registers when emitting machine code or implementing the ABI logic.
  *
- * Using enums instead of raw integer literals (e.g., `X0_REG` instead of `0`)
- * prevents "magic number" bugs and makes the code in `abi_arm64.c` and
- * `abi_arm64_emitters.c` significantly more readable.
+ * This file also contains preprocessor definitions for the fixed bitfields of
+ * various AArch64 instructions. This abstracts away the "magic numbers" of machine
+ * code generation, making the emitter code in `abi_arm64_emitters.c` more readable
+ * and easier to verify against the official ARM Architecture Reference Manual.
+ *
  * @endinternal
  */
 
@@ -120,3 +122,63 @@ typedef enum {
     V30_REG,     ///< Volatile scratch register.
     V31_REG,     ///< Volatile scratch register.
 } arm64_vpr;
+
+/**
+ * @internal
+ * @defgroup aarch64_opcodes AArch64 Instruction Opcodes and Bitfields
+ * @brief Defines for the bit-level encoding of AArch64 instructions.
+ * @details These constants represent the fixed bit patterns for various instruction
+ *          classes as specified in the ARM Architecture Reference Manual. Using these
+ *          defines instead of raw hex literals makes the emitter code more readable
+ *          and easier to verify. The `U` suffix is critical to prevent signed
+ *          integer overflow during bit-shifting operations at compile time.
+ * @{
+ */
+
+// Common bitfields
+#define A64_SF_64BIT (1U << 31)  // 'sf' bit for 64-bit operations
+#define A64_SF_32BIT (0U << 31)
+
+// Data Processing -- Immediate
+#define A64_OPC_ADD (0b00U << 29)
+#define A64_OPC_ADDS (0b01U << 29)
+#define A64_OPC_SUB (0b10U << 29)
+#define A64_OPC_SUBS (0b11U << 29)
+#define A64_OP_ADD_SUB_IMM (0b0010001U << 24)
+
+// Data Processing -- Register
+#define A64_OP_ADD_SUB_REG (0b01011U << 24)
+#define A64_OP_LOGICAL_REG (0b01010U << 24)
+#define A64_OPCODE_ORR (0b01U << 29)
+
+// Move Wide
+#define A64_OPC_MOVZ (0b10U << 29)
+#define A64_OPC_MOVK (0b11U << 29)
+#define A64_OP_MOVE_WIDE_IMM (0b100101U << 23)
+
+// Load/Store -- Immediate Unsigned Offset
+#define A64_OP_LOAD_STORE_IMM_UNSIGNED (0b111001U << 24)
+#define A64_LDR_OP (1U << 22)
+#define A64_V_VECTOR (1U << 26)  // Vector bit for SIMD/FP instructions
+
+// Load/Store -- Pair
+#define A64_OPC_STP (0b00U << 30)
+#define A64_OPC_LDP (0b01U << 30)
+#define A64_OP_LOAD_STORE_PAIR (0b1010100U << 23)
+#define A64_LSPAIR_PRE_INDEX (0b11U << 23)
+#define A64_LSPAIR_POST_INDEX (0b01U << 23)
+
+// Branching
+#define A64_OP_BRANCH_REG (0b1101011U << 25)
+#define A64_OPC_BR (0b0000U << 21)
+#define A64_OPC_BLR (0b0001U << 21)
+#define A64_OPC_RET (0b0010U << 21)
+#define A64_OP_BRANCH_COND_IMM (0b01010100U << 24)
+#define A64_OP_COMPARE_BRANCH_IMM (0b011010U << 25)
+#define A64_OPC_CBNZ (1U << 24)
+
+// System
+#define A64_OP_SYSTEM (0b11010100U << 25)
+#define A64_OP_BRK (0b00000000001U << 16)
+
+/** @} */  // end aarch64_opcodes

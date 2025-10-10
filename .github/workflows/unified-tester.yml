@@ -55,7 +55,7 @@ jobs:
         shell: bash
         run: |
           ${{ inputs.prepare }}
-          perl build.pl --compiler=${{ inputs.toolchain }} test
+          perl build.pl --compiler=${{ inputs.toolchain }} -v test
 
       - name: Build and Test in FreeBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'freebsd'

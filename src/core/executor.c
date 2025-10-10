@@ -344,6 +344,7 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
 #else
     // On macOS, mprotect on mmap'd data pages can be unreliable.
     // We skip this hardening step for now to ensure stability.
+    // https://developer.apple.com/documentation/apple-silicon/porting-just-in-time-compilers-to-apple-silicon
     (void)prot;
     result = true;
 #endif

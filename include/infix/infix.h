@@ -606,7 +606,6 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_
 
 /** @} */
 
-
 /** @addtogroup exports_api */
 /** @{ */
 
