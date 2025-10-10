@@ -1023,10 +1023,7 @@ static infix_type * parse_type(parser_state * state) {
     return result_type;
 }
 
-//=================================================================================================
 // Public API Implementation & Internal Parser
-//=================================================================================================
-
 /**
  * @internal
  * @brief The internal-only parsing logic that creates a type graph but does NOT resolve named types.

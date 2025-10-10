@@ -41,10 +41,7 @@
  */
 #define INITIAL_REGISTRY_BUCKETS 61
 
-//=================================================================================================
 // Internal Hash Table Implementation
-//=================================================================================================
-
 /**
  * @internal
  * @brief A simple and effective string hashing function (djb2 algorithm).
@@ -127,10 +124,7 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
     return new_entry;
 }
 
-//=================================================================================================
 // Public API: Registry Management
-//=================================================================================================
-
 /**
  * @brief Implementation for the public `infix_registry_create` function.
  */
@@ -181,10 +175,7 @@ void infix_registry_destroy(infix_registry_t * registry) {
     infix_free(registry);
 }
 
-//=================================================================================================
 // Type Definition Parser for infix_register_types
-//=================================================================================================
-
 /**
  * @internal
  * @brief The state for the registry's internal definition parser.
@@ -389,9 +380,9 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
     return INFIX_SUCCESS;
 }
 
-//=================================================================================================
+
 // Type Graph Resolver
-//=================================================================================================
+
 
 /**
  * @internal

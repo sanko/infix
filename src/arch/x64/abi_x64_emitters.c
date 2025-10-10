@@ -38,10 +38,7 @@
 #define REX_X (1 << 1)  // Extends SIB 'index' field
 #define REX_B (1 << 0)  // Extends ModR/M 'r/m' or SIB 'base' field
 
-//=================================================================================================
 // Instruction Encoding Helpers
-//=================================================================================================
-
 /*
  * Implementation for emit_rex_prefix.
  * The REX prefix is a single byte (0x40-0x4F) used in 64-bit mode to:
@@ -71,10 +68,7 @@ void emit_modrm(code_buffer * buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm) 
     emit_byte(buf, modrm_byte);
 }
 
-//=================================================================================================
 // GPR <-> Immediate Value Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_mov_reg_imm64.
  * Instruction Breakdown: MOV r64, imm64
@@ -106,10 +100,7 @@ void emit_mov_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm) {
     emit_int32(buf, imm);
 }
 
-//=================================================================================================
 // GPR <-> GPR Move Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_mov_reg_reg.
  * Instruction Breakdown: MOV r/m64, r64
@@ -129,10 +120,7 @@ void emit_mov_reg_reg(code_buffer * buf, x64_gpr dest, x64_gpr src) {
     emit_modrm(buf, 3, src % 8, dest % 8);  // mod=11 (register-to-register)
 }
 
-//=================================================================================================
 // Memory -> GPR Load Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_mov_reg_mem.
  * Instruction Breakdown: MOV r64, r/m64
@@ -296,10 +284,7 @@ void emit_movzx_reg64_mem16(code_buffer * buf, x64_gpr dest, x64_gpr src_base, i
         emit_int32(buf, offset);
 }
 
-//=================================================================================================
 // GPR -> Memory Store Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_mov_mem_reg.
  * Instruction Breakdown: MOV r/m64, r64
@@ -404,10 +389,7 @@ void emit_mov_mem_reg8(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64
         emit_int32(buf, offset);
 }
 
-//=================================================================================================
 // Memory <-> XMM/YMM (SSE/AVX) Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_movss_xmm_mem.
  * Instruction Breakdown: MOVSS xmm, m32
@@ -634,10 +616,7 @@ void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, 
         emit_int32(buf, offset);
 }
 
-//=================================================================================================
 // GPR <-> XMM Move Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_movq_xmm_gpr.
  * Instruction Breakdown: MOVQ xmm, r/m64
@@ -664,10 +643,7 @@ void emit_movq_gpr_xmm(code_buffer * buf, x64_gpr dest, x64_xmm src) {
     emit_modrm(buf, 3, src % 8, dest % 8);
 }
 
-//=================================================================================================
 // Memory <-> x87 FPU Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_fldt_mem.
  * Instruction Breakdown: FLDT m80fp (Load long double)
@@ -718,10 +694,7 @@ void emit_fstpt_mem(code_buffer * buf, x64_gpr base, int32_t offset) {
         emit_int32(buf, offset);
 }
 
-//=================================================================================================
 // Arithmetic & Logic Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_lea_reg_mem.
  * Instruction Breakdown: LEA r64, m
@@ -791,10 +764,7 @@ void emit_dec_reg(code_buffer * buf, x64_gpr reg) {
     emit_modrm(buf, 3, 1, reg % 8);
 }
 
-//=================================================================================================
 // Stack & Control Flow Emitters
-//=================================================================================================
-
 /*
  * Implementation for emit_push_reg.
  * Opcode format: [REX.B] 50+rd

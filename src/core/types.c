@@ -37,10 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//=================================================================================================
 // Static Singleton Instances for Primitive Types
-//=================================================================================================
-
 /*
  * Helper macro to initialize a static `infix_type` for a primitive.
  * This ensures size and alignment are correct for the compilation target at compile time.

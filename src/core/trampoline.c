@@ -49,10 +49,7 @@
 #include <unistd.h>
 #endif
 
-//=================================================================================================
 // ABI Specification Declarations & Dispatch
-//=================================================================================================
-
 /*
  * These extern declarations link to the ABI-specific v-tables defined in files
  * like `abi_win_x64.c` and `abi_sysv_x64.c`. The preprocessor ensures that only
@@ -105,10 +102,7 @@ const infix_reverse_abi_spec * get_current_reverse_abi_spec() {
 #endif
 }
 
-//=================================================================================================
 // Code Buffer & Emitter Utilities
-//=================================================================================================
-
 /**
  * @internal
  * @brief Initializes a `code_buffer` for use with an arena.
@@ -174,11 +168,7 @@ void emit_int64(code_buffer * buf, int64_t value) {
     code_buffer_append(buf, &value, 8);
 }
 
-//=================================================================================================
 // Internal Type System Helpers
-//=================================================================================================
-
-
 /**
  * @internal
  * @brief Recursively checks if an entire type graph is fully resolved.
@@ -215,10 +205,7 @@ static bool _is_type_graph_resolved(infix_type * type) {
     }
 }
 
-//=================================================================================================
 // Forward Trampoline Implementation
-//=================================================================================================
-
 /*
  * Implementation for infix_forward_get_unbound_code.
  * This is a type-safe accessor for the public API.
@@ -419,10 +406,7 @@ void infix_forward_destroy(infix_forward_t * trampoline) {
     infix_free(trampoline);
 }
 
-//=================================================================================================
 // Reverse Trampoline Implementation
-//=================================================================================================
-
 /*
  * @internal
  * A helper to get the system's memory page size.
@@ -631,10 +615,7 @@ void infix_reverse_destroy(infix_reverse_t * reverse_trampoline) {
     infix_protected_free(reverse_trampoline->protected_ctx);
 }
 
-//=================================================================================================
 // Unity Build Section
-//=================================================================================================
-
 /*
  * This section implements a unity build for the ABI-specific components.
  * Instead of relying on the build system to compile and link the correct `abi_*.c`

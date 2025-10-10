@@ -29,6 +29,26 @@
  *     (`infix_internal_dispatch_callback_fn_impl`) that is called by the
  *     low-level assembly of a reverse trampoline. This function acts as the final
  *     bridge to invoke the user's C callback with the correctly marshalled arguments.
+ *
+ * ### macOS JIT Implementation
+ *
+ * On Apple Silicon, the OS enforces strict W^X policies at the hardware level. To
+ * create JIT-compiled code, an application must:
+ *   a) Be signed with the `com.apple.security.cs.allow-jit` entitlement.
+ *   b) Use the `MAP_JIT` flag when allocating memory.
+ *   c) Use the special `pthread_jit_write_protect_np()` function to toggle memory
+ *      permissions between write and execute.
+ *
+ * To avoid forcing users of `infix` to add extra linker flags (`-framework Security`, etc.),
+ * this implementation uses a **runtime dynamic linking** approach. On the first call to
+ * `infix_executable_alloc` on macOS, it manually `dlopen`s the required system
+ * frameworks, finds the necessary functions with `dlsym`, and then checks for the JIT
+ * entitlement.
+ *
+ * If this modern, secure path is available, it is used. If not (e.g., on older OS
+ * versions or in unhardened command-line builds), it gracefully falls back to the
+ * legacy `mprotect` method. This provides the best of both worlds: maximum security
+ * when possible, and maximum compatibility without user friction.
  * @endinternal
  */
 
@@ -49,9 +69,10 @@
 #include <unistd.h>
 #endif
 
-// On Apple platforms, pthread.h provides the necessary `pthread_jit_write_protect_np` function.
+// On Apple platforms, include necessary headers for JIT and security framework APIs.
 #if defined(INFIX_OS_MACOS)
 // https://developer.apple.com/documentation/apple-silicon/porting-just-in-time-compilers-to-apple-silicon
+#include <dlfcn.h>  // For dlopen/dlsym
 #include <pthread.h>
 #endif
 
@@ -62,11 +83,90 @@
 #endif
 #endif
 
-//=================================================================================================
-// Internal Helpers
-//=================================================================================================
+// Internal Helpers for macOS Runtime Linking
+#if defined(INFIX_OS_MACOS)
+// Forward-declare the opaque types from Apple's frameworks to avoid including the full headers.
+typedef const struct __CFString * CFStringRef;
+typedef const void * CFTypeRef;
+typedef struct __SecTask * SecTaskRef;
+typedef struct __CFError * CFErrorRef;
+#define kCFStringEncodingUTF8 0x08000100
 
-#if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_TERMUX) && !defined(INFIX_OS_OPENBSD)
+// A struct to hold dynamically loaded function pointers from macOS frameworks.
+static struct {
+    // CoreFoundation functions
+    void (*CFRelease)(CFTypeRef);
+    bool (*CFBooleanGetValue)(CFTypeRef boolean);
+    CFStringRef (*CFStringCreateWithCString)(CFTypeRef allocator, const char * cStr, uint32_t encoding);
+    CFTypeRef kCFAllocatorDefault;
+
+    // Security framework functions
+    SecTaskRef (*SecTaskCreateFromSelf)(CFTypeRef allocator);
+    CFTypeRef (*SecTaskCopyValueForEntitlement)(SecTaskRef task, CFStringRef entitlement, CFErrorRef * error);
+} g_macos_framework_apis;
+
+static void initialize_macos_apis(void) {
+    void * cf_handle = dlopen("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", RTLD_LAZY);
+    void * sec_handle = dlopen("/System/Library/Frameworks/Security.framework/Security", RTLD_LAZY);
+
+    if (!cf_handle || !sec_handle) {
+        INFIX_DEBUG_PRINTF("Warning: Could not dlopen macOS frameworks. JIT security features will be degraded.");
+        if (cf_handle)
+            dlclose(cf_handle);
+        if (sec_handle)
+            dlclose(sec_handle);
+        memset(&g_macos_framework_apis, 0, sizeof(g_macos_framework_apis));
+        return;
+    }
+    g_macos_framework_apis.CFRelease = dlsym(cf_handle, "CFRelease");
+    g_macos_framework_apis.CFBooleanGetValue = dlsym(cf_handle, "CFBooleanGetValue");
+    g_macos_framework_apis.CFStringCreateWithCString = dlsym(cf_handle, "CFStringCreateWithCString");
+    void ** pAllocator = (void **)dlsym(cf_handle, "kCFAllocatorDefault");
+    if (pAllocator)
+        g_macos_framework_apis.kCFAllocatorDefault = *pAllocator;
+    g_macos_framework_apis.SecTaskCreateFromSelf = dlsym(sec_handle, "SecTaskCreateFromSelf");
+    g_macos_framework_apis.SecTaskCopyValueForEntitlement = dlsym(sec_handle, "SecTaskCopyValueForEntitlement");
+    dlclose(cf_handle);
+    dlclose(sec_handle);
+}
+static bool has_jit_entitlement(void) {
+    static bool api_initialized = false;
+    if (!api_initialized) {
+        initialize_macos_apis();
+        api_initialized = true;
+    }
+
+    if (!g_macos_framework_apis.SecTaskCopyValueForEntitlement || !g_macos_framework_apis.CFStringCreateWithCString)
+        return false;
+
+    bool result = false;
+    SecTaskRef task = g_macos_framework_apis.SecTaskCreateFromSelf(g_macos_framework_apis.kCFAllocatorDefault);
+    if (task == NULL)
+        return false;
+
+    CFStringRef entitlement_key = g_macos_framework_apis.CFStringCreateWithCString(
+        g_macos_framework_apis.kCFAllocatorDefault, "com.apple.security.cs.allow-jit", kCFStringEncodingUTF8);
+
+    CFTypeRef value = NULL;
+    if (entitlement_key)
+        value = g_macos_framework_apis.SecTaskCopyValueForEntitlement(task, entitlement_key, NULL);
+
+    g_macos_framework_apis.CFRelease(task);
+    if (entitlement_key)
+        g_macos_framework_apis.CFRelease(entitlement_key);
+
+    if (value != NULL) {
+        if (g_macos_framework_apis.CFBooleanGetValue && g_macos_framework_apis.CFBooleanGetValue(value))
+            result = true;
+
+        g_macos_framework_apis.CFRelease(value);
+    }
+
+    return result;
+}
+#endif
+
+#if defined(INFIX_OS_LINUX) || defined(INFIX_OS_FREEBSD)
 #include <fcntl.h>
 #include <stdint.h>
 /*
@@ -89,16 +189,13 @@
 static int shm_open_anonymous() {
     char shm_name[64];
     uint64_t random_val = 0;
-
     int rand_fd = open("/dev/urandom", O_RDONLY);
     if (rand_fd < 0)
         return -1;
-
     ssize_t bytes_read = read(rand_fd, &random_val, sizeof(random_val));
     close(rand_fd);
     if (bytes_read != sizeof(random_val))
         return -1;
-
     snprintf(shm_name, sizeof(shm_name), "/infix-jit-%d-%llx", getpid(), (unsigned long long)random_val);
 
     int fd = shm_open(shm_name, O_RDWR | O_CREAT | O_EXCL, 0600);
@@ -113,10 +210,7 @@ static int shm_open_anonymous() {
 }
 #endif
 
-//=================================================================================================
 // Executable Memory Management
-//=================================================================================================
-
 /*
  * Implementation for infix_executable_alloc.
  * This is a cross-platform wrapper that allocates page-aligned memory suitable for JIT code.
@@ -131,57 +225,65 @@ static int shm_open_anonymous() {
  *   mappings to the same physical memory, satisfying strict security policies.
  */
 c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
-    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0};
-    if (size == 0) {
+// The initialization must be platform-specific to match the struct definition.
+#if defined(INFIX_OS_WINDOWS)
+    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .handle = NULL};
+#else
+    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
+#endif
+
+    if (size == 0)
         return exec;
-    }
 
 #if defined(INFIX_OS_WINDOWS)
-    // Windows: Single Mapping (VirtualAlloc).
     void * code = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (code == nullptr)
         return exec;
     exec.rw_ptr = code;
     exec.rx_ptr = code;
-
-#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
-    // Single Mapping (mmap). This simpler approach is more reliable on these platforms.
+#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_NETBSD)  || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     void * code = MAP_FAILED;
 #if defined(MAP_ANON)
     int flags = MAP_PRIVATE | MAP_ANON;
 #if defined(INFIX_OS_MACOS)
-    // On modern macOS, especially Apple Silicon, MAP_JIT is required to create
-    // memory that can later be made executable. The app must be signed with
-    // the `com.apple.security.cs.allow-jit` entitlement for this to succeed.
-    flags |= MAP_JIT;
+    static bool use_modern_jit = false;
+    static bool checked_jit_support = false;
+    if (!checked_jit_support) {
+        use_modern_jit = has_jit_entitlement();
+        INFIX_DEBUG_PRINTF("macOS JIT check: Entitlement present = %s. Using %s API.",
+                           use_modern_jit ? "yes" : "no",
+                           use_modern_jit ? "secure (MAP_JIT)" : "legacy (mprotect)");
+        checked_jit_support = true;
+    }
+    if (use_modern_jit)
+        flags |= MAP_JIT;
 #endif
     code = mmap(nullptr, size, PROT_READ | PROT_WRITE, flags, -1, 0);
-#else
-    // Fallback for systems that may not define MAP_ANON.
-    int fd = open("/dev/zero", O_RDWR);
-    if (fd != -1) {
-        code = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-        close(fd);
+#endif  // MAP_ANON
+
+    // If the MAP_ANON path was not taken or failed, fall back to /dev/zero.
+    // This is the correct path for DragonflyBSD.
+    if (code == MAP_FAILED) {
+        int fd = open("/dev/zero", O_RDWR);
+        if (fd != -1) {
+            code = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+            close(fd);
+        }
     }
-#endif
+
     if (code == MAP_FAILED)
         return exec;
-
     exec.rw_ptr = code;
     exec.rx_ptr = code;
 
-#else
-    // Other POSIX (Linux, etc.): Dual Mapping (shm_open) for strict W^X.
+#else  // All other POSIX systems (Linux, FreeBSD) use dual-mapping
     exec.shm_fd = shm_open_anonymous();
     if (exec.shm_fd < 0)
         return exec;
-
     if (ftruncate(exec.shm_fd, size) != 0) {
         close(exec.shm_fd);
         return exec;
     }
-
-    // Create two separate virtual mappings to the same physical memory.
     exec.rw_ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, exec.shm_fd, 0);
     exec.rx_ptr = mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_SHARED, exec.shm_fd, 0);
 
@@ -220,23 +322,20 @@ void infix_executable_free(infix_executable_t exec) {
         // Now, release the memory.
         VirtualFree(exec.rw_ptr, 0, MEM_RELEASE);
     }
-#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
+#elif defined(INFIX_OS_MACOS)
     if (exec.rw_ptr) {
-#if defined(INFIX_OS_MACOS)
-        // Before freeing, we must make the JIT memory writable again.
-        pthread_jit_write_protect_np(true);
-#endif
-        // On single-map platforms, rw_ptr == rx_ptr.
+        static bool use_modern_jit = false;
+        if (use_modern_jit)
+            pthread_jit_write_protect_np(true);
         mprotect(exec.rw_ptr, exec.size, PROT_NONE);
         munmap(exec.rw_ptr, exec.size);
     }
 #else
-    // On dual-map platforms, we unmap both views and close the shared memory fd.
     if (exec.rx_ptr)
         mprotect(exec.rx_ptr, exec.size, PROT_NONE);
-    if (exec.rw_ptr)
+    if (exec.rw_ptr && exec.rx_ptr != exec.rw_ptr)
         munmap(exec.rw_ptr, exec.size);
-    if (exec.rx_ptr && exec.rx_ptr != exec.rw_ptr)
+    if (exec.rx_ptr)
         munmap(exec.rx_ptr, exec.size);
     if (exec.shm_fd >= 0)
         close(exec.shm_fd);
@@ -276,16 +375,18 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     // On single-map Windows, change protection from RW to RX.
     result = VirtualProtect(exec.rw_ptr, exec.size, PAGE_EXECUTE_READ, &(DWORD){0});
 #elif defined(INFIX_OS_MACOS)
-    // Use the Apple-recommended API to make JIT memory executable.
-    // This call is thread-specific and correctly handles cache coherency.
-    pthread_jit_write_protect_np(false);
-    result = true;  // This function does not return a status. Assume success.
-#elif defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
-    // On other single-map POSIX, change protection from RW to RX.
-    result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
+    static bool use_modern_jit = false;
+    if (use_modern_jit) {
+        pthread_jit_write_protect_np(false);
+        result = true;
+    }
+    else
+        result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
 #else
-    // On dual-map platforms, the rx_ptr is already executable.
-    result = true;
+    if (exec.rx_ptr == exec.rw_ptr)
+        result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
+    else
+        result = true;
 #endif
 
     if (result)
@@ -293,10 +394,7 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     return result;
 }
 
-//=================================================================================================
 // Protected Data Memory Management
-//=================================================================================================
-
 /*
  * Implementation for infix_protected_alloc.
  * This allocates a page-aligned block of read-write data memory, used for the
@@ -363,10 +461,7 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
     return result;
 }
 
-//=================================================================================================
 // Callback Dispatching
-//=================================================================================================
-
 /*
  * Implementation for infix_internal_dispatch_callback_fn_impl.
  * This is the high-level C bridge called by the low-level assembly of a reverse trampoline.

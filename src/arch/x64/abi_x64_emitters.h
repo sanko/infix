@@ -29,27 +29,18 @@
 #include "abi_x64_common.h"
 #include "common/infix_internals.h"
 
-//=================================================================================================
 // GPR <-> Immediate Value Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `mov r64, imm64` to load a 64-bit immediate value into a register. */
 void emit_mov_reg_imm64(code_buffer * buf, x64_gpr reg, uint64_t value);
 
 /** @internal @brief Emits `mov r64, imm32` (sign-extended) to load a 32-bit immediate into a register. */
 void emit_mov_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm);
 
-//=================================================================================================
 // GPR <-> GPR Move Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `mov r64, r64` for a register-to-register move. */
 void emit_mov_reg_reg(code_buffer * buf, x64_gpr dest, x64_gpr src);
 
-//=================================================================================================
 // Memory -> GPR Load Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `mov r64, [base + offset]` to load a 64-bit value from memory. */
 void emit_mov_reg_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32_t offset);
 
@@ -71,10 +62,7 @@ void emit_movzx_reg64_mem8(code_buffer * buf, x64_gpr dest, x64_gpr src_base, in
 /** @internal @brief Emits `movzx r64, r/m16` to load an unsigned 16-bit value and zero-extend to 64. */
 void emit_movzx_reg64_mem16(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32_t offset);
 
-//=================================================================================================
 // GPR -> Memory Store Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `mov [base + offset], r64` to store a 64-bit GPR to memory. */
 void emit_mov_mem_reg(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_gpr src);
 
@@ -87,10 +75,7 @@ void emit_mov_mem_reg16(code_buffer * buf, x64_gpr dest_base, int32_t offset, x6
 /** @internal @brief Emits `mov [base + offset], r8` to store an 8-bit GPR to memory. */
 void emit_mov_mem_reg8(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_gpr src);
 
-//=================================================================================================
 // Memory <-> XMM/YMM (SSE/AVX) Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `movss xmm, [base + offset]` to load a 32-bit float from memory. */
 void emit_movss_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset);
 
@@ -115,30 +100,21 @@ void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int
 /** @internal @brief Emits `vmovupd [base + offset], ymm` to store a 256-bit unaligned value (AVX). */
 void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
 
-//=================================================================================================
 // GPR <-> XMM Move Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `movq xmm, r64` to move 64 bits from a GPR to an XMM register. */
 void emit_movq_xmm_gpr(code_buffer * buf, x64_xmm dest, x64_gpr src);
 
 /** @internal @brief Emits `movq r64, xmm` to move 64 bits from an XMM to a GPR. */
 void emit_movq_gpr_xmm(code_buffer * buf, x64_gpr dest, x64_xmm src);
 
-//=================================================================================================
 // Memory <-> x87 FPU Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `fldt [base + offset]` to load an 80-bit `long double` onto the FPU stack. */
 void emit_fldt_mem(code_buffer * buf, x64_gpr base, int32_t offset);
 
 /** @internal @brief Emits `fstpt [base + offset]` to store and pop an 80-bit `long double`. */
 void emit_fstpt_mem(code_buffer * buf, x64_gpr base, int32_t offset);
 
-//=================================================================================================
 // Arithmetic & Logic Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `lea r64, [base + offset]` to load an effective address. */
 void emit_lea_reg_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32_t offset);
 
@@ -154,10 +130,7 @@ void emit_sub_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm);
 /** @internal @brief Emits `dec r64` to decrement a 64-bit register by 1. */
 void emit_dec_reg(code_buffer * buf, x64_gpr reg);
 
-//=================================================================================================
 // Stack & Control Flow Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `push r64` to push a GPR onto the stack. */
 void emit_push_reg(code_buffer * buf, x64_gpr reg);
 
@@ -182,17 +155,11 @@ void emit_jmp_reg(code_buffer * buf, x64_gpr reg);
 /** @internal @brief Emits `ud2`, an undefined instruction that causes an invalid opcode exception. */
 void emit_ud2(code_buffer * buf);
 
-//=================================================================================================
 // Stack Operation Emitters
-//=================================================================================================
-
 /** @internal @brief Emits `pop r64` to pop a 64-bit value from the stack into a register. */
 void emit_pop_reg(code_buffer * buf, x64_gpr reg);
 
-//=================================================================================================
 // Instruction Encoding Helpers
-//=================================================================================================
-
 /** @internal @brief Emits an x86-64 ModR/M byte, used to encode operands. */
 void emit_modrm(code_buffer * buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm);
 
