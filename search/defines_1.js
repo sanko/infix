@@ -30,12 +30,5 @@ var searchData=
   ['a64_5fopcode_5forr_27',['A64_OPCODE_ORR',['../abi__arm64__common_8h.html#a7b7868a9e600eb6fac1ef3a50ce2aaeb',1,'abi_arm64_common.h']]],
   ['a64_5fsf_5f32bit_28',['A64_SF_32BIT',['../abi__arm64__common_8h.html#a669ed1152bcbcbac276038e90af8f333',1,'abi_arm64_common.h']]],
   ['a64_5fsf_5f64bit_29',['A64_SF_64BIT',['../abi__arm64__common_8h.html#ae8aa968c13bff263a545e140a2005847',1,'abi_arm64_common.h']]],
-  ['a64_5fv_5fvector_30',['A64_V_VECTOR',['../abi__arm64__common_8h.html#a49c67ecab87ba34568a8097e7cd9122a',1,'abi_arm64_common.h']]],
-  ['allocator_5finit_31',['ALLOCATOR_INIT',['../811__fault__injection_8c.html#a7dee31301b4ca956bedc6af80ec23cb3',1,'811_fault_injection.c']]],
-  ['allocator_5flock_32',['ALLOCATOR_LOCK',['../811__fault__injection_8c.html#aa3870b626d3f4ef9143a30e65e92bad7',1,'811_fault_injection.c']]],
-  ['allocator_5funlock_33',['ALLOCATOR_UNLOCK',['../811__fault__injection_8c.html#ac8d10f59ab0438538b237ef1ec24ced5',1,'811_fault_injection.c']]],
-  ['arg_34',['ARG',['../401__large__stack_8c.html#a8c157e46e692e6b6b07f7e33e9f7e9ef',1,'401_large_stack.c']]],
-  ['args_5f0_5fto_5f99_35',['ARGS_0_TO_99',['../401__large__stack_8c.html#ac867de98a2635ed26a74d5dd3a5bd22e',1,'401_large_stack.c']]],
-  ['args_5f100_5fto_5f499_36',['ARGS_100_TO_499',['../401__large__stack_8c.html#acda84b89ab2bfcd7dbac64ed7a7de26d',1,'401_large_stack.c']]],
-  ['args_5f500_5fto_5f519_37',['ARGS_500_TO_519',['../401__large__stack_8c.html#af17c47557820689b297102a239ba009b',1,'401_large_stack.c']]]
+  ['a64_5fv_5fvector_30',['A64_V_VECTOR',['../abi__arm64__common_8h.html#a49c67ecab87ba34568a8097e7cd9122a',1,'abi_arm64_common.h']]]
 ];

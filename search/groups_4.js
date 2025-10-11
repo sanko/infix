@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['feature_20detection_20macros_0',['SIMD Feature Detection Macros',['../group__simd__macros.html',1,'']]]
+  ['information_0',['Version Information',['../group__version__macros.html',1,'']]],
+  ['introspection_20api_1',['Introspection API',['../group__introspection__api.html',1,'']]]
 ];

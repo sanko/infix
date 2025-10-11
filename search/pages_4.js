@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['doxygen_20awesome_0',['Doxygen Awesome',['../md_docs_2api_2html_2README.html',1,'']]]
+  ['infix_20tt_20_3a_20a_20jit_20powered_20ffi_20library_20for_20c_0',['&lt;tt&gt;infix&lt;/tt&gt;: A JIT-Powered FFI Library for C',['../index.html',1,'']]]
 ];

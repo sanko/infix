@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['rex_5fb_0',['REX_B',['../abi__x64__emitters_8c.html#acb1ae716658f4c07000774aec95a28b5',1,'abi_x64_emitters.c']]],
-  ['rex_5fr_1',['REX_R',['../abi__x64__emitters_8c.html#a260eea5a72f79c2095dbd9bbcc12e375',1,'abi_x64_emitters.c']]],
-  ['rex_5fw_2',['REX_W',['../abi__x64__emitters_8c.html#a7adaa2df53d88b449173812b9a971624',1,'abi_x64_emitters.c']]],
-  ['rex_5fx_3',['REX_X',['../abi__x64__emitters_8c.html#a69282ddcab54bd0904efa0a7ac5db584',1,'abi_x64_emitters.c']]]
+  ['test_0',['TEST',['../double__tap_8h.html#ab946e2e7f7679350627acfded8e2658b',1,'double_tap.h']]],
+  ['todo_1',['TODO',['../double__tap_8h.html#a9c9971e17638fc67630c02c7759c6d2f',1,'double_tap.h']]]
 ];

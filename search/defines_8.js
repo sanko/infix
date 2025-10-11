@@ -1,16 +1,6 @@
 var searchData=
 [
-  ['infix_5fcalloc_0',['infix_calloc',['../840__arena__allocator_8c.html#a5c774b30b31bdd5524a1f34a89335fe6',1,'infix_calloc:&#160;840_arena_allocator.c'],['../811__fault__injection_8c.html#a5c774b30b31bdd5524a1f34a89335fe6',1,'infix_calloc:&#160;811_fault_injection.c']]],
-  ['infix_5fcompiler_5fnfi_1',['INFIX_COMPILER_NFI',['../infix__config_8h.html#a8a875b31b8469c5d09efa1279aa0c35c',1,'infix_config.h']]],
-  ['infix_5fdebug_5fprintf_2',['INFIX_DEBUG_PRINTF',['../utility_8h.html#a24c83162d95dc5b1377d2e020ef53c1a',1,'utility.h']]],
-  ['infix_5ffree_3',['infix_free',['../811__fault__injection_8c.html#a04e9a217a378e5c109ddfaef2f775d31',1,'infix_free:&#160;811_fault_injection.c'],['../840__arena__allocator_8c.html#a04e9a217a378e5c109ddfaef2f775d31',1,'infix_free:&#160;840_arena_allocator.c']]],
-  ['infix_5fmalloc_4',['infix_malloc',['../811__fault__injection_8c.html#ae386105bc20f1819f8ffc8e808f0a7d9',1,'infix_malloc:&#160;811_fault_injection.c'],['../840__arena__allocator_8c.html#ae386105bc20f1819f8ffc8e808f0a7d9',1,'infix_malloc:&#160;840_arena_allocator.c']]],
-  ['infix_5fmax_5farg_5fsize_5',['INFIX_MAX_ARG_SIZE',['../infix__internals_8h.html#ad07873963febd6f5771434e5b88f10a3',1,'infix_internals.h']]],
-  ['infix_5fmax_5fstack_5falloc_6',['INFIX_MAX_STACK_ALLOC',['../infix__internals_8h.html#a6bfc1314bf9f1265d233766af7544cab',1,'infix_internals.h']]],
-  ['infix_5frealloc_7',['infix_realloc',['../811__fault__injection_8c.html#a84d15b7c77d469bf3e41faaa8a74b629',1,'infix_realloc:&#160;811_fault_injection.c'],['../840__arena__allocator_8c.html#a84d15b7c77d469bf3e41faaa8a74b629',1,'infix_realloc:&#160;840_arena_allocator.c']]],
-  ['infix_5ftls_8',['INFIX_TLS',['../error_8c.html#ae538a6110237ff5067c6d0746fa04f33',1,'error.c']]],
-  ['infix_5ftrampoline_5fheadroom_9',['INFIX_TRAMPOLINE_HEADROOM',['../infix__config_8h.html#ae3d32fd45b8b48968091b55a8a6ca817',1,'infix_config.h']]],
-  ['infix_5ftype_5finit_10',['INFIX_TYPE_INIT',['../types_8c.html#a50bb65efbb034d9151d0ac0fcfdf583f',1,'types.c']]],
-  ['initial_5fregistry_5fbuckets_11',['INITIAL_REGISTRY_BUCKETS',['../type__registry_8c.html#a4b82c5f5c89861fc1bb702865e1deaea',1,'type_registry.c']]],
-  ['iterations_5fper_5fthread_12',['iterations_per_thread',['../820__threading__helgrind_8c.html#a6a3c7d4a3a7ff9df5289e524f9c524af',1,'ITERATIONS_PER_THREAD:&#160;820_threading_helgrind.c'],['../821__threading__bare_8c.html#a6a3c7d4a3a7ff9df5289e524f9c524af',1,'ITERATIONS_PER_THREAD:&#160;821_threading_bare.c']]]
+  ['max_5faggregate_5ffields_5fto_5fclassify_0',['max_aggregate_fields_to_classify',['../abi__arm64_8c.html#a08313eff19c7dcf365697a7b15e6e10d',1,'MAX_AGGREGATE_FIELDS_TO_CLASSIFY:&#160;abi_arm64.c'],['../abi__sysv__x64_8c.html#a08313eff19c7dcf365697a7b15e6e10d',1,'MAX_AGGREGATE_FIELDS_TO_CLASSIFY:&#160;abi_sysv_x64.c']]],
+  ['max_5fclassify_5fdepth_1',['MAX_CLASSIFY_DEPTH',['../abi__sysv__x64_8c.html#ad8a465405056aa54ce7735d63b9babaa',1,'abi_sysv_x64.c']]],
+  ['max_5frecursion_5fdepth_2',['MAX_RECURSION_DEPTH',['../signature_8c.html#a4e3b689e9483994cfcd85954cba23338',1,'signature.c']]]
 ];
