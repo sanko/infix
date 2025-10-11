@@ -738,7 +738,7 @@ void recipe_system_call() {
 
     void* hwnd = NULL;
     const char* text = "Hello from a dynamically loaded function!";
-    const char* caption = "Infix FFI";
+    const char* caption = "infix FFI";
     uint32_t type = 0; // MB_OK
     void* args[] = { &hwnd, &text, &caption, &type };
 

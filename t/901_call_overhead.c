@@ -57,7 +57,7 @@ TEST {
     volatile int accumulator = 0;
     clock_t start, end;
 
-    diag("Infix Call Overhead Benchmark");
+    diag("infix Call Overhead Benchmark");
     diag("Iterations: %d", BENCHMARK_ITERATIONS);
     diag("Target function: int(int, int)");
 

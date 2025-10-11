@@ -1,4 +1,4 @@
-# The Infix Signature and Type System
+# The infix Signature and Type System
 
 ### Part 1: Introduction
 

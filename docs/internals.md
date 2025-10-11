@@ -1,4 +1,4 @@
-# Infix Internals and Architecture
+# infix Internals and Architecture
 
 This document provides a deep dive into the architecture and internal workings of `infix`. It is intended for maintainers, contributors, and advanced users who wish to understand the library's design philosophy, core mechanics, security features, and ABI implementations.
 
@@ -110,7 +110,50 @@ graph TD
 ### 3.2 Guard Pages and Read-Only Contexts
 To mitigate use-after-free bugs, `infix_executable_free` turns freed memory into a non-accessible "guard page," causing an immediate and safe crash on attempted use. Additionally, after a reverse trampoline's context is created, its memory is made read-only to prevent runtime corruption.
 
-### 3.3 Fuzz Testing
+### 3.3 macOS JIT Hardening and the Entitlement Fallback
+
+The implementation of W^X on macOS, particularly on Apple Silicon, is unique and requires special handling to balance security with developer convenience.
+
+#### The Challenge: Hardened Runtimes on Apple Silicon
+Apple Silicon enforces W^X at the hardware level. For a JIT engine to function correctly within a standard, distributable application (e.g., an official Python interpreter), that application **must** be built with specific permissions:
+1.  The memory must be allocated with the `MAP_JIT` flag.
+2.  The application must be signed with the `com.apple.security.cs.allow-jit` entitlement.
+3.  Permissions must be toggled with the special `pthread_jit_write_protect_np()` function, as the standard `mprotect()` will fail.
+
+This presents a major usability problem. Forcing every developer who uses `infix` to learn about and correctly configure linker flags (`-framework Security`, etc.) and code signing for their local test builds would create an unacceptable barrier to entry.
+
+#### The `infix` Solution: Runtime Detection with Graceful Fallback
+`infix` solves this problem by making a runtime decision. This provides the best of both worlds: security-by-default for real-world applications, and zero-configuration ease-of-use for developers.
+
+Here is the logic, which is executed once per process:
+1.  **Dynamic Linking:** On the first JIT allocation, `infix` attempts to `dlopen()` the `Security.framework` and `CoreFoundation.framework` libraries and find the necessary functions using `dlsym()`. This avoids any build-time linker dependencies.
+2.  **Entitlement Check:** If the framework functions are found, `infix` checks if the currently running process has the `com.apple.security.cs.allow-jit` entitlement.
+3.  **Strategy Selection:**
+    *   If **both** the frameworks are available **and** the entitlement is present, a global flag is set to use the **modern, secure API path** (`MAP_JIT` and `pthread_jit_write_protect_np`). This is the path that will be taken by official interpreters like Python or Perl.
+    *   If **either** step fails, the library gracefully falls back to the **legacy, insecure path** (a standard `mmap` followed by `mprotect`). This path works for unhardened developer builds (like our CI tests) because macOS runs them in a more permissive mode.
+
+This ensures the library "just works" for developers, while automatically "leveling up" its security when run inside a properly configured application.
+
+```mermaid
+graph TD
+    A[infix_executable_alloc() called on macOS] --> B{Is this the first call?};
+    B -->|Yes| C[Runtime Detection];
+    B -->|No| G[Use cached strategy];
+
+    subgraph Runtime Detection
+        C --> D{dlopen frameworks?};
+        D -->|Yes| E{has_jit_entitlement?};
+        D -->|No| F[Set strategy = LEGACY];
+        E -->|Yes| H[Set strategy = SECURE];
+        E -->|No| F;
+    end
+
+    G --> I{Strategy is SECURE?};
+    I -->|Yes| J[mmap with MAP_JIT];
+    I -->|No| K[mmap without MAP_JIT];
+```
+
+### 3.4 Fuzz Testing
 The entire `infix` API surface, especially the signature parser and ABI classifiers, is continuously tested using `libFuzzer` and `AFL++`. The fuzzing harnesses (`fuzz/`) are designed to find memory safety violations (ASan), integer overflows (UBSan), and infinite loops (timeouts). All findings are converted into permanent regression tests.
 
 ---

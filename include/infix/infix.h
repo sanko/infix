@@ -750,7 +750,7 @@ c23_nodiscard void * infix_arena_calloc(infix_arena_t *, size_t, size_t, size_t)
  * @brief Specifies the output format for type-to-string serialization functions.
  */
 typedef enum {
-    INFIX_DIALECT_SIGNATURE,         ///< The standard Infix signature language format.
+    INFIX_DIALECT_SIGNATURE,         ///< The standard infix signature language format.
     INFIX_DIALECT_ITANIUM_MANGLING,  ///< Itanium C++ ABI name mangling (used by GCC/Clang). (Not yet implemented)
     INFIX_DIALECT_MSVC_MANGLING      ///< Microsoft C++ ABI name mangling. (Not yet implemented)
 } infix_print_dialect_t;

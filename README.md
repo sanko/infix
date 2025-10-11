@@ -86,7 +86,7 @@ int main() {
 
     // 4. Prepare arguments and call.
     //    The `args` array must contain *pointers* to your argument values.
-    const char* my_string = "Hello from Infix!";
+    const char* my_string = "Hello from infix!";
     void* args[] = { &my_string };
     int return_value;
     cif(&return_value, args); // A non-negative value is returned on success.
@@ -142,7 +142,7 @@ int main() {
     infix_bound_cif_func cif = infix_forward_get_code(trampoline);
 
     // 4. Prepare arguments and call.
-    const char* my_string = "Hello from Infix!";
+    const char* my_string = "Hello from infix!";
     void* args[] = { &my_string };
     int return_value;
     cif(&return_value, args);
