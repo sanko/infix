@@ -1,7 +1,6 @@
 var files_dup =
 [
-    [ "docs", "dir_49e56c817e5e54854c35e136979f97ca.html", null ],
-    [ "doxygen-awesome-css", "dir_1a55803d4667afd0b5d398f378b65f85.html", "dir_1a55803d4667afd0b5d398f378b65f85" ],
+    [ "docs", "dir_49e56c817e5e54854c35e136979f97ca.html", "dir_49e56c817e5e54854c35e136979f97ca" ],
     [ "eg", "dir_e1e8740223492c3b6347c2d4cd943a6c.html", "dir_e1e8740223492c3b6347c2d4cd943a6c" ],
     [ "fuzz", "dir_b05962af846a36bbc52d05dfc046b2b4.html", "dir_b05962af846a36bbc52d05dfc046b2b4" ],
     [ "include", "dir_d44c64559bbebec7f509842c48db8b23.html", "dir_d44c64559bbebec7f509842c48db8b23" ],

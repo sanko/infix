@@ -9,6 +9,5 @@ var searchData=
   ['underlying_5ftype_6',['underlying_type',['../structinfix__type__t.html#aeeeeac278209a4aa5f3024b196d89292',1,'infix_type_t']]],
   ['union_5ftype_7',['union_type',['../103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61',1,'103_unions.c']]],
   ['user_5fcallback_5ffn_8',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],
-  ['user_5fdata_9',['user_data',['../structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1',1,'infix_reverse_t']]],
-  ['user_5fid_10',['user_id',['../structUserProfile.html#acde5e199f2ff45eeb86fcfd57fced770',1,'UserProfile']]]
+  ['user_5fdata_9',['user_data',['../structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1',1,'infix_reverse_t']]]
 ];

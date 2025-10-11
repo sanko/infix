@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['x_0',['x',['../md_docs_2internals.html#autotoc_md106',1,'3.1 Write XOR Execute (W^X)'],['../structPoint.html#ab99c56589bc8ad5fa5071387110a5bc7',1,'Point::x']]],
+  ['x_0',['x',['../md_docs_2internals.html#autotoc_md143',1,'3.1 Write XOR Execute (W^X)'],['../structPoint.html#ab99c56589bc8ad5fa5071387110a5bc7',1,'Point::x']]],
   ['x_20write_20xor_20execute_20memory_20policy_1',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md249',1,'']]],
   ['x0_5freg_2',['X0_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aa0689257e9ed3bccebcb22a48336fc26',1,'abi_arm64_common.h']]],
   ['x10_5freg_3',['X10_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aff751fdf3e687c6e979b821e648ce1e2',1,'abi_arm64_common.h']]],
@@ -57,6 +57,6 @@ var searchData=
   ['xmm_5fargs_54',['xmm_args',['../abi__sysv__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_sysv_x64.c'],['../abi__win__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_win_x64.c']]],
   ['xmm_5fsave_5farea_5foffset_55',['xmm_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662',1,'infix_reverse_call_frame_layout']]],
   ['xor_20execute_20memory_20policy_56',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md249',1,'']]],
-  ['xor_20execute_20w_20x_57',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md106',1,'']]],
-  ['xpm_20dependency_58',['npm/xpm dependency',['../md_doxygen-awesome-css_2README.html#autotoc_md176',1,'']]]
+  ['xor_20execute_20w_20x_57',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md143',1,'']]],
+  ['xpm_20dependency_58',['npm/xpm dependency',['../md_docs_2api_2html_2README.html#autotoc_md46',1,'']]]
 ];

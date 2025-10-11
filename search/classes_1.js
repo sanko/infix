@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['appcontext_0',['AppContext',['../structAppContext.html',1,'']]]
+  ['code_5fbuffer_0',['code_buffer',['../structcode__buffer.html',1,'']]]
 ];

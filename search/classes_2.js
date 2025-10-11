@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['code_5fbuffer_0',['code_buffer',['../structcode__buffer.html',1,'']]]
+  ['fuzzer_5finput_0',['fuzzer_input',['../structfuzzer__input.html',1,'']]]
 ];

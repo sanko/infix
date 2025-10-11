@@ -1,23 +1,26 @@
 <map id="t/103_unions.c" name="t/103_unions.c">
-<area shape="rect" id="Node000001" title="Tests passing and returning C unions by value." alt="" coords="280,5,396,31"/>
+<area shape="rect" id="Node000001" title="Tests passing and returning C unions by value." alt="" coords="300,5,416,31"/>
 <area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,33,143,77,142,72,297,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="196,79,267,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="322,33,262,73,259,69,319,28"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title=" " alt="" coords="291,79,385,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="341,31,341,65,335,65,335,31"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="409,79,477,104"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="356,28,416,69,414,73,353,33"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="501,79,572,104"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="371,28,492,71,490,76,369,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="166,225,249,251"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="291,105,217,126,185,139,167,154,162,168,165,184,186,214,182,217,160,186,157,168,162,150,183,135,215,121,290,100"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="283,225,358,251"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="384,102,418,114,448,130,459,141,466,152,467,165,462,179,444,199,421,214,373,232,371,227,419,209,440,195,457,176,462,164,461,154,455,144,445,135,416,119,382,107"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="376,152,447,177"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="352,102,391,140,388,144,348,106"/>
-<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="177,152,352,177"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="328,106,288,144,285,140,324,102"/>
-<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="257,179,227,216,223,213,253,176"/>
-<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="276,176,305,213,301,216,272,179"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="315,33,146,78,145,73,314,28"/>
+<area shape="rect" id="Node000003" href="$types_8h.html" title="Defines common data structures used across the entire test suite." alt="" coords="196,79,267,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="339,33,265,74,263,69,336,28"/>
+<area shape="rect" id="Node000006" href="$infix_8h.html" title=" " alt="" coords="311,79,405,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="361,31,361,65,355,65,355,31"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="429,79,497,104"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="376,28,436,69,434,73,373,33"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="521,79,592,104"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="391,28,512,71,510,76,389,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="96,152,183,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,106,167,146,163,141,215,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="330,225,405,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="233,104,234,139,239,158,248,176,263,191,280,204,318,221,316,226,277,208,259,195,244,179,234,160,229,140,228,104"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="361,104,368,211,363,212,356,105"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="514,225,597,251"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="406,101,523,128,571,141,595,150,601,167,598,185,579,217,574,214,593,183,596,168,591,154,570,146,521,133,405,106"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="259,152,329,177"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="349,106,315,144,311,140,345,103"/>
+<area shape="rect" id="Node000009" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="405,152,580,177"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="381,102,460,143,457,148,378,106"/>
+<area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="474,180,401,221,398,216,471,175"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="505,176,538,213,534,217,501,179"/>
 </map>

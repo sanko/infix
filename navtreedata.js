@@ -42,203 +42,203 @@ var NAVTREE =
       [ "Code of Conduct", "md_CONTRIBUTING.html#autotoc_md11", null ],
       [ "How to Contribute", "md_CONTRIBUTING.html#autotoc_md12", null ]
     ] ],
+    [ "Customization", "md_docs_2api_2html_2docs_2customization.html", [
+      [ "CSS-Variables", "md_docs_2api_2html_2docs_2customization.html#autotoc_md16", [
+        [ "Setup", "md_docs_2api_2html_2docs_2customization.html#autotoc_md17", null ],
+        [ "Available variables", "md_docs_2api_2html_2docs_2customization.html#autotoc_md18", null ]
+      ] ],
+      [ "Doxygen generator", "md_docs_2api_2html_2docs_2customization.html#autotoc_md19", null ],
+      [ "Share your customizations", "md_docs_2api_2html_2docs_2customization.html#autotoc_md20", null ]
+    ] ],
+    [ "Extensions", "md_docs_2api_2html_2docs_2extensions.html", [
+      [ "Dark Mode Toggle", "md_docs_2api_2html_2docs_2extensions.html#extension-dark-mode-toggle", [
+        [ "Installation", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md22", null ],
+        [ "Customizing", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md23", null ]
+      ] ],
+      [ "Fragment Copy Button", "md_docs_2api_2html_2docs_2extensions.html#extension-copy-button", [
+        [ "Installation", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md24", null ],
+        [ "Customizing", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md25", null ]
+      ] ],
+      [ "Paragraph Linking", "md_docs_2api_2html_2docs_2extensions.html#extension-para", [
+        [ "Installation", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md26", null ],
+        [ "Customizing", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md27", null ]
+      ] ],
+      [ "Interactive TOC", "md_docs_2api_2html_2docs_2extensions.html#extension-toc", [
+        [ "Installation", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md28", null ],
+        [ "Customizing", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md29", null ]
+      ] ],
+      [ "Tabs", "md_docs_2api_2html_2docs_2extensions.html#extension-tabs", [
+        [ "Installation", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md30", null ],
+        [ "Usage", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md31", null ]
+      ] ],
+      [ "Page Navigation", "md_docs_2api_2html_2docs_2extensions.html#extension-page-navigation", [
+        [ "Installation", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md32", null ],
+        [ "Usage", "md_docs_2api_2html_2docs_2extensions.html#autotoc_md33", null ]
+      ] ]
+    ] ],
+    [ "Tips & Tricks", "md_docs_2api_2html_2docs_2tricks.html", [
+      [ "Diagrams with Graphviz", "md_docs_2api_2html_2docs_2tricks.html#tricks-graphviz", null ],
+      [ "Disable Dark Mode", "md_docs_2api_2html_2docs_2tricks.html#tricks-darkmode", null ],
+      [ "Choosing Sidebar Width", "md_docs_2api_2html_2docs_2tricks.html#tricks-sidebar", null ],
+      [ "Formatting Tables", "md_docs_2api_2html_2docs_2tricks.html#tricks-tables", [
+        [ "Centering", "md_docs_2api_2html_2docs_2tricks.html#autotoc_md35", null ],
+        [ "Full Width", "md_docs_2api_2html_2docs_2tricks.html#autotoc_md36", null ],
+        [ "Buttons", "md_docs_2api_2html_2docs_2tricks.html#autotoc_md37", null ],
+        [ "Bordered Images", "md_docs_2api_2html_2docs_2tricks.html#autotoc_md38", null ]
+      ] ]
+    ] ],
+    [ "Doxygen Awesome", "md_docs_2api_2html_2README.html", [
+      [ "Motivation", "md_docs_2api_2html_2README.html#autotoc_md40", null ],
+      [ "Features", "md_docs_2api_2html_2README.html#autotoc_md41", null ],
+      [ "Examples", "md_docs_2api_2html_2README.html#autotoc_md42", null ],
+      [ "Installation", "md_docs_2api_2html_2README.html#autotoc_md43", [
+        [ "Git submodule", "md_docs_2api_2html_2README.html#autotoc_md44", null ],
+        [ "CMake with FetchContent", "md_docs_2api_2html_2README.html#autotoc_md45", null ],
+        [ "npm/xpm dependency", "md_docs_2api_2html_2README.html#autotoc_md46", null ],
+        [ "System-wide", "md_docs_2api_2html_2README.html#autotoc_md47", null ],
+        [ "Choosing a layout", "md_docs_2api_2html_2README.html#autotoc_md48", null ],
+        [ "Further installation instructions", "md_docs_2api_2html_2README.html#autotoc_md49", null ]
+      ] ],
+      [ "Browser support", "md_docs_2api_2html_2README.html#autotoc_md50", null ],
+      [ "Credits", "md_docs_2api_2html_2README.html#autotoc_md51", null ]
+    ] ],
     [ "The <tt>infix</tt> FFI Cookbook", "md_docs_2cookbook.html", [
-      [ "Table of Contents", "md_docs_2cookbook.html#autotoc_md16", null ],
-      [ "Chapter 1: The Basics (Forward Calls)", "md_docs_2cookbook.html#autotoc_md18", [
-        [ "Recipe: Calling a Simple C Function", "md_docs_2cookbook.html#autotoc_md19", null ],
-        [ "Recipe: Passing and Receiving Pointers", "md_docs_2cookbook.html#autotoc_md20", null ],
-        [ "Recipe: Working with Opaque Pointers (Incomplete Types)", "md_docs_2cookbook.html#autotoc_md21", null ]
+      [ "Table of Contents", "md_docs_2cookbook.html#autotoc_md53", null ],
+      [ "Chapter 1: The Basics (Forward Calls)", "md_docs_2cookbook.html#autotoc_md55", [
+        [ "Recipe: Calling a Simple C Function", "md_docs_2cookbook.html#autotoc_md56", null ],
+        [ "Recipe: Passing and Receiving Pointers", "md_docs_2cookbook.html#autotoc_md57", null ],
+        [ "Recipe: Working with Opaque Pointers (Incomplete Types)", "md_docs_2cookbook.html#autotoc_md58", null ]
       ] ],
-      [ "Chapter 2: Handling Complex Data Structures", "md_docs_2cookbook.html#autotoc_md23", [
-        [ "Recipe: Small Structs Passed by Value", "md_docs_2cookbook.html#autotoc_md24", null ],
-        [ "Recipe: Receiving a Struct from a Function", "md_docs_2cookbook.html#autotoc_md25", null ],
-        [ "Recipe: Large Structs Passed by Reference", "md_docs_2cookbook.html#autotoc_md26", null ],
-        [ "Recipe: Working with Packed Structs", "md_docs_2cookbook.html#autotoc_md27", null ],
-        [ "Recipe: Working with Unions", "md_docs_2cookbook.html#autotoc_md28", null ],
-        [ "Recipe: Working with Fixed-Size Arrays", "md_docs_2cookbook.html#autotoc_md29", null ],
-        [ "Recipe: Working with Complex Numbers", "md_docs_2cookbook.html#autotoc_md30", null ],
-        [ "Recipe: Working with SIMD Vectors", "md_docs_2cookbook.html#autotoc_md31", null ]
+      [ "Chapter 2: Handling Complex Data Structures", "md_docs_2cookbook.html#autotoc_md60", [
+        [ "Recipe: Small Structs Passed by Value", "md_docs_2cookbook.html#autotoc_md61", null ],
+        [ "Recipe: Receiving a Struct from a Function", "md_docs_2cookbook.html#autotoc_md62", null ],
+        [ "Recipe: Large Structs Passed by Reference", "md_docs_2cookbook.html#autotoc_md63", null ],
+        [ "Recipe: Working with Packed Structs", "md_docs_2cookbook.html#autotoc_md64", null ],
+        [ "Recipe: Working with Unions", "md_docs_2cookbook.html#autotoc_md65", null ],
+        [ "Recipe: Working with Fixed-Size Arrays", "md_docs_2cookbook.html#autotoc_md66", null ],
+        [ "Recipe: Working with Complex Numbers", "md_docs_2cookbook.html#autotoc_md67", null ],
+        [ "Recipe: Working with SIMD Vectors", "md_docs_2cookbook.html#autotoc_md68", null ]
       ] ],
-      [ "Chapter 3: The Power of Callbacks (Reverse Calls)", "md_docs_2cookbook.html#autotoc_md33", [
-        [ "Recipe: Creating a Stateless Callback for <tt>qsort</tt>", "md_docs_2cookbook.html#autotoc_md34", null ],
-        [ "Recipe: Creating a Stateful Callback", "md_docs_2cookbook.html#autotoc_md35", null ]
+      [ "Chapter 3: The Power of Callbacks (Reverse Calls)", "md_docs_2cookbook.html#autotoc_md70", [
+        [ "Recipe: Creating a Stateless Callback for <tt>qsort</tt>", "md_docs_2cookbook.html#autotoc_md71", null ],
+        [ "Recipe: Creating a Stateful Callback", "md_docs_2cookbook.html#autotoc_md72", null ]
       ] ],
-      [ "Chapter 4: Advanced Techniques", "md_docs_2cookbook.html#autotoc_md37", [
-        [ "Recipe: Calling Variadic Functions like <tt>printf</tt>", "md_docs_2cookbook.html#autotoc_md38", null ],
-        [ "Recipe: Receiving and Calling a Function Pointer", "md_docs_2cookbook.html#autotoc_md39", null ],
-        [ "Recipe: Proving Reentrancy with Nested FFI Calls", "md_docs_2cookbook.html#autotoc_md40", null ]
+      [ "Chapter 4: Advanced Techniques", "md_docs_2cookbook.html#autotoc_md74", [
+        [ "Recipe: Calling Variadic Functions like <tt>printf</tt>", "md_docs_2cookbook.html#autotoc_md75", null ],
+        [ "Recipe: Receiving and Calling a Function Pointer", "md_docs_2cookbook.html#autotoc_md76", null ],
+        [ "Recipe: Proving Reentrancy with Nested FFI Calls", "md_docs_2cookbook.html#autotoc_md77", null ]
       ] ],
-      [ "Chapter 5: Interoperability with Other Languages", "md_docs_2cookbook.html#autotoc_md42", [
-        [ "The Universal Principle: The C ABI", "md_docs_2cookbook.html#autotoc_md43", null ],
-        [ "Recipe: Interfacing with a C++ Class (Directly)", "md_docs_2cookbook.html#autotoc_md44", null ],
-        [ "Recipe: Interfacing with C++ Templates", "md_docs_2cookbook.html#autotoc_md45", null ],
-        [ "The Pattern for Other Compiled Languages", "md_docs_2cookbook.html#autotoc_md46", [
-          [ "Rust", "md_docs_2cookbook.html#autotoc_md47", null ],
-          [ "Zig", "md_docs_2cookbook.html#autotoc_md48", null ],
-          [ "Go", "md_docs_2cookbook.html#autotoc_md49", null ],
-          [ "Swift", "md_docs_2cookbook.html#autotoc_md50", null ],
-          [ "Dlang", "md_docs_2cookbook.html#autotoc_md51", null ],
-          [ "Fortran", "md_docs_2cookbook.html#autotoc_md52", null ],
-          [ "Assembly", "md_docs_2cookbook.html#autotoc_md53", null ]
+      [ "Chapter 5: Interoperability with Other Languages", "md_docs_2cookbook.html#autotoc_md79", [
+        [ "The Universal Principle: The C ABI", "md_docs_2cookbook.html#autotoc_md80", null ],
+        [ "Recipe: Interfacing with a C++ Class (Directly)", "md_docs_2cookbook.html#autotoc_md81", null ],
+        [ "Recipe: Interfacing with C++ Templates", "md_docs_2cookbook.html#autotoc_md82", null ],
+        [ "The Pattern for Other Compiled Languages", "md_docs_2cookbook.html#autotoc_md83", [
+          [ "Rust", "md_docs_2cookbook.html#autotoc_md84", null ],
+          [ "Zig", "md_docs_2cookbook.html#autotoc_md85", null ],
+          [ "Go", "md_docs_2cookbook.html#autotoc_md86", null ],
+          [ "Swift", "md_docs_2cookbook.html#autotoc_md87", null ],
+          [ "Dlang", "md_docs_2cookbook.html#autotoc_md88", null ],
+          [ "Fortran", "md_docs_2cookbook.html#autotoc_md89", null ],
+          [ "Assembly", "md_docs_2cookbook.html#autotoc_md90", null ]
         ] ]
       ] ],
-      [ "Chapter 6: Dynamic Libraries & System Calls", "md_docs_2cookbook.html#autotoc_md55", [
-        [ "Recipe: Calling Native System Libraries without Linking", "md_docs_2cookbook.html#autotoc_md56", null ],
-        [ "Recipe: Reading and Writing Global Variables", "md_docs_2cookbook.html#autotoc_md57", [
-          [ "Example 1: Simple Integer Variable", "md_docs_2cookbook.html#autotoc_md58", null ],
-          [ "Example 2: Aggregate (Struct) Variable", "md_docs_2cookbook.html#autotoc_md59", null ]
+      [ "Chapter 6: Dynamic Libraries & System Calls", "md_docs_2cookbook.html#autotoc_md92", [
+        [ "Recipe: Calling Native System Libraries without Linking", "md_docs_2cookbook.html#autotoc_md93", null ],
+        [ "Recipe: Reading and Writing Global Variables", "md_docs_2cookbook.html#autotoc_md94", [
+          [ "Example 1: Simple Integer Variable", "md_docs_2cookbook.html#autotoc_md95", null ],
+          [ "Example 2: Aggregate (Struct) Variable", "md_docs_2cookbook.html#autotoc_md96", null ]
         ] ],
-        [ "Recipe: Handling Library Dependencies", "md_docs_2cookbook.html#autotoc_md60", null ]
+        [ "Recipe: Handling Library Dependencies", "md_docs_2cookbook.html#autotoc_md97", null ]
       ] ],
-      [ "Chapter 7: Introspection for Data Marshalling", "md_docs_2cookbook.html#autotoc_md62", [
-        [ "Recipe: Dynamic Struct Marshalling with the Signature Parser", "md_docs_2cookbook.html#autotoc_md63", null ],
-        [ "Recipe: Introspecting a Trampoline for a Wrapper", "md_docs_2cookbook.html#autotoc_md64", null ]
+      [ "Chapter 7: Introspection for Data Marshalling", "md_docs_2cookbook.html#autotoc_md99", [
+        [ "Recipe: Dynamic Struct Marshalling with the Signature Parser", "md_docs_2cookbook.html#autotoc_md100", null ],
+        [ "Recipe: Introspecting a Trampoline for a Wrapper", "md_docs_2cookbook.html#autotoc_md101", null ]
       ] ],
-      [ "Chapter 8: Performance & Memory Management", "md_docs_2cookbook.html#autotoc_md66", [
-        [ "Best Practice: Caching Trampolines", "md_docs_2cookbook.html#autotoc_md67", null ],
-        [ "Recipe: Using a Custom Arena for a Group of Types", "md_docs_2cookbook.html#autotoc_md68", null ]
+      [ "Chapter 8: Performance & Memory Management", "md_docs_2cookbook.html#autotoc_md103", [
+        [ "Best Practice: Caching Trampolines", "md_docs_2cookbook.html#autotoc_md104", null ],
+        [ "Recipe: Using a Custom Arena for a Group of Types", "md_docs_2cookbook.html#autotoc_md105", null ]
       ] ],
-      [ "Chapter 9: Common Pitfalls & Troubleshooting", "md_docs_2cookbook.html#autotoc_md70", [
-        [ "Mistake: Passing a Value Instead of a Pointer in <tt>args[]</tt>", "md_docs_2cookbook.html#autotoc_md71", null ],
-        [ "Mistake: <tt>infix</tt> Signature Mismatch", "md_docs_2cookbook.html#autotoc_md72", null ],
-        [ "Pitfall: Function Pointer Syntax", "md_docs_2cookbook.html#autotoc_md73", null ]
+      [ "Chapter 9: Common Pitfalls & Troubleshooting", "md_docs_2cookbook.html#autotoc_md107", [
+        [ "Mistake: Passing a Value Instead of a Pointer in <tt>args[]</tt>", "md_docs_2cookbook.html#autotoc_md108", null ],
+        [ "Mistake: <tt>infix</tt> Signature Mismatch", "md_docs_2cookbook.html#autotoc_md109", null ],
+        [ "Pitfall: Function Pointer Syntax", "md_docs_2cookbook.html#autotoc_md110", null ]
       ] ],
-      [ "Chapter 10: A Comparative Look: <tt>infix</tt> vs. <tt>libffi</tt> and <tt>dyncall</tt>", "md_docs_2cookbook.html#autotoc_md75", [
-        [ "Scenario 1: Calling a Simple Function", "md_docs_2cookbook.html#autotoc_md76", [
-          [ "The <tt>dyncall</tt> Approach", "md_docs_2cookbook.html#autotoc_md77", null ],
-          [ "The <tt>libffi</tt> Approach", "md_docs_2cookbook.html#autotoc_md78", null ],
-          [ "The <tt>infix</tt> Approach", "md_docs_2cookbook.html#autotoc_md79", null ]
+      [ "Chapter 10: A Comparative Look: <tt>infix</tt> vs. <tt>libffi</tt> and <tt>dyncall</tt>", "md_docs_2cookbook.html#autotoc_md112", [
+        [ "Scenario 1: Calling a Simple Function", "md_docs_2cookbook.html#autotoc_md113", [
+          [ "The <tt>dyncall</tt> Approach", "md_docs_2cookbook.html#autotoc_md114", null ],
+          [ "The <tt>libffi</tt> Approach", "md_docs_2cookbook.html#autotoc_md115", null ],
+          [ "The <tt>infix</tt> Approach", "md_docs_2cookbook.html#autotoc_md116", null ]
         ] ],
-        [ "Scenario 2: Calling a Function with a Struct", "md_docs_2cookbook.html#autotoc_md80", [
-          [ "The <tt>dyncall</tt> Approach", "md_docs_2cookbook.html#autotoc_md81", null ],
-          [ "The <tt>libffi</tt> Approach", "md_docs_2cookbook.html#autotoc_md82", null ],
-          [ "The <tt>infix</tt> Approach", "md_docs_2cookbook.html#autotoc_md83", null ]
+        [ "Scenario 2: Calling a Function with a Struct", "md_docs_2cookbook.html#autotoc_md117", [
+          [ "The <tt>dyncall</tt> Approach", "md_docs_2cookbook.html#autotoc_md118", null ],
+          [ "The <tt>libffi</tt> Approach", "md_docs_2cookbook.html#autotoc_md119", null ],
+          [ "The <tt>infix</tt> Approach", "md_docs_2cookbook.html#autotoc_md120", null ]
         ] ],
-        [ "Scenario 3: Creating a Callback", "md_docs_2cookbook.html#autotoc_md84", [
-          [ "The <tt>dyncall</tt> Approach", "md_docs_2cookbook.html#autotoc_md85", null ],
-          [ "The <tt>libffi</tt> Approach", "md_docs_2cookbook.html#autotoc_md86", null ],
-          [ "The <tt>infix</tt> Approach", "md_docs_2cookbook.html#autotoc_md87", null ]
+        [ "Scenario 3: Creating a Callback", "md_docs_2cookbook.html#autotoc_md121", [
+          [ "The <tt>dyncall</tt> Approach", "md_docs_2cookbook.html#autotoc_md122", null ],
+          [ "The <tt>libffi</tt> Approach", "md_docs_2cookbook.html#autotoc_md123", null ],
+          [ "The <tt>infix</tt> Approach", "md_docs_2cookbook.html#autotoc_md124", null ]
         ] ],
-        [ "Analysis and Takeaways", "md_docs_2cookbook.html#autotoc_md88", null ]
+        [ "Analysis and Takeaways", "md_docs_2cookbook.html#autotoc_md125", null ]
       ] ],
-      [ "Chapter 11: Building Language Bindings", "md_docs_2cookbook.html#autotoc_md90", [
-        [ "The Four Pillars of a Language Binding", "md_docs_2cookbook.html#autotoc_md91", null ],
-        [ "Recipe: Porting a Python Binding from <tt>dyncall</tt> to <tt>infix</tt>", "md_docs_2cookbook.html#autotoc_md92", null ]
+      [ "Chapter 11: Building Language Bindings", "md_docs_2cookbook.html#autotoc_md127", [
+        [ "The Four Pillars of a Language Binding", "md_docs_2cookbook.html#autotoc_md128", null ],
+        [ "Recipe: Porting a Python Binding from <tt>dyncall</tt> to <tt>infix</tt>", "md_docs_2cookbook.html#autotoc_md129", null ]
       ] ]
     ] ],
     [ "Infix Internals and Architecture", "md_docs_2internals.html", [
-      [ "1. Core Design Philosophy", "md_docs_2internals.html#autotoc_md94", [
-        [ "1.1 Guiding Principles", "md_docs_2internals.html#autotoc_md95", null ],
-        [ "1.2 Key Architectural Decisions", "md_docs_2internals.html#autotoc_md96", [
-          [ "The Unity Build", "md_docs_2internals.html#autotoc_md97", null ],
-          [ "The Self-Contained Object Model", "md_docs_2internals.html#autotoc_md98", null ],
-          [ "Arena-Based Manual API", "md_docs_2internals.html#autotoc_md99", null ],
-          [ "Universal Context for Callbacks", "md_docs_2internals.html#autotoc_md100", null ]
+      [ "1. Core Design Philosophy", "md_docs_2internals.html#autotoc_md131", [
+        [ "1.1 Guiding Principles", "md_docs_2internals.html#autotoc_md132", null ],
+        [ "1.2 Key Architectural Decisions", "md_docs_2internals.html#autotoc_md133", [
+          [ "The Unity Build", "md_docs_2internals.html#autotoc_md134", null ],
+          [ "The Self-Contained Object Model", "md_docs_2internals.html#autotoc_md135", null ],
+          [ "Arena-Based Manual API", "md_docs_2internals.html#autotoc_md136", null ],
+          [ "Universal Context for Callbacks", "md_docs_2internals.html#autotoc_md137", null ]
         ] ]
       ] ],
-      [ "2. Architectural Overview", "md_docs_2internals.html#autotoc_md102", [
-        [ "The Trampoline Generation Pipeline", "md_docs_2internals.html#autotoc_md103", null ]
+      [ "2. Architectural Overview", "md_docs_2internals.html#autotoc_md139", [
+        [ "The Trampoline Generation Pipeline", "md_docs_2internals.html#autotoc_md140", null ]
       ] ],
-      [ "3. Security Features Deep Dive", "md_docs_2internals.html#autotoc_md105", [
-        [ "3.1 Write XOR Execute (W^X)", "md_docs_2internals.html#autotoc_md106", null ],
-        [ "3.2 Guard Pages and Read-Only Contexts", "md_docs_2internals.html#autotoc_md107", null ],
-        [ "3.3 Fuzz Testing", "md_docs_2internals.html#autotoc_md108", null ]
+      [ "3. Security Features Deep Dive", "md_docs_2internals.html#autotoc_md142", [
+        [ "3.1 Write XOR Execute (W^X)", "md_docs_2internals.html#autotoc_md143", null ],
+        [ "3.2 Guard Pages and Read-Only Contexts", "md_docs_2internals.html#autotoc_md144", null ],
+        [ "3.3 Fuzz Testing", "md_docs_2internals.html#autotoc_md145", null ]
       ] ],
-      [ "4. ABI Internals", "md_docs_2internals.html#autotoc_md110", null ],
-      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md112", [
-        [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md113", null ],
-        [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md114", null ],
-        [ "Useful Tools", "md_docs_2internals.html#autotoc_md115", null ]
+      [ "4. ABI Internals", "md_docs_2internals.html#autotoc_md147", null ],
+      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md149", [
+        [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md150", null ],
+        [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md151", null ],
+        [ "Useful Tools", "md_docs_2internals.html#autotoc_md152", null ]
       ] ],
-      [ "External ABI Documentation", "md_docs_2internals.html#autotoc_md116", null ]
+      [ "External ABI Documentation", "md_docs_2internals.html#autotoc_md153", null ]
     ] ],
     [ "Porting <tt>infix</tt> to a New Platform", "md_docs_2porting.html", [
-      [ "Step 0: Research and Preparation", "md_docs_2porting.html#autotoc_md118", null ],
-      [ "Step 1: Platform Detection (<tt>src/common/infix_config.h</tt>)", "md_docs_2porting.html#autotoc_md119", null ],
-      [ "Step 2: Implement the ABI Specification", "md_docs_2porting.html#autotoc_md120", null ],
-      [ "Step 3: Implement the Instruction Emitters", "md_docs_2porting.html#autotoc_md121", null ],
-      [ "Step 4: Integrate the New ABI", "md_docs_2porting.html#autotoc_md122", null ],
-      [ "Step 5: Testing", "md_docs_2porting.html#autotoc_md123", null ]
+      [ "Step 0: Research and Preparation", "md_docs_2porting.html#autotoc_md155", null ],
+      [ "Step 1: Platform Detection (<tt>src/common/infix_config.h</tt>)", "md_docs_2porting.html#autotoc_md156", null ],
+      [ "Step 2: Implement the ABI Specification", "md_docs_2porting.html#autotoc_md157", null ],
+      [ "Step 3: Implement the Instruction Emitters", "md_docs_2porting.html#autotoc_md158", null ],
+      [ "Step 4: Integrate the New ABI", "md_docs_2porting.html#autotoc_md159", null ],
+      [ "Step 5: Testing", "md_docs_2porting.html#autotoc_md160", null ]
     ] ],
     [ "The Infix Signature and Type System", "md_docs_2signatures.html", [
-      [ "Part 2: The Signature Language Reference", "md_docs_2signatures.html#autotoc_md129", [
-        [ "Part 1: Introduction", "md_docs_2signatures.html#autotoc_md125", [
-          [ "1.1 The Challenge of Interoperability", "md_docs_2signatures.html#autotoc_md126", null ],
-          [ "1.2 The Limitations of C Declarations", "md_docs_2signatures.html#autotoc_md127", null ],
-          [ "1.3 Our Solution: A Human-First Signature System", "md_docs_2signatures.html#autotoc_md128", null ]
+      [ "Part 2: The Signature Language Reference", "md_docs_2signatures.html#autotoc_md166", [
+        [ "Part 1: Introduction", "md_docs_2signatures.html#autotoc_md162", [
+          [ "1.1 The Challenge of Interoperability", "md_docs_2signatures.html#autotoc_md163", null ],
+          [ "1.2 The Limitations of C Declarations", "md_docs_2signatures.html#autotoc_md164", null ],
+          [ "1.3 Our Solution: A Human-First Signature System", "md_docs_2signatures.html#autotoc_md165", null ]
         ] ],
-        [ "2.1 Primitives", "md_docs_2signatures.html#autotoc_md130", [
-          [ "Tier 1: Abstract C Types", "md_docs_2signatures.html#autotoc_md131", null ],
-          [ "Tier 2: Explicit Fixed-Width Types (Recommended)", "md_docs_2signatures.html#autotoc_md132", null ]
+        [ "2.1 Primitives", "md_docs_2signatures.html#autotoc_md167", [
+          [ "Tier 1: Abstract C Types", "md_docs_2signatures.html#autotoc_md168", null ],
+          [ "Tier 2: Explicit Fixed-Width Types (Recommended)", "md_docs_2signatures.html#autotoc_md169", null ]
         ] ],
-        [ "2.2 Type Constructors and Composite Structures", "md_docs_2signatures.html#autotoc_md133", null ],
-        [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md134", null ]
+        [ "2.2 Type Constructors and Composite Structures", "md_docs_2signatures.html#autotoc_md170", null ],
+        [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md171", null ]
       ] ],
-      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md136", [
-        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md137", null ],
-        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md138", null ]
+      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md173", [
+        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md174", null ],
+        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md175", null ]
       ] ],
-      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md140", null ]
-    ] ],
-    [ "Customization", "md_doxygen-awesome-css_2docs_2customization.html", [
-      [ "CSS-Variables", "md_doxygen-awesome-css_2docs_2customization.html#autotoc_md146", [
-        [ "Setup", "md_doxygen-awesome-css_2docs_2customization.html#autotoc_md147", null ],
-        [ "Available variables", "md_doxygen-awesome-css_2docs_2customization.html#autotoc_md148", null ]
-      ] ],
-      [ "Doxygen generator", "md_doxygen-awesome-css_2docs_2customization.html#autotoc_md149", null ],
-      [ "Share your customizations", "md_doxygen-awesome-css_2docs_2customization.html#autotoc_md150", null ]
-    ] ],
-    [ "Extensions", "md_doxygen-awesome-css_2docs_2extensions.html", [
-      [ "Dark Mode Toggle", "md_doxygen-awesome-css_2docs_2extensions.html#extension-dark-mode-toggle", [
-        [ "Installation", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md152", null ],
-        [ "Customizing", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md153", null ]
-      ] ],
-      [ "Fragment Copy Button", "md_doxygen-awesome-css_2docs_2extensions.html#extension-copy-button", [
-        [ "Installation", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md154", null ],
-        [ "Customizing", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md155", null ]
-      ] ],
-      [ "Paragraph Linking", "md_doxygen-awesome-css_2docs_2extensions.html#extension-para", [
-        [ "Installation", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md156", null ],
-        [ "Customizing", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md157", null ]
-      ] ],
-      [ "Interactive TOC", "md_doxygen-awesome-css_2docs_2extensions.html#extension-toc", [
-        [ "Installation", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md158", null ],
-        [ "Customizing", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md159", null ]
-      ] ],
-      [ "Tabs", "md_doxygen-awesome-css_2docs_2extensions.html#extension-tabs", [
-        [ "Installation", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md160", null ],
-        [ "Usage", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md161", null ]
-      ] ],
-      [ "Page Navigation", "md_doxygen-awesome-css_2docs_2extensions.html#extension-page-navigation", [
-        [ "Installation", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md162", null ],
-        [ "Usage", "md_doxygen-awesome-css_2docs_2extensions.html#autotoc_md163", null ]
-      ] ]
-    ] ],
-    [ "Tips & Tricks", "md_doxygen-awesome-css_2docs_2tricks.html", [
-      [ "Diagrams with Graphviz", "md_doxygen-awesome-css_2docs_2tricks.html#tricks-graphviz", null ],
-      [ "Disable Dark Mode", "md_doxygen-awesome-css_2docs_2tricks.html#tricks-darkmode", null ],
-      [ "Choosing Sidebar Width", "md_doxygen-awesome-css_2docs_2tricks.html#tricks-sidebar", null ],
-      [ "Formatting Tables", "md_doxygen-awesome-css_2docs_2tricks.html#tricks-tables", [
-        [ "Centering", "md_doxygen-awesome-css_2docs_2tricks.html#autotoc_md165", null ],
-        [ "Full Width", "md_doxygen-awesome-css_2docs_2tricks.html#autotoc_md166", null ],
-        [ "Buttons", "md_doxygen-awesome-css_2docs_2tricks.html#autotoc_md167", null ],
-        [ "Bordered Images", "md_doxygen-awesome-css_2docs_2tricks.html#autotoc_md168", null ]
-      ] ]
-    ] ],
-    [ "Doxygen Awesome", "md_doxygen-awesome-css_2README.html", [
-      [ "Motivation", "md_doxygen-awesome-css_2README.html#autotoc_md170", null ],
-      [ "Features", "md_doxygen-awesome-css_2README.html#autotoc_md171", null ],
-      [ "Examples", "md_doxygen-awesome-css_2README.html#autotoc_md172", null ],
-      [ "Installation", "md_doxygen-awesome-css_2README.html#autotoc_md173", [
-        [ "Git submodule", "md_doxygen-awesome-css_2README.html#autotoc_md174", null ],
-        [ "CMake with FetchContent", "md_doxygen-awesome-css_2README.html#autotoc_md175", null ],
-        [ "npm/xpm dependency", "md_doxygen-awesome-css_2README.html#autotoc_md176", null ],
-        [ "System-wide", "md_doxygen-awesome-css_2README.html#autotoc_md177", null ],
-        [ "Choosing a layout", "md_doxygen-awesome-css_2README.html#autotoc_md178", null ],
-        [ "Further installation instructions", "md_doxygen-awesome-css_2README.html#autotoc_md179", null ]
-      ] ],
-      [ "Browser support", "md_doxygen-awesome-css_2README.html#autotoc_md180", null ],
-      [ "Credits", "md_doxygen-awesome-css_2README.html#autotoc_md181", null ]
+      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md177", null ]
     ] ],
     [ "Building and Integrating <tt>infix</tt>", "md_INSTALL.html", [
       [ "Prerequisites", "md_INSTALL.html#autotoc_md184", null ],
@@ -320,9 +320,9 @@ var NAVTREE =
       ] ]
     ] ],
     [ "<strong>Project Roadmap: infix FFI</strong>", "md_TODO.html", [
-      [ "<strong>High Priority: Foundation & Stability</strong>", "md_TODO.html#autotoc_md256", null ],
-      [ "<strong>Medium Priority: Expansion & Optimization</strong>", "md_TODO.html#autotoc_md257", null ],
-      [ "<strong>Low Priority: Advanced Features & Polish</strong>", "md_TODO.html#autotoc_md258", null ]
+      [ "<strong>High Priority: Foundation & Stability</strong>", "md_TODO.html#autotoc_md257", null ],
+      [ "<strong>Medium Priority: Expansion & Optimization</strong>", "md_TODO.html#autotoc_md258", null ],
+      [ "<strong>Low Priority: Advanced Features & Polish</strong>", "md_TODO.html#autotoc_md259", null ]
     ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
@@ -352,12 +352,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "001__primitives_8c.html",
-"203__complex_8c.html#aede9c690b1c97a1302526c2d95c65564",
-"abi__arm64__common_8h.html#a1a804a261c22318a78552ce20a670ae3",
-"abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e",
-"group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66",
-"md_SECURITY.html#autotoc_md252",
-"structinfix__arg__location.html#a4f53bb713bc5749863d8ba2633b74604"
+"401__large__stack_8c.html#af17c47557820689b297102a239ba009b",
+"abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beab5309de4723327f2f604d0fb62152746",
+"compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f",
+"group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2",
+"md_docs_2cookbook.html#autotoc_md57",
+"structinfix__type__t.html#a654909b4eaa71cf395f7324c581e163f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

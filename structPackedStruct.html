@@ -97,10 +97,10 @@ $(document).ready(function(){initNavTree('structPackedStruct.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>A struct with a non-standard, packed memory layout.  
+<p>A struct that will have different layouts when packed vs. non-packed.  
  <a href="structPackedStruct.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="eg_2cookbook_2lib_2types_8h_source.html">types.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="types_8h_source.html">types.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -110,9 +110,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aa68e900594beb9c5affa9b3a9dee0e32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A struct with a non-standard, packed memory layout. </p>
-<p>A struct that will have different layouts when packed vs. non-packed.</p>
-<p>Non-packed size on x64 would be 16 bytes due to padding. Packed size is 9 bytes.</p>
+<div class="textblock"><p>A struct that will have different layouts when packed vs. non-packed. </p>
 <p>Non-packed size on x64: 16 bytes (char a, 7 bytes padding, uint64_t b). Packed size: 9 bytes (char a, uint64_t b) </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a629f17cbc45f8532ed43e2122a9fb064" name="a629f17cbc45f8532ed43e2122a9fb064"></a>
@@ -143,9 +141,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following files:<ul>
-<li>eg/cookbook/lib/<a class="el" href="eg_2cookbook_2lib_2types_8h_source.html">types.h</a></li>
-<li>t/include/<a class="el" href="t_2include_2types_8h_source.html">types.h</a></li>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>t/include/<a class="el" href="types_8h_source.html">types.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

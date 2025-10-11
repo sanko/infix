@@ -7,5 +7,5 @@ var searchData=
   ['contributing_20to_20the_20infix_20ffi_20library_4',['Contributing to the infix FFI Library',['../md_CONTRIBUTING.html',1,'']]],
   ['contributor_20code_20of_20conduct_5',['Contributor Code of Conduct',['../md_CODE__OF__CONDUCT.html',1,'']]],
   ['cookbook_6',['The &lt;tt&gt;infix&lt;/tt&gt; FFI Cookbook',['../md_docs_2cookbook.html',1,'']]],
-  ['customization_7',['Customization',['../md_doxygen-awesome-css_2docs_2customization.html',1,'']]]
+  ['customization_7',['Customization',['../md_docs_2api_2html_2docs_2customization.html',1,'']]]
 ];

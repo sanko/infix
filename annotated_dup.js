@@ -2,7 +2,6 @@ var annotated_dup =
 [
     [ "_infix_registry_entry_t", "struct__infix__registry__entry__t.html", "struct__infix__registry__entry__t" ],
     [ "_registry_parser_state_t", "struct__registry__parser__state__t.html", "struct__registry__parser__state__t" ],
-    [ "AppContext", "structAppContext.html", "structAppContext" ],
     [ "code_buffer", "structcode__buffer.html", "structcode__buffer" ],
     [ "fuzzer_input", "structfuzzer__input.html", "structfuzzer__input" ],
     [ "infix_arena_t", "structinfix__arena__t.html", "structinfix__arena__t" ],
@@ -24,7 +23,6 @@ var annotated_dup =
     [ "LargeData", "structLargeData.html", "structLargeData" ],
     [ "LargeStruct", "structLargeStruct.html", "structLargeStruct" ],
     [ "MixedIntDouble", "structMixedIntDouble.html", "structMixedIntDouble" ],
-    [ "my_handle", "structmy__handle.html", "structmy__handle" ],
     [ "NonPowerOfTwoStruct", "structNonPowerOfTwoStruct.html", "structNonPowerOfTwoStruct" ],
     [ "Number", "unionNumber.html", "unionNumber" ],
     [ "PackedStruct", "structPackedStruct.html", "structPackedStruct" ],
@@ -41,6 +39,5 @@ var annotated_dup =
     [ "test_union", "uniontest__union.html", "uniontest__union" ],
     [ "TestStruct", "structTestStruct.html", "structTestStruct" ],
     [ "TestUnion", "unionTestUnion.html", "unionTestUnion" ],
-    [ "UserProfile", "structUserProfile.html", "structUserProfile" ],
     [ "Vector4", "structVector4.html", "structVector4" ]
 ];

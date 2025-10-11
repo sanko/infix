@@ -6,5 +6,5 @@ var searchData=
   ['and_20integrating_20tt_20infix_20tt_3',['Building and Integrating &lt;tt&gt;infix&lt;/tt&gt;',['../md_INSTALL.html',1,'']]],
   ['and_20type_20system_4',['The Infix Signature and Type System',['../md_docs_2signatures.html',1,'']]],
   ['architecture_5',['Infix Internals and Architecture',['../md_docs_2internals.html',1,'']]],
-  ['awesome_6',['Doxygen Awesome',['../md_doxygen-awesome-css_2README.html',1,'']]]
+  ['awesome_6',['Doxygen Awesome',['../md_docs_2api_2html_2README.html',1,'']]]
 ];
