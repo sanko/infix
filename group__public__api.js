@@ -8,8 +8,8 @@ var group__public__api =
     [ "Memory Management", "group__memory__management.html", "group__memory__management" ],
     [ "Error Reporting", "group__error__api.html", "group__error__api" ],
     [ "Version Information", "group__version__macros.html", "group__version__macros" ],
-    [ "infix_bound_cif_func", "group__public__api.html#gaa424eb35854d3fa968995851e690c9f8", null ],
-    [ "infix_cif_func", "group__public__api.html#ga34ef26a155a3861d5172b7c07239ee43", null ],
+    [ "infix_cif_func", "group__public__api.html#ga3042690c20cccd4137f134154bd62e1a", null ],
+    [ "infix_unbound_cif_func", "group__public__api.html#ga48f7ee868576f525269902fc953887bd", null ],
     [ "infix_status", "group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7", [
       [ "INFIX_SUCCESS", "group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da", null ],
       [ "INFIX_ERROR_ALLOCATION_FAILED", "group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a059ba15d1ac5d065ab33d039aba51da1", null ],

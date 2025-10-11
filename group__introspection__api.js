@@ -6,11 +6,11 @@ var group__introspection__api =
       [ "INFIX_DIALECT_MSVC_MANGLING", "group__introspection__api.html#ggac8c5bb029a977b1d6befd2bef7d2aa55ac29a69adfbf6f3433a893319cec03ffe", null ]
     ] ],
     [ "infix_forward_get_arg_type", "group__introspection__api.html#ga3c1734cc40973646abcbf439a047021a", null ],
-    [ "infix_forward_get_code", "group__introspection__api.html#gafe563c6ded8b7937f0a803fbf6938a4b", null ],
+    [ "infix_forward_get_code", "group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8", null ],
     [ "infix_forward_get_num_args", "group__introspection__api.html#ga7b7e73aa032acb4185433f40720ec126", null ],
     [ "infix_forward_get_num_fixed_args", "group__introspection__api.html#ga218ac4c8f7f2b30d125d8a733d8ee8dc", null ],
     [ "infix_forward_get_return_type", "group__introspection__api.html#ga25901aeda151af1e91692dbe6776b162", null ],
-    [ "infix_forward_get_unbound_code", "group__introspection__api.html#gad881dff0c196a8a91f2c38d4c2d5e2ff", null ],
+    [ "infix_forward_get_unbound_code", "group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad", null ],
     [ "infix_function_print", "group__introspection__api.html#gab498bd07df9d321ec54056c519899b53", null ],
     [ "infix_reverse_get_arg_type", "group__introspection__api.html#gae00f0a3ebc8b0e4035382589dac25730", null ],
     [ "infix_reverse_get_code", "group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66", null ],
