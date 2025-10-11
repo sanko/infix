@@ -1,7 +1,6 @@
 # `infix`: A JIT-Powered FFI Library for C
 
-[![CI/CD](https://github.com/your-repo/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/your-repo/infix/actions/workflows/ci.yml)
-[![License: MIT/Artistic-2.0](https://img.shields.io/badge/License-MIT%20%2F%20Artistic--2.0-blue.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/sanko/infix/actions/workflows/ci.yml)
 
 `infix` is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It simplifies the process of calling native C functions from other environments and creating C-callable function pointers from your own handlers. All with a simple, human-readable string like `({int, *double}, *char) -> int`.
 

@@ -7,16 +7,14 @@ PROJECT_NAME           = "infix FFI Library"
 PROJECT_BRIEF          = "A JIT-Powered FFI Library for C"
 # Use the main README file as the front page of the documentation.
 # The path is relative to this Doxyfile's location.
-USE_MDFILE_AS_MAINPAGE = ../README.md
+USE_MDFILE_AS_MAINPAGE = README.md
 
 #---------------------------------------------------------------------------
 # Build related configuration options
 #---------------------------------------------------------------------------
 # Set the input directories. Paths are relative to this Doxyfile.
 # '.' refers to the current directory ('docs/'), which will pick up our markdown files.
-INPUT                  = ../include \
-                         ../src \
-                         .
+INPUT                  = README.md include src
 RECURSIVE              = YES
 FILE_PATTERNS          = *.h *.c *.md
 EXTRACT_ALL            = YES
@@ -34,13 +32,12 @@ HTML_FILE_EXTENSION    = .html
 # --- Doxygen Awesome CSS Theme Integration ---
 # These paths are relative to the OUTPUT_DIRECTORY's html folder.
 # The workflow will copy the theme files to a place where Doxygen can find them.
-HTML_STYLESHEET        = doxygen-awesome.css
-HTML_EXTRA_FILES       = doxygen-awesome-sidebar-only.css \
-                         doxygen-awesome-fragment-copy.js \
-                         doxygen-awesome-paragraph-link.js \
-                         doxygen-awesome-interactive-toc.js \
-                         doxygen-awesome-tabs.js \
-                         doxygen-awesome-darkmode-toggle.js
+GENERATE_TREEVIEW      = YES # optional. Also works without treeview
+DISABLE_INDEX = NO
+FULL_SIDEBAR = NO
+HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome-css/doxygen-awesome.css
+HTML_COLORSTYLE        = LIGHT # required with Doxygen >= 1.9.5
+
 DISABLE_INDEX          = NO
 GENERATE_TREEVIEW      = YES
 FULL_PAGE_TABS         = YES
