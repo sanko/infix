@@ -1,123 +1,10 @@
 #pragma once
-
 /*
------4~------------4~------------------
----67-67---------67-67-------4~4-------
-4-------4~----4-------4~--4/5~--5~54---
----------------------------------------
-*/
-/**
- * @file infix.h
- * @brief The main public header for the infix FFI library.
- * @copyright Copyright (c) 2025 Sanko Robinson
- *
- * @mainpage Infix FFI Library
- *
- * @section intro_sec Introduction
- *
- * Welcome to the documentation for **infix**, a powerful and flexible Foreign Function
- * Interface (FFI) library for C. Infix simplifies the process of calling C functions
- * from other environments and creating C-callable function pointers from foreign handlers.
- *
- * The core of the library is a Just-in-Time (JIT) compiler that generates small,
- * highly-optimized "trampoline" functions at runtime. These trampolines correctly
- * handle the low-level Application Binary Interface (ABI) for the target platform,
- * ensuring seamless interoperability.
- *
- * This file, `infix.h`, is the only header you need to include to use the library.
- * It contains the entire public API, type system, and platform-detection logic.
- *
- * @section features_sec Key Features
- *
- * - **Forward Calls:** Call any C function dynamically by providing a function pointer
- *   and its arguments at runtime. The library generates a trampoline that correctly
- *   places arguments in registers and on the stack according to the platform's ABI.
- *
- * - **Reverse Calls (Callbacks):** Create native C function pointers from your own
- *   handlers (e.g., functions from an embedded scripting language). These pointers
- *   can be passed to C libraries that require callbacks. When the C code invokes the
- *   pointer, the infix trampoline marshals the arguments and passes them to your handler.
- *
- * - **High-Level Signature API:** Define complex function signatures, including
- *   structs, unions, arrays, and variadic arguments, using a simple and readable
- *   string format. This is the recommended way to interact with the library.
- *
- * - **Manual Type System:** For advanced use cases, provides a complete set of
- *   functions to manually construct `infix_type` descriptors for any C data type using
- *   a safe, arena-based memory model.
- *
- * - **Cross-Platform and Cross-Architecture:** Designed to be portable, with
- *   initial support for x86-64 (System V and Windows x64) and AArch64 (AAPCS64).
- *
- * - **Security-Conscious Design:** Enforces Write XOR Execute (W^X) memory policies
- *   for JIT-compiled code to mitigate security vulnerabilities.
- *
- * - **Customizable Memory Management:** Allows users to override `malloc`, `free`,
- *   etc., to integrate the library with custom memory allocators or pools.
- *
- * @section concepts_sec Core Concepts
- *
- * - **`infix_type`:** The central data structure that describes any C type, from a
- *   simple `int` to a complex, nested `struct`. The library uses this metadata to
- *   understand how to handle data according to ABI rules.
- *
- * - **Trampoline:** A small piece of machine code JIT-compiled by infix. It acts as
- *   a bridge between a generic calling convention and a specific, native C function
- *   signature.
- *
- * - **Forward Trampoline (`infix_forward_t`):** Enables calls *from* a generic
- *   environment *into* a specific C function. You invoke it with a standard
- *   interface (`target_function`, `return_value`, `args_array`), and it executes a
- *   native call.
- *
- * - **Reverse Trampoline (`infix_reverse_t`):** A C function pointer that
- *   wraps a foreign handler. When called by native C code, it translates the native
- *   arguments into a generic format and calls your handler.
- *
- * - **Arena Allocator (`infix_arena_t`):** An efficient memory allocator used internally,
- *   especially by the high-level signature parser, to manage the memory for complex
- *   `infix_type` object graphs with a single `free` operation. It is also exposed as
- *   part of the public API for performance-critical applications.
- *
- * @section usage_sec Basic Usage
- *
- * The easiest way to use infix is with the high-level signature API.
- *
- * **Example: Creating a forward trampoline to call `printf`**
- * ```c
- * #include <stdio.h>
- * #include "infix.h"
- *
- * int main() {
- *     infix_forward_t* trampoline = NULL;
- *     // Signature for: int printf(const char*, ...);
- *     const char* signature = "(*char; int32) -> int32";
- *
- *     infix_status status = infix_forward_create(&trampoline, signature, printf);
- *     if (status != INFIX_SUCCESS) {
- *         // Handle error
- *         return 1;
- *     }
- *
- *     infix_bound_cif_func cif = infix_forward_get_code(trampoline);
- *
- *     const char* my_string = "Hello, Infix! The number is %d\n";
- *     int my_int = 42;
- *     int printf_ret;
- *
- *     void* args[] = { &my_string, &my_int };
- *
- *     cif(&printf_ret, args);
- *
- *     printf("printf returned: %d\n", printf_ret); // Should match the number of chars printed
- *
- *     infix_forward_destroy(trampoline);
- *     return 0;
- * }
- * ```
- *
- * @section license_sec Licensing
- *
+G -----4~------------4~------------------
+D ---67-67---------67-67-------4~4-------
+A 4-------4~----4-------4~--4/5~--5~54---
+E ---------------------------------------
+
  * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
  * You may choose to use this code under the terms of either license.
  *
@@ -140,6 +27,10 @@
  * @defgroup manual_api Manual Type-Creation API
  * @ingroup public_api
  * @brief Advanced functions for manually building `infix_type` objects.
+ *
+ * @defgroup registry_api Named Type Registry API
+ * @ingroup public_api
+ * @brief Functions for defining, managing, and using a registry of named types.
  *
  * @defgroup type_system Type System
  * @ingroup public_api
@@ -209,6 +100,8 @@ typedef infix_reverse_t infix_context_t;
 typedef struct infix_arena_t infix_arena_t;
 /** @brief An opaque handle to a shared library. */
 typedef struct infix_library_t infix_library_t;
+/** @brief An opaque handle to a named type registry. */
+typedef struct infix_registry_t infix_registry_t;
 
 /**
  * @enum infix_type_category
@@ -305,7 +198,7 @@ struct infix_type_t {
             struct infix_type_t * element_type;  ///< The type of the elements in the vector.
             size_t num_elements;                 ///< The number of elements in the vector.
         } vector_info;
-        /** @brief For `INFIX_TYPE_NAMED_REFERENCE`. */
+        /** @brief For `INFIX_TYPE_NAMED_REFERENCE`. This is an internal placeholder for a named type like `@Point`. */
         struct {
             const char * name;
             infix_aggregate_category_t aggregate_category;
@@ -460,6 +353,49 @@ typedef enum {
 
 /** @} */
 
+/** @addtogroup registry_api */
+/** @{ */
+
+/**
+ * @brief Creates a new, empty type registry.
+ * @details A type registry is a self-contained object that stores named type definitions.
+ *          These definitions can then be referenced by name (e.g., `@Point`) in any
+ *          signature string passed to the library.
+ *
+ * @return A handle to the new registry, or `nullptr` if memory allocation fails.
+ * @note The returned registry must be freed with `infix_registry_destroy`.
+ */
+c23_nodiscard infix_registry_t * infix_registry_create(void);
+
+/**
+ * @brief Frees a type registry and all type definitions and metadata contained within it.
+ * @param registry The registry to destroy. Can be `nullptr` (no-op).
+ */
+void infix_registry_destroy(infix_registry_t * registry);
+
+/**
+ * @brief Parses a string of definitions and populates a type registry.
+ * @details This function is the primary way to define named types. The definition
+ *          string is a semicolon-separated list of `@Name = <TypeDefinition>;` entries.
+ *
+ * @example
+ * ```c
+ * const char* my_types =
+ *     "@Point = {double, double};"
+ *     "@Node = { value: int, next: *@Node };";
+ * infix_status status = infix_register_types(registry, my_types);
+ * ```
+ *
+ * @param registry The registry to populate.
+ * @param definitions A null-terminated, semicolon-separated string of type definitions.
+ * @return `INFIX_SUCCESS` on success.
+ * @return `INFIX_ERROR_INVALID_ARGUMENT` if the definition string contains a syntax error
+ *         or attempts to redefine an existing type in the registry.
+ */
+c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *);
+
+/** @} */
+
 /** @addtogroup high_level_api */
 /** @{ */
 
@@ -473,10 +409,11 @@ typedef enum {
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
  * @param target_function A pointer to the native C function to be bound to the trampoline.
+ * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
  * @return `INFIX_SUCCESS` on success.
  * @note The function pointer returned by `infix_forward_get_code` should be used.
  */
-c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *);
+c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *);
 
 /**
  * @brief Generates an unbound forward-call trampoline from a signature string.
@@ -486,10 +423,11 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
+ * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
  * @return `INFIX_SUCCESS` on success.
  * @note The function pointer returned by `infix_forward_get_unbound_code` must be used.
  */
-c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *);
+c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *);
 
 /**
  * @brief Generates a reverse-call trampoline (callback) from a signature string.
@@ -503,12 +441,13 @@ c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, cons
  *                         by the types described in the signature string.
  * @param user_data A user-defined pointer for passing state to the handler,
  *                  accessible inside the handler via `infix_reverse_get_user_data`.
+ * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
  * @return `INFIX_SUCCESS` on success.
  * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
  *         contains unresolved named types.
  * @note The returned context must be freed with `infix_reverse_destroy`.
  */
-c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *, void *, void *);
+c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *, void *, void *, infix_registry_t *);
 
 /**
  * @brief Parses a full function signature string into its constituent infix_type parts.
@@ -522,11 +461,12 @@ c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *
  * @param[out] out_args On success, points to an array of `infix_function_argument`.
  * @param[out] out_num_args On success, will be set to the total number of arguments.
  * @param[out] out_num_fixed_args On success, will be set to the number of non-variadic arguments.
+ * @param[in]  registry An optional handle to a type registry. Can be `nullptr`.
  * @return `INFIX_SUCCESS` if parsing is successful.
  * @note **Memory Management:** On success, the caller takes ownership of the arena.
  */
-c23_nodiscard infix_status
-infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_function_argument **, size_t *, size_t *);
+c23_nodiscard infix_status infix_signature_parse(
+    const char *, infix_arena_t **, infix_type **, infix_function_argument **, size_t *, size_t *, infix_registry_t *);
 
 /**
  * @brief Parses a signature string representing a single data type.
@@ -536,13 +476,13 @@ infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_funct
  * @param[out] out_type On success, will point to the newly created `infix_type`.
  * @param[out] out_arena On success, points to the new arena that owns the type graph.
  * @param[in]  signature A string describing the data type (e.g., `"int32"`, `"{int, float}"`).
+ * @param[in]  registry An optional handle to a type registry. Can be `nullptr`.
  * @return `INFIX_SUCCESS` if parsing is successful.
  * @note **Memory Management:** On success, the caller takes ownership of the arena.
  */
-c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *);
+c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *, infix_registry_t *);
 
 /** @} */
-
 
 /** @addtogroup exports_api */
 /** @{ */
@@ -835,7 +775,7 @@ typedef enum {
  * @code
  * infix_type* type = NULL;
  * infix_arena_t* arena = NULL;
- * infix_type_from_signature(&type, &arena, "{int, *void}");
+ * infix_type_from_signature(&type, &arena, "{int, *void}", nullptr);
  *
  * char buffer[128];
  * if (infix_type_print(buffer, sizeof(buffer), type, INFIX_DIALECT_SIGNATURE) == INFIX_SUCCESS) {
@@ -867,14 +807,14 @@ c23_nodiscard infix_status infix_type_print(char * buffer,
  * @param[in]  dialect The output format to use.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status infix_function_print(char * buffer,
-                                                size_t buffer_size,
-                                                const char * function_name,
-                                                const infix_type * ret_type,
-                                                const infix_function_argument * args,
-                                                size_t num_args,
-                                                size_t num_fixed_args,
-                                                infix_print_dialect_t dialect);
+c23_nodiscard infix_status infix_function_print(char *,
+                                                size_t,
+                                                const char *,
+                                                const infix_type *,
+                                                const infix_function_argument *,
+                                                size_t,
+                                                size_t,
+                                                infix_print_dialect_t);
 
 /** @} */
 
@@ -1112,7 +1052,7 @@ typedef struct {
  * @code
  * infix_arena_t* arena = NULL;
  * infix_type* type = NULL;
- * infix_status status = infix_type_from_signature(&type, &arena, "{int, ^float}"); // Invalid token '^'
+ * infix_status status = infix_type_from_signature(&type, &arena, "{int, ^float}", nullptr); // Invalid token '^'
  *
  * if (status != INFIX_SUCCESS) {
  *     infix_error_details_t err = infix_get_last_error();

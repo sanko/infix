@@ -61,7 +61,8 @@ TEST {
             subtest("Unbound trampoline") {
                 plan(2);
                 infix_forward_t * unbound_t = nullptr;
-                ok(infix_forward_create_unbound(&unbound_t, signature) == INFIX_SUCCESS, "Unbound trampoline created");
+                ok(infix_forward_create_unbound(&unbound_t, signature, nullptr) == INFIX_SUCCESS,
+                   "Unbound trampoline created");
                 if (unbound_t) {
                     Point unbound_result = {0.0, 0.0};
                     infix_cif_func cif = infix_forward_get_unbound_code(unbound_t);
@@ -78,7 +79,7 @@ TEST {
             subtest("Bound trampoline") {
                 plan(2);
                 infix_forward_t * bound_t = nullptr;
-                ok(infix_forward_create(&bound_t, signature, (void *)move_point) == INFIX_SUCCESS,
+                ok(infix_forward_create(&bound_t, signature, (void *)move_point, nullptr) == INFIX_SUCCESS,
                    "Bound trampoline created");
                 if (bound_t) {
                     Point bound_result = {0.0, 0.0};
@@ -101,7 +102,8 @@ TEST {
             const char * signature = "({double, double}) -> {double, double}";
 
             infix_reverse_t * context = nullptr;
-            infix_status status = infix_reverse_create(&context, signature, (void *)point_callback_handler, nullptr);
+            infix_status status =
+                infix_reverse_create(&context, signature, (void *)point_callback_handler, nullptr, nullptr);
             ok(status == INFIX_SUCCESS, "Successfully created reverse trampoline for struct by value");
 
             if (status == INFIX_SUCCESS) {

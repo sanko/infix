@@ -49,10 +49,7 @@
 #include <unistd.h>
 #endif
 
-//=================================================================================================
 // ABI Specification Declarations & Dispatch
-//=================================================================================================
-
 /*
  * These extern declarations link to the ABI-specific v-tables defined in files
  * like `abi_win_x64.c` and `abi_sysv_x64.c`. The preprocessor ensures that only
@@ -105,10 +102,7 @@ const infix_reverse_abi_spec * get_current_reverse_abi_spec() {
 #endif
 }
 
-//=================================================================================================
 // Code Buffer & Emitter Utilities
-//=================================================================================================
-
 /**
  * @internal
  * @brief Initializes a `code_buffer` for use with an arena.
@@ -174,117 +168,7 @@ void emit_int64(code_buffer * buf, int64_t value) {
     code_buffer_append(buf, &value, 8);
 }
 
-//=================================================================================================
 // Internal Type System Helpers
-//=================================================================================================
-
-/**
- * @internal
- * @brief Recursively performs a deep copy of an `infix_type` object graph.
- * @details This function is the core of making trampolines self-contained. It walks a type
- *          graph and duplicates it in the destination arena. This prevents use-after-free
- *          errors if the user destroys the original arena used to create the types.
- * @param dest_arena The destination arena to copy the type graph into.
- * @param src_type The source type to copy.
- * @return A pointer to the newly-copied type, or `nullptr` on allocation failure.
- */
-static infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type) {
-    if (src_type == nullptr)
-        return nullptr;
-
-    // Optimization: If the source type is a static primitive, we don't need to copy it.
-    if (!src_type->is_arena_allocated)
-        return (infix_type *)src_type;
-
-    // Allocate space for the new type in the destination arena and copy the base struct.
-    infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
-    if (dest_type == nullptr)
-        return nullptr;
-    memcpy(dest_type, src_type, sizeof(infix_type));
-
-    // Recursively copy any nested types based on the category.
-    switch (src_type->category) {
-    case INFIX_TYPE_POINTER:
-        dest_type->meta.pointer_info.pointee_type =
-            _copy_type_graph_to_arena(dest_arena, src_type->meta.pointer_info.pointee_type);
-        break;
-    case INFIX_TYPE_ARRAY:
-        dest_type->meta.array_info.element_type =
-            _copy_type_graph_to_arena(dest_arena, src_type->meta.array_info.element_type);
-        break;
-    case INFIX_TYPE_STRUCT:
-    case INFIX_TYPE_UNION:
-        {
-            // Deep copy the aggregate's own name, if it has one.
-            const char * src_agg_name = src_type->meta.aggregate_info.name;
-            if (src_agg_name) {
-                size_t name_len = strlen(src_agg_name) + 1;
-                char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
-                if (!dest_agg_name)
-                    return nullptr;  // Allocation failed
-                memcpy(dest_agg_name, src_agg_name, name_len);
-                // We need to cast away const to write to the destination struct field.
-                *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
-            }
-
-            if (src_type->meta.aggregate_info.num_members > 0) {
-                size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
-                dest_type->meta.aggregate_info.members =
-                    infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
-                if (dest_type->meta.aggregate_info.members == nullptr)
-                    return nullptr;
-                memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
-
-                for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
-                    dest_type->meta.aggregate_info.members[i].type =
-                        _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
-                    // Deep copy the member name string to avoid dangling pointers.
-                    const char * src_name = src_type->meta.aggregate_info.members[i].name;
-                    if (src_name) {
-                        size_t name_len = strlen(src_name) + 1;
-                        char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
-                        if (!dest_name)
-                            return nullptr;
-                        memcpy(dest_name, src_name, name_len);
-                        *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
-                    }
-                }
-            }
-        }
-        break;
-    case INFIX_TYPE_REVERSE_TRAMPOLINE:
-        dest_type->meta.func_ptr_info.return_type =
-            _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.return_type);
-        if (src_type->meta.func_ptr_info.num_args > 0) {
-            size_t args_size = sizeof(infix_function_argument) * src_type->meta.func_ptr_info.num_args;
-            dest_type->meta.func_ptr_info.args =
-                infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
-            if (dest_type->meta.func_ptr_info.args == nullptr)
-                return nullptr;
-            memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
-
-            for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
-                dest_type->meta.func_ptr_info.args[i].type =
-                    _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.args[i].type);
-                const char * src_name = src_type->meta.func_ptr_info.args[i].name;
-                if (src_name) {
-                    size_t name_len = strlen(src_name) + 1;
-                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
-                    if (!dest_name)
-                        return nullptr;
-                    memcpy(dest_name, src_name, name_len);
-                    *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
-                }
-            }
-        }
-        break;
-    default:
-        // For PRIMITIVE, VOID, ENUM, etc., the initial shallow copy is sufficient.
-        break;
-    }
-    return dest_type;
-}
-
 /**
  * @internal
  * @brief Recursively checks if an entire type graph is fully resolved.
@@ -321,10 +205,7 @@ static bool _is_type_graph_resolved(infix_type * type) {
     }
 }
 
-//=================================================================================================
 // Forward Trampoline Implementation
-//=================================================================================================
-
 /*
  * Implementation for infix_forward_get_unbound_code.
  * This is a type-safe accessor for the public API.
@@ -398,7 +279,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     code_buffer buf;
     code_buffer_init(&buf, temp_arena);
 
-    // --- JIT Compilation Pipeline ---
+    // JIT Compilation Pipeline
     status = spec->prepare_forward_call_frame(
         temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args, target_fn);
     if (status != INFIX_SUCCESS)
@@ -423,7 +304,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
         goto cleanup;
     }
 
-    // --- Final Trampoline Handle Assembly ---
+    // Final Trampoline Handle Assembly
     handle = infix_calloc(1, sizeof(infix_forward_t));
     if (handle == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
@@ -525,10 +406,7 @@ void infix_forward_destroy(infix_forward_t * trampoline) {
     infix_free(trampoline);
 }
 
-//=================================================================================================
 // Reverse Trampoline Implementation
-//=================================================================================================
-
 /*
  * @internal
  * A helper to get the system's memory page size.
@@ -650,7 +528,7 @@ c23_nodiscard infix_status infix_reverse_create_manual(infix_reverse_t ** out_co
     if (status != INFIX_SUCCESS)
         goto cleanup;
 
-    // --- JIT Compilation Pipeline for Reverse Trampoline ---
+    // JIT Compilation Pipeline for Reverse Trampoline
     status = spec->prepare_reverse_call_frame(temp_arena, &layout, context);
     if (status != INFIX_SUCCESS)
         goto cleanup;
@@ -737,10 +615,7 @@ void infix_reverse_destroy(infix_reverse_t * reverse_trampoline) {
     infix_protected_free(reverse_trampoline->protected_ctx);
 }
 
-//=================================================================================================
 // Unity Build Section
-//=================================================================================================
-
 /*
  * This section implements a unity build for the ABI-specific components.
  * Instead of relying on the build system to compile and link the correct `abi_*.c`

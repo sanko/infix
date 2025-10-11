@@ -177,7 +177,7 @@ TEST {
         const char * signature = "(*char, uint64, *char; *char, int32, double) -> int32";
 
         infix_forward_t * trampoline = nullptr;
-        infix_status status = infix_forward_create_unbound(&trampoline, signature);
+        infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic forward trampoline created");
 
         char buffer[1] = {0};  // Dummy buffer for signature match
@@ -211,7 +211,7 @@ TEST {
         Point s = {10.5, 20.5};
 #endif
         infix_forward_t * trampoline = nullptr;
-        infix_status status = infix_forward_create_unbound(&trampoline, signature);
+        infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic aggregate trampoline created");
 
         int fixed_arg = 1;
@@ -231,7 +231,7 @@ TEST {
         const char * signature = "(*char; int, double, *char) -> int";
 
         infix_reverse_t * rt = nullptr;
-        infix_status status = infix_reverse_create(&rt, signature, (void *)variadic_reverse_handler, nullptr);
+        infix_status status = infix_reverse_create(&rt, signature, (void *)variadic_reverse_handler, nullptr, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic reverse trampoline created");
 
         if (rt) {
@@ -252,7 +252,7 @@ TEST {
         note("Testing variadic call with struct argument on macOS/ARM (must go on stack)");
         const char * signature = "(int32; double, {int64, int64}) -> int32";
         infix_forward_t * trampoline = nullptr;
-        infix_status status = infix_forward_create_unbound(&trampoline, signature);
+        infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline for macOS variadic test created");
 
         infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
@@ -278,7 +278,7 @@ TEST {
 
         const char * signature = "(int32; double) -> double";
         infix_forward_t * trampoline = nullptr;
-        infix_status status = infix_forward_create_unbound(&trampoline, signature);
+        infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline for Windows variadic test created");
 
         infix_cif_func cif = infix_forward_get_unbound_code(trampoline);

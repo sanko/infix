@@ -305,7 +305,7 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
     if (layout->return_value_in_memory)
         emit_mov_reg_reg(buf, GPR_ARGS[0], R13_REG);
 
-    // --- Marshall Register Arguments ---
+    // Marshall Register Arguments
     for (size_t i = 0; i < num_args; ++i) {
         infix_arg_location * loc = &layout->arg_locations[i];
         if (loc->type == ARG_LOCATION_STACK)
@@ -585,7 +585,7 @@ static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_r
 static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * buf,
                                                                   infix_reverse_call_frame_layout * layout,
                                                                   infix_reverse_t * context) {
-    // --- Step 1: Save all potential incoming argument registers to our local stack ---
+    // Step 1: Save all potential incoming argument registers to our local stack
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 0 * 8, RCX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 1 * 8, RDX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 2 * 8, R8_REG);
@@ -596,7 +596,7 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
     emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 16, XMM2_REG);
     emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 16, XMM3_REG);
 
-    // --- Step 2: Populate the `args_array` with pointers to the argument data ---
+    // Step 2: Populate the `args_array` with pointers to the argument data
     size_t arg_pos_offset = return_value_is_by_reference(context->return_type) ? 1 : 0;
     size_t stack_slot_offset = 0;  // Tracks arguments on the caller's stack.
 

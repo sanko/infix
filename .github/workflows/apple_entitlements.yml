@@ -1,0 +1,26 @@
+name: Verify macOS Entitlements
+
+# This allows you to run this workflow manually from the Actions tab
+on:
+  workflow_dispatch:
+
+jobs:
+  check-interpreters:
+    runs-on: macos-latest
+    steps:
+      - name: Check System Perl for JIT Entitlement
+        run: |
+          echo "Verifying System Perl (/usr/bin/perl)"
+          codesign -d --entitlements - /usr/bin/perl | grep "com.apple.security.cs.allow-jit"
+          echo "System Perl has the JIT entitlement."
+
+      - name: Install and Check Homebrew Perl for JIT Entitlement
+        run: |
+          echo "Installing Homebrew Perl"
+          brew install perl
+          echo Verifying Homebrew Perl"
+          # Use brew --prefix to find the path robustly on both Intel and Apple Silicon runners
+          PERL_PATH=$(brew --prefix perl)/bin/perl
+          echo "Homebrew Perl is at: $PERL_PATH"
+          codesign -d --entitlements - $PERL_PATH | grep "com.apple.security.cs.allow-jit"
+          echo "Homebrew Perl has the JIT entitlement."

@@ -283,7 +283,7 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
         }
 
         bool placed_in_register = false;
-        bool is_variadic_arg = (i >= num_fixed_args);
+        c23_maybe_unused bool is_variadic_arg = (i >= num_fixed_args);
 
 #if defined(INFIX_OS_MACOS)
         // Apple's ABI mandates that all variadic arguments are passed on the stack.

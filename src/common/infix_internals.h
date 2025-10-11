@@ -119,6 +119,32 @@ struct infix_arena_t {
 
 /**
  * @internal
+ * @struct _infix_registry_entry_t
+ * @brief Represents a single key-value pair in the hash table of a type registry.
+ * @details This is the node for the linked list in each hash bucket, forming a
+ *          separate-chaining hash table.
+ */
+typedef struct _infix_registry_entry_t {
+    const char * name;           /**< The key (e.g., "UI::Point"). This string is owned by the registry's arena. */
+    infix_type * type;           /**< The value (pointer to the type definition). Also owned by the arena. */
+    bool is_forward_declaration; /**< True if defined like "@Name;" and not yet fully resolved. */
+    struct _infix_registry_entry_t *
+        next; /**< Pointer to the next entry in the same bucket for collision resolution. */
+} _infix_registry_entry_t;
+
+/**
+ * @internal
+ * @brief The concrete, internal definition of the type registry handle.
+ */
+struct infix_registry_t {
+    infix_arena_t * arena;              /**< Owns all memory for the hash table, names, and its types. */
+    size_t num_buckets;                 /**< The size of the 'buckets' array. */
+    size_t num_items;                   /**< The total number of items stored in the hash table. */
+    _infix_registry_entry_t ** buckets; /**< The array of pointers to the heads of the collision chains. */
+};
+
+/**
+ * @internal
  * @brief A utility structure for dynamically building machine code in memory.
  */
 typedef struct {
@@ -144,11 +170,6 @@ typedef struct {
  * @brief A safe upper limit on the size of a single argument to prevent OOM errors.
  */
 #define INFIX_MAX_ARG_SIZE (1024 * 64)  // 64KB
-
-//=================================================================================================
-// ABI-Specific Type Definitions
-//=================================================================================================
-
 /**
  * @internal
  * @brief Classifies where an argument is passed according to an ABI.
@@ -217,10 +238,6 @@ typedef struct {
     int32_t xmm_save_area_offset;  ///< Offset to where incoming XMM/VPR arguments are saved.
 } infix_reverse_call_frame_layout;
 
-//=================================================================================================
-// ABI Specification Interfaces (V-Tables)
-//=================================================================================================
-
 /**
  * @internal
  * @brief An interface (v-table) for an ABI-specific forward trampoline implementation.
@@ -251,7 +268,26 @@ typedef struct {
     infix_status (*generate_reverse_epilogue)(code_buffer *, infix_reverse_call_frame_layout *, infix_reverse_t *);
 } infix_reverse_abi_spec;
 
-// --- From trampoline.c ---
+// Function Prototypes for internal modules
+
+// From error.c
+void _infix_set_error(infix_error_category_t, infix_error_code_t, size_t);
+void _infix_set_system_error(infix_error_category_t, infix_error_code_t, long, const char *);
+void _infix_clear_error(void);
+
+// From types.c
+infix_type * _copy_type_graph_to_arena(infix_arena_t *, const infix_type *);
+
+// From registry.c
+c23_nodiscard infix_status _infix_resolve_type_graph(infix_type **, infix_registry_t *);
+
+// From signature.c
+c23_nodiscard infix_status _infix_parse_type_internal(infix_type **,
+                                                      infix_arena_t **,
+                                                      const char *,
+                                                      infix_registry_t *);
+
+// From trampoline.c
 const infix_forward_abi_spec * get_current_forward_abi_spec(void);
 const infix_reverse_abi_spec * get_current_reverse_abi_spec(void);
 void code_buffer_init(code_buffer *, infix_arena_t *);
@@ -262,7 +298,7 @@ void emit_int64(code_buffer *, int64_t);
 c23_nodiscard infix_status _infix_forward_create_internal(
     infix_forward_t **, infix_type *, infix_type **, size_t, size_t, infix_arena_t *, void *);
 
-// --- From executor.c ---
+// From executor.c
 c23_nodiscard infix_executable_t infix_executable_alloc(size_t);
 void infix_executable_free(infix_executable_t);
 c23_nodiscard bool infix_executable_make_executable(infix_executable_t);
@@ -271,7 +307,7 @@ void infix_protected_free(infix_protected_t);
 c23_nodiscard bool infix_protected_make_readonly(infix_protected_t);
 void infix_internal_dispatch_callback_fn_impl(infix_reverse_t *, void *, void **);
 
-// --- Macro for emitting multiple bytes ---
+// Macro for emitting multiple bytes
 #define EMIT_BYTES(buf, ...)                             \
     do {                                                 \
         const uint8_t bytes[] = {__VA_ARGS__};           \
@@ -304,10 +340,6 @@ static inline bool is_double(const infix_type * type) {
 static inline bool is_long_double(const infix_type * type) {
     return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_LONG_DOUBLE;
 }
-
-//=================================================================================================
-// Architecture-Specific Emitter Includes
-//=================================================================================================
 
 #if defined(INFIX_ABI_SYSV_X64) || defined(INFIX_ABI_WINDOWS_X64)
 #include "arch/x64/abi_x64_emitters.h"

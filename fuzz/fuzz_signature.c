@@ -82,10 +82,11 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     // and handling special separators like `=>` and `;`.
     infix_arena_t * arena = NULL;
     infix_type * ret_type = NULL;
-    infix_type ** arg_types = NULL;
+    infix_function_argument * args = NULL;
     size_t num_args, num_fixed_args;
 
-    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &arg_types, &num_args, &num_fixed_args);
+    infix_status status =
+        infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed_args, nullptr);
 
     // The core of the test: If parsing was successful, we must prove that we
     // can destroy the resulting arena and all the infix_type objects it contains
@@ -101,7 +102,7 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     // full function signatures.
     infix_arena_t * type_arena = NULL;
     infix_type * type_only = NULL;
-    status = infix_type_from_signature(&type_only, &type_arena, signature);
+    status = infix_type_from_signature(&type_only, &type_arena, signature, nullptr);
 
     // As with the first target, a successful parse must be followed by a clean
     // destruction to pass the test under AddressSanitizer.
