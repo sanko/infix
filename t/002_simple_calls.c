@@ -74,7 +74,7 @@ TEST {
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
         int unbound_result = 0;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)add_ints, &unbound_result, args);
         ok(unbound_result == 35, "Unbound call correct");
         infix_forward_destroy(unbound_t);
@@ -84,7 +84,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_ints) == INFIX_SUCCESS,
            "Bound created");
         int bound_result = 0;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == 35, "Bound call correct");
         infix_forward_destroy(bound_t);
@@ -103,7 +103,7 @@ TEST {
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
         float unbound_result = 0.0f;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)multiply_floats, &unbound_result, args);
         ok(fabs(unbound_result - 10.0f) < 0.001, "Unbound call correct");
         infix_forward_destroy(unbound_t);
@@ -113,7 +113,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)multiply_floats) == INFIX_SUCCESS,
            "Bound created");
         float bound_result = 0.0f;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(fabs(bound_result - 10.0f) < 0.001, "Bound call correct");
         infix_forward_destroy(bound_t);
@@ -127,7 +127,7 @@ TEST {
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, nullptr, 0, 0) == INFIX_SUCCESS,
            "Unbound created");
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)do_nothing, nullptr, nullptr);
         infix_forward_destroy(unbound_t);
 
@@ -135,7 +135,7 @@ TEST {
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, nullptr, 0, 0, (void *)do_nothing) == INFIX_SUCCESS,
            "Bound created");
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(nullptr, nullptr);
         infix_forward_destroy(bound_t);
     }
@@ -154,7 +154,7 @@ TEST {
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS,
            "Unbound created");
         bool neg_result_u = false, pos_result_u = true;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)is_negative, &neg_result_u, neg_args);
         ok(neg_result_u == true, "Unbound is_negative(-100) returned true");
         unbound_cif((void *)is_negative, &pos_result_u, pos_args);
@@ -166,7 +166,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)is_negative) == INFIX_SUCCESS,
            "Bound created");
         bool neg_result_b = false, pos_result_b = true;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&neg_result_b, neg_args);
         ok(neg_result_b == true, "Bound is_negative(-100) returned true");
         bound_cif(&pos_result_b, pos_args);

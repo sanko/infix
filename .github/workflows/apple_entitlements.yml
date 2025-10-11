@@ -1,26 +1,57 @@
-name: Verify macOS Entitlements
+name: Inspect macOS Interpreter Entitlements
 
-# This allows you to run this workflow manually from the Actions tab
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  # actions: read is required to list artifacts via the API
+  actions: read
+
 jobs:
-  check-interpreters:
+  inspect:
     runs-on: macos-latest
     steps:
-      - name: Check System Perl for JIT Entitlement
-        run: |
-          echo "Verifying System Perl (/usr/bin/perl)"
-          codesign -d --entitlements - /usr/bin/perl | grep "com.apple.security.cs.allow-jit"
-          echo "System Perl has the JIT entitlement."
+      - name: Start Inspection
+        run: echo "Starting entitlement inspection on runner..."
 
-      - name: Install and Check Homebrew Perl for JIT Entitlement
+      - name: 1. Inspect System Perl
         run: |
-          echo "Installing Homebrew Perl"
-          brew install perl
-          echo Verifying Homebrew Perl"
-          # Use brew --prefix to find the path robustly on both Intel and Apple Silicon runners
+          echo "--- Verifying System Perl (/usr/bin/perl) ---"
+          echo "--- [Step 1/2] Displaying full signature info... ---"
+          codesign -dv /usr/bin/perl 2>&1 || true
+          echo "--- [Step 2/2] Displaying entitlements... ---"
+          codesign -d --entitlements - /usr/bin/perl 2>&1
+          echo "Exit code of entitlement check: $?"
+
+      - name: 2. Inspect System Python 3
+        run: |
+          echo "--- Verifying System Python 3 (/usr/bin/python3) ---"
+          echo "--- [Step 1/2] Displaying full signature info... ---"
+          codesign -dv /usr/bin/python3 2>&1 || true
+          echo "--- [Step 2/2] Displaying entitlements... ---"
+          codesign -d --entitlements - /usr/bin/python3 2>&1
+          echo "Exit code of entitlement check: $?"
+
+      - name: 3. Install and Inspect Homebrew Interpreters
+        run: |
+          echo "--- Installing Homebrew packages ---"
+          brew install perl python
+
+          echo "--- Verifying Homebrew Perl ---"
           PERL_PATH=$(brew --prefix perl)/bin/perl
           echo "Homebrew Perl is at: $PERL_PATH"
-          codesign -d --entitlements - $PERL_PATH | grep "com.apple.security.cs.allow-jit"
-          echo "Homebrew Perl has the JIT entitlement."
+          echo "--- [Step 1/2] Displaying full signature info... ---"
+          codesign -dv "$PERL_PATH" 2>&1 || true
+          echo "--- [Step 2/2] Displaying entitlements... ---"
+          codesign -d --entitlements - "$PERL_PATH" 2>&1
+          echo "Exit code of entitlement check: $?"
+
+          echo "--- Verifying Homebrew Python 3 ---"
+          PYTHON_PATH=$(brew --prefix python)/bin/python3
+          echo "Homebrew Python is at: $PYTHON_PATH"
+          echo "--- [Step 1/2] Displaying full signature info... ---"
+          codesign -dv "$PYTHON_PATH" 2>&1 || true
+          echo "--- [Step 2/2] Displaying entitlements... ---"
+          codesign -d --entitlements - "$PYTHON_PATH" 2>&1
+          echo "Exit code of entitlement check: $?"

@@ -256,9 +256,9 @@ TEST {
         Point p_in = {10.5, 20.5};
         void * pass_args[] = {&p_in};
         double unbound_pass_res = 0.0, bound_pass_res = 0.0;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_pass);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_pass);
         unbound_cif((void *)process_point_by_value, &unbound_pass_res, pass_args);
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_pass);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_pass);
         bound_cif(&bound_pass_res, pass_args);
         ok(fabs(unbound_pass_res - 31.0) < 0.001 && fabs(bound_pass_res - 31.0) < 0.001, "Pass arg correct");
 
@@ -270,9 +270,9 @@ TEST {
                INFIX_SUCCESS,
            "Ret val (bound) created");
         Point unbound_ret_res = {0, 0}, bound_ret_res = {0, 0};
-        infix_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
+        infix_unbound_cif_func unbound_ret_cif = infix_forward_get_unbound_code(unbound_ret);
         unbound_ret_cif((void *)return_point_by_value, &unbound_ret_res, nullptr);
-        infix_bound_cif_func bound_ret_cif = infix_forward_get_code(bound_ret);
+        infix_cif_func bound_ret_cif = infix_forward_get_code(bound_ret);
         bound_ret_cif(&bound_ret_res, nullptr);
         ok(unbound_ret_res.x == 100.0 && unbound_ret_res.y == 200.0 && bound_ret_res.x == 100.0 &&
                bound_ret_res.y == 200.0,
@@ -304,7 +304,7 @@ TEST {
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for mixed-type struct created");
 
-        infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
         MixedIntDouble arg_val = {-500, 3.14};
         int result = 0;
         void * args[] = {&arg_val};
@@ -348,7 +348,7 @@ TEST {
                 &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &struct_type, 1, 1);
             ok(status == INFIX_SUCCESS, "Trampoline for HFA struct created");
 
-            infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
+            infix_unbound_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
             Vector4 vec = {{1.5f, 2.5f, 3.5f, 4.5f}};
             float result = 0.0f;
             void * args[] = {&vec};
@@ -387,7 +387,7 @@ TEST {
                 double d[2];
             } result;
             result.v = _mm_setzero_pd();
-            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
             cif((void *)native_vector_add, &result.v, args);
 
             ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
@@ -420,7 +420,7 @@ TEST {
             float64x2_t vec_b = vld1q_f64(b_data);
             void * args[] = {&vec_a, &vec_b};
             float64x2_t result_vec;
-            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
             cif((void *)neon_vector_add, &result_vec, args);
             float64_t result_data[2];
             vst1q_f64(result_data, result_vec);
@@ -465,7 +465,7 @@ TEST {
                 double d[4];
             } result;
             result.v = _mm256_setzero_pd();
-            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
             cif((void *)native_vector_add_256, &result.v, args);
 
             ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9 && fabs(result.d[2] - 42.0) < 1e-9 &&
@@ -527,7 +527,7 @@ TEST {
 
                 void * args[] = {&vec_a, &vec_b};
 
-                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
                 cif((void *)native_sve_vector_add, &result_vec, args);
 
                 svst1_f64(pg, result_data, result_vec);

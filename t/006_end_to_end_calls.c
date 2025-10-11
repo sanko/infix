@@ -65,7 +65,7 @@ TEST {
                    "Unbound trampoline created");
                 if (unbound_t) {
                     Point unbound_result = {0.0, 0.0};
-                    infix_cif_func cif = infix_forward_get_unbound_code(unbound_t);
+                    infix_unbound_cif_func cif = infix_forward_get_unbound_code(unbound_t);
                     cif((void *)move_point, &unbound_result, args);
                     ok(fabs(unbound_result.x - 15.5) < 1e-9 && fabs(unbound_result.y - 17.5) < 1e-9,
                        "Unbound call correct");
@@ -83,7 +83,7 @@ TEST {
                    "Bound trampoline created");
                 if (bound_t) {
                     Point bound_result = {0.0, 0.0};
-                    infix_bound_cif_func cif = infix_forward_get_code(bound_t);
+                    infix_cif_func cif = infix_forward_get_code(bound_t);
                     cif(&bound_result, args);
                     ok(fabs(bound_result.x - 15.5) < 1e-9 && fabs(bound_result.y - 17.5) < 1e-9, "Bound call correct");
                 }

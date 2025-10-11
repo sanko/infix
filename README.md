@@ -1,7 +1,6 @@
 # `infix`: A JIT-Powered FFI Library for C
 
-[![CI/CD](https://github.com/your-repo/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/your-repo/infix/actions/workflows/ci.yml)
-[![License: MIT/Artistic-2.0](https://img.shields.io/badge/License-MIT%20%2F%20Artistic--2.0-blue.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/sanko/infix/actions/workflows/ci.yml)
 
 `infix` is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It simplifies the process of calling native C functions from other environments and creating C-callable function pointers from your own handlers. All with a simple, human-readable string like `({int, *double}, *char) -> int`.
 
@@ -82,11 +81,11 @@ int main() {
     infix_forward_create(&trampoline, signature, (void*)puts, NULL);
 
     // 3. Get the callable function pointer.
-    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
+    infix_cif_func cif = infix_forward_get_code(trampoline);
 
     // 4. Prepare arguments and call.
     //    The `args` array must contain *pointers* to your argument values.
-    const char* my_string = "Hello from Infix!";
+    const char* my_string = "Hello from infix!";
     void* args[] = { &my_string };
     int return_value;
     cif(&return_value, args); // A non-negative value is returned on success.
@@ -139,10 +138,10 @@ int main() {
     infix_forward_create(&trampoline, signature, (void*)puts, nullptr);
 
     // 3. Get the callable function pointer.
-    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
+    infix_cif_func cif = infix_forward_get_code(trampoline);
 
     // 4. Prepare arguments and call.
-    const char* my_string = "Hello from Infix!";
+    const char* my_string = "Hello from infix!";
     void* args[] = { &my_string };
     int return_value;
     cif(&return_value, args);

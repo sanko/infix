@@ -173,7 +173,7 @@ TEST {
 
             double result = 0.0;
             if (trampoline) {
-                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
                 cif((void *)sum_max_reg_doubles, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for max register args");
             }
@@ -205,7 +205,7 @@ TEST {
 
             double result = 0.0;
             if (trampoline) {
-                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
                 cif((void *)sum_one_stack_double, &result, args);
                 ok(fabs(result - expected_sum) < 0.001, "Correct sum for one stack arg");
             }
@@ -244,7 +244,7 @@ TEST {
 
             double result = 0.0;
             if (trampoline) {
-                infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+                infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
                 cif((void *)large_stack_callee, &result, args);
                 ok(fabs(result - expected_result) < 0.001,
                    "Large stack call returned correct sum (got %.1f, expected %.1f)",

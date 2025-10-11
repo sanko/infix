@@ -77,7 +77,7 @@ TEST {
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
         const char * unbound_result = nullptr;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)find_char_in_string, &unbound_result, args);
         ok(unbound_result && strcmp(unbound_result, "FFI World!") == 0, "Unbound call correct");
 
@@ -87,7 +87,7 @@ TEST {
                INFIX_SUCCESS,
            "Bound created");
         const char * bound_result = nullptr;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result && strcmp(bound_result, "FFI World!") == 0, "Bound call correct");
 
@@ -109,7 +109,7 @@ TEST {
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)modify_data_via_pointers, nullptr, args);
         ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Unbound call correct");
         val_a = 1;
@@ -120,7 +120,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)modify_data_via_pointers) ==
                INFIX_SUCCESS,
            "Bound created");
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(nullptr, args);
         ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Bound call correct");
 
@@ -143,7 +143,7 @@ TEST {
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS,
            "Unbound created");
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)check_if_null, &res_null, args_null);
         ok(res_null == true, "Unbound nullptr correct");
         unbound_cif((void *)check_if_null, &res_valid, args_valid);
@@ -153,7 +153,7 @@ TEST {
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)check_if_null) == INFIX_SUCCESS,
            "Bound created");
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&res_null, args_null);
         ok(res_null == true, "Bound nullptr correct");
         bound_cif(&res_valid, args_valid);

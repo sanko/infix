@@ -134,7 +134,7 @@ TEST {
         if (inner_rt && fwd_trampoline) {
             void * callback_ptr_arg = infix_reverse_get_code(inner_rt);
             void * args[] = {&callback_ptr_arg};
-            infix_cif_func cif = infix_forward_get_unbound_code(fwd_trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(fwd_trampoline);
             cif((void *)execute_callback_as_arg_harness, nullptr, args);
         }
         else

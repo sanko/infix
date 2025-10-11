@@ -89,7 +89,7 @@ TEST {
             &int_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &union_type, 1, 1);
         ok(status == INFIX_SUCCESS && int_trampoline != nullptr, "Trampoline for process_number_union_as_int created");
 
-        infix_cif_func int_cif = infix_forward_get_unbound_code(int_trampoline);
+        infix_unbound_cif_func int_cif = infix_forward_get_unbound_code(int_trampoline);
         Number num_int;
         num_int.i = 123;
         int int_result = 0;
@@ -105,7 +105,7 @@ TEST {
         ok(status == INFIX_SUCCESS && flt_trampoline != nullptr,
            "Trampoline for process_number_union_as_float created");
 
-        infix_cif_func flt_cif = infix_forward_get_unbound_code(flt_trampoline);
+        infix_unbound_cif_func flt_cif = infix_forward_get_unbound_code(flt_trampoline);
         Number num_flt;
         num_flt.f = 99.5f;
         float flt_result = 0.0f;
@@ -122,7 +122,7 @@ TEST {
         status = infix_forward_create_unbound_manual(&trampoline, union_type, &arg_type, 1, 1);
         ok(status == INFIX_SUCCESS && trampoline != nullptr, "Trampoline for return_number_union created");
 
-        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
 
         // Test 1: Return as integer
         Number int_result;

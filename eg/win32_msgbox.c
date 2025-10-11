@@ -47,7 +47,7 @@ int main() {
     int result = 0;
 
     // 5. Call the function.
-    ((infix_cif_func)infix_forward_get_code(trampoline))((void *)MessageBoxW_ptr, &result, args);
+    ((infix_unbound_cif_func)infix_forward_get_code(trampoline))((void *)MessageBoxW_ptr, &result, args);
     printf("MessageBoxW returned: %d\n", result);
 
     // 6. Clean up.
