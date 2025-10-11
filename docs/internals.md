@@ -192,7 +192,7 @@ This is the most powerful method. It allows you to step through the JIT'd code o
 
 1.  **Get the Address**: In your test code, print the address of the executable pointer right after it's generated.
     ```c
-    infix_cif_func cif_func = infix_forward_get_code(trampoline);
+    infix_unbound_cif_func cif_func = infix_forward_get_code(trampoline);
     printf("DEBUG: Trampoline generated at address: %p\n", (void*)cif_func);
     ```
 2.  **Run Under Debugger**: `gdb ./my_test_executable`

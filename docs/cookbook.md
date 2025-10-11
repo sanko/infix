@@ -79,7 +79,7 @@ void recipe_simple_forward_call() {
     infix_forward_create_unbound(&trampoline, signature, NULL);
 
     // 3. Get the callable function pointer.
-    infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+    infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
 
     // 4. Prepare arguments. The args array must hold *pointers* to the values.
     double y = 1.0, x = 1.0;
@@ -110,7 +110,7 @@ void recipe_pointer_args_and_return() {
     const char* signature = "(*char, int) -> *char";
     infix_forward_t* trampoline = NULL;
     infix_forward_create(&trampoline, signature, (void*)strchr, NULL);
-    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
+    infix_cif_func cif = infix_forward_get_code(trampoline);
 
     const char* haystack = "hello-world";
     int needle = '-';
@@ -926,7 +926,7 @@ void dynamic_wrapper(infix_forward_t* trampoline, void* target_func, void** args
         return;
     }
     // A real binding would also check the types using infix_forward_get_arg_type().
-    ((infix_cif_func)infix_forward_get_unbound_code(trampoline))(target_func, NULL, args);
+    ((infix_unbound_cif_func)infix_forward_get_unbound_code(trampoline))(target_func, NULL, args);
 }
 ```
 
@@ -941,7 +941,7 @@ void dynamic_wrapper(infix_forward_t* trampoline, void* target_func, void** args
 // FAST: Create once, call many times
 infix_forward_t* t = NULL;
 infix_forward_create(&t, "(int, int) -> int", my_func, NULL);
-infix_bound_cif_func cif = infix_forward_get_code(t);
+infix_cif_func cif = infix_forward_get_code(t);
 for (int i = 0; i < 1000000; ++i) {
     cif(&result, args); // VERY FAST
 }
@@ -1042,7 +1042,7 @@ ffi_call(&cif, FFI_FN(add_doubles), &result, args_values);
 infix_forward_t* t = NULL;
 // One-time setup from a simple string
 infix_forward_create(&t, "(double, double) -> double", (void*)add_doubles, NULL);
-infix_bound_cif_func cif = infix_forward_get_code(t);
+infix_cif_func cif = infix_forward_get_code(t);
 
 double a = 1.5, b = 2.5;
 void* args[] = { &a, &b };
@@ -1289,7 +1289,7 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
     }
 
     // 3. The FFI Call
-    infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+    infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
     // A real binding would inspect the signature to handle the return value.
     cif(target_func, NULL, c_args);
 

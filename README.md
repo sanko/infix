@@ -81,7 +81,7 @@ int main() {
     infix_forward_create(&trampoline, signature, (void*)puts, NULL);
 
     // 3. Get the callable function pointer.
-    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
+    infix_cif_func cif = infix_forward_get_code(trampoline);
 
     // 4. Prepare arguments and call.
     //    The `args` array must contain *pointers* to your argument values.
@@ -138,7 +138,7 @@ int main() {
     infix_forward_create(&trampoline, signature, (void*)puts, nullptr);
 
     // 3. Get the callable function pointer.
-    infix_bound_cif_func cif = infix_forward_get_code(trampoline);
+    infix_cif_func cif = infix_forward_get_code(trampoline);
 
     // 4. Prepare arguments and call.
     const char* my_string = "Hello from infix!";

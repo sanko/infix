@@ -80,7 +80,7 @@ TEST {
     infix_forward_t * unbound_t = nullptr;
     if (infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) != INFIX_SUCCESS)
         bail_out("Failed to create unbound trampoline");
-    infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+    infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
 
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
@@ -101,7 +101,7 @@ TEST {
     infix_forward_t * bound_t = nullptr;
     if (infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_for_benchmark) != INFIX_SUCCESS)
         bail_out("Failed to create bound trampoline");
-    infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+    infix_cif_func bound_cif = infix_forward_get_code(bound_t);
 
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {

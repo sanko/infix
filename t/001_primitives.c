@@ -121,7 +121,7 @@ __int128_t passthrough_sint128(__int128_t v) {
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");                               \
                                                                                                                    \
         c_type unbound_result = 0;                                                                                 \
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);                                    \
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);                            \
         if (unbound_cif) {                                                                                         \
             unbound_cif((void *)passthrough_func, &unbound_result, args);                                          \
             ok(unbound_result == input,                                                                            \
@@ -138,7 +138,7 @@ __int128_t passthrough_sint128(__int128_t v) {
         ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");                                   \
                                                                                                                    \
         c_type bound_result = 0;                                                                                   \
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);                                          \
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);                                                \
         if (bound_cif) {                                                                                           \
             bound_cif(&bound_result, args);                                                                        \
             ok(bound_result == input,                                                                              \
@@ -180,7 +180,7 @@ TEST {
         infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");
         long double unbound_result = 0.0L;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)passthrough_long_double, &unbound_result, args);
         ok(unbound_result == input, "Unbound long double correct");
 
@@ -190,7 +190,7 @@ TEST {
             infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_long_double);
         ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");
         long double bound_result = 0.0L;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound long double correct");
 
@@ -208,7 +208,7 @@ TEST {
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
         __uint128_t unbound_result = 0;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)passthrough_uint128, &unbound_result, args);
         ok(unbound_result == input, "Unbound correct");
 
@@ -216,7 +216,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_uint128) == INFIX_SUCCESS,
            "Bound created");
         __uint128_t bound_result = 0;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound correct");
 
@@ -233,7 +233,7 @@ TEST {
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
         __int128_t unbound_result = 0;
-        infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+        infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)passthrough_sint128, &unbound_result, args);
         ok(unbound_result == input, "Unbound correct");
 
@@ -241,7 +241,7 @@ TEST {
         ok(infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_sint128) == INFIX_SUCCESS,
            "Bound created");
         __int128_t bound_result = 0;
-        infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+        infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound correct");
 

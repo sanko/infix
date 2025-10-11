@@ -189,7 +189,7 @@ TEST {
         int result = 0;
         void * args[] = {&buffer, &size, &fmt, &str_arg, &int_arg, &dbl_arg};
 
-        infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
         cif_func((void *)forward_variadic_checker, &result, args);
         // The subtest inside the checker performs its own ok() calls, so we don't check the return value here.
         // We just need to ensure the test plan in the outer scope is correct.
@@ -218,7 +218,7 @@ TEST {
         void * args[] = {&fixed_arg, &s};
         int result = 0;
 
-        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         cif((void *)forward_variadic_aggregate_checker, &result, args);
 
         pass("Aggregate checker function was called.");
@@ -255,7 +255,7 @@ TEST {
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline for macOS variadic test created");
 
-        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         int fixed_val = 10;
         double dbl_val = 20.0;
         MacTestStruct struct_val = {30, 40};
@@ -281,7 +281,7 @@ TEST {
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline for Windows variadic test created");
 
-        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         int fixed_val = 100;
         double dbl_val = 123.45;
         void * args[] = {&fixed_val, &dbl_val};

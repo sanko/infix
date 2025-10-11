@@ -87,7 +87,7 @@ TEST {
         long double input = 1.234567890123456789L;
         long double result = 0.0L;
         void * args[] = {&input};
-        infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         cif((void *)passthrough_long_double, &result, args);
 
         ok(result == input, "long double passed and returned correctly");
@@ -113,7 +113,7 @@ TEST {
         if (ok(status == INFIX_SUCCESS, "Pass trampoline created for __int128_t")) {
             bool pass_result = false;
             void * pass_args[] = {(void *)&S128_CONSTANT};
-            infix_cif_func cif = infix_forward_get_unbound_code(pass_trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(pass_trampoline);
             cif((void *)check_s128, &pass_result, pass_args);
             ok(pass_result, "Forward call: __int128_t passed correctly as argument");
         }
@@ -127,7 +127,7 @@ TEST {
         status = infix_forward_create_unbound_manual(&ret_trampoline, s128_type, nullptr, 0, 0);
         if (ok(status == INFIX_SUCCESS, "Return trampoline created for __int128_t")) {
             __int128_t ret_result = 0;
-            infix_cif_func cif = infix_forward_get_unbound_code(ret_trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(ret_trampoline);
             cif((void *)return_s128, &ret_result, nullptr);
             ok(ret_result == S128_CONSTANT, "Forward call: __int128_t returned correctly");
         }
@@ -166,7 +166,7 @@ TEST {
         if (ok(status == INFIX_SUCCESS, "Trampoline created for __uint128_t")) {
             bool result = false;
             void * args[] = {(void *)&U128_CONSTANT};
-            infix_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
             cif((void *)check_u128, &result, args);
             ok(result, "Forward call: __uint128_t passed correctly as argument");
         }

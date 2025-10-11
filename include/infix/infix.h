@@ -327,7 +327,7 @@ struct infix_function_argument_t {
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
  */
-typedef void (*infix_cif_func)(void *, void *, void **);
+typedef void (*infix_unbound_cif_func)(void *, void *, void **);
 
 /**
  * @brief The signature for a "bound" forward-call trampoline.
@@ -336,7 +336,7 @@ typedef void (*infix_cif_func)(void *, void *, void **);
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
  */
-typedef void (*infix_bound_cif_func)(void *, void **);
+typedef void (*infix_cif_func)(void *, void **);
 
 /**
  * @brief An enumeration of all possible success or failure codes from the public API.
@@ -824,18 +824,18 @@ c23_nodiscard infix_status infix_function_print(char *,
 /**
  * @brief Retrieves the executable code pointer from an unbound forward trampoline.
  * @param trampoline A handle to a previously created unbound forward trampoline.
- * @return A callable function pointer of type `infix_cif_func`. Returns `nullptr` if the
+ * @return A callable function pointer of type `infix_unbound_cif_func`. Returns `nullptr` if the
  *         handle is invalid or if it points to a bound trampoline.
  */
-c23_nodiscard infix_cif_func infix_forward_get_unbound_code(infix_forward_t *);
+c23_nodiscard infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t *);
 
 /**
  * @brief Retrieves the executable code pointer from a bound forward trampoline.
  * @param trampoline A handle to a previously created bound forward trampoline.
- * @return A callable function pointer of type `infix_bound_cif_func`. Returns `nullptr`
+ * @return A callable function pointer of type `infix_cif_func`. Returns `nullptr`
  *         if the handle is invalid or if it points to an unbound trampoline.
  */
-c23_nodiscard infix_bound_cif_func infix_forward_get_code(infix_forward_t *);
+c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *);
 
 /**
  * @brief Retrieves the executable code pointer from a reverse trampoline.

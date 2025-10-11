@@ -108,7 +108,7 @@ TEST {
             infix_status status = infix_forward_create_unbound(&t, "(int32)->int32", nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
-            infix_cif_func f = infix_forward_get_unbound_code(t);
+            infix_unbound_cif_func f = infix_forward_get_unbound_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
             void * aa[] = {&a};
@@ -119,7 +119,7 @@ TEST {
             infix_status status = infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
-            infix_bound_cif_func f = infix_forward_get_code(t);
+            infix_cif_func f = infix_forward_get_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
             void * aa[] = {&a};
@@ -163,7 +163,7 @@ TEST {
                 infix_status status = infix_forward_create_unbound(&trampoline, "(int32)->int32", nullptr);
                 if (status != INFIX_SUCCESS)
                     exit(2);  // Exit with error if creation fails
-                infix_cif_func dangling_ptr = infix_forward_get_unbound_code(trampoline);
+                infix_unbound_cif_func dangling_ptr = infix_forward_get_unbound_code(trampoline);
                 infix_forward_destroy(trampoline);
                 int arg = 5, result = 0;
                 void * args[] = {&arg};
@@ -195,7 +195,7 @@ TEST {
                 infix_forward_t * t = nullptr;
                 if (infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func, nullptr) != INFIX_SUCCESS)
                     exit(2);
-                infix_bound_cif_func f = infix_forward_get_code(t);
+                infix_cif_func f = infix_forward_get_code(t);
                 infix_forward_destroy(t);
                 int a = 5, r = 0;
                 void * aa[] = {&a};

@@ -302,7 +302,7 @@ TEST {
         infix_forward_t * trampoline = nullptr;
         status = infix_forward_create_unbound_manual(&trampoline, ret_type, &packed_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Successfully generated trampoline for packed struct.");
-        infix_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
+        infix_unbound_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
 
         PackedStruct arg_struct = {'X', 0xDEADBEEFCAFEBABE};
         int result = 0;

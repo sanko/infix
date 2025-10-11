@@ -633,7 +633,7 @@ void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * 
 
     // The cached trampoline is always a "bound" one, as its target (the user's C
     // handler) is known at creation time. Get its executable code pointer.
-    infix_bound_cif_func cif_func = infix_forward_get_code(trampoline);
+    infix_cif_func cif_func = infix_forward_get_code(trampoline);
 
     // The cached forward trampoline was generated to expect `num_args + 1` arguments,
     // with the first one being the `infix_reverse_t*` context. We must construct a

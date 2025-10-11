@@ -79,7 +79,7 @@ TEST {
     ok(infix_forward_create_unbound_manual(&unbound_t, return_type, &struct_type, 1, 1) == INFIX_SUCCESS,
        "Unbound created");
     int unbound_result = 0;
-    infix_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
+    infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
     unbound_cif((void *)process_pointer_struct, &unbound_result, args);
     ok(unbound_result == 550, "Unbound call correct");
 
@@ -89,7 +89,7 @@ TEST {
            INFIX_SUCCESS,
        "Bound created");
     int bound_result = 0;
-    infix_bound_cif_func bound_cif = infix_forward_get_code(bound_t);
+    infix_cif_func bound_cif = infix_forward_get_code(bound_t);
     bound_cif(&bound_result, args);
     ok(bound_result == 550, "Bound call correct");
 

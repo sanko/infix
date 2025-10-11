@@ -78,7 +78,7 @@ TEST {
             Point p = {42.5, -10.0};
             void * args[] = {&p};
             double result = 0.0;
-            infix_bound_cif_func cif = infix_forward_get_code(trampoline);
+            infix_cif_func cif = infix_forward_get_code(trampoline);
             cif(&result, args);
             ok(fabs(result - 42.5) < 1e-9, "FFI call with named type as argument succeeded");
         }
