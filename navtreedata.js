@@ -186,7 +186,7 @@ var NAVTREE =
         [ "Recipe: Porting a Python Binding from <tt>dyncall</tt> to <tt>infix</tt>", "md_docs_2cookbook.html#autotoc_md129", null ]
       ] ]
     ] ],
-    [ "Infix Internals and Architecture", "md_docs_2internals.html", [
+    [ "infix Internals and Architecture", "md_docs_2internals.html", [
       [ "1. Core Design Philosophy", "md_docs_2internals.html#autotoc_md131", [
         [ "1.1 Guiding Principles", "md_docs_2internals.html#autotoc_md132", null ],
         [ "1.2 Key Architectural Decisions", "md_docs_2internals.html#autotoc_md133", [
@@ -202,127 +202,131 @@ var NAVTREE =
       [ "3. Security Features Deep Dive", "md_docs_2internals.html#autotoc_md142", [
         [ "3.1 Write XOR Execute (W^X)", "md_docs_2internals.html#autotoc_md143", null ],
         [ "3.2 Guard Pages and Read-Only Contexts", "md_docs_2internals.html#autotoc_md144", null ],
-        [ "3.3 Fuzz Testing", "md_docs_2internals.html#autotoc_md145", null ]
+        [ "3.3 macOS JIT Hardening and the Entitlement Fallback", "md_docs_2internals.html#autotoc_md145", [
+          [ "The Challenge: Hardened Runtimes on Apple Silicon", "md_docs_2internals.html#autotoc_md146", null ],
+          [ "The <tt>infix</tt> Solution: Runtime Detection with Graceful Fallback", "md_docs_2internals.html#autotoc_md147", null ]
+        ] ],
+        [ "3.4 Fuzz Testing", "md_docs_2internals.html#autotoc_md148", null ]
       ] ],
-      [ "4. ABI Internals", "md_docs_2internals.html#autotoc_md147", null ],
-      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md149", [
-        [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md150", null ],
-        [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md151", null ],
-        [ "Useful Tools", "md_docs_2internals.html#autotoc_md152", null ]
+      [ "4. ABI Internals", "md_docs_2internals.html#autotoc_md150", null ],
+      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md152", [
+        [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md153", null ],
+        [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md154", null ],
+        [ "Useful Tools", "md_docs_2internals.html#autotoc_md155", null ]
       ] ],
-      [ "External ABI Documentation", "md_docs_2internals.html#autotoc_md153", null ]
+      [ "External ABI Documentation", "md_docs_2internals.html#autotoc_md156", null ]
     ] ],
     [ "Porting <tt>infix</tt> to a New Platform", "md_docs_2porting.html", [
-      [ "Step 0: Research and Preparation", "md_docs_2porting.html#autotoc_md155", null ],
-      [ "Step 1: Platform Detection (<tt>src/common/infix_config.h</tt>)", "md_docs_2porting.html#autotoc_md156", null ],
-      [ "Step 2: Implement the ABI Specification", "md_docs_2porting.html#autotoc_md157", null ],
-      [ "Step 3: Implement the Instruction Emitters", "md_docs_2porting.html#autotoc_md158", null ],
-      [ "Step 4: Integrate the New ABI", "md_docs_2porting.html#autotoc_md159", null ],
-      [ "Step 5: Testing", "md_docs_2porting.html#autotoc_md160", null ]
+      [ "Step 0: Research and Preparation", "md_docs_2porting.html#autotoc_md158", null ],
+      [ "Step 1: Platform Detection (<tt>src/common/infix_config.h</tt>)", "md_docs_2porting.html#autotoc_md159", null ],
+      [ "Step 2: Implement the ABI Specification", "md_docs_2porting.html#autotoc_md160", null ],
+      [ "Step 3: Implement the Instruction Emitters", "md_docs_2porting.html#autotoc_md161", null ],
+      [ "Step 4: Integrate the New ABI", "md_docs_2porting.html#autotoc_md162", null ],
+      [ "Step 5: Testing", "md_docs_2porting.html#autotoc_md163", null ]
     ] ],
-    [ "The Infix Signature and Type System", "md_docs_2signatures.html", [
-      [ "Part 2: The Signature Language Reference", "md_docs_2signatures.html#autotoc_md166", [
-        [ "Part 1: Introduction", "md_docs_2signatures.html#autotoc_md162", [
-          [ "1.1 The Challenge of Interoperability", "md_docs_2signatures.html#autotoc_md163", null ],
-          [ "1.2 The Limitations of C Declarations", "md_docs_2signatures.html#autotoc_md164", null ],
-          [ "1.3 Our Solution: A Human-First Signature System", "md_docs_2signatures.html#autotoc_md165", null ]
+    [ "The infix Signature and Type System", "md_docs_2signatures.html", [
+      [ "Part 2: The Signature Language Reference", "md_docs_2signatures.html#autotoc_md169", [
+        [ "Part 1: Introduction", "md_docs_2signatures.html#autotoc_md165", [
+          [ "1.1 The Challenge of Interoperability", "md_docs_2signatures.html#autotoc_md166", null ],
+          [ "1.2 The Limitations of C Declarations", "md_docs_2signatures.html#autotoc_md167", null ],
+          [ "1.3 Our Solution: A Human-First Signature System", "md_docs_2signatures.html#autotoc_md168", null ]
         ] ],
-        [ "2.1 Primitives", "md_docs_2signatures.html#autotoc_md167", [
-          [ "Tier 1: Abstract C Types", "md_docs_2signatures.html#autotoc_md168", null ],
-          [ "Tier 2: Explicit Fixed-Width Types (Recommended)", "md_docs_2signatures.html#autotoc_md169", null ]
+        [ "2.1 Primitives", "md_docs_2signatures.html#autotoc_md170", [
+          [ "Tier 1: Abstract C Types", "md_docs_2signatures.html#autotoc_md171", null ],
+          [ "Tier 2: Explicit Fixed-Width Types (Recommended)", "md_docs_2signatures.html#autotoc_md172", null ]
         ] ],
-        [ "2.2 Type Constructors and Composite Structures", "md_docs_2signatures.html#autotoc_md170", null ],
-        [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md171", null ]
+        [ "2.2 Type Constructors and Composite Structures", "md_docs_2signatures.html#autotoc_md173", null ],
+        [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md174", null ]
       ] ],
-      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md173", [
-        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md174", null ],
-        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md175", null ]
+      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md176", [
+        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md177", null ],
+        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md178", null ]
       ] ],
-      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md177", null ]
+      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md180", null ]
     ] ],
     [ "Building and Integrating <tt>infix</tt>", "md_INSTALL.html", [
-      [ "Prerequisites", "md_INSTALL.html#autotoc_md184", null ],
-      [ "1. Building <tt>infix</tt> from Source", "md_INSTALL.html#autotoc_md186", [
-        [ "Using xmake (Recommended)", "md_INSTALL.html#autotoc_md187", null ],
-        [ "Using Perl", "md_INSTALL.html#autotoc_md188", null ],
-        [ "Using CMake", "md_INSTALL.html#autotoc_md189", [
-          [ "Using Makefiles", "md_INSTALL.html#autotoc_md194", [
-            [ "GNU Make (Linux, macOS, BSDs)", "md_INSTALL.html#autotoc_md195", null ],
-            [ "NMake (Windows with MSVC)", "md_INSTALL.html#autotoc_md197", null ]
+      [ "Prerequisites", "md_INSTALL.html#autotoc_md187", null ],
+      [ "1. Building <tt>infix</tt> from Source", "md_INSTALL.html#autotoc_md189", [
+        [ "Using xmake (Recommended)", "md_INSTALL.html#autotoc_md190", null ],
+        [ "Using Perl", "md_INSTALL.html#autotoc_md191", null ],
+        [ "Using CMake", "md_INSTALL.html#autotoc_md192", [
+          [ "Using Makefiles", "md_INSTALL.html#autotoc_md197", [
+            [ "GNU Make (Linux, macOS, BSDs)", "md_INSTALL.html#autotoc_md198", null ],
+            [ "NMake (Windows with MSVC)", "md_INSTALL.html#autotoc_md200", null ]
           ] ],
-          [ "Manual Compilation (Advanced)", "md_INSTALL.html#autotoc_md198", null ]
+          [ "Manual Compilation (Advanced)", "md_INSTALL.html#autotoc_md201", null ]
         ] ],
-        [ "2. Integrating <tt>infix</tt> into Your Project", "md_INSTALL.html#autotoc_md200", [
-          [ "Using CMake with <tt>find_package</tt>", "md_INSTALL.html#autotoc_md201", null ],
-          [ "Using pkg-config", "md_INSTALL.html#autotoc_md202", null ],
-          [ "Using xmake", "md_INSTALL.html#autotoc_md203", null ],
-          [ "Using in Visual Studio Code", "md_INSTALL.html#autotoc_md204", [
-            [ "Manual Integration into an Existing Project", "md_INSTALL.html#autotoc_md205", null ]
+        [ "2. Integrating <tt>infix</tt> into Your Project", "md_INSTALL.html#autotoc_md203", [
+          [ "Using CMake with <tt>find_package</tt>", "md_INSTALL.html#autotoc_md204", null ],
+          [ "Using pkg-config", "md_INSTALL.html#autotoc_md205", null ],
+          [ "Using xmake", "md_INSTALL.html#autotoc_md206", null ],
+          [ "Using in Visual Studio Code", "md_INSTALL.html#autotoc_md207", [
+            [ "Manual Integration into an Existing Project", "md_INSTALL.html#autotoc_md208", null ]
           ] ]
         ] ],
-        [ "3. Packaging <tt>infix</tt> (For Maintainers)", "md_INSTALL.html#autotoc_md207", [
-          [ "Linux Distributions (DEB/RPM)", "md_INSTALL.html#autotoc_md208", null ],
-          [ "xmake Repository", "md_INSTALL.html#autotoc_md209", null ]
+        [ "3. Packaging <tt>infix</tt> (For Maintainers)", "md_INSTALL.html#autotoc_md210", [
+          [ "Linux Distributions (DEB/RPM)", "md_INSTALL.html#autotoc_md211", null ],
+          [ "xmake Repository", "md_INSTALL.html#autotoc_md212", null ]
         ] ]
       ] ]
     ] ],
     [ "<tt>infix</tt>: A JIT-Powered FFI Library for C", "md_README.html", [
-      [ "Who is this for?", "md_README.html#autotoc_md211", null ],
-      [ "Key Features", "md_README.html#autotoc_md212", null ],
-      [ "Getting Started", "md_README.html#autotoc_md213", [
-        [ "Prerequisites", "md_README.html#autotoc_md214", null ],
-        [ "Building the Library", "md_README.html#autotoc_md215", null ],
-        [ "Integrating into Your Project", "md_README.html#autotoc_md216", null ],
-        [ "Quick Start: A 60-Second Example", "md_README.html#autotoc_md217", null ]
+      [ "Who is this for?", "md_README.html#autotoc_md214", null ],
+      [ "Key Features", "md_README.html#autotoc_md215", null ],
+      [ "Getting Started", "md_README.html#autotoc_md216", [
+        [ "Prerequisites", "md_README.html#autotoc_md217", null ],
+        [ "Building the Library", "md_README.html#autotoc_md218", null ],
+        [ "Integrating into Your Project", "md_README.html#autotoc_md219", null ],
+        [ "Quick Start: A 60-Second Example", "md_README.html#autotoc_md220", null ]
       ] ],
-      [ "Usage Guide", "md_README.html#autotoc_md218", [
-        [ "Part 1: The Signature Language", "md_README.html#autotoc_md219", null ],
-        [ "Part 2: Common Recipes", "md_README.html#autotoc_md220", [
-          [ "Forward Call (Calling C from your code)", "md_README.html#autotoc_md221", null ],
-          [ "Reverse Call (Creating a C callback)", "md_README.html#autotoc_md222", null ],
-          [ "Using the Named Type Registry", "md_README.html#autotoc_md223", null ],
-          [ "Reading Global Variables from a Shared Library", "md_README.html#autotoc_md224", null ]
+      [ "Usage Guide", "md_README.html#autotoc_md221", [
+        [ "Part 1: The Signature Language", "md_README.html#autotoc_md222", null ],
+        [ "Part 2: Common Recipes", "md_README.html#autotoc_md223", [
+          [ "Forward Call (Calling C from your code)", "md_README.html#autotoc_md224", null ],
+          [ "Reverse Call (Creating a C callback)", "md_README.html#autotoc_md225", null ],
+          [ "Using the Named Type Registry", "md_README.html#autotoc_md226", null ],
+          [ "Reading Global Variables from a Shared Library", "md_README.html#autotoc_md227", null ]
         ] ],
-        [ "Part 3: The Manual C API (Advanced)", "md_README.html#autotoc_md225", null ],
-        [ "Powerful Introspection for Dynamic Data Marshalling", "md_README.html#autotoc_md226", null ],
-        [ "Error Handling", "md_README.html#autotoc_md227", null ]
+        [ "Part 3: The Manual C API (Advanced)", "md_README.html#autotoc_md228", null ],
+        [ "Powerful Introspection for Dynamic Data Marshalling", "md_README.html#autotoc_md229", null ],
+        [ "Error Handling", "md_README.html#autotoc_md230", null ]
       ] ],
-      [ "API Reference", "md_README.html#autotoc_md228", [
-        [ "Named Type Registry (<tt>registry_api</tt>)", "md_README.html#autotoc_md229", null ],
-        [ "High-Level Signature API (<tt>high_level_api</tt>)", "md_README.html#autotoc_md230", null ],
-        [ "Dynamic Library & Globals API (<tt>exports_api</tt>)", "md_README.html#autotoc_md231", null ],
-        [ "Manual API (<tt>manual_api</tt>)", "md_README.html#autotoc_md232", null ],
-        [ "Type System (<tt>type_system</tt>)", "md_README.html#autotoc_md233", null ],
-        [ "Memory Management (<tt>memory_management</tt>)", "md_README.html#autotoc_md234", null ],
-        [ "Introspection API (<tt>introspection_api</tt>)", "md_README.html#autotoc_md235", null ],
-        [ "Error Handling API (<tt>error_api</tt>)", "md_README.html#autotoc_md236", null ]
+      [ "API Reference", "md_README.html#autotoc_md231", [
+        [ "Named Type Registry (<tt>registry_api</tt>)", "md_README.html#autotoc_md232", null ],
+        [ "High-Level Signature API (<tt>high_level_api</tt>)", "md_README.html#autotoc_md233", null ],
+        [ "Dynamic Library & Globals API (<tt>exports_api</tt>)", "md_README.html#autotoc_md234", null ],
+        [ "Manual API (<tt>manual_api</tt>)", "md_README.html#autotoc_md235", null ],
+        [ "Type System (<tt>type_system</tt>)", "md_README.html#autotoc_md236", null ],
+        [ "Memory Management (<tt>memory_management</tt>)", "md_README.html#autotoc_md237", null ],
+        [ "Introspection API (<tt>introspection_api</tt>)", "md_README.html#autotoc_md238", null ],
+        [ "Error Handling API (<tt>error_api</tt>)", "md_README.html#autotoc_md239", null ]
       ] ],
-      [ "Supported Platforms", "md_README.html#autotoc_md237", null ],
-      [ "Building and Integrating", "md_README.html#autotoc_md238", null ],
-      [ "Contributing", "md_README.html#autotoc_md239", null ],
-      [ "Learn More", "md_README.html#autotoc_md240", null ],
-      [ "License & Legal", "md_README.html#autotoc_md241", [
-        [ "Code License", "md_README.html#autotoc_md242", null ],
-        [ "Documentation License", "md_README.html#autotoc_md243", null ]
+      [ "Supported Platforms", "md_README.html#autotoc_md240", null ],
+      [ "Building and Integrating", "md_README.html#autotoc_md241", null ],
+      [ "Contributing", "md_README.html#autotoc_md242", null ],
+      [ "Learn More", "md_README.html#autotoc_md243", null ],
+      [ "License & Legal", "md_README.html#autotoc_md244", [
+        [ "Code License", "md_README.html#autotoc_md245", null ],
+        [ "Documentation License", "md_README.html#autotoc_md246", null ]
       ] ]
     ] ],
     [ "Security Policy", "md_SECURITY.html", [
-      [ "Supported Versions", "md_SECURITY.html#autotoc_md245", null ],
-      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md246", null ],
-      [ "Security Model", "md_SECURITY.html#autotoc_md247", [
-        [ "Mitigations", "md_SECURITY.html#autotoc_md248", [
-          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md249", null ],
-          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md250", null ],
-          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md251", null ],
-          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md252", null ],
-          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md253", null ]
+      [ "Supported Versions", "md_SECURITY.html#autotoc_md248", null ],
+      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md249", null ],
+      [ "Security Model", "md_SECURITY.html#autotoc_md250", [
+        [ "Mitigations", "md_SECURITY.html#autotoc_md251", [
+          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md252", null ],
+          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md253", null ],
+          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md254", null ],
+          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md255", null ],
+          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md256", null ]
         ] ]
       ] ]
     ] ],
     [ "<strong>Project Roadmap: infix FFI</strong>", "md_TODO.html", [
-      [ "<strong>High Priority: Foundation & Stability</strong>", "md_TODO.html#autotoc_md257", null ],
-      [ "<strong>Medium Priority: Expansion & Optimization</strong>", "md_TODO.html#autotoc_md258", null ],
-      [ "<strong>Low Priority: Advanced Features & Polish</strong>", "md_TODO.html#autotoc_md259", null ]
+      [ "<strong>High Priority: Foundation & Stability</strong>", "md_TODO.html#autotoc_md260", null ],
+      [ "<strong>Medium Priority: Expansion & Optimization</strong>", "md_TODO.html#autotoc_md261", null ],
+      [ "<strong>Low Priority: Advanced Features & Polish</strong>", "md_TODO.html#autotoc_md262", null ]
     ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
@@ -357,7 +361,7 @@ var NAVTREEINDEX =
 "compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f",
 "group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2",
 "md_docs_2cookbook.html#autotoc_md57",
-"structinfix__type__t.html#a654909b4eaa71cf395f7324c581e163f"
+"structinfix__type__t.html#a48077b88e083d5e6fdad889427efaca7"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

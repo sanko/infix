@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: Infix Internals and Architecture</title>
+<title>infix FFI Library: infix Internals and Architecture</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('md_docs_2internals.html',''); initResi
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Infix Internals and Architecture</div></div>
+  <div class="headertitle"><div class="title">infix Internals and Architecture</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md130"></a> This document provides a deep dive into the architecture and internal workings of <code>infix</code>. It is intended for maintainers, contributors, and advanced users who wish to understand the library's design philosophy, core mechanics, security features, and ABI implementations.</p>
@@ -199,10 +199,50 @@ The Trampoline Generation Pipeline</h2>
 3.2 Guard Pages and Read-Only Contexts</h2>
 <p>To mitigate use-after-free bugs, <code>infix_executable_free</code> turns freed memory into a non-accessible "guard page," causing an immediate and safe crash on attempted use. Additionally, after a reverse trampoline's context is created, its memory is made read-only to prevent runtime corruption.</p>
 <h2><a class="anchor" id="autotoc_md145"></a>
-3.3 Fuzz Testing</h2>
+3.3 macOS JIT Hardening and the Entitlement Fallback</h2>
+<p>The implementation of W^X on macOS, particularly on Apple Silicon, is unique and requires special handling to balance security with developer convenience.</p>
+<h3><a class="anchor" id="autotoc_md146"></a>
+The Challenge: Hardened Runtimes on Apple Silicon</h3>
+<p>Apple Silicon enforces W^X at the hardware level. For a JIT engine to function correctly within a standard, distributable application (e.g., an official Python interpreter), that application <b>must</b> be built with specific permissions:</p><ol type="1">
+<li>The memory must be allocated with the <code>MAP_JIT</code> flag.</li>
+<li>The application must be signed with the <code>com.apple.security.cs.allow-jit</code> entitlement.</li>
+<li>Permissions must be toggled with the special <code>pthread_jit_write_protect_np()</code> function, as the standard <code>mprotect()</code> will fail.</li>
+</ol>
+<p>This presents a major usability problem. Forcing every developer who uses <code>infix</code> to learn about and correctly configure linker flags (<code>-framework Security</code>, etc.) and code signing for their local test builds would create an unacceptable barrier to entry.</p>
+<h3><a class="anchor" id="autotoc_md147"></a>
+The &lt;tt&gt;infix&lt;/tt&gt; Solution: Runtime Detection with Graceful Fallback</h3>
+<p><code>infix</code> solves this problem by making a runtime decision. This provides the best of both worlds: security-by-default for real-world applications, and zero-configuration ease-of-use for developers.</p>
+<p>Here is the logic, which is executed once per process:</p><ol type="1">
+<li><b>Dynamic Linking:</b> On the first JIT allocation, <code>infix</code> attempts to <code>dlopen()</code> the <code>Security.framework</code> and <code>CoreFoundation.framework</code> libraries and find the necessary functions using <code>dlsym()</code>. This avoids any build-time linker dependencies.</li>
+<li><b>Entitlement Check:</b> If the framework functions are found, <code>infix</code> checks if the currently running process has the <code>com.apple.security.cs.allow-jit</code> entitlement.</li>
+<li><b>Strategy Selection:</b><ul>
+<li>If <b>both</b> the frameworks are available <b>and</b> the entitlement is present, a global flag is set to use the <b>modern, secure API path</b> (<code>MAP_JIT</code> and <code>pthread_jit_write_protect_np</code>). This is the path that will be taken by official interpreters like Python or Perl.</li>
+<li>If <b>either</b> step fails, the library gracefully falls back to the <b>legacy, insecure path</b> (a standard <code>mmap</code> followed by <code>mprotect</code>). This path works for unhardened developer builds (like our CI tests) because macOS runs them in a more permissive mode.</li>
+</ul>
+</li>
+</ol>
+<p>This ensures the library "just works" for developers, while automatically "leveling up" its security when run inside a properly configured application.</p>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[infix_executable_alloc() called on macOS] --&gt; B{Is this the first call?};</div>
+<div class="line">    B --&gt;|Yes| C[Runtime Detection];</div>
+<div class="line">    B --&gt;|No| G[Use cached strategy];</div>
+<div class="line"> </div>
+<div class="line">    subgraph Runtime Detection</div>
+<div class="line">        C --&gt; D{dlopen frameworks?};</div>
+<div class="line">        D --&gt;|Yes| E{has_jit_entitlement?};</div>
+<div class="line">        D --&gt;|No| F[Set strategy = LEGACY];</div>
+<div class="line">        E --&gt;|Yes| H[Set strategy = SECURE];</div>
+<div class="line">        E --&gt;|No| F;</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    G --&gt; I{Strategy is SECURE?};</div>
+<div class="line">    I --&gt;|Yes| J[mmap with MAP_JIT];</div>
+<div class="line">    I --&gt;|No| K[mmap without MAP_JIT];</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md148"></a>
+3.4 Fuzz Testing</h2>
 <p>The entire <code>infix</code> API surface, especially the signature parser and ABI classifiers, is continuously tested using <code>libFuzzer</code> and <code>AFL++</code>. The fuzzing harnesses (<code>fuzz/</code>) are designed to find memory safety violations (ASan), integer overflows (UBSan), and infinite loops (timeouts). All findings are converted into permanent regression tests.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md147"></a>
+<h1><a class="anchor" id="autotoc_md150"></a>
 4. ABI Internals</h1>
 <p>This section provides a low-level comparison of the ABIs supported by <code>infix</code>.</p>
 <table class="markdownTable">
@@ -226,16 +266,16 @@ The Trampoline Generation Pipeline</h2>
 <td class="markdownTableBodyNone"><b>Shadow Space</b>   </td><td class="markdownTableBodyNone">No. Has a 128-byte "red zone" below <code>RSP</code>.   </td><td class="markdownTableBodyNone">Yes, caller allocates 32 bytes on stack for the callee.   </td><td class="markdownTableBodyNone">No.   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md149"></a>
+<h1><a class="anchor" id="autotoc_md152"></a>
 5. Maintainer's Debugging Guide</h1>
-<h2><a class="anchor" id="autotoc_md150"></a>
+<h2><a class="anchor" id="autotoc_md153"></a>
 Method 1: Static Analysis with &lt;tt&gt;infix_dump_hex&lt;/tt&gt;</h2>
 <p>The simplest way to see what the JIT is producing is to enable <code>INFIX_DEBUG_ENABLED=1</code> in your build. This will trigger a hexdump of the generated machine code after every trampoline creation.</p>
 <div class="fragment"><div class="line"># My Forward Trampoline (size: 78 bytes)</div>
 <div class="line">#   0x0000: 55 48 89 e5 41 54 41 55  41 56 41 57 49 89 cc 49 | UH..ATAUAVAWI..I</div>
 <div class="line">#   0x0010: 89 d5 4d 89 c6 48 81 ec  20 00 00 00 4c 89 e9 4d | ..M..H.. ...L..M</div>
 <div class="line">#   ...</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md151"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md154"></a>
 Method 2: Live Debugging with GDB/LLDB</h2>
 <p>This is the most powerful method. It allows you to step through the JIT'd code one instruction at a time.</p>
 <ol type="1">
@@ -245,12 +285,12 @@ Method 2: Live Debugging with GDB/LLDB</h2>
 <li><b>Trigger and Disassemble</b>: Run the program. When it breaks, use <code>disassemble</code> to view the JIT code.</li>
 <li><b>Step and Verify</b>: Use <code>stepi</code> (step instruction) and <code>info registers</code> to walk through the code and check register values.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md152"></a>
+<h2><a class="anchor" id="autotoc_md155"></a>
 Useful Tools</h2>
 <ul>
 <li><b>Online Assembler/Disassembler</b>: <a href="https://shell-storm.org/online/Online-Assembler-and-Disassembler/">shell-storm.org</a> is an invaluable tool for quickly checking instruction encodings.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md153"></a>
+<h1><a class="anchor" id="autotoc_md156"></a>
 External ABI Documentation</h1>
 <ul>
 <li><b>System V AMD64 ABI:</b> <a href="https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-1.0.pdf">https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-1.0.pdf</a></li>

@@ -7,5 +7,5 @@ var searchData=
   ['005_5flayouts_2ec_4',['005_layouts.c',['../005__layouts_8c.html',1,'']]],
   ['006_5fend_5fto_5fend_5fcalls_2ec_5',['006_end_to_end_calls.c',['../006__end__to__end__calls_8c.html',1,'']]],
   ['007_5ftype_5fregistry_2ec_6',['007_type_registry.c',['../007__type__registry_8c.html',1,'']]],
-  ['0_3a_20research_20and_20preparation_7',['Step 0: Research and Preparation',['../md_docs_2porting.html#autotoc_md155',1,'']]]
+  ['0_3a_20research_20and_20preparation_7',['Step 0: Research and Preparation',['../md_docs_2porting.html#autotoc_md158',1,'']]]
 ];

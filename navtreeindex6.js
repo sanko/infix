@@ -1,5 +1,8 @@
 var NAVTREEINDEX6 =
 {
+"structinfix__type__t.html#a48077b88e083d5e6fdad889427efaca7":[15,0,3,1,24],
+"structinfix__type__t.html#a4dc08b6a109b67e1394e097c90d497d6":[15,0,3,1,2],
+"structinfix__type__t.html#a6129c5165e189c4e5aa99904a98079e1":[15,0,3,1,12],
 "structinfix__type__t.html#a654909b4eaa71cf395f7324c581e163f":[15,0,3,1,7],
 "structinfix__type__t.html#a736c003e9eef685d02153e46a46ad461":[15,0,3,1,14],
 "structinfix__type__t.html#a7e98e476d66532fa296d00607d0851d1":[15,0,3,1,3],
