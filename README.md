@@ -1,4 +1,4 @@
-# `infix`: A JIT-Powered FFI Library for C
+# infix: A JIT-Powered FFI Library for C
 
 [![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/sanko/infix/actions/workflows/ci.yml)
 

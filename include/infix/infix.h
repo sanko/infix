@@ -335,6 +335,17 @@ typedef void (*infix_unbound_cif_func)(void *, void *, void **);
  * The target function is hardcoded, so it is not needed as an argument at the call site.
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
+ *
+ * @par Example: Calling a function `int add(int a, int b)`
+ * @code
+ * infix_cif_func cif = infix_forward_get_code(trampoline);
+ * int a = 10, b = 20;
+ * int result;
+ * // The args array must contain pointers to the actual argument values.
+ * void* my_args[] = { &a, &b };
+ * cif(&result, my_args);
+ * // `result` now contains 30.
+ * @endcode
  */
 typedef void (*infix_cif_func)(void *, void **);
 
@@ -437,8 +448,16 @@ c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, cons
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
  * @param user_callback_fn A function pointer to the user's C callback handler.
- *                         Its signature must start with `infix_context_t*`, followed
- *                         by the types described in the signature string.
+ *                         Its signature **must** accept an `infix_context_t*` as its first
+ *                         argument, followed by the arguments described in the signature.
+ *
+ * @par Example:
+ * A native C library expects a function pointer of type:<br>
+ * `int (*my_callback)(int, int);`
+ *
+ * Your `infix` handler function must be:<br>
+ * `int my_handler(infix_context_t* ctx, int a, int b);`
+ *
  * @param user_data A user-defined pointer for passing state to the handler,
  *                  accessible inside the handler via `infix_reverse_get_user_data`.
  * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
