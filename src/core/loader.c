@@ -191,7 +191,7 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
         return status;
 
     // Perform a memory copy of the correct size.
-    memcpy(buffer, symbol_addr, type->size);
+    infix_memcpy(buffer, symbol_addr, type->size);
 
     // Clean up the temporary arena used for parsing.
     infix_arena_destroy(arena);
@@ -233,7 +233,7 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
         return status;
 
     // Perform a memory copy of the correct size.
-    memcpy(symbol_addr, buffer, type->size);
+    infix_memcpy(symbol_addr, buffer, type->size);
 
     // Clean up the temporary arena used for parsing.
     infix_arena_destroy(arena);

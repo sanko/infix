@@ -456,7 +456,7 @@ A brief overview of the complete public API, grouped by functionality.
 
 ## Building and Integrating
 
-Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are available in **[INSTALL.md](INSTALL.md)**.
+Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are available in **[INSTALL.md](docs/INSTALL.md)**.
 
 Because `infix` uses a unity build, integration into an existing project is simple: add `src/infix.c` to your list of source files and add the `include/` directory to your include paths.
 
@@ -470,7 +470,7 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 *   **[Signature Reference](docs/signatures.md):** The complete guide to the signature mini-language.
 *   **[Internals](docs/internals.md):** A deep dive into the library's architecture, JIT engine, and security features.
 *   **[Porting Guide](docs/porting.md):** Instructions for adding support for new architectures.
-*   **[INSTALL.md](INSTALL.md):** Detailed build and integration instructions.
+*   **[INSTALL.md](docs/INSTALL.md):** Detailed build and integration instructions.
 
 ## License & Legal
 

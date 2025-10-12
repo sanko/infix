@@ -191,7 +191,7 @@ static const char * parse_identifier(parser_state * state) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return nullptr;
     }
-    memcpy(name, start, len);
+    infix_memcpy(name, start, len);
     name[len] = '\0';
     return name;
 }

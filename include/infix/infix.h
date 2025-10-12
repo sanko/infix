@@ -781,7 +781,7 @@ typedef enum {
  * infix_arena_destroy(arena);
  * @endcode
  */
-c23_nodiscard infix_status infix_type_print(char * ,                                            size_t ,                                            const infix_type * ,                                            infix_print_dialect_t );
+c23_nodiscard infix_status infix_type_print(char *, size_t, const infix_type *, infix_print_dialect_t);
 
 /**
  * @brief Serializes a full function signature into a string representation.
@@ -800,8 +800,14 @@ c23_nodiscard infix_status infix_type_print(char * ,                            
  * @param[in]  dialect The output format to use.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status infix_function_print(char *,                                                size_t,
-                                                const char *,                                                const infix_type *,                                                const infix_function_argument *,                                                size_t,                                                size_t,                                                infix_print_dialect_t);
+c23_nodiscard infix_status infix_function_print(char *,
+                                                size_t,
+                                                const char *,
+                                                const infix_type *,
+                                                const infix_function_argument *,
+                                                size_t,
+                                                size_t,
+                                                infix_print_dialect_t);
 
 /** @} */
 

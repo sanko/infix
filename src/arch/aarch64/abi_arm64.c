@@ -59,7 +59,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>  // For memcpy
 
 /** The General-Purpose Registers used for the first 8 integer/pointer arguments. */
 static const arm64_gpr GPR_ARGS[] = {X0_REG, X1_REG, X2_REG, X3_REG, X4_REG, X5_REG, X6_REG, X7_REG};
