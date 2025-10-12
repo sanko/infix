@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: Public API</title>
+<title>infix FFI Library: Public API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,7 +17,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -26,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix
+   <div id="projectname">infix FFI Library
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -178,20 +177,10 @@ Enumerations</h2></td></tr>
 <p>This is the function pointer type returned by <code>infix_forward_get_code</code>. The target function is hardcoded, so it is not needed as an argument at the call site. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">return_value</td><td>A pointer to a buffer where the return value will be stored. </td></tr>
-    <tr><td class="paramname">args</td><td>An array of pointers, where each element points to an argument's value.</td></tr>
+    <tr><td class="paramname">args</td><td>An array of pointers, where each element points to an argument's value. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section user"><dt>Example: Calling a function <code>int add(int a, int b)</code></dt><dd><div class="fragment"><div class="line"><a class="code hl_typedef" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline);</div>
-<div class="line"><span class="keywordtype">int</span> a = 10, b = 20;</div>
-<div class="line"><span class="keywordtype">int</span> result;</div>
-<div class="line"><span class="comment">// The args array must contain pointers to the actual argument values.</span></div>
-<div class="line"><span class="keywordtype">void</span>* my_args[] = { &amp;a, &amp;b };</div>
-<div class="line">cif(&amp;result, my_args);</div>
-<div class="line"><span class="comment">// `result` now contains 30.</span></div>
-<div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:223</div></div>
-<div class="ttc" id="agroup__public__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">The signature for a &quot;bound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:350</div></div>
-</div><!-- fragment --> </dd></dl>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a72">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
 </dl>
 

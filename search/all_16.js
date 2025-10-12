@@ -1,31 +1,4 @@
 var searchData=
 [
-  ['language_0',['Part 1: The Signature Language',['../index.html#autotoc_md9',1,'']]],
-  ['language_20binding_1',['The Four Pillars of a Language Binding',['../md_docs_2cookbook.html#autotoc_md114',1,'']]],
-  ['language_20bindings_2',['Chapter 11: Building Language Bindings',['../md_docs_2cookbook.html#autotoc_md113',1,'']]],
-  ['language_20reference_3',['Part 2: The Signature Language Reference',['../md_docs_2signatures.html#autotoc_md192',1,'']]],
-  ['languages_4',['languages',['../md_docs_2cookbook.html#autotoc_md65',1,'Chapter 5: Interoperability with Other Languages'],['../md_docs_2cookbook.html#autotoc_md69',1,'The Pattern for Other Compiled Languages']]],
-  ['large_20structs_20passed_20by_20reference_5',['Recipe: Large Structs Passed by Reference',['../md_docs_2cookbook.html#autotoc_md47',1,'']]],
-  ['layout_6',['Choosing a layout',['..//home/runner/work/infix/infix/docs/doxygen-awesome-css/README.md#autotoc_md149',1,'']]],
-  ['learn_20more_7',['Learn More',['../index.html#autotoc_md30',1,'']]],
-  ['legal_8',['License &amp; Legal',['../index.html#autotoc_md31',1,'']]],
-  ['level_20signature_20api_9',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
-  ['level_20signature_20api_20tt_20high_5flevel_5fapi_20tt_10',['High-Level Signature API (&lt;tt&gt;high_level_api&lt;/tt&gt;)',['../index.html#autotoc_md20',1,'']]],
-  ['libffi_20tt_20and_20tt_20dyncall_20tt_11',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md98',1,'']]],
-  ['libffi_20tt_20approach_12',['libffi tt approach',['../md_docs_2cookbook.html#autotoc_md109',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md101',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md105',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach']]],
-  ['libraries_20system_20calls_13',['Chapter 6: Dynamic Libraries &amp; System Calls',['../md_docs_2cookbook.html#autotoc_md77',1,'']]],
-  ['libraries_20without_20linking_14',['Recipe: Calling Native System Libraries without Linking',['../md_docs_2cookbook.html#autotoc_md78',1,'']]],
-  ['library_15',['library',['../index.html#autotoc_md5',1,'Building the Library'],['../index.html#autotoc_md14',1,'Reading Global Variables from a Shared Library']]],
-  ['library_20dependencies_16',['Recipe: Handling Library Dependencies',['../md_docs_2cookbook.html#autotoc_md82',1,'']]],
-  ['library_20for_20c_17',['infix: A JIT-Powered FFI Library for C',['../index.html',1,'']]],
-  ['library_20globals_20api_20tt_20exports_5fapi_20tt_18',['Dynamic Library &amp; Globals API (&lt;tt&gt;exports_api&lt;/tt&gt;)',['../index.html#autotoc_md21',1,'']]],
-  ['license_19',['license',['../index.html#autotoc_md32',1,'Code License'],['../index.html#autotoc_md33',1,'Documentation License']]],
-  ['license_20legal_20',['License &amp; Legal',['../index.html#autotoc_md31',1,'']]],
-  ['like_20tt_20printf_20tt_21',['Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md60',1,'']]],
-  ['limitations_20of_20c_20declarations_22',['1.2 The Limitations of C Declarations',['../md_docs_2signatures.html#autotoc_md190',1,'']]],
-  ['linking_23',['linking',['../md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-para',1,'Paragraph Linking'],['../md_docs_2cookbook.html#autotoc_md78',1,'Recipe: Calling Native System Libraries without Linking']]],
-  ['live_20debugging_20with_20gdb_20lldb_24',['Method 2: Live Debugging with GDB/LLDB',['../md_docs_2internals.html#autotoc_md177',1,'']]],
-  ['lldb_25',['Method 2: Live Debugging with GDB/LLDB',['../md_docs_2internals.html#autotoc_md177',1,'']]],
-  ['loader_2ec_26',['loader.c',['../loader_8c.html',1,'']]],
-  ['look_3a_20tt_20infix_20tt_20vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_27',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md98',1,'']]]
+  ['quick_20start_3a_20a_2060_20second_20example_0',['Quick Start: A 60-Second Example',['../index.html#autotoc_md7',1,'']]]
 ];

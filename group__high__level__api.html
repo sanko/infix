@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: High-Level Signature API</title>
+<title>infix FFI Library: High-Level Signature API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,7 +17,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -26,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix
+   <div id="projectname">infix FFI Library
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -285,18 +284,9 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the callback's signature. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's C callback handler. Its signature <b>must</b> accept an <code>infix_context_t*</code> as its first argument, followed by the arguments described in the signature.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section user"><dt>Example:</dt><dd>A native C library expects a function pointer of type:<br  />
- <code>int (*my_callback)(int, int);</code></dd></dl>
-<p>Your <code>infix</code> handler function must be:<br  />
- <code>int my_handler(infix_context_t* ctx, int a, int b);</code></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">user_data</td><td>A user-defined pointer for passing state to the handler, accessible inside the handler via <code>infix_reverse_get_user_data</code>. </td></tr>
-    <tr><td class="paramname">registry</td><td>An optional handle to a type registry for resolving named types. Pass <code>nullptr</code> if not used. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's C callback handler. Its signature must start with <code>infix_context_t*</code>, followed by the types described in the signature string. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">user_data</td><td>A user-defined pointer for passing state to the handler, accessible inside the handler via <code>infix_reverse_get_user_data</code>. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">registry</td><td>An optional handle to a type registry for resolving named types. Pass <code>nullptr</code> if not used. </td></tr>
   </table>
   </dd>
 </dl>
