@@ -21,6 +21,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
     *   [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
     *   [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
     *   [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
+    *   [Recipe: Working with Enums](#recipe-working-with-enums)
 *   **[Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)**
     *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
     *   [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
@@ -28,7 +29,9 @@ This guide provides practical, real-world examples to help you solve common FFI 
     *   [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
     *   [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
     *   [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
+    *   [Recipe: Handling `long double`](#recipe-handling-long-double)
     *   [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
+    *   [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
 *   **[Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)**
     *   [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
     *   [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
@@ -52,6 +55,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
 *   **[Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)**
     *   [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
     *   [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+    *   [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
 *   **[Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)**
     *   [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
     *   [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
@@ -456,7 +460,44 @@ void recipe_simd() {
 
     infix_forward_get_code(t)(&result, args);
     double* d = (double*)&result;
-    printf("SIMD vector result: [%.1f, %.1f]\n", d, d); // Expected: [42.0, 42.0]
+    // Note: The result of _mm_add_pd is {a[0]+b[0], a[1]+b[1]}, which is {10+32, 20+22}
+    printf("SIMD vector result: [%.1f, %.1f]\n", d[0], d[1]); // Expected: [42.0, 42.0]
+
+    infix_forward_destroy(t);
+}
+```
+### **Recipe: Working with Enums**
+
+**Problem**: You need to call a C function that takes an `enum`, but you want to ensure the underlying integer type is handled correctly for ABI purposes.
+
+**Solution**: Use the `e:<type>` syntax in the signature string. `infix` treats the enum identically to its underlying integer type for the FFI call, which is the correct behavior.
+
+```c
+// Native C enum and function
+typedef enum { STATUS_OK = 0, STATUS_WARN = 1, STATUS_ERR = -1 } StatusCode;
+const char* status_to_string(StatusCode code) {
+    switch (code) {
+        case STATUS_OK: return "OK";
+        case STATUS_WARN: return "Warning";
+        case STATUS_ERR: return "Error";
+        default: return "Unknown";
+    }
+}
+
+void recipe_enums() {
+    // The C `enum` is based on `int`, so we describe it as `e:int`.
+    const char* signature = "(e:int) -> *char";
+    infix_forward_t* t = NULL;
+    infix_forward_create(&t, signature, (void*)status_to_string, NULL);
+
+    // Pass the enum value as its underlying integer type.
+    int code = STATUS_ERR;
+    const char* result_str = NULL;
+    void* args[] = { &code };
+
+    infix_forward_get_code(t)(&result_str, args);
+
+    printf("Status for code %d is '%s'\n", code, result_str); // Expected: 'Error'
 
     infix_forward_destroy(t);
 }
@@ -635,6 +676,39 @@ void recipe_vtable_call() {
 }
 ```
 
+### **Recipe: Handling `long double`**
+**Problem**: You need to call a function that uses `long double`, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for `double` on MSVC/macOS).
+**Solution**: Use the `long double` keyword in your signature. `infix`'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal `double`.
+
+```c
+#include <math.h>
+
+// A simple function using long double.
+long double native_sqrtl(long double x) {
+    return sqrtl(x);
+}
+
+void recipe_long_double() {
+    // On platforms where long double is distinct (like Linux), this will
+    // trigger special ABI handling. On platforms where it's an alias for
+    // double (like Windows), infix will treat it as a double.
+    const char* signature = "(long double) -> long double";
+
+    infix_forward_t* t = NULL;
+    infix_forward_create(&t, signature, (void*)native_sqrtl, NULL);
+
+    long double input = 144.0L;
+    long double result = 0.0L;
+    void* args[] = { &input };
+
+    infix_forward_get_code(t)(&result, args);
+
+    printf("sqrtl(144.0L) = %Lf\n", result); // Expected: 12.0
+
+    infix_forward_destroy(t);
+}
+```
+
 ### Recipe: Proving Reentrancy with Nested FFI Calls
 **Problem**: You need to be sure that making an FFI call from within an FFI callback is safe.
 **Solution**: `infix` is designed to be fully reentrant. The library uses no global mutable state, and all error information is stored in thread-local storage. This recipe demonstrates a forward call that invokes a reverse callback, which in turn makes another forward call.
@@ -685,6 +759,72 @@ void recipe_reentrancy() {
     infix_forward_destroy(fwd_harness);
     infix_reverse_destroy(rev_nested);
     infix_forward_destroy(fwd_multiply);
+}
+```
+
+### **Recipe: Proving Thread Safety**
+**Problem**: You need to create a trampoline in one thread and safely use it in another.
+**Solution**: `infix` trampoline handles (`infix_forward_t*` and `infix_reverse_t*`) are immutable after creation and are safe to share between threads. All error state is kept in thread-local storage, so calls from different threads will not interfere with each other.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#if defined(_WIN32)
+#include <windows.h>
+#else
+#include <pthread.h>
+#endif
+
+// A simple function to be the FFI target.
+int add(int a, int b) { return a + b; }
+
+// A struct to pass data to our worker thread.
+typedef struct {
+    infix_cif_func cif; // The callable trampoline function pointer.
+    int result;
+} thread_data_t;
+
+// The function our worker thread will execute.
+#if defined(_WIN32)
+DWORD WINAPI worker_thread_func(LPVOID arg) {
+#else
+void* worker_thread_func(void* arg) {
+#endif
+    thread_data_t* data = (thread_data_t*)arg;
+    int a = 20, b = 22;
+    void* args[] = { &a, &b };
+    // Call the trampoline function pointer that was created on the main thread.
+    data->cif(&data->result, args);
+#if defined(_WIN32)
+    return 0;
+#else
+    return NULL;
+#endif
+}
+
+void recipe_thread_safety() {
+    // Main thread: Create the trampoline.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, "(int, int)->int", (void*)add, NULL);
+
+    thread_data_t data = { infix_forward_get_code(trampoline), 0 };
+
+    // Main thread: Spawn a worker thread, passing it the callable pointer.
+#if defined(_WIN32)
+    HANDLE thread_handle = CreateThread(NULL, 0, worker_thread_func, &data, 0, NULL);
+    WaitForSingleObject(thread_handle, INFINITE);
+    CloseHandle(thread_handle);
+#else
+    pthread_t thread_id;
+    pthread_create(&thread_id, NULL, worker_thread_func, &data);
+    pthread_join(thread_id, NULL);
+#endif
+
+    // Main thread: Check the result computed by the worker thread.
+    printf("Result from worker thread: %d\n", data.result); // Expected: 42
+
+    // Main thread: Clean up the trampoline.
+    infix_forward_destroy(trampoline);
 }
 ```
 
@@ -1227,6 +1367,7 @@ void dynamic_wrapper(infix_forward_t* trampoline, void* target_func, void** args
 ## Chapter 8: Performance & Memory Management
 
 ### Best Practice: Caching Trampolines
+
 **Rule**: **NEVER** generate a new trampoline for the same function signature inside a hot loop. The performance of `infix` comes from amortizing the one-time generation cost over many fast calls.
 
 ```c
@@ -1243,6 +1384,7 @@ infix_forward_destroy(t);
 ```
 
 ### Recipe: Using a Custom Arena for a Group of Types
+
 **Goal:** Create a set of related `infix_type` objects for the Manual API and free them all at once.
 
 ```c
@@ -1257,6 +1399,49 @@ void recipe_custom_arena() {
 
     // A single call to destroy the arena cleans up everything allocated from it.
     infix_arena_destroy(arena);
+}
+```
+
+### **Recipe: Using Custom Memory Allocators**
+
+**Problem**: Your application uses a custom memory manager for tracking, pooling, or integration with a garbage collector. You need `infix` to use your allocators instead of the standard `malloc`, `calloc`, etc.
+
+**Solution**: `infix` provides override macros (`infix_malloc`, `infix_free`, etc.). Define these macros *before* you include `infix.h` to redirect all of its internal memory operations.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// 1. Define your custom memory management functions.
+static size_t g_total_allocated = 0;
+void* tracking_malloc(size_t size) {
+    g_total_allocated += size;
+    printf(">> Custom Malloc: Allocating %zu bytes (Total: %zu)\n", size, g_total_allocated);
+    return malloc(size);
+}
+
+void tracking_free(void* ptr) {
+    printf(">> Custom Free\n");
+    free(ptr);
+}
+
+// 2. Define the infix override macros BEFORE including infix.h
+#define infix_malloc(size) tracking_malloc(size)
+#define infix_free(ptr)    tracking_free(ptr)
+// You can also override infix_calloc and infix_realloc if needed.
+
+#include <infix/infix.h>
+
+void recipe_custom_allocators() {
+    printf("Creating trampoline with custom allocators\n");
+    infix_forward_t* trampoline = NULL;
+    // All internal allocations for the trampoline will now use tracking_malloc.
+    infix_forward_create(&trampoline, "()->void", (void*)recipe_custom_allocators, NULL);
+
+    printf("Destroying trampoline\n");
+    // The free operations will now use tracking_free.
+    infix_forward_destroy(trampoline);
+    printf("Done\n");
 }
 ```
 

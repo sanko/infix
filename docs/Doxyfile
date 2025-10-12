@@ -13,12 +13,12 @@ USE_MDFILE_AS_MAINPAGE = README.md
 # Build related configuration options
 #---------------------------------------------------------------------------
 # Set the input directories. Paths are relative to this Doxyfile.
-# '.' refers to the current directory ('docs/'), which will pick up our markdown files.
 INPUT                  = README.md include src docs
 RECURSIVE              = YES
 FILE_PATTERNS          = *.h *.c *.md
 EXTRACT_ALL            = YES
 EXTRACT_STATIC         = YES
+EXCLUDE                = docs/doxygen-awesome-css
 
 #---------------------------------------------------------------------------
 # HTML related configuration options
@@ -40,6 +40,9 @@ HTML_EXTRA_FILES       = ./docs/doxygen-awesome-css/doxygen-awesome-fragment-cop
                          ./docs/doxygen-awesome-css/doxygen-awesome-interactive-toc.js \
                          ./docs/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
 HTML_COLORSTYLE        = LIGHT # required with Doxygen >= 1.9.5
+
+MARKDOWN_SUPPORT       = YES
+FLEX_MARKDOWN          = YES
 
 DISABLE_INDEX          = NO
 GENERATE_TREEVIEW      = YES

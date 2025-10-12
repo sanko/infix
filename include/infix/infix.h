@@ -47,6 +47,10 @@ E ---------------------------------------
  * @defgroup error_api Error Reporting
  * @ingroup public_api
  * @brief Public structures and enumerations for detailed error reporting.
+ *
+ * @defgroup exports_api Dynamic Library & Globals API
+ * @ingroup public_api
+ * @brief Functions for interacting with shared libraries and their global variables.
  */
 
 /**

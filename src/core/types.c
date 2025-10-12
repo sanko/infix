@@ -42,14 +42,12 @@
  * Helper macro to initialize a static `infix_type` for a primitive.
  * This ensures size and alignment are correct for the compilation target at compile time.
  */
-#define INFIX_TYPE_INIT(id, T)            \
-    {                                     \
-        .category = INFIX_TYPE_PRIMITIVE, \
-        .size = sizeof(T),                \
-        .alignment = _Alignof(T),         \
-        .is_arena_allocated = false,      \
-        .meta.primitive_id = id,          \
-    }
+#define INFIX_TYPE_INIT(id, T)         \
+    {.category = INFIX_TYPE_PRIMITIVE, \
+     .size = sizeof(T),                \
+     .alignment = _Alignof(T),         \
+     .is_arena_allocated = false,      \
+     .meta.primitive_id = id}
 
 /*
  * These statically allocated singletons are a performance optimization. They avoid
@@ -710,10 +708,6 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
  * Introspection API. They provide a stable way for users to query type and
  * trampoline properties without needing to know the internal layout of the
  * opaque `infix_type_t`, `infix_forward_t`, or `infix_reverse_t` structs.
- * The trampoline-related functions are implemented here for organizational
-- * consistency, as they are part of the same conceptual API group.
-+ * consistency, as they are part of the same conceptual API group. It also includes
-+ * the new introspection functions for the type registry.
  */
 
 /*
