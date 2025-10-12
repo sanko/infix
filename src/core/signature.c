@@ -1433,7 +1433,7 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             _print(state, "double");
             break;
         case INFIX_PRIMITIVE_LONG_DOUBLE:
-            _print(state, "long double");
+            _print(state, "longdouble");
             break;
         default:
             state->status = INFIX_ERROR_INVALID_ARGUMENT;

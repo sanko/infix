@@ -394,7 +394,7 @@ static inline bool is_double(const infix_type * type) {
     return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_DOUBLE;
 }
 
-/** @brief Convenience helper to check if an `infix_type` is a `long double`. */
+/** @brief Convenience helper to check if an `infix_type` is a `longdouble`. */
 static inline bool is_long_double(const infix_type * type) {
     return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_LONG_DOUBLE;
 }

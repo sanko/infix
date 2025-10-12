@@ -29,7 +29,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
       + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
       + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
       + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
-      + [Recipe: Handling `long double`](#recipe-handling-long-double)
+      + [Recipe: Handling `longdouble`](#recipe-handling-longdouble)
       + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
       + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
    * [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
@@ -728,11 +728,11 @@ void recipe_vtable_call() {
 }
 ```
 
-### Recipe: Handling `long double`
+### Recipe: Handling `longdouble`
 
-**Problem**: You need to call a function that uses `long double`, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for `double` on MSVC/macOS).
+**Problem**: You need to call a function that uses `longdouble`, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for `double` on MSVC/macOS).
 
-**Solution**: Use the `long double` keyword in your signature. `infix`'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal `double`.
+**Solution**: Use the `longdouble` keyword in your signature. `infix`'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal `double`.
 
 ```c
 #include <math.h>
@@ -746,7 +746,7 @@ void recipe_long_double() {
     // On platforms where long double is distinct (like Linux), this will
     // trigger special ABI handling. On platforms where it's an alias for
     // double (like Windows), infix will treat it as a double.
-    const char* signature = "(long double) -> long double";
+    const char* signature = "(longdouble) -> longdouble";
 
     infix_forward_t* t = NULL;
     infix_forward_create(&t, signature, (void*)native_sqrtl, NULL);

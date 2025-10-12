@@ -65,10 +65,10 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The `infix_executable_free` function is updated to use `mprotect`/`VirtualProtect`. A new test is created that frees a trampoline and then calls its old function pointer, asserting that the program safely terminates.
     *   **Possible Roadblocks:** Testing for an expected crash is non-trivial and may require platform-specific signal handling or process management in the test suite.
 
-- [x] **Add `long double` Support**
-    *   **Context:** `long double` was the last major C primitive type not supported by the library.
+- [x] **Add `longdouble` Support**
+    *   **Context:** `longdouble` was the last major C primitive type not supported by the library.
     *   **Idea:** Add a new primitive type and implement the correct, platform-specific ABI handling for it.
-    *   **Goal:** `long double` is a recognized `infix_type` and passes correctly in forward and reverse calls on all supported platforms (System V, Windows/GCC, AArch64).
+    *   **Goal:** `longdouble` is a recognized `infix_type` and passes correctly in forward and reverse calls on all supported platforms (System V, Windows/GCC, AArch64).
 
 - [x] **Read-Only Callback Contexts (RELRO for Callbacks)**
     *   **Context:** The `infix_reverse_t` struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.

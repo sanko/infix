@@ -104,23 +104,27 @@ int main() {
 
 The signature language is the most powerful and convenient way to use `infix`.
 
-| Name                 | `infix` Syntax                | Example Signature              | C/C++ Equivalent                 |
-| :------------------- | :---------------------------- | :----------------------------- | :------------------------------- |
-| **Primitives**       | C type names                  | `"int"`, `"double"`, `"uint64"`| `int`, `double`, `uint64_t`      |
-| **Pointers**         | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
-| **Structs**          | `{<members>}`                 | `"{int, double, *char}"`       | `struct { ... }`                 |
-| **Unions**           | `<<members>>`                 | `"<int, float>"`               | `union { ... }`                  |
-| **Arrays**           | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                     |
-| **Function Pointers**| `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`              |
-| **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                |
-| **SIMD Vectors**     | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`         |
-| **Enums**            | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                   |
-| **Packed Structs**   | `!{...}` or `!<N>:{...}`       | `"!{char, longlong}"`          | `__attribute__((packed))`        |
-| **Variadic Functions**| `(<fixed>;<variadic>)`       | `"(*char; int)->int"`          | `printf(const char*, ...)`      |
-| **Named Types**      | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`      | `typedef struct Point {...}`     |
-| **Named Arguments**  | `<name>:<type>`               | `"(count:int, data:*void)"`    | (For reflection only)            |
+| Name                  | `infix` Syntax                 | Example Signature               | C/C++ Equivalent                 |
+| :--------------------- | :---------------------------- | :------------------------------ | :------------------------------- |
+| **Primitives**         | C type names                  | `"int"`, `"double"`, `"uint64"` | `int`, `double`, `uint64_t`      |
+| **Pointers**           | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
+| **Structs**            | `{<members>}`                 | `"{int, double, *char}"`        | `struct { ... }`                 |
+| **Unions**             | `<<members>>`                 | `"<int, float>"`                | `union { ... }`                  |
+| **Arrays**             | `[<size>:<type>]`             | `"[10:double]"`                 | `double[10]`                     |
+| **Function Pointers**  | `(<args>)-><ret>`             | `"(int, int)->int"`             | `int (*)(int, int)`              |
+| **_Complex**           | `c[<base_type>]`              | `"c[double]"`                   | `_Complex double`                |
+| **SIMD Vectors**       | `v[<size>:<type>]`            | `"v[4:float]"`                  | `__m128`, `float32x4_t`          |
+| **Enums**              | `e:<int_type>`                | `"e:int"`                       | `enum { ... }`                   |
+| **Packed Structs**     | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`           | `__attribute__((packed))`        |
+| **Variadic Functions** | `(<fixed>;<variadic>)`        | `"(*char; int)->int"`           | `printf(const char*, ...)`       |
+| **Named Types**        | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`       | `typedef struct Point {...}`     |
+| **Named Arguments**    | `<name>:<type>`               | `"(count:int, data:*void)"`     | (For reflection only)            |
+
+See [the complete signature specification](docs/signatures.md).
 
 ### Part 2: Common Recipes
+
+A wide range of recipes may be found in [infix's cookbook](docs/cookbook.md).
 
 #### Forward Call (Calling C from your code)
 

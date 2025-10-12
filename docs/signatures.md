@@ -43,9 +43,9 @@ These keywords represent standard C types whose size can vary by platform. They 
 | `ulong`         | `unsigned long`      | **32 or 64 bits**   | The unsigned version of `long`.                                             |
 | `longlong`      | `long long`          | 64 bits             | A signed integer of at least 64 bits.                                       |
 | `ulonglong`     | `unsigned long long` | 64 bits             | An unsigned integer of at least 64 bits.                                    |
-| `float`         | `float`              | 32 bits             | A 32-bit single-precision floating-point number.                          |
-| `double`        | `double`             | 64 bits             | A 64-bit double-precision floating-point number.                          |
-| `long double`   | `long double`        | **Varies**          | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution. |
+| `float`         | `float`              | 32 bits             | A 32-bit single-precision floating-point number.                            |
+| `double`        | `double`             | 64 bits             | A 64-bit double-precision floating-point number.                            |
+| `longdouble`    | `long double`        | **Varies**          | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.  |
 
 #### Tier 2: Explicit Fixed-Width Types (Recommended)
 
@@ -82,7 +82,7 @@ These syntax elements allow you to build complex types from simpler ones.
 
 ### 2.3 Syntax Showcase
 
-| FFI Signature                             | Breakdown                                                                      |
+| FFI Signature                             | Breakdown                                                                       |
 | :---------------------------------------- | :------------------------------------------------------------------------------ |
 | `int`                                     | A standard C signed integer.                                                    |
 | `*char`                                   | A pointer to a C `signed char`.                                                 |
