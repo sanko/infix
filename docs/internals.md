@@ -1,4 +1,4 @@
-# infix Internals and Architecture
+# Architectural Notes
 
 This document provides a deep dive into the architecture and internal workings of `infix`. It is intended for maintainers, contributors, and advanced users who wish to understand the library's design philosophy, core mechanics, security features, and ABI implementations.
 

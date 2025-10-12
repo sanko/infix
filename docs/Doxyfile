@@ -13,12 +13,12 @@ USE_MDFILE_AS_MAINPAGE = README.md
 # Build related configuration options
 #---------------------------------------------------------------------------
 # Set the input directories. Paths are relative to this Doxyfile.
-INPUT                  = README.md include src docs
+INPUT                  = README.md include src docs t eg
 RECURSIVE              = YES
 FILE_PATTERNS          = *.h *.c *.md
 EXTRACT_ALL            = YES
 EXTRACT_STATIC         = YES
-EXCLUDE                = docs/doxygen-awesome-css
+EXCLUDE                = docs/doxygen-awesome-css/docs docs/doxygen-awesome-css
 
 #---------------------------------------------------------------------------
 # HTML related configuration options

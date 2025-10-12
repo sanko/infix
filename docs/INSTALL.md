@@ -1,4 +1,4 @@
-# Building and Integrating `infix`
+# Building and Integrating infix
 
 This guide provides detailed instructions for building the `infix` library from source and integrating it into your own projects. `infix` is designed to be easy to compile and supports several popular build systems.
 

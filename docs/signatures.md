@@ -192,7 +192,7 @@ arg                 ::= ( Identifier ':' )? value_type
 primitive_type      ::= 'void' | 'bool'
                     | 'char' | 'uchar' | 'short' | 'ushort' | 'int' | 'uint'
                     | 'long' | 'ulong' | 'longlong' | 'ulonglong'
-                    | 'float' | 'double' | 'long' ' ' 'double'
+                    | 'float' | 'double' | 'longdouble'
                     | 'sint8' | 'uint8' | 'sint16' | 'uint16' | 'sint32' | 'uint32'
                     | 'sint64' | 'uint64' | 'sint128' | 'uint128'
                     | 'float32' | 'float64'

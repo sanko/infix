@@ -1,4 +1,4 @@
-# The `infix` FFI Cookbook
+# The infix FFI Cookbook
 
 This guide provides practical, real-world examples to help you solve common FFI problems and leverage the full power of the `infix` library. Where the `README.md` covers concepts, this cookbook provides the code.
 
@@ -6,71 +6,91 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 ## Table of Contents
 
-*   **[Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)**
-    *   [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
-    *   [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
-    *   [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
-    *   [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
-*   **[Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)**
-    *   [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
-    *   [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
-    *   [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
-    *   [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
-    *   [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
-    *   [Recipe: Working with Unions](#recipe-working-with-unions)
-    *   [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
-    *   [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
-    *   [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
-    *   [Recipe: Working with Enums](#recipe-working-with-enums)
-*   **[Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)**
-    *   [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
-    *   [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
-*   **[Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)**
-    *   [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
-    *   [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
-    *   [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
-    *   [Recipe: Handling `long double`](#recipe-handling-long-double)
-    *   [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
-    *   [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
-*   **[Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)**
-    *   [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
-    *   [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
-    *   [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
-    *   [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
-        *   [Rust](#rust)
-        *   [Zig](#zig)
-        *   [Go](#go)
-        *   [Swift](#swift)
-        *   [Dlang](#dlang)
-        *   [Fortran](#fortran)
-        *   [Assembly](#assembly)
-*   **[Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries--system-calls)**
-    *   [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
-    *   [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
-    *   [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
-*   **[Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)**
-    *   [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
-    *   [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
-    *   [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
-*   **[Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)**
-    *   [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
-    *   [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
-    *   [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
-*   **[Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)**
-    *   [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
-    *   [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
-    *   [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
-*   **[Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look-infix-vs-libffi-and-dyncall)**
-*   **[Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)**
-    *   [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
-    *   [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
+   * [Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)
+      + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
+      + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
+      + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
+      + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
+   * [Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)
+      + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
+      + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
+      + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
+      + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
+      + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
+      + [Recipe: Working with Unions](#recipe-working-with-unions)
+      + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
+      + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
+      + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
+      + [Recipe: Working with Enums](#recipe-working-with-enums)
+   * [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
+      + [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
+      + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
+   * [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
+      + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
+      + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
+      + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
+      + [Recipe: Handling `long double`](#recipe-handling-long-double)
+      + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
+      + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
+   * [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
+      + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
+      + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
+      + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
+      + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
+         - [Rust](#rust)
+         - [Zig](#zig)
+         - [Go](#go)
+         - [Swift](#swift)
+         - [Dlang](#dlang)
+         - [Fortran](#fortran)
+         - [Assembly](#assembly)
+   * [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries--system-calls)
+      + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
+      + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
+         - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
+         - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
+      + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
+   * [Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)
+      + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
+      + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
+      + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
+   * [Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)
+      + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
+      + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+      + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
+      + [**Recipe: Building a Dynamic Call Frame with an Arena**](#recipe-building-a-dynamic-call-frame-with-an-arena)
+         - [How It Works & Why It's Better](#how-it-works--why-its-better)
+         - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
+   * [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
+      + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
+      + [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
+      + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
+   * [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look-infix-vs-libffi-and-dyncall)
+      + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
+         - [The `dyncall` Approach](#the-dyncall-approach)
+         - [The `libffi` Approach](#the-libffi-approach)
+         - [The `infix` Approach](#the-infix-approach)
+      + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
+         - [The `dyncall` Approach](#the-dyncall-approach-1)
+         - [The `libffi` Approach](#the-libffi-approach-1)
+         - [The `infix` Approach](#the-infix-approach-1)
+      + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
+         - [The `dyncall` Approach](#the-dyncall-approach-2)
+         - [The `libffi` Approach](#the-libffi-approach-2)
+         - [The `infix` Approach](#the-infix-approach-2)
+      + [Analysis and Takeaways](#analysis-and-takeaways)
+   * [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
+      + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
+      + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
 
 ---
 
 ## Chapter 1: The Basics (Forward Calls)
 
 ### Recipe: Calling a Simple C Function
+
 **Problem**: You want to call a standard C function, like `atan2` from the math library.
+
 **Solution**: Describe the function's signature, prepare pointers to your arguments, and invoke the function through a generated trampoline. An "unbound" trampoline is ideal when you want to call multiple functions that share the same signature.
 
 ```c
@@ -105,7 +125,9 @@ void recipe_simple_forward_call() {
 ```
 
 ### Recipe: Passing and Receiving Pointers
+
 **Problem**: You need to call a C function that takes a pointer as an argument and returns a pointer, like `strchr`.
+
 **Solution**: Use the `*` prefix for pointer types. The value in the `args` array for a pointer argument is the address of your pointer variable.
 
 ```c
@@ -135,6 +157,7 @@ void recipe_pointer_args_and_return() {
 ```
 
 ### Recipe: Working with "Out" Parameters
+
 **Problem**: You need to call a C function that doesn't use its return value for its primary output. Instead, it takes a pointer to a variable and writes the result into it. This is a very common pattern for functions that need to return multiple values or an error code.
 
 **Solution**: The signature is straightforward. The "out" parameter is simply a pointer type (`*<type>`). In your calling code, you create a local variable and pass its address in the `args` array.
@@ -176,7 +199,9 @@ void recipe_out_parameters() {
 ```
 
 ### Recipe: Working with Opaque Pointers (Incomplete Types)
+
 **Problem**: You need to interact with a C library that uses opaque pointers or handles (e.g., `FILE*`, `sqlite3*`) where the internal structure is hidden.
+
 **Solution**: Use the `*void` signature. This is the canonical representation for any generic handle. Using a registry to create a type alias like `@FileHandle = *void;` can make your signatures more readable.
 
 ```c
@@ -249,7 +274,9 @@ void recipe_pass_struct_by_value() {
 ```
 
 ### Recipe: Receiving a Struct from a Function
+
 **Problem**: You need to call a function that *returns* a struct by value.
+
 **Solution**: `infix` handles the ABI details, whether the struct is returned in registers or via a hidden pointer passed by the caller.
 
 ```c
@@ -272,7 +299,9 @@ void recipe_return_struct() {
 ```
 
 ### Recipe: Large Structs Passed by Reference
+
 **Problem**: A function takes a struct that is too large to fit in registers.
+
 **Solution**: The process is identical to the small struct example. `infix`'s ABI logic will detect that the struct is large and automatically pass it by reference (the standard C ABI rule).
 
 ```c
@@ -296,7 +325,9 @@ void recipe_large_struct() {
 ```
 
 ### Recipe: Working with Packed Structs
+
 **Problem**: You need to call a function that takes a `__attribute__((packed))` struct.
+
 **Solution**: Use the `!{...}` syntax for 1-byte alignment, or `!N:{...}` to specify a maximum alignment of `N` bytes.
 
 ```c
@@ -322,7 +353,9 @@ void recipe_packed_struct() {
 ```
 
 ### Recipe: Working with Structs that Contain Bitfields
+
 **Problem**: You need to interact with a C struct that uses bitfields. `infix`'s signature language has no syntax for bitfields because their memory layout is implementation-defined and not portable.
+
 **Solution**: Treat the underlying integer that holds the bitfields as a single member in your signature. Then, use C's bitwise operators in your wrapper code to manually pack and unpack the values before and after the FFI call.
 
 ```c
@@ -362,7 +395,9 @@ void recipe_bitfields() {
 ```
 
 ### Recipe: Working with Unions
+
 **Problem**: You need to call a function that passes or returns a `union`.
+
 **Solution**: Use the `<...>` syntax to describe the union's members.
 
 ```c
@@ -387,7 +422,9 @@ void recipe_union() {
 ```
 
 ### Recipe: Working with Fixed-Size Arrays
+
 **Problem**: A function takes a fixed-size array, like `long long sum(long long arr[4]);`.
+
 **Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this. To describe the array *itself* (e.g., inside a struct), use the `[N:type]` syntax.
 
 ```c
@@ -417,7 +454,9 @@ void recipe_array_decay() {
 ```
 
 ### Recipe: Working with Complex Numbers
+
 **Problem**: You need to call a C function that uses `_Complex` types.
+
 **Solution**: Use the `c[<base_type>]` constructor in the signature string.
 
 ```c
@@ -441,7 +480,9 @@ void recipe_complex() {
 ```
 
 ### Recipe: Working with SIMD Vectors
+
 **Problem**: You need to call a high-performance C function that uses SIMD vector types.
+
 **Solution**: Use the `v[<elements>:<type>]` syntax. The ABI logic will ensure the vector is passed in a SIMD register.
 
 ```c
@@ -466,7 +507,8 @@ void recipe_simd() {
     infix_forward_destroy(t);
 }
 ```
-### **Recipe: Working with Enums**
+
+### Recipe: Working with Enums
 
 **Problem**: You need to call a C function that takes an `enum`, but you want to ensure the underlying integer type is handled correctly for ABI purposes.
 
@@ -508,7 +550,9 @@ void recipe_enums() {
 ## Chapter 3: The Power of Callbacks (Reverse Calls)
 
 ### Recipe: Creating a Stateless Callback for `qsort`
+
 **Problem**: You need to sort an array using C's `qsort`, which requires a function pointer for the comparison logic.
+
 **Solution**: Use a reverse trampoline. The handler's signature must accept `infix_context_t*` as its first argument.
 
 ```c
@@ -542,7 +586,9 @@ void recipe_qsort_callback() {
 ```
 
 ### Recipe: Creating a Stateful Callback
+
 **Problem**: A callback handler needs access to application state, but the C library API is stateless (it has no `void* user_data` parameter).
+
 **Solution**: `infix` automatically passes a pointer to the `infix_context_t` as the first argument to every handler. Store your application state in the context's `user_data` field.
 
 ```c
@@ -577,7 +623,9 @@ void recipe_stateful_callback() {
 ## Chapter 4: Advanced Techniques
 
 ### Recipe: Calling Variadic Functions like `printf`
+
 **Problem**: You need to call a function with a variable number of arguments.
+
 **Solution**: Use the `;` token to separate fixed and variadic arguments. The signature must exactly match the types you are passing in a *specific call*.
 
 ```c
@@ -597,7 +645,9 @@ void recipe_variadic_printf() {
 ```
 
 ### Recipe: Receiving and Calling a Function Pointer
+
 **Problem**: You need to call a C function that *takes* a function pointer as an argument, and pass it a callback you generate.
+
 **Solution**: The signature for a function pointer is `*((...) -> ...)`. Generate your callback, get its native pointer, and pass that pointer as an argument.
 
 ```c
@@ -625,7 +675,9 @@ void recipe_callback_as_arg() {
 ```
 
 ### Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)
+
 **Problem**: You have a pointer to a struct that contains function pointers, similar to a C implementation of an object's v-table. You need to read a function pointer from the struct and then call it.
+
 **Solution**: This is a two-step FFI process. First, read the function pointer value from the struct. Second, create a new trampoline for that function pointer's signature and call it. The Type Registry is perfect for making this clean.
 
 ```c
@@ -676,8 +728,10 @@ void recipe_vtable_call() {
 }
 ```
 
-### **Recipe: Handling `long double`**
+### Recipe: Handling `long double`
+
 **Problem**: You need to call a function that uses `long double`, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for `double` on MSVC/macOS).
+
 **Solution**: Use the `long double` keyword in your signature. `infix`'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal `double`.
 
 ```c
@@ -710,7 +764,9 @@ void recipe_long_double() {
 ```
 
 ### Recipe: Proving Reentrancy with Nested FFI Calls
+
 **Problem**: You need to be sure that making an FFI call from within an FFI callback is safe.
+
 **Solution**: `infix` is designed to be fully reentrant. The library uses no global mutable state, and all error information is stored in thread-local storage. This recipe demonstrates a forward call that invokes a reverse callback, which in turn makes another forward call.
 
 ```c
@@ -762,8 +818,10 @@ void recipe_reentrancy() {
 }
 ```
 
-### **Recipe: Proving Thread Safety**
+### Recipe: Proving Thread Safety
+
 **Problem**: You need to create a trampoline in one thread and safely use it in another.
+
 **Solution**: `infix` trampoline handles (`infix_forward_t*` and `infix_reverse_t*`) are immutable after creation and are safe to share between threads. All error state is kept in thread-local storage, so calls from different threads will not interfere with each other.
 
 ```c
@@ -833,10 +891,13 @@ void recipe_thread_safety() {
 ## Chapter 5: Interoperability with Other Languages
 
 ### The Universal Principle: The C ABI
+
 `infix` can call any function that exposes a standard C ABI. Nearly every compiled language provides a mechanism to export a function using this standard (`extern "C"` in C++/Rust/Zig, `//export` in Go, `bind(C)` in Fortran).
 
 ### Recipe: Interfacing with a C++ Class (Directly)
+
 **Problem**: You need to call C++ class methods without writing a C wrapper.
+
 **Solution**: Find the compiler-mangled names for the constructor, destructor, and methods. Use `infix` to call them directly, manually passing the `this` pointer as the first argument to methods.
 
 ```cpp
@@ -913,7 +974,9 @@ void recipe_cpp_mangled() {
 ```
 
 ### Recipe: Interfacing with C++ Templates
+
 **Problem**: How do you call a C++ function template from C?
+
 **Solution**: You can't call the template itself, but you can call a *specific instantiation* of it. The compiler generates a normal function for each concrete type used with the template, and this function has a predictable mangled name that you can look up and call.
 
 ```cpp
@@ -975,6 +1038,7 @@ void recipe_cpp_template() {
 ```
 
 ### The Pattern for Other Compiled Languages
+
 The `extern "C"` pattern is universal. The C code to call any of the functions below would be identical: load the library, find the symbol, create a trampoline for `(int, int) -> int`, and call it.
 
 #### Rust
@@ -1130,6 +1194,7 @@ void recipe_system_call() {
 }
 #endif
 ```
+
 ### Recipe: Reading and Writing Global Variables
 
 **Problem**: You need to access a global variable exported from a shared library, not just a function.
@@ -1139,6 +1204,7 @@ void recipe_system_call() {
 #### Example 1: Simple Integer Variable
 
 First, create a simple shared library (`libglobals.c`) that exports a counter:
+
 ```c
 // libglobals.c - Compile to a shared library
 #if defined(_WIN32)
@@ -1151,6 +1217,7 @@ EXPORT int global_counter = 42;
 ```
 
 Now, the C code to interact with it:
+
 ```c
 #include <infix/infix.h>
 #include <stdio.h>
@@ -1181,6 +1248,7 @@ void recipe_global_int() {
 #### Example 2: Aggregate (Struct) Variable
 
 Let's expand `libglobals.c` to export a configuration struct:
+
 ```c
 // Add to libglobals.c
 typedef struct {
@@ -1192,6 +1260,7 @@ EXPORT Config g_config = { "default", 1 };
 ```
 
 Now, the C code to read and write this struct:
+
 ```c
 #include <infix/infix.h>
 #include <stdio.h>
@@ -1228,7 +1297,9 @@ void recipe_global_struct() {
 ```
 
 ### Recipe: Handling Library Dependencies
+
 **Problem:** You want to load a library (`libA`) that itself depends on another shared library (`libB`).
+
 **Solution:** You don't have to do anything special. On all modern operating systems, the dynamic linker will automatically find, load, and link `libB` when you load `libA`.
 
 ```c
@@ -1267,7 +1338,9 @@ void recipe_library_dependencies() {
 ## Chapter 7: Introspection for Data Marshalling
 
 ### Recipe: Dynamic Struct Marshalling with the Signature Parser
+
 **Problem**: You have data from a dynamic source (like a script) and need to pack it into a C `struct` layout at runtime.
+
 **Solution**: Use `infix_type_from_signature` to parse a signature into a detailed `infix_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
 ```c
@@ -1306,7 +1379,9 @@ void recipe_dynamic_packing() {
 ```
 
 ### Recipe: Building a Signature String at Runtime
+
 **Problem**: The structure of the data you need to work with isn't known until runtime (e.g., it's defined in a configuration file or a user script).
+
 **Solution**: Since `infix` signatures are just strings, you can build them dynamically using `snprintf`. You can then parse this dynamic signature to get layout information, which is perfect for data marshalling or dynamic RPC systems.
 
 ```c
@@ -1347,7 +1422,9 @@ void recipe_dynamic_signature() {
 ```
 
 ### Recipe: Introspecting a Trampoline for a Wrapper
+
 **Problem**: You are building a language binding and need to validate the number and types of arguments provided by the user before making an FFI call.
+
 **Solution**: Use the trampoline introspection API to query the signature information stored in the handle.
 
 ```c
@@ -1402,7 +1479,7 @@ void recipe_custom_arena() {
 }
 ```
 
-### **Recipe: Using Custom Memory Allocators**
+### Recipe: Using Custom Memory Allocators
 
 **Problem**: Your application uses a custom memory manager for tracking, pooling, or integration with a garbage collector. You need `infix` to use your allocators instead of the standard `malloc`, `calloc`, etc.
 
@@ -1445,22 +1522,137 @@ void recipe_custom_allocators() {
 }
 ```
 
+### **Recipe: Building a Dynamic Call Frame with an Arena**
+
+**Problem**: You are writing a language binding (e.g., for Python, Perl, Lua) and need to build the `void* args[]` array at runtime. The arguments are coming from the host language, so you need to unbox them into temporary C values, create an array of pointers to these temporary values, and then clean everything up after the call. Doing this with `malloc` for every call in a tight loop is inefficient.
+
+**Solution**: Use an `infix` arena to allocate memory for both the unboxed C values *and* the `void**` array that points to them. This makes the entire call frame a single, contiguous block of memory that can be allocated and freed with extreme efficiency.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stdarg.h> // For va_list
+#include <string.h> // For memcpy
+
+// A sample C function we want to call dynamically.
+void process_user_data(int id, double score, const char* name) {
+    printf("C Function Received: ID=%d, Score=%.2f, Name='%s'\n", id, score, name);
+}
+
+// This function simulates the core logic of a language binding's generic "call" function.
+// It takes a va_list to represent dynamic arguments coming from a script.
+void dynamic_ffi_call(infix_forward_t* trampoline, void* target_func, int arg_count, ...) {
+    // 1. Create a temporary arena for this call's entire data frame.
+    infix_arena_t* call_arena = infix_arena_create(4096);
+    if (!call_arena) {
+        fprintf(stderr, "Error: Could not create call arena.\n");
+        return;
+    }
+
+    // 2. Allocate the void** array itself from the arena.
+    void** args = infix_arena_alloc(call_arena, sizeof(void*) * arg_count, _Alignof(void*));
+
+    va_list va;
+    va_start(va, arg_count);
+
+    // 3. For each argument, allocate space for its C value in the arena,
+    //    copy the value, and store the pointer in the `args` array.
+    for (int i = 0; i < arg_count; ++i) {
+        // In a real binding, you would inspect the trampoline's arg types here.
+        // For this example, we'll assume the order int, double, const char*.
+        if (i == 0) { // int
+            int* val_ptr = infix_arena_alloc(call_arena, sizeof(int), _Alignof(int));
+            *val_ptr = va_arg(va, int);
+            args[i] = val_ptr;
+        }
+        else if (i == 1) { // double
+            double* val_ptr = infix_arena_alloc(call_arena, sizeof(double), _Alignof(double));
+            *val_ptr = va_arg(va, double);
+            args[i] = val_ptr;
+        }
+        else if (i == 2) { // const char*
+            const char** val_ptr = infix_arena_alloc(call_arena, sizeof(const char*), _Alignof(const char*));
+            *val_ptr = va_arg(va, const char*);
+            args[i] = val_ptr;
+        }
+    }
+    va_end(va);
+
+    // 4. Make the FFI call using the arena-managed data.
+    infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
+    cif(target_func, NULL, args);
+
+    // 5. A single free cleans up the void** array AND all the argument values.
+    infix_arena_destroy(call_arena);
+}
+
+void recipe_arena_call_frame() {
+    // Setup the trampoline once and cache it (as a real binding would).
+    const char* signature = "(int, double, *char) -> void";
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create_unbound(&trampoline, signature, NULL);
+
+    printf("Making dynamic FFI call\n");
+    dynamic_ffi_call(trampoline, (void*)process_user_data, 3,
+                     123, 99.8, "test user");
+
+    infix_forward_destroy(trampoline);
+}
+```
+
+#### How It Works & Why It's Better
+
+1.  **Unified Allocation**: Instead of multiple calls to `malloc` (one for the `args` array, one for the `int`, one for the `double`, etc.), all memory is sourced from a single arena.
+
+2.  **Performance**: The allocations within the arena are extremely fast "bump" allocations, which is significantly cheaper than heap allocation, especially for many small objects.
+
+3.  **Simplified Cleanup**: All temporary data for the call—the `void**` array and the unboxed C values—lives in the arena. A single call to `infix_arena_destroy` cleans everything up instantly, eliminating the risk of memory leaks from forgetting to `free` one of the many small allocations.
+
+#### Advanced Optimization: Arena Resetting for Hot Loops
+
+For a binding that needs to make many FFI calls in a tight loop, you can achieve even higher performance by creating the arena *once* outside the loop and "resetting" it on each iteration. Since `infix_arena_t` is not an opaque type, you can do this manually:
+
+```c
+// Inside a hypothetical binding's loop...
+infix_arena_t* loop_arena = infix_arena_create(65536);
+for (int i = 0; i < 1000; ++i) {
+    // Before building the args, save the current allocation point.
+    size_t arena_state = loop_arena->current_offset;
+
+    // ... build the void** args and argument values from the arena ...
+    // ... make the FFI call ...
+
+    // Instead of destroying the arena, just reset the offset.
+    // This is virtually free and avoids all allocation/deallocation overhead inside the loop.
+    loop_arena->current_offset = arena_state;
+}
+infix_arena_destroy(loop_arena);
+```
+
 ---
 
 ## Chapter 9: Common Pitfalls & Troubleshooting
 
 ### Mistake: Passing a Value Instead of a Pointer in `args[]`
+
 *   **Symptom**: Crash or garbage data.
+
 *   **Explanation**: The `args` array for a forward call must be an array of **pointers to** your argument values, not the values themselves.
 
 ### Mistake: `infix` Signature Mismatch
+
 *   **Symptom**: Silent data corruption, garbage values, or a crash.
+
 *   **Explanation**: The signature string must *exactly* match the C type's size and alignment. A `long` is 32 bits on 64-bit Windows but 64 bits on 64-bit Linux.
+
 *   **Solution**: Use fixed-width types (`int32`, `uint64`) whenever possible.
 
 ### Pitfall: Function Pointer Syntax
+
 *   **Symptom**: Parser error.
+
 *   **Explanation**: A function type is `(...) -> ...`, and a pointer is `*...`. Therefore, a pointer to a function type is `*((...) -> ...)`.
+
 *   **Solution**: `int (*callback)(void)` becomes `*(() -> int)`.
 
 ---
@@ -1474,6 +1666,7 @@ This chapter provides a practical, code-level comparison of `infix` with two oth
 **Goal**: Call a simple function `double add_doubles(double a, double b);`. This demonstrates the core calling mechanism and API ergonomics.
 
 #### The `dyncall` Approach
+
 `dyncall` uses a "call virtual machine" (VM) where arguments are pushed one-by-one. The setup cost is incurred on **every call**, making it very flexible but less performant for repeated calls to the same function.
 
 ```c
@@ -1492,6 +1685,7 @@ dcFree(vm);
 ```
 
 #### The `libffi` Approach
+
 `libffi` requires a one-time "Call Interface" (`ffi_cif`) preparation. Subsequent calls are fast, but the initial type definition is manual and programmatic.
 
 ```c
@@ -1513,6 +1707,7 @@ ffi_call(&cif, FFI_FN(add_doubles), &result, args_values);
 ```
 
 #### The `infix` Approach
+
 `infix` combines the performance model of `libffi` (one-time setup) with a much higher-level, human-readable API. The key difference is the use of a simple signature string.
 
 ```c
@@ -1536,6 +1731,7 @@ cif(&result, args);
 **Goal**: Call `Point move_point(Point p);` where `Point` is `{double, double}`. This highlights the critical differences in type systems.
 
 #### The `dyncall` Approach
+
 `dyncall` requires manual construction of an aggregate object (`DCaggr`) to describe the struct layout. This must be done at runtime before the call.
 
 ```c
@@ -1563,6 +1759,7 @@ dcFree(vm);
 ```
 
 #### The `libffi` Approach
+
 `libffi` also requires programmatic struct definition, which is done by creating an `ffi_type` struct and an array for its elements.
 
 ```c
@@ -1590,6 +1787,7 @@ ffi_call(&cif, FFI_FN(move_point), &p_out, args_values);
 ```
 
 #### The `infix` Approach
+
 `infix` handles the entire struct definition within the signature string, making the C code for the FFI call trivial and declarative.
 
 ```c
@@ -1616,6 +1814,7 @@ infix_forward_destroy(t);
 **Goal**: Create a native C function pointer from a custom handler to be used by `qsort`.
 
 #### The `dyncall` Approach
+
 `dyncallback` requires creating a `DCCallback` object and initializing it with a C function that uses a special `dcbArg*` API to retrieve arguments one by one.
 
 ```c
@@ -1635,6 +1834,7 @@ dcbFree(cb);
 ```
 
 #### The `libffi` Approach
+
 `libffi` can create a "closure" which is a block of executable memory that acts as the C function pointer. The handler receives arguments via `ffi_call`-style arrays.
 
 ```c
@@ -1661,6 +1861,7 @@ ffi_closure_free(closure);
 ```
 
 #### The `infix` Approach
+
 `infix` generates a reverse trampoline. The handler is a normal C function that receives its arguments directly, prefixed by the `infix_context_t*`.
 
 ```c
@@ -1707,6 +1908,7 @@ A robust language binding built on `infix` must solve four main challenges:
 4.  **The Callback Bridge:** A C handler must be implemented to transfer control from a native C call back into the host language's runtime, handling argument unmarshalling and potential GIL (Global Interpreter Lock) acquisition.
 
 ### Recipe: Porting a Python Binding from `dyncall` to `infix`
+
 This recipe demonstrates how one might port a Python binding from a library like `dyncall` to `infix`.
 
 **The `dyncall` approach** involves a "call virtual machine" (`DCCallVM*`) that arguments are pushed to one-by-one at call time. This is flexible but incurs overhead on every call.

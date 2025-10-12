@@ -245,25 +245,6 @@ struct infix_function_argument_t {
  * macro before including `infix.h` to redirect all internal memory allocations
  * to a custom allocator, for example, for memory pooling, leak tracking, or
  * integration with a garbage collector.
- *
- * @example
- * ```c
- * // In your project's configuration header, or before including infix.h:
- * #include <stdlib.h> // For size_t
- * void* my_custom_alloc(size_t size) {
- *     // Custom allocation logic...
- *     return malloc(size);
- * }
- * void my_custom_free(void* ptr) {
- *     // Custom deallocation logic...
- *     free(ptr);
- * }
- *
- * #define infix_malloc(size) my_custom_alloc(size)
- * #define infix_free(ptr)    my_custom_free(ptr)
- *
- * #include "infix.h"
- * ```
  */
 #ifndef infix_malloc
 #define infix_malloc malloc
@@ -392,14 +373,6 @@ void infix_registry_destroy(infix_registry_t * registry);
  * @brief Parses a string of definitions and populates a type registry.
  * @details This function is the primary way to define named types. The definition
  *          string is a semicolon-separated list of `@Name = <TypeDefinition>;` entries.
- *
- * @example
- * ```c
- * const char* my_types =
- *     "@Point = {double, double};"
- *     "@Node = { value: int, next: *@Node };";
- * infix_status status = infix_register_types(registry, my_types);
- * ```
  *
  * @param registry The registry to populate.
  * @param definitions A null-terminated, semicolon-separated string of type definitions.
@@ -808,10 +781,7 @@ typedef enum {
  * infix_arena_destroy(arena);
  * @endcode
  */
-c23_nodiscard infix_status infix_type_print(char * buffer,
-                                            size_t buffer_size,
-                                            const infix_type * type,
-                                            infix_print_dialect_t dialect);
+c23_nodiscard infix_status infix_type_print(char * ,                                            size_t ,                                            const infix_type * ,                                            infix_print_dialect_t );
 
 /**
  * @brief Serializes a full function signature into a string representation.
@@ -830,14 +800,8 @@ c23_nodiscard infix_status infix_type_print(char * buffer,
  * @param[in]  dialect The output format to use.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status infix_function_print(char *,
-                                                size_t,
-                                                const char *,
-                                                const infix_type *,
-                                                const infix_function_argument *,
-                                                size_t,
-                                                size_t,
-                                                infix_print_dialect_t);
+c23_nodiscard infix_status infix_function_print(char *,                                                size_t,
+                                                const char *,                                                const infix_type *,                                                const infix_function_argument *,                                                size_t,                                                size_t,                                                infix_print_dialect_t);
 
 /** @} */
 

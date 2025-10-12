@@ -1,4 +1,4 @@
-# Porting `infix` to a New Platform
+# Porting infix to a New ABI
 
 This guide outlines the steps required to add support for a new CPU architecture or Application Binary Interface (ABI) to the `infix` FFI library. The library is designed to be highly portable, with a clean separation between platform-agnostic logic and ABI-specific implementations.
 
