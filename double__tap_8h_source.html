@@ -366,10 +366,10 @@ $(document).ready(function(){initNavTree('double__tap_8h_source.html',''); initR
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="keywordtype">char</span> name_buffer[256] = {0};</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keywordflow">if</span> (name &amp;&amp; name[0] != <span class="charliteral">&#39;\0&#39;</span>) {</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        va_list args;</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        va_start(args, name);</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        vsnprintf(name_buffer, <span class="keyword">sizeof</span>(name_buffer), name, args);</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        va_end(args);</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, name);</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        vsnprintf(name_buffer, <span class="keyword">sizeof</span>(name_buffer), name, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    }</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    current_state-&gt;count++;</div>
@@ -422,10 +422,10 @@ $(document).ready(function(){initNavTree('double__tap_8h_source.html',''); initR
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span><span class="keywordtype">void</span> tap_skip(<span class="keywordtype">size_t</span> count, <span class="keyword">const</span> <span class="keywordtype">char</span> * reason, ...) {</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    _tap_ensure_initialized();</div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="keywordtype">char</span> buffer[256];</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    va_list args;</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    va_start(args, reason);</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    vsnprintf(buffer, <span class="keyword">sizeof</span>(buffer), reason, args);</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    va_end(args);</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, reason);</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    vsnprintf(buffer, <span class="keyword">sizeof</span>(buffer), reason, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; count; ++i) {</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        current_state-&gt;count++;</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        print_indent(stdout);</div>
@@ -437,19 +437,19 @@ $(document).ready(function(){initNavTree('double__tap_8h_source.html',''); initR
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span><span class="keywordtype">void</span> tap_skip_all(<span class="keyword">const</span> <span class="keywordtype">char</span> * reason, ...) {</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    _tap_ensure_initialized();</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    current_state-&gt;skipping = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    va_list args;</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    va_start(args, reason);</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    vsnprintf(current_state-&gt;skip_reason, <span class="keyword">sizeof</span>(current_state-&gt;skip_reason), reason, args);</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    va_end(args);</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, reason);</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    vsnprintf(current_state-&gt;skip_reason, <span class="keyword">sizeof</span>(current_state-&gt;skip_reason), reason, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>}</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="keywordtype">void</span> tap_todo_start(<span class="keyword">const</span> <span class="keywordtype">char</span> * reason, ...) {</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    _tap_ensure_initialized();</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    current_state-&gt;todo = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    va_list args;</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    va_start(args, reason);</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    vsnprintf(current_state-&gt;todo_reason, <span class="keyword">sizeof</span>(current_state-&gt;todo_reason), reason, args);</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    va_end(args);</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, reason);</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    vsnprintf(current_state-&gt;todo_reason, <span class="keyword">sizeof</span>(current_state-&gt;todo_reason), reason, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>}</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="keywordtype">void</span> tap_todo_end(<span class="keywordtype">void</span>) {</div>
@@ -462,10 +462,10 @@ $(document).ready(function(){initNavTree('double__tap_8h_source.html',''); initR
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    _tap_ensure_initialized();</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    print_indent(stderr);</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    fprintf(stderr, <span class="stringliteral">&quot;# &quot;</span>);</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    va_list args;</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    va_start(args, fmt);</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    vfprintf(stderr, fmt, args);</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    va_end(args);</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, fmt);</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    vfprintf(stderr, fmt, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    fputs(<span class="stringliteral">&quot;\n&quot;</span>, stderr);</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    fflush(stderr);</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>}</div>
@@ -474,20 +474,20 @@ $(document).ready(function(){initNavTree('double__tap_8h_source.html',''); initR
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    _tap_ensure_initialized();</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    print_indent(stdout);</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    fprintf(stdout, <span class="stringliteral">&quot;# &quot;</span>);</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    va_list args;</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    va_start(args, fmt);</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    vfprintf(stdout, fmt, args);</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    va_end(args);</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, fmt);</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    vfprintf(stdout, fmt, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    fputs(<span class="stringliteral">&quot;\n&quot;</span>, stdout);</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    fflush(stdout);</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>}</div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span> </div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span><span class="keywordtype">void</span> tap_bail_out(<span class="keyword">const</span> <span class="keywordtype">char</span> * reason, ...) {</div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    fprintf(stderr, <span class="stringliteral">&quot;Bail out! &quot;</span>);</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    va_list args;</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    va_start(args, reason);</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    vfprintf(stderr, reason, args);</div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    va_end(args);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    va_list <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>;</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    va_start(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, reason);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    vfprintf(stderr, reason, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    va_end(<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    fprintf(stderr, <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    fflush(stderr);</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    exit(1);</div>
@@ -565,13 +565,15 @@ $(document).ready(function(){initNavTree('double__tap_8h_source.html',''); initR
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span><span class="comment"> * The entry point of the test program when DBLTAP_ENABLE is defined.</span></div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span><span class="keywordtype">int</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>(<span class="keywordtype">void</span>) {</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>    tap_init();</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>    test_body();</div>
 <div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>    <span class="keywordflow">return</span> (<span class="keywordtype">int</span>)tap_done();</div>
 <div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>}</div>
 <div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span> </div>
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span><span class="preprocessor">#endif  </span><span class="comment">// defined(DBLTAP_ENABLE) &amp;&amp; defined(DBLTAP_IMPLEMENTATION)</span></div>
+<div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:75</div></div>
+<div class="ttc" id="a821__threading__bare_8c_html_a840291bc02cba5474a4cb46a9b9566fe"><div class="ttname"><a href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a></div><div class="ttdeci">int main(void)</div><div class="ttdef"><b>Definition</b> 821_threading_bare.c:102</div></div>
 <div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
 <div class="ttc" id="adouble__tap_8h_html_a1d83e69b4252e4052fc5215c44f90c0d"><div class="ttname"><a href="double__tap_8h.html#a1d83e69b4252e4052fc5215c44f90c0d">diag</a></div><div class="ttdeci">#define diag(...)</div><div class="ttdef"><b>Definition</b> double_tap.h:148</div></div>
 <div class="ttc" id="adouble__tap_8h_html_a1eb6cb8997bc0bbff7c765afb5c67d79"><div class="ttname"><a href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a></div><div class="ttdeci">#define ok(cond,...)</div><div class="ttdef"><b>Definition</b> double_tap.h:141</div></div>

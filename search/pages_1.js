@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['c_0',['infix: A JIT-Powered FFI Library for C',['../index.html',1,'']]],
-  ['cookbook_1',['The &lt;tt&gt;infix&lt;/tt&gt; FFI Cookbook',['../md_docs_2cookbook.html',1,'']]]
+  ['building_20and_20integrating_20infix_0',['Building and Integrating infix',['../md_docs_2INSTALL.html',1,'']]]
 ];

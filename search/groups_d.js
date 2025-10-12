@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['type_20creation_20api_0',['Manual Type-Creation API',['../group__manual__api.html',1,'']]],
-  ['type_20registry_20api_1',['Named Type Registry API',['../group__registry__api.html',1,'']]],
-  ['type_20system_2',['Type System',['../group__type__system.html',1,'']]]
+  ['signature_20api_0',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
+  ['simd_20feature_20detection_20macros_1',['SIMD Feature Detection Macros',['../group__simd__macros.html',1,'']]],
+  ['system_2',['Type System',['../group__type__system.html',1,'']]]
 ];

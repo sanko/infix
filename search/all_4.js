@@ -1,12 +1,15 @@
 var searchData=
 [
-  ['4_201_20whitespace_20and_20comments_0',['4.1 Whitespace and Comments',['../md_docs_2signatures.html#autotoc_md170',1,'']]],
-  ['4_202_20ebnf_20grammar_1',['4.2 EBNF Grammar',['../md_docs_2signatures.html#autotoc_md171',1,'']]],
-  ['4_203_20design_20rationale_3a_20why_20this_20syntax_2',['4.3 Design Rationale: Why This Syntax?',['../md_docs_2signatures.html#autotoc_md172',1,'']]],
-  ['4_204_20comparison_20with_20other_20systems_3',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md173',1,'']]],
-  ['4_20abi_20internals_4',['4. ABI Internals',['../md_docs_2internals.html#autotoc_md140',1,'']]],
-  ['4_20fuzz_20testing_5',['3.4 Fuzz Testing',['../md_docs_2internals.html#autotoc_md138',1,'']]],
-  ['4_3a_20advanced_20techniques_6',['Chapter 4: Advanced Techniques',['../md_docs_2cookbook.html#autotoc_md60',1,'']]],
-  ['4_3a_20integrate_20the_20new_20abi_7',['Step 4: Integrate the New ABI',['../md_docs_2porting.html#autotoc_md151',1,'']]],
-  ['4_3a_20technical_20specification_8',['Part 4: Technical Specification',['../md_docs_2signatures.html#autotoc_md169',1,'']]]
+  ['4_201_20whitespace_20and_20comments_0',['4.1 Whitespace and Comments',['../md_docs_2signatures.html#autotoc_md200',1,'']]],
+  ['4_202_20ebnf_20grammar_1',['4.2 EBNF Grammar',['../md_docs_2signatures.html#autotoc_md201',1,'']]],
+  ['4_203_20design_20rationale_3a_20why_20this_20syntax_2',['4.3 Design Rationale: Why This Syntax?',['../md_docs_2signatures.html#autotoc_md202',1,'']]],
+  ['4_204_20comparison_20with_20other_20systems_3',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md203',1,'']]],
+  ['4_20abi_20internals_4',['4. ABI Internals',['../md_docs_2internals.html#autotoc_md170',1,'']]],
+  ['4_20fuzz_20testing_5',['3.4 Fuzz Testing',['../md_docs_2internals.html#autotoc_md168',1,'']]],
+  ['401_5flarge_5fstack_2ec_6',['401_large_stack.c',['../401__large__stack_8c.html',1,'']]],
+  ['402_5fvariadic_5ffunctions_2ec_7',['402_variadic_functions.c',['../402__variadic__functions_8c.html',1,'']]],
+  ['403_5fspecial_5ftypes_2ec_8',['403_special_types.c',['../403__special__types_8c.html',1,'']]],
+  ['4_3a_20advanced_20techniques_9',['Chapter 4: Advanced Techniques',['../md_docs_2cookbook.html#autotoc_md60',1,'']]],
+  ['4_3a_20integrate_20the_20new_20abi_10',['Step 4: Integrate the New ABI',['../md_docs_2porting.html#autotoc_md181',1,'']]],
+  ['4_3a_20technical_20specification_11',['Part 4: Technical Specification',['../md_docs_2signatures.html#autotoc_md199',1,'']]]
 ];

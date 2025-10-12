@@ -144,7 +144,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:aa15a8508483b37fe212fb479c2f44e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of members for the aggregate.  <a href="structinfix__type__t.html#a6129c5165e189c4e5aa99904a98079e1">More...</a><br /></td></tr>
 <tr class="separator:aa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca307cbaffc95a71230aa9486593ff4f" id="r_aca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="structinfix__type__t.html#a48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="structinfix__type__t.html#addead8d897d6058a40f4f49d9cc87c45">num_members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:aca307cbaffc95a71230aa9486593ff4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of members in the aggregate.  <a href="structinfix__type__t.html#addead8d897d6058a40f4f49d9cc87c45">More...</a><br /></td></tr>
+<tr class="memdesc:aca307cbaffc95a71230aa9486593ff4f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate.  <a href="structinfix__type__t.html#addead8d897d6058a40f4f49d9cc87c45">More...</a><br /></td></tr>
 <tr class="separator:aca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeebefe41e0410c6cff0c01275bc37253" id="r_aeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="structinfix__type__t.html#a9d7572a9e837b5a8cb21010a91983abb">aggregate_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="memdesc:aeebefe41e0410c6cff0c01275bc37253"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>.  <a href="structinfix__type__t.html#a9d7572a9e837b5a8cb21010a91983abb">More...</a><br /></td></tr>
@@ -211,7 +211,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae0e5d175600a09754e1dd8a80560fab1" id="r_ae0e5d175600a09754e1dd8a80560fab1"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a>&#160;&#160;&#160;<a class="el" href="structinfix__type__t.html#a820935723a98863101aa35b828fffe0b">aggregate_category</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:ae0e5d175600a09754e1dd8a80560fab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69c567720b478d07b87af0ef17aa9f82" id="r_a69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="structinfix__type__t.html#aefbba96a3cadf0e38ba54f1ff7cb93b1">named_reference</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:a69c567720b478d07b87af0ef17aa9f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_NAMED_REFERENCE</code>. This is an internal placeholder for a named type like <code>@Point</code>.  <a href="structinfix__type__t.html#aefbba96a3cadf0e38ba54f1ff7cb93b1">More...</a><br /></td></tr>
+<tr class="memdesc:a69c567720b478d07b87af0ef17aa9f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">For <code>INFIX_TYPE_NAMED_REFERENCE</code>. This is an internal placeholder for a named type like <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code>.  <a href="structinfix__type__t.html#aefbba96a3cadf0e38ba54f1ff7cb93b1">More...</a><br /></td></tr>
 <tr class="separator:a69c567720b478d07b87af0ef17aa9f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06717387732a6557d456a760bb3150cc" id="r_a06717387732a6557d456a760bb3150cc"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__type__t.html#a06717387732a6557d456a760bb3150cc">meta</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="memdesc:a06717387732a6557d456a760bb3150cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-specific metadata.  <br /></td></tr>
@@ -220,8 +220,6 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The central structure for describing any data type in the FFI system. </p>
 <p>This structure provides the FFI code generator with the necessary metadata (size, alignment, category, and contents) to correctly handle arguments and return values according to the target ABI. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#_a0">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a820935723a98863101aa35b828fffe0b" name="a820935723a98863101aa35b828fffe0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a820935723a98863101aa35b828fffe0b">&#9670;&#160;</a></span>aggregate_category</h2>
@@ -234,8 +232,6 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a63">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -252,8 +248,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a49">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -270,8 +264,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The alignment requirement of the type in bytes, per <code>_Alignof</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a41">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -288,8 +280,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Array of function arguments (name and type). </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a54">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -306,8 +296,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_ARRAY</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a52">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -324,8 +312,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The floating point type of the real and imaginary parts. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a60">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -342,8 +328,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The fundamental category of the type. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a39">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -360,8 +344,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_COMPLEX</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a61">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -379,8 +361,6 @@ Public Attributes</h2></td></tr>
 
 <p>The type of elements in the array. </p>
 <p>The type of the elements in the vector. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a50">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -397,8 +377,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_ENUM</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a59">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -415,8 +393,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a57">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -433,8 +409,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>If true, this type was allocated from an arena and should not be individually freed. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a42">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -451,8 +425,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Array of members for the aggregate. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a47">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -469,8 +441,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Type-specific metadata. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a65">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -487,8 +457,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Optional name of the aggregate. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a46">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -504,9 +472,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>For <code>INFIX_TYPE_NAMED_REFERENCE</code>. This is an internal placeholder for a named type like <code>@Point</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a64">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
+<p>For <code>INFIX_TYPE_NAMED_REFERENCE</code>. This is an internal placeholder for a named type like <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code>. </p>
 
 </div>
 </div>
@@ -523,8 +489,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The total number of fixed and variadic arguments. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a55">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -542,8 +506,6 @@ Public Attributes</h2></td></tr>
 
 <p>The number of elements in the array. </p>
 <p>The number of elements in the vector. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a51">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -560,8 +522,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The number of non-variadic arguments. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a56">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -577,9 +537,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Number of members in the aggregate. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a48">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
+<p><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> of members in the aggregate. </p>
 
 </div>
 </div>
@@ -596,8 +554,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The type this pointer points to. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a44">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -614,8 +570,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_POINTER</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a45">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -632,8 +586,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_PRIMITIVE</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a43">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -650,8 +602,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reverse trampoline return value. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a53">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -668,8 +618,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The total size of the type in bytes, per <code>sizeof</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a40">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -686,8 +634,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The integer type this enum is based on. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a58">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -704,8 +650,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>For <code>INFIX_TYPE_VECTOR</code>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a62">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>

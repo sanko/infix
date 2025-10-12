@@ -179,8 +179,6 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>The function pointer returned by <code>infix_forward_get_code</code> should be used.</dd></dl>
 <p>Generates a bound forward-call trampoline from a signature string.</p>
 <p>This high-level wrapper combines <code>infix_signature_parse</code> and the internal <code>_infix_forward_create_internal</code> to provide a seamless "signature-to-trampoline" experience. It manages a temporary arena for the parsing process, ensuring no memory is leaked. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a85">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -230,8 +228,6 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>The function pointer returned by <code>infix_forward_get_unbound_code</code> must be used.</dd></dl>
 <p>Generates an unbound forward-call trampoline from a signature string.</p>
 <p>This is a high-level wrapper that combines parsing and trampoline generation. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a86">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -306,8 +302,6 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>The returned context must be freed with <code>infix_reverse_destroy</code>.</dd></dl>
 <p>Generates a reverse-call trampoline (callback) from a signature string.</p>
 <p>This high-level wrapper combines <code>infix_signature_parse</code> and <code>infix_reverse_create_manual</code> for a seamless user experience. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a87">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -385,8 +379,6 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd><b>Memory Management:</b> On success, the caller takes ownership of the arena.</dd></dl>
 <p>Parses a full function signature string into its constituent infix_type parts.</p>
 <p>This function orchestrates the full process for parsing a complete function signature, including the lazy resolution pass if a registry is provided. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a88">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -448,8 +440,6 @@ Functions</h2></td></tr>
 <li>If a registry was provided, it calls the resolver to replace all <code>@Name</code> references with their concrete definitions.</li>
 <li>On failure, it ensures all allocated resources are cleaned up. </li>
 </ol>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a89">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>

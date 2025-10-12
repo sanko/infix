@@ -1,0 +1,26 @@
+<map id="t/850_regression_cases.c" name="t/850_regression_cases.c">
+<area shape="rect" id="Node000001" title="Contains a data&#45;driven suite of deterministic unit tests for specific bugs found by fuzzing." alt="" coords="249,5,435,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,33,144,77,142,72,301,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="196,79,312,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="330,33,281,72,277,68,326,29"/>
+<area shape="rect" id="Node000004" href="$fuzz__regression__helpers_8h.html" title="Helpers for creating regression tests from fuzzer&#45;discovered inputs." alt="" coords="336,79,527,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="358,29,408,68,404,72,355,33"/>
+<area shape="rect" id="Node000008" href="$infix_8h.html" title=" " alt="" coords="596,79,691,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="391,28,583,73,582,78,390,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="481,225,555,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="441,103,506,212,502,215,436,106"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="264,152,335,177"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="411,106,334,148,332,143,409,102"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="359,152,429,177"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="428,106,409,141,404,139,423,103"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="614,106,579,125,547,154,532,182,524,212,519,211,527,180,543,150,576,121,612,102"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="665,225,747,251"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="681,102,717,120,733,134,746,151,750,168,747,185,729,216,725,213,742,183,745,168,741,153,729,138,714,125,679,106"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="807,152,877,177"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="676,102,797,145,796,150,674,107"/>
+<area shape="rect" id="Node000011" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="556,152,731,177"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="646,104,646,138,641,138,641,104"/>
+<area shape="poly" id="edge13_Node000011_Node000005" title=" " alt="" coords="625,180,552,221,549,216,622,175"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="656,176,689,213,685,217,652,179"/>
+</map>

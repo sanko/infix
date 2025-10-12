@@ -133,9 +133,9 @@ Collaboration diagram for Introspection API:</div>
 <tr class="separator:ga184bcb5102d6315b8ff8d6defe1387f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Type Serialization</h2></td></tr>
-<tr class="memitem:ga9e3df6ee056ecc368ec2817f26a773bb" id="r_ga9e3df6ee056ecc368ec2817f26a773bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb">infix_type_print</a> (char *buffer, size_t buffer_size, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
-<tr class="memdesc:ga9e3df6ee056ecc368ec2817f26a773bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes an infix_type object graph into a string representation.  <br /></td></tr>
-<tr class="separator:ga9e3df6ee056ecc368ec2817f26a773bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c701c9fe631b5e6d715eb2df9c3581e" id="r_ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e">infix_type_print</a> (char *, size_t, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a>)</td></tr>
+<tr class="memdesc:ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes an infix_type object graph into a string representation.  <br /></td></tr>
+<tr class="separator:ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab498bd07df9d321ec54056c519899b53" id="r_gab498bd07df9d321ec54056c519899b53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#gab498bd07df9d321ec54056c519899b53">infix_function_print</a> (char *, size_t, const char *, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, const <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *, size_t, size_t, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a>)</td></tr>
 <tr class="memdesc:gab498bd07df9d321ec54056c519899b53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes a full function signature into a string representation.  <br /></td></tr>
 <tr class="separator:gab498bd07df9d321ec54056c519899b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,8 +202,6 @@ Collaboration diagram for Introspection API:</div>
 <tr><td class="fieldname"><a id="ggac8c5bb029a977b1d6befd2bef7d2aa55ac29a69adfbf6f3433a893319cec03ffe" name="ggac8c5bb029a977b1d6befd2bef7d2aa55ac29a69adfbf6f3433a893319cec03ffe"></a>INFIX_DIALECT_MSVC_MANGLING&#160;</td><td class="fielddoc"><p>Microsoft C++ ABI name mangling. (Not yet implemented) </p>
 </td></tr>
 </table>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a117">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -243,8 +241,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant pointer to the argument's <code>infix_type</code>. Returns <code>nullptr</code> if the handle is <code>nullptr</code> or the index is out of bounds. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a127">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -272,8 +268,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A callable function pointer of type <code>infix_cif_func</code>. Returns <code>nullptr</code> if the handle is invalid or if it points to an unbound trampoline. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a121">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -301,8 +295,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The total number of arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a124">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -330,8 +322,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of fixed arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a125">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -359,8 +349,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant pointer to the return <code>infix_type</code>. Returns <code>nullptr</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a126">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -388,8 +376,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A callable function pointer of type <code>infix_unbound_cif_func</code>. Returns <code>nullptr</code> if the handle is invalid or if it points to a bound trampoline. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a120">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -472,8 +458,6 @@ Collaboration diagram for Introspection API:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
 <p>Serializes a full function signature into a string representation. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a119">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -512,8 +496,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant pointer to the argument's <code>infix_type</code>. Returns <code>nullptr</code> if the handle is <code>nullptr</code> or the index is out of bounds. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a131">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -541,8 +523,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A callable function pointer. Returns <code>nullptr</code> if the handle is invalid. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a122">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -570,8 +550,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The total number of arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a128">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -599,8 +577,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of fixed arguments. Returns <code>0</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a130">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -628,8 +604,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant pointer to the return <code>infix_type</code>. Returns <code>nullptr</code> if the handle is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a129">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -657,8 +631,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The opaque user_data pointer. Returns <code>nullptr</code> if the handle is invalid. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a123">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -686,8 +658,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The alignment of the type. Returns <code>0</code> if the type is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a134">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -726,8 +696,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant string for the argument's name, or <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a137">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -766,8 +734,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant pointer to the argument's <code>infix_type</code>. Returns <code>nullptr</code> if invalid. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a138">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -795,8 +761,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <code>infix_type_category</code> enum for the type. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a132">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -835,8 +799,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A constant pointer to the <code>infix_struct_member</code> on success. Returns <code>nullptr</code> if <code>type</code> is not a struct/union or the <code>index</code> is out of bounds. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a136">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -864,8 +826,6 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of members if the type is a struct or union; <code>0</code> otherwise. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a135">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -893,13 +853,11 @@ Collaboration diagram for Introspection API:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The size of the type. Returns <code>0</code> if the type is <code>nullptr</code>. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a133">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
-<a id="ga9e3df6ee056ecc368ec2817f26a773bb" name="ga9e3df6ee056ecc368ec2817f26a773bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9e3df6ee056ecc368ec2817f26a773bb">&#9670;&#160;</a></span>infix_type_print()</h2>
+<a id="ga4c701c9fe631b5e6d715eb2df9c3581e" name="ga4c701c9fe631b5e6d715eb2df9c3581e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4c701c9fe631b5e6d715eb2df9c3581e">&#9670;&#160;</a></span>infix_type_print()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -949,25 +907,24 @@ Collaboration diagram for Introspection API:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. Returns <code>INFIX_ERROR_INVALID_ARGUMENT</code> if the buffer is too small to hold the entire string.</dd></dl>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structinfix__type__t.html">infix_type</a>* type = NULL;</div>
-<div class="line"><a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a>* arena = NULL;</div>
-<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a>(&amp;type, &amp;arena, <span class="stringliteral">&quot;{int, *void}&quot;</span>, <span class="keyword">nullptr</span>);</div>
+<div class="line"><a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a>* <a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = NULL;</div>
+<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a>(&amp;type, &amp;<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <span class="stringliteral">&quot;{int, *void}&quot;</span>, <span class="keyword">nullptr</span>);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">char</span> buffer[128];</div>
-<div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb">infix_type_print</a>(buffer, <span class="keyword">sizeof</span>(buffer), type, <a class="code hl_enumvalue" href="group__introspection__api.html#ggac8c5bb029a977b1d6befd2bef7d2aa55a180a9913bfad969f16faa51b3595d5dd">INFIX_DIALECT_SIGNATURE</a>) == <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
+<div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e">infix_type_print</a>(buffer, <span class="keyword">sizeof</span>(buffer), type, <a class="code hl_enumvalue" href="group__introspection__api.html#ggac8c5bb029a977b1d6befd2bef7d2aa55a180a9913bfad969f16faa51b3595d5dd">INFIX_DIALECT_SIGNATURE</a>) == <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
 <div class="line">    printf(<span class="stringliteral">&quot;Serialized type: %s\n&quot;</span>, buffer); <span class="comment">// Output: {int,*void}</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(arena);</div>
+<div class="line"><a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>);</div>
+<div class="ttc" id="a005__layouts_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 005_layouts.c:57</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga3632147d55b80e520987d37722ddcf61"><div class="ttname"><a href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Parses a signature string representing a single data type.</div><div class="ttdef"><b>Definition</b> signature.c:1090</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga9e3df6ee056ecc368ec2817f26a773bb"><div class="ttname"><a href="group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb">infix_type_print</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_print(char *buffer, size_t buffer_size, const infix_type *type, infix_print_dialect_t dialect)</div><div class="ttdoc">Serializes an infix_type object graph into a string representation.</div><div class="ttdef"><b>Definition</b> signature.c:1452</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ggac8c5bb029a977b1d6befd2bef7d2aa55a180a9913bfad969f16faa51b3595d5dd"><div class="ttname"><a href="group__introspection__api.html#ggac8c5bb029a977b1d6befd2bef7d2aa55a180a9913bfad969f16faa51b3595d5dd">INFIX_DIALECT_SIGNATURE</a></div><div class="ttdeci">@ INFIX_DIALECT_SIGNATURE</div><div class="ttdoc">The standard infix signature language format.</div><div class="ttdef"><b>Definition</b> infix.h:776</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga4c701c9fe631b5e6d715eb2df9c3581e"><div class="ttname"><a href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e">infix_type_print</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_print(char *, size_t, const infix_type *, infix_print_dialect_t)</div><div class="ttdoc">Serializes an infix_type object graph into a string representation.</div><div class="ttdef"><b>Definition</b> signature.c:1452</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ggac8c5bb029a977b1d6befd2bef7d2aa55a180a9913bfad969f16faa51b3595d5dd"><div class="ttname"><a href="group__introspection__api.html#ggac8c5bb029a977b1d6befd2bef7d2aa55a180a9913bfad969f16faa51b3595d5dd">INFIX_DIALECT_SIGNATURE</a></div><div class="ttdeci">@ INFIX_DIALECT_SIGNATURE</div><div class="ttdoc">The standard infix signature language format.</div><div class="ttdef"><b>Definition</b> infix.h:749</div></div>
 <div class="ttc" id="agroup__memory__management_html_ga50b7219c58789fc03898690254f0280e"><div class="ttname"><a href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a></div><div class="ttdeci">void infix_arena_destroy(infix_arena_t *)</div><div class="ttdoc">Frees an entire memory arena and all objects allocated within it.</div><div class="ttdef"><b>Definition</b> arena.c:68</div></div>
-<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:360</div></div>
+<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:341</div></div>
 <div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:129</div></div>
 <div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div><div class="ttdef"><b>Definition</b> infix.h:161</div></div>
 </div><!-- fragment --><p>Serializes an infix_type object graph into a string representation. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a118">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>

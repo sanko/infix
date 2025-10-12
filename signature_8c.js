@@ -13,7 +13,7 @@ var signature_8c =
     [ "infix_reverse_create", "group__high__level__api.html#ga7d09d07b70706cb1a949e2efd5f5f471", null ],
     [ "infix_signature_parse", "group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7", null ],
     [ "infix_type_from_signature", "group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61", null ],
-    [ "infix_type_print", "group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb", null ],
+    [ "infix_type_print", "group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e", null ],
     [ "is_function_signature_ahead", "signature_8c.html#a168864a18641ec5e852690df1599b2bf", null ],
     [ "parse_aggregate", "signature_8c.html#aefdd9063b7ca0a9be42ce5ca2bcea10f", null ],
     [ "parse_aggregate_members", "signature_8c.html#a12bc7588aa7d87826a0cf5d10a98c46c", null ],

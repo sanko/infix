@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['signature_20api_0',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
-  ['system_1',['Type System',['../group__type__system.html',1,'']]]
+  ['registry_20api_0',['Named Type Registry API',['../group__registry__api.html',1,'']]],
+  ['reporting_1',['Error Reporting',['../group__error__api.html',1,'']]]
 ];

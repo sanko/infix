@@ -149,6 +149,6 @@ var infix_8h =
     [ "infix_type_get_member", "group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9", null ],
     [ "infix_type_get_member_count", "group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda", null ],
     [ "infix_type_get_size", "group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a", null ],
-    [ "infix_type_print", "group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb", null ],
+    [ "infix_type_print", "group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e", null ],
     [ "infix_write_global", "group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f", null ]
 ];

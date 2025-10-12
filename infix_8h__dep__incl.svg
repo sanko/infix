@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1546;
+var viewWidth = 5308;
 var viewHeight = 214;
 var sectionId = 'dynsection-1';
 </script>
@@ -58,17 +58,17 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="#666666" points="927.5,-206 818.5,-206 818.5,-187 927.5,-187 927.5,-206"/>
-<text text-anchor="middle" x="873" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">include/infix/infix.h</text>
+<polygon fill="#999999" stroke="#666666" points="3101,-206 2992,-206 2992,-187 3101,-187 3101,-206"/>
+<text text-anchor="middle" x="3046.5" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">include/infix/infix.h</text>
 </a>
 </g>
 </g>
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Declarations for internal&#45;only functions, types, and constants.">
-<polygon fill="white" stroke="#666666" points="899,-151 741,-151 741,-132 899,-132 899,-151"/>
-<text text-anchor="middle" x="820" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/infix_internals.h</text>
+<g id="a_Node000002"><a xlink:href="win32__msgbox_8c.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="794,-151 681,-151 681,-132 794,-132 794,-151"/>
+<text text-anchor="middle" x="737.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">eg/win32_msgbox.c</text>
 </a>
 </g>
 </g>
@@ -76,402 +76,960 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M857.02,-179.52C847.68,-170.18 836.25,-158.75 828.59,-151.09"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="854.7,-182.15 864.25,-186.75 859.65,-177.2 854.7,-182.15"/>
-</a>
-</g>
-</g>
-<!-- Node12 -->
-<g id="Node000012" class="node">
-<title>Node12</title>
-<g id="a_Node000012"><a xlink:href="error_8c.html" target="_top" xlink:title="Implements the thread&#45;local error reporting system.">
-<polygon fill="white" stroke="#666666" points="1537.5,-90.5 1448.5,-90.5 1448.5,-71.5 1537.5,-71.5 1537.5,-90.5"/>
-<text text-anchor="middle" x="1493" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/error.c</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node12 -->
-<g id="edge28_Node000001_Node000012" class="edge">
-<title>Node1&#45;&gt;Node12</title>
-<g id="a_edge28_Node000001_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M937.83,-185.95C1043.52,-169.97 1259.32,-135.64 1440,-96 1447.34,-94.39 1455.2,-92.44 1462.56,-90.51"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="937.01,-182.53 927.64,-187.49 938.05,-189.46 937.01,-182.53"/>
+<path fill="none" stroke="#63b8ff" d="M2981.7,-195.16C2661.22,-193.35 1243.47,-183.6 803.5,-151 800.5,-150.78 797.44,-150.51 794.34,-150.22"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.73,-198.66 2991.75,-195.22 2981.77,-191.66 2981.73,-198.66"/>
 </a>
 </g>
 </g>
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="abi__arm64_8c.html" target="_top" xlink:title="Implements the FFI logic for the AArch64 (ARM64) architecture.">
-<polygon fill="white" stroke="#666666" points="658.5,-30 543.5,-30 543.5,0 658.5,0 658.5,-30"/>
-<text text-anchor="start" x="551.5" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
-<text text-anchor="middle" x="601" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64.c</text>
+<g id="a_Node000003"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Declarations for internal&#45;only functions, types, and constants.">
+<polygon fill="white" stroke="#666666" points="970.5,-151 812.5,-151 812.5,-132 970.5,-132 970.5,-151"/>
+<text text-anchor="middle" x="891.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/infix_internals.h</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node3 -->
-<g id="edge2_Node000002_Node000003" class="edge">
-<title>Node2&#45;&gt;Node3</title>
-<g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M730.82,-137.11C664.75,-132.5 582.6,-121.63 561,-96 543.99,-75.82 567.21,-47.16 584.73,-30.19"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="730.64,-140.61 740.85,-137.77 731.1,-133.62 730.64,-140.61"/>
-</a>
-</g>
-</g>
-<!-- Node4 -->
-<g id="Node000004" class="node">
-<title>Node4</title>
-<g id="a_Node000004"><a xlink:href="abi__arm64__emitters_8h.html" target="_top" xlink:title="Declares internal helper functions for emitting AArch64 machine code.">
-<polygon fill="white" stroke="#666666" points="513.5,-96 398.5,-96 398.5,-66 513.5,-66 513.5,-96"/>
-<text text-anchor="start" x="406.5" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
-<text text-anchor="middle" x="456" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64_emitters.h</text>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node4 -->
-<g id="edge3_Node000002_Node000004" class="edge">
-<title>Node2&#45;&gt;Node4</title>
-<g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M749.21,-130.54C689.99,-122.01 603.35,-109.06 528,-96 523.36,-95.2 518.55,-94.33 513.73,-93.44"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="748.81,-134.02 759.2,-131.97 749.8,-127.09 748.81,-134.02"/>
-</a>
-</g>
-</g>
-<!-- Node6 -->
-<g id="Node000006" class="node">
-<title>Node6</title>
-<g id="a_Node000006"><a xlink:href="abi__sysv__x64_8c.html" target="_top" xlink:title="Implements the FFI logic for the System V AMD64 ABI.">
-<polygon fill="white" stroke="#666666" points="122,-30 0,-30 0,0 122,0 122,-30"/>
-<text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_sysv</text>
-<text text-anchor="middle" x="61" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_x64.c</text>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node6 -->
-<g id="edge6_Node000002_Node000006" class="edge">
-<title>Node2&#45;&gt;Node6</title>
-<g id="a_edge6_Node000002_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M730.68,-141.4C574.08,-141.85 256.88,-137.4 155,-96 119.86,-81.72 88.38,-48.94 72.29,-30.07"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="730.78,-144.9 740.76,-141.37 730.75,-137.9 730.78,-144.9"/>
-</a>
-</g>
-</g>
-<!-- Node7 -->
-<g id="Node000007" class="node">
-<title>Node7</title>
-<g id="a_Node000007"><a xlink:href="abi__win__x64_8c.html" target="_top" xlink:title="Implements the FFI logic for the Windows x64 calling convention.">
-<polygon fill="white" stroke="#666666" points="392,-30 276,-30 276,0 392,0 392,-30"/>
-<text text-anchor="start" x="284" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_win</text>
-<text text-anchor="middle" x="334" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_x64.c</text>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node7 -->
-<g id="edge7_Node000002_Node000007" class="edge">
-<title>Node2&#45;&gt;Node7</title>
-<g id="a_edge7_Node000002_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M730.83,-139.97C621.81,-137.84 444.91,-129.19 389,-96 363.49,-80.86 347.06,-48.72 339.28,-30.12"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="730.77,-143.47 740.84,-140.15 730.9,-136.47 730.77,-143.47"/>
-</a>
-</g>
-</g>
-<!-- Node8 -->
-<g id="Node000008" class="node">
-<title>Node8</title>
-<g id="a_Node000008"><a xlink:href="abi__x64__emitters_8h.html" target="_top" xlink:title="Declares internal helper functions for emitting x86&#45;64 machine code.">
-<polygon fill="white" stroke="#666666" points="281.5,-96 164.5,-96 164.5,-66 281.5,-66 281.5,-96"/>
-<text text-anchor="start" x="172.5" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_x64</text>
-<text text-anchor="middle" x="223" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">_emitters.h</text>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node8 -->
-<g id="edge8_Node000002_Node000008" class="edge">
-<title>Node2&#45;&gt;Node8</title>
-<g id="a_edge8_Node000002_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M730.73,-133.35C632.8,-125.28 471.05,-111.26 332,-96 315.6,-94.2 297.83,-92.02 281.5,-89.92"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="730.63,-136.86 740.88,-134.19 731.2,-129.88 730.63,-136.86"/>
-</a>
-</g>
-</g>
-<!-- Node10 -->
-<g id="Node000010" class="node">
-<title>Node10</title>
-<g id="a_Node000010"><a xlink:href="arena_8c.html" target="_top" xlink:title="Implementation of the internal arena allocator.">
-<polygon fill="white" stroke="#666666" points="923,-90.5 829,-90.5 829,-71.5 923,-71.5 923,-90.5"/>
-<text text-anchor="middle" x="876" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/arena.c</text>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node10 -->
-<g id="edge12_Node000002_Node000010" class="edge">
-<title>Node2&#45;&gt;Node10</title>
-<g id="a_edge12_Node000002_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M835.23,-124.59C845.69,-113.67 859.17,-99.58 867.7,-90.67"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="832.65,-122.22 828.26,-131.87 837.71,-127.06 832.65,-122.22"/>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node12 -->
-<g id="edge14_Node000002_Node000012" class="edge">
-<title>Node2&#45;&gt;Node12</title>
-<g id="a_edge14_Node000002_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M909.67,-139.3C1030.79,-136.49 1253.04,-127.12 1440,-96 1448.07,-94.66 1456.7,-92.64 1464.61,-90.54"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="909.26,-135.81 899.34,-139.53 909.42,-142.8 909.26,-135.81"/>
+<!-- Node1&#45;&gt;Node3 -->
+<g id="edge2_Node000001_Node000003" class="edge">
+<title>Node1&#45;&gt;Node3</title>
+<g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.61,-193.9C2668.35,-186.2 1313.51,-152.88 970.6,-144.45"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.8,-197.41 2991.88,-194.16 2981.97,-190.41 2981.8,-197.41"/>
 </a>
 </g>
 </g>
 <!-- Node13 -->
 <g id="Node000013" class="node">
 <title>Node13</title>
-<g id="a_Node000013"><a xlink:href="executor_8c.html" target="_top" xlink:title="Implements OS&#45;level memory management and the internal callback dispatcher.">
-<polygon fill="white" stroke="#666666" points="1048.5,-90.5 941.5,-90.5 941.5,-71.5 1048.5,-71.5 1048.5,-90.5"/>
-<text text-anchor="middle" x="995" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/executor.c</text>
+<g id="a_Node000013"><a xlink:href="840__arena__allocator_8c.html" target="_top" xlink:title="Unit tests for the internal arena allocator.">
+<polygon fill="white" stroke="#666666" points="1552.5,-24.5 1422.5,-24.5 1422.5,-5.5 1552.5,-5.5 1552.5,-24.5"/>
+<text text-anchor="middle" x="1487.5" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">t/840_arena_allocator.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node13 -->
-<g id="edge16_Node000002_Node000013" class="edge">
-<title>Node2&#45;&gt;Node13</title>
-<g id="a_edge16_Node000002_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M854.95,-128.82C888.8,-117.5 939.31,-100.62 969.52,-90.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="853.82,-125.5 845.45,-131.99 856.04,-132.14 853.82,-125.5"/>
+<!-- Node1&#45;&gt;Node13 -->
+<g id="edge56_Node000001_Node000013" class="edge">
+<title>Node1&#45;&gt;Node13</title>
+<g id="a_edge56_Node000001_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.43,-195.48C2712.44,-195.14 1698.81,-191.17 1644.5,-151 1612.41,-127.26 1643.1,-94.83 1615.5,-66 1594.47,-44.03 1562.63,-31.54 1535.98,-24.54"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.8,-198.98 2991.81,-195.49 2981.81,-191.98 2981.8,-198.98"/>
 </a>
 </g>
 </g>
 <!-- Node14 -->
 <g id="Node000014" class="node">
 <title>Node14</title>
-<g id="a_Node000014"><a xlink:href="loader_8c.html" target="_top" xlink:title="Implements the cross&#45;platform dynamic library loading and symbol resolution API.">
-<polygon fill="white" stroke="#666666" points="1163,-90.5 1067,-90.5 1067,-71.5 1163,-71.5 1163,-90.5"/>
-<text text-anchor="middle" x="1115" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/loader.c</text>
+<g id="a_Node000014"><a xlink:href="error_8c.html" target="_top" xlink:title="Implements the thread&#45;local error reporting system.">
+<polygon fill="white" stroke="#666666" points="1496,-90.5 1407,-90.5 1407,-71.5 1496,-71.5 1496,-90.5"/>
+<text text-anchor="middle" x="1451.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/error.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node14 -->
-<g id="edge18_Node000002_Node000014" class="edge">
-<title>Node2&#45;&gt;Node14</title>
-<g id="a_edge18_Node000002_Node000014"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M880.27,-130.19C928.5,-121.71 997.78,-109.02 1058,-96 1065.67,-94.34 1073.88,-92.42 1081.62,-90.53"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="879.56,-126.76 870.31,-131.94 880.76,-133.66 879.56,-126.76"/>
+<!-- Node1&#45;&gt;Node14 -->
+<g id="edge31_Node000001_Node000014" class="edge">
+<title>Node1&#45;&gt;Node14</title>
+<g id="a_edge31_Node000001_Node000014"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.65,-195.2C2716.52,-193.74 1722.53,-185.95 1586.5,-151 1537.81,-138.49 1486.62,-106.24 1463.77,-90.67"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.87,-198.7 2991.89,-195.25 2981.9,-191.7 2981.87,-198.7"/>
 </a>
 </g>
 </g>
-<!-- Node15 -->
-<g id="Node000015" class="node">
-<title>Node15</title>
-<g id="a_Node000015"><a xlink:href="signature_8c.html" target="_top" xlink:title="Implements the high&#45;level signature string parser.">
-<polygon fill="white" stroke="#666666" points="1293,-90.5 1181,-90.5 1181,-71.5 1293,-71.5 1293,-90.5"/>
-<text text-anchor="middle" x="1237" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/signature.c</text>
+<!-- Node21 -->
+<g id="Node000021" class="node">
+<title>Node21</title>
+<g id="a_Node000021"><a xlink:href="830__security_8c.html" target="_top" xlink:title="A test suite for security hardening and vulnerability prevention.">
+<polygon fill="white" stroke="#666666" points="1606.5,-90.5 1514.5,-90.5 1514.5,-71.5 1606.5,-71.5 1606.5,-90.5"/>
+<text text-anchor="middle" x="1560.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">t/830_security.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node15 -->
-<g id="edge20_Node000002_Node000015" class="edge">
-<title>Node2&#45;&gt;Node15</title>
-<g id="a_edge20_Node000002_Node000015"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M909.57,-131.34C980.9,-123.52 1083.16,-111.15 1172,-96 1181.1,-94.45 1190.86,-92.5 1199.98,-90.55"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="908.84,-127.9 899.28,-132.46 909.6,-134.85 908.84,-127.9"/>
+<!-- Node1&#45;&gt;Node21 -->
+<g id="edge55_Node000001_Node000021" class="edge">
+<title>Node1&#45;&gt;Node21</title>
+<g id="a_edge55_Node000001_Node000021"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.51,-195.06C2709.4,-193.02 1672.84,-183.14 1611.5,-151 1586.43,-137.86 1570.48,-106.22 1563.92,-90.77"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.6,-198.56 2991.63,-195.13 2981.65,-191.56 2981.6,-198.56"/>
 </a>
 </g>
 </g>
-<!-- Node16 -->
-<g id="Node000016" class="node">
-<title>Node16</title>
-<g id="a_Node000016"><a xlink:href="trampoline_8c.html" target="_top" xlink:title="The core engine for JIT compiling FFI trampolines.">
-<polygon fill="white" stroke="#666666" points="1430.5,-90.5 1311.5,-90.5 1311.5,-71.5 1430.5,-71.5 1430.5,-90.5"/>
-<text text-anchor="middle" x="1371" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/trampoline.c</text>
+<!-- Node22 -->
+<g id="Node000022" class="node">
+<title>Node22</title>
+<g id="a_Node000022"><a xlink:href="001__primitives_8c.html" target="_top" xlink:title="Tests FFI functionality with all supported primitive C types.">
+<polygon fill="white" stroke="#666666" points="1757.5,-151 1653.5,-151 1653.5,-132 1757.5,-132 1757.5,-151"/>
+<text text-anchor="middle" x="1705.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/001_primitives.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node16 -->
-<g id="edge22_Node000002_Node000016" class="edge">
-<title>Node2&#45;&gt;Node16</title>
-<g id="a_edge22_Node000002_Node000016"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M909.27,-135.16C1006.29,-128.68 1165.69,-116.06 1302,-96 1312.04,-94.52 1322.82,-92.53 1332.81,-90.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="908.96,-131.67 899.21,-135.82 909.42,-138.66 908.96,-131.67"/>
+<!-- Node1&#45;&gt;Node22 -->
+<g id="edge32_Node000001_Node000022" class="edge">
+<title>Node1&#45;&gt;Node22</title>
+<g id="a_edge32_Node000001_Node000022"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.52,-195.62C2793.19,-195.45 2230.95,-191.32 1766.5,-151 1763.62,-150.75 1760.68,-150.46 1757.7,-150.14"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.79,-199.12 2991.8,-195.62 2981.8,-192.12 2981.79,-199.12"/>
 </a>
 </g>
 </g>
-<!-- Node17 -->
-<g id="Node000017" class="node">
-<title>Node17</title>
-<g id="a_Node000017"><a xlink:href="type__registry_8c.html" target="_top" xlink:title="Implements the named type registry and definition parser.">
-<polygon fill="white" stroke="#666666" points="699.5,-90.5 570.5,-90.5 570.5,-71.5 699.5,-71.5 699.5,-90.5"/>
-<text text-anchor="middle" x="635" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/type_registry.c</text>
+<!-- Node23 -->
+<g id="Node000023" class="node">
+<title>Node23</title>
+<g id="a_Node000023"><a xlink:href="002__simple__calls_8c.html" target="_top" xlink:title="Tests basic FFI calls with simple function signatures.">
+<polygon fill="white" stroke="#666666" points="1891.5,-151 1775.5,-151 1775.5,-132 1891.5,-132 1891.5,-151"/>
+<text text-anchor="middle" x="1833.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/002_simple_calls.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node17 -->
-<g id="edge24_Node000002_Node000017" class="edge">
-<title>Node2&#45;&gt;Node17</title>
-<g id="a_edge24_Node000002_Node000017"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M783.52,-128.96C747.73,-117.65 694.01,-100.66 661.93,-90.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="782.51,-132.32 793.1,-131.99 784.62,-125.64 782.51,-132.32"/>
+<!-- Node1&#45;&gt;Node23 -->
+<g id="edge33_Node000001_Node000023" class="edge">
+<title>Node1&#45;&gt;Node23</title>
+<g id="a_edge33_Node000001_Node000023"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.77,-194.97C2807.03,-193.1 2311.26,-184.96 1900.5,-151 1897.58,-150.76 1894.59,-150.48 1891.57,-150.18"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.79,-198.47 2991.82,-195.07 2981.86,-191.47 2981.79,-198.47"/>
 </a>
 </g>
 </g>
-<!-- Node18 -->
-<g id="Node000018" class="node">
-<title>Node18</title>
-<g id="a_Node000018"><a xlink:href="types_8c.html" target="_top" xlink:title="Implements the public API for creating and managing type descriptions.">
-<polygon fill="white" stroke="#666666" points="810.5,-90.5 717.5,-90.5 717.5,-71.5 810.5,-71.5 810.5,-90.5"/>
-<text text-anchor="middle" x="764" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/types.c</text>
+<!-- Node24 -->
+<g id="Node000024" class="node">
+<title>Node24</title>
+<g id="a_Node000024"><a xlink:href="003__type__system__api_8c.html" target="_top" xlink:title="Tests the infix_type_* API functions for correctness and error handling.">
+<polygon fill="white" stroke="#666666" points="2047.5,-151 1909.5,-151 1909.5,-132 2047.5,-132 2047.5,-151"/>
+<text text-anchor="middle" x="1978.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/003_type_system_api.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node18 -->
-<g id="edge26_Node000002_Node000018" class="edge">
-<title>Node2&#45;&gt;Node18</title>
-<g id="a_edge26_Node000002_Node000018"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M804.77,-124.59C794.31,-113.67 780.83,-99.58 772.3,-90.67"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="802.29,-127.06 811.74,-131.87 807.35,-122.22 802.29,-127.06"/>
+<!-- Node1&#45;&gt;Node24 -->
+<g id="edge34_Node000001_Node000024" class="edge">
+<title>Node1&#45;&gt;Node24</title>
+<g id="a_edge34_Node000001_Node000024"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.93,-194.02C2823.88,-190.09 2405.01,-177.79 2056.5,-151 2053.65,-150.78 2050.74,-150.54 2047.8,-150.28"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.88,-197.52 2991.96,-194.27 2982.05,-190.52 2981.88,-197.52"/>
 </a>
 </g>
 </g>
-<!-- Node4&#45;&gt;Node3 -->
-<g id="edge4_Node000004_Node000003" class="edge">
-<title>Node4&#45;&gt;Node3</title>
-<g id="a_edge4_Node000004_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M497.27,-61.78C520.13,-51.69 548.12,-39.34 569.25,-30.01"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="495.56,-58.71 487.82,-65.95 498.38,-65.12 495.56,-58.71"/>
+<!-- Node25 -->
+<g id="Node000025" class="node">
+<title>Node25</title>
+<g id="a_Node000025"><a xlink:href="004__signatures_8c.html" target="_top" xlink:title="Hardened test suite for the high&#45;level signature API.">
+<polygon fill="white" stroke="#666666" points="2171.5,-151 2065.5,-151 2065.5,-132 2171.5,-132 2171.5,-151"/>
+<text text-anchor="middle" x="2118.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/004_signatures.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node25 -->
+<g id="edge35_Node000001_Node000025" class="edge">
+<title>Node1&#45;&gt;Node25</title>
+<g id="a_edge35_Node000001_Node000025"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.57,-193.99C2837.38,-190.25 2479.67,-178.74 2181.5,-151 2178.31,-150.7 2175.04,-150.37 2171.74,-150"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.9,-197.5 2991.99,-194.26 2982.08,-190.51 2981.9,-197.5"/>
+</a>
+</g>
+</g>
+<!-- Node26 -->
+<g id="Node000026" class="node">
+<title>Node26</title>
+<g id="a_Node000026"><a xlink:href="005__layouts_8c.html" target="_top" xlink:title="Tests the correctness of the ABI&#45;aware layout calculation for aggregates.">
+<polygon fill="white" stroke="#666666" points="2281,-151 2190,-151 2190,-132 2281,-132 2281,-151"/>
+<text text-anchor="middle" x="2235.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/005_layouts.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node26 -->
+<g id="edge36_Node000001_Node000026" class="edge">
+<title>Node1&#45;&gt;Node26</title>
+<g id="a_edge36_Node000001_Node000026"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.55,-193.75C2850.54,-189.75 2545.4,-178.14 2290.5,-151 2287.43,-150.67 2284.26,-150.29 2281.08,-149.88"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.7,-197.25 2991.8,-194.05 2981.91,-190.25 2981.7,-197.25"/>
+</a>
+</g>
+</g>
+<!-- Node27 -->
+<g id="Node000027" class="node">
+<title>Node27</title>
+<g id="a_Node000027"><a xlink:href="006__end__to__end__calls_8c.html" target="_top" xlink:title="End&#45;to&#45;end integration tests for the entire FFI call process.">
+<polygon fill="white" stroke="#666666" points="2438,-151 2299,-151 2299,-132 2438,-132 2438,-151"/>
+<text text-anchor="middle" x="2368.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/006_end_to_end_calls.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node27 -->
+<g id="edge37_Node000001_Node000027" class="edge">
+<title>Node1&#45;&gt;Node27</title>
+<g id="a_edge37_Node000001_Node000027"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.68,-191.39C2871.73,-184.26 2641.67,-168.65 2447.5,-151 2444.48,-150.73 2441.39,-150.43 2438.27,-150.13"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.74,-194.9 2991.94,-192.05 2982.19,-187.91 2981.74,-194.9"/>
+</a>
+</g>
+</g>
+<!-- Node28 -->
+<g id="Node000028" class="node">
+<title>Node28</title>
+<g id="a_Node000028"><a xlink:href="007__type__registry_8c.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="2574.5,-151 2456.5,-151 2456.5,-132 2574.5,-132 2574.5,-151"/>
+<text text-anchor="middle" x="2515.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/007_type_registry.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node28 -->
+<g id="edge38_Node000001_Node000028" class="edge">
+<title>Node1&#45;&gt;Node28</title>
+<g id="a_edge38_Node000001_Node000028"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.7,-189.81C2892.27,-181.82 2726.03,-166.53 2584.5,-151 2581.26,-150.64 2577.94,-150.27 2574.58,-149.88"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.42,-193.29 2991.69,-190.7 2982.04,-186.32 2981.42,-193.29"/>
+</a>
+</g>
+</g>
+<!-- Node29 -->
+<g id="Node000029" class="node">
+<title>Node29</title>
+<g id="a_Node000029"><a xlink:href="101__by__value_8c.html" target="_top" xlink:title="Tests passing and returning small aggregate types (structs) by value.">
+<polygon fill="white" stroke="#666666" points="2692,-151 2593,-151 2593,-132 2692,-132 2692,-151"/>
+<text text-anchor="middle" x="2642.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/101_by_value.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node29 -->
+<g id="edge39_Node000001_Node000029" class="edge">
+<title>Node1&#45;&gt;Node29</title>
+<g id="a_edge39_Node000001_Node000029"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2981.46,-187.4C2912.08,-178.7 2798.97,-164.31 2701.5,-151 2698.42,-150.58 2695.26,-150.14 2692.07,-149.7"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2981.44,-190.93 2991.79,-188.7 2982.31,-183.98 2981.44,-190.93"/>
+</a>
+</g>
+</g>
+<!-- Node30 -->
+<g id="Node000030" class="node">
+<title>Node30</title>
+<g id="a_Node000030"><a xlink:href="102__by__reference_8c.html" target="_top" xlink:title="Tests passing and returning aggregates that are handled by reference.">
+<polygon fill="white" stroke="#666666" points="2829,-151 2710,-151 2710,-132 2829,-132 2829,-151"/>
+<text text-anchor="middle" x="2769.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/102_by_reference.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node30 -->
+<g id="edge40_Node000001_Node000030" class="edge">
+<title>Node1&#45;&gt;Node30</title>
+<g id="a_edge40_Node000001_Node000030"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M2991.96,-185.07C2940.03,-175.13 2862.81,-160.35 2814.35,-151.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="2991.52,-188.54 3002,-186.98 2992.83,-181.67 2991.52,-188.54"/>
+</a>
+</g>
+</g>
+<!-- Node31 -->
+<g id="Node000031" class="node">
+<title>Node31</title>
+<g id="a_Node000031"><a xlink:href="103__unions_8c.html" target="_top" xlink:title="Tests passing and returning C unions by value.">
+<polygon fill="white" stroke="#666666" points="2934,-151 2847,-151 2847,-132 2934,-132 2934,-151"/>
+<text text-anchor="middle" x="2890.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/103_unions.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node31 -->
+<g id="edge41_Node000001_Node000031" class="edge">
+<title>Node1&#45;&gt;Node31</title>
+<g id="a_edge41_Node000001_Node000031"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3011.68,-183.67C2982.59,-173.79 2941.8,-159.93 2915.76,-151.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3010.84,-187.08 3021.44,-186.98 3013.09,-180.45 3010.84,-187.08"/>
+</a>
+</g>
+</g>
+<!-- Node32 -->
+<g id="Node000032" class="node">
+<title>Node32</title>
+<g id="a_Node000032"><a xlink:href="201__basic_8c.html" target="_top" xlink:title="Tests fundamental FFI operations involving pointers.">
+<polygon fill="white" stroke="#666666" points="3032.5,-151 2952.5,-151 2952.5,-132 3032.5,-132 3032.5,-151"/>
+<text text-anchor="middle" x="2992.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/201_basic.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node32 -->
+<g id="edge42_Node000001_Node000032" class="edge">
+<title>Node1&#45;&gt;Node32</title>
+<g id="a_edge42_Node000001_Node000032"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3030.22,-179.52C3020.7,-170.18 3009.06,-158.75 3001.25,-151.09"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3027.99,-182.24 3037.58,-186.75 3032.9,-177.25 3027.99,-182.24"/>
+</a>
+</g>
+</g>
+<!-- Node33 -->
+<g id="Node000033" class="node">
+<title>Node33</title>
+<g id="a_Node000033"><a xlink:href="202__in__structs_8c.html" target="_top" xlink:title="Tests passing structs that contain pointer members.">
+<polygon fill="white" stroke="#666666" points="3152.5,-151 3050.5,-151 3050.5,-132 3152.5,-132 3152.5,-151"/>
+<text text-anchor="middle" x="3101.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/202_in_structs.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node33 -->
+<g id="edge43_Node000001_Node000033" class="edge">
+<title>Node1&#45;&gt;Node33</title>
+<g id="a_edge43_Node000001_Node000033"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3062.79,-179.8C3072.54,-170.41 3084.55,-158.83 3092.59,-151.09"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3060.35,-177.29 3055.58,-186.75 3065.21,-182.33 3060.35,-177.29"/>
+</a>
+</g>
+</g>
+<!-- Node34 -->
+<g id="Node000034" class="node">
+<title>Node34</title>
+<g id="a_Node000034"><a xlink:href="203__complex_8c.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="3268,-151 3171,-151 3171,-132 3268,-132 3268,-151"/>
+<text text-anchor="middle" x="3219.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/203_complex.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node34 -->
+<g id="edge44_Node000001_Node000034" class="edge">
+<title>Node1&#45;&gt;Node34</title>
+<g id="a_edge44_Node000001_Node000034"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3084.27,-183.93C3116.59,-174.03 3162.36,-160.01 3191.49,-151.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3082.83,-180.71 3074.3,-186.98 3084.88,-187.4 3082.83,-180.71"/>
+</a>
+</g>
+</g>
+<!-- Node35 -->
+<g id="Node000035" class="node">
+<title>Node35</title>
+<g id="a_Node000035"><a xlink:href="301__primitives_8c.html" target="_top" xlink:title="Tests reverse trampolines (callbacks) with primitive type signatures.">
+<polygon fill="white" stroke="#666666" points="3390.5,-151 3286.5,-151 3286.5,-132 3390.5,-132 3390.5,-151"/>
+<text text-anchor="middle" x="3338.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/301_primitives.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node35 -->
+<g id="edge45_Node000001_Node000035" class="edge">
+<title>Node1&#45;&gt;Node35</title>
+<g id="a_edge45_Node000001_Node000035"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3103.31,-185.19C3158.05,-175.25 3239.92,-160.39 3291.22,-151.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3102.63,-181.75 3093.41,-186.98 3103.88,-188.64 3102.63,-181.75"/>
+</a>
+</g>
+</g>
+<!-- Node36 -->
+<g id="Node000036" class="node">
+<title>Node36</title>
+<g id="a_Node000036"><a xlink:href="302__aggregates_8c.html" target="_top" xlink:title="Tests reverse trampolines (callbacks) with struct and union arguments/returns.">
+<polygon fill="white" stroke="#666666" points="3518.5,-151 3408.5,-151 3408.5,-132 3518.5,-132 3518.5,-151"/>
+<text text-anchor="middle" x="3463.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/302_aggregates.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node36 -->
+<g id="edge46_Node000001_Node000036" class="edge">
+<title>Node1&#45;&gt;Node36</title>
+<g id="a_edge46_Node000001_Node000036"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.35,-187.46C3182.17,-178.64 3298.93,-164.02 3399.5,-151 3402.39,-150.63 3405.35,-150.24 3408.35,-149.85"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3110.73,-184.01 3101.24,-188.71 3111.6,-190.95 3110.73,-184.01"/>
+</a>
+</g>
+</g>
+<!-- Node37 -->
+<g id="Node000037" class="node">
+<title>Node37</title>
+<g id="a_Node000037"><a xlink:href="303__advanced_8c.html" target="_top" xlink:title="Tests advanced reverse trampoline (callback) patterns.">
+<polygon fill="white" stroke="#666666" points="3638.5,-151 3536.5,-151 3536.5,-132 3638.5,-132 3638.5,-151"/>
+<text text-anchor="middle" x="3587.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/303_advanced.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node37 -->
+<g id="edge47_Node000001_Node000037" class="edge">
+<title>Node1&#45;&gt;Node37</title>
+<g id="a_edge47_Node000001_Node000037"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.09,-190.52C3203.51,-183.18 3378.77,-168.4 3527.5,-151 3530.43,-150.66 3533.43,-150.29 3536.46,-149.9"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3110.74,-187.04 3101.05,-191.32 3111.3,-194.02 3110.74,-187.04"/>
+</a>
+</g>
+</g>
+<!-- Node38 -->
+<g id="Node000038" class="node">
+<title>Node38</title>
+<g id="a_Node000038"><a xlink:href="401__large__stack_8c.html" target="_top" xlink:title="Tests FFI calls with a large number of arguments, forcing stack usage.">
+<polygon fill="white" stroke="#666666" points="3768,-151 3657,-151 3657,-132 3768,-132 3768,-151"/>
+<text text-anchor="middle" x="3712.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/401_large_stack.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node38 -->
+<g id="edge48_Node000001_Node000038" class="edge">
+<title>Node1&#45;&gt;Node38</title>
+<g id="a_edge48_Node000001_Node000038"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.58,-191.88C3221.97,-185.48 3452.9,-170.91 3647.5,-151 3650.56,-150.69 3653.69,-150.35 3656.85,-149.99"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.06,-188.41 3101.28,-192.48 3111.47,-195.39 3111.06,-188.41"/>
+</a>
+</g>
+</g>
+<!-- Node39 -->
+<g id="Node000039" class="node">
+<title>Node39</title>
+<g id="a_Node000039"><a xlink:href="402__variadic__functions_8c.html" target="_top" xlink:title="Tests FFI calls for variadic functions.">
+<polygon fill="white" stroke="#666666" points="3930.5,-151 3786.5,-151 3786.5,-132 3930.5,-132 3930.5,-151"/>
+<text text-anchor="middle" x="3858.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/402_variadic_functions.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node39 -->
+<g id="edge49_Node000001_Node000039" class="edge">
+<title>Node1&#45;&gt;Node39</title>
+<g id="a_edge49_Node000001_Node000039"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.11,-192.52C3238.64,-186.42 3531.69,-171.37 3777.5,-151 3780.32,-150.77 3783.19,-150.52 3786.09,-150.26"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3110.94,-189.02 3101.12,-192.99 3111.28,-196.01 3110.94,-189.02"/>
+</a>
+</g>
+</g>
+<!-- Node40 -->
+<g id="Node000040" class="node">
+<title>Node40</title>
+<g id="a_Node000040"><a xlink:href="403__special__types_8c.html" target="_top" xlink:title="Tests FFI calls with types that have unique ABI handling rules.">
+<polygon fill="white" stroke="#666666" points="4070.5,-151 3948.5,-151 3948.5,-132 4070.5,-132 4070.5,-151"/>
+<text text-anchor="middle" x="4009.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/403_special_types.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node40 -->
+<g id="edge50_Node000001_Node000040" class="edge">
+<title>Node1&#45;&gt;Node40</title>
+<g id="a_edge50_Node000001_Node000040"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.43,-193.85C3258.85,-189.74 3630.06,-177.46 3939.5,-151 3942.43,-150.75 3945.42,-150.47 3948.44,-150.17"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.11,-190.35 3101.21,-194.13 3111.3,-197.35 3111.11,-190.35"/>
+</a>
+</g>
+</g>
+<!-- Node41 -->
+<g id="Node000041" class="node">
+<title>Node41</title>
+<g id="a_Node000041"><a xlink:href="810__memory__stress_8c.html" target="_top" xlink:title="A stress test for detecting memory leaks in the infix FFI library.">
+<polygon fill="white" stroke="#666666" points="4220,-151 4089,-151 4089,-132 4220,-132 4220,-151"/>
+<text text-anchor="middle" x="4154.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/810_memory_stress.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node41 -->
+<g id="edge51_Node000001_Node000041" class="edge">
+<title>Node1&#45;&gt;Node41</title>
+<g id="a_edge51_Node000001_Node000041"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.52,-194.27C3274.61,-190.86 3714.16,-179.54 4079.5,-151 4082.5,-150.77 4085.58,-150.5 4088.67,-150.22"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.1,-190.78 3101.18,-194.49 3111.25,-197.78 3111.1,-190.78"/>
+</a>
+</g>
+</g>
+<!-- Node42 -->
+<g id="Node000042" class="node">
+<title>Node42</title>
+<g id="a_Node000042"><a xlink:href="811__fault__injection_8c.html" target="_top" xlink:title="An advanced stress test that uses fault injection to find memory leaks in the library&#39;s error&#45;handlin...">
+<polygon fill="white" stroke="#666666" points="4363,-151 4238,-151 4238,-132 4363,-132 4363,-151"/>
+<text text-anchor="middle" x="4300.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/811_fault_injection.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node42 -->
+<g id="edge52_Node000001_Node000042" class="edge">
+<title>Node1&#45;&gt;Node42</title>
+<g id="a_edge52_Node000001_Node000042"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.13,-194.92C3289.51,-192.92 3803.64,-184.44 4229.5,-151 4232.22,-150.79 4235,-150.55 4237.81,-150.29"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.09,-191.42 3101.13,-195.03 3111.17,-198.42 3111.09,-191.42"/>
+</a>
+</g>
+</g>
+<!-- Node43 -->
+<g id="Node000043" class="node">
+<title>Node43</title>
+<g id="a_Node000043"><a xlink:href="820__threading__helgrind_8c.html" target="_top" xlink:title="A cross&#45;platform test for thread&#45;safety issues using Valgrind&#39;s Helgrind tool or other thread sanitiz...">
+<polygon fill="white" stroke="#666666" points="4527.5,-151 4381.5,-151 4381.5,-132 4527.5,-132 4527.5,-151"/>
+<text text-anchor="middle" x="4454.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/820_threading_helgrind.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node43 -->
+<g id="edge53_Node000001_Node000043" class="edge">
+<title>Node1&#45;&gt;Node43</title>
+<g id="a_edge53_Node000001_Node000043"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.43,-194.92C3304,-192.87 3888.77,-184.15 4372.5,-151 4375.36,-150.8 4378.27,-150.59 4381.2,-150.35"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.16,-191.43 3101.2,-195.03 3111.23,-198.43 3111.16,-191.43"/>
+</a>
+</g>
+</g>
+<!-- Node44 -->
+<g id="Node000044" class="node">
+<title>Node44</title>
+<g id="a_Node000044"><a xlink:href="821__threading__bare_8c.html" target="_top" xlink:title="A &quot;barebones&quot; thread&#45;safety test with no testing framework dependency.">
+<polygon fill="white" stroke="#666666" points="4673.5,-151 4545.5,-151 4545.5,-132 4673.5,-132 4673.5,-151"/>
+<text text-anchor="middle" x="4609.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/821_threading_bare.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node44 -->
+<g id="edge54_Node000001_Node000044" class="edge">
+<title>Node1&#45;&gt;Node44</title>
+<g id="a_edge54_Node000001_Node000044"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.16,-195.55C3318.6,-195.3 3986.02,-191.19 4536.5,-151 4539.43,-150.79 4542.42,-150.54 4545.44,-150.28"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.04,-192.05 3101.05,-195.56 3111.05,-199.05 3111.04,-192.05"/>
+</a>
+</g>
+</g>
+<!-- Node45 -->
+<g id="Node000045" class="node">
+<title>Node45</title>
+<g id="a_Node000045"><a xlink:href="850__regression__cases_8c.html" target="_top" xlink:title="Contains a data&#45;driven suite of deterministic unit tests for specific bugs found by fuzzing.">
+<polygon fill="white" stroke="#666666" points="4831,-151 4692,-151 4692,-132 4831,-132 4831,-151"/>
+<text text-anchor="middle" x="4761.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/850_regression_cases.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node45 -->
+<g id="edge57_Node000001_Node000045" class="edge">
+<title>Node1&#45;&gt;Node45</title>
+<g id="a_edge57_Node000001_Node000045"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.4,-195.6C3331.9,-195.53 4072.4,-192.05 4682.5,-151 4685.53,-150.8 4688.62,-150.56 4691.74,-150.31"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.3,-192.1 3101.3,-195.6 3111.3,-199.1 3111.3,-192.1"/>
+</a>
+</g>
+</g>
+<!-- Node46 -->
+<g id="Node000046" class="node">
+<title>Node46</title>
+<g id="a_Node000046"><a xlink:href="860__error__handling_8c.html" target="_top" xlink:title="Unit tests for the detailed error reporting system.">
+<polygon fill="white" stroke="#666666" points="4974,-151 4849,-151 4849,-132 4974,-132 4974,-151"/>
+<text text-anchor="middle" x="4911.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/860_error_handling.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node46 -->
+<g id="edge58_Node000001_Node000046" class="edge">
+<title>Node1&#45;&gt;Node46</title>
+<g id="a_edge58_Node000001_Node000046"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.41,-194.71C3391.03,-191.19 4494.2,-175.97 4840.5,-151 4843.22,-150.8 4846,-150.58 4848.81,-150.33"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3110.99,-191.22 3101.04,-194.84 3111.08,-198.22 3110.99,-191.22"/>
+</a>
+</g>
+</g>
+<!-- Node47 -->
+<g id="Node000047" class="node">
+<title>Node47</title>
+<g id="a_Node000047"><a xlink:href="901__call__overhead_8c.html" target="_top" xlink:title="A microbenchmark to measure the performance overhead of an FFI call.">
+<polygon fill="white" stroke="#666666" points="5115,-151 4992,-151 4992,-132 5115,-132 5115,-151"/>
+<text text-anchor="middle" x="5053.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/901_call_overhead.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node47 -->
+<g id="edge59_Node000001_Node000047" class="edge">
+<title>Node1&#45;&gt;Node47</title>
+<g id="a_edge59_Node000001_Node000047"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.27,-194.87C3404.22,-191.86 4607.37,-178.09 4983.5,-151 4986.19,-150.81 4988.93,-150.58 4991.7,-150.34"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.2,-191.37 3101.23,-194.97 3111.27,-198.37 3111.2,-191.37"/>
+</a>
+</g>
+</g>
+<!-- Node48 -->
+<g id="Node000048" class="node">
+<title>Node48</title>
+<g id="a_Node000048"><a xlink:href="903__generation__benchmark_8c.html" target="_top" xlink:title="A microbenchmark for FFI trampoline generation time.">
+<polygon fill="white" stroke="#666666" points="5300,-151 5133,-151 5133,-132 5300,-132 5300,-151"/>
+<text text-anchor="middle" x="5216.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/903_generation_benchmark.c</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node48 -->
+<g id="edge60_Node000001_Node000048" class="edge">
+<title>Node1&#45;&gt;Node48</title>
+<g id="a_edge60_Node000001_Node000048"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M3111.37,-195.78C3367.36,-196.53 4332.09,-196.03 5124.5,-151 5127.22,-150.85 5129.99,-150.67 5132.78,-150.49"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="3111.15,-192.28 3101.14,-195.75 3111.13,-199.28 3111.15,-192.28"/>
+</a>
+</g>
+</g>
+<!-- Node4 -->
+<g id="Node000004" class="node">
+<title>Node4</title>
+<g id="a_Node000004"><a xlink:href="abi__arm64_8c.html" target="_top" xlink:title="Implements the FFI logic for the AArch64 (ARM64) architecture.">
+<polygon fill="white" stroke="#666666" points="115,-30 0,-30 0,0 115,0 115,-30"/>
+<text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
+<text text-anchor="middle" x="57.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64.c</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node4 -->
+<g id="edge3_Node000003_Node000004" class="edge">
+<title>Node3&#45;&gt;Node4</title>
+<g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M802.13,-132.15C691.05,-126.61 188.66,-128.85 123.5,-96 95.04,-81.65 74.39,-48.9 64.35,-30.05"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="802.22,-135.66 812.42,-132.77 802.64,-128.68 802.22,-135.66"/>
 </a>
 </g>
 </g>
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="abi__arm64__emitters_8c.html" target="_top" xlink:title="Implements internal helper functions for emitting AArch64 machine code.">
-<polygon fill="white" stroke="#666666" points="525.5,-30 410.5,-30 410.5,0 525.5,0 525.5,-30"/>
-<text text-anchor="start" x="418.5" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
-<text text-anchor="middle" x="468" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64_emitters.c</text>
+<g id="a_Node000005"><a xlink:href="abi__arm64__emitters_8h.html" target="_top" xlink:title="Declares internal helper functions for emitting AArch64 machine code.">
+<polygon fill="white" stroke="#666666" points="248,-96 133,-96 133,-66 248,-66 248,-96"/>
+<text text-anchor="start" x="141" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
+<text text-anchor="middle" x="190.5" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64_emitters.h</text>
 </a>
 </g>
 </g>
-<!-- Node4&#45;&gt;Node5 -->
-<g id="edge5_Node000004_Node000005" class="edge">
-<title>Node4&#45;&gt;Node5</title>
-<g id="a_edge5_Node000004_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M460.53,-55.83C462.16,-47.17 463.93,-37.7 465.34,-30.16"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="457.07,-55.32 458.66,-65.8 463.95,-56.61 457.07,-55.32"/>
+<!-- Node3&#45;&gt;Node5 -->
+<g id="edge4_Node000003_Node000005" class="edge">
+<title>Node3&#45;&gt;Node5</title>
+<g id="a_edge4_Node000003_Node000005"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M802.22,-132C583.65,-113.72 527.19,-116.02 313.5,-96 292.1,-94 268.65,-91.42 248.02,-89.03"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="802.15,-135.51 812.41,-132.86 802.74,-128.53 802.15,-135.51"/>
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node6 -->
-<g id="edge9_Node000008_Node000006" class="edge">
-<title>Node8&#45;&gt;Node6</title>
-<g id="a_edge9_Node000008_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M177.91,-62.19C152.19,-52.02 120.4,-39.47 96.47,-30.01"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="176.86,-65.54 187.45,-65.95 179.43,-59.03 176.86,-65.54"/>
+<!-- Node7 -->
+<g id="Node000007" class="node">
+<title>Node7</title>
+<g id="a_Node000007"><a xlink:href="abi__sysv__x64_8c.html" target="_top" xlink:title="Implements the FFI logic for the System V AMD64 ABI.">
+<polygon fill="white" stroke="#666666" points="388.5,-30 266.5,-30 266.5,0 388.5,0 388.5,-30"/>
+<text text-anchor="start" x="274.5" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_sysv</text>
+<text text-anchor="middle" x="327.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_x64.c</text>
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node7 -->
-<g id="edge10_Node000008_Node000007" class="edge">
-<title>Node8&#45;&gt;Node7</title>
-<g id="a_edge10_Node000008_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M256.48,-60.69C273.62,-50.82 294.09,-39.01 309.7,-30.01"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="254.27,-57.93 247.36,-65.95 257.77,-63.99 254.27,-57.93"/>
+<!-- Node3&#45;&gt;Node7 -->
+<g id="edge7_Node000003_Node000007" class="edge">
+<title>Node3&#45;&gt;Node7</title>
+<g id="a_edge7_Node000003_Node000007"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M802.14,-132.11C691.84,-124.85 452.75,-145.25 374.5,-96 350.51,-80.9 337.29,-48.75 331.37,-30.13"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="802.17,-135.62 812.41,-132.9 802.7,-128.64 802.17,-135.62"/>
+</a>
+</g>
+</g>
+<!-- Node8 -->
+<g id="Node000008" class="node">
+<title>Node8</title>
+<g id="a_Node000008"><a xlink:href="abi__win__x64_8c.html" target="_top" xlink:title="Implements the FFI logic for the Windows x64 calling convention.">
+<polygon fill="white" stroke="#666666" points="522.5,-30 406.5,-30 406.5,0 522.5,0 522.5,-30"/>
+<text text-anchor="start" x="414.5" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_win</text>
+<text text-anchor="middle" x="464.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_x64.c</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node8 -->
+<g id="edge8_Node000003_Node000008" class="edge">
+<title>Node3&#45;&gt;Node8</title>
+<g id="a_edge8_Node000003_Node000008"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M802.19,-132.21C723.6,-127.95 414.48,-128.67 384.5,-96 362.59,-72.12 402.16,-45.79 433.05,-30.09"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="802.19,-135.71 812.4,-132.91 802.67,-128.73 802.19,-135.71"/>
 </a>
 </g>
 </g>
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="abi__x64__emitters_8c.html" target="_top" xlink:title="Implements internal helper functions for emitting x86&#45;64 machine code.">
-<polygon fill="white" stroke="#666666" points="257.5,-30 140.5,-30 140.5,0 257.5,0 257.5,-30"/>
-<text text-anchor="start" x="148.5" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_x64</text>
-<text text-anchor="middle" x="199" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_emitters.c</text>
+<g id="a_Node000009"><a xlink:href="abi__x64__emitters_8h.html" target="_top" xlink:title="Declares internal helper functions for emitting x86&#45;64 machine code.">
+<polygon fill="white" stroke="#666666" points="511,-96 394,-96 394,-66 511,-66 511,-96"/>
+<text text-anchor="start" x="402" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_x64</text>
+<text text-anchor="middle" x="452.5" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">_emitters.h</text>
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node9 -->
-<g id="edge11_Node000008_Node000009" class="edge">
-<title>Node8&#45;&gt;Node9</title>
-<g id="a_edge11_Node000008_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M214.15,-56.39C210.84,-47.59 207.2,-37.86 204.31,-30.16"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="210.89,-57.66 217.67,-65.8 217.44,-55.2 210.89,-57.66"/>
+<!-- Node3&#45;&gt;Node9 -->
+<g id="edge9_Node000003_Node000009" class="edge">
+<title>Node3&#45;&gt;Node9</title>
+<g id="a_edge9_Node000003_Node000009"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M803.27,-130.84C710.98,-120.58 572.32,-104.66 519.5,-96 516.8,-95.56 514.05,-95.08 511.27,-94.58"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="803.12,-134.35 813.45,-131.97 803.9,-127.39 803.12,-134.35"/>
 </a>
 </g>
 </g>
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="infix_8c.html" target="_top" xlink:title="The unity build source file for the infix library.">
-<polygon fill="white" stroke="#666666" points="1086.5,-24.5 1023.5,-24.5 1023.5,-5.5 1086.5,-5.5 1086.5,-24.5"/>
-<text text-anchor="middle" x="1055" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/infix.c</text>
+<g id="a_Node000011"><a xlink:href="arena_8c.html" target="_top" xlink:title="Implementation of the internal arena allocator.">
+<polygon fill="white" stroke="#666666" points="1388.5,-90.5 1294.5,-90.5 1294.5,-71.5 1388.5,-71.5 1388.5,-90.5"/>
+<text text-anchor="middle" x="1341.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/arena.c</text>
 </a>
 </g>
 </g>
-<!-- Node10&#45;&gt;Node11 -->
-<g id="edge13_Node000010_Node000011" class="edge">
-<title>Node10&#45;&gt;Node11</title>
-<g id="a_edge13_Node000010_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M909.56,-68C944.91,-55.36 999.69,-35.78 1030.96,-24.6"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="908.38,-64.71 900.14,-71.37 910.74,-71.3 908.38,-64.71"/>
+<!-- Node3&#45;&gt;Node11 -->
+<g id="edge13_Node000003_Node000011" class="edge">
+<title>Node3&#45;&gt;Node11</title>
+<g id="a_edge13_Node000003_Node000011"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M980.63,-133.69C1060.59,-126.8 1180.95,-114.5 1284.5,-96 1292.83,-94.51 1301.74,-92.52 1310,-90.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="980.26,-130.2 970.59,-134.54 980.86,-137.18 980.26,-130.2"/>
 </a>
 </g>
 </g>
-<!-- Node12&#45;&gt;Node11 -->
-<g id="edge15_Node000012_Node000011" class="edge">
-<title>Node12&#45;&gt;Node11</title>
-<g id="a_edge15_Node000012_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1453.6,-68.99C1449.03,-67.9 1444.43,-66.87 1440,-66 1310.03,-40.51 1152.75,-24.69 1086.66,-18.72"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1452.89,-72.42 1463.44,-71.47 1454.6,-65.64 1452.89,-72.42"/>
+<!-- Node3&#45;&gt;Node14 -->
+<g id="edge16_Node000003_Node000014" class="edge">
+<title>Node3&#45;&gt;Node14</title>
+<g id="a_edge16_Node000003_Node000014"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M981.12,-137.11C1082.72,-132.23 1252.99,-120.91 1397.5,-96 1405.61,-94.6 1414.29,-92.59 1422.27,-90.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="980.73,-133.63 970.9,-137.59 981.06,-140.62 980.73,-133.63"/>
 </a>
 </g>
 </g>
-<!-- Node13&#45;&gt;Node11 -->
-<g id="edge17_Node000013_Node000011" class="edge">
-<title>Node13&#45;&gt;Node11</title>
-<g id="a_edge17_Node000013_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1010.02,-63.98C1021.6,-51.62 1037.2,-34.99 1046.65,-24.91"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1007.38,-61.68 1003.09,-71.37 1012.48,-66.47 1007.38,-61.68"/>
+<!-- Node15 -->
+<g id="Node000015" class="node">
+<title>Node15</title>
+<g id="a_Node000015"><a xlink:href="executor_8c.html" target="_top" xlink:title="Implements OS&#45;level memory management and the internal callback dispatcher.">
+<polygon fill="white" stroke="#666666" points="636,-90.5 529,-90.5 529,-71.5 636,-71.5 636,-90.5"/>
+<text text-anchor="middle" x="582.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/executor.c</text>
 </a>
 </g>
 </g>
-<!-- Node14&#45;&gt;Node11 -->
-<g id="edge19_Node000014_Node000011" class="edge">
-<title>Node14&#45;&gt;Node11</title>
-<g id="a_edge19_Node000014_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1099.98,-63.98C1088.4,-51.62 1072.8,-34.99 1063.35,-24.91"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1097.52,-66.47 1106.91,-71.37 1102.62,-61.68 1097.52,-66.47"/>
+<!-- Node3&#45;&gt;Node15 -->
+<g id="edge18_Node000003_Node000015" class="edge">
+<title>Node3&#45;&gt;Node15</title>
+<g id="a_edge18_Node000003_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M831,-130.25C781.13,-121.63 708.59,-108.71 645.5,-96 637.15,-94.32 628.21,-92.4 619.76,-90.54"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="830.53,-133.72 840.98,-131.96 831.72,-126.82 830.53,-133.72"/>
 </a>
 </g>
 </g>
-<!-- Node15&#45;&gt;Node11 -->
-<g id="edge21_Node000015_Node000011" class="edge">
-<title>Node15&#45;&gt;Node11</title>
-<g id="a_edge21_Node000015_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1202.88,-68C1166.94,-55.36 1111.24,-35.78 1079.45,-24.6"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1201.86,-71.35 1212.45,-71.37 1204.18,-64.75 1201.86,-71.35"/>
+<!-- Node16 -->
+<g id="Node000016" class="node">
+<title>Node16</title>
+<g id="a_Node000016"><a xlink:href="loader_8c.html" target="_top" xlink:title="Implements the cross&#45;platform dynamic library loading and symbol resolution API.">
+<polygon fill="white" stroke="#666666" points="750.5,-90.5 654.5,-90.5 654.5,-71.5 750.5,-71.5 750.5,-90.5"/>
+<text text-anchor="middle" x="702.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/loader.c</text>
 </a>
 </g>
 </g>
-<!-- Node16&#45;&gt;Node11 -->
-<g id="edge23_Node000016_Node000011" class="edge">
-<title>Node16&#45;&gt;Node11</title>
-<g id="a_edge23_Node000016_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1318.87,-69.42C1313.17,-68.27 1307.47,-67.11 1302,-66 1224.6,-50.31 1133.55,-31.89 1086.58,-22.39"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1318.54,-72.93 1329.04,-71.48 1319.93,-66.06 1318.54,-72.93"/>
+<!-- Node3&#45;&gt;Node16 -->
+<g id="edge20_Node000003_Node000016" class="edge">
+<title>Node3&#45;&gt;Node16</title>
+<g id="a_edge20_Node000003_Node000016"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M854.23,-128.96C817.67,-117.65 762.78,-100.66 730.02,-90.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="853.43,-132.38 864.02,-131.99 855.5,-125.69 853.43,-132.38"/>
 </a>
 </g>
 </g>
-<!-- Node17&#45;&gt;Node11 -->
-<g id="edge25_Node000017_Node000011" class="edge">
-<title>Node17&#45;&gt;Node11</title>
-<g id="a_edge25_Node000017_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M688.41,-69.61C695.33,-68.35 702.33,-67.11 709,-66 824.54,-46.73 962.53,-28.1 1023.44,-20.09"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="687.57,-66.2 678.38,-71.47 688.85,-73.09 687.57,-66.2"/>
+<!-- Node17 -->
+<g id="Node000017" class="node">
+<title>Node17</title>
+<g id="a_Node000017"><a xlink:href="signature_8c.html" target="_top" xlink:title="Implements the high&#45;level signature string parser.">
+<polygon fill="white" stroke="#666666" points="880.5,-90.5 768.5,-90.5 768.5,-71.5 880.5,-71.5 880.5,-90.5"/>
+<text text-anchor="middle" x="824.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/signature.c</text>
 </a>
 </g>
 </g>
-<!-- Node18&#45;&gt;Node11 -->
-<g id="edge27_Node000018_Node000011" class="edge">
-<title>Node18&#45;&gt;Node11</title>
-<g id="a_edge27_Node000018_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M807.32,-69.01C811.6,-67.97 815.88,-66.95 820,-66 892.54,-49.22 978.17,-31.53 1023.37,-22.36"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="806.29,-65.66 797.42,-71.44 807.96,-72.46 806.29,-65.66"/>
+<!-- Node3&#45;&gt;Node17 -->
+<g id="edge22_Node000003_Node000017" class="edge">
+<title>Node3&#45;&gt;Node17</title>
+<g id="a_edge22_Node000003_Node000017"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M874,-125.22C861.4,-114.21 844.83,-99.75 834.43,-90.67"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="871.78,-127.93 881.61,-131.87 876.38,-122.65 871.78,-127.93"/>
+</a>
+</g>
+</g>
+<!-- Node18 -->
+<g id="Node000018" class="node">
+<title>Node18</title>
+<g id="a_Node000018"><a xlink:href="trampoline_8c.html" target="_top" xlink:title="The core engine for JIT compiling FFI trampolines.">
+<polygon fill="white" stroke="#666666" points="1018,-90.5 899,-90.5 899,-71.5 1018,-71.5 1018,-90.5"/>
+<text text-anchor="middle" x="958.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/trampoline.c</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node18 -->
+<g id="edge24_Node000003_Node000018" class="edge">
+<title>Node3&#45;&gt;Node18</title>
+<g id="a_edge24_Node000003_Node000018"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M909,-125.22C921.6,-114.21 938.17,-99.75 948.57,-90.67"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="906.62,-122.65 901.39,-131.87 911.22,-127.93 906.62,-122.65"/>
+</a>
+</g>
+</g>
+<!-- Node19 -->
+<g id="Node000019" class="node">
+<title>Node19</title>
+<g id="a_Node000019"><a xlink:href="type__registry_8c.html" target="_top" xlink:title="Implements the named type registry and definition parser.">
+<polygon fill="white" stroke="#666666" points="1165,-90.5 1036,-90.5 1036,-71.5 1165,-71.5 1165,-90.5"/>
+<text text-anchor="middle" x="1100.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/type_registry.c</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node19 -->
+<g id="edge26_Node000003_Node000019" class="edge">
+<title>Node3&#45;&gt;Node19</title>
+<g id="a_edge26_Node000003_Node000019"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M931.69,-129.25C972.1,-117.94 1033.53,-100.75 1070.07,-90.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="930.58,-125.93 921.89,-131.99 932.46,-132.67 930.58,-125.93"/>
+</a>
+</g>
+</g>
+<!-- Node20 -->
+<g id="Node000020" class="node">
+<title>Node20</title>
+<g id="a_Node000020"><a xlink:href="types_8c.html" target="_top" xlink:title="Implements the public API for creating and managing type descriptions.">
+<polygon fill="white" stroke="#666666" points="1276,-90.5 1183,-90.5 1183,-71.5 1276,-71.5 1276,-90.5"/>
+<text text-anchor="middle" x="1229.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/types.c</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node20 -->
+<g id="edge28_Node000003_Node000020" class="edge">
+<title>Node3&#45;&gt;Node20</title>
+<g id="a_edge28_Node000003_Node000020"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M965.92,-130.59C1022.97,-122.55 1103.51,-110.24 1173.5,-96 1181.26,-94.42 1189.56,-92.48 1197.33,-90.56"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="965.33,-127.14 955.91,-131.99 966.3,-134.07 965.33,-127.14"/>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node21 -->
+<g id="edge30_Node000003_Node000021" class="edge">
+<title>Node3&#45;&gt;Node21</title>
+<g id="a_edge30_Node000003_Node000021"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M981.1,-138.83C1101,-135.49 1319.96,-125.54 1504.5,-96 1513.01,-94.64 1522.12,-92.61 1530.47,-90.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="980.77,-135.33 970.87,-139.1 980.96,-142.33 980.77,-135.33"/>
+</a>
+</g>
+</g>
+<!-- Node5&#45;&gt;Node4 -->
+<g id="edge5_Node000005_Node000004" class="edge">
+<title>Node5&#45;&gt;Node4</title>
+<g id="a_edge5_Node000005_Node000004"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M152.08,-61.51C131.22,-51.47 105.83,-39.26 86.62,-30.01"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="150.78,-64.77 161.31,-65.95 153.82,-58.46 150.78,-64.77"/>
+</a>
+</g>
+</g>
+<!-- Node6 -->
+<g id="Node000006" class="node">
+<title>Node6</title>
+<g id="a_Node000006"><a xlink:href="abi__arm64__emitters_8c.html" target="_top" xlink:title="Implements internal helper functions for emitting AArch64 machine code.">
+<polygon fill="white" stroke="#666666" points="248,-30 133,-30 133,0 248,0 248,-30"/>
+<text text-anchor="start" x="141" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
+<text text-anchor="middle" x="190.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64_emitters.c</text>
+</a>
+</g>
+</g>
+<!-- Node5&#45;&gt;Node6 -->
+<g id="edge6_Node000005_Node000006" class="edge">
+<title>Node5&#45;&gt;Node6</title>
+<g id="a_edge6_Node000005_Node000006"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M190.5,-55.54C190.5,-46.96 190.5,-37.61 190.5,-30.16"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="187,-55.8 190.5,-65.8 194,-55.8 187,-55.8"/>
+</a>
+</g>
+</g>
+<!-- Node9&#45;&gt;Node7 -->
+<g id="edge10_Node000009_Node000007" class="edge">
+<title>Node9&#45;&gt;Node7</title>
+<g id="a_edge10_Node000009_Node000007"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M416.13,-61.38C396.57,-51.36 372.85,-39.22 354.87,-30.01"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="414.57,-64.51 425.07,-65.95 417.76,-58.28 414.57,-64.51"/>
+</a>
+</g>
+</g>
+<!-- Node9&#45;&gt;Node8 -->
+<g id="edge11_Node000009_Node000008" class="edge">
+<title>Node9&#45;&gt;Node8</title>
+<g id="a_edge11_Node000009_Node000008"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M457.03,-55.83C458.66,-47.17 460.43,-37.7 461.84,-30.16"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="453.57,-55.32 455.16,-65.8 460.45,-56.61 453.57,-55.32"/>
+</a>
+</g>
+</g>
+<!-- Node10 -->
+<g id="Node000010" class="node">
+<title>Node10</title>
+<g id="a_Node000010"><a xlink:href="abi__x64__emitters_8c.html" target="_top" xlink:title="Implements internal helper functions for emitting x86&#45;64 machine code.">
+<polygon fill="white" stroke="#666666" points="658,-30 541,-30 541,0 658,0 658,-30"/>
+<text text-anchor="start" x="549" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/x64/abi_x64</text>
+<text text-anchor="middle" x="599.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_emitters.c</text>
+</a>
+</g>
+</g>
+<!-- Node9&#45;&gt;Node10 -->
+<g id="edge12_Node000009_Node000010" class="edge">
+<title>Node9&#45;&gt;Node10</title>
+<g id="a_edge12_Node000009_Node000010"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M494.03,-61.92C517.26,-51.8 545.79,-39.38 567.32,-30.01"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="492.53,-58.75 484.76,-65.95 495.33,-65.17 492.53,-58.75"/>
+</a>
+</g>
+</g>
+<!-- Node12 -->
+<g id="Node000012" class="node">
+<title>Node12</title>
+<g id="a_Node000012"><a xlink:href="infix_8c.html" target="_top" xlink:title="The unity build source file for the infix library.">
+<polygon fill="white" stroke="#666666" points="1061,-24.5 998,-24.5 998,-5.5 1061,-5.5 1061,-24.5"/>
+<text text-anchor="middle" x="1029.5" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/infix.c</text>
+</a>
+</g>
+</g>
+<!-- Node11&#45;&gt;Node12 -->
+<g id="edge14_Node000011_Node000012" class="edge">
+<title>Node11&#45;&gt;Node12</title>
+<g id="a_edge14_Node000011_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1297.96,-69.08C1293.42,-68.01 1288.87,-66.96 1284.5,-66 1204.32,-48.3 1109.26,-30.5 1061,-21.68"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1297.26,-72.51 1307.8,-71.44 1298.9,-65.71 1297.26,-72.51"/>
+</a>
+</g>
+</g>
+<!-- Node11&#45;&gt;Node13 -->
+<g id="edge15_Node000011_Node000013" class="edge">
+<title>Node11&#45;&gt;Node13</title>
+<g id="a_edge15_Node000011_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1370.71,-67.19C1399.49,-54.58 1442.65,-35.66 1467.66,-24.7"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1368.94,-64.15 1361.19,-71.37 1371.75,-70.56 1368.94,-64.15"/>
+</a>
+</g>
+</g>
+<!-- Node14&#45;&gt;Node12 -->
+<g id="edge17_Node000014_Node000012" class="edge">
+<title>Node14&#45;&gt;Node12</title>
+<g id="a_edge17_Node000014_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1411.17,-68.99C1406.58,-67.9 1401.95,-66.88 1397.5,-66 1274.14,-41.72 1125.19,-25.42 1061.21,-19.03"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1410.54,-72.44 1421.09,-71.44 1412.22,-65.64 1410.54,-72.44"/>
+</a>
+</g>
+</g>
+<!-- Node15&#45;&gt;Node12 -->
+<g id="edge19_Node000015_Node000012" class="edge">
+<title>Node15&#45;&gt;Node12</title>
+<g id="a_edge19_Node000015_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M628.51,-69.28C634.22,-68.1 639.98,-66.97 645.5,-66 775.61,-43.12 932.22,-25.91 998,-19.14"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="627.42,-65.93 618.37,-71.45 628.88,-72.78 627.42,-65.93"/>
+</a>
+</g>
+</g>
+<!-- Node16&#45;&gt;Node12 -->
+<g id="edge21_Node000016_Node000012" class="edge">
+<title>Node16&#45;&gt;Node12</title>
+<g id="a_edge21_Node000016_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M745.85,-69.08C750.45,-68 755.07,-66.95 759.5,-66 845.25,-47.54 947.22,-29.79 997.79,-21.26"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="744.79,-65.73 735.88,-71.46 746.42,-72.54 744.79,-65.73"/>
+</a>
+</g>
+</g>
+<!-- Node17&#45;&gt;Node12 -->
+<g id="edge23_Node000017_Node000012" class="edge">
+<title>Node17&#45;&gt;Node12</title>
+<g id="a_edge23_Node000017_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M861.9,-68.32C902.34,-55.7 965.85,-35.87 1001.96,-24.6"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="860.65,-65.05 852.15,-71.37 862.74,-71.73 860.65,-65.05"/>
+</a>
+</g>
+</g>
+<!-- Node18&#45;&gt;Node12 -->
+<g id="edge25_Node000018_Node000012" class="edge">
+<title>Node18&#45;&gt;Node12</title>
+<g id="a_edge25_Node000018_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M975.88,-64.33C989.63,-51.94 1008.33,-35.09 1019.62,-24.91"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="973.16,-62.07 968.08,-71.37 977.85,-67.27 973.16,-62.07"/>
+</a>
+</g>
+</g>
+<!-- Node19&#45;&gt;Node12 -->
+<g id="edge27_Node000019_Node000012" class="edge">
+<title>Node19&#45;&gt;Node12</title>
+<g id="a_edge27_Node000019_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1083.12,-64.33C1069.37,-51.94 1050.67,-35.09 1039.38,-24.91"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1081.15,-67.27 1090.92,-71.37 1085.84,-62.07 1081.15,-67.27"/>
+</a>
+</g>
+</g>
+<!-- Node20&#45;&gt;Node12 -->
+<g id="edge29_Node000020_Node000012" class="edge">
+<title>Node20&#45;&gt;Node12</title>
+<g id="a_edge29_Node000020_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1192.76,-68.24C1153.29,-55.61 1091.52,-35.85 1056.36,-24.6"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1191.94,-71.65 1202.53,-71.37 1194.07,-64.99 1191.94,-71.65"/>
 </a>
 </g>
 </g>

@@ -114,7 +114,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a type registry and all type definitions and metadata contained within it.  <br /></td></tr>
 <tr class="separator:ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4ece2363948c40fe528826bf65dac280" id="r_ga4ece2363948c40fe528826bf65dac280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *, const char *)</td></tr>
-<tr class="memdesc:ga4ece2363948c40fe528826bf65dac280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_register_types</code> function.  <br /></td></tr>
+<tr class="memdesc:ga4ece2363948c40fe528826bf65dac280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string of definitions and populates a type registry.  <br /></td></tr>
 <tr class="separator:ga4ece2363948c40fe528826bf65dac280"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -146,9 +146,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implementation of the public <code>infix_register_types</code> function. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a84">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
+<p>Parses a string of definitions and populates a type registry. </p>
+<p>This function is the primary way to define named types. The definition string is a semicolon-separated list of <code>@Name = &lt;TypeDefinition&gt;;</code> entries.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">registry</td><td>The registry to populate. </td></tr>
+    <tr><td class="paramname">definitions</td><td>A null-terminated, semicolon-separated string of type definitions. </td></tr>
+  </table>
+  </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd>
+<dd>
+<code>INFIX_ERROR_INVALID_ARGUMENT</code> if the definition string contains a syntax error or attempts to redefine an existing type in the registry.</dd></dl>
+<p>Parses a string of definitions and populates a type registry. </p>
 
 </div>
 </div>
@@ -169,12 +179,10 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a new, empty type registry. </p>
-<p>A type registry is a self-contained object that stores named type definitions. These definitions can then be referenced by name (e.g., <code>@Point</code>) in any signature string passed to the library.</p>
+<p>A type registry is a self-contained object that stores named type definitions. These definitions can then be referenced by name (e.g., <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code>) in any signature string passed to the library.</p>
 <dl class="section return"><dt>Returns</dt><dd>A handle to the new registry, or <code>nullptr</code> if memory allocation fails. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The returned registry must be freed with <code>infix_registry_destroy</code>.</dd></dl>
 <p>Creates a new, empty type registry. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a82">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>
@@ -202,8 +210,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <p>Frees a type registry and all type definitions and metadata contained within it. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html#a83">/home/runner/work/infix/infix/include/infix/infix.h</a>.</dd>
-</dl>
 
 </div>
 </div>

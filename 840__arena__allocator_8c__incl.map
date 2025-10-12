@@ -1,0 +1,31 @@
+<map id="t/840_arena_allocator.c" name="t/840_arena_allocator.c">
+<area shape="rect" id="Node000001" title="Unit tests for the internal arena allocator." alt="" coords="422,5,595,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="442,33,170,79,169,74,441,28"/>
+<area shape="rect" id="Node000003" href="$arena_8c.html" title="Implementation of the internal arena allocator." alt="" coords="457,79,560,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="511,31,511,65,506,65,506,31"/>
+<area shape="rect" id="Node000006" href="$infix_8h.html" title=" " alt="" coords="203,225,297,251"/>
+<area shape="poly" id="edge15_Node000001_Node000006" title=" " alt="" coords="444,33,390,48,333,72,279,107,257,128,238,153,232,167,232,182,240,212,235,214,227,183,227,166,233,151,253,125,276,103,330,68,388,43,442,28"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="532,299,603,324"/>
+<area shape="poly" id="edge16_Node000001_Node000009" title=" " alt="" coords="540,28,578,46,621,72,661,107,678,128,691,151,697,173,695,194,686,215,673,234,638,268,601,294,598,289,634,264,669,231,681,212,689,193,692,173,686,153,673,131,657,111,617,77,575,51,538,33"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="605,152,676,177"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="524,29,575,77,626,139,622,143,571,80,521,33"/>
+<area shape="rect" id="Node000004" href="$infix__internals_8h.html" title="Declarations for internal&#45;only functions, types, and constants." alt="" coords="247,152,434,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="483,106,382,149,380,144,481,102"/>
+<area shape="poly" id="edge12_Node000003_Node000009" title=" " alt="" coords="519,103,532,125,545,151,562,223,569,285,563,285,556,224,539,153,528,127,515,106"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="459,152,529,177"/>
+<area shape="poly" id="edge13_Node000003_Node000011" title=" " alt="" coords="509,105,502,139,497,138,504,104"/>
+<area shape="poly" id="edge14_Node000003_Node000012" title=" " alt="" coords="531,102,608,143,606,148,529,106"/>
+<area shape="rect" id="Node000005" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="321,225,491,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="353,176,388,213,384,217,349,179"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="328,179,277,219,274,214,324,175"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="151,372,234,397"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="214,253,180,271,164,284,152,300,148,315,152,331,172,360,167,363,147,333,143,315,148,298,160,281,177,267,212,248"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="269,372,343,397"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="288,248,323,267,340,281,352,298,357,315,353,333,332,364,327,360,348,331,352,315,348,300,336,284,320,271,286,253"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="298,247,519,297,518,302,297,253"/>
+<area shape="rect" id="Node000010" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="163,299,337,324"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="253,251,253,285,247,285,247,251"/>
+<area shape="poly" id="edge10_Node000010_Node000007" title=" " alt="" coords="243,326,213,363,209,359,238,323"/>
+<area shape="poly" id="edge11_Node000010_Node000008" title=" " alt="" coords="261,323,291,360,286,363,257,326"/>
+</map>

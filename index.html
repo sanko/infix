@@ -154,7 +154,7 @@ Quick Start: A 60-Second Example</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>() {</div>
 <div class="line">    <span class="comment">// 1. Describe the function signature: int puts(const char*);</span></div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(*char) -&gt; int32&quot;</span>;</div>
 <div class="line"> </div>
@@ -169,9 +169,9 @@ Quick Start: A 60-Second Example</h2>
 <div class="line">    <span class="comment">// 4. Prepare arguments and call.</span></div>
 <div class="line">    <span class="comment">//    The `args` array must contain *pointers* to your argument values.</span></div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* my_string = <span class="stringliteral">&quot;Hello from infix!&quot;</span>;</div>
-<div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;my_string };</div>
+<div class="line">    <span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;my_string };</div>
 <div class="line">    <span class="keywordtype">int</span> return_value;</div>
-<div class="line">    cif(&amp;return_value, args); <span class="comment">// A non-negative value is returned on success.</span></div>
+<div class="line">    cif(&amp;return_value, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// A non-negative value is returned on success.</span></div>
 <div class="line"> </div>
 <div class="line">    printf(<span class="stringliteral">&quot;puts returned: %d\n&quot;</span>, return_value);</div>
 <div class="line"> </div>
@@ -179,10 +179,12 @@ Quick Start: A 60-Second Example</h2>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
+<div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:75</div></div>
+<div class="ttc" id="a821__threading__bare_8c_html_a840291bc02cba5474a4cb46a9b9566fe"><div class="ttname"><a href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a></div><div class="ttdeci">int main(void)</div><div class="ttdef"><b>Definition</b> 821_threading_bare.c:102</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Generates a bound forward-call trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> signature.c:1202</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:223</div></div>
 <div class="ttc" id="agroup__manual__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Frees a forward trampoline and its associated executable memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:400</div></div>
-<div class="ttc" id="agroup__public__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">The signature for a &quot;bound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:354</div></div>
+<div class="ttc" id="agroup__public__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">The signature for a &quot;bound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:335</div></div>
 <div class="ttc" id="ainfix_8h_html"><div class="ttname"><a href="infix_8h.html">infix.h</a></div></div>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:72</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
@@ -216,7 +218,7 @@ Part 1: The Signature Language</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><b>Variadic Functions</b>   </td><td class="markdownTableBodyLeft"><code>(&lt;fixed&gt;;&lt;variadic&gt;)</code>   </td><td class="markdownTableBodyLeft"><code>"(*char; int)-&gt;int"</code>   </td><td class="markdownTableBodyLeft"><code>printf(const char*, ...)</code>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><b>Named Types</b>   </td><td class="markdownTableBodyLeft"><code>@Name</code> or <code>@NS::Name</code>   </td><td class="markdownTableBodyLeft"><code>"@Point"</code>, <code>"@UI::User"</code>   </td><td class="markdownTableBodyLeft"><code>typedef struct Point {...}</code>    </td></tr>
+<td class="markdownTableBodyLeft"><b>Named Types</b>   </td><td class="markdownTableBodyLeft"><code>@Name</code> or <code>@NS::Name</code>   </td><td class="markdownTableBodyLeft"><code>"@Point"</code>, <code>"@UI::User"</code>   </td><td class="markdownTableBodyLeft"><code>typedef struct <a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a> {...}</code>    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><b>Named Arguments</b>   </td><td class="markdownTableBodyLeft"><code>&lt;name&gt;:&lt;type&gt;</code>   </td><td class="markdownTableBodyLeft"><code>"(count:int, data:*void)"</code>   </td><td class="markdownTableBodyLeft">(For reflection only)   </td></tr>
 </table>
@@ -227,7 +229,7 @@ Forward Call (Calling C from your code)</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>() {</div>
 <div class="line">    <span class="comment">// 1. Describe the function signature: int puts(const char*);</span></div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(*char) -&gt; int32&quot;</span>;</div>
 <div class="line"> </div>
@@ -241,9 +243,9 @@ Forward Call (Calling C from your code)</h3>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 4. Prepare arguments and call.</span></div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* my_string = <span class="stringliteral">&quot;Hello from infix!&quot;</span>;</div>
-<div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;my_string };</div>
+<div class="line">    <span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;my_string };</div>
 <div class="line">    <span class="keywordtype">int</span> return_value;</div>
-<div class="line">    cif(&amp;return_value, args);</div>
+<div class="line">    cif(&amp;return_value, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
 <div class="line"> </div>
 <div class="line">    printf(<span class="stringliteral">&quot;puts returned: %d\n&quot;</span>, return_value);</div>
 <div class="line"> </div>
@@ -265,7 +267,7 @@ Reverse Call (Creating a C callback)</h3>
 <div class="line">    printf(<span class="stringliteral">&quot;Native code received result: %d\n&quot;</span>, result); <span class="comment">// Prints 42</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>() {</div>
 <div class="line">    <span class="comment">// 3. Create the reverse trampoline (the callback).</span></div>
 <div class="line">    <a class="code hl_struct" href="structinfix__reverse__t.html">infix_reverse_t</a>* context = NULL;</div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(int32, int32) -&gt; int32&quot;</span>;</div>
@@ -306,7 +308,7 @@ Using the Named Type Registry</h3>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
 <div class="line"><a class="code hl_function" href="group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a">infix_registry_destroy</a>(registry);</div>
 <div class="ttc" id="agroup__registry__api_html_ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"><div class="ttname"><a href="group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a">infix_registry_destroy</a></div><div class="ttdeci">void infix_registry_destroy(infix_registry_t *registry)</div><div class="ttdoc">Frees a type registry and all type definitions and metadata contained within it.</div><div class="ttdef"><b>Definition</b> type_registry.c:166</div></div>
-<div class="ttc" id="agroup__registry__api_html_ga4ece2363948c40fe528826bf65dac280"><div class="ttname"><a href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a></div><div class="ttdeci">c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *)</div><div class="ttdoc">Implementation of the public infix_register_types function.</div><div class="ttdef"><b>Definition</b> type_registry.c:233</div></div>
+<div class="ttc" id="agroup__registry__api_html_ga4ece2363948c40fe528826bf65dac280"><div class="ttname"><a href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a></div><div class="ttdeci">c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *)</div><div class="ttdoc">Parses a string of definitions and populates a type registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:233</div></div>
 <div class="ttc" id="agroup__registry__api_html_gac808273483db7a9db2bc275c41b13296"><div class="ttname"><a href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a></div><div class="ttdeci">c23_nodiscard infix_registry_t * infix_registry_create(void)</div><div class="ttdoc">Creates a new, empty type registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:131</div></div>
 <div class="ttc" id="astructinfix__registry__t_html"><div class="ttname"><a href="structinfix__registry__t.html">infix_registry_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:157</div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md14"></a>
@@ -323,14 +325,14 @@ Reading Global Variables from a Shared Library</h3>
 <p><b>Main Application Code:</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> main() {</div>
+<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>() {</div>
 <div class="line">    <a class="code hl_struct" href="structinfix__library__t.html">infix_library_t</a>* lib = <a class="code hl_function" href="loader_8c.html#ac583cdbec7dfe1532917a7fbd849cba6">infix_library_open</a>(<span class="stringliteral">&quot;./libglobals.so&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">if</span> (!lib) <span class="keywordflow">return</span>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span> counter_value = 0;</div>
 <div class="line">    <span class="comment">// 1. Use a signature to describe the variable&#39;s type.</span></div>
-<div class="line">    <a class="code hl_enumeration" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status = <a class="code hl_function" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix_read_global</a>(lib, <span class="stringliteral">&quot;my_global_counter&quot;</span>, <span class="stringliteral">&quot;int32&quot;</span>, &amp;counter_value);</div>
-<div class="line">    <span class="keywordflow">if</span> (status == <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
+<div class="line">    <a class="code hl_enumeration" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> <a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_function" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix_read_global</a>(lib, <span class="stringliteral">&quot;my_global_counter&quot;</span>, <span class="stringliteral">&quot;int32&quot;</span>, &amp;counter_value);</div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> == <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
 <div class="line">        printf(<span class="stringliteral">&quot;Initial global value: %d\n&quot;</span>, counter_value); <span class="comment">// Expected: 42</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -344,10 +346,11 @@ Reading Global Variables from a Shared Library</h3>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="loader_8c.html#aa8a13683c23c32d08b281075f0321d6b">infix_library_close</a>(lib);</div>
 <div class="line">}</div>
+<div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:74</div></div>
 <div class="ttc" id="agroup__exports__api_html_ga3df4f2e6494af3e1fda98cd5a61d167f"><div class="ttname"><a href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f">infix_write_global</a></div><div class="ttdeci">infix_status infix_write_global(infix_library_t *, const char *, const char *, void *)</div><div class="ttdoc">Writes a value to a global variable in a loaded library.</div><div class="ttdef"><b>Definition</b> loader.c:213</div></div>
 <div class="ttc" id="agroup__exports__api_html_gae75c91d8011786875c73f26d2aa437a8"><div class="ttname"><a href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix_read_global</a></div><div class="ttdeci">infix_status infix_read_global(infix_library_t *, const char *, const char *, void *)</div><div class="ttdoc">Reads the value of a global variable from a loaded library.</div><div class="ttdef"><b>Definition</b> loader.c:170</div></div>
-<div class="ttc" id="agroup__public__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">An enumeration of all possible success or failure codes from the public API.</div><div class="ttdef"><b>Definition</b> infix.h:359</div></div>
-<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:360</div></div>
+<div class="ttc" id="agroup__public__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">An enumeration of all possible success or failure codes from the public API.</div><div class="ttdef"><b>Definition</b> infix.h:340</div></div>
+<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:341</div></div>
 <div class="ttc" id="aloader_8c_html_aa8a13683c23c32d08b281075f0321d6b"><div class="ttname"><a href="loader_8c.html#aa8a13683c23c32d08b281075f0321d6b">infix_library_close</a></div><div class="ttdeci">void infix_library_close(infix_library_t *lib)</div><div class="ttdef"><b>Definition</b> loader.c:113</div></div>
 <div class="ttc" id="aloader_8c_html_ac583cdbec7dfe1532917a7fbd849cba6"><div class="ttname"><a href="loader_8c.html#ac583cdbec7dfe1532917a7fbd849cba6">infix_library_open</a></div><div class="ttdeci">c23_nodiscard infix_library_t * infix_library_open(const char *path)</div><div class="ttdef"><b>Definition</b> loader.c:65</div></div>
 <div class="ttc" id="astructinfix__library__t_html"><div class="ttname"><a href="structinfix__library__t.html">infix_library_t</a></div><div class="ttdef"><b>Definition</b> loader.c:49</div></div>
@@ -355,28 +358,31 @@ Reading Global Variables from a Shared Library</h3>
 Part 3: The Manual C API (Advanced)</h2>
 <p>For dynamic use cases, you can build <code>infix_type</code> objects programmatically. All types are allocated from an <code><a class="el" href="structinfix__arena__t.html">infix_arena_t</a></code>.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stddef.h&gt;</span> <span class="comment">// For offsetof</span></div>
-<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{ <span class="keywordtype">double</span> x; <span class="keywordtype">double</span> y; } Point; <span class="comment">// C struct for reference</span></div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{ <span class="keywordtype">double</span> x; <span class="keywordtype">double</span> y; } <a class="code hl_struct" href="structPoint.html">Point</a>; <span class="comment">// C struct for reference</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> build_point_manually() {</div>
-<div class="line">    <a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a>* arena = <a class="code hl_function" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a>(4096);</div>
+<div class="line">    <a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a>* <a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = <a class="code hl_function" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a>(4096);</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a> members;</div>
-<div class="line">    members = <a class="code hl_function" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a>(<span class="stringliteral">&quot;x&quot;</span>, <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a>), offsetof(Point, x));</div>
-<div class="line">    members = <a class="code hl_function" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a>(<span class="stringliteral">&quot;y&quot;</span>, <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a>), offsetof(Point, y));</div>
+<div class="line">    <a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a> <a class="code hl_variable" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>;</div>
+<div class="line">    <a class="code hl_variable" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a> = <a class="code hl_function" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a>(<span class="stringliteral">&quot;x&quot;</span>, <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a>), offsetof(<a class="code hl_struct" href="structPoint.html">Point</a>, x));</div>
+<div class="line">    <a class="code hl_variable" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a> = <a class="code hl_function" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a>(<span class="stringliteral">&quot;y&quot;</span>, <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a>), offsetof(<a class="code hl_struct" href="structPoint.html">Point</a>, y));</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a>* point_type = NULL;</div>
-<div class="line">    <a class="code hl_function" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a>(arena, &amp;point_type, members, 2);</div>
+<div class="line">    <a class="code hl_function" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a>(<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;point_type, <a class="code hl_variable" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Now `point_type` can be used to create trampolines.</span></div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(arena); <span class="comment">// Frees the arena and all types within it.</span></div>
+<div class="line">    <a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>); <span class="comment">// Frees the arena and all types within it.</span></div>
 <div class="line">}</div>
+<div class="ttc" id="a005__layouts_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 005_layouts.c:57</div></div>
+<div class="ttc" id="a103__unions_8c_html_ab7fe37bb07add2b1981130a458016adb"><div class="ttname"><a href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a></div><div class="ttdeci">infix_struct_member * members</div><div class="ttdef"><b>Definition</b> 103_unions.c:68</div></div>
 <div class="ttc" id="agroup__memory__management_html_ga50b7219c58789fc03898690254f0280e"><div class="ttname"><a href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a></div><div class="ttdeci">void infix_arena_destroy(infix_arena_t *)</div><div class="ttdoc">Frees an entire memory arena and all objects allocated within it.</div><div class="ttdef"><b>Definition</b> arena.c:68</div></div>
 <div class="ttc" id="agroup__memory__management_html_gae39ca61ea3637aee7e87c1b41188c733"><div class="ttname"><a href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a></div><div class="ttdeci">c23_nodiscard infix_arena_t * infix_arena_create(size_t)</div><div class="ttdoc">Creates and initializes a new memory arena.</div><div class="ttdef"><b>Definition</b> arena.c:41</div></div>
 <div class="ttc" id="agroup__type__system_html_gac80d3ec096ade5b991048b61fecfe7b2"><div class="ttname"><a href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_create_struct(infix_arena_t *, infix_type **, infix_struct_member *, size_t)</div><div class="ttdoc">Creates a new infix_type for a struct from an arena.</div><div class="ttdef"><b>Definition</b> types.c:445</div></div>
 <div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:97</div></div>
 <div class="ttc" id="agroup__type__system_html_gaed99b57de2c839a66eb54c9e82d703d9"><div class="ttname"><a href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9">infix_type_create_member</a></div><div class="ttdeci">infix_struct_member infix_type_create_member(const char *, infix_type *, size_t)</div><div class="ttdoc">A factory function to create an infix_struct_member.</div><div class="ttdef"><b>Definition</b> types.c:161</div></div>
 <div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_DOUBLE</div><div class="ttdoc">double</div><div class="ttdef"><b>Definition</b> infix.h:146</div></div>
+<div class="ttc" id="astructPoint_html"><div class="ttname"><a href="structPoint.html">Point</a></div><div class="ttdoc">A simple struct with two doubles (16 bytes).</div><div class="ttdef"><b>Definition</b> types.h:39</div></div>
 <div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:129</div></div>
 <div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:219</div></div>
 <div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div><div class="ttdef"><b>Definition</b> infix.h:161</div></div>
@@ -393,26 +399,26 @@ Powerful Introspection for Dynamic Data Marshalling</h2>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* name;</div>
 <div class="line">} UserProfile;</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>() {</div>
 <div class="line">    <span class="comment">// 1. A signature describing the C struct, with named fields.</span></div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* profile_sig = <span class="stringliteral">&quot;{id:int32, score:double, name:*char}&quot;</span>;</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a>* struct_type = NULL;</div>
-<div class="line">    <a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a>* arena = NULL;</div>
+<div class="line">    <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a>* <a class="code hl_variable" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a> = NULL;</div>
+<div class="line">    <a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a>* <a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = NULL;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 2. Parse the signature to get a detailed, introspectable type object.</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<a class="code hl_function" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a>(&amp;struct_type, &amp;arena, profile_sig, <span class="keyword">nullptr</span>) != <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code hl_function" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a>(&amp;<a class="code hl_variable" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, &amp;<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, profile_sig, <span class="keyword">nullptr</span>) != <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
 <div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 3. Use the introspection API to query the layout.</span></div>
 <div class="line">    printf(<span class="stringliteral">&quot;Inspecting struct layout for: %s\n&quot;</span>, profile_sig);</div>
 <div class="line">    printf(<span class="stringliteral">&quot;Total size: %zu bytes, Alignment: %zu bytes\n&quot;</span>,</div>
-<div class="line">           <a class="code hl_function" href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a>(struct_type),</div>
-<div class="line">           <a class="code hl_function" href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">infix_type_get_alignment</a>(struct_type));</div>
+<div class="line">           <a class="code hl_function" href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a>(<a class="code hl_variable" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>),</div>
+<div class="line">           <a class="code hl_function" href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">infix_type_get_alignment</a>(<a class="code hl_variable" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>));</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; <a class="code hl_function" href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a>(struct_type); ++i) {</div>
-<div class="line">        <span class="keyword">const</span> <a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>* member = <a class="code hl_function" href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a>(struct_type, i);</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; <a class="code hl_function" href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a>(<a class="code hl_variable" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>); ++i) {</div>
+<div class="line">        <span class="keyword">const</span> <a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>* member = <a class="code hl_function" href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a>(<a class="code hl_variable" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, i);</div>
 <div class="line">        printf(<span class="stringliteral">&quot;  - Member &#39;%s&#39;: offset=%zu, size=%zu\n&quot;</span>,</div>
 <div class="line">               member-&gt;<a class="code hl_variable" href="structinfix__struct__member__t.html#a8dad067a06c5efd90028fb1cab9e2911">name</a>,</div>
 <div class="line">               member-&gt;<a class="code hl_variable" href="structinfix__struct__member__t.html#abc9fb3780626694111f4c8c74700a9b9">offset</a>,</div>
@@ -420,14 +426,15 @@ Powerful Introspection for Dynamic Data Marshalling</h2>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 4. Clean up the parser&#39;s temporary memory.</span></div>
-<div class="line">    <a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(arena);</div>
+<div class="line">    <a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
+<div class="ttc" id="a202__in__structs_8c_html_a844037a22f98c1dcb5892a0ac2948a74"><div class="ttname"><a href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a></div><div class="ttdeci">infix_type * struct_type</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:64</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga3632147d55b80e520987d37722ddcf61"><div class="ttname"><a href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Parses a signature string representing a single data type.</div><div class="ttdef"><b>Definition</b> signature.c:1090</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga0e49d4bdbfe42b661bf7bcb597793e9a"><div class="ttname"><a href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_size(const infix_type *)</div><div class="ttdoc">Retrieves the size of an infix_type in bytes.</div><div class="ttdef"><b>Definition</b> types.c:727</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga1ed0ae5410046578126032b844f81fc1"><div class="ttname"><a href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">infix_type_get_alignment</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_alignment(const infix_type *)</div><div class="ttdoc">Retrieves the alignment requirement of an infix_type in bytes.</div><div class="ttdef"><b>Definition</b> types.c:735</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga678390feeed80a43111725c4e73c0dda"><div class="ttname"><a href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_member_count(const infix_type *)</div><div class="ttdoc">Retrieves the number of members in an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> types.c:744</div></div>
-<div class="ttc" id="agroup__introspection__api_html_gafc256d548bfd78ff90ee38a1cc0ae8b9"><div class="ttname"><a href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a></div><div class="ttdeci">c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type *, size_t)</div><div class="ttdoc">Retrieves a specific member from an aggregate type by its index.</div><div class="ttdef"><b>Definition</b> types.c:755</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga0e49d4bdbfe42b661bf7bcb597793e9a"><div class="ttname"><a href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_size(const infix_type *)</div><div class="ttdoc">Retrieves the size of an infix_type in bytes.</div><div class="ttdef"><b>Definition</b> types.c:728</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga1ed0ae5410046578126032b844f81fc1"><div class="ttname"><a href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1">infix_type_get_alignment</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_alignment(const infix_type *)</div><div class="ttdoc">Retrieves the alignment requirement of an infix_type in bytes.</div><div class="ttdef"><b>Definition</b> types.c:736</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga678390feeed80a43111725c4e73c0dda"><div class="ttname"><a href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_member_count(const infix_type *)</div><div class="ttdoc">Retrieves the number of members in an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> types.c:745</div></div>
+<div class="ttc" id="agroup__introspection__api_html_gafc256d548bfd78ff90ee38a1cc0ae8b9"><div class="ttname"><a href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a></div><div class="ttdeci">c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type *, size_t)</div><div class="ttdoc">Retrieves a specific member from an aggregate type by its index.</div><div class="ttdef"><b>Definition</b> types.c:756</div></div>
 <div class="ttc" id="astructinfix__struct__member__t_html_a8dad067a06c5efd90028fb1cab9e2911"><div class="ttname"><a href="structinfix__struct__member__t.html#a8dad067a06c5efd90028fb1cab9e2911">infix_struct_member_t::name</a></div><div class="ttdeci">const char * name</div><div class="ttdoc">The name of the member (for debugging/reflection).</div><div class="ttdef"><b>Definition</b> infix.h:220</div></div>
 <div class="ttc" id="astructinfix__struct__member__t_html_aa89e6621da98f5115dcc807599c4ac77"><div class="ttname"><a href="structinfix__struct__member__t.html#aa89e6621da98f5115dcc807599c4ac77">infix_struct_member_t::type</a></div><div class="ttdeci">infix_type * type</div><div class="ttdoc">An infix_type describing the member's type.</div><div class="ttdef"><b>Definition</b> infix.h:221</div></div>
 <div class="ttc" id="astructinfix__struct__member__t_html_abc9fb3780626694111f4c8c74700a9b9"><div class="ttname"><a href="structinfix__struct__member__t.html#abc9fb3780626694111f4c8c74700a9b9">infix_struct_member_t::offset</a></div><div class="ttdeci">size_t offset</div><div class="ttdoc">The byte offset of the member from the start of the aggregate.</div><div class="ttdef"><b>Definition</b> infix.h:222</div></div>
@@ -444,7 +451,7 @@ Error Handling</h2>
 <div class="line"><span class="comment">// This will fail if `registry` is NULL or doesn&#39;t contain `@MissingType`.</span></div>
 <div class="line"><span class="comment">// infix_status status = infix_forward_create(&amp;trampoline, &quot;(@MissingType)-&gt;void&quot;, my_func, registry);</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordflow">if</span> (status != <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
+<div class="line"><span class="keywordflow">if</span> (<a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> != <a class="code hl_enumvalue" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
 <div class="line">    <a class="code hl_struct" href="structinfix__error__details__t.html">infix_error_details_t</a> err = <a class="code hl_function" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b">infix_get_last_error</a>();</div>
 <div class="line">    fprintf(stderr, <span class="stringliteral">&quot;Error creating trampoline!\n&quot;</span>);</div>
 <div class="line">    fprintf(stderr, <span class="stringliteral">&quot;  Category: %d\n&quot;</span>, err.<a class="code hl_variable" href="structinfix__error__details__t.html#a0caa6458c1d70d81abdc4f530dcc96d8">category</a>); <span class="comment">// e.g., INFIX_CATEGORY_PARSER</span></div>
@@ -452,10 +459,10 @@ Error Handling</h2>
 <div class="line">    fprintf(stderr, <span class="stringliteral">&quot;  Position: %zu\n&quot;</span>, err.<a class="code hl_variable" href="structinfix__error__details__t.html#a0530e44f33e347bfcfe3b663d76ba5b7">position</a>); <span class="comment">// Byte offset in signature string</span></div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__error__api_html_gaeee66e7ba26a8f8dea16d441200d147b"><div class="ttname"><a href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b">infix_get_last_error</a></div><div class="ttdeci">infix_error_details_t infix_get_last_error(void)</div><div class="ttdoc">Retrieves detailed information about the last error that occurred on the current thread.</div><div class="ttdef"><b>Definition</b> error.c:87</div></div>
-<div class="ttc" id="astructinfix__error__details__t_html"><div class="ttname"><a href="structinfix__error__details__t.html">infix_error_details_t</a></div><div class="ttdoc">A structure holding detailed information about the last error that occurred on the current thread.</div><div class="ttdef"><b>Definition</b> infix.h:1057</div></div>
-<div class="ttc" id="astructinfix__error__details__t_html_a0530e44f33e347bfcfe3b663d76ba5b7"><div class="ttname"><a href="structinfix__error__details__t.html#a0530e44f33e347bfcfe3b663d76ba5b7">infix_error_details_t::position</a></div><div class="ttdeci">size_t position</div><div class="ttdoc">For parser errors, the 0-based index in the input string where the error occurred.</div><div class="ttdef"><b>Definition</b> infix.h:1060</div></div>
-<div class="ttc" id="astructinfix__error__details__t_html_a0caa6458c1d70d81abdc4f530dcc96d8"><div class="ttname"><a href="structinfix__error__details__t.html#a0caa6458c1d70d81abdc4f530dcc96d8">infix_error_details_t::category</a></div><div class="ttdeci">infix_error_category_t category</div><div class="ttdoc">The general category of the error.</div><div class="ttdef"><b>Definition</b> infix.h:1058</div></div>
-<div class="ttc" id="astructinfix__error__details__t_html_ad9076024a7bb288a2a65f2fb8644c938"><div class="ttname"><a href="structinfix__error__details__t.html#ad9076024a7bb288a2a65f2fb8644c938">infix_error_details_t::code</a></div><div class="ttdeci">infix_error_code_t code</div><div class="ttdoc">The specific error code.</div><div class="ttdef"><b>Definition</b> infix.h:1059</div></div>
+<div class="ttc" id="astructinfix__error__details__t_html"><div class="ttname"><a href="structinfix__error__details__t.html">infix_error_details_t</a></div><div class="ttdoc">A structure holding detailed information about the last error that occurred on the current thread.</div><div class="ttdef"><b>Definition</b> infix.h:1027</div></div>
+<div class="ttc" id="astructinfix__error__details__t_html_a0530e44f33e347bfcfe3b663d76ba5b7"><div class="ttname"><a href="structinfix__error__details__t.html#a0530e44f33e347bfcfe3b663d76ba5b7">infix_error_details_t::position</a></div><div class="ttdeci">size_t position</div><div class="ttdoc">For parser errors, the 0-based index in the input string where the error occurred.</div><div class="ttdef"><b>Definition</b> infix.h:1030</div></div>
+<div class="ttc" id="astructinfix__error__details__t_html_a0caa6458c1d70d81abdc4f530dcc96d8"><div class="ttname"><a href="structinfix__error__details__t.html#a0caa6458c1d70d81abdc4f530dcc96d8">infix_error_details_t::category</a></div><div class="ttdeci">infix_error_category_t category</div><div class="ttdoc">The general category of the error.</div><div class="ttdef"><b>Definition</b> infix.h:1028</div></div>
+<div class="ttc" id="astructinfix__error__details__t_html_ad9076024a7bb288a2a65f2fb8644c938"><div class="ttname"><a href="structinfix__error__details__t.html#ad9076024a7bb288a2a65f2fb8644c938">infix_error_details_t::code</a></div><div class="ttdeci">infix_error_code_t code</div><div class="ttdoc">The specific error code.</div><div class="ttdef"><b>Definition</b> infix.h:1029</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md18"></a>
 API Reference</h1>
 <p>A brief overview of the complete public API, grouped by functionality.</p>
@@ -470,7 +477,7 @@ Named Type Registry (&lt;tt&gt;registry_api&lt;/tt&gt;)</h2>
 <ul>
 <li><code><a class="el" href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296" title="Creates a new, empty type registry.">infix_registry_create()</a></code>: Creates a new, empty type registry.</li>
 <li><code><a class="el" href="group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a" title="Frees a type registry and all type definitions and metadata contained within it.">infix_registry_destroy()</a></code>: Frees a registry and all types defined within it.</li>
-<li><code><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280" title="Implementation of the public infix_register_types function.">infix_register_types()</a></code>: Parses a string of definitions to populate a registry.</li>
+<li><code><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280" title="Parses a string of definitions and populates a type registry.">infix_register_types()</a></code>: Parses a string of definitions to populate a registry.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md20"></a>
 High-Level Signature API (&lt;tt&gt;high_level_api&lt;/tt&gt;)</h2>
@@ -535,7 +542,7 @@ Introspection API (&lt;tt&gt;introspection_api&lt;/tt&gt;)</h2>
 <li><code><a class="el" href="group__introspection__api.html#ga9d8374030d014a748fd0d2b26e5415e3" title="Retrieves the fundamental category of an infix_type.">infix_type_get_category()</a></code>, <code><a class="el" href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a" title="Retrieves the size of an infix_type in bytes.">infix_type_get_size()</a></code>, <code><a class="el" href="group__introspection__api.html#ga1ed0ae5410046578126032b844f81fc1" title="Retrieves the alignment requirement of an infix_type in bytes.">infix_type_get_alignment()</a></code></li>
 <li><code><a class="el" href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda" title="Retrieves the number of members in an aggregate type (struct or union).">infix_type_get_member_count()</a></code>, <code><a class="el" href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9" title="Retrieves a specific member from an aggregate type by its index.">infix_type_get_member()</a></code></li>
 <li><code><a class="el" href="group__introspection__api.html#ga797871621d591d441be67d42be2d1efa" title="Retrieves the name of a function argument by its index.">infix_type_get_arg_name()</a></code>, <code><a class="el" href="group__introspection__api.html#ga184bcb5102d6315b8ff8d6defe1387f9" title="Retrieves the type of a function argument by its index.">infix_type_get_arg_type()</a></code></li>
-<li><code><a class="el" href="group__introspection__api.html#ga9e3df6ee056ecc368ec2817f26a773bb" title="Serializes an infix_type object graph into a string representation.">infix_type_print()</a></code>: Serializes an <code>infix_type</code> graph to a string.</li>
+<li><code><a class="el" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e" title="Serializes an infix_type object graph into a string representation.">infix_type_print()</a></code>: Serializes an <code>infix_type</code> graph to a string.</li>
 <li><code><a class="el" href="group__introspection__api.html#gab498bd07df9d321ec54056c519899b53" title="Serializes a full function signature into a string representation.">infix_function_print()</a></code>: Serializes a full function signature to a string.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md26"></a>
@@ -589,7 +596,7 @@ Supported Platforms</h1>
 </details>
 <h1><a class="anchor" id="autotoc_md28"></a>
 Building and Integrating</h1>
-<p>Full build instructions for <code>xmake</code>, <code>cmake</code>, GNU <code>make</code>, and other systems are available in <b>INSTALL.md</b>.</p>
+<p>Full build instructions for <code>xmake</code>, <code>cmake</code>, GNU <code>make</code>, and other systems are available in <b><a class="el" href="INSTALL_8md.html">INSTALL.md</a></b>.</p>
 <p>Because <code>infix</code> uses a unity build, integration into an existing project is simple: add <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> to your list of source files and add the <code>include/</code> directory to your include paths.</p>
 <h1><a class="anchor" id="autotoc_md29"></a>
 Contributing</h1>
@@ -601,7 +608,7 @@ Learn More</h1>
 <li><b><a class="el" href="md_docs_2signatures.html">Signature Reference</a>:</b> The complete guide to the signature mini-language.</li>
 <li><b><a class="el" href="md_docs_2internals.html">Internals</a>:</b> A deep dive into the library's architecture, JIT engine, and security features.</li>
 <li><b><a class="el" href="md_docs_2porting.html">Porting Guide</a>:</b> Instructions for adding support for new architectures.</li>
-<li><b>INSTALL.md:</b> Detailed build and integration instructions.</li>
+<li><b><a class="el" href="INSTALL_8md.html">INSTALL.md</a>:</b> Detailed build and integration instructions.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md31"></a>
 License &amp; Legal</h1>
