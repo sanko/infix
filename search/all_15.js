@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['quick_20start_3a_20a_2060_20second_20example_0',['Quick Start: A 60-Second Example',['../index.html#autotoc_md7',1,'']]]
+  ['key_20architectural_20decisions_0',['1.2 Key Architectural Decisions',['../md_docs_2internals.html#autotoc_md156',1,'']]],
+  ['key_20features_1',['Key Features',['../index.html#autotoc_md2',1,'']]]
 ];

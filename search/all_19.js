@@ -1,10 +1,22 @@
 var searchData=
 [
-  ['underlying_5ftype_0',['underlying_type',['../structinfix__type__t.html#aeeeeac278209a4aa5f3024b196d89292',1,'infix_type_t']]],
-  ['usage_20guide_1',['Usage Guide',['../index.html#autotoc_md8',1,'']]],
-  ['user_5fcallback_5ffn_2',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],
-  ['user_5fdata_3',['user_data',['../structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1',1,'infix_reverse_t']]],
-  ['using_20the_20named_20type_20registry_4',['Using the Named Type Registry',['../index.html#autotoc_md13',1,'']]],
-  ['utility_2ec_5',['utility.c',['../utility_8c.html',1,'']]],
-  ['utility_2eh_6',['utility.h',['../utility_8h.html',1,'']]]
+  ['object_20model_0',['The Self-Contained Object Model',['../md_docs_2internals.html#autotoc_md158',1,'']]],
+  ['of_20a_20language_20binding_1',['The Four Pillars of a Language Binding',['../md_docs_2cookbook.html#autotoc_md114',1,'']]],
+  ['of_20a_20pointer_20in_20tt_20args_20tt_2',['Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md94',1,'']]],
+  ['of_20c_20declarations_3',['1.2 The Limitations of C Declarations',['../md_docs_2signatures.html#autotoc_md190',1,'']]],
+  ['of_20callbacks_20reverse_20calls_4',['Chapter 3: The Power of Callbacks (Reverse Calls)',['../md_docs_2cookbook.html#autotoc_md55',1,'']]],
+  ['of_20contents_5',['Table of Contents',['../md_docs_2cookbook.html#autotoc_md36',1,'']]],
+  ['of_20interoperability_6',['1.1 The Challenge of Interoperability',['../md_docs_2signatures.html#autotoc_md189',1,'']]],
+  ['of_20types_7',['Recipe: Using a Custom Arena for a Group of Types',['../md_docs_2cookbook.html#autotoc_md91',1,'']]],
+  ['offset_8',['offset',['../structinfix__struct__member__t.html#abc9fb3780626694111f4c8c74700a9b9',1,'infix_struct_member_t']]],
+  ['ok_9',['ok',['../double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79',1,'double_tap.h']]],
+  ['on_20apple_20silicon_10',['The Challenge: Hardened Runtimes on Apple Silicon',['../md_docs_2internals.html#autotoc_md169',1,'']]],
+  ['only_20contexts_11',['3.2 Guard Pages and Read-Only Contexts',['../md_docs_2internals.html#autotoc_md167',1,'']]],
+  ['opaque_20pointers_20incomplete_20types_12',['Recipe: Working with Opaque Pointers (Incomplete Types)',['../md_docs_2cookbook.html#autotoc_md42',1,'']]],
+  ['other_20compiled_20languages_13',['The Pattern for Other Compiled Languages',['../md_docs_2cookbook.html#autotoc_md69',1,'']]],
+  ['other_20languages_14',['Chapter 5: Interoperability with Other Languages',['../md_docs_2cookbook.html#autotoc_md65',1,'']]],
+  ['other_20systems_15',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md207',1,'']]],
+  ['our_20solution_3a_20a_20human_20first_20signature_20system_16',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md191',1,'']]],
+  ['out_20parameters_17',['Recipe: Working with &quot;Out&quot; Parameters',['../md_docs_2cookbook.html#autotoc_md41',1,'']]],
+  ['overview_18',['2. Architectural Overview',['../md_docs_2internals.html#autotoc_md162',1,'']]]
 ];

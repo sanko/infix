@@ -1,9 +1,25 @@
 var searchData=
 [
-  ['handle_0',['handle',['../structinfix__library__t.html#a3d2ae557db22eb7a00afe5e0f8e97ca6',1,'infix_library_t']]],
-  ['handling_1',['Error Handling',['../index.html#autotoc_md17',1,'']]],
-  ['handling_20api_20tt_20error_5fapi_20tt_2',['Error Handling API (&lt;tt&gt;error_api&lt;/tt&gt;)',['../index.html#autotoc_md26',1,'']]],
-  ['high_20level_20signature_20api_3',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
-  ['high_20level_20signature_20api_20tt_20high_5flevel_5fapi_20tt_4',['High-Level Signature API (&lt;tt&gt;high_level_api&lt;/tt&gt;)',['../index.html#autotoc_md20',1,'']]],
-  ['high_5flevel_5fapi_20tt_5',['High-Level Signature API (&lt;tt&gt;high_level_api&lt;/tt&gt;)',['../index.html#autotoc_md20',1,'']]]
+  ['bail_5fout_0',['bail_out',['../double__tap_8h.html#ae67140f57c292866c53eef6c962bc30d',1,'double_tap.h']]],
+  ['base_5ftype_1',['base_type',['../structinfix__type__t.html#ac70541d021d87d720c38b176fb39e4fc',1,'infix_type_t']]],
+  ['based_20manual_20api_2',['Arena-Based Manual API',['../md_docs_2internals.html#autotoc_md159',1,'']]],
+  ['basics_20forward_20calls_3',['Chapter 1: The Basics (Forward Calls)',['../md_docs_2cookbook.html#autotoc_md38',1,'']]],
+  ['best_20practice_3a_20caching_20trampolines_4',['Best Practice: Caching Trampolines',['../md_docs_2cookbook.html#autotoc_md90',1,'']]],
+  ['binding_5',['The Four Pillars of a Language Binding',['../md_docs_2cookbook.html#autotoc_md114',1,'']]],
+  ['binding_20from_20tt_20dyncall_20tt_20to_20tt_20infix_20tt_6',['Recipe: Porting a Python Binding from &lt;tt&gt;dyncall&lt;/tt&gt; to &lt;tt&gt;infix&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md115',1,'']]],
+  ['bindings_7',['Chapter 11: Building Language Bindings',['../md_docs_2cookbook.html#autotoc_md113',1,'']]],
+  ['bitfields_8',['Recipe: Working with Structs that Contain Bitfields',['../md_docs_2cookbook.html#autotoc_md49',1,'']]],
+  ['bordered_20images_9',['Bordered Images',['../md_docs_2doxygen-awesome-css_2docs_2tricks.html#autotoc_md139',1,'']]],
+  ['browser_20support_10',['Browser support',['..//home/runner/work/infix/infix/docs/doxygen-awesome-css/README.md#autotoc_md151',1,'']]],
+  ['buckets_11',['buckets',['../structinfix__registry__t.html#a5e4b310bcaaa29b2914b4cd575a94403',1,'infix_registry_t']]],
+  ['buffer_12',['buffer',['../structinfix__arena__t.html#a2bafad85c37fba52aaa3dd3311fec20d',1,'infix_arena_t']]],
+  ['build_13',['The Unity Build',['../md_docs_2internals.html#autotoc_md157',1,'']]],
+  ['building_20a_20signature_20string_20at_20runtime_14',['Recipe: Building a Signature String at Runtime',['../md_docs_2cookbook.html#autotoc_md86',1,'']]],
+  ['building_20and_20integrating_15',['Building and Integrating',['../index.html#autotoc_md28',1,'']]],
+  ['building_20language_20bindings_16',['Chapter 11: Building Language Bindings',['../md_docs_2cookbook.html#autotoc_md113',1,'']]],
+  ['building_20the_20library_17',['Building the Library',['../index.html#autotoc_md5',1,'']]],
+  ['button_18',['Fragment Copy Button',['../md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-copy-button',1,'']]],
+  ['buttons_19',['Buttons',['../md_docs_2doxygen-awesome-css_2docs_2tricks.html#autotoc_md138',1,'']]],
+  ['by_20reference_20',['Recipe: Large Structs Passed by Reference',['../md_docs_2cookbook.html#autotoc_md47',1,'']]],
+  ['by_20value_21',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md45',1,'']]]
 ];
