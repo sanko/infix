@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: src/core/arena.c Source File</title>
+<title>infix: src/core/arena.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -230,12 +230,12 @@ $(document).ready(function(){initNavTree('arena_8c_source.html',''); initResizab
 <div class="ttc" id="agroup__memory__management_html_gae386105bc20f1819f8ffc8e808f0a7d9"><div class="ttname"><a href="group__memory__management.html#gae386105bc20f1819f8ffc8e808f0a7d9">infix_malloc</a></div><div class="ttdeci">#define infix_malloc</div><div class="ttdoc">A macro for the memory allocation function used by the library.</div><div class="ttdef"><b>Definition</b> infix.h:265</div></div>
 <div class="ttc" id="agroup__memory__management_html_gae39ca61ea3637aee7e87c1b41188c733"><div class="ttname"><a href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a></div><div class="ttdeci">infix_arena_t * infix_arena_create(size_t initial_size)</div><div class="ttdoc">Creates and initializes a new memory arena.</div><div class="ttdef"><b>Definition</b> arena.c:41</div></div>
 <div class="ttc" id="ainfix__internals_8h_html"><div class="ttname"><a href="infix__internals_8h.html">infix_internals.h</a></div><div class="ttdoc">Declarations for internal-only functions, types, and constants.</div></div>
-<div class="ttc" id="ainfix__internals_8h_html_a5aac04bf0a20b7fc5cf2a2c5544ce716"><div class="ttname"><a href="infix__internals_8h.html#a5aac04bf0a20b7fc5cf2a2c5544ce716">_infix_align_up</a></div><div class="ttdeci">static size_t _infix_align_up(size_t value, size_t alignment)</div><div class="ttdef"><b>Definition</b> infix_internals.h:324</div></div>
-<div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:113</div></div>
-<div class="ttc" id="astructinfix__arena__t_html_a2bafad85c37fba52aaa3dd3311fec20d"><div class="ttname"><a href="structinfix__arena__t.html#a2bafad85c37fba52aaa3dd3311fec20d">infix_arena_t::buffer</a></div><div class="ttdeci">char * buffer</div><div class="ttdoc">The pointer to the large, pre-allocated memory block.</div><div class="ttdef"><b>Definition</b> infix_internals.h:114</div></div>
-<div class="ttc" id="astructinfix__arena__t_html_a35df9e6f27e3c9aeb2248585d9c164ae"><div class="ttname"><a href="structinfix__arena__t.html#a35df9e6f27e3c9aeb2248585d9c164ae">infix_arena_t::error</a></div><div class="ttdeci">bool error</div><div class="ttdoc">A sticky flag that is set if any allocation fails.</div><div class="ttdef"><b>Definition</b> infix_internals.h:117</div></div>
-<div class="ttc" id="astructinfix__arena__t_html_a53d46b399ce96dde2b87d4c4f1ec5657"><div class="ttname"><a href="structinfix__arena__t.html#a53d46b399ce96dde2b87d4c4f1ec5657">infix_arena_t::capacity</a></div><div class="ttdeci">size_t capacity</div><div class="ttdoc">The total size of the buffer in bytes.</div><div class="ttdef"><b>Definition</b> infix_internals.h:115</div></div>
-<div class="ttc" id="astructinfix__arena__t_html_ac06321238d0579d5b548c58a68eaf036"><div class="ttname"><a href="structinfix__arena__t.html#ac06321238d0579d5b548c58a68eaf036">infix_arena_t::current_offset</a></div><div class="ttdeci">size_t current_offset</div><div class="ttdoc">The high-water mark; the offset of the next free byte.</div><div class="ttdef"><b>Definition</b> infix_internals.h:116</div></div>
+<div class="ttc" id="ainfix__internals_8h_html_a5aac04bf0a20b7fc5cf2a2c5544ce716"><div class="ttname"><a href="infix__internals_8h.html#a5aac04bf0a20b7fc5cf2a2c5544ce716">_infix_align_up</a></div><div class="ttdeci">static size_t _infix_align_up(size_t value, size_t alignment)</div><div class="ttdef"><b>Definition</b> infix_internals.h:382</div></div>
+<div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:129</div></div>
+<div class="ttc" id="astructinfix__arena__t_html_a2bafad85c37fba52aaa3dd3311fec20d"><div class="ttname"><a href="structinfix__arena__t.html#a2bafad85c37fba52aaa3dd3311fec20d">infix_arena_t::buffer</a></div><div class="ttdeci">char * buffer</div><div class="ttdoc">The pointer to the large, pre-allocated memory block.</div><div class="ttdef"><b>Definition</b> infix_internals.h:130</div></div>
+<div class="ttc" id="astructinfix__arena__t_html_a35df9e6f27e3c9aeb2248585d9c164ae"><div class="ttname"><a href="structinfix__arena__t.html#a35df9e6f27e3c9aeb2248585d9c164ae">infix_arena_t::error</a></div><div class="ttdeci">bool error</div><div class="ttdoc">A sticky flag that is set if any allocation from this arena fails.</div><div class="ttdef"><b>Definition</b> infix_internals.h:133</div></div>
+<div class="ttc" id="astructinfix__arena__t_html_a53d46b399ce96dde2b87d4c4f1ec5657"><div class="ttname"><a href="structinfix__arena__t.html#a53d46b399ce96dde2b87d4c4f1ec5657">infix_arena_t::capacity</a></div><div class="ttdeci">size_t capacity</div><div class="ttdoc">The total size of the buffer in bytes.</div><div class="ttdef"><b>Definition</b> infix_internals.h:131</div></div>
+<div class="ttc" id="astructinfix__arena__t_html_ac06321238d0579d5b548c58a68eaf036"><div class="ttname"><a href="structinfix__arena__t.html#ac06321238d0579d5b548c58a68eaf036">infix_arena_t::current_offset</a></div><div class="ttdeci">size_t current_offset</div><div class="ttdoc">The high-water mark; the offset of the next free byte.</div><div class="ttdef"><b>Definition</b> infix_internals.h:132</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

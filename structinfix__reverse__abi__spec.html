@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: infix_reverse_abi_spec Struct Reference</title>
+<title>infix: infix_reverse_abi_spec Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -102,14 +102,19 @@ $(document).ready(function(){initNavTree('structinfix__reverse__abi__spec.html',
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ab0af959802776cc50f85233df5406e61" id="r_ab0af959802776cc50f85233df5406e61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__abi__spec.html#ab0af959802776cc50f85233df5406e61">prepare_reverse_call_frame</a> )(<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> **, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
+<tr class="memdesc:ab0af959802776cc50f85233df5406e61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyzes a callback signature and produces a stack layout for the JIT stub.  <br /></td></tr>
 <tr class="separator:ab0af959802776cc50f85233df5406e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abed31d01f9a2d717872ae79c841dcd49" id="r_abed31d01f9a2d717872ae79c841dcd49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__abi__spec.html#abed31d01f9a2d717872ae79c841dcd49">generate_reverse_prologue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *)</td></tr>
+<tr class="memdesc:abed31d01f9a2d717872ae79c841dcd49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the stub's function prologue.  <br /></td></tr>
 <tr class="separator:abed31d01f9a2d717872ae79c841dcd49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79ae2cdfd36dbfb83ac04359bdc54b0d" id="r_a79ae2cdfd36dbfb83ac04359bdc54b0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__abi__spec.html#a79ae2cdfd36dbfb83ac04359bdc54b0d">generate_reverse_argument_marshalling</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
+<tr class="memdesc:a79ae2cdfd36dbfb83ac04359bdc54b0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates instructions to save incoming arguments from registers/stack into a normalized format.  <br /></td></tr>
 <tr class="separator:a79ae2cdfd36dbfb83ac04359bdc54b0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc9c34eff67332aab69a173ce8d1cbbd" id="r_abc9c34eff67332aab69a173ce8d1cbbd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__abi__spec.html#abc9c34eff67332aab69a173ce8d1cbbd">generate_reverse_dispatcher_call</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
+<tr class="memdesc:abc9c34eff67332aab69a173ce8d1cbbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the call to the high-level C dispatcher function.  <br /></td></tr>
 <tr class="separator:abc9c34eff67332aab69a173ce8d1cbbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac89ff0e6c9ef4acd9aecf1dd13de5bef" id="r_ac89ff0e6c9ef4acd9aecf1dd13de5bef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__abi__spec.html#ac89ff0e6c9ef4acd9aecf1dd13de5bef">generate_reverse_epilogue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
+<tr class="memdesc:ac89ff0e6c9ef4acd9aecf1dd13de5bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the stub's epilogue, handling the return value and restoring the stack.  <br /></td></tr>
 <tr class="separator:ac89ff0e6c9ef4acd9aecf1dd13de5bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -125,6 +130,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Generates instructions to save incoming arguments from registers/stack into a normalized format. </p>
+
 </div>
 </div>
 <a id="abc9c34eff67332aab69a173ce8d1cbbd" name="abc9c34eff67332aab69a173ce8d1cbbd"></a>
@@ -138,6 +145,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Generates the call to the high-level C dispatcher function. </p>
 
 </div>
 </div>
@@ -153,6 +162,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Generates the stub's epilogue, handling the return value and restoring the stack. </p>
+
 </div>
 </div>
 <a id="abed31d01f9a2d717872ae79c841dcd49" name="abed31d01f9a2d717872ae79c841dcd49"></a>
@@ -167,6 +178,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Generates the stub's function prologue. </p>
+
 </div>
 </div>
 <a id="ab0af959802776cc50f85233df5406e61" name="ab0af959802776cc50f85233df5406e61"></a>
@@ -180,6 +193,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Analyzes a callback signature and produces a stack layout for the JIT stub. </p>
 
 </div>
 </div>

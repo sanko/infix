@@ -24,8 +24,8 @@
 */
 var NAVTREE =
 [
-  [ "infix FFI Library", "index.html", [
-    [ "<tt>infix</tt>: A JIT-Powered FFI Library for C", "index.html", "index" ],
+  [ "infix", "index.html", [
+    [ "infix: A JIT-Powered FFI Library for C", "index.html", "index" ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
