@@ -36,7 +36,7 @@ var searchData=
   ['value_33',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md45',1,'']]],
   ['value_20instead_20of_20a_20pointer_20in_20tt_20args_20tt_34',['Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md98',1,'']]],
   ['variable_35',['variable',['../md_docs_2cookbook.html#autotoc_md83',1,'Example 1: Simple Integer Variable'],['../md_docs_2cookbook.html#autotoc_md84',1,'Example 2: Aggregate (Struct) Variable']]],
-  ['variables_36',['variables',['../md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md123',1,'Available variables'],['../md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md121',1,'CSS-Variables'],['../md_docs_2cookbook.html#autotoc_md82',1,'Recipe: Reading and Writing Global Variables']]],
+  ['variables_36',['Recipe: Reading and Writing Global Variables',['../md_docs_2cookbook.html#autotoc_md82',1,'']]],
   ['variables_20from_20a_20shared_20library_37',['Reading Global Variables from a Shared Library',['../index.html#autotoc_md14',1,'']]],
   ['variadic_20functions_20like_20tt_20printf_20tt_38',['Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md61',1,'']]],
   ['vector_5finfo_39',['vector_info',['../structinfix__type__t.html#a07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t']]],

@@ -118,108 +118,62 @@ var NAVTREE =
         [ "Recipe: Porting a Python Binding from <tt>dyncall</tt> to <tt>infix</tt>", "md_docs_2cookbook.html#autotoc_md119", null ]
       ] ]
     ] ],
-    [ "Customization", "md_docs_2doxygen-awesome-css_2docs_2customization.html", [
-      [ "CSS-Variables", "md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md121", [
-        [ "Setup", "md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md122", null ],
-        [ "Available variables", "md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md123", null ]
-      ] ],
-      [ "Doxygen generator", "md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md124", null ],
-      [ "Share your customizations", "md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md125", null ]
-    ] ],
-    [ "Extensions", "md_docs_2doxygen-awesome-css_2docs_2extensions.html", [
-      [ "Dark Mode Toggle", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-dark-mode-toggle", [
-        [ "Installation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md127", null ],
-        [ "Customizing", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md128", null ]
-      ] ],
-      [ "Fragment Copy Button", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-copy-button", [
-        [ "Installation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md129", null ],
-        [ "Customizing", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md130", null ]
-      ] ],
-      [ "Paragraph Linking", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-para", [
-        [ "Installation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md131", null ],
-        [ "Customizing", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md132", null ]
-      ] ],
-      [ "Interactive TOC", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-toc", [
-        [ "Installation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md133", null ],
-        [ "Customizing", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md134", null ]
-      ] ],
-      [ "Tabs", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-tabs", [
-        [ "Installation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md135", null ],
-        [ "Usage", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md136", null ]
-      ] ],
-      [ "Page Navigation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#extension-page-navigation", [
-        [ "Installation", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md137", null ],
-        [ "Usage", "md_docs_2doxygen-awesome-css_2docs_2extensions.html#autotoc_md138", null ]
-      ] ]
-    ] ],
-    [ "Tips & Tricks", "md_docs_2doxygen-awesome-css_2docs_2tricks.html", [
-      [ "Diagrams with Graphviz", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#tricks-graphviz", null ],
-      [ "Disable Dark Mode", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#tricks-darkmode", null ],
-      [ "Choosing Sidebar Width", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#tricks-sidebar", null ],
-      [ "Formatting Tables", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#tricks-tables", [
-        [ "Centering", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#autotoc_md140", null ],
-        [ "Full Width", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#autotoc_md141", null ],
-        [ "Buttons", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#autotoc_md142", null ],
-        [ "Bordered Images", "md_docs_2doxygen-awesome-css_2docs_2tricks.html#autotoc_md143", null ]
-      ] ]
-    ] ],
     [ "infix Internals and Architecture", "md_docs_2internals.html", [
-      [ "1. Core Design Philosophy", "md_docs_2internals.html#autotoc_md158", [
-        [ "1.1 Guiding Principles", "md_docs_2internals.html#autotoc_md159", null ],
-        [ "1.2 Key Architectural Decisions", "md_docs_2internals.html#autotoc_md160", [
-          [ "The Unity Build", "md_docs_2internals.html#autotoc_md161", null ],
-          [ "The Self-Contained Object Model", "md_docs_2internals.html#autotoc_md162", null ],
-          [ "Arena-Based Manual API", "md_docs_2internals.html#autotoc_md163", null ],
-          [ "Universal Context for Callbacks", "md_docs_2internals.html#autotoc_md164", null ]
+      [ "1. Core Design Philosophy", "md_docs_2internals.html#autotoc_md121", [
+        [ "1.1 Guiding Principles", "md_docs_2internals.html#autotoc_md122", null ],
+        [ "1.2 Key Architectural Decisions", "md_docs_2internals.html#autotoc_md123", [
+          [ "The Unity Build", "md_docs_2internals.html#autotoc_md124", null ],
+          [ "The Self-Contained Object Model", "md_docs_2internals.html#autotoc_md125", null ],
+          [ "Arena-Based Manual API", "md_docs_2internals.html#autotoc_md126", null ],
+          [ "Universal Context for Callbacks", "md_docs_2internals.html#autotoc_md127", null ]
         ] ]
       ] ],
-      [ "2. Architectural Overview", "md_docs_2internals.html#autotoc_md166", [
-        [ "The Trampoline Generation Pipeline", "md_docs_2internals.html#autotoc_md167", null ]
+      [ "2. Architectural Overview", "md_docs_2internals.html#autotoc_md129", [
+        [ "The Trampoline Generation Pipeline", "md_docs_2internals.html#autotoc_md130", null ]
       ] ],
-      [ "3. Security Features Deep Dive", "md_docs_2internals.html#autotoc_md169", [
-        [ "3.1 Write XOR Execute (W^X)", "md_docs_2internals.html#autotoc_md170", null ],
-        [ "3.2 Guard Pages and Read-Only Contexts", "md_docs_2internals.html#autotoc_md171", null ],
-        [ "3.3 macOS JIT Hardening and the Entitlement Fallback", "md_docs_2internals.html#autotoc_md172", [
-          [ "The Challenge: Hardened Runtimes on Apple Silicon", "md_docs_2internals.html#autotoc_md173", null ],
-          [ "The <tt>infix</tt> Solution: Runtime Detection with Graceful Fallback", "md_docs_2internals.html#autotoc_md174", null ]
+      [ "3. Security Features Deep Dive", "md_docs_2internals.html#autotoc_md132", [
+        [ "3.1 Write XOR Execute (W^X)", "md_docs_2internals.html#autotoc_md133", null ],
+        [ "3.2 Guard Pages and Read-Only Contexts", "md_docs_2internals.html#autotoc_md134", null ],
+        [ "3.3 macOS JIT Hardening and the Entitlement Fallback", "md_docs_2internals.html#autotoc_md135", [
+          [ "The Challenge: Hardened Runtimes on Apple Silicon", "md_docs_2internals.html#autotoc_md136", null ],
+          [ "The <tt>infix</tt> Solution: Runtime Detection with Graceful Fallback", "md_docs_2internals.html#autotoc_md137", null ]
         ] ],
-        [ "3.4 Fuzz Testing", "md_docs_2internals.html#autotoc_md175", null ]
+        [ "3.4 Fuzz Testing", "md_docs_2internals.html#autotoc_md138", null ]
       ] ],
-      [ "4. ABI Internals", "md_docs_2internals.html#autotoc_md177", null ],
-      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md179", [
-        [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md180", null ],
-        [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md181", null ],
-        [ "Useful Tools", "md_docs_2internals.html#autotoc_md182", null ]
-      ] ],
-      [ "External ABI Documentation", "md_docs_2internals.html#autotoc_md183", null ]
+      [ "4. ABI Internals", "md_docs_2internals.html#autotoc_md140", null ],
+      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md142", [
+        [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md143", null ],
+        [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md144", null ],
+        [ "Useful Tools", "md_docs_2internals.html#autotoc_md145", null ]
+      ] ]
     ] ],
     [ "Porting <tt>infix</tt> to a New Platform", "md_docs_2porting.html", [
-      [ "Step 0: Research and Preparation", "md_docs_2porting.html#autotoc_md185", null ],
-      [ "Step 1: Platform Detection (<tt>src/common/infix_config.h</tt>)", "md_docs_2porting.html#autotoc_md186", null ],
-      [ "Step 2: Implement the ABI Specification", "md_docs_2porting.html#autotoc_md187", null ],
-      [ "Step 3: Implement the Instruction Emitters", "md_docs_2porting.html#autotoc_md188", null ],
-      [ "Step 4: Integrate the New ABI", "md_docs_2porting.html#autotoc_md189", null ],
-      [ "Step 5: Testing", "md_docs_2porting.html#autotoc_md190", null ]
+      [ "Step 0: Research and Preparation", "md_docs_2porting.html#autotoc_md147", null ],
+      [ "Step 1: Platform Detection (<tt>src/common/infix_config.h</tt>)", "md_docs_2porting.html#autotoc_md148", null ],
+      [ "Step 2: Implement the ABI Specification", "md_docs_2porting.html#autotoc_md149", null ],
+      [ "Step 3: Implement the Instruction Emitters", "md_docs_2porting.html#autotoc_md150", null ],
+      [ "Step 4: Integrate the New ABI", "md_docs_2porting.html#autotoc_md151", null ],
+      [ "Step 5: Testing", "md_docs_2porting.html#autotoc_md152", null ]
     ] ],
     [ "The infix Signature and Type System", "md_docs_2signatures.html", [
-      [ "Part 2: The Signature Language Reference", "md_docs_2signatures.html#autotoc_md196", [
-        [ "Part 1: Introduction", "md_docs_2signatures.html#autotoc_md192", [
-          [ "1.1 The Challenge of Interoperability", "md_docs_2signatures.html#autotoc_md193", null ],
-          [ "1.2 The Limitations of C Declarations", "md_docs_2signatures.html#autotoc_md194", null ],
-          [ "1.3 Our Solution: A Human-First Signature System", "md_docs_2signatures.html#autotoc_md195", null ]
+      [ "Part 2: The Signature Language Reference", "md_docs_2signatures.html#autotoc_md158", [
+        [ "Part 1: Introduction", "md_docs_2signatures.html#autotoc_md154", [
+          [ "1.1 The Challenge of Interoperability", "md_docs_2signatures.html#autotoc_md155", null ],
+          [ "1.2 The Limitations of C Declarations", "md_docs_2signatures.html#autotoc_md156", null ],
+          [ "1.3 Our Solution: A Human-First Signature System", "md_docs_2signatures.html#autotoc_md157", null ]
         ] ],
-        [ "2.1 Primitives", "md_docs_2signatures.html#autotoc_md197", [
-          [ "Tier 1: Abstract C Types", "md_docs_2signatures.html#autotoc_md198", null ],
-          [ "Tier 2: Explicit Fixed-Width Types (Recommended)", "md_docs_2signatures.html#autotoc_md199", null ]
+        [ "2.1 Primitives", "md_docs_2signatures.html#autotoc_md159", [
+          [ "Tier 1: Abstract C Types", "md_docs_2signatures.html#autotoc_md160", null ],
+          [ "Tier 2: Explicit Fixed-Width Types (Recommended)", "md_docs_2signatures.html#autotoc_md161", null ]
         ] ],
-        [ "2.2 Type Constructors and Composite Structures", "md_docs_2signatures.html#autotoc_md200", null ],
-        [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md201", null ]
+        [ "2.2 Type Constructors and Composite Structures", "md_docs_2signatures.html#autotoc_md162", null ],
+        [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md163", null ]
       ] ],
-      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md203", [
-        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md204", null ],
-        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md205", null ]
+      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md165", [
+        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md166", null ],
+        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md167", null ]
       ] ],
-      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md207", null ]
+      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md169", null ]
     ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
@@ -250,9 +204,8 @@ var NAVTREEINDEX =
 [
 "_2home_2runner_2work_2infix_2infix_2include_2infix_2infix_8h-example.html",
 "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cafd6b7890692fd70bc41505877be9e2ab",
-"group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a",
-"md_docs_2doxygen-awesome-css_2docs_2customization.html",
-"trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4"
+"group__memory__management.html",
+"md_docs_2internals.html#autotoc_md122"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
