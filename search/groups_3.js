@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['high_20level_20signature_20api_0',['High-Level Signature API',['../group__high__level__api.html',1,'']]]
+  ['error_20reporting_0',['Error Reporting',['../group__error__api.html',1,'']]]
 ];

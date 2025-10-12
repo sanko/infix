@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['x_0',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md166',1,'']]],
+  ['x_0',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md170',1,'']]],
   ['x0_5freg_1',['X0_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aa0689257e9ed3bccebcb22a48336fc26',1,'abi_arm64_common.h']]],
   ['x10_5freg_2',['X10_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aff751fdf3e687c6e979b821e648ce1e2',1,'abi_arm64_common.h']]],
   ['x11_5freg_3',['X11_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a8bbc3234a80956b6d6b83d4fee59cfb1',1,'abi_arm64_common.h']]],
@@ -52,6 +52,6 @@ var searchData=
   ['xmm9_5freg_49',['XMM9_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca367f9cc2a1b55e531bdbcb1091c5fc9a',1,'abi_x64_common.h']]],
   ['xmm_5fargs_50',['xmm_args',['../abi__sysv__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_sysv_x64.c'],['../abi__win__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_win_x64.c']]],
   ['xmm_5fsave_5farea_5foffset_51',['xmm_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662',1,'infix_reverse_call_frame_layout']]],
-  ['xor_20execute_20w_20x_52',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md166',1,'']]],
-  ['xpm_20dependency_53',['npm/xpm dependency',['..//home/runner/work/infix/infix/docs/doxygen-awesome-css/README.md#autotoc_md147',1,'']]]
+  ['xor_20execute_20w_20x_52',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md170',1,'']]],
+  ['xpm_20dependency_53',['npm/xpm dependency',['..//home/runner/work/infix/infix/docs/doxygen-awesome-css/README.md#autotoc_md151',1,'']]]
 ];

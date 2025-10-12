@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['v_20table_20emulation_0',['Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)',['../md_docs_2cookbook.html#autotoc_md62',1,'']]],
+  ['v_20table_20emulation_0',['Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)',['../md_docs_2cookbook.html#autotoc_md63',1,'']]],
   ['v0_5freg_1',['V0_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea3896c5caf6ec171184d53081ca1c2a29',1,'abi_arm64_common.h']]],
   ['v10_5freg_2',['V10_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea15800d9e3003c71ca9e1021d0b2426b1',1,'abi_arm64_common.h']]],
   ['v11_5freg_3',['V11_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beaf37de9346b5322fc02ac1db3777d8cf6',1,'abi_arm64_common.h']]],
@@ -34,14 +34,14 @@ var searchData=
   ['v8_5freg_31',['V8_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea833f555fde105a843b7dcd4bfe57ca75',1,'abi_arm64_common.h']]],
   ['v9_5freg_32',['V9_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea39d2e514751460f40a35b1215d0c0ef3',1,'abi_arm64_common.h']]],
   ['value_33',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md45',1,'']]],
-  ['value_20instead_20of_20a_20pointer_20in_20tt_20args_20tt_34',['Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md94',1,'']]],
-  ['variable_35',['variable',['../md_docs_2cookbook.html#autotoc_md80',1,'Example 1: Simple Integer Variable'],['../md_docs_2cookbook.html#autotoc_md81',1,'Example 2: Aggregate (Struct) Variable']]],
-  ['variables_36',['variables',['../md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md119',1,'Available variables'],['../md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md117',1,'CSS-Variables'],['../md_docs_2cookbook.html#autotoc_md79',1,'Recipe: Reading and Writing Global Variables']]],
+  ['value_20instead_20of_20a_20pointer_20in_20tt_20args_20tt_34',['Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md98',1,'']]],
+  ['variable_35',['variable',['../md_docs_2cookbook.html#autotoc_md83',1,'Example 1: Simple Integer Variable'],['../md_docs_2cookbook.html#autotoc_md84',1,'Example 2: Aggregate (Struct) Variable']]],
+  ['variables_36',['variables',['../md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md123',1,'Available variables'],['../md_docs_2doxygen-awesome-css_2docs_2customization.html#autotoc_md121',1,'CSS-Variables'],['../md_docs_2cookbook.html#autotoc_md82',1,'Recipe: Reading and Writing Global Variables']]],
   ['variables_20from_20a_20shared_20library_37',['Reading Global Variables from a Shared Library',['../index.html#autotoc_md14',1,'']]],
-  ['variadic_20functions_20like_20tt_20printf_20tt_38',['Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md60',1,'']]],
+  ['variadic_20functions_20like_20tt_20printf_20tt_38',['Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md61',1,'']]],
   ['vector_5finfo_39',['vector_info',['../structinfix__type__t.html#a07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t']]],
   ['vectors_40',['Recipe: Working with SIMD Vectors',['../md_docs_2cookbook.html#autotoc_md53',1,'']]],
   ['version_20information_41',['Version Information',['../group__version__macros.html',1,'']]],
   ['vpr_5fargs_42',['VPR_ARGS',['../abi__arm64_8c.html#a17f5f5d04e9e9fae4874e77698d83d31',1,'abi_arm64.c']]],
-  ['vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_43',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md98',1,'']]]
+  ['vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_43',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md102',1,'']]]
 ];

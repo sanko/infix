@@ -1,5 +1,9 @@
 var NAVTREEINDEX4 =
 {
+"trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4":[10,0,2,2,5,6],
+"trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970":[10,0,2,2,5,2],
+"trampoline_8c.html#aafe3a80a72de54323eb8bd0bee1be3ca":[10,0,2,2,5,9],
+"trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831":[10,0,2,2,5,5],
 "trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b":[10,0,2,2,5,8],
 "trampoline_8c_source.html":[10,0,2,2,5],
 "type__registry_8c.html":[10,0,2,2,6],

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['named_20type_20registry_20api_0',['Named Type Registry API',['../group__registry__api.html',1,'']]]
+  ['level_20signature_20api_0',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
+  ['library_20globals_20api_1',['Dynamic Library &amp; Globals API',['../group__exports__api.html',1,'']]]
 ];

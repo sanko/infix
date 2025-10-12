@@ -7,6 +7,7 @@ var group__public__api =
     [ "Introspection API", "group__introspection__api.html", "group__introspection__api" ],
     [ "Memory Management", "group__memory__management.html", "group__memory__management" ],
     [ "Error Reporting", "group__error__api.html", "group__error__api" ],
+    [ "Dynamic Library & Globals API", "group__exports__api.html", "group__exports__api" ],
     [ "Version Information", "group__version__macros.html", "group__version__macros" ],
     [ "infix_cif_func", "group__public__api.html#ga3042690c20cccd4137f134154bd62e1a", null ],
     [ "infix_unbound_cif_func", "group__public__api.html#ga48f7ee868576f525269902fc953887bd", null ],

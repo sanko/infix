@@ -118,6 +118,7 @@ Table of Contents</h1>
 <li>Recipe: Working with Fixed-Size Arrays</li>
 <li>Recipe: Working with Complex Numbers</li>
 <li>Recipe: Working with SIMD Vectors</li>
+<li>Recipe: Working with Enums</li>
 </ul>
 </li>
 <li><b>Chapter 3: The Power of Callbacks (Reverse Calls)</b><ul>
@@ -129,7 +130,9 @@ Table of Contents</h1>
 <li>Recipe: Calling Variadic Functions like `printf`</li>
 <li>Recipe: Receiving and Calling a Function Pointer</li>
 <li>Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)</li>
+<li>Recipe: Handling `long double`</li>
 <li>Recipe: Proving Reentrancy with Nested FFI Calls</li>
+<li>Recipe: Proving Thread Safety</li>
 </ul>
 </li>
 <li><b>Chapter 5: Interoperability with Other Languages</b><ul>
@@ -163,6 +166,7 @@ Table of Contents</h1>
 <li><b>Chapter 8: Performance &amp; Memory Management</b><ul>
 <li>Best Practice: Caching Trampolines</li>
 <li>Recipe: Using a Custom Arena for a Group of Types</li>
+<li>Recipe: Using Custom Memory Allocators</li>
 </ul>
 </li>
 <li><b>Chapter 9: Common Pitfalls &amp; Troubleshooting</b><ul>
@@ -215,7 +219,7 @@ Recipe: Calling a Simple C Function</h2>
 <div class="ttc" id="agroup__high__level__api_html_ga524a8ccebd24c9232d30cb2f79aee5a5"><div class="ttname"><a href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Generates an unbound forward-call trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> signature.c:1189</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga5f3559908e6a7bcc72103c52937d67ad"><div class="ttname"><a href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a></div><div class="ttdeci">c23_nodiscard infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:213</div></div>
 <div class="ttc" id="agroup__manual__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Frees a forward trampoline and its associated executable memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:400</div></div>
-<div class="ttc" id="agroup__public__api_html_ga48f7ee868576f525269902fc953887bd"><div class="ttname"><a href="group__public__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *, void *, void **)</div><div class="ttdoc">The signature for a generic &quot;unbound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:330</div></div>
+<div class="ttc" id="agroup__public__api_html_ga48f7ee868576f525269902fc953887bd"><div class="ttname"><a href="group__public__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *, void *, void **)</div><div class="ttdoc">The signature for a generic &quot;unbound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:334</div></div>
 <div class="ttc" id="ainfix_8h_html"><div class="ttname"><a href="infix_8h.html">infix.h</a></div></div>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:72</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md40"></a>
@@ -246,7 +250,7 @@ Recipe: Passing and Receiving Pointers</h2>
 <div class="line">}</div>
 <div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Generates a bound forward-call trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> signature.c:1202</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:223</div></div>
-<div class="ttc" id="agroup__public__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">The signature for a &quot;bound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:350</div></div>
+<div class="ttc" id="agroup__public__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">The signature for a &quot;bound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:354</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md41"></a>
 Recipe: Working with "Out" Parameters</h2>
 <p><b>Problem</b>: You need to call a C function that doesn't use its return value for its primary output. Instead, it takes a pointer to a variable and writes the result into it. This is a very common pattern for functions that need to return multiple values or an error code.</p>
@@ -531,14 +535,47 @@ Recipe: Working with SIMD Vectors</h2>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(t)(&amp;result, args);</div>
 <div class="line">    <span class="keywordtype">double</span>* d = (<span class="keywordtype">double</span>*)&amp;result;</div>
-<div class="line">    printf(<span class="stringliteral">&quot;SIMD vector result: [%.1f, %.1f]\n&quot;</span>, d, d); <span class="comment">// Expected: [42.0, 42.0]</span></div>
+<div class="line">    <span class="comment">// Note: The result of _mm_add_pd is {a[0]+b[0], a[1]+b[1]}, which is {10+32, 20+22}</span></div>
+<div class="line">    printf(<span class="stringliteral">&quot;SIMD vector result: [%.1f, %.1f]\n&quot;</span>, d[0], d[1]); <span class="comment">// Expected: [42.0, 42.0]</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
+<div class="line">}</div>
+</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md54"></a>
+&lt;strong&gt;Recipe: Working with Enums&lt;/strong&gt;</h2>
+<p><b>Problem</b>: You need to call a C function that takes an <code>enum</code>, but you want to ensure the underlying integer type is handled correctly for ABI purposes.</p>
+<p><b>Solution</b>: Use the <code>e:&lt;type&gt;</code> syntax in the signature string. <code>infix</code> treats the enum identically to its underlying integer type for the FFI call, which is the correct behavior.</p>
+<div class="fragment"><div class="line"><span class="comment">// Native C enum and function</span></div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> { STATUS_OK = 0, STATUS_WARN = 1, STATUS_ERR = -1 } StatusCode;</div>
+<div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* status_to_string(StatusCode code) {</div>
+<div class="line">    <span class="keywordflow">switch</span> (code) {</div>
+<div class="line">        <span class="keywordflow">case</span> STATUS_OK: <span class="keywordflow">return</span> <span class="stringliteral">&quot;OK&quot;</span>;</div>
+<div class="line">        <span class="keywordflow">case</span> STATUS_WARN: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Warning&quot;</span>;</div>
+<div class="line">        <span class="keywordflow">case</span> STATUS_ERR: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Error&quot;</span>;</div>
+<div class="line">        <span class="keywordflow">default</span>: <span class="keywordflow">return</span> <span class="stringliteral">&quot;Unknown&quot;</span>;</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> recipe_enums() {</div>
+<div class="line">    <span class="comment">// The C `enum` is based on `int`, so we describe it as `e:int`.</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(e:int) -&gt; *char&quot;</span>;</div>
+<div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* t = NULL;</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;t, signature, (<span class="keywordtype">void</span>*)status_to_string, NULL);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Pass the enum value as its underlying integer type.</span></div>
+<div class="line">    <span class="keywordtype">int</span> code = STATUS_ERR;</div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* result_str = NULL;</div>
+<div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;code };</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(t)(&amp;result_str, args);</div>
+<div class="line"> </div>
+<div class="line">    printf(<span class="stringliteral">&quot;Status for code %d is &#39;%s&#39;\n&quot;</span>, code, result_str); <span class="comment">// Expected: &#39;Error&#39;</span></div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md55"></a>
+<h1><a class="anchor" id="autotoc_md56"></a>
 Chapter 3: The Power of Callbacks (Reverse Calls)</h1>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 Recipe: Creating a Stateless Callback for &lt;tt&gt;qsort&lt;/tt&gt;</h2>
 <p><b>Problem</b>: You need to sort an array using C's <code>qsort</code>, which requires a function pointer for the comparison logic. <b>Solution</b>: Use a reverse trampoline. The handler's signature must accept <code>infix_context_t*</code> as its first argument.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
@@ -572,7 +609,7 @@ Recipe: Creating a Stateless Callback for &lt;tt&gt;qsort&lt;/tt&gt;</h2>
 <div class="ttc" id="agroup__introspection__api_html_ga3b75e8481ac13d11faa15046fc4adb66"><div class="ttname"><a href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:586</div></div>
 <div class="ttc" id="agroup__manual__api_html_ga00b101025663c423a28433e139be5d4e"><div class="ttname"><a href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a></div><div class="ttdeci">void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Frees a reverse trampoline, its JIT-compiled stub, and its context.</div><div class="ttdef"><b>Definition</b> trampoline.c:607</div></div>
 <div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:102</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md57"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md58"></a>
 Recipe: Creating a Stateful Callback</h2>
 <p><b>Problem</b>: A callback handler needs access to application state, but the C library API is stateless (it has no <code>void* user_data</code> parameter). <b>Solution</b>: <code>infix</code> automatically passes a pointer to the <code>infix_context_t</code> as the first argument to every handler. Store your application state in the context's <code>user_data</code> field.</p>
 <div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{ <span class="keyword">const</span> <span class="keywordtype">char</span> * name; <span class="keywordtype">int</span> sum; } AppContext;</div>
@@ -601,9 +638,9 @@ Recipe: Creating a Stateful Callback</h2>
 <div class="line">}</div>
 <div class="ttc" id="agroup__introspection__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Retrieves the user_data stored with a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:596</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md59"></a>
+<h1><a class="anchor" id="autotoc_md60"></a>
 Chapter 4: Advanced Techniques</h1>
-<h2><a class="anchor" id="autotoc_md60"></a>
+<h2><a class="anchor" id="autotoc_md61"></a>
 Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;</h2>
 <p><b>Problem</b>: You need to call a function with a variable number of arguments. <b>Solution</b>: Use the <code>;</code> token to separate fixed and variadic arguments. The signature must exactly match the types you are passing in a <em>specific call</em>.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> recipe_variadic_printf() {</div>
@@ -619,7 +656,7 @@ Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;</h2>
 <div class="line">    <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline)(NULL, args);</div>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md61"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md62"></a>
 Recipe: Receiving and Calling a Function Pointer</h2>
 <p><b>Problem</b>: You need to call a C function that <em>takes</em> a function pointer as an argument, and pass it a callback you generate. <b>Solution</b>: The signature for a function pointer is <code>*((...) -&gt; ...)</code>. Generate your callback, get its native pointer, and pass that pointer as an argument.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> multiply_handler(<a class="code hl_struct" href="structinfix__reverse__t.html">infix_context_t</a>* ctx, <span class="keywordtype">int</span> x) { (void)ctx; <span class="keywordflow">return</span> x * 10; }</div>
@@ -643,7 +680,7 @@ Recipe: Receiving and Calling a Function Pointer</h2>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(harness_trampoline);</div>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(inner_cb_ctx);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md62"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md63"></a>
 Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)</h2>
 <p><b>Problem</b>: You have a pointer to a struct that contains function pointers, similar to a C implementation of an object's v-table. You need to read a function pointer from the struct and then call it. <b>Solution</b>: This is a two-step FFI process. First, read the function pointer value from the struct. Second, create a new trampoline for that function pointer's signature and call it. The Type Registry is perfect for making this clean.</p>
 <div class="fragment"><div class="line"><span class="comment">// C equivalent of a simple &quot;object&quot; with a v-table.</span></div>
@@ -691,7 +728,36 @@ Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)</h2>
 <div class="line">    <a class="code hl_function" href="group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a">infix_registry_destroy</a>(reg);</div>
 <div class="line">    free(my_adder);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md63"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md64"></a>
+&lt;strong&gt;Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;&lt;/strong&gt;</h2>
+<p><b>Problem</b>: You need to call a function that uses <code>long double</code>, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for <code>double</code> on MSVC/macOS). <b>Solution</b>: Use the <code>long double</code> keyword in your signature. <code>infix</code>'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal <code>double</code>.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;math.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A simple function using long double.</span></div>
+<div class="line"><span class="keywordtype">long</span> <span class="keywordtype">double</span> native_sqrtl(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) {</div>
+<div class="line">    <span class="keywordflow">return</span> sqrtl(x);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> recipe_long_double() {</div>
+<div class="line">    <span class="comment">// On platforms where long double is distinct (like Linux), this will</span></div>
+<div class="line">    <span class="comment">// trigger special ABI handling. On platforms where it&#39;s an alias for</span></div>
+<div class="line">    <span class="comment">// double (like Windows), infix will treat it as a double.</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(long double) -&gt; long double&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* t = NULL;</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;t, signature, (<span class="keywordtype">void</span>*)native_sqrtl, NULL);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordtype">long</span> <span class="keywordtype">double</span> input = 144.0L;</div>
+<div class="line">    <span class="keywordtype">long</span> <span class="keywordtype">double</span> result = 0.0L;</div>
+<div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;input };</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(t)(&amp;result, args);</div>
+<div class="line"> </div>
+<div class="line">    printf(<span class="stringliteral">&quot;sqrtl(144.0L) = %Lf\n&quot;</span>, result); <span class="comment">// Expected: 12.0</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md65"></a>
 Recipe: Proving Reentrancy with Nested FFI Calls</h2>
 <p><b>Problem</b>: You need to be sure that making an FFI call from within an FFI callback is safe. <b>Solution</b>: <code>infix</code> is designed to be fully reentrant. The library uses no global mutable state, and all error information is stored in thread-local storage. This recipe demonstrates a forward call that invokes a reverse callback, which in turn makes another forward call.</p>
 <div class="fragment"><div class="line"><span class="comment">// Innermost target function</span></div>
@@ -740,13 +806,75 @@ Recipe: Proving Reentrancy with Nested FFI Calls</h2>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(rev_nested);</div>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(fwd_multiply);</div>
 <div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md66"></a>
+&lt;strong&gt;Recipe: Proving Thread Safety&lt;/strong&gt;</h2>
+<p><b>Problem</b>: You need to create a trampoline in one thread and safely use it in another. <b>Solution</b>: <code>infix</code> trampoline handles (<code>infix_forward_t*</code> and <code>infix_reverse_t*</code>) are immutable after creation and are safe to share between threads. All error state is kept in thread-local storage, so calls from different threads will not interfere with each other.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line"><span class="preprocessor">#include &lt;windows.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line"><span class="preprocessor">#include &lt;pthread.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A simple function to be the FFI target.</span></div>
+<div class="line"><span class="keywordtype">int</span> add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A struct to pass data to our worker thread.</span></div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line">    <a class="code hl_typedef" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a> cif; <span class="comment">// The callable trampoline function pointer.</span></div>
+<div class="line">    <span class="keywordtype">int</span> result;</div>
+<div class="line">} thread_data_t;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// The function our worker thread will execute.</span></div>
+<div class="line"><span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line">DWORD WINAPI worker_thread_func(LPVOID arg) {</div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line"><span class="keywordtype">void</span>* worker_thread_func(<span class="keywordtype">void</span>* arg) {</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line">    thread_data_t* data = (thread_data_t*)arg;</div>
+<div class="line">    <span class="keywordtype">int</span> a = 20, b = 22;</div>
+<div class="line">    <span class="keywordtype">void</span>* args[] = { &amp;a, &amp;b };</div>
+<div class="line">    <span class="comment">// Call the trampoline function pointer that was created on the main thread.</span></div>
+<div class="line">    data-&gt;cif(&amp;data-&gt;result, args);</div>
+<div class="line"><span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line">    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> recipe_thread_safety() {</div>
+<div class="line">    <span class="comment">// Main thread: Create the trampoline.</span></div>
+<div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;(int, int)-&gt;int&quot;</span>, (<span class="keywordtype">void</span>*)add, NULL);</div>
+<div class="line"> </div>
+<div class="line">    thread_data_t data = { <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline), 0 };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Main thread: Spawn a worker thread, passing it the callable pointer.</span></div>
+<div class="line"><span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line">    HANDLE thread_handle = CreateThread(NULL, 0, worker_thread_func, &amp;data, 0, NULL);</div>
+<div class="line">    WaitForSingleObject(thread_handle, INFINITE);</div>
+<div class="line">    CloseHandle(thread_handle);</div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line">    pthread_t thread_id;</div>
+<div class="line">    pthread_create(&amp;thread_id, NULL, worker_thread_func, &amp;data);</div>
+<div class="line">    pthread_join(thread_id, NULL);</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Main thread: Check the result computed by the worker thread.</span></div>
+<div class="line">    printf(<span class="stringliteral">&quot;Result from worker thread: %d\n&quot;</span>, data.result); <span class="comment">// Expected: 42</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Main thread: Clean up the trampoline.</span></div>
+<div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
+<div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md65"></a>
+<h1><a class="anchor" id="autotoc_md68"></a>
 Chapter 5: Interoperability with Other Languages</h1>
-<h2><a class="anchor" id="autotoc_md66"></a>
+<h2><a class="anchor" id="autotoc_md69"></a>
 The Universal Principle: The C ABI</h2>
 <p><code>infix</code> can call any function that exposes a standard C ABI. Nearly every compiled language provides a mechanism to export a function using this standard (<code>extern "C"</code> in C++/Rust/Zig, <code>//export</code> in Go, <code>bind(C)</code> in Fortran).</p>
-<h2><a class="anchor" id="autotoc_md67"></a>
+<h2><a class="anchor" id="autotoc_md70"></a>
 Recipe: Interfacing with a C++ Class (Directly)</h2>
 <p><b>Problem</b>: You need to call C++ class methods without writing a C wrapper. <b>Solution</b>: Find the compiler-mangled names for the constructor, destructor, and methods. Use <code>infix</code> to call them directly, manually passing the <code>this</code> pointer as the first argument to methods.</p>
 <div class="fragment"><div class="line"><span class="comment">// File: MyClass.cpp (compile to libmyclass.so/.dll)</span></div>
@@ -820,7 +948,7 @@ Recipe: Interfacing with a C++ Class (Directly)</h2>
 <div class="ttc" id="aloader_8c_html_aa8a13683c23c32d08b281075f0321d6b"><div class="ttname"><a href="loader_8c.html#aa8a13683c23c32d08b281075f0321d6b">infix_library_close</a></div><div class="ttdeci">void infix_library_close(infix_library_t *lib)</div><div class="ttdef"><b>Definition</b> loader.c:113</div></div>
 <div class="ttc" id="aloader_8c_html_ac583cdbec7dfe1532917a7fbd849cba6"><div class="ttname"><a href="loader_8c.html#ac583cdbec7dfe1532917a7fbd849cba6">infix_library_open</a></div><div class="ttdeci">c23_nodiscard infix_library_t * infix_library_open(const char *path)</div><div class="ttdef"><b>Definition</b> loader.c:65</div></div>
 <div class="ttc" id="astructinfix__library__t_html"><div class="ttname"><a href="structinfix__library__t.html">infix_library_t</a></div><div class="ttdef"><b>Definition</b> loader.c:49</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md68"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md71"></a>
 Recipe: Interfacing with C++ Templates</h2>
 <p><b>Problem</b>: How do you call a C++ function template from C? <b>Solution</b>: You can't call the template itself, but you can call a <em>specific instantiation</em> of it. The compiler generates a normal function for each concrete type used with the template, and this function has a predictable mangled name that you can look up and call.</p>
 <div class="fragment"><div class="line"><span class="comment">// File: Box.cpp (compile to libbox.so/.dll)</span></div>
@@ -875,10 +1003,10 @@ Recipe: Interfacing with C++ Templates</h2>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t_get);</div>
 <div class="line">    <a class="code hl_function" href="loader_8c.html#aa8a13683c23c32d08b281075f0321d6b">infix_library_close</a>(lib);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md69"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md72"></a>
 The Pattern for Other Compiled Languages</h2>
 <p>The <code>extern "C"</code> pattern is universal. The C code to call any of the functions below would be identical: load the library, find the symbol, create a trampoline for <code>(int, int) -&gt; int</code>, and call it.</p>
-<h3><a class="anchor" id="autotoc_md70"></a>
+<h3><a class="anchor" id="autotoc_md73"></a>
 Rust</h3>
 <p>To export a C-compatible function from Rust, use <code>#[no_mangle]</code> to prevent name mangling and <code>extern "C"</code> to specify the calling convention.</p>
 <div class="fragment"><div class="line">// librust_math.rs</div>
@@ -887,7 +1015,7 @@ Rust</h3>
 <div class="line">    a + b</div>
 <div class="line">}</div>
 </div><!-- fragment --><p><em>Compile with: <code>rustc --crate-type cdylib librust_math.rs</code></em></p>
-<h3><a class="anchor" id="autotoc_md71"></a>
+<h3><a class="anchor" id="autotoc_md74"></a>
 Zig</h3>
 <p>Zig's <code>export</code> keyword makes a function available with the C ABI by default.</p>
 <div class="fragment"><div class="line">// libzig_math.zig</div>
@@ -895,7 +1023,7 @@ Zig</h3>
 <div class="line">    return a + b;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p><em>Compile with: <code>zig build-lib -dynamic libzig_math.zig</code></em></p>
-<h3><a class="anchor" id="autotoc_md72"></a>
+<h3><a class="anchor" id="autotoc_md75"></a>
 Go</h3>
 <p>Go can export functions to C using a special <code>//export</code> comment directive.</p>
 <div class="fragment"><div class="line">// libgo_math.go</div>
@@ -906,7 +1034,7 @@ Go</h3>
 <div class="line">func go_add(a C.int, b C.int) C.int { return a + b }</div>
 <div class="line">func main() {}</div>
 </div><!-- fragment --><p><em>Compile with: <code>go build -buildmode=c-shared -o libgo_math.so libgo_math.go</code></em></p>
-<h3><a class="anchor" id="autotoc_md73"></a>
+<h3><a class="anchor" id="autotoc_md76"></a>
 Swift</h3>
 <p>The <code>@_cdecl</code> attribute exposes a Swift function to C with a specified name.</p>
 <div class="fragment"><div class="line">// libswift_math.swift</div>
@@ -915,13 +1043,13 @@ Swift</h3>
 <div class="line">    return a + b</div>
 <div class="line">}</div>
 </div><!-- fragment --><p><em>Compile with: <code>swiftc -emit-library libswift_math.swift -o libswift_math.so</code></em></p>
-<h3><a class="anchor" id="autotoc_md74"></a>
+<h3><a class="anchor" id="autotoc_md77"></a>
 Dlang</h3>
 <p>The <code>extern(C)</code> attribute specifies the C calling convention for a D function.</p>
 <div class="fragment"><div class="line"><span class="comment">// libd_math.d</span></div>
 <div class="line"><span class="keyword">extern</span> (C) <span class="keywordtype">int</span> d_add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
 </div><!-- fragment --><p><em>Compile with: <code>dmd -shared -fPIC -of=libd_math.so libd_math.d</code></em></p>
-<h3><a class="anchor" id="autotoc_md75"></a>
+<h3><a class="anchor" id="autotoc_md78"></a>
 Fortran</h3>
 <p>The <code>bind(C)</code> attribute from the <code>iso_c_binding</code> module provides C interoperability.</p>
 <div class="fragment"><div class="line"><span class="comment">! libfortran_math.f90</span></div>
@@ -932,7 +1060,7 @@ Fortran</h3>
 <div class="line">    c = a + b</div>
 <div class="line"><span class="keyword">end function </span>fortran_add</div>
 </div><!-- fragment --><p><em>Compile with: <code>gfortran -shared -fPIC -o libfortran_math.so libfortran_math.f90</code></em></p>
-<h3><a class="anchor" id="autotoc_md76"></a>
+<h3><a class="anchor" id="autotoc_md79"></a>
 Assembly</h3>
 <p>Pure machine code has no name mangling. You just need to follow the target ABI's calling convention.</p>
 <div class="fragment"><div class="line">; libasm_math.asm (for System V x64 ABI)</div>
@@ -943,9 +1071,9 @@ Assembly</h3>
 <div class="line">    add eax, esi ; Add second argument (RSI) to EAX</div>
 <div class="line">    ret          ; Return value is in EAX</div>
 </div><!-- fragment --><p><em>Compile with: <code>nasm -f elf64 libasm_math.asm &amp;&amp; gcc -shared -o libasm_math.so libasm_math.o</code></em></p>
-<h1><a class="anchor" id="autotoc_md77"></a>
+<h1><a class="anchor" id="autotoc_md80"></a>
 Chapter 6: Dynamic Libraries &amp; System Calls</h1>
-<h2><a class="anchor" id="autotoc_md78"></a>
+<h2><a class="anchor" id="autotoc_md81"></a>
 Recipe: Calling Native System Libraries without Linking</h2>
 <p><b>Problem</b>: You need to call a function from a system library (e.g., <code>user32.dll</code>) without linking against its import library at compile time.</p>
 <p><b>Solution</b>: Use <code>infix</code>'s cross-platform library loading API to get a handle to the library and the function pointer, then create a trampoline.</p>
@@ -992,11 +1120,11 @@ Recipe: Calling Native System Libraries without Linking</h2>
 <div class="line">    printf(<span class="stringliteral">&quot;This recipe is for Windows only.\n&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
-</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md79"></a>
+</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md82"></a>
 Recipe: Reading and Writing Global Variables</h2>
 <p><b>Problem</b>: You need to access a global variable exported from a shared library, not just a function.</p>
 <p><b>Solution</b>: Use <code><a class="el" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8" title="Reads the value of a global variable from a loaded library.">infix_read_global()</a></code> and <code><a class="el" href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f" title="Writes a value to a global variable in a loaded library.">infix_write_global()</a></code>. The powerful signature language is used to describe the variable's type, ensuring <code>infix</code> reads or writes the correct number of bytes.</p>
-<h3><a class="anchor" id="autotoc_md80"></a>
+<h3><a class="anchor" id="autotoc_md83"></a>
 Example 1: Simple Integer Variable</h3>
 <p>First, create a simple shared library (<code>libglobals.c</code>) that exports a counter: </p><div class="fragment"><div class="line"><span class="comment">// libglobals.c - Compile to a shared library</span></div>
 <div class="line"><span class="preprocessor">#if defined(_WIN32)</span></div>
@@ -1032,7 +1160,7 @@ Example 1: Simple Integer Variable</h3>
 <div class="line">}</div>
 <div class="ttc" id="agroup__exports__api_html_ga3df4f2e6494af3e1fda98cd5a61d167f"><div class="ttname"><a href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f">infix_write_global</a></div><div class="ttdeci">infix_status infix_write_global(infix_library_t *, const char *, const char *, void *)</div><div class="ttdoc">Writes a value to a global variable in a loaded library.</div><div class="ttdef"><b>Definition</b> loader.c:213</div></div>
 <div class="ttc" id="agroup__exports__api_html_gae75c91d8011786875c73f26d2aa437a8"><div class="ttname"><a href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix_read_global</a></div><div class="ttdeci">infix_status infix_read_global(infix_library_t *, const char *, const char *, void *)</div><div class="ttdoc">Reads the value of a global variable from a loaded library.</div><div class="ttdef"><b>Definition</b> loader.c:170</div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md81"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md84"></a>
 Example 2: Aggregate (Struct) Variable</h3>
 <p>Let's expand <code>libglobals.c</code> to export a configuration struct: </p><div class="fragment"><div class="line"><span class="comment">// Add to libglobals.c</span></div>
 <div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
@@ -1073,7 +1201,7 @@ Example 2: Aggregate (Struct) Variable</h3>
 <div class="line">    <a class="code hl_function" href="group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a">infix_registry_destroy</a>(reg);</div>
 <div class="line">    <a class="code hl_function" href="loader_8c.html#aa8a13683c23c32d08b281075f0321d6b">infix_library_close</a>(lib);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md82"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md85"></a>
 Recipe: Handling Library Dependencies</h2>
 <p><b>Problem:</b> You want to load a library (<code>libA</code>) that itself depends on another shared library (<code>libB</code>). <b>Solution:</b> You don't have to do anything special. On all modern operating systems, the dynamic linker will automatically find, load, and link <code>libB</code> when you load <code>libA</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// libB.c -&gt; provides a helper function</span></div>
@@ -1105,9 +1233,9 @@ Recipe: Handling Library Dependencies</h2>
 <div class="line">    <a class="code hl_function" href="loader_8c.html#aa8a13683c23c32d08b281075f0321d6b">infix_library_close</a>(lib);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md84"></a>
+<h1><a class="anchor" id="autotoc_md87"></a>
 Chapter 7: Introspection for Data Marshalling</h1>
-<h2><a class="anchor" id="autotoc_md85"></a>
+<h2><a class="anchor" id="autotoc_md88"></a>
 Recipe: Dynamic Struct Marshalling with the Signature Parser</h2>
 <p><b>Problem</b>: You have data from a dynamic source (like a script) and need to pack it into a C <code>struct</code> layout at runtime. <b>Solution</b>: Use <code>infix_type_from_signature</code> to parse a signature into a detailed <code>infix_type</code> graph. This graph contains all the <code>size</code>, <code>alignment</code>, and member <code>offset</code> information needed to correctly write data into a C-compatible memory buffer.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
@@ -1143,17 +1271,17 @@ Recipe: Dynamic Struct Marshalling with the Signature Parser</h2>
 <div class="line">           profile_buffer.user_id, profile_buffer.score, profile_buffer.name);</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__high__level__api_html_ga3632147d55b80e520987d37722ddcf61"><div class="ttname"><a href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Parses a signature string representing a single data type.</div><div class="ttdef"><b>Definition</b> signature.c:1090</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga0e49d4bdbfe42b661bf7bcb597793e9a"><div class="ttname"><a href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_size(const infix_type *)</div><div class="ttdoc">Retrieves the size of an infix_type in bytes.</div><div class="ttdef"><b>Definition</b> types.c:733</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga678390feeed80a43111725c4e73c0dda"><div class="ttname"><a href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_member_count(const infix_type *)</div><div class="ttdoc">Retrieves the number of members in an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> types.c:750</div></div>
-<div class="ttc" id="agroup__introspection__api_html_gafc256d548bfd78ff90ee38a1cc0ae8b9"><div class="ttname"><a href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a></div><div class="ttdeci">c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type *, size_t)</div><div class="ttdoc">Retrieves a specific member from an aggregate type by its index.</div><div class="ttdef"><b>Definition</b> types.c:761</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga0e49d4bdbfe42b661bf7bcb597793e9a"><div class="ttname"><a href="group__introspection__api.html#ga0e49d4bdbfe42b661bf7bcb597793e9a">infix_type_get_size</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_size(const infix_type *)</div><div class="ttdoc">Retrieves the size of an infix_type in bytes.</div><div class="ttdef"><b>Definition</b> types.c:729</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga678390feeed80a43111725c4e73c0dda"><div class="ttname"><a href="group__introspection__api.html#ga678390feeed80a43111725c4e73c0dda">infix_type_get_member_count</a></div><div class="ttdeci">c23_nodiscard size_t infix_type_get_member_count(const infix_type *)</div><div class="ttdoc">Retrieves the number of members in an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> types.c:746</div></div>
+<div class="ttc" id="agroup__introspection__api_html_gafc256d548bfd78ff90ee38a1cc0ae8b9"><div class="ttname"><a href="group__introspection__api.html#gafc256d548bfd78ff90ee38a1cc0ae8b9">infix_type_get_member</a></div><div class="ttdeci">c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type *, size_t)</div><div class="ttdoc">Retrieves a specific member from an aggregate type by its index.</div><div class="ttdef"><b>Definition</b> types.c:757</div></div>
 <div class="ttc" id="agroup__memory__management_html_ga50b7219c58789fc03898690254f0280e"><div class="ttname"><a href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a></div><div class="ttdeci">void infix_arena_destroy(infix_arena_t *)</div><div class="ttdoc">Frees an entire memory arena and all objects allocated within it.</div><div class="ttdef"><b>Definition</b> arena.c:68</div></div>
-<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:356</div></div>
+<div class="ttc" id="agroup__public__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdoc">The operation completed successfully.</div><div class="ttdef"><b>Definition</b> infix.h:360</div></div>
 <div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:129</div></div>
-<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:215</div></div>
-<div class="ttc" id="astructinfix__struct__member__t_html_aa89e6621da98f5115dcc807599c4ac77"><div class="ttname"><a href="structinfix__struct__member__t.html#aa89e6621da98f5115dcc807599c4ac77">infix_struct_member_t::type</a></div><div class="ttdeci">infix_type * type</div><div class="ttdoc">An infix_type describing the member's type.</div><div class="ttdef"><b>Definition</b> infix.h:217</div></div>
-<div class="ttc" id="astructinfix__struct__member__t_html_abc9fb3780626694111f4c8c74700a9b9"><div class="ttname"><a href="structinfix__struct__member__t.html#abc9fb3780626694111f4c8c74700a9b9">infix_struct_member_t::offset</a></div><div class="ttdeci">size_t offset</div><div class="ttdoc">The byte offset of the member from the start of the aggregate.</div><div class="ttdef"><b>Definition</b> infix.h:218</div></div>
-<div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div><div class="ttdef"><b>Definition</b> infix.h:157</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md86"></a>
+<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:219</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html_aa89e6621da98f5115dcc807599c4ac77"><div class="ttname"><a href="structinfix__struct__member__t.html#aa89e6621da98f5115dcc807599c4ac77">infix_struct_member_t::type</a></div><div class="ttdeci">infix_type * type</div><div class="ttdoc">An infix_type describing the member's type.</div><div class="ttdef"><b>Definition</b> infix.h:221</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html_abc9fb3780626694111f4c8c74700a9b9"><div class="ttname"><a href="structinfix__struct__member__t.html#abc9fb3780626694111f4c8c74700a9b9">infix_struct_member_t::offset</a></div><div class="ttdeci">size_t offset</div><div class="ttdoc">The byte offset of the member from the start of the aggregate.</div><div class="ttdef"><b>Definition</b> infix.h:222</div></div>
+<div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">The central structure for describing any data type in the FFI system.</div><div class="ttdef"><b>Definition</b> infix.h:161</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md89"></a>
 Recipe: Building a Signature String at Runtime</h2>
 <p><b>Problem</b>: The structure of the data you need to work with isn't known until runtime (e.g., it's defined in a configuration file or a user script). <b>Solution</b>: Since <code>infix</code> signatures are just strings, you can build them dynamically using <code>snprintf</code>. You can then parse this dynamic signature to get layout information, which is perfect for data marshalling or dynamic RPC systems.</p>
 <div class="fragment"><div class="line"><span class="comment">// Imagine this data comes from a config file</span></div>
@@ -1190,7 +1318,7 @@ Recipe: Building a Signature String at Runtime</h2>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a>(arena);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md87"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md90"></a>
 Recipe: Introspecting a Trampoline for a Wrapper</h2>
 <p><b>Problem</b>: You are building a language binding and need to validate the number and types of arguments provided by the user before making an FFI call. <b>Solution</b>: Use the trampoline introspection API to query the signature information stored in the handle.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> dynamic_wrapper(<a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline, <span class="keywordtype">void</span>* target_func, <span class="keywordtype">void</span>** args, <span class="keywordtype">size_t</span> num_provided_args) {</div>
@@ -1202,11 +1330,11 @@ Recipe: Introspecting a Trampoline for a Wrapper</h2>
 <div class="line">    <span class="comment">// A real binding would also check the types using infix_forward_get_arg_type().</span></div>
 <div class="line">    ((<a class="code hl_typedef" href="group__public__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a>)<a class="code hl_function" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(trampoline))(target_func, NULL, args);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__introspection__api_html_ga7b7e73aa032acb4185433f40720ec126"><div class="ttname"><a href="group__introspection__api.html#ga7b7e73aa032acb4185433f40720ec126">infix_forward_get_num_args</a></div><div class="ttdeci">c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t *)</div><div class="ttdoc">Retrieves the number of arguments for a forward trampoline.</div><div class="ttdef"><b>Definition</b> types.c:798</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga7b7e73aa032acb4185433f40720ec126"><div class="ttname"><a href="group__introspection__api.html#ga7b7e73aa032acb4185433f40720ec126">infix_forward_get_num_args</a></div><div class="ttdeci">c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t *)</div><div class="ttdoc">Retrieves the number of arguments for a forward trampoline.</div><div class="ttdef"><b>Definition</b> types.c:794</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md89"></a>
+<h1><a class="anchor" id="autotoc_md92"></a>
 Chapter 8: Performance &amp; Memory Management</h1>
-<h2><a class="anchor" id="autotoc_md90"></a>
+<h2><a class="anchor" id="autotoc_md93"></a>
 Best Practice: Caching Trampolines</h2>
 <p><b>Rule</b>: <b>NEVER</b> generate a new trampoline for the same function signature inside a hot loop. The performance of <code>infix</code> comes from amortizing the one-time generation cost over many fast calls.</p>
 <div class="fragment"><div class="line"><span class="comment">// FAST: Create once, call many times</span></div>
@@ -1219,7 +1347,7 @@ Best Practice: Caching Trampolines</h2>
 <div class="line">    cif(&amp;result, args); <span class="comment">// VERY FAST</span></div>
 <div class="line">}</div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md91"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md94"></a>
 Recipe: Using a Custom Arena for a Group of Types</h2>
 <p><b>Goal:</b> Create a set of related <code>infix_type</code> objects for the Manual API and free them all at once.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> recipe_custom_arena() {</div>
@@ -1237,24 +1365,62 @@ Recipe: Using a Custom Arena for a Group of Types</h2>
 <div class="ttc" id="agroup__memory__management_html_gae39ca61ea3637aee7e87c1b41188c733"><div class="ttname"><a href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a></div><div class="ttdeci">c23_nodiscard infix_arena_t * infix_arena_create(size_t)</div><div class="ttdoc">Creates and initializes a new memory arena.</div><div class="ttdef"><b>Definition</b> arena.c:41</div></div>
 <div class="ttc" id="agroup__type__system_html_ga9f0d8a41015262d2dcffc97cf5f87772"><div class="ttname"><a href="group__type__system.html#ga9f0d8a41015262d2dcffc97cf5f87772">infix_type_create_array</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t)</div><div class="ttdoc">Creates a new infix_type for a fixed-size array from an arena.</div><div class="ttdef"><b>Definition</b> types.c:256</div></div>
 <div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:99</div></div>
-<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdoc">signed int, int32_t</div><div class="ttdef"><b>Definition</b> infix.h:136</div></div>
+<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdoc">signed int, int32_t</div><div class="ttdef"><b>Definition</b> infix.h:140</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md95"></a>
+&lt;strong&gt;Recipe: Using Custom Memory Allocators&lt;/strong&gt;</h2>
+<p><b>Problem</b>: Your application uses a custom memory manager for tracking, pooling, or integration with a garbage collector. You need <code>infix</code> to use your allocators instead of the standard <code>malloc</code>, <code>calloc</code>, etc.</p>
+<p><b>Solution</b>: <code>infix</code> provides override macros (<code>infix_malloc</code>, <code>infix_free</code>, etc.). Define these macros <em>before</em> you include <code><a class="el" href="infix_8h.html">infix.h</a></code> to redirect all of its internal memory operations.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 1. Define your custom memory management functions.</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">size_t</span> g_total_allocated = 0;</div>
+<div class="line"><span class="keywordtype">void</span>* tracking_malloc(<span class="keywordtype">size_t</span> size) {</div>
+<div class="line">    g_total_allocated += size;</div>
+<div class="line">    printf(<span class="stringliteral">&quot;&gt;&gt; Custom Malloc: Allocating %zu bytes (Total: %zu)\n&quot;</span>, size, g_total_allocated);</div>
+<div class="line">    <span class="keywordflow">return</span> malloc(size);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> tracking_free(<span class="keywordtype">void</span>* ptr) {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;&gt;&gt; Custom Free\n&quot;</span>);</div>
+<div class="line">    free(ptr);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 2. Define the infix override macros BEFORE including infix.h</span></div>
+<div class="line"><span class="preprocessor">#define infix_malloc(size) tracking_malloc(size)</span></div>
+<div class="line"><span class="preprocessor">#define infix_free(ptr)    tracking_free(ptr)</span></div>
+<div class="line"><span class="comment">// You can also override infix_calloc and infix_realloc if needed.</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> recipe_custom_allocators() {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;Creating trampoline with custom allocators\n&quot;</span>);</div>
+<div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
+<div class="line">    <span class="comment">// All internal allocations for the trampoline will now use tracking_malloc.</span></div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, <span class="stringliteral">&quot;()-&gt;void&quot;</span>, (<span class="keywordtype">void</span>*)recipe_custom_allocators, NULL);</div>
+<div class="line"> </div>
+<div class="line">    printf(<span class="stringliteral">&quot;Destroying trampoline\n&quot;</span>);</div>
+<div class="line">    <span class="comment">// The free operations will now use tracking_free.</span></div>
+<div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
+<div class="line">    printf(<span class="stringliteral">&quot;Done\n&quot;</span>);</div>
+<div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md93"></a>
+<h1><a class="anchor" id="autotoc_md97"></a>
 Chapter 9: Common Pitfalls &amp; Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md94"></a>
+<h2><a class="anchor" id="autotoc_md98"></a>
 Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;</h2>
 <ul>
 <li><b>Symptom</b>: Crash or garbage data.</li>
 <li><b>Explanation</b>: The <code>args</code> array for a forward call must be an array of <b>pointers to</b> your argument values, not the values themselves.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md95"></a>
+<h2><a class="anchor" id="autotoc_md99"></a>
 Mistake: &lt;tt&gt;infix&lt;/tt&gt; Signature Mismatch</h2>
 <ul>
 <li><b>Symptom</b>: Silent data corruption, garbage values, or a crash.</li>
 <li><b>Explanation</b>: The signature string must <em>exactly</em> match the C type's size and alignment. A <code>long</code> is 32 bits on 64-bit Windows but 64 bits on 64-bit Linux.</li>
 <li><b>Solution</b>: Use fixed-width types (<code>int32</code>, <code>uint64</code>) whenever possible.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md96"></a>
+<h2><a class="anchor" id="autotoc_md100"></a>
 Pitfall: Function Pointer Syntax</h2>
 <ul>
 <li><b>Symptom</b>: Parser error.</li>
@@ -1262,13 +1428,13 @@ Pitfall: Function Pointer Syntax</h2>
 <li><b>Solution</b>: <code>int (*callback)(void)</code> becomes <code>*(() -&gt; int)</code>.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md98"></a>
+<h1><a class="anchor" id="autotoc_md102"></a>
 Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;</h1>
 <p>This chapter provides a practical, code-level comparison of <code>infix</code> with two other popular FFI libraries: <code>libffi</code> (the industry standard) and <code>dyncall</code>. All three are powerful tools, but they are built with different philosophies and trade-offs. We will compare them across three common FFI tasks.</p>
-<h2><a class="anchor" id="autotoc_md99"></a>
+<h2><a class="anchor" id="autotoc_md103"></a>
 Scenario 1: Calling a Simple Function</h2>
 <p><b>Goal</b>: Call a simple function <code>double add_doubles(double a, double b);</code>. This demonstrates the core calling mechanism and API ergonomics.</p>
-<h3><a class="anchor" id="autotoc_md100"></a>
+<h3><a class="anchor" id="autotoc_md104"></a>
 The &lt;tt&gt;dyncall&lt;/tt&gt; Approach</h3>
 <p><code>dyncall</code> uses a "call virtual machine" (VM) where arguments are pushed one-by-one. The setup cost is incurred on <b>every call</b>, making it very flexible but less performant for repeated calls to the same function.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;dyncall.h&gt;</span></div>
@@ -1283,7 +1449,7 @@ The &lt;tt&gt;dyncall&lt;/tt&gt; Approach</h3>
 <div class="line">result = dcCallDouble(vm, (DCpointer)&amp;add_doubles); <span class="comment">// result is 4.0</span></div>
 <div class="line"> </div>
 <div class="line">dcFree(vm);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md101"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md105"></a>
 The &lt;tt&gt;libffi&lt;/tt&gt; Approach</h3>
 <p><code>libffi</code> requires a one-time "Call Interface" (<code>ffi_cif</code>) preparation. Subsequent calls are fast, but the initial type definition is manual and programmatic.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;ffi.h&gt;</span></div>
@@ -1301,7 +1467,7 @@ The &lt;tt&gt;libffi&lt;/tt&gt; Approach</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Subsequent calls are fast</span></div>
 <div class="line">ffi_call(&amp;cif, FFI_FN(add_doubles), &amp;result, args_values);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md102"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md106"></a>
 The &lt;tt&gt;infix&lt;/tt&gt; Approach</h3>
 <p><code>infix</code> combines the performance model of <code>libffi</code> (one-time setup) with a much higher-level, human-readable API. The key difference is the use of a simple signature string.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
@@ -1317,10 +1483,10 @@ The &lt;tt&gt;infix&lt;/tt&gt; Approach</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Subsequent calls are very fast</span></div>
 <div class="line">cif(&amp;result, args);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md103"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md107"></a>
 Scenario 2: Calling a Function with a Struct</h2>
 <p><b>Goal</b>: Call <code>Point move_point(Point p);</code> where <code>Point</code> is <code>{double, double}</code>. This highlights the critical differences in type systems.</p>
-<h3><a class="anchor" id="autotoc_md104"></a>
+<h3><a class="anchor" id="autotoc_md108"></a>
 The &lt;tt&gt;dyncall&lt;/tt&gt; Approach</h3>
 <p><code>dyncall</code> requires manual construction of an aggregate object (<code>DCaggr</code>) to describe the struct layout. This must be done at runtime before the call.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;dyncall.h&gt;</span></div>
@@ -1344,7 +1510,7 @@ The &lt;tt&gt;dyncall&lt;/tt&gt; Approach</h3>
 <div class="line"> </div>
 <div class="line">dcFreeAggr(ag);</div>
 <div class="line">dcFree(vm);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md105"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md109"></a>
 The &lt;tt&gt;libffi&lt;/tt&gt; Approach</h3>
 <p><code>libffi</code> also requires programmatic struct definition, which is done by creating an <code>ffi_type</code> struct and an array for its elements.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;ffi.h&gt;</span></div>
@@ -1368,7 +1534,7 @@ The &lt;tt&gt;libffi&lt;/tt&gt; Approach</h3>
 <div class="line">Point p_out;</div>
 <div class="line"><span class="keywordtype">void</span>* args_values[] = { &amp;p_in };</div>
 <div class="line">ffi_call(&amp;cif, FFI_FN(move_point), &amp;p_out, args_values);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md106"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md110"></a>
 The &lt;tt&gt;infix&lt;/tt&gt; Approach</h3>
 <p><code>infix</code> handles the entire struct definition within the signature string, making the C code for the FFI call trivial and declarative.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
@@ -1387,10 +1553,10 @@ The &lt;tt&gt;infix&lt;/tt&gt; Approach</h3>
 <div class="line"><a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(t)(&amp;p_out, args);</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(t);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md107"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md111"></a>
 Scenario 3: Creating a Callback</h2>
 <p><b>Goal</b>: Create a native C function pointer from a custom handler to be used by <code>qsort</code>.</p>
-<h3><a class="anchor" id="autotoc_md108"></a>
+<h3><a class="anchor" id="autotoc_md112"></a>
 The &lt;tt&gt;dyncall&lt;/tt&gt; Approach</h3>
 <p><code>dyncallback</code> requires creating a <code>DCCallback</code> object and initializing it with a C function that uses a special <code>dcbArg*</code> API to retrieve arguments one by one.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;dyncall_callback.h&gt;</span></div>
@@ -1406,7 +1572,7 @@ The &lt;tt&gt;dyncall&lt;/tt&gt; Approach</h3>
 <div class="line">DCCallback* cb = dcbNewCallback(<span class="stringliteral">&quot;pp)i&quot;</span>, &amp;qsort_handler_dc, NULL);</div>
 <div class="line">qsort(numbers, 5, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>), (<span class="keywordtype">void</span>*)cb);</div>
 <div class="line">dcbFree(cb);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md109"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md113"></a>
 The &lt;tt&gt;libffi&lt;/tt&gt; Approach</h3>
 <p><code>libffi</code> can create a "closure" which is a block of executable memory that acts as the C function pointer. The handler receives arguments via <code>ffi_call</code>-style arrays.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;ffi.h&gt;</span></div>
@@ -1429,7 +1595,7 @@ The &lt;tt&gt;libffi&lt;/tt&gt; Approach</h3>
 <div class="line">ffi_prep_closure_loc(closure, &amp;cif, qsort_handler_ffi, NULL, func_ptr);</div>
 <div class="line">qsort(numbers, 5, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>), (<span class="keywordtype">void</span>*)func_ptr);</div>
 <div class="line">ffi_closure_free(closure);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md110"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md114"></a>
 The &lt;tt&gt;infix&lt;/tt&gt; Approach</h3>
 <p><code>infix</code> generates a reverse trampoline. The handler is a normal C function that receives its arguments directly, prefixed by the <code>infix_context_t*</code>.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
@@ -1450,7 +1616,7 @@ The &lt;tt&gt;infix&lt;/tt&gt; Approach</h3>
 <div class="line">qsort(numbers, 5, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>), my_comparator);</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(context);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md111"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md115"></a>
 Analysis and Takeaways</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -1467,9 +1633,9 @@ Analysis and Takeaways</h2>
 <td class="markdownTableBodyLeft"><b>Callback Handler</b>   </td><td class="markdownTableBodyLeft">Special API (<code>dcbArg*</code>)   </td><td class="markdownTableBodyLeft">Generic <code>void**</code> arguments   </td><td class="markdownTableBodyLeft"><b>Native C arguments</b>, easy to read and write.   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md113"></a>
+<h1><a class="anchor" id="autotoc_md117"></a>
 Chapter 11: Building Language Bindings</h1>
-<h2><a class="anchor" id="autotoc_md114"></a>
+<h2><a class="anchor" id="autotoc_md118"></a>
 The Four Pillars of a Language Binding</h2>
 <p>A robust language binding built on <code>infix</code> must solve four main challenges:</p>
 <ol type="1">
@@ -1478,7 +1644,7 @@ The Four Pillars of a Language Binding</h2>
 <li><b>Memory &amp; Lifetime Management:</b> The binding must act as a bridge between the host language's Garbage Collector (GC) and C's manual memory management, holding references to objects to prevent premature collection.</li>
 <li><b>The Callback Bridge:</b> A C handler must be implemented to transfer control from a native C call back into the host language's runtime, handling argument unmarshalling and potential GIL (Global Interpreter Lock) acquisition.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md115"></a>
+<h2><a class="anchor" id="autotoc_md119"></a>
 Recipe: Porting a Python Binding from &lt;tt&gt;dyncall&lt;/tt&gt; to &lt;tt&gt;infix&lt;/tt&gt;</h2>
 <p>This recipe demonstrates how one might port a Python binding from a library like <code>dyncall</code> to <code>infix</code>.</p>
 <p><b>The <code>dyncall</code> approach</b> involves a "call virtual machine" (<code>DCCallVM*</code>) that arguments are pushed to one-by-one at call time. This is flexible but incurs overhead on every call.</p>
