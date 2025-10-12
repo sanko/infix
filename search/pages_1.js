@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['a_20jit_20powered_20ffi_20library_20for_20c_0',['&lt;tt&gt;infix&lt;/tt&gt;: A JIT-Powered FFI Library for C',['../index.html',1,'']]]
+  ['c_0',['infix: A JIT-Powered FFI Library for C',['../index.html',1,'']]],
+  ['cookbook_1',['The &lt;tt&gt;infix&lt;/tt&gt; FFI Cookbook',['../md_docs_2cookbook.html',1,'']]],
+  ['customization_2',['Customization',['../md_docs_2doxygen-awesome-css_2docs_2customization.html',1,'']]]
 ];

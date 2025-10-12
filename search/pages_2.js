@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['c_0',['&lt;tt&gt;infix&lt;/tt&gt;: A JIT-Powered FFI Library for C',['../index.html',1,'']]]
+  ['extensions_0',['Extensions',['../md_docs_2doxygen-awesome-css_2docs_2extensions.html',1,'']]]
 ];

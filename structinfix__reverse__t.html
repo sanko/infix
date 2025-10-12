@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: infix_reverse_t Struct Reference</title>
+<title>infix: infix_reverse_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -110,10 +111,10 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:ae013bffa36e879ea914d8bb24778354e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The arena that owns all type metadata for this callback.  <br /></td></tr>
 <tr class="separator:ae013bffa36e879ea914d8bb24778354e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b6b50c9fdecedb6a09e9d76e4ed8fdb" id="r_a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a1b6b50c9fdecedb6a09e9d76e4ed8fdb">exec</a></td></tr>
-<tr class="memdesc:a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the executable JIT-compiled stub.  <br /></td></tr>
+<tr class="memdesc:a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the executable JIT-compiled entry stub.  <br /></td></tr>
 <tr class="separator:a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa44f161934419cbdbc7300d47ec1544d" id="r_aa44f161934419cbdbc7300d47ec1544d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#aa44f161934419cbdbc7300d47ec1544d">protected_ctx</a></td></tr>
-<tr class="memdesc:aa44f161934419cbdbc7300d47ec1544d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the memory where this context struct itself resides.  <br /></td></tr>
+<tr class="memdesc:aa44f161934419cbdbc7300d47ec1544d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the memory where this very context struct resides.  <br /></td></tr>
 <tr class="separator:aa44f161934419cbdbc7300d47ec1544d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f4e9e15154cd079228a60ce80c27219" id="r_a0f4e9e15154cd079228a60ce80c27219"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a0f4e9e15154cd079228a60ce80c27219">return_type</a></td></tr>
 <tr class="memdesc:a0f4e9e15154cd079228a60ce80c27219"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <code>infix_type</code> of the callback's return value.  <br /></td></tr>
@@ -140,6 +141,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a310b74442c77d4871307491e47741bb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the C function that bridges from assembly.  <br /></td></tr>
 <tr class="separator:a310b74442c77d4871307491e47741bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf1d66dab26788e7353bb443cd741478" id="r_abf1d66dab26788e7353bb443cd741478"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#abf1d66dab26788e7353bb443cd741478">cached_forward_trampoline</a></td></tr>
+<tr class="memdesc:abf1d66dab26788e7353bb443cd741478"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pre-compiled forward trampoline for calling the user's C callback.  <br /></td></tr>
 <tr class="separator:abf1d66dab26788e7353bb443cd741478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -189,7 +191,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A pre-compiled trampoline for calling the user's C callback with the correct ABI. </p>
+
+<p>A pre-compiled forward trampoline for calling the user's C callback. </p>
+<p>This is the core of the reverse call mechanism's type safety and ergonomics. The C dispatcher uses this trampoline to correctly marshal the <code>void**</code> arguments and the context pointer into the native ABI required to call the user's clean, type-safe C handler function. </p>
 
 </div>
 </div>
@@ -205,7 +209,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handle to the executable JIT-compiled stub. </p>
+<p>Handle to the executable JIT-compiled entry stub. </p>
 
 </div>
 </div>
@@ -285,7 +289,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Handle to the memory where this context struct itself resides. </p>
+<p>Handle to the memory where this very context struct resides. </p>
 
 </div>
 </div>

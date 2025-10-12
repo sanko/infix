@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: infix_forward_abi_spec Struct Reference</title>
+<title>infix: infix_forward_abi_spec Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -102,14 +103,19 @@ $(document).ready(function(){initNavTree('structinfix__forward__abi__spec.html',
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a22eebb39a18e18dc1c7bcf1df7974064" id="r_a22eebb39a18e18dc1c7bcf1df7974064"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a22eebb39a18e18dc1c7bcf1df7974064">prepare_forward_call_frame</a> )(<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
+<tr class="memdesc:a22eebb39a18e18dc1c7bcf1df7974064"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyzes a signature and produces a complete call frame layout.  <br /></td></tr>
 <tr class="separator:a22eebb39a18e18dc1c7bcf1df7974064"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0e395d536ca342d4a8db8d1b897c6d2" id="r_ab0e395d536ca342d4a8db8d1b897c6d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#ab0e395d536ca342d4a8db8d1b897c6d2">generate_forward_prologue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td></tr>
+<tr class="memdesc:ab0e395d536ca342d4a8db8d1b897c6d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the function prologue, including stack setup and saving registers.  <br /></td></tr>
 <tr class="separator:ab0e395d536ca342d4a8db8d1b897c6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd0d173dc42a6b1cabc0243265809423" id="r_afd0d173dc42a6b1cabc0243265809423"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#afd0d173dc42a6b1cabc0243265809423">generate_forward_argument_moves</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t)</td></tr>
+<tr class="memdesc:afd0d173dc42a6b1cabc0243265809423"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the instructions to move arguments from the generic <code>void**</code> array to their native locations.  <br /></td></tr>
 <tr class="separator:afd0d173dc42a6b1cabc0243265809423"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30c561bcf73ce7250c8d8e5b65fd268f" id="r_a30c561bcf73ce7250c8d8e5b65fd268f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a30c561bcf73ce7250c8d8e5b65fd268f">generate_forward_call_instruction</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td></tr>
+<tr class="memdesc:a30c561bcf73ce7250c8d8e5b65fd268f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the <code>call</code> instruction (e.g., <code>call rax</code>).  <br /></td></tr>
 <tr class="separator:a30c561bcf73ce7250c8d8e5b65fd268f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52d93723e5a00fe794855b212b0a3958" id="r_a52d93723e5a00fe794855b212b0a3958"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a52d93723e5a00fe794855b212b0a3958">generate_forward_epilogue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:a52d93723e5a00fe794855b212b0a3958"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the function epilogue, handling the return value and restoring the stack.  <br /></td></tr>
 <tr class="separator:a52d93723e5a00fe794855b212b0a3958"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -125,6 +131,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Generates the instructions to move arguments from the generic <code>void**</code> array to their native locations. </p>
+
 </div>
 </div>
 <a id="a30c561bcf73ce7250c8d8e5b65fd268f" name="a30c561bcf73ce7250c8d8e5b65fd268f"></a>
@@ -138,6 +146,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Generates the <code>call</code> instruction (e.g., <code>call rax</code>). </p>
 
 </div>
 </div>
@@ -153,6 +163,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Generates the function epilogue, handling the return value and restoring the stack. </p>
+
 </div>
 </div>
 <a id="ab0e395d536ca342d4a8db8d1b897c6d2" name="ab0e395d536ca342d4a8db8d1b897c6d2"></a>
@@ -167,6 +179,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Generates the function prologue, including stack setup and saving registers. </p>
+
 </div>
 </div>
 <a id="a22eebb39a18e18dc1c7bcf1df7974064" name="a22eebb39a18e18dc1c7bcf1df7974064"></a>
@@ -180,6 +194,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Analyzes a signature and produces a complete call frame layout. </p>
 
 </div>
 </div>

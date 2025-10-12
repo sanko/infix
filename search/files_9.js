@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['utility_2ec_0',['utility.c',['../utility_8c.html',1,'']]],
-  ['utility_2eh_1',['utility.h',['../utility_8h.html',1,'']]]
+  ['trampoline_2ec_0',['trampoline.c',['../trampoline_8c.html',1,'']]],
+  ['tricks_2emd_1',['tricks.md',['../tricks_8md.html',1,'']]],
+  ['type_5fregistry_2ec_2',['type_registry.c',['../type__registry_8c.html',1,'']]],
+  ['types_2ec_3',['types.c',['../types_8c.html',1,'']]]
 ];

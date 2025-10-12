@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: src/common/infix_internals.h File Reference</title>
+<title>infix: src/common/infix_internals.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -153,6 +154,7 @@ Macros</h2></td></tr>
 <tr class="memitem:ad07873963febd6f5771434e5b88f10a3" id="r_ad07873963febd6f5771434e5b88f10a3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ad07873963febd6f5771434e5b88f10a3">INFIX_MAX_ARG_SIZE</a>&#160;&#160;&#160;(1024 * 64)</td></tr>
 <tr class="separator:ad07873963febd6f5771434e5b88f10a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a417e0209604532a4b0761190672b2a4b" id="r_a417e0209604532a4b0761190672b2a4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a417e0209604532a4b0761190672b2a4b">EMIT_BYTES</a>(buf, ...)</td></tr>
+<tr class="memdesc:a417e0209604532a4b0761190672b2a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro for emitting a sequence of literal bytes into a code buffer.  <br /></td></tr>
 <tr class="separator:a417e0209604532a4b0761190672b2a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -180,46 +182,67 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a275b35b736df4d6c74b4907a74e4370b" id="r_a275b35b736df4d6c74b4907a74e4370b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a275b35b736df4d6c74b4907a74e4370b">_infix_set_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a>, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a>, size_t)</td></tr>
+<tr class="memdesc:a275b35b736df4d6c74b4907a74e4370b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error details for a library-internal error.  <br /></td></tr>
 <tr class="separator:a275b35b736df4d6c74b4907a74e4370b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa45e765ff1f0ba04d054507a79641e5c" id="r_aa45e765ff1f0ba04d054507a79641e5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aa45e765ff1f0ba04d054507a79641e5c">_infix_set_system_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a>, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a>, long, const char *)</td></tr>
+<tr class="memdesc:aa45e765ff1f0ba04d054507a79641e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error details for an error originating from the OS.  <br /></td></tr>
 <tr class="separator:aa45e765ff1f0ba04d054507a79641e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b1239dadced21f143442b72b77d52bf" id="r_a9b1239dadced21f143442b72b77d52bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a9b1239dadced21f143442b72b77d52bf">_infix_clear_error</a> (void)</td></tr>
+<tr class="memdesc:a9b1239dadced21f143442b72b77d52bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the thread-local error state. Called at the start of every public API function.  <br /></td></tr>
 <tr class="separator:a9b1239dadced21f143442b72b77d52bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54adf97fe7f3b32a1224c63d810c37df" id="r_a54adf97fe7f3b32a1224c63d810c37df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a54adf97fe7f3b32a1224c63d810c37df">_copy_type_graph_to_arena</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:a54adf97fe7f3b32a1224c63d810c37df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep copy of a type graph from one arena to another.  <br /></td></tr>
 <tr class="separator:a54adf97fe7f3b32a1224c63d810c37df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2158169d33167a27580d4f6bf45617c1" id="r_a2158169d33167a27580d4f6bf45617c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a2158169d33167a27580d4f6bf45617c1">_infix_resolve_type_graph</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:a2158169d33167a27580d4f6bf45617c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Walks a type graph, replacing all <code>@Name</code> placeholders with their concrete definitions from a registry.  <br /></td></tr>
 <tr class="separator:a2158169d33167a27580d4f6bf45617c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33f37b8f801430839a63c72c2b6169f0" id="r_a33f37b8f801430839a63c72c2b6169f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a33f37b8f801430839a63c72c2b6169f0">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, const char *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:a33f37b8f801430839a63c72c2b6169f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core, non-resolving entry point for the signature parser.  <br /></td></tr>
 <tr class="separator:a33f37b8f801430839a63c72c2b6169f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1494081d07d1f770d1d6d0b6811df28a" id="r_a1494081d07d1f770d1d6d0b6811df28a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1494081d07d1f770d1d6d0b6811df28a">get_current_forward_abi_spec</a> (void)</td></tr>
+<tr class="memdesc:a1494081d07d1f770d1d6d0b6811df28a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for the current target platform (forward calls).  <br /></td></tr>
 <tr class="separator:a1494081d07d1f770d1d6d0b6811df28a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8350c168a4d73e304563eec574db526d" id="r_a8350c168a4d73e304563eec574db526d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a8350c168a4d73e304563eec574db526d">get_current_reverse_abi_spec</a> (void)</td></tr>
+<tr class="memdesc:a8350c168a4d73e304563eec574db526d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for the current target platform (reverse calls).  <br /></td></tr>
 <tr class="separator:a8350c168a4d73e304563eec574db526d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96bd9779b08079b90bb00e3dbe40f7f8" id="r_a96bd9779b08079b90bb00e3dbe40f7f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a96bd9779b08079b90bb00e3dbe40f7f8">code_buffer_init</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *)</td></tr>
+<tr class="memdesc:a96bd9779b08079b90bb00e3dbe40f7f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a code buffer for JIT code generation.  <br /></td></tr>
 <tr class="separator:a96bd9779b08079b90bb00e3dbe40f7f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1af0e1f3c0da841929de03957c11ef6a" id="r_a1af0e1f3c0da841929de03957c11ef6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1af0e1f3c0da841929de03957c11ef6a">code_buffer_append</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, const void *, size_t)</td></tr>
+<tr class="memdesc:a1af0e1f3c0da841929de03957c11ef6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends raw bytes to a code buffer, reallocating if necessary.  <br /></td></tr>
 <tr class="separator:a1af0e1f3c0da841929de03957c11ef6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae937d6ecbe87a036607ed9588ae7c256" id="r_ae937d6ecbe87a036607ed9588ae7c256"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ae937d6ecbe87a036607ed9588ae7c256">emit_byte</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, uint8_t)</td></tr>
+<tr class="memdesc:ae937d6ecbe87a036607ed9588ae7c256"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a single byte to a code buffer.  <br /></td></tr>
 <tr class="separator:ae937d6ecbe87a036607ed9588ae7c256"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6de28d22e09e81dd32cb8f821132455b" id="r_a6de28d22e09e81dd32cb8f821132455b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a6de28d22e09e81dd32cb8f821132455b">emit_int32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, int32_t)</td></tr>
+<tr class="memdesc:a6de28d22e09e81dd32cb8f821132455b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a 32-bit integer to a code buffer.  <br /></td></tr>
 <tr class="separator:a6de28d22e09e81dd32cb8f821132455b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a67e8a855e46ffd77216281c31d1c2d" id="r_a4a67e8a855e46ffd77216281c31d1c2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a4a67e8a855e46ffd77216281c31d1c2d">emit_int64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, int64_t)</td></tr>
+<tr class="memdesc:a4a67e8a855e46ffd77216281c31d1c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a 64-bit integer to a code buffer.  <br /></td></tr>
 <tr class="separator:a4a67e8a855e46ffd77216281c31d1c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab96bb6ef6306aa201b21821386e1c4e2" id="r_ab96bb6ef6306aa201b21821386e1c4e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ab96bb6ef6306aa201b21821386e1c4e2">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, void *)</td></tr>
+<tr class="memdesc:ab96bb6ef6306aa201b21821386e1c4e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The internal core logic for creating a forward trampoline.  <br /></td></tr>
 <tr class="separator:ab96bb6ef6306aa201b21821386e1c4e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a359551fe6b76b82083bb717dd39a576f" id="r_a359551fe6b76b82083bb717dd39a576f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a359551fe6b76b82083bb717dd39a576f">infix_executable_alloc</a> (size_t)</td></tr>
+<tr class="memdesc:a359551fe6b76b82083bb717dd39a576f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a page-aligned block of W^X-compliant executable memory.  <br /></td></tr>
 <tr class="separator:a359551fe6b76b82083bb717dd39a576f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1203c88dcf633b5243fa2a4ef55a9f33" id="r_a1203c88dcf633b5243fa2a4ef55a9f33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1203c88dcf633b5243fa2a4ef55a9f33">infix_executable_free</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a>)</td></tr>
+<tr class="memdesc:a1203c88dcf633b5243fa2a4ef55a9f33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees executable memory, creating a guard page to prevent use-after-free.  <br /></td></tr>
 <tr class="separator:a1203c88dcf633b5243fa2a4ef55a9f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26ad93c4766cd5c13220a5c6d08efa23" id="r_a26ad93c4766cd5c13220a5c6d08efa23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a26ad93c4766cd5c13220a5c6d08efa23">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a>)</td></tr>
+<tr class="memdesc:a26ad93c4766cd5c13220a5c6d08efa23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a JIT memory region readable and executable (and non-writable).  <br /></td></tr>
 <tr class="separator:a26ad93c4766cd5c13220a5c6d08efa23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a77408d46a05b3d5724857bc76a200" id="r_a92a77408d46a05b3d5724857bc76a200"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a92a77408d46a05b3d5724857bc76a200">infix_protected_alloc</a> (size_t)</td></tr>
+<tr class="memdesc:a92a77408d46a05b3d5724857bc76a200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a page-aligned block of data memory.  <br /></td></tr>
 <tr class="separator:a92a77408d46a05b3d5724857bc76a200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c820a373d9807b2c65cff34c5c4d79" id="r_ab4c820a373d9807b2c65cff34c5c4d79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ab4c820a373d9807b2c65cff34c5c4d79">infix_protected_free</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a>)</td></tr>
+<tr class="memdesc:ab4c820a373d9807b2c65cff34c5c4d79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of protected data memory.  <br /></td></tr>
 <tr class="separator:ab4c820a373d9807b2c65cff34c5c4d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc9d0009209b720a02d9da16b074e99a" id="r_afc9d0009209b720a02d9da16b074e99a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#afc9d0009209b720a02d9da16b074e99a">infix_protected_make_readonly</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a>)</td></tr>
+<tr class="memdesc:afc9d0009209b720a02d9da16b074e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hardens a block of protected data memory to be read-only.  <br /></td></tr>
 <tr class="separator:afc9d0009209b720a02d9da16b074e99a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5719eae73d6777be6222e4369581018" id="r_ad5719eae73d6777be6222e4369581018"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ad5719eae73d6777be6222e4369581018">infix_internal_dispatch_callback_fn_impl</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *, void *, void **)</td></tr>
+<tr class="memdesc:ad5719eae73d6777be6222e4369581018"><td class="mdescLeft">&#160;</td><td class="mdescRight">The high-level C dispatcher function called by reverse trampoline stubs.  <br /></td></tr>
 <tr class="separator:ad5719eae73d6777be6222e4369581018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aac04bf0a20b7fc5cf2a2c5544ce716" id="r_a5aac04bf0a20b7fc5cf2a2c5544ce716"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a5aac04bf0a20b7fc5cf2a2c5544ce716">_infix_align_up</a> (size_t value, size_t alignment)</td></tr>
 <tr class="separator:a5aac04bf0a20b7fc5cf2a2c5544ce716"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,6 +294,8 @@ Functions</h2></td></tr>
 <div class="line">        code_buffer_append((buf), bytes, <span class="keyword">sizeof</span>(bytes)); \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
+<p>A macro for emitting a sequence of literal bytes into a code buffer. </p>
+
 </div>
 </div>
 <a id="ad07873963febd6f5771434e5b88f10a3" name="ad07873963febd6f5771434e5b88f10a3"></a>
@@ -347,13 +372,13 @@ Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a60e841f3dea3544b709c24b07c2a1821" name="a563afdbfea1331be68965428418c4899a60e841f3dea3544b709c24b07c2a1821"></a>ARG_LOCATION_XMM&#160;</td><td class="fielddoc"><p>Argument is passed in an XMM (SSE) register. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a50fa7f6383f87cf3c249ba7d3dfd4f2f" name="a563afdbfea1331be68965428418c4899a50fa7f6383f87cf3c249ba7d3dfd4f2f"></a>ARG_LOCATION_GPR_PAIR&#160;</td><td class="fielddoc"><p>A struct passed in two GPRs (SysV only). </p>
+<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a50fa7f6383f87cf3c249ba7d3dfd4f2f" name="a563afdbfea1331be68965428418c4899a50fa7f6383f87cf3c249ba7d3dfd4f2f"></a>ARG_LOCATION_GPR_PAIR&#160;</td><td class="fielddoc"><p>A struct passed in two GPRs (System V only). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277" name="a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277"></a>ARG_LOCATION_SSE_SSE_PAIR&#160;</td><td class="fielddoc"><p>A struct passed in two XMM registers (SysV only). </p>
+<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277" name="a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277"></a>ARG_LOCATION_SSE_SSE_PAIR&#160;</td><td class="fielddoc"><p>A struct passed in two XMM registers (System V only). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096" name="a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096"></a>ARG_LOCATION_INTEGER_SSE_PAIR&#160;</td><td class="fielddoc"><p>A struct passed in one GPR and one XMM (SysV only). </p>
+<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096" name="a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096"></a>ARG_LOCATION_INTEGER_SSE_PAIR&#160;</td><td class="fielddoc"><p>A struct split between a GPR and an XMM register (System V only). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00" name="a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00"></a>ARG_LOCATION_SSE_INTEGER_PAIR&#160;</td><td class="fielddoc"><p>A struct passed in one XMM and one GPR (SysV only). </p>
+<tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00" name="a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00"></a>ARG_LOCATION_SSE_INTEGER_PAIR&#160;</td><td class="fielddoc"><p>A struct split between an XMM and a GPR (System V only). </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a57dd7a02a33aea12b547bc96bd73909b" name="a563afdbfea1331be68965428418c4899a57dd7a02a33aea12b547bc96bd73909b"></a>ARG_LOCATION_STACK&#160;</td><td class="fielddoc"><p>Argument is passed on the stack. </p>
 </td></tr>
@@ -387,6 +412,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Performs a deep copy of a type graph from one arena to another. </p>
 
 </div>
 </div>
@@ -441,6 +468,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Resets the thread-local error state. Called at the start of every public API function. </p>
 
 </div>
 </div>
@@ -500,6 +529,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The internal core logic for creating a forward trampoline. </p>
+
 </div>
 </div>
 <a id="a33f37b8f801430839a63c72c2b6169f0" name="a33f37b8f801430839a63c72c2b6169f0"></a>
@@ -540,6 +571,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The core, non-resolving entry point for the signature parser. </p>
+
 </div>
 </div>
 <a id="a2158169d33167a27580d4f6bf45617c1" name="a2158169d33167a27580d4f6bf45617c1"></a>
@@ -567,6 +600,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Walks a type graph, replacing all <code>@Name</code> placeholders with their concrete definitions from a registry. </p>
 
 </div>
 </div>
@@ -601,6 +636,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the thread-local error details for a library-internal error. </p>
 
 </div>
 </div>
@@ -642,6 +679,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the thread-local error details for an error originating from the OS. </p>
+
 </div>
 </div>
 <a id="a1af0e1f3c0da841929de03957c11ef6a" name="a1af0e1f3c0da841929de03957c11ef6a"></a>
@@ -676,6 +715,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends raw bytes to a code buffer, reallocating if necessary. </p>
+
 </div>
 </div>
 <a id="a96bd9779b08079b90bb00e3dbe40f7f8" name="a96bd9779b08079b90bb00e3dbe40f7f8"></a>
@@ -703,6 +744,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initializes a code buffer for JIT code generation. </p>
 
 </div>
 </div>
@@ -732,6 +775,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends a single byte to a code buffer. </p>
+
 </div>
 </div>
 <a id="a6de28d22e09e81dd32cb8f821132455b" name="a6de28d22e09e81dd32cb8f821132455b"></a>
@@ -759,6 +804,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Appends a 32-bit integer to a code buffer. </p>
 
 </div>
 </div>
@@ -788,6 +835,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends a 64-bit integer to a code buffer. </p>
+
 </div>
 </div>
 <a id="a1494081d07d1f770d1d6d0b6811df28a" name="a1494081d07d1f770d1d6d0b6811df28a"></a>
@@ -805,6 +854,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Gets the ABI v-table for the current target platform (forward calls). </p>
 
 </div>
 </div>
@@ -824,6 +875,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Gets the ABI v-table for the current target platform (reverse calls). </p>
+
 </div>
 </div>
 <a id="a359551fe6b76b82083bb717dd39a576f" name="a359551fe6b76b82083bb717dd39a576f"></a>
@@ -841,6 +894,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Allocates a page-aligned block of W^X-compliant executable memory. </p>
 
 </div>
 </div>
@@ -860,6 +915,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Frees executable memory, creating a guard page to prevent use-after-free. </p>
+
 </div>
 </div>
 <a id="a26ad93c4766cd5c13220a5c6d08efa23" name="a26ad93c4766cd5c13220a5c6d08efa23"></a>
@@ -877,6 +934,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Makes a JIT memory region readable and executable (and non-writable). </p>
 
 </div>
 </div>
@@ -912,6 +971,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The high-level C dispatcher function called by reverse trampoline stubs. </p>
+
 </div>
 </div>
 <a id="a92a77408d46a05b3d5724857bc76a200" name="a92a77408d46a05b3d5724857bc76a200"></a>
@@ -929,6 +990,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Allocates a page-aligned block of data memory. </p>
 
 </div>
 </div>
@@ -948,6 +1011,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Frees a block of protected data memory. </p>
+
 </div>
 </div>
 <a id="afc9d0009209b720a02d9da16b074e99a" name="afc9d0009209b720a02d9da16b074e99a"></a>
@@ -965,6 +1030,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Hardens a block of protected data memory to be read-only. </p>
 
 </div>
 </div>

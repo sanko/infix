@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: src/core/executor.c File Reference</title>
+<title>infix: src/core/executor.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -128,18 +129,25 @@ Functions</h2></td></tr>
 <tr class="memitem:aa8f362c13a4f32d15b32f4980e685932" id="r_aa8f362c13a4f32d15b32f4980e685932"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#aa8f362c13a4f32d15b32f4980e685932">shm_open_anonymous</a> ()</td></tr>
 <tr class="separator:aa8f362c13a4f32d15b32f4980e685932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f1c9cffdcefd87ca6cf40b0d99adc" id="r_a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a721f1c9cffdcefd87ca6cf40b0d99adc">infix_executable_alloc</a> (size_t size)</td></tr>
+<tr class="memdesc:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a page-aligned block of W^X-compliant executable memory.  <br /></td></tr>
 <tr class="separator:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dc6a62860160637126cf984b77a2d46" id="r_a2dc6a62860160637126cf984b77a2d46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a2dc6a62860160637126cf984b77a2d46">infix_executable_free</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
+<tr class="memdesc:a2dc6a62860160637126cf984b77a2d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees executable memory, creating a guard page to prevent use-after-free.  <br /></td></tr>
 <tr class="separator:a2dc6a62860160637126cf984b77a2d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28b554e0d17b214853dca915ecc1afc1" id="r_a28b554e0d17b214853dca915ecc1afc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a28b554e0d17b214853dca915ecc1afc1">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
+<tr class="memdesc:a28b554e0d17b214853dca915ecc1afc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a JIT memory region readable and executable (and non-writable).  <br /></td></tr>
 <tr class="separator:a28b554e0d17b214853dca915ecc1afc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6661b906602a04bbd15a91ecc1c6adde" id="r_a6661b906602a04bbd15a91ecc1c6adde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a6661b906602a04bbd15a91ecc1c6adde">infix_protected_alloc</a> (size_t size)</td></tr>
+<tr class="memdesc:a6661b906602a04bbd15a91ecc1c6adde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a page-aligned block of data memory.  <br /></td></tr>
 <tr class="separator:a6661b906602a04bbd15a91ecc1c6adde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cf96474020e05e7a98b191a61fd7fbf" id="r_a1cf96474020e05e7a98b191a61fd7fbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a1cf96474020e05e7a98b191a61fd7fbf">infix_protected_free</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
+<tr class="memdesc:a1cf96474020e05e7a98b191a61fd7fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of protected data memory.  <br /></td></tr>
 <tr class="separator:a1cf96474020e05e7a98b191a61fd7fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b41b11f951e09fb9ea8b609c312ac95" id="r_a9b41b11f951e09fb9ea8b609c312ac95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a9b41b11f951e09fb9ea8b609c312ac95">infix_protected_make_readonly</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
+<tr class="memdesc:a9b41b11f951e09fb9ea8b609c312ac95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hardens a block of protected data memory to be read-only.  <br /></td></tr>
 <tr class="separator:a9b41b11f951e09fb9ea8b609c312ac95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab973839755f4384eb456335fcb87cdc2" id="r_ab973839755f4384eb456335fcb87cdc2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#ab973839755f4384eb456335fcb87cdc2">infix_internal_dispatch_callback_fn_impl</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context, void *return_value_ptr, void **args_array)</td></tr>
+<tr class="memdesc:ab973839755f4384eb456335fcb87cdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The high-level C dispatcher function called by reverse trampoline stubs.  <br /></td></tr>
 <tr class="separator:ab973839755f4384eb456335fcb87cdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -166,6 +174,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Allocates a page-aligned block of W^X-compliant executable memory. </p>
+
 </div>
 </div>
 <a id="a2dc6a62860160637126cf984b77a2d46" name="a2dc6a62860160637126cf984b77a2d46"></a>
@@ -184,6 +194,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Frees executable memory, creating a guard page to prevent use-after-free. </p>
+
 </div>
 </div>
 <a id="a28b554e0d17b214853dca915ecc1afc1" name="a28b554e0d17b214853dca915ecc1afc1"></a>
@@ -201,6 +213,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Makes a JIT memory region readable and executable (and non-writable). </p>
 
 </div>
 </div>
@@ -236,6 +250,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The high-level C dispatcher function called by reverse trampoline stubs. </p>
+
 </div>
 </div>
 <a id="a6661b906602a04bbd15a91ecc1c6adde" name="a6661b906602a04bbd15a91ecc1c6adde"></a>
@@ -253,6 +269,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Allocates a page-aligned block of data memory. </p>
 
 </div>
 </div>
@@ -272,6 +290,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Frees a block of protected data memory. </p>
+
 </div>
 </div>
 <a id="a9b41b11f951e09fb9ea8b609c312ac95" name="a9b41b11f951e09fb9ea8b609c312ac95"></a>
@@ -289,6 +309,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Hardens a block of protected data memory to be read-only. </p>
 
 </div>
 </div>

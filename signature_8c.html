@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: src/core/signature.c File Reference</title>
+<title>infix: src/core/signature.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -165,6 +166,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a12bc7588aa7d87826a0cf5d10a98c46c" id="r_a12bc7588aa7d87826a0cf5d10a98c46c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a12bc7588aa7d87826a0cf5d10a98c46c">parse_aggregate_members</a> (<a class="el" href="structparser__state.html">parser_state</a> *state, char end_char, size_t *out_num_members)</td></tr>
 <tr class="separator:a12bc7588aa7d87826a0cf5d10a98c46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd83c89fb461d359fd31cd097db9e1f5" id="r_afd83c89fb461d359fd31cd097db9e1f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#afd83c89fb461d359fd31cd097db9e1f5">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:afd83c89fb461d359fd31cd097db9e1f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core, non-resolving entry point for the signature parser.  <br /></td></tr>
 <tr class="separator:afd83c89fb461d359fd31cd097db9e1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3632147d55b80e520987d37722ddcf61" id="r_ga3632147d55b80e520987d37722ddcf61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
 <tr class="memdesc:ga3632147d55b80e520987d37722ddcf61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_type_from_signature</code> API function.  <br /></td></tr>
@@ -252,6 +254,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The core, non-resolving entry point for the signature parser. </p>
 
 </div>
 </div>

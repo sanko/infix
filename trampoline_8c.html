@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix FFI Library: src/core/trampoline.c File Reference</title>
+<title>infix: src/core/trampoline.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">infix FFI Library
+   <div id="projectname">infix
    </div>
    <div id="projectbrief">A JIT-Powered FFI Library for C</div>
   </td>
@@ -121,18 +122,25 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a3b84d54f6e9f0ce8471541a5613d172a" id="r_a3b84d54f6e9f0ce8471541a5613d172a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a">get_current_forward_abi_spec</a> ()</td></tr>
+<tr class="memdesc:a3b84d54f6e9f0ce8471541a5613d172a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for the current target platform (forward calls).  <br /></td></tr>
 <tr class="separator:a3b84d54f6e9f0ce8471541a5613d172a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae93b9ffeb475945247232b8e930a976b" id="r_ae93b9ffeb475945247232b8e930a976b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b">get_current_reverse_abi_spec</a> ()</td></tr>
+<tr class="memdesc:ae93b9ffeb475945247232b8e930a976b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for the current target platform (reverse calls).  <br /></td></tr>
 <tr class="separator:ae93b9ffeb475945247232b8e930a976b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aa83ec657f76fd7a7c4959e4595a4ca" id="r_a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca">code_buffer_init</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *arena)</td></tr>
+<tr class="memdesc:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a code buffer for JIT code generation.  <br /></td></tr>
 <tr class="separator:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9d33eaa80bda7f5098a8c9a54f3a970" id="r_aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970">code_buffer_append</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, const void *data, size_t len)</td></tr>
+<tr class="memdesc:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends raw bytes to a code buffer, reallocating if necessary.  <br /></td></tr>
 <tr class="separator:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d0918e753909d08082ed9b2824dcbb8" id="r_a0d0918e753909d08082ed9b2824dcbb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8">emit_byte</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint8_t byte)</td></tr>
+<tr class="memdesc:a0d0918e753909d08082ed9b2824dcbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a single byte to a code buffer.  <br /></td></tr>
 <tr class="separator:a0d0918e753909d08082ed9b2824dcbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd9ba2199b4fe230a75cccf849da3831" id="r_abd9ba2199b4fe230a75cccf849da3831"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831">emit_int32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int32_t value)</td></tr>
+<tr class="memdesc:abd9ba2199b4fe230a75cccf849da3831"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a 32-bit integer to a code buffer.  <br /></td></tr>
 <tr class="separator:abd9ba2199b4fe230a75cccf849da3831"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bb6e3bc5fc462f6d764002029c7dfe4" id="r_a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4">emit_int64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int64_t value)</td></tr>
+<tr class="memdesc:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a 64-bit integer to a code buffer.  <br /></td></tr>
 <tr class="separator:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6806deef9c44b1fc8716f03c0d0d85f2" id="r_a6806deef9c44b1fc8716f03c0d0d85f2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a6806deef9c44b1fc8716f03c0d0d85f2">_is_type_graph_resolved</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:a6806deef9c44b1fc8716f03c0d0d85f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -143,6 +151,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the executable code pointer from a bound forward trampoline.  <br /></td></tr>
 <tr class="separator:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cc3a6bbf73695ec563aceeb6ed73fbb" id="r_a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *return_type, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **arg_types, size_t num_args, size_t num_fixed_args, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *source_arena, void *target_fn)</td></tr>
+<tr class="memdesc:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The internal core logic for creating a forward trampoline.  <br /></td></tr>
 <tr class="separator:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga017f14762b217bc6d0101e994481bfd0" id="r_ga017f14762b217bc6d0101e994481bfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *return_type, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **arg_types, size_t num_args, size_t num_fixed_args, void *target_function)</td></tr>
 <tr class="memdesc:ga017f14762b217bc6d0101e994481bfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a bound forward-call trampoline for a given function signature.  <br /></td></tr>
@@ -232,6 +241,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The internal core logic for creating a forward trampoline. </p>
+
 </div>
 </div>
 <a id="a6806deef9c44b1fc8716f03c0d0d85f2" name="a6806deef9c44b1fc8716f03c0d0d85f2"></a>
@@ -292,6 +303,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends raw bytes to a code buffer, reallocating if necessary. </p>
+
 </div>
 </div>
 <a id="a4aa83ec657f76fd7a7c4959e4595a4ca" name="a4aa83ec657f76fd7a7c4959e4595a4ca"></a>
@@ -319,6 +332,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initializes a code buffer for JIT code generation. </p>
 
 </div>
 </div>
@@ -348,6 +363,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends a single byte to a code buffer. </p>
+
 </div>
 </div>
 <a id="abd9ba2199b4fe230a75cccf849da3831" name="abd9ba2199b4fe230a75cccf849da3831"></a>
@@ -375,6 +392,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Appends a 32-bit integer to a code buffer. </p>
 
 </div>
 </div>
@@ -404,6 +423,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Appends a 64-bit integer to a code buffer. </p>
+
 </div>
 </div>
 <a id="a3b84d54f6e9f0ce8471541a5613d172a" name="a3b84d54f6e9f0ce8471541a5613d172a"></a>
@@ -422,6 +443,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Gets the ABI v-table for the current target platform (forward calls). </p>
+
 </div>
 </div>
 <a id="ae93b9ffeb475945247232b8e930a976b" name="ae93b9ffeb475945247232b8e930a976b"></a>
@@ -439,6 +462,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Gets the ABI v-table for the current target platform (reverse calls). </p>
 
 </div>
 </div>
