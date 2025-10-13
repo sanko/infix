@@ -28,7 +28,7 @@ var searchData=
   ['build_25',['The Unity Build',['../md_docs_2internals.html#autotoc_md154',1,'']]],
   ['building_20a_20dynamic_20call_20frame_20with_20an_20arena_20strong_26',['&lt;strong&gt;Recipe: Building a Dynamic Call Frame with an Arena&lt;/strong&gt;',['../md_docs_2cookbook.html#autotoc_md96',1,'']]],
   ['building_20a_20signature_20string_20at_20runtime_27',['Recipe: Building a Signature String at Runtime',['../md_docs_2cookbook.html#autotoc_md89',1,'']]],
-  ['building_20and_20integrating_28',['Building and Integrating',['../index.html#autotoc_md28',1,'']]],
+  ['building_20and_20integrating_28',['Building and Integrating',['../index.html#autotoc_md27',1,'']]],
   ['building_20and_20integrating_20infix_29',['Building and Integrating infix',['../md_docs_2INSTALL.html',1,'']]],
   ['building_20language_20bindings_30',['Chapter 11: Building Language Bindings',['../md_docs_2cookbook.html#autotoc_md120',1,'']]],
   ['building_20the_20library_31',['Building the Library',['../index.html#autotoc_md5',1,'']]],

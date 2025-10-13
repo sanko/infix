@@ -30,8 +30,8 @@ var index =
       [ "Introspection API (<tt>introspection_api</tt>)", "index.html#autotoc_md25", null ],
       [ "Error Handling API (<tt>error_api</tt>)", "index.html#autotoc_md26", null ]
     ] ],
-    [ "Supported Platforms", "index.html#autotoc_md27", null ],
-    [ "Building and Integrating", "index.html#autotoc_md28", null ],
+    [ "Building and Integrating", "index.html#autotoc_md27", null ],
+    [ "Supported Platforms", "index.html#autotoc_md28", null ],
     [ "Contributing", "index.html#autotoc_md29", null ],
     [ "Learn More", "index.html#autotoc_md30", null ],
     [ "License & Legal", "index.html#autotoc_md31", [

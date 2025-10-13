@@ -92,7 +92,7 @@ var searchData=
   ['sum_5fmax_5freg_5fdoubles_89',['sum_max_reg_doubles',['../401__large__stack_8c.html#a64caa6314252677d0c90338cdf4c2381',1,'401_large_stack.c']]],
   ['sum_5fone_5fstack_5fdouble_90',['sum_one_stack_double',['../401__large__stack_8c.html#a1b8eb95f56635f721ca7df36ba089536',1,'401_large_stack.c']]],
   ['sum_5fvector4_91',['sum_vector4',['../101__by__value_8c.html#ad5228d51b42d1399422c6689574a8640',1,'101_by_value.c']]],
-  ['supported_20platforms_92',['Supported Platforms',['../index.html#autotoc_md27',1,'']]],
+  ['supported_20platforms_92',['Supported Platforms',['../index.html#autotoc_md28',1,'']]],
   ['supported_20versions_93',['Supported Versions',['../md_SECURITY.html#autotoc_md213',1,'']]],
   ['swift_94',['Swift',['../md_docs_2cookbook.html#autotoc_md76',1,'']]],
   ['syntax_95',['syntax',['../md_docs_2signatures.html#autotoc_md202',1,'4.3 Design Rationale: Why This Syntax?'],['../md_docs_2cookbook.html#autotoc_md103',1,'Pitfall: Function Pointer Syntax']]],

@@ -57,7 +57,7 @@ var searchData=
   ['pkg_20config_54',['Using pkg-config',['../md_docs_2INSTALL.html#autotoc_md142',1,'']]],
   ['plan_55',['plan',['../850__regression__cases_8c.html#a22f9d9559015dcf5a4b8f35e3490da67',1,'plan(num_tests):&#160;850_regression_cases.c'],['../double__tap_8h.html#a1cf5990a750112f555ca38cadef37398',1,'plan:&#160;double_tap.h']]],
   ['platform_20detection_20tt_20src_20common_20infix_5fconfig_20h_20tt_56',['Step 1: Platform Detection (&lt;tt&gt;src/common/infix_config.h&lt;/tt&gt;)',['../md_docs_2porting.html#autotoc_md178',1,'']]],
-  ['platforms_57',['Supported Platforms',['../index.html#autotoc_md27',1,'']]],
+  ['platforms_57',['Supported Platforms',['../index.html#autotoc_md28',1,'']]],
   ['point_58',['Point',['../structPoint.html',1,'']]],
   ['point_5fcallback_5fhandler_59',['point_callback_handler',['../302__aggregates_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35',1,'point_callback_handler(infix_context_t *context, Point p):&#160;302_aggregates.c'],['../203__complex_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35',1,'point_callback_handler(infix_context_t *context, Point p):&#160;203_complex.c'],['../006__end__to__end__calls_8c.html#aaa802cbfbe8a0342c1316af82e1f8b35',1,'point_callback_handler(infix_context_t *context, Point p):&#160;006_end_to_end_calls.c']]],
   ['pointee_5ftype_60',['pointee_type',['../structinfix__type__t.html#aa1b3a38155abc3e22a9dae4826c9f9bf',1,'infix_type_t']]],

@@ -101,7 +101,7 @@ var searchData=
   ['and_20calling_20a_20function_20pointer_98',['Recipe: Receiving and Calling a Function Pointer',['../md_docs_2cookbook.html#autotoc_md62',1,'']]],
   ['and_20comments_99',['4.1 Whitespace and Comments',['../md_docs_2signatures.html#autotoc_md200',1,'']]],
   ['and_20composite_20structures_100',['2.2 Type Constructors and Composite Structures',['../md_docs_2signatures.html#autotoc_md192',1,'']]],
-  ['and_20integrating_101',['Building and Integrating',['../index.html#autotoc_md28',1,'']]],
+  ['and_20integrating_101',['Building and Integrating',['../index.html#autotoc_md27',1,'']]],
   ['and_20integrating_20infix_102',['Building and Integrating infix',['../md_docs_2INSTALL.html',1,'']]],
   ['and_20preparation_103',['Step 0: Research and Preparation',['../md_docs_2porting.html#autotoc_md177',1,'']]],
   ['and_20read_20only_20contexts_104',['3.2 Guard Pages and Read-Only Contexts',['../md_docs_2internals.html#autotoc_md164',1,'']]],

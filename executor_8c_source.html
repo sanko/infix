@@ -228,7 +228,7 @@ $(document).ready(function(){initNavTree('executor_8c_source.html',''); initResi
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>}</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="preprocessor">#if !defined(INFIX_OS_WINDOWS) &amp;&amp; !defined(INFIX_OS_MACOS) &amp;&amp; !defined(INFIX_OS_TERMUX) &amp;&amp; !defined(INFIX_OS_OPENBSD)</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="preprocessor">#if !defined(INFIX_OS_WINDOWS) &amp;&amp; !defined(INFIX_OS_MACOS) &amp;&amp; !defined(INFIX_OS_ANDROID) &amp;&amp; !defined(INFIX_OS_OPENBSD)</span></div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="preprocessor">#include &lt;fcntl.h&gt;</span></div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
@@ -283,7 +283,7 @@ $(document).ready(function(){initNavTree('executor_8c_source.html',''); initResi
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a> = code;</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    exec.<a class="code hl_variable" href="structinfix__executable__t.html#a50e15399f44c62193a85a674ae393b3f">rx_ptr</a> = code;</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="preprocessor">#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="preprocessor">#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)</span></div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordtype">void</span> * code = MAP_FAILED;</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="preprocessor">#if defined(MAP_ANON)</span></div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keywordtype">int</span> flags = MAP_PRIVATE | MAP_ANON;</div>
@@ -368,7 +368,7 @@ $(document).ready(function(){initNavTree('executor_8c_source.html',''); initResi
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        mprotect(exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>, exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>, PROT_NONE);</div>
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        munmap(exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>, exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>);</div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    }</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span><span class="preprocessor">#elif defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)</span></div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span><span class="preprocessor">#elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)</span></div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keywordflow">if</span> (exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>) {</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>        mprotect(exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>, exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>, PROT_NONE);</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>        munmap(exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>, exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>);</div>
@@ -412,7 +412,7 @@ $(document).ready(function(){initNavTree('executor_8c_source.html',''); initResi
 <div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>    <span class="keywordflow">else</span>  <span class="comment">// Fallback to the legacy, insecure method.</span></div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>        result = (mprotect(exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>, exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>, PROT_READ | PROT_EXEC) == 0);</div>
-<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span><span class="preprocessor">#elif defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)</span></div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span><span class="preprocessor">#elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)</span></div>
 <div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span>    result = (mprotect(exec.<a class="code hl_variable" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a>, exec.<a class="code hl_variable" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a>, PROT_READ | PROT_EXEC) == 0);</div>
 <div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span>    result = <span class="keyword">true</span>;  <span class="comment">// No-op for dual-map platforms</span></div>
