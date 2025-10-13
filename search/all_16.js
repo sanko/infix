@@ -36,7 +36,7 @@ var searchData=
   ['live_20debugging_20with_20gdb_20lldb_33',['Method 2: Live Debugging with GDB/LLDB',['../md_docs_2internals.html#autotoc_md174',1,'']]],
   ['lldb_34',['Method 2: Live Debugging with GDB/LLDB',['../md_docs_2internals.html#autotoc_md174',1,'']]],
   ['loader_2ec_35',['loader.c',['../loader_8c.html',1,'']]],
-  ['long_20double_20tt_36',['Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
+  ['longdouble_20tt_36',['Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
   ['look_3a_20tt_20infix_20tt_20vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_37',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md105',1,'']]],
   ['loops_38',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md98',1,'']]]
 ];

@@ -54,7 +54,7 @@ var NAVTREE =
         [ "Recipe: Calling Variadic Functions like <tt>printf</tt>", "md_docs_2cookbook.html#autotoc_md61", null ],
         [ "Recipe: Receiving and Calling a Function Pointer", "md_docs_2cookbook.html#autotoc_md62", null ],
         [ "Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)", "md_docs_2cookbook.html#autotoc_md63", null ],
-        [ "Recipe: Handling <tt>long double</tt>", "md_docs_2cookbook.html#autotoc_md64", null ],
+        [ "Recipe: Handling <tt>longdouble</tt>", "md_docs_2cookbook.html#autotoc_md64", null ],
         [ "Recipe: Proving Reentrancy with Nested FFI Calls", "md_docs_2cookbook.html#autotoc_md65", null ],
         [ "Recipe: Proving Thread Safety", "md_docs_2cookbook.html#autotoc_md66", null ]
       ] ],

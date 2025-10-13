@@ -93,7 +93,7 @@ var searchData=
   ['tt_20infix_5fregister_5ftypes_20tt_90',['Defining Types (&lt;tt&gt;infix_register_types&lt;/tt&gt;)',['../md_docs_2signatures.html#autotoc_md196',1,'']]],
   ['tt_20introspection_5fapi_20tt_91',['Introspection API (&lt;tt&gt;introspection_api&lt;/tt&gt;)',['../index.html#autotoc_md25',1,'']]],
   ['tt_20libffi_20tt_20approach_92',['tt libffi tt approach',['../md_docs_2cookbook.html#autotoc_md112',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md108',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md116',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach']]],
-  ['tt_20long_20double_20tt_93',['Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
+  ['tt_20longdouble_20tt_93',['Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
   ['tt_20manual_5fapi_20tt_94',['Manual API (&lt;tt&gt;manual_api&lt;/tt&gt;)',['../index.html#autotoc_md22',1,'']]],
   ['tt_20memory_5fmanagement_20tt_95',['Memory Management (&lt;tt&gt;memory_management&lt;/tt&gt;)',['../index.html#autotoc_md24',1,'']]],
   ['tt_20printf_20tt_96',['Recipe: Calling Variadic Functions like &lt;tt&gt;printf&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md61',1,'']]],

@@ -130,7 +130,7 @@ Table of Contents</h1>
 <li>Recipe: Calling Variadic Functions like `printf`</li>
 <li>Recipe: Receiving and Calling a Function Pointer</li>
 <li>Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)</li>
-<li>Recipe: Handling `long double`</li>
+<li>Recipe: Handling `longdouble`</li>
 <li>Recipe: Proving Reentrancy with Nested FFI Calls</li>
 <li>Recipe: Proving Thread Safety</li>
 </ul>
@@ -785,9 +785,9 @@ Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)</h2>
 <div class="line">    free(my_adder);</div>
 <div class="line">}</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md64"></a>
-Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;</h2>
-<p><b>Problem</b>: You need to call a function that uses <code>long double</code>, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for <code>double</code> on MSVC/macOS).</p>
-<p><b>Solution</b>: Use the <code>long double</code> keyword in your signature. <code>infix</code>'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal <code>double</code>.</p>
+Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;</h2>
+<p><b>Problem</b>: You need to call a function that uses <code>longdouble</code>, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for <code>double</code> on MSVC/macOS).</p>
+<p><b>Solution</b>: Use the <code>longdouble</code> keyword in your signature. <code>infix</code>'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal <code>double</code>.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;math.h&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// A simple function using long double.</span></div>
@@ -799,7 +799,7 @@ Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;</h2>
 <div class="line">    <span class="comment">// On platforms where long double is distinct (like Linux), this will</span></div>
 <div class="line">    <span class="comment">// trigger special ABI handling. On platforms where it&#39;s an alias for</span></div>
 <div class="line">    <span class="comment">// double (like Windows), infix will treat it as a double.</span></div>
-<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(long double) -&gt; long double&quot;</span>;</div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(longdouble) -&gt; longdouble&quot;</span>;</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* t = NULL;</div>
 <div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;t, signature, (<span class="keywordtype">void</span>*)native_sqrtl, NULL);</div>

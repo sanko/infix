@@ -6,7 +6,7 @@ var searchData=
   ['handling_20api_20tt_20error_5fapi_20tt_3',['Error Handling API (&lt;tt&gt;error_api&lt;/tt&gt;)',['../index.html#autotoc_md26',1,'']]],
   ['handling_20complex_20data_20structures_4',['Chapter 2: Handling Complex Data Structures',['../md_docs_2cookbook.html#autotoc_md44',1,'']]],
   ['handling_20library_20dependencies_5',['Recipe: Handling Library Dependencies',['../md_docs_2cookbook.html#autotoc_md85',1,'']]],
-  ['handling_20tt_20long_20double_20tt_6',['Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
+  ['handling_20tt_20longdouble_20tt_6',['Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
   ['hardened_20runtimes_20on_20apple_20silicon_7',['The Challenge: Hardened Runtimes on Apple Silicon',['../md_docs_2internals.html#autotoc_md166',1,'']]],
   ['hardening_20and_20the_20entitlement_20fallback_8',['3.3 macOS JIT Hardening and the Entitlement Fallback',['../md_docs_2internals.html#autotoc_md165',1,'']]],
   ['has_5fdistinct_5flong_5fdouble_9',['HAS_DISTINCT_LONG_DOUBLE',['../403__special__types_8c.html#ab22b2712e8ee2b6cfa3dd3fcc78ec409',1,'403_special_types.c']]],

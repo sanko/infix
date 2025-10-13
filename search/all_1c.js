@@ -32,7 +32,7 @@ var searchData=
   ['recipe_3a_20creating_20a_20stateless_20callback_20for_20tt_20qsort_20tt_29',['Recipe: Creating a Stateless Callback for &lt;tt&gt;qsort&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md57',1,'']]],
   ['recipe_3a_20dynamic_20struct_20marshalling_20with_20the_20signature_20parser_30',['Recipe: Dynamic Struct Marshalling with the Signature Parser',['../md_docs_2cookbook.html#autotoc_md88',1,'']]],
   ['recipe_3a_20handling_20library_20dependencies_31',['Recipe: Handling Library Dependencies',['../md_docs_2cookbook.html#autotoc_md85',1,'']]],
-  ['recipe_3a_20handling_20tt_20long_20double_20tt_32',['Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
+  ['recipe_3a_20handling_20tt_20longdouble_20tt_32',['Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
   ['recipe_3a_20interfacing_20with_20a_20c_20class_20directly_33',['Recipe: Interfacing with a C++ Class (Directly)',['../md_docs_2cookbook.html#autotoc_md70',1,'']]],
   ['recipe_3a_20interfacing_20with_20c_20templates_34',['Recipe: Interfacing with C++ Templates',['../md_docs_2cookbook.html#autotoc_md71',1,'']]],
   ['recipe_3a_20introspecting_20a_20trampoline_20for_20a_20wrapper_35',['Recipe: Introspecting a Trampoline for a Wrapper',['../md_docs_2cookbook.html#autotoc_md90',1,'']]],
