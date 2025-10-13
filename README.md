@@ -458,6 +458,8 @@ A brief overview of the complete public API, grouped by functionality.
 | Solaris (11.4) | x86-64 | GCC | ✅ |
 | OmniOS (stable)| x86-64 | GCC | ✅ |
 
+In addition to the CI platforms tested here on Github, I can verify infix builds and passes unit tests on Android/Termux.
+
 </details>
 
 ## Building and Integrating

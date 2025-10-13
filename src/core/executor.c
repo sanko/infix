@@ -197,7 +197,7 @@ static bool has_jit_entitlement(void) {
 }
 #endif
 
-#if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_TERMUX) && !defined(INFIX_OS_OPENBSD)
+#if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_ANDROID) && !defined(INFIX_OS_OPENBSD)
 #include <fcntl.h>
 #include <stdint.h>
 
@@ -300,7 +300,7 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     exec.rw_ptr = code;
     exec.rx_ptr = code;
 
-#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
+#elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     void * code = MAP_FAILED;
 #if defined(MAP_ANON)
     int flags = MAP_PRIVATE | MAP_ANON;
@@ -410,7 +410,7 @@ void infix_executable_free(infix_executable_t exec) {
         mprotect(exec.rw_ptr, exec.size, PROT_NONE);
         munmap(exec.rw_ptr, exec.size);
     }
-#elif defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
+#elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     if (exec.rw_ptr) {
         mprotect(exec.rw_ptr, exec.size, PROT_NONE);
         munmap(exec.rw_ptr, exec.size);
@@ -475,7 +475,7 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     else  // Fallback to the legacy, insecure method.
 #endif
         result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
-#elif defined(INFIX_OS_TERMUX) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
+#elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
 #else
     result = true;  // No-op for dual-map platforms
