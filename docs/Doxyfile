@@ -13,7 +13,7 @@ USE_MDFILE_AS_MAINPAGE = README.md
 # Build related configuration options
 #---------------------------------------------------------------------------
 # Set the input directories. Paths are relative to this Doxyfile.
-INPUT                  = README.md include src docs t eg
+INPUT                  = README.md include src docs t eg CHANGELOG.md TODO.md SECURITY.md fuzz
 RECURSIVE              = YES
 FILE_PATTERNS          = *.h *.c *.md
 EXTRACT_ALL            = YES
@@ -35,16 +35,20 @@ HTML_FILE_EXTENSION    = .html
 GENERATE_TREEVIEW      = YES # optional. Also works without treeview
 DISABLE_INDEX = NO
 FULL_SIDEBAR = NO
-HTML_EXTRA_STYLESHEET  = ./docs/doxygen-awesome-css/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = ./docs/doxygen-awesome-css/doxygen-awesome.css \
+                         ./docs/doxygen-awesome-css/doxygen-awesome-sidebar-only.css \
+                         ./docs/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css
 HTML_EXTRA_FILES       = ./docs/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js \
                          ./docs/doxygen-awesome-css/doxygen-awesome-interactive-toc.js \
                          ./docs/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
 HTML_COLORSTYLE        = LIGHT # required with Doxygen >= 1.9.5
+HTML_HEADER            = ./docs/header.html
 
 MARKDOWN_SUPPORT       = YES
 FLEX_MARKDOWN          = YES
 
 DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
 GENERATE_TREEVIEW      = YES
 FULL_PAGE_TABS         = YES
 TOC_EXPAND             = YES

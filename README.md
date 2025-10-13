@@ -54,11 +54,13 @@ lib.exe /OUT:infix.lib infix.obj
 ### Integrating into Your Project
 
 1.  **Include the Header:**
+
     ```c
     #include <infix/infix.h>
     ```
 
 2.  **Link the Library:** When compiling your application, link against the `libinfix.a` (or `infix.lib`) library.
+
     ```bash
     gcc my_app.c -I/path/to/infix/include -L/path/to/build/dir -linfix -o my_app
     ```

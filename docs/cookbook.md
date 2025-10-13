@@ -519,10 +519,10 @@ void recipe_simd() {
 typedef enum { STATUS_OK = 0, STATUS_WARN = 1, STATUS_ERR = -1 } StatusCode;
 const char* status_to_string(StatusCode code) {
     switch (code) {
-        case STATUS_OK: return "OK";
+        case STATUS_OK:   return "OK";
         case STATUS_WARN: return "Warning";
-        case STATUS_ERR: return "Error";
-        default: return "Unknown";
+        case STATUS_ERR:  return "Error";
+        default:          return "Unknown";
     }
 }
 

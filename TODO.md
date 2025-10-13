@@ -1,8 +1,8 @@
-# **Project Roadmap: infix FFI**
+# Project Roadmap: infix FFI
 
 This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.
 
-## **High Priority: Foundation & Stability**
+## High Priority: Foundation & Stability
 
 *These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.*
 
@@ -76,7 +76,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The context is hardened by default. Any attempt to write to a hardened context struct will cause an immediate segmentation fault, preventing the attack.
     *   **Possible Roadblocks:** `mprotect` operates on page boundaries, not on individual structs. This requires careful memory management to ensure unrelated writable data is not on the same page, which might make the implementation complex.
 
-## **Medium Priority: Expansion & Optimization**
+## Medium Priority: Expansion & Optimization
 
 *Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.*
 
@@ -109,7 +109,7 @@ This document outlines the planned development goals for the infix FFI library, 
 - [ ] **Implement Validation for Unresolved Types**
     *   **Context:** The JIT might try creating a trampoline if the signature contains an unresolved named reference (like `struct<Foo>`).
 
-## **Low Priority: Advanced Features & Polish**
+## Low Priority: Advanced Features & Polish
 
 *These items are valuable but less critical. They can be addressed over time to round out the library's feature set.*
 
