@@ -6,5 +6,6 @@ var searchData=
   ['dummy_5fhandler_5ffunc_3',['dummy_handler_func',['../830__security_8c.html#a84ec4fb6b076f7d0d2c769feb2d20a47',1,'830_security.c']]],
   ['dummy_5fstress_5ffunc_5ffwd_4',['dummy_stress_func_fwd',['../810__memory__stress_8c.html#a8eed32a78508cd94143c2a5cfd09b775',1,'810_memory_stress.c']]],
   ['dummy_5fstress_5fhandler_5frev_5',['dummy_stress_handler_rev',['../810__memory__stress_8c.html#aa8818707e5175ce778045c40c6d5b4d6',1,'810_memory_stress.c']]],
-  ['dummy_5ftarget_5ffunc_6',['dummy_target_func',['../830__security_8c.html#a8fcb0b2df065db9dd72f731a65b7caa4',1,'830_security.c']]]
+  ['dummy_5ftarget_5ffor_5ffuzzing_6',['dummy_target_for_fuzzing',['../fuzz__trampoline_8c.html#a1ae756b4fd31a3e10dafd23d69bb9171',1,'fuzz_trampoline.c']]],
+  ['dummy_5ftarget_5ffunc_7',['dummy_target_func',['../830__security_8c.html#a8fcb0b2df065db9dd72f731a65b7caa4',1,'830_security.c']]]
 ];

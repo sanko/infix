@@ -8,7 +8,7 @@ var searchData=
   ['large_20structs_20passed_20by_20reference_5',['Recipe: Large Structs Passed by Reference',['../md_docs_2cookbook.html#autotoc_md47',1,'']]],
   ['large_5fstack_5fcallee_6',['large_stack_callee',['../401__large__stack_8c.html#a8d9b25f0d708a936741592612cc6abfa',1,'401_large_stack.c']]],
   ['large_5fstruct_5fpass_5fhandler_7',['large_struct_pass_handler',['../203__complex_8c.html#ac84a68db4e3aae7e761f6ed7196ce3e2',1,'large_struct_pass_handler(infix_context_t *context, LargeStruct s):&#160;203_complex.c'],['../302__aggregates_8c.html#ac84a68db4e3aae7e761f6ed7196ce3e2',1,'large_struct_pass_handler(infix_context_t *context, LargeStruct s):&#160;302_aggregates.c']]],
-  ['large_5fstruct_5freturn_5fhandler_8',['large_struct_return_handler',['../302__aggregates_8c.html#a534b99cfc4e2eb58aa6b1912be1f7c62',1,'large_struct_return_handler(infix_context_t *context, int a):&#160;302_aggregates.c'],['../203__complex_8c.html#a534b99cfc4e2eb58aa6b1912be1f7c62',1,'large_struct_return_handler(infix_context_t *context, int a):&#160;203_complex.c']]],
+  ['large_5fstruct_5freturn_5fhandler_8',['large_struct_return_handler',['../203__complex_8c.html#a534b99cfc4e2eb58aa6b1912be1f7c62',1,'large_struct_return_handler(infix_context_t *context, int a):&#160;203_complex.c'],['../302__aggregates_8c.html#a534b99cfc4e2eb58aa6b1912be1f7c62',1,'large_struct_return_handler(infix_context_t *context, int a):&#160;302_aggregates.c']]],
   ['largedata_9',['LargeData',['../structLargeData.html',1,'']]],
   ['largestruct_10',['LargeStruct',['../structLargeStruct.html',1,'']]],
   ['learn_20more_11',['Learn More',['../index.html#autotoc_md30',1,'']]],
@@ -16,7 +16,7 @@ var searchData=
   ['level_20signature_20api_13',['High-Level Signature API',['../group__high__level__api.html',1,'']]],
   ['level_20signature_20api_20tt_20high_5flevel_5fapi_20tt_14',['High-Level Signature API (&lt;tt&gt;high_level_api&lt;/tt&gt;)',['../index.html#autotoc_md20',1,'']]],
   ['libffi_20tt_20and_20tt_20dyncall_20tt_15',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md105',1,'']]],
-  ['libffi_20tt_20approach_16',['libffi tt approach',['../md_docs_2cookbook.html#autotoc_md108',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md112',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md116',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach']]],
+  ['libffi_20tt_20approach_16',['libffi tt approach',['../md_docs_2cookbook.html#autotoc_md116',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md108',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach'],['../md_docs_2cookbook.html#autotoc_md112',1,'The &lt;tt&gt;libffi&lt;/tt&gt; Approach']]],
   ['libraries_20system_20calls_17',['Chapter 6: Dynamic Libraries &amp; System Calls',['../md_docs_2cookbook.html#autotoc_md80',1,'']]],
   ['libraries_20without_20linking_18',['Recipe: Calling Native System Libraries without Linking',['../md_docs_2cookbook.html#autotoc_md81',1,'']]],
   ['library_19',['library',['../index.html#autotoc_md5',1,'Building the Library'],['../index.html#autotoc_md14',1,'Reading Global Variables from a Shared Library']]],
@@ -35,8 +35,10 @@ var searchData=
   ['list100_32',['LIST100',['../401__large__stack_8c.html#abe34be58e85259442d89c13a804cedda',1,'401_large_stack.c']]],
   ['live_20debugging_20with_20gdb_20lldb_33',['Method 2: Live Debugging with GDB/LLDB',['../md_docs_2internals.html#autotoc_md174',1,'']]],
   ['lldb_34',['Method 2: Live Debugging with GDB/LLDB',['../md_docs_2internals.html#autotoc_md174',1,'']]],
-  ['loader_2ec_35',['loader.c',['../loader_8c.html',1,'']]],
-  ['longdouble_20tt_36',['Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
-  ['look_3a_20tt_20infix_20tt_20vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_37',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md105',1,'']]],
-  ['loops_38',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md98',1,'']]]
+  ['llvmfuzzertestoneinput_35',['llvmfuzzertestoneinput',['../fuzz__abi_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_abi.c'],['../fuzz__signature_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_signature.c'],['../fuzz__trampoline_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_trampoline.c'],['../fuzz__types_8c.html#a91ce7c16e9840492202299da2b451e60',1,'LLVMFuzzerTestOneInput(const uint8_t *data, size_t size):&#160;fuzz_types.c']]],
+  ['loader_2ec_36',['loader.c',['../loader_8c.html',1,'']]],
+  ['longdouble_20tt_37',['Recipe: Handling &lt;tt&gt;longdouble&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md64',1,'']]],
+  ['look_3a_20tt_20infix_20tt_20vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_38',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md105',1,'']]],
+  ['loops_39',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md98',1,'']]],
+  ['low_20priority_3a_20advanced_20features_20polish_40',['Low Priority: Advanced Features &amp; Polish',['../md_TODO.html#autotoc_md211',1,'']]]
 ];

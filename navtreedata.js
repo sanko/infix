@@ -210,6 +210,24 @@ var NAVTREE =
         [ "Added", "md_CHANGELOG.html#autotoc_md207", null ]
       ] ]
     ] ],
+    [ "Project Roadmap: infix FFI", "md_TODO.html", [
+      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md209", null ],
+      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md210", null ],
+      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md211", null ]
+    ] ],
+    [ "Security Policy", "md_SECURITY.html", [
+      [ "Supported Versions", "md_SECURITY.html#autotoc_md213", null ],
+      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md214", null ],
+      [ "Security Model", "md_SECURITY.html#autotoc_md215", [
+        [ "Mitigations", "md_SECURITY.html#autotoc_md216", [
+          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md217", null ],
+          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md218", null ],
+          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md219", null ],
+          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md220", null ],
+          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md221", null ]
+        ] ]
+      ] ]
+    ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -240,8 +258,9 @@ var NAVTREEINDEX =
 "401__large__stack_8c.html#af17c47557820689b297102a239ba009b",
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beac61d78e3a51ddaca6fd5c96453974272",
 "compat__c23_8h.html#a375e33770fc0a906c61d85025ab11b70",
-"group__type__system.html#ggaad7a91cc786d4cec1dbbddb5d7b165b7a192c803c42b18a1e8f76a0faf02fd5c6",
-"signature_8c.html#a72477cb1bc3a1a22e006a8563e61a5cd"
+"group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9",
+"md_docs_2internals.html#autotoc_md166",
+"trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
