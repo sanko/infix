@@ -47,6 +47,10 @@ E ---------------------------------------
  * @defgroup error_api Error Reporting
  * @ingroup public_api
  * @brief Public structures and enumerations for detailed error reporting.
+ *
+ * @defgroup exports_api Dynamic Library & Globals API
+ * @ingroup public_api
+ * @brief Functions for interacting with shared libraries and their global variables.
  */
 
 /**
@@ -241,25 +245,6 @@ struct infix_function_argument_t {
  * macro before including `infix.h` to redirect all internal memory allocations
  * to a custom allocator, for example, for memory pooling, leak tracking, or
  * integration with a garbage collector.
- *
- * @example
- * ```c
- * // In your project's configuration header, or before including infix.h:
- * #include <stdlib.h> // For size_t
- * void* my_custom_alloc(size_t size) {
- *     // Custom allocation logic...
- *     return malloc(size);
- * }
- * void my_custom_free(void* ptr) {
- *     // Custom deallocation logic...
- *     free(ptr);
- * }
- *
- * #define infix_malloc(size) my_custom_alloc(size)
- * #define infix_free(ptr)    my_custom_free(ptr)
- *
- * #include "infix.h"
- * ```
  */
 #ifndef infix_malloc
 #define infix_malloc malloc
@@ -335,6 +320,17 @@ typedef void (*infix_unbound_cif_func)(void *, void *, void **);
  * The target function is hardcoded, so it is not needed as an argument at the call site.
  * @param return_value A pointer to a buffer where the return value will be stored.
  * @param args An array of pointers, where each element points to an argument's value.
+ *
+ * @par Example: Calling a function `int add(int a, int b)`
+ * @code
+ * infix_cif_func cif = infix_forward_get_code(trampoline);
+ * int a = 10, b = 20;
+ * int result;
+ * // The args array must contain pointers to the actual argument values.
+ * void* my_args[] = { &a, &b };
+ * cif(&result, my_args);
+ * // `result` now contains 30.
+ * @endcode
  */
 typedef void (*infix_cif_func)(void *, void **);
 
@@ -377,14 +373,6 @@ void infix_registry_destroy(infix_registry_t * registry);
  * @brief Parses a string of definitions and populates a type registry.
  * @details This function is the primary way to define named types. The definition
  *          string is a semicolon-separated list of `@Name = <TypeDefinition>;` entries.
- *
- * @example
- * ```c
- * const char* my_types =
- *     "@Point = {double, double};"
- *     "@Node = { value: int, next: *@Node };";
- * infix_status status = infix_register_types(registry, my_types);
- * ```
  *
  * @param registry The registry to populate.
  * @param definitions A null-terminated, semicolon-separated string of type definitions.
@@ -437,8 +425,16 @@ c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, cons
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
  * @param user_callback_fn A function pointer to the user's C callback handler.
- *                         Its signature must start with `infix_context_t*`, followed
- *                         by the types described in the signature string.
+ *                         Its signature **must** accept an `infix_context_t*` as its first
+ *                         argument, followed by the arguments described in the signature.
+ *
+ * @par Example:
+ * A native C library expects a function pointer of type:<br>
+ * `int (*my_callback)(int, int);`
+ *
+ * Your `infix` handler function must be:<br>
+ * `int my_handler(infix_context_t* ctx, int a, int b);`
+ *
  * @param user_data A user-defined pointer for passing state to the handler,
  *                  accessible inside the handler via `infix_reverse_get_user_data`.
  * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
@@ -785,10 +781,7 @@ typedef enum {
  * infix_arena_destroy(arena);
  * @endcode
  */
-c23_nodiscard infix_status infix_type_print(char * buffer,
-                                            size_t buffer_size,
-                                            const infix_type * type,
-                                            infix_print_dialect_t dialect);
+c23_nodiscard infix_status infix_type_print(char *, size_t, const infix_type *, infix_print_dialect_t);
 
 /**
  * @brief Serializes a full function signature into a string representation.

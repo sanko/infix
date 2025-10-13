@@ -42,14 +42,12 @@
  * Helper macro to initialize a static `infix_type` for a primitive.
  * This ensures size and alignment are correct for the compilation target at compile time.
  */
-#define INFIX_TYPE_INIT(id, T)            \
-    {                                     \
-        .category = INFIX_TYPE_PRIMITIVE, \
-        .size = sizeof(T),                \
-        .alignment = _Alignof(T),         \
-        .is_arena_allocated = false,      \
-        .meta.primitive_id = id,          \
-    }
+#define INFIX_TYPE_INIT(id, T)         \
+    {.category = INFIX_TYPE_PRIMITIVE, \
+     .size = sizeof(T),                \
+     .alignment = _Alignof(T),         \
+     .is_arena_allocated = false,      \
+     .meta.primitive_id = id}
 
 /*
  * These statically allocated singletons are a performance optimization. They avoid
@@ -203,7 +201,7 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
             *out_type = nullptr;
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
-        memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
+        infix_memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
         // Deep copy the member names to make the type fully self-contained.
         for (size_t i = 0; i < num_members; ++i) {
             const char * src_name = members[i].name;
@@ -214,7 +212,7 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
                     *out_type = nullptr;
                     return INFIX_ERROR_ALLOCATION_FAILED;
                 }
-                memcpy(dest_name, src_name, name_len);
+                infix_memcpy(dest_name, src_name, name_len);
                 arena_members[i].name = dest_name;
             }
         }
@@ -542,7 +540,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
             *out_type = nullptr;
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
-        memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
+        infix_memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
     }
 
     type->is_arena_allocated = true;
@@ -582,7 +580,7 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    memcpy(arena_name, name, name_len);
+    infix_memcpy(arena_name, name, name_len);
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_NAMED_REFERENCE;
@@ -621,7 +619,7 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
     infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
     if (dest_type == nullptr)
         return nullptr;
-    memcpy(dest_type, src_type, sizeof(infix_type));
+    infix_memcpy(dest_type, src_type, sizeof(infix_type));
 
     // Recursively copy any nested types based on the category.
     switch (src_type->category) {
@@ -643,7 +641,7 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                 char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
                 if (!dest_agg_name)
                     return nullptr;  // Allocation failed
-                memcpy(dest_agg_name, src_agg_name, name_len);
+                infix_memcpy(dest_agg_name, src_agg_name, name_len);
                 // We need to cast away const to write to the destination struct field.
                 *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
             }
@@ -654,7 +652,8 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                     infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
                 if (dest_type->meta.aggregate_info.members == nullptr)
                     return nullptr;
-                memcpy(dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
+                infix_memcpy(
+                    dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
 
                 for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
                     dest_type->meta.aggregate_info.members[i].type =
@@ -666,7 +665,7 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                         char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
                         if (!dest_name)
                             return nullptr;
-                        memcpy(dest_name, src_name, name_len);
+                        infix_memcpy(dest_name, src_name, name_len);
                         *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
                     }
                 }
@@ -682,7 +681,7 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                 infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
             if (dest_type->meta.func_ptr_info.args == nullptr)
                 return nullptr;
-            memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
+            infix_memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
 
             for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
                 dest_type->meta.func_ptr_info.args[i].type =
@@ -693,7 +692,7 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                     char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
                     if (!dest_name)
                         return nullptr;
-                    memcpy(dest_name, src_name, name_len);
+                    infix_memcpy(dest_name, src_name, name_len);
                     *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
                 }
             }
@@ -710,10 +709,6 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
  * Introspection API. They provide a stable way for users to query type and
  * trampoline properties without needing to know the internal layout of the
  * opaque `infix_type_t`, `infix_forward_t`, or `infix_reverse_t` structs.
- * The trampoline-related functions are implemented here for organizational
-- * consistency, as they are part of the same conceptual API group.
-+ * consistency, as they are part of the same conceptual API group. It also includes
-+ * the new introspection functions for the type registry.
  */
 
 /*

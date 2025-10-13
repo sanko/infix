@@ -1,6 +1,6 @@
-# `infix`: A JIT-Powered FFI Library for C
+# infix: A JIT-Powered FFI Library for C
 
-[![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/sanko/infix/actions/workflows/ci.yml)
+[![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/sanko/infix/actions/workflows/ci.yml) ([Matrix](#supported-platforms))
 
 `infix` is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It simplifies the process of calling native C functions from other environments and creating C-callable function pointers from your own handlers. All with a simple, human-readable string like `({int, *double}, *char) -> int`.
 
@@ -54,11 +54,13 @@ lib.exe /OUT:infix.lib infix.obj
 ### Integrating into Your Project
 
 1.  **Include the Header:**
+
     ```c
     #include <infix/infix.h>
     ```
 
 2.  **Link the Library:** When compiling your application, link against the `libinfix.a` (or `infix.lib`) library.
+
     ```bash
     gcc my_app.c -I/path/to/infix/include -L/path/to/build/dir -linfix -o my_app
     ```
@@ -104,23 +106,27 @@ int main() {
 
 The signature language is the most powerful and convenient way to use `infix`.
 
-| Name                 | `infix` Syntax                | Example Signature              | C/C++ Equivalent                 |
-| :------------------- | :---------------------------- | :----------------------------- | :------------------------------- |
-| **Primitives**       | C type names                  | `"int"`, `"double"`, `"uint64"`| `int`, `double`, `uint64_t`      |
-| **Pointers**         | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
-| **Structs**          | `{<members>}`                 | `"{int, double, *char}"`       | `struct { ... }`                 |
-| **Unions**           | `<<members>>`                 | `"<int, float>"`               | `union { ... }`                  |
-| **Arrays**           | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                     |
-| **Function Pointers**| `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`              |
-| **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                |
-| **SIMD Vectors**     | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`         |
-| **Enums**            | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                   |
-| **Packed Structs**   | `!{...}` or `!<N>:{...}`       | `"!{char, longlong}"`          | `__attribute__((packed))`        |
-| **Variadic Functions**| `(<fixed>;<variadic>)`       | `"(*char; int)->int"`          | `printf(const char*, ...)`      |
-| **Named Types**      | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`      | `typedef struct Point {...}`     |
-| **Named Arguments**  | `<name>:<type>`               | `"(count:int, data:*void)"`    | (For reflection only)            |
+| Name                  | `infix` Syntax                 | Example Signature               | C/C++ Equivalent                 |
+| :--------------------- | :---------------------------- | :------------------------------ | :------------------------------- |
+| **Primitives**         | C type names                  | `"int"`, `"double"`, `"uint64"` | `int`, `double`, `uint64_t`      |
+| **Pointers**           | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
+| **Structs**            | `{<members>}`                 | `"{int, double, *char}"`        | `struct { ... }`                 |
+| **Unions**             | `<<members>>`                 | `"<int, float>"`                | `union { ... }`                  |
+| **Arrays**             | `[<size>:<type>]`             | `"[10:double]"`                 | `double[10]`                     |
+| **Function Pointers**  | `(<args>)-><ret>`             | `"(int, int)->int"`             | `int (*)(int, int)`              |
+| **_Complex**           | `c[<base_type>]`              | `"c[double]"`                   | `_Complex double`                |
+| **SIMD Vectors**       | `v[<size>:<type>]`            | `"v[4:float]"`                  | `__m128`, `float32x4_t`          |
+| **Enums**              | `e:<int_type>`                | `"e:int"`                       | `enum { ... }`                   |
+| **Packed Structs**     | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`           | `__attribute__((packed))`        |
+| **Variadic Functions** | `(<fixed>;<variadic>)`        | `"(*char; int)->int"`           | `printf(const char*, ...)`       |
+| **Named Types**        | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`       | `typedef struct Point {...}`     |
+| **Named Arguments**    | `<name>:<type>`               | `"(count:int, data:*void)"`     | (For reflection only)            |
+
+See [the complete signature specification](docs/signatures.md).
 
 ### Part 2: Common Recipes
+
+A wide range of recipes may be found in [infix's cookbook](docs/cookbook.md).
 
 #### Forward Call (Calling C from your code)
 
@@ -426,39 +432,50 @@ A brief overview of the complete public API, grouped by functionality.
 
 </details>
 
+## Building and Integrating
+
+Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are available in **[INSTALL.md](docs/INSTALL.md)**.
+
+Because `infix` uses a unity build, integration into an existing project is simple: add `src/infix.c` to your list of source files and add the `include/` directory to your include paths.
+
 ## Supported Platforms
 
 `infix` is rigorously tested on a wide array of operating systems, compilers, and architectures with every commit.
 
 <details>
+<summary><b>Click to expand Full Platform CI Results</b></summary>
 
-<summary><strong>Click to view the full CI test matrix</strong></summary>
-
-| OS | Architecture | Compilers | Status |
-| :--- | :--- | :--- | :--- |
-| Ubuntu (latest) | x86-64 | GCC, Clang | ✅ |
-| Ubuntu (latest) | AArch64 | GCC, Clang | ✅ |
-| Windows (latest)| x86-64 | MSVC, Clang, GCC (MinGW) | ✅ |
-| Windows (latest)| AArch64 | MSVC, Clang | ✅ |
-| macOS (latest) | AArch64 | Clang, GCC | ✅ |
-| macOS (latest) | x86-64 (cross-compiled) | Clang, GCC | ✅ |
-| FreeBSD (latest)| x86-64 | Clang, GCC | ✅ |
-| FreeBSD (latest)| AArch64 | Clang, GCC | ✅ |
-| OpenBSD (latest)| x86-64 | Clang, GCC | ✅ |
-| OpenBSD (latest)| AArch64 | Clang, GCC | ✅ |
-| NetBSD (latest) | x86-64 | GCC | ✅ |
-| NetBSD (latest) | AArch64 | GCC | ✅ |
-| DragonflyBSD (latest)| x86-64 | GCC | ✅ |
-| Solaris (11.4) | x86-64 | GCC | ✅ |
-| OmniOS (stable)| x86-64 | GCC | ✅ |
+| OS           | Version     | Architecture | Compiler  | Status                                                                                                                                                                                               |
+| :----------- | :---------- | :----------- | :-------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DragonflyBSD | 6.4.0       | x86-64       | GCC       | ![dragonflybsd/x64/gcc](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=dragonflybsd-x86_64-gcc) |
+| FreeBSD      | 14.3        | x86-64       | GCC       | ![freebsd/x86/gcc     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=freebsd-x86_64-gcc) |
+|              | 14.3        | AArch64      | GCC       | ![freebsd/a64/gcc     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=freebsd-aarch64-gcc)     |
+|              | 14.3        | x86-64       | Clang     | ![freebsd/x64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=freebsd-x86_64-clang) |
+|              | 14.3        | AArch64      | Clang     | ![freebsd/a64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=freebsd-aarch64-clang)   |
+| macOS        | Sequoia     | AArch64      | Clang     | ![macos/a64/clang     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=macos-x86_64-clang) |
+|              | Sequoia     | AArch64      | GCC       | ![macos/a64/gcc       ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=macos-x86_64-gcc)   |
+| NetBSD       | 10.1        | AArch64      | GCC       | ![netbsd/a64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=netbsd-aarch64-gcc) |
+|              | 10.1        | x86-64       | GCC       | ![netbsd/x64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=netbsd-x86_64-gcc)   |
+| OmniOS       | r151052     | x86-64       | GCC       | ![omnios/x64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=omnios-x86_64-gcc) |
+| OpenBSD      | 7.7         | AArch64      | Clang     | ![openbsd/a64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=openbsd-aarch64-clang) |
+|              | 7.7         | AArch64      | GCC       | ![openbsd/a64/gcc     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=openbsd-aarch64-egcc) |
+|              | 7.7         | x86-64       | Clang     | ![openbsd/x64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=openbsd-x86_64-clang) |
+|              | 7.7         | x86-64       | Clang     | ![openbsd/x64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=openbsd-x86_64-egcc) |
+| Solaris      | 11.4        | x86-64       | GCC       | ![solaris/x64/gcc     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=solaris-x86_64-gcc) |
+| Ubuntu       | 24.04       | AArch64      | Clang     | ![ubuntu/a64/clang    ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=ubuntu-arm-aarch64-clang) |
+|              | 24.04       | AArch64      | GCC       | ![ubuntu/a64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=ubuntu-arm-aarch64-gcc) |
+|              | 24.04       | x86-64       | Clang     | ![ubuntu/x64/clang    ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=ubuntu-x86_64-clang) |
+|              | 24.04       | x86-64       | GCC       | ![ubuntu/x64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=ubuntu-x86_64-gcc) |
+| Windows      | Server 2025 | AArch64      | Clang     | ![windows/a64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=windows-arm-aarch64-clang) |
+|              | Server 2025 | AArch64      | GCC       | ![windows/a64/gcc     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=windows-arm-aarch64-gcc) |
+|              | Server 2025 | AArch64      | MSVC      | ![windows/a64/msvc    ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=windows-arm-aarch64-msvc) |
+|              | Server 2025 | x86-64       | Clang     | ![windows/x64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=windows-x86_64-clang) |
+|              | Server 2025 | x86-64       | GCC       | ![windows/x64/gcc     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=windows-x86_64-gcc) |
+|              | Server 2025 | x86-64       | MSVC      | ![windows/x64/msvc    ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=windows-x86_64-msvc) |
 
 </details>
 
-## Building and Integrating
-
-Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are available in **[INSTALL.md](INSTALL.md)**.
-
-Because `infix` uses a unity build, integration into an existing project is simple: add `src/infix.c` to your list of source files and add the `include/` directory to your include paths.
+In addition to the CI platforms tested here on Github, I can verify infix builds and passes unit tests on Android/Termux.
 
 ## Contributing
 
@@ -470,7 +487,7 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 *   **[Signature Reference](docs/signatures.md):** The complete guide to the signature mini-language.
 *   **[Internals](docs/internals.md):** A deep dive into the library's architecture, JIT engine, and security features.
 *   **[Porting Guide](docs/porting.md):** Instructions for adding support for new architectures.
-*   **[INSTALL.md](INSTALL.md):** Detailed build and integration instructions.
+*   **[INSTALL.md](docs/INSTALL.md):** Detailed build and integration instructions.
 
 ## License & Legal
 
@@ -484,6 +501,6 @@ See the [LICENSE-A2](LICENSE-A2) and/or [LICENSE-MIT](LICENSE-MIT) for the full 
 
 ### Documentation License
 
-All standalone documentation (`.md`), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**. We encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.
+At your discretion, all standalone documentation (`.md`), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**. We encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.
 
 See the [LICENSE-CC](LICENSE-CC) for details.

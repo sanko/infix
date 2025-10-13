@@ -1,4 +1,4 @@
-# infix Internals and Architecture
+# Architectural Notes
 
 This document provides a deep dive into the architecture and internal workings of `infix`. It is intended for maintainers, contributors, and advanced users who wish to understand the library's design philosophy, core mechanics, security features, and ABI implementations.
 
@@ -201,13 +201,9 @@ This is the most powerful method. It allows you to step through the JIT'd code o
 5.  **Step and Verify**: Use `stepi` (step instruction) and `info registers` to walk through the code and check register values.
 
 ### Useful Tools
-* **Online Assembler/Disassembler**: [shell-storm.org](https://shell-storm.org/online/Online-Assembler-and-Disassembler/) is an invaluable tool for quickly checking instruction encodings.
-
-## External ABI Documentation
 
 *   **System V AMD64 ABI:** [https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-1.0.pdf](https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-1.0.pdf)
 *   **Microsoft Windows x64 ABI:** [https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention](https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention)
 *   **ARM 64-bit (AArch64) ABI:** [https://developer.arm.com/documentation/ihi0055/latest/](https://developer.arm.com/documentation/ihi0055/latest/)
 *   **Apple ARM64 Specifics:** [https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms](https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms)
-
-This isn't documentation but I couldn't have come close to getting infix off the ground without https://shell-storm.org/online/Online-Assembler-and-Disassembler/
+*   **Online Assembler/Disassembler**: [shell-storm.org](https://shell-storm.org/online/Online-Assembler-and-Disassembler/) is an invaluable tool for quickly checking instruction encodings. This isn't documentation but I couldn't have come close to getting infix off the ground without it.

@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = "infix FFI Library"
+PROJECT_NAME           = "infix"
 PROJECT_BRIEF          = "A JIT-Powered FFI Library for C"
 # Use the main README file as the front page of the documentation.
 # The path is relative to this Doxyfile's location.
@@ -13,12 +13,12 @@ USE_MDFILE_AS_MAINPAGE = README.md
 # Build related configuration options
 #---------------------------------------------------------------------------
 # Set the input directories. Paths are relative to this Doxyfile.
-# '.' refers to the current directory ('docs/'), which will pick up our markdown files.
-INPUT                  = README.md include src
+INPUT                  = README.md include src docs t eg CHANGELOG.md TODO.md SECURITY.md fuzz
 RECURSIVE              = YES
 FILE_PATTERNS          = *.h *.c *.md
 EXTRACT_ALL            = YES
 EXTRACT_STATIC         = YES
+EXCLUDE                = docs/doxygen-awesome-css/docs docs/doxygen-awesome-css
 
 #---------------------------------------------------------------------------
 # HTML related configuration options
@@ -35,10 +35,20 @@ HTML_FILE_EXTENSION    = .html
 GENERATE_TREEVIEW      = YES # optional. Also works without treeview
 DISABLE_INDEX = NO
 FULL_SIDEBAR = NO
-HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome-css/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = ./docs/doxygen-awesome-css/doxygen-awesome.css \
+                         ./docs/doxygen-awesome-css/doxygen-awesome-sidebar-only.css \
+                         ./docs/doxygen-awesome-css/doxygen-awesome-sidebar-only-darkmode-toggle.css
+HTML_EXTRA_FILES       = ./docs/doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js \
+                         ./docs/doxygen-awesome-css/doxygen-awesome-interactive-toc.js \
+                         ./docs/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
 HTML_COLORSTYLE        = LIGHT # required with Doxygen >= 1.9.5
+HTML_HEADER            = ./docs/header.html
+
+MARKDOWN_SUPPORT       = YES
+FLEX_MARKDOWN          = YES
 
 DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
 GENERATE_TREEVIEW      = YES
 FULL_PAGE_TABS         = YES
 TOC_EXPAND             = YES

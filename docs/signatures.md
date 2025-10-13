@@ -43,23 +43,23 @@ These keywords represent standard C types whose size can vary by platform. They 
 | `ulong`         | `unsigned long`      | **32 or 64 bits**   | The unsigned version of `long`.                                             |
 | `longlong`      | `long long`          | 64 bits             | A signed integer of at least 64 bits.                                       |
 | `ulonglong`     | `unsigned long long` | 64 bits             | An unsigned integer of at least 64 bits.                                    |
-| `float`         | `float`              | 32 bits             | A 32-bit single-precision floating-point number.                          |
-| `double`        | `double`             | 64 bits             | A 64-bit double-precision floating-point number.                          |
-| `long double`   | `long double`        | **Varies**          | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution. |
+| `float`         | `float`              | 32 bits             | A 32-bit single-precision floating-point number.                            |
+| `double`        | `double`             | 64 bits             | A 64-bit double-precision floating-point number.                            |
+| `longdouble`    | `long double`        | **Varies**          | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.  |
 
 #### Tier 2: Explicit Fixed-Width Types (Recommended)
 
 For maximum portability and control, these keywords guarantee the size of the type across all platforms.
 
-| `infix` Keyword   | C/C++ Equivalent     | Size     | Description                                     |
-| :---------------- | :------------------- | :------- | :---------------------------------------------- |
-| `sint8`, `uint8`  | `int8_t`, `uint8_t`  | 8 bits   | Explicitly-sized 8-bit signed/unsigned integers.  |
-| `sint16`, `uint16`| `int16_t`, `uint16_t`| 16 bits  | Explicitly-sized 16-bit signed/unsigned integers. |
-| `sint32`, `uint32`| `int32_t`, `uint32_t`| 32 bits  | Explicitly-sized 32-bit signed/unsigned integers. |
-| `sint64`, `uint64`| `int64_t`, `uint64_t`| 64 bits  | Explicitly-sized 64-bit signed/unsigned integers. |
-| `sint128`, `uint128`| `__int128_t`       | 128 bits | 128-bit integers (GCC/Clang extension).         |
-| `float32`         | `float`              | 32 bits  | An explicit alias for a 32-bit float.             |
-| `float64`         | `double`             | 64 bits  | An explicit alias for a 64-bit float.             |
+| `infix` Keyword       | C/C++ Equivalent      | Size     | Description                                       |
+| :-------------------- | :-------------------- | :------- | :------------------------------------------------ |
+| `sint8`, `uint8`      | `int8_t`, `uint8_t`   | 8 bits   | Explicitly-sized 8-bit signed/unsigned integers.  |
+| `sint16`, `uint16`    | `int16_t`, `uint16_t` | 16 bits  | Explicitly-sized 16-bit signed/unsigned integers. |
+| `sint32`, `uint32`    | `int32_t`, `uint32_t` | 32 bits  | Explicitly-sized 32-bit signed/unsigned integers. |
+| `sint64`, `uint64`    | `int64_t`, `uint64_t` | 64 bits  | Explicitly-sized 64-bit signed/unsigned integers. |
+| `sint128`, `uint128`  | `__int128_t`          | 128 bits | 128-bit integers (GCC/Clang extension).           |
+| `float32`             | `float`               | 32 bits  | An explicit alias for a 32-bit float.             |
+| `float64`             | `double`              | 64 bits  | An explicit alias for a 64-bit float.             |
 
 ### 2.2 Type Constructors and Composite Structures
 
@@ -67,40 +67,40 @@ These syntax elements allow you to build complex types from simpler ones.
 
 | Name                 | `infix` Syntax                | Example Signature              | C/C++ Equivalent                 |
 | :------------------- | :---------------------------- | :----------------------------- | :------------------------------- |
-| **Pointer**          | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
+| **Pointer**          | `*<type>`                     | `"*int"`, `"*void"`            | `int*`, `void*`                  |
 | **Struct**           | `{<members>}`                 | `"{int, double, *char}"`       | `struct { ... }`                 |
 | **Union**            | `<`<members>`>`               | `"<int, float>"`               | `union { ... }`                  |
 | **Array**            | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                     |
 | **Function Pointer** | `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`              |
 | **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                |
-| **SIMD Vector**      | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`         |
+| **SIMD Vector**      | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`          |
 | **Enum**             | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                   |
-| **Packed Struct**    | `!{...}` or `!<N>:{...}`       | `"!{char, longlong}"`          | `__attribute__((packed))`        |
-| **Variadic Function**| `(<fixed>;<variadic>)`       | `"(*char; int)->int"`          | `printf(const char*, ...)`      |
+| **Packed Struct**    | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`          | `__attribute__((packed))`        |
+| **Variadic Function**| `(<fixed>;<variadic>)`        | `"(*char; int)->int"`          | `printf(const char*, ...)`       |
 | **Named Type**       | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`      | `typedef struct Point {...}`     |
 | **Named Argument**   | `<name>:<type>`               | `"(count:int, data:*void)"`    | (For reflection only)            |
 
 ### 2.3 Syntax Showcase
 
-| FFI Signature                             | Breakdown                                                                     |
-| :---------------------------------------- | :---------------------------------------------------------------------------- |
-| `int`                                     | A standard C signed integer.                                                  |
-| `*char`                                   | A pointer to a C `signed char`.                                               |
-| `**void`                                  | A pointer to a generic `void` pointer.                                        |
-| `[16:char]`                               | An array of 16 signed characters.                                             |
-| `*[16:char]`                              | A pointer to an array of 16 signed characters.                                |
-| `{int, float}`                            | An anonymous struct containing an `int` followed by a `float`.                |
-| `{id:uint64, score:double}`               | An anonymous struct with two named fields for introspection.                  |
-| `!{id:uint16, status:char}`                | A packed struct (1-byte alignment). `status` will be at offset 2.             |
-| `!4:{a:char, b:longlong}`                  | A packed struct with 4-byte alignment. `b` will be padded to start at offset 4. |
-| `<int, float64>`                          | An anonymous union that can hold either an `int` or a 64-bit float.           |
-| `() -> void`                              | A function that takes no arguments and returns nothing.                       |
-| `(*char, int) -> int`                     | A function that takes a `*char` and an `int`, and returns an `int`.           |
-| `(*char; int, double) -> int`             | A variadic function like `printf`. The semicolon `;` marks the variadic part. |
-| `*((int, int) -> int)`                    | A pointer to a function that takes two `int`s and returns an `int`.           |
+| FFI Signature                             | Breakdown                                                                       |
+| :---------------------------------------- | :------------------------------------------------------------------------------ |
+| `int`                                     | A standard C signed integer.                                                    |
+| `*char`                                   | A pointer to a C `signed char`.                                                 |
+| `**void`                                  | A pointer to a generic `void` pointer.                                          |
+| `[16:char]`                               | An array of 16 signed characters.                                               |
+| `*[16:char]`                              | A pointer to an array of 16 signed characters.                                  |
+| `{int, float}`                            | An anonymous struct containing an `int` followed by a `float`.                  |
+| `{id:uint64, score:double}`               | An anonymous struct with two named fields for introspection.                    |
+| `!{id:uint16, status:char}`               | A packed struct (1-byte alignment). `status` will be at offset 2.               |
+| `!4:{a:char, b:longlong}`                 | A packed struct with 4-byte alignment. `b` will be padded to start at offset 4. |
+| `<int, float64>`                          | An anonymous union that can hold either an `int` or a 64-bit float.             |
+| `() -> void`                              | A function that takes no arguments and returns nothing.                         |
+| `(*char, int) -> int`                     | A function that takes a `*char` and an `int`, and returns an `int`.             |
+| `(*char; int, double) -> int`             | A variadic function like `printf`. The semicolon `;` marks the variadic part.   |
+| `*((int, int) -> int)`                    | A pointer to a function that takes two `int`s and returns an `int`.             |
 | `{@Point, callback:*((int)->void)}`       | A struct with a named type `@Point` and a function pointer field.               |
-| `c[float]`                                | A C `float _Complex` number.                                                  |
-| `v[4:float]`                              | A 128-bit SIMD vector containing four 32-bit floats.                          |
+| `c[float]`                                | A C `float _Complex` number.                                                    |
+| `v[4:float]`                              | A 128-bit SIMD vector containing four 32-bit floats.                            |
 
 ---
 
@@ -192,7 +192,7 @@ arg                 ::= ( Identifier ':' )? value_type
 primitive_type      ::= 'void' | 'bool'
                     | 'char' | 'uchar' | 'short' | 'ushort' | 'int' | 'uint'
                     | 'long' | 'ulong' | 'longlong' | 'ulonglong'
-                    | 'float' | 'double' | 'long' ' ' 'double'
+                    | 'float' | 'double' | 'longdouble'
                     | 'sint8' | 'uint8' | 'sint16' | 'uint16' | 'sint32' | 'uint32'
                     | 'sint64' | 'uint64' | 'sint128' | 'uint128'
                     | 'float32' | 'float64'
@@ -211,4 +211,4 @@ Integer             ::= [0-9]+
 
 *   **vs. Itanium C++ ABI:** Itanium is a "write-only" format designed for linkers. `infix` signatures are designed for humans to read and write.
 *   **vs. Python's `ctypes`:** `ctypes` uses a programmatic, object-oriented approach. The `infix` format is a standalone, declarative string that can be used by *any* language.
-*   **vs. `dyncall`'s Signature Format:** `dyncall`'s format is a flat string of single characters (e.g., `iSl)d`), prioritizing brevity. `infix` prioritizes human readability (`(int, ushort, longlong) -> double`). Further, `dyncall` can only describe primitive types, whereas `infix` treats complex data structures as first-class citizens.
+*   **vs. `dyncall`'s Signature Format:** `dyncall`'s format is a flat string of single characters (e.g., `isL)d`), prioritizing brevity. `infix` prioritizes human readability (`(int, ushort, longlong) -> double`). Further, `dyncall` can only describe primitive types, whereas `infix` treats complex data structures as first-class citizens.

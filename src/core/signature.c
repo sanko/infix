@@ -191,7 +191,7 @@ static const char * parse_identifier(parser_state * state) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return nullptr;
     }
-    memcpy(name, start, len);
+    infix_memcpy(name, start, len);
     name[len] = '\0';
     return name;
 }
@@ -1433,7 +1433,7 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             _print(state, "double");
             break;
         case INFIX_PRIMITIVE_LONG_DOUBLE:
-            _print(state, "long double");
+            _print(state, "longdouble");
             break;
         default:
             state->status = INFIX_ERROR_INVALID_ARGUMENT;

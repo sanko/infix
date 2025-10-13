@@ -130,7 +130,7 @@ jobs:
           - platform: { name: 'macos' }
             toolchain: 'msvc'
 
-  summary:
+  results:
     name: Summary
     if: always()
     needs: [vm, direct]
@@ -145,21 +145,66 @@ jobs:
 
       - name: Generate Job Summary from Artifacts
         run: |
-          echo "## Build and Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "| Category | Test / Arch | Compiler | Result |" >> $GITHUB_STEP_SUMMARY
-          echo "|:---|:---|:---|:---|" >> $GITHUB_STEP_SUMMARY
+          mkdir -p status
+          # --- Setup for Markdown and JSON output ---
+          SUMMARY_MD="status/status.md"
+          STATUS_JSON="status/status.json"
+          echo "## Build and Test Summary" > $SUMMARY_MD
+          echo "| OS | Arch | Compiler | Result |" >> $SUMMARY_MD
+          echo "|:---|:---|:---|:---|" >> $SUMMARY_MD
+          echo "{" > $STATUS_JSON
+          is_first_json_entry=true
           if [ -d "results" ] && [ -n "$(ls -A results)" ]; then
             find results -type f -name "*.result" | sort | while IFS= read -r file; do
               result=$(cat "$file")
               filename=$(basename "$file" .result)
               ICON=$([[ $result == 'success' ]] && echo '✅' || echo '❌')
-                # Handle standard build/test results: e.g., "ubuntu-x86_64-gcc"
-                IFS='-' read -ra parts <<< "$filename"
-                platform="${parts[0]}"
-                arch="${parts[1]}"
-                toolchain="${parts[2]}"
-                echo "| **$platform** | $arch | $toolchain | $ICON $result |" >> $GITHUB_STEP_SUMMARY
+              IFS='-' read -ra parts <<< "$filename"
+              platform="${parts[0]}"
+              arch="${parts[1]}"
+              compiler="${parts[2]}"
+              echo "| **$platform** | \`$arch\` | \`$compiler\` | $ICON $result |" >> $SUMMARY_MD
+              if [ "$is_first_json_entry" = false ]; then
+                echo "," >> $STATUS_JSON
+              fi
+              # The key is the unique job identifier, e.g., "freebsd-x86_64-gcc"
+              # The value is "passing" or "failing" for Shields.io color coding
+              SHIELD_STATUS=$([[ $result == 'success' ]] && echo 'passing' || echo 'failing')
+              echo "\"$filename\": \"$SHIELD_STATUS\"" >> $STATUS_JSON
+              is_first_json_entry=false
             done
           else
-            echo "| All build jobs | | | No result data found. ❌ |" >> $GITHUB_STEP_SUMMARY
+            echo "| All build jobs | | | No result data found. ❌ |" >> $SUMMARY_MD
           fi
+          echo "}" >> $STATUS_JSON
+          cat $SUMMARY_MD >> $GITHUB_STEP_SUMMARY
+      - name: Upload Status Artifact for Publishing
+        uses: actions/upload-artifact@v4
+        with:
+          name: status-files
+          path: status/
+  publish-status:
+    name: Publish Status Page
+    if: github.ref == 'refs/heads/main' # Only run on pushes to the main branch
+    needs: [results]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Important: Permission to write to the repo (for gh-pages branch)
+    steps:
+      - name: Download status files
+        uses: actions/download-artifact@v4
+        with:
+          name: status-files
+          path: ./status
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./status
+          publish_branch: gh-pages
+          keep_files: true
+          destination_dir: status
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Update build status matrix'

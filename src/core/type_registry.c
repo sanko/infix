@@ -109,7 +109,7 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
     char * name_copy = infix_arena_alloc(registry->arena, name_len, 1);
     if (!name_copy)
         return nullptr;
-    memcpy(name_copy, name, name_len);
+    infix_memcpy(name_copy, name, name_len);
 
     // Populate the new entry as a placeholder. The type will be linked later.
     new_entry->name = name_copy;
@@ -222,7 +222,7 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
     if (len == 0 || len >= buf_size)
         return nullptr;
 
-    memcpy(buffer, name_start, len);
+    infix_memcpy(buffer, name_start, len);
     buffer[len] = '\0';
     return buffer;
 }
@@ -337,10 +337,10 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         _infix_registry_entry_t * entry = defs_found[i].entry;
 
         // Create a temporary, null-terminated string for the definition body.
-        char * body_copy = malloc(defs_found[i].def_body_len + 1);
+        char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
         if (!body_copy)
             return INFIX_ERROR_ALLOCATION_FAILED;
-        memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
+        infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
         body_copy[defs_found[i].def_body_len] = '\0';
 
         infix_type * parsed_type = nullptr;
@@ -348,7 +348,7 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         // Use the internal parser which does not perform resolution. This creates a raw type graph.
         infix_status status = _infix_parse_type_internal(&parsed_type, &temp_arena, body_copy, registry);
 
-        free(body_copy);
+        infix_free(body_copy);
 
         if (status != INFIX_SUCCESS) {
             infix_arena_destroy(temp_arena);

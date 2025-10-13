@@ -20,7 +20,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
       - name: Clone Doxygen Awesome CSS theme
-        run: git clone --depth 1 https://github.com/jothepro/doxygen-awesome-css.git docs/api/html/
+        run: git clone --depth 1 https://github.com/jothepro/doxygen-awesome-css.git docs/doxygen-awesome-css
 
       - name: Generate Doxygen documentation
         # Run doxygen, specifying the path to our Doxyfile.
@@ -32,6 +32,7 @@ jobs:
           # The GITHUB_TOKEN is automatically provided by GitHub Actions
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/api/html
+          keep_files: true
           destination_dir: ./${{ env.DOXYGEN_OUTPUT_PATH }}
           # The user who will commit the changes
           user_name: 'github-actions[bot]'
