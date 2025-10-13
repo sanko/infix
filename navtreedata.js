@@ -205,6 +205,11 @@ var NAVTREE =
       ] ],
       [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md199", null ]
     ] ],
+    [ "Changelog", "md_CHANGELOG.html", [
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...HEAD\"", "md_CHANGELOG.html#autotoc_md206", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md207", null ]
+      ] ]
+    ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -236,7 +241,7 @@ var NAVTREEINDEX =
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beac61d78e3a51ddaca6fd5c96453974272",
 "compat__c23_8h.html#a375e33770fc0a906c61d85025ab11b70",
 "group__type__system.html#ggaad7a91cc786d4cec1dbbddb5d7b165b7a192c803c42b18a1e8f76a0faf02fd5c6",
-"signature_8c.html#ab4c5b55fdeb3f3391ba92636e7f83621"
+"signature_8c.html#a72477cb1bc3a1a22e006a8563e61a5cd"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
