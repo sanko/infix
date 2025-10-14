@@ -480,6 +480,37 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_
 
 /** @} */
 
+/**
+ * @defgroup library_api Dynamic Library API
+ * @ingroup public_api
+ * @brief Functions for loading shared libraries and looking up symbols.
+ * @{
+ */
+
+/**
+ * @brief Opens a dynamic library and returns a handle to it.
+ * @param path The file path to the dynamic library (.so, .dll, .dylib).
+ * @return A handle to the library on success, or `nullptr` on failure.
+ * @note The returned handle must be freed with `infix_library_close`.
+ */
+c23_nodiscard infix_library_t * infix_library_open(const char *);
+
+/**
+ * @brief Closes a dynamic library handle and unloads it.
+ * @param lib A handle to a previously opened library. Can be `nullptr`.
+ */
+void infix_library_close(infix_library_t *);
+
+/**
+ * @brief Retrieves the memory address of a symbol (function or global variable).
+ * @param lib A handle to a previously opened library.
+ * @param symbol_name The name of the symbol to look up.
+ * @return A `void*` pointer to the symbol's address, or `nullptr` if not found.
+ */
+c23_nodiscard void * infix_library_get_symbol(infix_library_t *, const char *);
+
+/** @} */
+
 /** @addtogroup exports_api */
 /** @{ */
 
