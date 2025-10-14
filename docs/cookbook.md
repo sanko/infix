@@ -58,7 +58,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
       + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
       + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
       + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
-      + [**Recipe: Building a Dynamic Call Frame with an Arena**](#recipe-building-a-dynamic-call-frame-with-an-arena)
+      + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
          - [How It Works & Why It's Better](#how-it-works--why-its-better)
          - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
    * [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
@@ -1522,7 +1522,7 @@ void recipe_custom_allocators() {
 }
 ```
 
-### **Recipe: Building a Dynamic Call Frame with an Arena**
+### Recipe: Building a Dynamic Call Frame with an Arena
 
 **Problem**: You are writing a language binding (e.g., for Python, Perl, Lua) and need to build the `void* args[]` array at runtime. The arguments are coming from the host language, so you need to unbox them into temporary C values, create an array of pointers to these temporary values, and then clean everything up after the call. Doing this with `malloc` for every call in a tight loop is inefficient.
 
