@@ -26,8 +26,7 @@ double get_point_x(Point p) {
     note("get_point_x received Point {x=%.1f, y=%.1f}", p.x, p.y);
     return p.x;
 }
-Point move_point_handler(infix_context_t * context, Point p) {
-    (void)context;
+Point move_point_handler(Point p) {
     note("move_point_handler received Point {x=%.1f, y=%.1f}", p.x, p.y);
     p.x += 100.0;
     p.y -= 100.0;
@@ -96,7 +95,7 @@ TEST {
            "Setup: @Point registered");
         const char * signature = "(@Point) -> @Point";
         infix_reverse_t * context = nullptr;
-        infix_status status = infix_reverse_create(&context, signature, (void *)move_point_handler, nullptr, registry);
+        infix_status status = infix_reverse_create_callback(&context, signature, (void *)move_point_handler, registry);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created using named type '@Point'");
         if (context) {
             typedef Point (*PointFunc)(Point);

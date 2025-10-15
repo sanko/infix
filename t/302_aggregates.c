@@ -37,41 +37,43 @@
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
+#include <string.h>
 
-/** @brief Handler for Point(Point) signature. Doubles the coordinates. */
-Point point_callback_handler(infix_context_t * context, Point p) {
-    (void)context;
+// Type-Safe "Callback" Handlers
+Point point_callback_handler(Point p) {
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     return (Point){p.x * 2.0, p.y * 2.0};
 }
 
-/** @brief Handler for int(LargeStruct) signature. Processes a large struct. */
-int large_struct_pass_handler(infix_context_t * context, LargeStruct s) {
-    (void)context;
+int large_struct_pass_handler(LargeStruct s) {
     note("large_struct_pass_handler received s.a=%d, s.f=%d", s.a, s.f);
     return s.a - s.f;
 }
 
-/** @brief Handler for LargeStruct(int) signature. Returns a large struct. */
-LargeStruct large_struct_return_handler(infix_context_t * context, int a) {
-    (void)context;
+LargeStruct large_struct_return_handler(int a) {
     note("large_struct_return_handler called with a=%d", a);
     return (LargeStruct){a, a + 1, a + 2, a + 3, a + 4, a + 5};
 }
 
-/** @brief Handler for int(Vector4) signature. Sums the vector elements. */
-int vector4_callback_handler(infix_context_t * context, Vector4 v) {
-    (void)context;
+int vector4_callback_handler(Vector4 v) {
     return (int)(v.v[0] + v.v[1] + v.v[2] + v.v[3]);
 }
 
-/** @brief Handler for Number(float) signature. Returns a union. */
-Number number_union_return_handler(infix_context_t * context, float f) {
-    (void)context;
+Number number_union_return_handler(float f) {
     Number n;
     n.f = f * 10.0f;
     return n;
 }
+
+// Generic "Closure" Handlers
+void point_closure_handler(infix_context_t * ctx, void * ret, void ** args) {
+    (void)ctx;
+    Point p = *(Point *)args[0];
+    Point result = {p.x * 2.0, p.y * 2.0};
+    memcpy(ret, &result, sizeof(Point));
+}
+
+// Harness Functions
 void execute_point_callback(Point (*func_ptr)(Point), Point p) {
     Point result = func_ptr(p);
     ok(fabs(result.x - p.x * 2.0) < 0.001 && fabs(result.y - p.y * 2.0) < 0.001, "Callback returned correct Point");
@@ -93,70 +95,75 @@ void execute_number_union_return_callback(Number (*func_ptr)(float), float f) {
     ok(fabs(result.f - (f * 10.0f)) < 0.001, "Callback returned correct Number union");
 }
 
-/** @brief A simple C function to act as our FFI target. It verifies the struct's contents. */
 int process_packed_struct(PackedStruct p) {
     note("C target received PackedStruct with a='%c', b=%" PRIu64, p.a, p.b);
     if (p.a == 'X' && p.b == 0xDEADBEEFCAFEBABE)
-        return 42;  // Success code
-    return -1;      // Failure code
+        return 42;
+    return -1;
 }
 
 TEST {
     plan(6);
 
     subtest("Callback with small struct: Point(Point)") {
-        plan(3);
+        plan(5);
         infix_arena_t * arena = infix_arena_create(4096);
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] =
-            infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
-        members[1] =
-            infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
+        infix_struct_member members[] = {
+            infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
+            infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))};
         infix_type * point_type = nullptr;
-
-        infix_status status = infix_type_create_struct(arena, &point_type, members, 2);
-        if (!ok(status == INFIX_SUCCESS, "Point infix_type created")) {
-            skip(2, "Test skipped");
+        if (!ok(infix_type_create_struct(arena, &point_type, members, 2) == INFIX_SUCCESS,
+                "Point infix_type created")) {
+            skip(4, "Test skipped");
             infix_arena_destroy(arena);
             return;
         }
 
-        infix_reverse_t * rt = nullptr;
-        status =
-            infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)point_callback_handler, nullptr);
-        ok(status == INFIX_SUCCESS, "Reverse trampoline created");
-
-        if (rt)
-            execute_point_callback((Point(*)(Point))infix_reverse_get_code(rt), (Point){10.0, -5.0});
+        // Test Type-Safe Callback
+        infix_reverse_t * rt_cb = nullptr;
+        ok(infix_reverse_create_callback_manual(
+               &rt_cb, point_type, &point_type, 1, 1, (void *)point_callback_handler) == INFIX_SUCCESS,
+           "Type-safe callback created");
+        if (rt_cb)
+            execute_point_callback((Point(*)(Point))infix_reverse_get_code(rt_cb), (Point){10.0, -5.0});
         else
             skip(1, "Test skipped");
 
-        infix_reverse_destroy(rt);
+        // Test Generic Closure
+        infix_reverse_t * rt_cl = nullptr;
+        ok(infix_reverse_create_closure_manual(&rt_cl, point_type, &point_type, 1, 1, point_closure_handler, nullptr) ==
+               INFIX_SUCCESS,
+           "Generic closure created");
+        if (rt_cl)
+            execute_point_callback((Point(*)(Point))infix_reverse_get_code(rt_cl), (Point){-2.0, 3.0});
+        else
+            skip(1, "Test skipped");
+
+        infix_reverse_destroy(rt_cb);
+        infix_reverse_destroy(rt_cl);
         infix_arena_destroy(arena);
     }
 
     subtest("Callback with large struct argument: int(LargeStruct)") {
-        plan(3);
+        plan(2);  // Only testing the type-safe version for brevity
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
+        infix_struct_member members[6];
         for (int i = 0; i < 6; ++i)
             members[i] =
                 infix_type_create_member(nullptr, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
         infix_type * large_struct_type = nullptr;
 
-        infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
-        if (!ok(status == INFIX_SUCCESS, "LargeStruct infix_type created")) {
-            skip(2, "Test skipped");
+        if (infix_type_create_struct(arena, &large_struct_type, members, 6) != INFIX_SUCCESS) {
+            fail("Failed to create LargeStruct type");
+            skip(1, "Cannot proceed");
             infix_arena_destroy(arena);
             return;
         }
 
         infix_reverse_t * rt = nullptr;
-        status = infix_reverse_create_manual(
-            &rt, ret_type, &large_struct_type, 1, 1, (void *)large_struct_pass_handler, nullptr);
+        infix_status status = infix_reverse_create_callback_manual(
+            &rt, ret_type, &large_struct_type, 1, 1, (void *)large_struct_pass_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -170,26 +177,24 @@ TEST {
     }
 
     subtest("Callback returning large struct: LargeStruct(int)") {
-        plan(3);
+        plan(2);  // Only testing the type-safe version
         infix_arena_t * arena = infix_arena_create(4096);
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
+        infix_struct_member members[6];
         for (int i = 0; i < 6; ++i)
             members[i] =
                 infix_type_create_member(nullptr, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), sizeof(int) * i);
         infix_type * large_struct_type = nullptr;
-
-        infix_status status = infix_type_create_struct(arena, &large_struct_type, members, 6);
-        if (!ok(status == INFIX_SUCCESS, "LargeStruct infix_type created")) {
-            skip(2, "Test skipped");
+        if (infix_type_create_struct(arena, &large_struct_type, members, 6) != INFIX_SUCCESS) {
+            fail("Failed to create LargeStruct type");
+            skip(1, "Cannot proceed");
             infix_arena_destroy(arena);
             return;
         }
         infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
 
         infix_reverse_t * rt = nullptr;
-        status = infix_reverse_create_manual(
-            &rt, large_struct_type, &arg_type, 1, 1, (void *)large_struct_return_handler, nullptr);
+        infix_status status = infix_reverse_create_callback_manual(
+            &rt, large_struct_type, &arg_type, 1, 1, (void *)large_struct_return_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -202,34 +207,32 @@ TEST {
     }
 
     subtest("Callback with struct containing array: int(Vector4)") {
-        plan(4);
+        plan(3);  // Only testing the type-safe version
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_type * array_type = nullptr;
 
-        infix_status status =
-            infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 4);
-        if (!ok(status == INFIX_SUCCESS, "Array infix_type created")) {
-            skip(3, "Test skipped");
+        if (infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 4) !=
+            INFIX_SUCCESS) {
+            fail("Failed to create array type");
+            skip(2, "Cannot proceed");
             infix_arena_destroy(arena);
             return;
         }
 
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
-        members[0] = infix_type_create_member("v", array_type, offsetof(Vector4, v));
+        infix_struct_member members[] = {infix_type_create_member("v", array_type, offsetof(Vector4, v))};
         infix_type * struct_type = nullptr;
 
-        status = infix_type_create_struct(arena, &struct_type, members, 1);
-        if (!ok(status == INFIX_SUCCESS, "Vector4 infix_type created")) {
+        if (!ok(infix_type_create_struct(arena, &struct_type, members, 1) == INFIX_SUCCESS,
+                "Vector4 infix_type created")) {
             skip(2, "Test skipped");
             infix_arena_destroy(arena);
             return;
         }
 
         infix_reverse_t * rt = nullptr;
-        status =
-            infix_reverse_create_manual(&rt, ret_type, &struct_type, 1, 1, (void *)vector4_callback_handler, nullptr);
+        infix_status status =
+            infix_reverse_create_callback_manual(&rt, ret_type, &struct_type, 1, 1, (void *)vector4_callback_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)
@@ -243,25 +246,23 @@ TEST {
     }
 
     subtest("Callback returning union: Number(float)") {
-        plan(3);
+        plan(2);  // Only testing the type-safe version
         infix_arena_t * arena = infix_arena_create(4096);
-        infix_struct_member * members =
-            infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
-        members[0] = infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0);
-        members[1] = infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 0);
+        infix_struct_member members[] = {
+            infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0),
+            infix_type_create_member("f", infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 0)};
         infix_type * union_type = nullptr;
-
-        infix_status status = infix_type_create_union(arena, &union_type, members, 2);
-        if (!ok(status == INFIX_SUCCESS, "Number union infix_type created")) {
-            skip(2, "Test skipped");
+        if (infix_type_create_union(arena, &union_type, members, 2) != INFIX_SUCCESS) {
+            fail("Failed to create union type");
+            skip(1, "Cannot proceed");
             infix_arena_destroy(arena);
             return;
         }
         infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
 
         infix_reverse_t * rt = nullptr;
-        status =
-            infix_reverse_create_manual(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler, nullptr);
+        infix_status status =
+            infix_reverse_create_callback_manual(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
 
         if (rt)

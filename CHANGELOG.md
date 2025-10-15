@@ -7,60 +7,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This is the initial public release of the `infix` FFI library.
+### Initial Public Release
+
+This is the first tagged version of `infix`. It's all downhill from here.
 
 ### Added
 
-- Core FFI Engine
-    + Core JIT engine for generating forward-call (calling from your code into C) and reverse-call (creating C callbacks from your handlers) trampolines.
-    + High-level Signature API for creating and managing trampolines from simple, human-readable strings (e.g., `"(int, *char) -> double"`).
-    + Low-level Manual API for programmatic, arena-based creation of C types for performance-critical scenarios.
+Everything. It's brand new.
 
-- Signature Language & Type System
-    + Comprehensive signature language with support for all major C types:
-        + Primitives: Both abstract (`int`, `long`) and fixed-width (`int32`, `uint64`).
-        + Pointers: `*` for pointers to any type, including `*void`.
-        + Structs: `{...}` for C `struct` definitions.
-        + Unions: `<...>` for C `union` definitions.
-        + Arrays: `[<size>:<type>]` for fixed-size arrays.
-        + Function Pointers: `*((...) -> ...)` for describing and passing function pointers.
-        + Enums: `e:<int_type>` for describing the underlying integer storage of an enum.
-        + Special Numerics: `c[...]` for `_Complex` numbers and `v[...]` for SIMD vectors.
-    + Support for variadic functions using the `;` separator (e.g., `"(*char; int, double) -> int"` for `printf`).
-    + Support for packed structs with `!{...}` for 1-byte packing and `!N:{...}` for N-byte packing.
+- Forward Trampolines:
+  - "Bound" trampolines with a hardcoded target function for maximum performance
+  - "Unbound" trampolines where the target function is provided at call-time for maximum flexibility
+- Reverse Trampolines:
+  - Callbacks: High-level API (`infix_reverse_create_callback`) for C/C++ developers, allowing the use of clean, type-safe C function signatures for handlers
+  - Closures: Low-level API (`infix_reverse_create_closure`) for language binding authors and stateful callbacks, providing a generic handler signature and support for a `user_data` context pointer
+- Cross-platform functions for loading shared libraries (`.so`, `.dll`, `.dylib`) and looking up symbols
+- APIs for reading/writing exported global variables
+- A powerful, human-readable string-based language to describe any C type or function signature. Support includes...
+  - Primitives: `int`, `double`
+  - Fixed-width integers: `int32`, `uint64`
+  - Pointers: `*int`, `**void`
+  - Structs: `{int, double}`
+  - Packed structs with custom alignment: `!{...}` or `!4:{...}`
+  - Unions: `<int, float>`
+  - Arrays: `[10:char]`
+  - Function Pointers: `(*((int)->void))`
+  - Variadic functions using a semicolon separator: `(*char; int, double) -> int`
+  - `_Complex` numbers: `c[double]`
+  - SIMD vectors: `v[4:float]`
+  - Enums with an explicit underlying type: `e:int`
+- Named Type Registry: A powerful system for defining and reusing complex types by name
+  - Simple aliases: `@UserID = uint64;`
+  - Recursive types: `@Node = { value: int, next: *@Node };`
+  - Mutually recursive types via forward declarations: `@A; @B; ...`
+- Manual API.
+  A programmatic, arena-based API (`infix_type_create_struct`, etc.) for building `infix_type` objects without the string parser.
+- Introspection API:
+  A comprehensive suite of getter functions to inspect the layout of any type at runtime, including its size, alignment, and the name/offset/type of every member. This is ideal for building dynamic language bindings and data marshallers.
 
-- Named Type Registry
-    + A powerful registry for defining complex structs, unions, and type aliases once and reusing them by name (e.g., `@Point`, `@Node`).
-    +   Automatically handles forward declarations and mutually recursive types, allowing complex data structures to be defined in any order.
+#### Security & Hardening
+- W^X Memory Protection: JIT-compiled code is never writable and executable at the same time, enforced with platform-native APIs (`VirtualProtect`, `mprotect`, `MAP_JIT`).
+- Guard Pages: Freed trampolines are made inaccessible to cause a safe, immediate crash on any use-after-free attempt.
+- Read-Only Contexts: The internal metadata for reverse callbacks is made read-only after creation to prevent runtime memory corruption vulnerabilities.
+- Integer Overflow Hardening: All API functions and internal calculations are hardened against integer overflows from malformed or malicious inputs.
+- Fuzz Tested: The entire API surface, especially the signature parser and ABI classifiers, is continuously validated with `libFuzzer` and `AFL++` to find and fix potential crashes and hangs.
 
-- Security Features
-    + Security-first design, hardened and validated through fuzz testing.
-    + Strict W^X (Write XOR Execute) memory protection for all JIT-compiled code, with platform-native implementations (dual-mapping on Linux/BSD, `VirtualProtect`/`mprotect` elsewhere).
-    + Guard Pages on freed trampoline memory to prevent use-after-free vulnerabilities by ensuring immediate and safe crashes.
-    + Read-Only Contexts for reverse trampolines (callbacks) to protect against runtime memory corruption exploits.
-    + Hardened against integer overflows in all type creation and layout calculation functions.
+#### Performance & Memory Management
+- High-Performance Design: The API separates the one-time JIT compilation cost from the near-native call-time overhead, making cached trampolines extremely fast.
+- Arena Allocator: All type metadata is managed by a fast, efficient arena allocator, eliminating memory leaks and simplifying the manual API.
+- Self-Contained Objects: Trampoline handles (`infix_forward_t`, `infix_reverse_t`) perform a deep copy of all necessary type information, making them fully self-contained and immune to use-after-free errors from other parts of the system.
+- Zero Dependencies: The library is written in pure C11 and has no external library dependencies.
 
-*   Dynamic Library & Globals API
-    + Cross-platform API for loading dynamic/shared libraries (`.so`, `.dll`, `.dylib`).
-    + Functions to look up symbols (functions or variables) by name within a loaded library.
-    + `infix_read_global()` and `infix_write_global()` to access global variables from a library using the same signature system.
-
-*   Introspection & Memory Management
-    + Powerful introspection API to parse signatures and inspect C type memory layouts at runtime (size, alignment, and member offsets).
-    + `infix_type_print()` to serialize a type graph back into a canonical signature string.
-    + Efficient arena-based memory management for all type descriptions, simplifying cleanup and improving performance.
-    + Support for custom memory allocators via preprocessor macros (`infix_malloc`, `infix_free`, etc.).
-
-*   Platform Support
-    + Initial cross-platform support for:
-        + Architectures: x86-64 and AArch64 (ARM64).
-        + ABIs: System V (Linux, macOS, BSDs), Windows x64, and AAPCS64 (standard ARM64).
-        + Compilers: GCC, Clang, and MSVC.
-        + Operating Systems: Rigorously tested on Linux, Windows, macOS, FreeBSD, OpenBSD, NetBSD, and Solaris.
-    + Zero-dependency, unity-build design for easy integration into any C/C++ project.
-
-*   Error Handling
-    + Detailed, thread-safe error reporting via `infix_get_last_error()` for robust diagnostics.
+#### Platform Support
+- Architectures: x86-64 and AArch64 (ARM64).
+- ABIs:
+  - System V AMD64 ABI (Linux, macOS, BSDs on x86-64)
+  - Microsoft x64 Calling Convention (Windows on x86-64)
+  - Procedure Call Standard for the ARM 64-bit Architecture (AAPCS64) on Linux, macOS, and Windows.
+- Compilers: GCC, Clang, and Microsoft Visual C++ (MSVC).
+- Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 
 [unreleased]: https://github.com/sanko/infix/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/sanko/infix/releases/tag/v0.1.0

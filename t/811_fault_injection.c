@@ -33,7 +33,7 @@
  *     paths correctly free any partially allocated resources.
  *
  * This test targets the two most allocation-heavy high-level operations:
- * - `infix_reverse_create`
+ * - `infix_reverse_create_callback`
  * - `infix_type_from_signature`
  */
 
@@ -188,10 +188,10 @@ TEST {
         reset_fault_injector();
     }
 
-    subtest("Leak test for infix_reverse_create failures") {
+    subtest("Leak test for infix_reverse_create_callback failures") {
         const int MAX_FAILS_TO_TEST = 20;  // A reasonable upper bound on heap allocations
         plan(MAX_FAILS_TO_TEST);
-        note("Testing for leaks when infix_reverse_create fails at every possible allocation.");
+        note("Testing for leaks when infix_reverse_create_callback fails at every possible allocation.");
 
         // A complex signature to exercise the parser and JIT engine.
         const char * signature = "({*char,int})->void";
@@ -201,7 +201,7 @@ TEST {
             setup_fault_injector(i);  // Fail on the i-th allocation
             infix_reverse_t * context = nullptr;
             infix_status status =
-                infix_reverse_create(&context, signature, (void *)fault_injection_handler, nullptr, nullptr);
+                infix_reverse_create_callback(&context, signature, (void *)fault_injection_handler, nullptr);
 
             if (fault_triggered) {
                 ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);

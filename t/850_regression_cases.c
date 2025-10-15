@@ -169,7 +169,12 @@ static const regression_test_case_t regression_tests[] = {
      .b64_input = "iAOysoiVA7L////////////////N////C////////////////4X/////////////9///////zf////8L////////////////////"
                   "////////9/8=",
      .target = TARGET_TRAMPOLINE_GENERATOR,
-     .expected_status = INFIX_ERROR_INVALID_ARGUMENT}};
+     .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
+    {.name = "Timeout in SysV Classifier (Zero-Sized Array)",
+     .b64_input = "PjL/gUAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAJWVlZWV/////////////////////////////////////5WVlZWFPg==",
+     .target = TARGET_TYPE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+};
 
 /**
  * @internal
@@ -255,7 +260,7 @@ static void run_regression_case(const regression_test_case_t * test) {
 
             infix_reverse_t * rev = nullptr;
             infix_status rev_status =
-                infix_reverse_create_manual(&rev, type_pool[0], arg_types, 1, 1, nullptr, nullptr);
+                infix_reverse_create_callback_manual(&rev, type_pool[0], arg_types, 1, 1, nullptr);
             infix_reverse_destroy(rev);
 
             ok(fwd_status == test->expected_status && rev_status == test->expected_status,

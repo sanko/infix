@@ -258,8 +258,8 @@ TEST {
             ok(fwd_status == INFIX_SUCCESS, "infix_forward_create_unbound parses successfully");
             infix_forward_destroy(fwd);
             infix_reverse_t * rev = nullptr;
-            infix_status rev_status = infix_reverse_create(&rev, "() -> void", dummy_handler, nullptr, nullptr);
-            ok(rev_status == INFIX_SUCCESS, "infix_reverse_create parses successfully");
+            infix_status rev_status = infix_reverse_create_callback(&rev, "()->void", (void *)dummy_handler, nullptr);
+            ok(rev_status == INFIX_SUCCESS, "infix_reverse_create_callback parses successfully");
             infix_reverse_destroy(rev);
         }
         subtest("Function with named arguments") {

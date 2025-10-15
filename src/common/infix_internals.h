@@ -113,11 +113,12 @@ struct infix_reverse_t {
     infix_internal_dispatch_callback_fn internal_dispatcher;  ///< Pointer to the C function that bridges from assembly.
 
     /**
-     * @brief A pre-compiled forward trampoline for calling the user's C callback.
-     * @details This is the core of the reverse call mechanism's type safety and ergonomics.
-     *          The C dispatcher uses this trampoline to correctly marshal the `void**`
-     *          arguments and the context pointer into the native ABI required to call the
-     *          user's clean, type-safe C handler function.
+     * @brief A pre-compiled forward trampoline for calling a type-safe user C callback.
+     * @details If this pointer is non-NULL, it signifies a high-level "callback" created
+     *          with `infix_reverse_create_callback`. The dispatcher will use this trampoline to
+     *          marshal arguments and call the user's type-safe C handler. If this is NULL,
+     *          it signifies a low-level "closure" created with `infix_reverse_create_closure`,
+     *          and the dispatcher will call the generic handler directly.
      */
     infix_forward_t * cached_forward_trampoline;
 };

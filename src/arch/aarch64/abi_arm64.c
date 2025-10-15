@@ -681,10 +681,14 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
     size_t args_array_size = (context->num_args * sizeof(void *) + 15) & ~15;
     // The contiguous block where we will save the actual argument data.
     size_t saved_args_data_size = 0;
-    for (size_t i = 0; i < context->num_args; ++i)
+    for (size_t i = 0; i < context->num_args; ++i) {
+        if (context->arg_types[i]->size > INFIX_MAX_ARG_SIZE) {
+            *out_layout = nullptr;
+            return INFIX_ERROR_LAYOUT_FAILED;
+        }
         // Ensure each saved argument is 16-byte aligned for simplicity.
         saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
-
+    }
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;

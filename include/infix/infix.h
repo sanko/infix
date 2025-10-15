@@ -335,6 +335,17 @@ typedef void (*infix_unbound_cif_func)(void *, void *, void **);
 typedef void (*infix_cif_func)(void *, void **);
 
 /**
+ * @brief The signature for a generic "closure" handler.
+ * @details This function pointer type is used with `infix_reverse_create_closure`.
+ * It is a low-level handler ideal for language bindings, receiving all arguments
+ * in a generic `void**` array for manual marshalling.
+ * @param context The context handle of the invoked callback.
+ * @param return_value A pointer to a buffer where the handler must write the return value.
+ * @param args An array of pointers to the arguments passed by the native caller.
+ */
+typedef void (*infix_closure_handler_fn)(infix_context_t * context, void * return_value, void ** args);
+
+/**
  * @brief An enumeration of all possible success or failure codes from the public API.
  */
 typedef enum {
@@ -418,32 +429,44 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *
 c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *);
 
 /**
- * @brief Generates a reverse-call trampoline (callback) from a signature string.
+ * @brief Generates a type-safe reverse-call trampoline (callback) from a signature string.
  * @details This function parses a signature string to create a native, C-callable function
- * pointer that invokes the provided user handler.
+ * pointer that invokes the provided user handler. This is the recommended API for C/C++
+ * developers as it provides compile-time type safety for the handler.
  *
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param signature A null-terminated string describing the callback's signature.
  * @param user_callback_fn A function pointer to the user's C callback handler.
- *                         Its signature **must** accept an `infix_context_t*` as its first
- *                         argument, followed by the arguments described in the signature.
+ *                         Its signature must be a "clean" C signature, exactly matching
+ *                         the types described in the signature string.
  *
  * @par Example:
- * A native C library expects a function pointer of type:<br>
- * `int (*my_callback)(int, int);`
+ * If the native C signature is `int (*my_callback)(int, int);`,
+ * your `infix` handler function must be `int my_handler(int a, int b);`.
  *
- * Your `infix` handler function must be:<br>
- * `int my_handler(infix_context_t* ctx, int a, int b);`
- *
- * @param user_data A user-defined pointer for passing state to the handler,
- *                  accessible inside the handler via `infix_reverse_get_user_data`.
  * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
  * @return `INFIX_SUCCESS` on success.
- * @return `INFIX_ERROR_INVALID_ARGUMENT` if the signature string is malformed or
- *         contains unresolved named types.
- * @note The returned context must be freed with `infix_reverse_destroy`.
+ * @note This type of callback is **stateless**. For stateful callbacks, use
+ *       `infix_reverse_create_closure`.
  */
-c23_nodiscard infix_status infix_reverse_create(infix_reverse_t **, const char *, void *, void *, infix_registry_t *);
+c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *);
+
+/**
+ * @brief Generates a low-level reverse-call trampoline (closure) from a signature string.
+ * @details Creates a native C function pointer that invokes a generic handler. This is the
+ * recommended API for language binding authors and for creating stateful callbacks.
+ *
+ * @param[out] out_context On success, will point to the new reverse trampoline context.
+ * @param signature A null-terminated string describing the callback's signature.
+ * @param user_callback_fn A function pointer to the user's generic closure handler. Its
+ *                         signature must match `infix_closure_handler_fn`.
+ * @param user_data A user-defined pointer for passing state to the handler, accessible
+ *                  inside the handler via `infix_reverse_get_user_data(context)`.
+ * @param registry An optional handle to a type registry. Pass `nullptr` if not used.
+ * @return `INFIX_SUCCESS` on success.
+ */
+c23_nodiscard infix_status
+infix_reverse_create_closure(infix_reverse_t **, const char *, infix_closure_handler_fn, void *, infix_registry_t *);
 
 /**
  * @brief Parses a full function signature string into its constituent infix_type parts.
@@ -477,6 +500,37 @@ c23_nodiscard infix_status infix_signature_parse(
  * @note **Memory Management:** On success, the caller takes ownership of the arena.
  */
 c23_nodiscard infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *, infix_registry_t *);
+
+/** @} */
+
+/**
+ * @defgroup library_api Dynamic Library API
+ * @ingroup public_api
+ * @brief Functions for loading shared libraries and looking up symbols.
+ * @{
+ */
+
+/**
+ * @brief Opens a dynamic library and returns a handle to it.
+ * @param path The file path to the dynamic library (.so, .dll, .dylib).
+ * @return A handle to the library on success, or `nullptr` on failure.
+ * @note The returned handle must be freed with `infix_library_close`.
+ */
+c23_nodiscard infix_library_t * infix_library_open(const char *);
+
+/**
+ * @brief Closes a dynamic library handle and unloads it.
+ * @param lib A handle to a previously opened library. Can be `nullptr`.
+ */
+void infix_library_close(infix_library_t *);
+
+/**
+ * @brief Retrieves the memory address of a symbol (function or global variable).
+ * @param lib A handle to a previously opened library.
+ * @param symbol_name The name of the symbol to look up.
+ * @return A `void*` pointer to the symbol's address, or `nullptr` if not found.
+ */
+c23_nodiscard void * infix_library_get_symbol(infix_library_t *, const char *);
 
 /** @} */
 
@@ -538,22 +592,33 @@ c23_nodiscard infix_status
 infix_forward_create_unbound_manual(infix_forward_t **, infix_type *, infix_type **, size_t, size_t);
 
 /**
- * @brief Generates a reverse-call trampoline (a native callable function pointer for a callback).
- * @details Creates a native C function pointer that invokes a user-provided handler.
+ * @brief Generates a type-safe reverse-call trampoline (callback) from `infix_type` objects.
  * @param[out] out_context On success, will point to the new reverse trampoline context.
  * @param return_type The return type of the callback.
  * @param arg_types An array of `infix_type` pointers for the callback's arguments.
  * @param num_args The total number of arguments in `arg_types`.
  * @param num_fixed_args The number of fixed arguments.
- * @param user_callback_fn A function pointer to your C callback handler.
- * @param user_data A user-defined pointer for passing state to the handler.
+ * @param user_callback_fn A function pointer to your type-safe C callback handler.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
- * @note See `infix_reverse_create` for critical details on the handler's signature.
- * @note The returned context must be freed with `infix_reverse_destroy`.
- * @note The generated context is self-contained.
+ * @note See `infix_reverse_create_callback` for details on the handler's signature.
  */
 c23_nodiscard infix_status
-infix_reverse_create_manual(infix_reverse_t **, infix_type *, infix_type **, size_t, size_t, void *, void *);
+infix_reverse_create_callback_manual(infix_reverse_t **, infix_type *, infix_type **, size_t, size_t, void *);
+
+/**
+ * @brief Generates a generic reverse-call trampoline (closure) from `infix_type` objects.
+ * @param[out] out_context On success, will point to the new reverse trampoline context.
+ * @param return_type The return type of the callback.
+ * @param arg_types An array of `infix_type` pointers for the callback's arguments.
+ * @param num_args The total number of arguments in `arg_types`.
+ * @param num_fixed_args The number of fixed arguments.
+ * @param user_callback_fn A function pointer to your generic `infix_closure_handler_fn`.
+ * @param user_data A user-defined pointer for passing state to the handler.
+ * @return `INFIX_SUCCESS` on success.
+ */
+c23_nodiscard infix_status infix_reverse_create_closure_manual(
+    infix_reverse_t **, infix_type *, infix_type **, size_t, size_t, infix_closure_handler_fn, void *);
+
 
 /**
  * @brief Frees a forward trampoline and its associated executable memory.
@@ -660,6 +725,7 @@ c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **
  * @param arena The arena from which to allocate.
  * @param[out] out_type On success, will point to the newly created `infix_type`.
  * @param name The name of the type being referenced.
+ * @param aggregate_category Distinguishes between `struct` and `union` for the reference.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  * @note A type graph containing a named reference is "unresolved".
  */
@@ -671,7 +737,7 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t *,
 /**
  * @brief Creates a new `infix_type` for a `_Complex` number from an arena.
  * @param arena The arena from which to allocate.
- * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param base_type The floating-point `infix_type` of the real and imaginary parts.
  * @return `INFIX_SUCCESS` on success.
  */

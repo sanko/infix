@@ -64,8 +64,7 @@ bool check_u128(__uint128_t val) {
 __int128_t return_s128(void) {
     return S128_CONSTANT;
 }
-bool s128_callback_handler(infix_context_t * context, __int128_t val) {
-    (void)context;
+bool s128_callback_handler(__int128_t val) {
     note("s128_callback_handler received value.");
     return val == S128_CONSTANT;
 }
@@ -138,7 +137,7 @@ TEST {
 
         // Test 3: Reverse call with __int128_t
         infix_reverse_t * rt = nullptr;
-        status = infix_reverse_create_manual(&rt, bool_type, &s128_type, 1, 1, (void *)s128_callback_handler, nullptr);
+        status = infix_reverse_create_callback_manual(&rt, bool_type, &s128_type, 1, 1, (void *)s128_callback_handler);
         if (ok(status == INFIX_SUCCESS, "Reverse trampoline created for __int128_t")) {
             typedef bool (*s128_harness_fn)(__int128_t);
             s128_harness_fn harness = (s128_harness_fn)infix_reverse_get_code(rt);

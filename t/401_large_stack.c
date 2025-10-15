@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2025 Sanko Robinson
  *
@@ -123,8 +122,7 @@ double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) {
 // Native C Handler and Harness for Reverse Call Test
 
 /** @brief A callback handler that takes a mix of register and stack arguments. */
-int many_args_callback_handler(infix_context_t * context, int a, double b, int c, const char * d, Point e, float f) {
-    (void)context;
+int many_args_callback_handler(int a, double b, int c, const char * d, Point e, float f) {
     subtest("Inside many_args_callback_handler") {
         plan(6);
         ok(a == 10, "Arg 1 (int) is correct");
@@ -143,7 +141,6 @@ void execute_many_args_callback(int (*func_ptr)(int, double, int, const char *, 
     int result = func_ptr(10, 20.2, -30, "arg4", p, 7.7f);
     ok(result == -20, "Callback with stack args returned correct value");
 }
-
 
 TEST {
     plan(2);
@@ -284,7 +281,7 @@ TEST {
 
         infix_reverse_t * rt = nullptr;
         status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 6, 6, (void *)many_args_callback_handler, nullptr);
+            infix_reverse_create_callback_manual(&rt, ret_type, arg_types, 6, 6, (void *)many_args_callback_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline with stack args created");
 
         if (rt) {

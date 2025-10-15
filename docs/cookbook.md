@@ -19,11 +19,12 @@ This guide provides practical, real-world examples to help you solve common FFI 
       + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
       + [Recipe: Working with Unions](#recipe-working-with-unions)
       + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
+      + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive--forward-declared)
       + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
       + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
       + [Recipe: Working with Enums](#recipe-working-with-enums)
    * [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
-      + [Recipe: Creating a Stateless Callback for `qsort`](#recipe-creating-a-stateless-callback-for-qsort)
+      + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-type-safe-callback-for-qsort)
       + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
    * [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
       + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
@@ -57,11 +58,13 @@ This guide provides practical, real-world examples to help you solve common FFI 
    * [Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)
       + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
       + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+      + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
       + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
-      + [**Recipe: Building a Dynamic Call Frame with an Arena**](#recipe-building-a-dynamic-call-frame-with-an-arena)
+      + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
          - [How It Works & Why It's Better](#how-it-works--why-its-better)
          - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
    * [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
+      + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
       + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
       + [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
       + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
@@ -305,8 +308,8 @@ void recipe_return_struct() {
 **Solution**: The process is identical to the small struct example. `infix`'s ABI logic will detect that the struct is large and automatically pass it by reference (the standard C ABI rule).
 
 ```c
-typedef struct { int data; } LargeStruct;
-int get_first_element(LargeStruct s) { return s.data; }
+typedef struct { int data[8]; } LargeStruct;
+int get_first_element(LargeStruct s) { return s.data[0]; }
 
 void recipe_large_struct() {
     const char* signature = "({[8:int]}) -> int";
@@ -453,6 +456,67 @@ void recipe_array_decay() {
 }
 ```
 
+### Recipe: Advanced Named Types (Recursive & Forward-Declared)
+
+**Problem**: You need to describe complex, real-world C data structures, such as a linked list or mutually dependent types.
+
+**Solution**: The `infix` registry fully supports recursive definitions and forward declarations, allowing you to model these patterns cleanly.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+
+// C equivalent of the types we will define:
+typedef struct Employee Employee;
+typedef struct Manager {
+    const char* name;
+    Employee* reports[10]; // A manager has direct reports
+} Manager;
+
+struct Employee {
+    const char* name;
+    Manager* manager; // An employee has a manager
+};
+
+// A simple function to demonstrate usage
+const char* get_manager_name(Employee* e) {
+    return e->manager ? e->manager->name : "None";
+}
+
+void recipe_advanced_registry() {
+    infix_registry_t* registry = infix_registry_create();
+
+    // 1. Define the types. Note the forward declarations with a single ';'.
+    //    This is necessary because Manager refers to Employee, and Employee
+    //    refers to Manager.
+    const char* definitions =
+        "@Employee; @Manager;" // Forward declarations
+        "@Manager = { name:*char, reports:[10:*@Employee] };"
+        "@Employee = { name:*char, manager:*@Manager };"
+    ;
+    infix_register_types(registry, definitions);
+
+    // 2. Create a trampoline using the named types.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, "(*@Employee) -> *char", (void*)get_manager_name, registry);
+
+    // 3. Set up the C data and call.
+    Manager boss = { "Sanko", { NULL } };
+    Employee worker = { "Robinson", &boss };
+    Employee* p_worker = &worker;
+    const char* manager_name = NULL;
+    void* args[] = { &p_worker };
+
+    infix_forward_get_code(trampoline)(&manager_name, args);
+
+    printf("The manager of %s is %s.\n", worker.name, manager_name); // Expected: Sanko
+
+    // 4. Clean up.
+    infix_forward_destroy(trampoline);
+    infix_registry_destroy(registry);
+}
+```
+
 ### Recipe: Working with Complex Numbers
 
 **Problem**: You need to call a C function that uses `_Complex` types.
@@ -549,30 +613,33 @@ void recipe_enums() {
 
 ## Chapter 3: The Power of Callbacks (Reverse Calls)
 
-### Recipe: Creating a Stateless Callback for `qsort`
+### Recipe: Creating a Type-Safe Callback for `qsort`
 
 **Problem**: You need to sort an array using C's `qsort`, which requires a function pointer for the comparison logic.
 
-**Solution**: Use a reverse trampoline. The handler's signature must accept `infix_context_t*` as its first argument.
+**Solution**: Use `infix_reverse_create_callback`. The handler is a normal, clean C function whose signature exactly matches what `qsort` expects.
 
 ```c
 #include <stdlib.h>
 
-int compare_integers_handler(infix_context_t* ctx, const int* a, const int* b) {
-    (void)ctx; // Unused
-    return (*a - *b);
+// 1. The handler function has a standard C signature. No context pointer is needed.
+int compare_integers_handler(const void* a, const void* b) {
+    return (*(const int*)a - *(const int*)b);
 }
 
 void recipe_qsort_callback() {
+    // 2. Create the reverse trampoline.
     infix_reverse_t* context = NULL;
     const char* cmp_sig = "(*void, *void) -> int";
-    infix_reverse_create(&context, cmp_sig, (void*)compare_integers_handler, NULL, NULL);
+    infix_reverse_create_callback(&context, cmp_sig, (void*)compare_integers_handler, NULL);
 
+    // 3. Get the native function pointer.
     typedef int (*compare_func_t)(const void*, const void*);
     compare_func_t my_comparator = (compare_func_t)infix_reverse_get_code(context);
 
+    // 4. Use the generated callback with the C library function.
     int numbers[] = { 5, 1, 4, 2, 3 };
-    size_t num_count = sizeof(numbers) / sizeof(numbers);
+    size_t num_count = sizeof(numbers) / sizeof(numbers[0]);
     qsort(numbers, num_count, sizeof(int), my_comparator);
 
     printf("Sorted numbers:");
@@ -589,26 +656,39 @@ void recipe_qsort_callback() {
 
 **Problem**: A callback handler needs access to application state, but the C library API is stateless (it has no `void* user_data` parameter).
 
-**Solution**: `infix` automatically passes a pointer to the `infix_context_t` as the first argument to every handler. Store your application state in the context's `user_data` field.
+**Solution**: Use `infix_reverse_create_closure`. This API is specifically designed for stateful callbacks. You provide a generic handler and a `void* user_data` pointer to your state. Inside the handler, you can retrieve this pointer from the `context`.
 
 ```c
 typedef struct { const char * name; int sum; } AppContext;
 
-void my_stateful_handler(infix_context_t* context, int item_value) {
+// 1. The handler for a closure has a generic signature.
+void my_stateful_handler(infix_context_t* context, void* ret, void** args) {
+    (void)ret; // This handler doesn't return a value.
+
+    // 2. Retrieve your state from the context's user_data field.
     AppContext* ctx = (AppContext*)infix_reverse_get_user_data(context);
+
+    // 3. Manually unbox the arguments from the void** array.
+    int item_value = *(int*)args[0];
+
     ctx->sum += item_value;
 }
 
+// A C library function that takes a callback but no user_data.
 typedef void (*item_processor_t)(int);
-void process_list(int* items, int count, item_processor_t process_func) {
+void process_list(const int* items, int count, item_processor_t process_func) {
     for (int i = 0; i < count; ++i) process_func(items[i]);
 }
 
 void recipe_stateful_callback() {
+    // a. Prepare your state.
     AppContext ctx = {"My List", 0};
-    infix_reverse_t* rt = NULL;
-    infix_reverse_create(&rt, "(int) -> void", (void*)my_stateful_handler, &ctx, NULL);
 
+    // b. Create the closure, passing a pointer to your state as user_data.
+    infix_reverse_t* rt = NULL;
+    infix_reverse_create_closure(&rt, "(int) -> void", my_stateful_handler, &ctx, NULL);
+
+    // c. Use the generated callback.
     item_processor_t processor_ptr = (item_processor_t)infix_reverse_get_code(rt);
     int list[] = {10, 20, 30};
     process_list(list, 3, processor_ptr);
@@ -638,8 +718,9 @@ void recipe_variadic_printf() {
     int count = 42;
     double value = 123.45;
     void* args[] = { &fmt, &count, &value };
+    int result;
 
-    infix_forward_get_code(trampoline)(NULL, args);
+    infix_forward_get_code(trampoline)(&result, args);
     infix_forward_destroy(trampoline);
 }
 ```
@@ -651,12 +732,12 @@ void recipe_variadic_printf() {
 **Solution**: The signature for a function pointer is `*((...) -> ...)`. Generate your callback, get its native pointer, and pass that pointer as an argument.
 
 ```c
-int multiply_handler(infix_context_t* ctx, int x) { (void)ctx; return x * 10; }
+int multiply_handler(int x) { return x * 10; }
 int harness_func(int (*worker_func)(int), int base_val) { return worker_func(base_val); }
 
 void recipe_callback_as_arg() {
     infix_reverse_t* inner_cb_ctx = NULL;
-    infix_reverse_create(&inner_cb_ctx, "(int)->int", (void*)multiply_handler, NULL, NULL);
+    infix_reverse_create_callback(&inner_cb_ctx, "(int)->int", (void*)multiply_handler, NULL);
 
     infix_forward_t* harness_trampoline = NULL;
     infix_forward_create(&harness_trampoline, "(*((int)->int), int) -> int", (void*)harness_func, NULL);
@@ -694,7 +775,7 @@ typedef struct {
 const AdderVTable VTABLE = { vtable_add, vtable_destroy };
 Adder* create_adder(int base) {
     Adder* a = malloc(sizeof(Adder));
-    a->val = base;
+    if (a) a->val = base;
     return a;
 }
 
@@ -770,20 +851,30 @@ void recipe_long_double() {
 **Solution**: `infix` is designed to be fully reentrant. The library uses no global mutable state, and all error information is stored in thread-local storage. This recipe demonstrates a forward call that invokes a reverse callback, which in turn makes another forward call.
 
 ```c
+#include <string.h> // For memcpy
+
 // Innermost target function
 int multiply(int a, int b) { return a * b; }
 
-// The callback handler that will make the nested forward call
-int nested_call_handler(infix_context_t* ctx, int val) {
+// Because this handler needs state (the forward trampoline), we MUST use a closure.
+void nested_call_handler(infix_context_t* ctx, void* ret, void** args) {
+    // 1. Retrieve the forward trampoline from user_data.
     infix_forward_t* fwd_trampoline = (infix_forward_t*)infix_reverse_get_user_data(ctx);
+
+    // 2. Unbox the argument.
+    int val = *(int*)args[0];
     int multiplier = 5;
-    void* args[] = { &val, &multiplier };
+    void* mult_args[] = { &val, &multiplier };
+
+    // 3. Make the nested forward call.
     int result;
-    infix_forward_get_code(fwd_trampoline)(&result, args);
-    return result;
+    infix_forward_get_code(fwd_trampoline)(&result, mult_args);
+
+    // 4. Write the result to the return buffer.
+    memcpy(ret, &result, sizeof(int));
 }
 
-// The outer C function that takes our callback
+// The outer C function that takes our generated callback
 int harness(int (*func)(int), int input) {
     return func(input);
 }
@@ -793,9 +884,9 @@ void recipe_reentrancy() {
     infix_forward_t* fwd_multiply = NULL;
     infix_forward_create(&fwd_multiply, "(int, int)->int", (void*)multiply, NULL);
 
-    // 2. Create the reverse trampoline (callback), passing the forward trampoline as user_data
+    // 2. Create the reverse closure, passing the forward trampoline as user_data
     infix_reverse_t* rev_nested = NULL;
-    infix_reverse_create(&rev_nested, "(int)->int", (void*)nested_call_handler, fwd_multiply, NULL);
+    infix_reverse_create_closure(&rev_nested, "(int)->int", nested_call_handler, fwd_multiply, NULL);
 
     // 3. Create the outermost forward trampoline (for `harness`)
     infix_forward_t* fwd_harness = NULL;
@@ -1479,6 +1570,58 @@ void recipe_custom_arena() {
 }
 ```
 
+### Recipe: The Full Manual API Lifecycle (Types to Trampoline)
+
+**Problem**: You want to create a trampoline without using the signature parser, for maximum performance or because your type information is already structured in C.
+
+**Solution**: Use an arena to build your `infix_type` objects and then pass them directly to the `_manual` variant of the creation functions.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stddef.h> // For offsetof
+
+// The C types and function we want to call
+typedef struct { double x, y; } Point;
+Point move_point(Point p, double dx) { p.x += dx; return p; }
+
+void recipe_full_manual_api() {
+    // 1. Create an arena to hold all our type definitions.
+    infix_arena_t* arena = infix_arena_create(4096);
+
+    // 2. Manually define the 'Point' struct type.
+    infix_struct_member point_members[] = {
+        infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
+        infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))
+    };
+    infix_type* point_type = NULL;
+    infix_type_create_struct(arena, &point_type, point_members, 2);
+
+    // 3. Define the argument types for the function `Point move_point(Point, double)`.
+    infix_type* arg_types[] = {
+        point_type,
+        infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)
+    };
+
+    // 4. Create the trampoline using the manually created types.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create_manual(&trampoline, point_type, arg_types, 2, 2, (void*)move_point);
+
+    // 5. Call the function.
+    Point start = { 10.0, 20.0 };
+    double delta_x = 5.5;
+    void* args[] = { &start, &delta_x };
+    Point end;
+
+    infix_forward_get_code(trampoline)(&end, args);
+    printf("Manual API result: Moved point has x = %f\n", end.x); // Should be 15.5
+
+    // 6. Clean up.
+    infix_forward_destroy(trampoline);
+    infix_arena_destroy(arena); // Frees the 'point_type' as well.
+}
+```
+
 ### Recipe: Using Custom Memory Allocators
 
 **Problem**: Your application uses a custom memory manager for tracking, pooling, or integration with a garbage collector. You need `infix` to use your allocators instead of the standard `malloc`, `calloc`, etc.
@@ -1522,7 +1665,7 @@ void recipe_custom_allocators() {
 }
 ```
 
-### **Recipe: Building a Dynamic Call Frame with an Arena**
+### Recipe: Building a Dynamic Call Frame with an Arena
 
 **Problem**: You are writing a language binding (e.g., for Python, Perl, Lua) and need to build the `void* args[]` array at runtime. The arguments are coming from the host language, so you need to unbox them into temporary C values, create an array of pointers to these temporary values, and then clean everything up after the call. Doing this with `malloc` for every call in a tight loop is inefficient.
 
@@ -1632,6 +1775,49 @@ infix_arena_destroy(loop_arena);
 ---
 
 ## Chapter 9: Common Pitfalls & Troubleshooting
+
+### Recipe: Advanced Error Reporting for the Parser
+
+**Problem**: A user provides an invalid signature string, and you want to give them a helpful error message indicating exactly where the syntax error occurred.
+
+**Solution**: After a parsing function fails, call `infix_get_last_error()` and use the `position` field to point out the exact character that caused the failure.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+
+void report_parse_error(const char* signature) {
+    infix_type* type = NULL;
+    infix_arena_t* arena = NULL;
+    infix_status status = infix_type_from_signature(&type, &arena, signature, NULL);
+
+    if (status != INFIX_SUCCESS) {
+        infix_error_details_t err = infix_get_last_error();
+        fprintf(stderr, "Failed to parse signature:\n");
+        fprintf(stderr, "  %s\n", signature);
+        // Print a caret '^' pointing to the error location.
+        fprintf(stderr, "  %*s^\n", (int)err.position, "");
+        fprintf(stderr, "Error Code: %d at position %zu\n", err.code, err.position);
+    }
+    else
+        printf("Successfully parsed signature: %s\n", signature);
+
+    infix_arena_destroy(arena);
+}
+
+void recipe_error_reporting() {
+    // This signature has an invalid character '^' instead of a comma.
+    report_parse_error("{int, double, ^*char}");
+}
+
+/*
+Expected output:
+Failed to parse signature:
+  {int, double, ^*char}
+               ^
+Error Code: 200 at position 15
+*/
+```
 
 ### Mistake: Passing a Value Instead of a Pointer in `args[]`
 
@@ -1875,7 +2061,7 @@ int qsort_handler_infix(infix_context_t* ctx, const int* a, const int* b) {
 
 // 2. Create the reverse trampoline from a signature.
 infix_reverse_t* context = NULL;
-infix_reverse_create(&context, "(*void, *void)->int", (void*)qsort_handler_infix, NULL, NULL);
+infix_reverse_create_callback(&context, "(*void, *void)->int", (void*)qsort_handler_infix, NULL, NULL);
 
 // 3. Get the native function pointer and use it.
 typedef int (*compare_func_t)(const void*, const void*);
@@ -1893,7 +2079,7 @@ infix_reverse_destroy(context);
 | **Performance Model** | Setup cost on **every call**          | **One-time setup** (`ffi_prep_cif`)                  | **One-time setup** (JIT compilation)                                     |
 | **Type System**   | Programmatic, with struct support     | Manual, programmatic `ffi_type` creation             | **Integrated**. Types are part of the signature string, with registry support. |
 | **Ease of Use**   | Simple for primitives, complex for structs | Complex, powerful, requires deep knowledge of the API | **Simple and Declarative**, designed for a high-level experience.        |
-| **Callback Handler**| Special API (`dcbArg*`)              | Generic `void**` arguments                           | **Native C arguments**, easy to read and write.                          |
+| **Callback Handler**| Special API (`dcbArg*`)              | Generic `void**` arguments                           | **Native C arguments** (callback) or **Generic `void**` (closure).       |
 
 ---
 
@@ -1905,7 +2091,7 @@ A robust language binding built on `infix` must solve four main challenges:
 1.  **Type Mapping & Signature Generation:** The binding's primary job is to translate the host language's type representation (e.g., Python's `ctypes.c_int`) into an `infix` signature string.
 2.  **Trampoline Caching:** The binding **must** implement a global, persistent cache for trampolines, using the signature string as the key, to amortize the one-time JIT compilation cost.
 3.  **Memory & Lifetime Management:** The binding must act as a bridge between the host language's Garbage Collector (GC) and C's manual memory management, holding references to objects to prevent premature collection.
-4.  **The Callback Bridge:** A C handler must be implemented to transfer control from a native C call back into the host language's runtime, handling argument unmarshalling and potential GIL (Global Interpreter Lock) acquisition.
+4.  **The Callback Bridge:** A C handler must be implemented to transfer control from a native C call back into the host language's runtime, handling argument unmarshalling and potential GIL (Global Interpreter Lock) acquisition. This should use the `infix_reverse_create_closure` API.
 
 ### Recipe: Porting a Python Binding from `dyncall` to `infix`
 
@@ -1940,9 +2126,9 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
     PyObject* capsule = PyDict_GetItem(g_trampoline_cache, signature_py);
     infix_forward_t* trampoline = NULL;
 
-    if (capsule) {
+    if (capsule)
         trampoline = (infix_forward_t*)PyCapsule_GetPointer(capsule, "infix_trampoline");
-    } else {
+    else {
         // Not in cache: create, then store in cache via a PyCapsule.
         if (infix_forward_create_unbound(&trampoline, signature, NULL) != INFIX_SUCCESS) {
             PyErr_SetString(PyExc_RuntimeError, "Failed to create infix trampoline.");
@@ -1967,7 +2153,8 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
         if (PyLong_Check(py_arg)) {
             long* val = (long*)storage_ptr; *val = PyLong_AsLong(py_arg);
             c_args[i] = val; storage_ptr += sizeof(long);
-        } else if (PyFloat_Check(py_arg)) {
+        }
+        else if (PyFloat_Check(py_arg)) {
             double* val = (double*)storage_ptr; *val = PyFloat_AsDouble(py_arg);
             c_args[i] = val; storage_ptr += sizeof(double);
         } // ... etc.

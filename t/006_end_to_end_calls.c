@@ -23,8 +23,7 @@ Point move_point(Point p, double dx, double dy) {
 }
 
 /** @brief A callback handler that receives a Point, modifies it, and returns it. */
-Point point_callback_handler(infix_context_t * context, Point p) {
-    (void)context;  // Context is unused in this simple handler.
+Point point_callback_handler(Point p) {
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     // Return a new point with doubled coordinates to verify the call worked.
     return (Point){p.x * 2.0, p.y * 2.0};
@@ -103,7 +102,7 @@ TEST {
 
             infix_reverse_t * context = nullptr;
             infix_status status =
-                infix_reverse_create(&context, signature, (void *)point_callback_handler, nullptr, nullptr);
+                infix_reverse_create_callback(&context, signature, (void *)point_callback_handler, nullptr);
             ok(status == INFIX_SUCCESS, "Successfully created reverse trampoline for struct by value");
 
             if (status == INFIX_SUCCESS) {
