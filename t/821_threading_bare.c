@@ -45,8 +45,7 @@
 #define ITERATIONS_PER_THREAD 500
 
 /** @brief A simple C callback function; its only purpose is to be a valid call target. */
-void bare_helgrind_handler(infix_context_t * context, int a, int b) {
-    (void)context;
+void bare_helgrind_handler(int a, int b) {
     (void)a;
     (void)b;
 }
@@ -73,7 +72,7 @@ void * bare_thread_worker(void * arg) {
         infix_reverse_t * rt = nullptr;
         // Generate the reverse trampoline. This is a critical area for thread-safety.
         infix_status status =
-            infix_reverse_create_manual(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler, nullptr);
+            infix_reverse_create_callback_manual(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler);
         if (status != INFIX_SUCCESS) {
             fprintf(stderr, "# Thread failed to generate reverse trampoline.\n");
 #if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)

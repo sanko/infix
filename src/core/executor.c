@@ -597,64 +597,40 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
  *          assembly stub handles the complexities of the native calling convention,
  *          finds all arguments (whether in registers or on the stack), and packages
  *          them into a simple `void**` array. This function receives that normalized
- *          data and performs the final step of invoking the user's code.
+ *          data and invokes the correct user handler.
  *
- *          Its primary responsibility is to adapt the argument list for the user's
- *          handler. All `infix` callback handlers have a signature that begins with
- *          `infix_context_t*`, which provides access to state. This function
- *          constructs a new argument array on the stack, prepends a pointer to the
- *          `context` as the first argument, and then calls the user's handler
- *          through a pre-compiled **cached forward trampoline**. This final hop
- *          through another trampoline ensures that the call to the user's C code
- *          is itself ABI-correct.
+ *          It distinguishes between a type-safe "callback" and a generic "closure"
+ *          by checking if a `cached_forward_trampoline` exists in the context.
  *
  * @param context A pointer to the `infix_reverse_t` context object for the
- *                callback that was invoked. This contains the pointer to the
- *                user's C handler and the cached forward trampoline.
- * @param return_value_ptr A pointer to a buffer on the JIT stub's stack. The
- *                         final return value from the user's handler will be
- *                         written here.
- * @param args_array An array of `void*` pointers, where each element points to
- *                   one of the original arguments passed by the native caller.
- *                   This array is prepared by the assembly stub.
+ *                callback that was invoked.
+ * @param return_value_ptr A pointer to a buffer on the JIT stub's stack for the return value.
+ * @param args_array An array of `void*` pointers to the arguments from the native caller.
  */
 void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * return_value_ptr, void ** args_array) {
     INFIX_DEBUG_PRINTF("Dispatching callback. Context: %p, User Fn: %p", (void *)context, context->user_callback_fn);
 
-    infix_forward_t * trampoline = context->cached_forward_trampoline;
-    if (trampoline == nullptr) {
+    if (context->user_callback_fn == nullptr) {
         // This is a fatal internal error, likely from a failed allocation during setup.
-        // We cannot propagate an error, but we can prevent a crash by zeroing the
-        // return buffer if it exists.
         if (return_value_ptr && context->return_type->size > 0)
             infix_memset(return_value_ptr, 0, context->return_type->size);
         return;
     }
 
-    // The cached trampoline is always a "bound" one, as its target (the user's C
-    // handler) is known at creation time. Get its executable code pointer.
-    infix_cif_func cif_func = infix_forward_get_code(trampoline);
-
-    // The cached forward trampoline was generated to expect `num_args + 1` arguments,
-    // with the first one being the `infix_reverse_t*` context. We must construct a
-    // new argument array on the stack that reflects this.
-#if defined(INFIX_COMPILER_MSVC)
-    // MSVC does not support C99 VLAs, so we use its intrinsic `_alloca`.
-    void ** callback_args = (void **)_alloca(sizeof(void *) * (context->num_args + 1));
-#else
-    // Use a standard Variable Length Array on GCC/Clang.
-    void * callback_args[context->num_args + 1];
-#endif
-
-    // The first argument to the user's handler is the context pointer itself.
-    callback_args[0] = &context;
-
-    // Copy the original argument pointers into the rest of the new array.
-    if (context->num_args > 0)
-        infix_memcpy(&callback_args[1], args_array, context->num_args * sizeof(void *));
-
-    // Call the user's handler through the trampoline with the complete, prepended argument list.
-    cif_func(return_value_ptr, callback_args);
+    // Check if this is a high-level "callback" or a low-level "closure".
+    if (context->cached_forward_trampoline != nullptr) {
+        // High-Level, Type-Safe "Callback" Path
+        // Use the cached forward trampoline to call the user's type-safe C handler.
+        // The user's handler has a "clean" signature and does not expect the context.
+        infix_cif_func cif_func = infix_forward_get_code(context->cached_forward_trampoline);
+        cif_func(return_value_ptr, args_array);
+    }
+    else {
+        // Low-Level, Generic "Closure" Path
+        // Directly call the user's generic handler, which expects the context.
+        infix_closure_handler_fn handler = (infix_closure_handler_fn)context->user_callback_fn;
+        handler(context, return_value_ptr, args_array);
+    }
 
     INFIX_DEBUG_PRINTF("Exiting callback dispatcher.");
 }

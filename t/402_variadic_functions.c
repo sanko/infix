@@ -116,8 +116,7 @@ int forward_variadic_aggregate_checker(int fixed_arg, ...) {
 }
 
 /** @brief A handler for a reverse trampoline with a variadic signature. */
-int variadic_reverse_handler(infix_context_t * context, const char * topic, ...) {
-    (void)context;
+int variadic_reverse_handler(const char * topic, ...) {
     va_list args;
     va_start(args, topic);
     int count = va_arg(args, int);
@@ -231,7 +230,7 @@ TEST {
         const char * signature = "(*char; int, double, *char) -> int";
 
         infix_reverse_t * rt = nullptr;
-        infix_status status = infix_reverse_create(&rt, signature, (void *)variadic_reverse_handler, nullptr, nullptr);
+        infix_status status = infix_reverse_create_callback(&rt, signature, (void *)variadic_reverse_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic reverse trampoline created");
 
         if (rt) {

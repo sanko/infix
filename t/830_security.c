@@ -127,7 +127,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
             infix_reverse_t * rt = nullptr;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr);
+            infix_status status = infix_reverse_create_callback(&rt, "()->void", (void *)dummy_handler_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             void (*f)() = (void (*)())infix_reverse_get_code(rt);
@@ -136,7 +136,7 @@ TEST {
         }
         else if (strcmp(child_test_name, "write_harden") == 0) {
             infix_reverse_t * rt = nullptr;
-            infix_status status = infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr);
+            infix_status status = infix_reverse_create_callback(&rt, "()->void", (void *)dummy_handler_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
             rt->user_data = nullptr;  // This line should crash
@@ -220,7 +220,7 @@ TEST {
             }
             else if (pid == 0) {  // Child process
                 infix_reverse_t * rt = nullptr;
-                if (infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr) !=
+                if (infix_reverse_create_callback(&rt, "()->void", (void *)dummy_handler_func, nullptr) !=
                     INFIX_SUCCESS)
                     exit(2);
                 void (*dangling_ptr)() = (void (*)())infix_reverse_get_code(rt);
@@ -255,7 +255,7 @@ TEST {
         }
         else if (pid == 0) {  // Child process
             infix_reverse_t * rt = nullptr;
-            if (infix_reverse_create(&rt, "()->void", (void *)dummy_handler_func, nullptr, nullptr) != INFIX_SUCCESS)
+            if (infix_reverse_create_callback(&rt, "()->void", (void *)dummy_handler_func, nullptr) != INFIX_SUCCESS)
                 exit(2);
             rt->user_data = nullptr;  // This write should trigger a SIGSEGV
             exit(0);                  // Should not be reached

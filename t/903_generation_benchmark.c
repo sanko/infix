@@ -33,8 +33,7 @@
 #define BENCHMARK_ITERATIONS 10000
 
 // A dummy handler function to be a valid target for trampoline generation.
-void benchmark_handler(infix_context_t * context, Point p) {
-    (void)context;
+void benchmark_handler(Point p) {
     (void)p;
 }
 
@@ -43,15 +42,14 @@ TEST {
 
     diag("Trampoline Generation Benchmark");
     diag("Iterations: %d", BENCHMARK_ITERATIONS);
-    diag("Target: infix_reverse_create_manual for Point(Point) using arena API");
+    diag("Target: infix_reverse_create_callback_manual for Point(Point) using arena API");
 
     // Run the benchmark loop. Each iteration is a full create/destroy cycle.
     clock_t start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
         infix_arena_t * arena = infix_arena_create(1024);
-        if (!arena) {
+        if (!arena)
             bail_out("Arena creation failed mid-benchmark.");
-        }
 
         // 1. Build the infix_type within the timing loop, using the arena.
         infix_struct_member * point_members =
@@ -69,7 +67,7 @@ TEST {
         // 2. Generate the trampoline.
         infix_reverse_t * rt = nullptr;
         infix_status status =
-            infix_reverse_create_manual(&rt, point_type, &point_type, 1, 1, (void *)benchmark_handler, nullptr);
+            infix_reverse_create_callback_manual(&rt, point_type, &point_type, 1, 1, (void *)benchmark_handler);
         if (status != INFIX_SUCCESS) {
             infix_arena_destroy(arena);
             bail_out("Trampoline generation failed mid-benchmark on iteration %d.", i);

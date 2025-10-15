@@ -19,7 +19,7 @@
  * @details This harness uses the shared recursive generator (`fuzz_helpers.h`) to
  * create a pool of complex `infix_type` objects within a memory arena. It then uses
  * these types to construct randomized function signatures which are passed to
- * `infix_forward_create_manual` and `infix_reverse_create_manual`.
+ * `infix_forward_create_manual` and `infix_reverse_create_*_manual`.
  *
  * The goal is to find bugs in the ABI classification and JIT code generation stages.
  * This harness now tests the fully arena-based workflow.
@@ -27,8 +27,15 @@
 
 #include "fuzz_helpers.h"
 
-// A dummy function pointer to use as a target for bound trampolines.
+// A dummy function pointer to use as a target for bound trampolines and callbacks.
 void dummy_target_for_fuzzing(void) {}
+// A dummy generic handler for closures.
+void dummy_closure_handler(infix_context_t * ctx, void * ret, void ** args) {
+    (void)ctx;
+    (void)ret;
+    (void)args;
+}
+
 
 // Fuzzing Logic Core
 // This function contains the actual test logic, shared by both entry points.
@@ -92,11 +99,23 @@ static void FuzzTest(fuzzer_input in) {
                                             (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
                 infix_forward_destroy(bound_trampoline);
 
-            // Fuzz the reverse trampoline generator.
-            infix_reverse_t * reverse_trampoline = NULL;
-            if (infix_reverse_create_manual(
-                    &reverse_trampoline, return_type, arg_types, num_args, num_fixed_args, NULL, NULL) == INFIX_SUCCESS)
-                infix_reverse_destroy(reverse_trampoline);
+            // Fuzz the type-safe reverse trampoline (callback) generator.
+            infix_reverse_t * reverse_callback = NULL;
+            if (infix_reverse_create_callback_manual(&reverse_callback,
+                                                     return_type,
+                                                     arg_types,
+                                                     num_args,
+                                                     num_fixed_args,
+                                                     (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
+                infix_reverse_destroy(reverse_callback);
+
+            // Fuzz the generic reverse trampoline (closure) generator.
+            infix_reverse_t * reverse_closure = NULL;
+            if (infix_reverse_create_closure_manual(
+                    &reverse_closure, return_type, arg_types, num_args, num_fixed_args, dummy_closure_handler, NULL) ==
+                INFIX_SUCCESS)
+                infix_reverse_destroy(reverse_closure);
+
 
             free(arg_types);
         }

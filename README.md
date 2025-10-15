@@ -21,7 +21,7 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
 -   **Simple, Powerful APIs:** Use the high-level **Signature API** to create trampolines from a single string, or drop down to the memory-safe **Manual API** for dynamic, performance-critical use cases.
 -   **Advanced Type System:** Full support for primitives, pointers, structs, unions, arrays, enums, `_Complex` numbers, and SIMD vectors.
 -   **Named Type Registry:** Define complex types like structs and unions once, and reuse them by name (`@Name`) across all your signatures for unparalleled readability and maintainability.
--   **Stateful Callbacks Made Easy:** The reverse-call API is designed to make stateful callbacks simple and safe, even when the C library you're calling doesn't provide a `user_data` parameter.
+-   **Stateful Callbacks Made Easy:** The reverse-call API is designed to make stateful callbacks simple and safe, even when the C library you're calling doesn't provide a `user_data` parameter. It offers both high-level, type-safe handlers for C/C++ and low-level, generic handlers for language bindings.
 -   **Secure by Design:** `infix` is hardened against vulnerabilities and validated through extensive fuzz testing:
     *   **W^X Memory Protection:** JIT-compiled code is never writable and executable at the same time.
     *   **Guard Pages:** Freed trampolines are made inaccessible to prevent **use-after-free** bugs.
@@ -163,9 +163,9 @@ int main() {
 #### Reverse Call (Creating a C callback)
 
 ```c
-// 1. The custom handler function. Its signature must start with infix_context_t*.
-int my_adder_handler(infix_context_t* context, int a, int b) {
-    (void)context; // Unused in this simple example
+// 1. The handler for a type-safe callback is a clean C function.
+//    Its signature exactly matches the types in the signature string.
+int my_adder_handler(int a, int b) {
     return a + b;
 }
 
@@ -179,7 +179,7 @@ int main() {
     // 3. Create the reverse trampoline (the callback).
     infix_reverse_t* context = NULL;
     const char* signature = "(int32, int32) -> int32";
-    infix_reverse_create(&context, signature, (void*)my_adder_handler, NULL, NULL);
+    infix_reverse_create_callback(&context, signature, (void*)my_adder_handler, NULL);
 
     // 4. Get the native C function pointer and pass it to the C code.
     typedef int (*AdderFunc)(int, int);
@@ -376,7 +376,8 @@ A brief overview of the complete public API, grouped by functionality.
 ### High-Level Signature API (`high_level_api`)
 - `infix_forward_create()`: Creates a bound forward trampoline from a signature.
 - `infix_forward_create_unbound()`: Creates an unbound forward trampoline from a signature.
-- `infix_reverse_create()`: Creates a reverse trampoline (callback) from a signature.
+- `infix_reverse_create_callback()`: Creates a type-safe reverse trampoline (for C/C++ developers).
+- `infix_reverse_create_closure()`: Creates a generic reverse trampoline (for language bindings).
 - `infix_signature_parse()`: Parses a full function signature into its `infix_type` components.
 - `infix_type_from_signature()`: Parses a string representing a single data type.
 
@@ -390,7 +391,8 @@ A brief overview of the complete public API, grouped by functionality.
 ### Manual API (`manual_api`)
 - `infix_forward_create_manual()`: Creates a bound forward trampoline from `infix_type` objects.
 - `infix_forward_create_unbound_manual()`: Creates an unbound forward trampoline from `infix_type` objects.
-- `infix_reverse_create_manual()`: Creates a reverse trampoline from `infix_type` objects.
+- `infix_reverse_create_callback_manual()`: Creates a type-safe reverse trampoline from `infix_type` objects.
+- `infix_reverse_create_closure_manual()`: Creates a generic reverse trampoline from `infix_type` objects.
 - `infix_forward_destroy()`: Frees a forward trampoline.
 - `infix_reverse_destroy()`: Frees a reverse trampoline.
 

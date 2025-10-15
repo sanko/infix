@@ -50,8 +50,7 @@ typedef struct {
 void dummy_stress_func_fwd(StressObject obj) {
     (void)obj;
 }
-void dummy_stress_handler_rev(infix_context_t * context, StressObject obj) {
-    (void)context;
+void dummy_stress_handler_rev(StressObject obj) {
     (void)obj;
 }
 
@@ -115,13 +114,12 @@ TEST {
 
             // 4. Generate and Destroy a Reverse Trampoline
             infix_reverse_t * reverse_trampoline = nullptr;
-            if (infix_reverse_create_manual(&reverse_trampoline,
-                                            infix_type_create_void(),
-                                            &object_type,
-                                            1,
-                                            1,
-                                            (void *)dummy_stress_handler_rev,
-                                            nullptr) != INFIX_SUCCESS) {
+            if (infix_reverse_create_callback_manual(&reverse_trampoline,
+                                                     infix_type_create_void(),
+                                                     &object_type,
+                                                     1,
+                                                     1,
+                                                     (void *)dummy_stress_handler_rev) != INFIX_SUCCESS) {
                 infix_arena_destroy(arena);
                 bail_out("Failed to generate reverse trampoline");
             }

@@ -36,3 +36,4 @@ html/*
 latex/*
 leak-*
 .tidyall.d/*
+docs/api/
