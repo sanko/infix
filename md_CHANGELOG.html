@@ -105,78 +105,83 @@ $(document).ready(function(){initNavTree('md_CHANGELOG.html',''); initResizable(
   <div class="headertitle"><div class="title">Changelog</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md205"></a> All notable changes to this project will (I hope) be documented in this file.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md209"></a> All notable changes to this project will (I hope) be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h1><a class="anchor" id="autotoc_md206"></a>
+<h1><a class="anchor" id="autotoc_md210"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.0...HEAD"</h1>
 <p>&gt;Unreleased</p>
-<p>This is the initial public release of the <code>infix</code> FFI library.</p>
-<h2><a class="anchor" id="autotoc_md207"></a>
+<h2><a class="anchor" id="autotoc_md211"></a>
+Initial Public Release</h2>
+<p>This is the first tagged version of <code>infix</code>. It's all downhill from here.</p>
+<h2><a class="anchor" id="autotoc_md212"></a>
 Added</h2>
+<p>Everything. It's brand new.</p>
 <ul>
-<li>Core FFI Engine<ul>
-<li>Core JIT engine for generating forward-call (calling from your code into C) and reverse-call (creating C callbacks from your handlers) trampolines.</li>
-<li>High-level Signature API for creating and managing trampolines from simple, human-readable strings (e.g., <code>"(int, *char) -&gt; double"</code>).</li>
-<li>Low-level Manual API for programmatic, arena-based creation of C types for performance-critical scenarios.</li>
+<li>Forward Trampolines:<ul>
+<li>"Bound" trampolines with a hardcoded target function for maximum performance</li>
+<li>"Unbound" trampolines where the target function is provided at call-time for maximum flexibility</li>
 </ul>
 </li>
-<li>Signature Language &amp; Type System<ul>
-<li>Comprehensive signature language with support for all major C types:<ul>
-<li>Primitives: Both abstract (<code>int</code>, <code>long</code>) and fixed-width (<code>int32</code>, <code>uint64</code>).</li>
-<li>Pointers: <code>*</code> for pointers to any type, including <code>*void</code>.</li>
-<li>Structs: <code>{...}</code> for C <code>struct</code> definitions.</li>
-<li>Unions: <code>&lt;...&gt;</code> for C <code>union</code> definitions.</li>
-<li>Arrays: <code>[&lt;size&gt;:&lt;type&gt;]</code> for fixed-size arrays.</li>
-<li>Function Pointers: <code>*((...) -&gt; ...)</code> for describing and passing function pointers.</li>
-<li>Enums: <code>e:&lt;int_type&gt;</code> for describing the underlying integer storage of an enum.</li>
-<li>Special Numerics: <code>c[...]</code> for <code>_Complex</code> numbers and <code>v[...]</code> for SIMD vectors.</li>
+<li>Reverse Trampolines:<ul>
+<li>Callbacks: High-level API (<code>infix_reverse_create_callback</code>) for C/C++ developers, allowing the use of clean, type-safe C function signatures for handlers</li>
+<li>Closures: Low-level API (<code>infix_reverse_create_closure</code>) for language binding authors and stateful callbacks, providing a generic handler signature and support for a <code>user_data</code> context pointer</li>
 </ul>
 </li>
-<li>Support for variadic functions using the <code>;</code> separator (e.g., <code>"(*char; int, double) -&gt; int"</code> for <code>printf</code>).</li>
-<li>Support for packed structs with <code>!{...}</code> for 1-byte packing and <code>!N:{...}</code> for N-byte packing.</li>
+<li>Cross-platform functions for loading shared libraries (<code>.so</code>, <code>.dll</code>, <code>.dylib</code>) and looking up symbols</li>
+<li>APIs for reading/writing exported global variables</li>
+<li>A powerful, human-readable string-based language to describe any C type or function signature. Support includes...<ul>
+<li>Primitives: <code>int</code>, <code>double</code></li>
+<li>Fixed-width integers: <code>int32</code>, <code>uint64</code></li>
+<li>Pointers: <code>*int</code>, <code>**void</code></li>
+<li>Structs: <code>{int, double}</code></li>
+<li>Packed structs with custom alignment: <code>!{...}</code> or <code>!4:{...}</code></li>
+<li>Unions: <code>&lt;int, float&gt;</code></li>
+<li>Arrays: <code>[10:char]</code></li>
+<li>Function Pointers: <code>(*((int)-&gt;void))</code></li>
+<li>Variadic functions using a semicolon separator: <code>(*char; int, double) -&gt; int</code></li>
+<li><code>_Complex</code> numbers: <code>c[double]</code></li>
+<li>SIMD vectors: <code>v[4:float]</code></li>
+<li>Enums with an explicit underlying type: <code>e:int</code></li>
 </ul>
 </li>
-<li>Named Type Registry<ul>
-<li>A powerful registry for defining complex structs, unions, and type aliases once and reusing them by name (e.g., <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code>, <code>@Node</code>).</li>
-<li>Automatically handles forward declarations and mutually recursive types, allowing complex data structures to be defined in any order.</li>
+<li>Named Type Registry: A powerful system for defining and reusing complex types by name<ul>
+<li>Simple aliases: <code>@UserID = uint64;</code></li>
+<li>Recursive types: <code>@Node = { value: int, next: *@Node };</code></li>
+<li>Mutually recursive types via forward declarations: <code>@A; @B; ...</code></li>
 </ul>
 </li>
-<li>Security Features<ul>
-<li>Security-first design, hardened and validated through fuzz testing.</li>
-<li>Strict W^X (Write XOR Execute) memory protection for all JIT-compiled code, with platform-native implementations (dual-mapping on Linux/BSD, <code>VirtualProtect</code>/<code>mprotect</code> elsewhere).</li>
-<li>Guard Pages on freed trampoline memory to prevent use-after-free vulnerabilities by ensuring immediate and safe crashes.</li>
-<li>Read-Only Contexts for reverse trampolines (callbacks) to protect against runtime memory corruption exploits.</li>
-<li>Hardened against integer overflows in all type creation and layout calculation functions.</li>
+<li>Manual API. A programmatic, arena-based API (<code>infix_type_create_struct</code>, etc.) for building <code>infix_type</code> objects without the string parser.</li>
+<li>Introspection API: A comprehensive suite of getter functions to inspect the layout of any type at runtime, including its size, alignment, and the name/offset/type of every member. This is ideal for building dynamic language bindings and data marshallers.</li>
 </ul>
-</li>
-<li>Dynamic Library &amp; Globals API<ul>
-<li>Cross-platform API for loading dynamic/shared libraries (<code>.so</code>, <code>.dll</code>, <code>.dylib</code>).</li>
-<li>Functions to look up symbols (functions or variables) by name within a loaded library.</li>
-<li><code><a class="el" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8" title="Reads the value of a global variable from a loaded library.">infix_read_global()</a></code> and <code><a class="el" href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f" title="Writes a value to a global variable in a loaded library.">infix_write_global()</a></code> to access global variables from a library using the same signature system.</li>
+<h3><a class="anchor" id="autotoc_md213"></a>
+Security &amp; Hardening</h3>
+<ul>
+<li>W^X Memory Protection: JIT-compiled code is never writable and executable at the same time, enforced with platform-native APIs (<code>VirtualProtect</code>, <code>mprotect</code>, <code>MAP_JIT</code>).</li>
+<li>Guard Pages: Freed trampolines are made inaccessible to cause a safe, immediate crash on any use-after-free attempt.</li>
+<li>Read-Only Contexts: The internal metadata for reverse callbacks is made read-only after creation to prevent runtime memory corruption vulnerabilities.</li>
+<li>Integer Overflow Hardening: All API functions and internal calculations are hardened against integer overflows from malformed or malicious inputs.</li>
+<li>Fuzz Tested: The entire API surface, especially the signature parser and ABI classifiers, is continuously validated with <code>libFuzzer</code> and <code>AFL++</code> to find and fix potential crashes and hangs.</li>
 </ul>
-</li>
-<li>Introspection &amp; Memory Management<ul>
-<li>Powerful introspection API to parse signatures and inspect C type memory layouts at runtime (size, alignment, and member offsets).</li>
-<li><code><a class="el" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e" title="Serializes an infix_type object graph into a string representation.">infix_type_print()</a></code> to serialize a type graph back into a canonical signature string.</li>
-<li>Efficient arena-based memory management for all type descriptions, simplifying cleanup and improving performance.</li>
-<li>Support for custom memory allocators via preprocessor macros (<code>infix_malloc</code>, <code>infix_free</code>, etc.).</li>
+<h3><a class="anchor" id="autotoc_md214"></a>
+Performance &amp; Memory Management</h3>
+<ul>
+<li>High-Performance Design: The API separates the one-time JIT compilation cost from the near-native call-time overhead, making cached trampolines extremely fast.</li>
+<li>Arena Allocator: All type metadata is managed by a fast, efficient arena allocator, eliminating memory leaks and simplifying the manual API.</li>
+<li>Self-Contained Objects: Trampoline handles (<code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code>, <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code>) perform a deep copy of all necessary type information, making them fully self-contained and immune to use-after-free errors from other parts of the system.</li>
+<li>Zero Dependencies: The library is written in pure C11 and has no external library dependencies.</li>
 </ul>
-</li>
-<li>Platform Support<ul>
-<li>Initial cross-platform support for:<ul>
+<h3><a class="anchor" id="autotoc_md215"></a>
+Platform Support</h3>
+<ul>
 <li>Architectures: x86-64 and AArch64 (ARM64).</li>
-<li>ABIs: System V (Linux, macOS, BSDs), Windows x64, and AAPCS64 (standard ARM64).</li>
-<li>Compilers: GCC, Clang, and MSVC.</li>
-<li>Operating Systems: Rigorously tested on Linux, Windows, macOS, FreeBSD, OpenBSD, NetBSD, and Solaris.</li>
+<li>ABIs:<ul>
+<li>System V AMD64 ABI (Linux, macOS, BSDs on x86-64)</li>
+<li>Microsoft x64 Calling Convention (Windows on x86-64)</li>
+<li>Procedure Call Standard for the ARM 64-bit Architecture (AAPCS64) on Linux, macOS, and Windows.</li>
 </ul>
 </li>
-<li>Zero-dependency, unity-build design for easy integration into any C/C++ project.</li>
-</ul>
-</li>
-<li>Error Handling<ul>
-<li>Detailed, thread-safe error reporting via <code><a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b" title="Retrieves detailed information about the last error that occurred on the current thread.">infix_get_last_error()</a></code> for robust diagnostics. </li>
-</ul>
-</li>
+<li>Compilers: GCC, Clang, and Microsoft Visual C++ (MSVC).</li>
+<li>Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

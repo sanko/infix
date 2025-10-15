@@ -426,7 +426,7 @@ var sectionId = 'dynsection-1';
 <!-- Node41 -->
 <g id="Node000041" class="node">
 <title>Node41</title>
-<g id="a_Node000041"><a xlink:href="203__complex_8c.html" target="_top" xlink:title=" ">
+<g id="a_Node000041"><a xlink:href="203__complex_8c.html" target="_top" xlink:title="Tests FFI calls with C _Complex types.">
 <polygon fill="white" stroke="#666666" points="3311,-151 3214,-151 3214,-132 3311,-132 3311,-151"/>
 <text text-anchor="middle" x="3262.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/203_complex.c</text>
 </a>

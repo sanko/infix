@@ -12,7 +12,7 @@
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1040,36,844,81,843,76,1039,31"/>
 <area shape="rect" id="Node000007" href="$202__in__structs_8c.html" title="Tests passing structs that contain pointer members." alt="" coords="877,79,1013,104"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1065,39,971,81,969,76,1063,34"/>
-<area shape="rect" id="Node000008" href="$203__complex_8c.html" title=" " alt="" coords="1037,79,1167,104"/>
+<area shape="rect" id="Node000008" href="$203__complex_8c.html" title="Tests FFI calls with C _Complex types." alt="" coords="1037,79,1167,104"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1105,44,1105,79,1099,79,1099,44"/>
 <area shape="rect" id="Node000009" href="$302__aggregates_8c.html" title="Tests reverse trampolines (callbacks) with struct and union arguments/returns." alt="" coords="1191,79,1338,104"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1142,34,1239,76,1237,81,1140,39"/>

@@ -1,11 +1,13 @@
 <map id="t/301_primitives.c" name="t/301_primitives.c">
-<area shape="rect" id="Node000001" title="Tests reverse trampolines (callbacks) with primitive type signatures." alt="" coords="174,5,313,31"/>
+<area shape="rect" id="Node000001" title="Tests reverse trampolines (callbacks) with primitive type signatures." alt="" coords="226,5,365,31"/>
 <area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,33,127,75,125,70,217,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="263,33,136,77,134,72,261,28"/>
 <area shape="rect" id="Node000003" href="$infix_8h.html" title=" " alt="" coords="196,79,291,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,31,246,65,241,65,241,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="289,33,262,69,258,66,285,29"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="315,79,383,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="262,28,322,69,319,73,259,33"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="306,29,334,66,330,69,302,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="407,79,477,104"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="320,28,407,70,405,75,318,33"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="71,225,154,251"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="196,105,122,126,91,139,72,154,67,168,71,184,92,214,87,217,66,186,62,168,68,150,88,135,120,121,195,100"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="189,225,263,251"/>

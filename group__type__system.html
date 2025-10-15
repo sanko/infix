@@ -602,7 +602,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code>infix_type</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, this will point to the newly created <code>infix_type</code>. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">base_type</td><td>The floating-point <code>infix_type</code> of the real and imaginary parts. </td></tr>
   </table>
   </dd>
@@ -745,6 +745,7 @@ Functions</h2></td></tr>
     <tr><td class="paramdir"></td><td class="paramname">arena</td><td>The arena from which to allocate. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code>infix_type</code>. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">name</td><td>The name of the type being referenced. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">aggregate_category</td><td>Distinguishes between <code>struct</code> and <code>union</code> for the reference. </td></tr>
   </table>
   </dd>
 </dl>

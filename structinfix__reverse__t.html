@@ -152,7 +152,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a310b74442c77d4871307491e47741bb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the C function that bridges from assembly.  <br /></td></tr>
 <tr class="separator:a310b74442c77d4871307491e47741bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf1d66dab26788e7353bb443cd741478" id="r_abf1d66dab26788e7353bb443cd741478"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#abf1d66dab26788e7353bb443cd741478">cached_forward_trampoline</a></td></tr>
-<tr class="memdesc:abf1d66dab26788e7353bb443cd741478"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pre-compiled forward trampoline for calling the user's C callback.  <br /></td></tr>
+<tr class="memdesc:abf1d66dab26788e7353bb443cd741478"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pre-compiled forward trampoline for calling a type-safe user C callback.  <br /></td></tr>
 <tr class="separator:abf1d66dab26788e7353bb443cd741478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -200,8 +200,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A pre-compiled forward trampoline for calling the user's C callback. </p>
-<p>This is the core of the reverse call mechanism's type safety and ergonomics. The C dispatcher uses this trampoline to correctly marshal the <code>void**</code> arguments and the context pointer into the native ABI required to call the user's clean, type-safe C handler function. </p>
+<p>A pre-compiled forward trampoline for calling a type-safe user C callback. </p>
+<p>If this pointer is non-NULL, it signifies a high-level "callback" created with <code>infix_reverse_create_callback</code>. The dispatcher will use this trampoline to marshal arguments and call the user's type-safe C handler. If this is NULL, it signifies a low-level "closure" created with <code>infix_reverse_create_closure</code>, and the dispatcher will call the generic handler directly. </p>
 
 </div>
 </div>

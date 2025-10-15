@@ -40,7 +40,7 @@
 <area shape="poly" id="edge40_Node000001_Node000039" title=" " alt="" coords="3884,32,4018,76,4017,81,3882,37"/>
 <area shape="rect" id="Node000040" href="$202__in__structs_8c.html" title="Tests passing structs that contain pointer members." alt="" coords="4130,79,4266,104"/>
 <area shape="poly" id="edge41_Node000001_Node000040" title=" " alt="" coords="3907,31,4140,76,4139,81,3906,36"/>
-<area shape="rect" id="Node000041" href="$203__complex_8c.html" title=" " alt="" coords="4291,79,4420,104"/>
+<area shape="rect" id="Node000041" href="$203__complex_8c.html" title="Tests FFI calls with C _Complex types." alt="" coords="4291,79,4420,104"/>
 <area shape="poly" id="edge42_Node000001_Node000041" title=" " alt="" coords="3922,28,4278,76,4291,78,4290,83,4278,81,3921,33"/>
 <area shape="rect" id="Node000042" href="$301__primitives_8c.html" title="Tests reverse trampolines (callbacks) with primitive type signatures." alt="" coords="4445,79,4583,104"/>
 <area shape="poly" id="edge43_Node000001_Node000042" title=" " alt="" coords="3922,24,4153,46,4433,76,4445,77,4444,83,4432,81,4152,51,3921,29"/>

@@ -12,7 +12,7 @@ var 811__fault__injection_8c =
     [ "reset_fault_injector", "811__fault__injection_8c.html#a22b0089a906857dc064cc5ab9ff15c28", null ],
     [ "setup_fault_injector", "811__fault__injection_8c.html#afa7d0f768f9d3b855ff208e62a639653", null ],
     [ "subtest", "811__fault__injection_8c.html#ac6615cb903786a0da007ad646d891ee7", null ],
-    [ "subtest", "811__fault__injection_8c.html#a46d0cf26076f25a837bf688a1cade962", null ],
+    [ "subtest", "811__fault__injection_8c.html#adf61af808c6a1e5a113aeef84c757385", null ],
     [ "subtest", "811__fault__injection_8c.html#a2432a956776096afb0372a6c473a22a6", null ],
     [ "test_calloc", "811__fault__injection_8c.html#a3d5734c10766f88ab872543cc9ff50e7", null ],
     [ "test_free", "811__fault__injection_8c.html#aabb7aa4acb6dbea8bdfa9572cb96cb10", null ],

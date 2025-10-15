@@ -12,7 +12,7 @@ var 401__large__stack_8c =
     [ "ONE_STACK_DOUBLE", "401__large__stack_8c.html#aade27249ba136699f108174289e538fc", null ],
     [ "execute_many_args_callback", "401__large__stack_8c.html#a5bbfbfc732971dfdd40e6e8e1370150e", null ],
     [ "large_stack_callee", "401__large__stack_8c.html#a8d9b25f0d708a936741592612cc6abfa", null ],
-    [ "many_args_callback_handler", "401__large__stack_8c.html#aba3852631c88f666e148008813c88979", null ],
+    [ "many_args_callback_handler", "401__large__stack_8c.html#a653e324b8eb35e848e31ea6185e75225", null ],
     [ "subtest", "401__large__stack_8c.html#af4c1d43081ae6d5c631b4c7bcfbdb25c", null ],
     [ "subtest", "401__large__stack_8c.html#aa9a4d036a52ee68c2fc695ccb437ae55", null ],
     [ "sum_max_reg_doubles", "401__large__stack_8c.html#a64caa6314252677d0c90338cdf4c2381", null ],

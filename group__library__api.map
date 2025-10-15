@@ -1,0 +1,4 @@
+<map id="Dynamic Library API" name="Dynamic Library API">
+<area shape="rect" id="Node000001" title="Functions for loading shared libraries and looking up symbols." alt="" coords="140,5,295,31"/>
+<area shape="rect" id="Node000002" href="$group__public__api.html" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,5,92,31"/>
+</map>

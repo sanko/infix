@@ -115,10 +115,11 @@ $(document).ready(function(){initNavTree('301__primitives_8c.html',''); initResi
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 301_primitives.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="301__primitives_8c__incl.svg" width="388" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="301__primitives_8c__incl.svg" width="483" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -128,15 +129,21 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab04632b49a27b13e24c176d4e1483df8" id="r_ab04632b49a27b13e24c176d4e1483df8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#ab04632b49a27b13e24c176d4e1483df8">int_callback_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, int a, int b)</td></tr>
-<tr class="memdesc:ab04632b49a27b13e24c176d4e1483df8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple callback handler that multiplies two integers.  <br /></td></tr>
-<tr class="separator:ab04632b49a27b13e24c176d4e1483df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad80f5c82da708830d5001239d52010db" id="r_ad80f5c82da708830d5001239d52010db"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#ad80f5c82da708830d5001239d52010db">float_callback_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, float a, float b)</td></tr>
-<tr class="memdesc:ad80f5c82da708830d5001239d52010db"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback handler that adds two floats.  <br /></td></tr>
-<tr class="separator:ad80f5c82da708830d5001239d52010db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb4ece8c6bb2cc5243c4f00a6276b2ac" id="r_afb4ece8c6bb2cc5243c4f00a6276b2ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#afb4ece8c6bb2cc5243c4f00a6276b2ac">void_callback_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, int check_val)</td></tr>
-<tr class="memdesc:afb4ece8c6bb2cc5243c4f00a6276b2ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback handler with a void return type that checks its argument.  <br /></td></tr>
-<tr class="separator:afb4ece8c6bb2cc5243c4f00a6276b2ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6293de3c5cf59e44634feaa2fe16e69" id="r_ae6293de3c5cf59e44634feaa2fe16e69"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#ae6293de3c5cf59e44634feaa2fe16e69">int_callback_handler</a> (int a, int b)</td></tr>
+<tr class="memdesc:ae6293de3c5cf59e44634feaa2fe16e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple callback handler that multiplies two integers.  <br /></td></tr>
+<tr class="separator:ae6293de3c5cf59e44634feaa2fe16e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a934c530d1200c95925ef1366a5c8cf" id="r_a8a934c530d1200c95925ef1366a5c8cf"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#a8a934c530d1200c95925ef1366a5c8cf">float_callback_handler</a> (float a, float b)</td></tr>
+<tr class="memdesc:a8a934c530d1200c95925ef1366a5c8cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback handler that adds two floats.  <br /></td></tr>
+<tr class="separator:a8a934c530d1200c95925ef1366a5c8cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af78e1cbf71830c0ea2ac8eaeeff15061" id="r_af78e1cbf71830c0ea2ac8eaeeff15061"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#af78e1cbf71830c0ea2ac8eaeeff15061">void_callback_handler</a> (int check_val)</td></tr>
+<tr class="memdesc:af78e1cbf71830c0ea2ac8eaeeff15061"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback handler with a void return type that checks its argument.  <br /></td></tr>
+<tr class="separator:af78e1cbf71830c0ea2ac8eaeeff15061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd86540e13df5cb223cee233746a4cbf" id="r_acd86540e13df5cb223cee233746a4cbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#acd86540e13df5cb223cee233746a4cbf">int_closure_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value, void **<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td></tr>
+<tr class="separator:acd86540e13df5cb223cee233746a4cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22de56e184cc1981e0a1af0274b42c84" id="r_a22de56e184cc1981e0a1af0274b42c84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#a22de56e184cc1981e0a1af0274b42c84">float_closure_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value, void **<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td></tr>
+<tr class="separator:a22de56e184cc1981e0a1af0274b42c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f6d3a2b6a6e827c28d25d05857ccaa4" id="r_a3f6d3a2b6a6e827c28d25d05857ccaa4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#a3f6d3a2b6a6e827c28d25d05857ccaa4">void_closure_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value, void **<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td></tr>
+<tr class="separator:a3f6d3a2b6a6e827c28d25d05857ccaa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dfdf1b98f14b0fe59b428d7884aaa35" id="r_a5dfdf1b98f14b0fe59b428d7884aaa35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#a5dfdf1b98f14b0fe59b428d7884aaa35">execute_int_callback</a> (int(*func_ptr)(int, int), int x, int y)</td></tr>
 <tr class="separator:a5dfdf1b98f14b0fe59b428d7884aaa35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67b44339c1ba7c1139e4ce7b02bcbfbe" id="r_a67b44339c1ba7c1139e4ce7b02bcbfbe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="301__primitives_8c.html#a67b44339c1ba7c1139e4ce7b02bcbfbe">execute_float_callback</a> (float(*func_ptr)(float, float), float a, float b)</td></tr>
@@ -164,15 +171,14 @@ Variables</h2></td></tr>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
 <p>This test suite is the cornerstone for verifying the reverse FFI (callback) functionality. It ensures that the library can correctly generate native, callable function pointers for user-defined handlers that operate on primitive C types.</p>
 <p>For each signature, the test performs these steps:</p><ol type="1">
-<li>Defines a C "handler" function (e.g., <code>int_callback_handler</code>). This handler's first argument is now always <code>infix_context_t* context</code>.</li>
+<li>Defines a C "handler" function (e.g., <code>int_callback_handler</code>).</li>
 <li>Creates the <code>infix_type</code> definitions for the handler's public signature.</li>
-<li>Calls <code>infix_reverse_create_manual</code> to create a native function pointer.</li>
+<li>Calls the appropriate <code>infix_reverse_create_*_manual</code> function to create a native function pointer.</li>
 <li>Defines a C "harness" function that takes a function pointer of the native type as an argument.</li>
 <li>Calls the harness, passing it the generated function pointer.</li>
-<li>Inside the harness, the generated function pointer is called. This triggers the JIT-compiled assembly stub, which marshals the arguments, prepends the context, and invokes the original C handler.</li>
-<li>The test asserts that the value returned by the callback is correct.</li>
+<li>Inside the harness, the generated function pointer is called. This triggers the JIT-compiled assembly stub, which marshals the arguments and invokes the original C handler via the correct path (type-safe or generic).</li>
+<li>The test asserts that the value returned by the callback is correct. </li>
 </ol>
-<p>This validates the entire reverse call chain: native call -&gt; JIT stub -&gt; internal dispatcher -&gt; cached forward trampoline -&gt; user C handler. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -285,8 +291,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad80f5c82da708830d5001239d52010db" name="ad80f5c82da708830d5001239d52010db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad80f5c82da708830d5001239d52010db">&#9670;&#160;</a></span>float_callback_handler()</h2>
+<a id="a8a934c530d1200c95925ef1366a5c8cf" name="a8a934c530d1200c95925ef1366a5c8cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a934c530d1200c95925ef1366a5c8cf">&#9670;&#160;</a></span>float_callback_handler()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -294,12 +300,6 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">float float_callback_handler </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
@@ -321,14 +321,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab04632b49a27b13e24c176d4e1483df8" name="ab04632b49a27b13e24c176d4e1483df8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab04632b49a27b13e24c176d4e1483df8">&#9670;&#160;</a></span>int_callback_handler()</h2>
+<a id="a22de56e184cc1981e0a1af0274b42c84" name="a22de56e184cc1981e0a1af0274b42c84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22de56e184cc1981e0a1af0274b42c84">&#9670;&#160;</a></span>float_closure_handler()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int int_callback_handler </td>
+          <td class="memname">void float_closure_handler </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
@@ -336,6 +336,34 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>return_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6293de3c5cf59e44634feaa2fe16e69" name="ae6293de3c5cf59e44634feaa2fe16e69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6293de3c5cf59e44634feaa2fe16e69">&#9670;&#160;</a></span>int_callback_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int int_callback_handler </td>
+          <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
@@ -354,6 +382,40 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A simple callback handler that multiplies two integers. </p>
+
+</div>
+</div>
+<a id="acd86540e13df5cb223cee233746a4cbf" name="acd86540e13df5cb223cee233746a4cbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd86540e13df5cb223cee233746a4cbf">&#9670;&#160;</a></span>int_closure_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void int_closure_handler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>return_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -411,8 +473,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="afb4ece8c6bb2cc5243c4f00a6276b2ac" name="afb4ece8c6bb2cc5243c4f00a6276b2ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb4ece8c6bb2cc5243c4f00a6276b2ac">&#9670;&#160;</a></span>void_callback_handler()</h2>
+<a id="af78e1cbf71830c0ea2ac8eaeeff15061" name="af78e1cbf71830c0ea2ac8eaeeff15061"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af78e1cbf71830c0ea2ac8eaeeff15061">&#9670;&#160;</a></span>void_callback_handler()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,14 +482,40 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void void_callback_handler </td>
           <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>check_val</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A callback handler with a void return type that checks its argument. </p>
+
+</div>
+</div>
+<a id="a3f6d3a2b6a6e827c28d25d05857ccaa4" name="a3f6d3a2b6a6e827c28d25d05857ccaa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f6d3a2b6a6e827c28d25d05857ccaa4">&#9670;&#160;</a></span>void_closure_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void void_closure_handler </td>
+          <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>check_val</em>&#160;</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>return_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -436,8 +524,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A callback handler with a void return type that checks its argument. </p>
 
 </div>
 </div>

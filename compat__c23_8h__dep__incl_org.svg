@@ -398,7 +398,7 @@
 <!-- Node42 -->
 <g id="Node000042" class="node">
 <title>Node42</title>
-<g id="a_Node000042"><a xlink:href="203__complex_8c.html" target="_top" xlink:title=" ">
+<g id="a_Node000042"><a xlink:href="203__complex_8c.html" target="_top" xlink:title="Tests FFI calls with C _Complex types.">
 <polygon fill="white" stroke="#666666" points="2169,-151 2072,-151 2072,-132 2169,-132 2169,-151"/>
 <text text-anchor="middle" x="2120.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">t/203_complex.c</text>
 </a>

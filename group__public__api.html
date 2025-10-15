@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('group__public__api.html',''); initResi
 <div class="dynheader">
 Collaboration diagram for Public API:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="group__public__api.svg" width="367" height="431"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="group__public__api.svg" width="367" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
@@ -147,6 +147,9 @@ Modules</h2></td></tr>
 <tr class="memitem:group__version__macros" id="r_group__version__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__macros.html">Version Information</a></td></tr>
 <tr class="memdesc:group__version__macros"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macros defining the semantic version of the infix library. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__library__api" id="r_group__library__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__library__api.html">Dynamic Library API</a></td></tr>
+<tr class="memdesc:group__library__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for loading shared libraries and looking up symbols. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -156,6 +159,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga3042690c20cccd4137f134154bd62e1a" id="r_ga3042690c20cccd4137f134154bd62e1a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a>) (void *, void **)</td></tr>
 <tr class="memdesc:ga3042690c20cccd4137f134154bd62e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a "bound" forward-call trampoline.  <br /></td></tr>
 <tr class="separator:ga3042690c20cccd4137f134154bd62e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0493abb74a3f8ba3ce52c066390c722d" id="r_ga0493abb74a3f8ba3ce52c066390c722d"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a>) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value, void **<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td></tr>
+<tr class="memdesc:ga0493abb74a3f8ba3ce52c066390c722d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The signature for a generic "closure" handler.  <br /></td></tr>
+<tr class="separator:ga0493abb74a3f8ba3ce52c066390c722d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -203,9 +209,33 @@ Enumerations</h2></td></tr>
 <div class="line"><span class="keywordtype">void</span>* my_args[] = { &amp;a, &amp;b };</div>
 <div class="line">cif(&amp;result, my_args);</div>
 <div class="line"><span class="comment">// `result` now contains 30.</span></div>
-<div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:223</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Retrieves the executable code pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:227</div></div>
 <div class="ttc" id="agroup__public__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">The signature for a &quot;bound&quot; forward-call trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:335</div></div>
 </div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga0493abb74a3f8ba3ce52c066390c722d" name="ga0493abb74a3f8ba3ce52c066390c722d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0493abb74a3f8ba3ce52c066390c722d">&#9670;&#160;</a></span>infix_closure_handler_fn</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* infix_closure_handler_fn) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value, void **<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The signature for a generic "closure" handler. </p>
+<p>This function pointer type is used with <code>infix_reverse_create_closure</code>. It is a low-level handler ideal for language bindings, receiving all arguments in a generic <code>void**</code> array for manual marshalling. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>The context handle of the invoked callback. </td></tr>
+    <tr><td class="paramname">return_value</td><td>A pointer to a buffer where the handler must write the return value. </td></tr>
+    <tr><td class="paramname">args</td><td>An array of pointers to the arguments passed by the native caller. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

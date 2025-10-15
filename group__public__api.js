@@ -9,7 +9,9 @@ var group__public__api =
     [ "Error Reporting", "group__error__api.html", "group__error__api" ],
     [ "Dynamic Library & Globals API", "group__exports__api.html", "group__exports__api" ],
     [ "Version Information", "group__version__macros.html", "group__version__macros" ],
+    [ "Dynamic Library API", "group__library__api.html", "group__library__api" ],
     [ "infix_cif_func", "group__public__api.html#ga3042690c20cccd4137f134154bd62e1a", null ],
+    [ "infix_closure_handler_fn", "group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d", null ],
     [ "infix_unbound_cif_func", "group__public__api.html#ga48f7ee868576f525269902fc953887bd", null ],
     [ "infix_status", "group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7", [
       [ "INFIX_SUCCESS", "group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da", null ],

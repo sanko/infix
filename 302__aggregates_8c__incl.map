@@ -1,13 +1,15 @@
 <map id="t/302_aggregates.c" name="t/302_aggregates.c">
-<area shape="rect" id="Node000001" title="Tests reverse trampolines (callbacks) with struct and union arguments/returns." alt="" coords="221,5,367,31"/>
+<area shape="rect" id="Node000001" title="Tests reverse trampolines (callbacks) with struct and union arguments/returns." alt="" coords="285,5,431,31"/>
 <area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,33,136,77,134,72,260,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="315,33,146,78,145,73,314,28"/>
 <area shape="rect" id="Node000003" href="$types_8h.html" title="Defines common data structures used across the entire test suite." alt="" coords="196,79,267,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="286,33,253,70,249,66,282,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="339,33,265,74,263,69,336,28"/>
 <area shape="rect" id="Node000006" href="$infix_8h.html" title=" " alt="" coords="311,79,405,104"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,29,341,67,337,70,303,33"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="361,31,361,65,355,65,355,31"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="429,79,497,104"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="322,28,424,71,422,76,320,33"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="376,28,436,69,434,73,373,33"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="521,79,592,104"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="391,28,512,71,510,76,389,33"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="96,152,183,177"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,106,167,146,163,141,215,102"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="330,225,405,251"/>

@@ -1,6 +1,7 @@
 var trampoline_8c =
 [
     [ "_infix_forward_create_internal", "trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb", null ],
+    [ "_infix_reverse_create_internal", "trampoline_8c.html#a964917e57d373d129275a8733240fa6c", null ],
     [ "_is_type_graph_resolved", "trampoline_8c.html#a6806deef9c44b1fc8716f03c0d0d85f2", null ],
     [ "code_buffer_append", "trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970", null ],
     [ "code_buffer_init", "trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca", null ],
@@ -10,12 +11,17 @@ var trampoline_8c =
     [ "get_current_forward_abi_spec", "trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a", null ],
     [ "get_current_reverse_abi_spec", "trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b", null ],
     [ "get_page_size", "trampoline_8c.html#aafe3a80a72de54323eb8bd0bee1be3ca", null ],
+    [ "infix_forward_create", "group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36", null ],
     [ "infix_forward_create_manual", "group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0", null ],
+    [ "infix_forward_create_unbound", "group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5", null ],
     [ "infix_forward_create_unbound_manual", "group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a", null ],
     [ "infix_forward_destroy", "group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032", null ],
     [ "infix_forward_get_code", "group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8", null ],
     [ "infix_forward_get_unbound_code", "group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad", null ],
-    [ "infix_reverse_create_manual", "group__manual__api.html#ga32fff61e3d2ec3b9463eff95b203ba6c", null ],
+    [ "infix_reverse_create_callback", "group__high__level__api.html#ga010d41376c47f1100903d427776033ab", null ],
+    [ "infix_reverse_create_callback_manual", "group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb", null ],
+    [ "infix_reverse_create_closure", "group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971", null ],
+    [ "infix_reverse_create_closure_manual", "group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a", null ],
     [ "infix_reverse_destroy", "group__manual__api.html#ga00b101025663c423a28433e139be5d4e", null ],
     [ "infix_reverse_get_code", "group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66", null ],
     [ "infix_reverse_get_user_data", "group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3", null ]
