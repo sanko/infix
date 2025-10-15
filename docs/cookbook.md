@@ -19,6 +19,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
       + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
       + [Recipe: Working with Unions](#recipe-working-with-unions)
       + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
+      + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive--forward-declared)
       + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
       + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
       + [Recipe: Working with Enums](#recipe-working-with-enums)
@@ -57,11 +58,13 @@ This guide provides practical, real-world examples to help you solve common FFI 
    * [Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)
       + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
       + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+      + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
       + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
       + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
          - [How It Works & Why It's Better](#how-it-works--why-its-better)
          - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
    * [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
+      + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
       + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
       + [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
       + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
@@ -450,6 +453,67 @@ void recipe_array_decay() {
     printf("Sum of array is: %lld\n", (long long)result);  // Expected: 100
 
     infix_forward_destroy(t);
+}
+```
+
+### Recipe: Advanced Named Types (Recursive & Forward-Declared)
+
+**Problem**: You need to describe complex, real-world C data structures, such as a linked list or mutually dependent types.
+
+**Solution**: The `infix` registry fully supports recursive definitions and forward declarations, allowing you to model these patterns cleanly.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+
+// C equivalent of the types we will define:
+typedef struct Employee Employee;
+typedef struct Manager {
+    const char* name;
+    Employee* reports[10]; // A manager has direct reports
+} Manager;
+
+struct Employee {
+    const char* name;
+    Manager* manager; // An employee has a manager
+};
+
+// A simple function to demonstrate usage
+const char* get_manager_name(Employee* e) {
+    return e->manager ? e->manager->name : "None";
+}
+
+void recipe_advanced_registry() {
+    infix_registry_t* registry = infix_registry_create();
+
+    // 1. Define the types. Note the forward declarations with a single ';'.
+    //    This is necessary because Manager refers to Employee, and Employee
+    //    refers to Manager.
+    const char* definitions =
+        "@Employee; @Manager;" // Forward declarations
+        "@Manager = { name:*char, reports:[10:*@Employee] };"
+        "@Employee = { name:*char, manager:*@Manager };"
+    ;
+    infix_register_types(registry, definitions);
+
+    // 2. Create a trampoline using the named types.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, "(*@Employee) -> *char", (void*)get_manager_name, registry);
+
+    // 3. Set up the C data and call.
+    Manager boss = { "Sanko", { NULL } };
+    Employee worker = { "Robinson", &boss };
+    Employee* p_worker = &worker;
+    const char* manager_name = NULL;
+    void* args[] = { &p_worker };
+
+    infix_forward_get_code(trampoline)(&manager_name, args);
+
+    printf("The manager of %s is %s.\n", worker.name, manager_name); // Expected: Sanko
+
+    // 4. Clean up.
+    infix_forward_destroy(trampoline);
+    infix_registry_destroy(registry);
 }
 ```
 
@@ -1506,6 +1570,58 @@ void recipe_custom_arena() {
 }
 ```
 
+### Recipe: The Full Manual API Lifecycle (Types to Trampoline)
+
+**Problem**: You want to create a trampoline without using the signature parser, for maximum performance or because your type information is already structured in C.
+
+**Solution**: Use an arena to build your `infix_type` objects and then pass them directly to the `_manual` variant of the creation functions.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stddef.h> // For offsetof
+
+// The C types and function we want to call
+typedef struct { double x, y; } Point;
+Point move_point(Point p, double dx) { p.x += dx; return p; }
+
+void recipe_full_manual_api() {
+    // 1. Create an arena to hold all our type definitions.
+    infix_arena_t* arena = infix_arena_create(4096);
+
+    // 2. Manually define the 'Point' struct type.
+    infix_struct_member point_members[] = {
+        infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
+        infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))
+    };
+    infix_type* point_type = NULL;
+    infix_type_create_struct(arena, &point_type, point_members, 2);
+
+    // 3. Define the argument types for the function `Point move_point(Point, double)`.
+    infix_type* arg_types[] = {
+        point_type,
+        infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)
+    };
+
+    // 4. Create the trampoline using the manually created types.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create_manual(&trampoline, point_type, arg_types, 2, 2, (void*)move_point);
+
+    // 5. Call the function.
+    Point start = { 10.0, 20.0 };
+    double delta_x = 5.5;
+    void* args[] = { &start, &delta_x };
+    Point end;
+
+    infix_forward_get_code(trampoline)(&end, args);
+    printf("Manual API result: Moved point has x = %f\n", end.x); // Should be 15.5
+
+    // 6. Clean up.
+    infix_forward_destroy(trampoline);
+    infix_arena_destroy(arena); // Frees the 'point_type' as well.
+}
+```
+
 ### Recipe: Using Custom Memory Allocators
 
 **Problem**: Your application uses a custom memory manager for tracking, pooling, or integration with a garbage collector. You need `infix` to use your allocators instead of the standard `malloc`, `calloc`, etc.
@@ -1659,6 +1775,49 @@ infix_arena_destroy(loop_arena);
 ---
 
 ## Chapter 9: Common Pitfalls & Troubleshooting
+
+### Recipe: Advanced Error Reporting for the Parser
+
+**Problem**: A user provides an invalid signature string, and you want to give them a helpful error message indicating exactly where the syntax error occurred.
+
+**Solution**: After a parsing function fails, call `infix_get_last_error()` and use the `position` field to point out the exact character that caused the failure.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+
+void report_parse_error(const char* signature) {
+    infix_type* type = NULL;
+    infix_arena_t* arena = NULL;
+    infix_status status = infix_type_from_signature(&type, &arena, signature, NULL);
+
+    if (status != INFIX_SUCCESS) {
+        infix_error_details_t err = infix_get_last_error();
+        fprintf(stderr, "Failed to parse signature:\n");
+        fprintf(stderr, "  %s\n", signature);
+        // Print a caret '^' pointing to the error location.
+        fprintf(stderr, "  %*s^\n", (int)err.position, "");
+        fprintf(stderr, "Error Code: %d at position %zu\n", err.code, err.position);
+    }
+    else
+        printf("Successfully parsed signature: %s\n", signature);
+
+    infix_arena_destroy(arena);
+}
+
+void recipe_error_reporting() {
+    // This signature has an invalid character '^' instead of a comma.
+    report_parse_error("{int, double, ^*char}");
+}
+
+/*
+Expected output:
+Failed to parse signature:
+  {int, double, ^*char}
+               ^
+Error Code: 200 at position 15
+*/
+```
 
 ### Mistake: Passing a Value Instead of a Pointer in `args[]`
 
@@ -1967,9 +2126,9 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
     PyObject* capsule = PyDict_GetItem(g_trampoline_cache, signature_py);
     infix_forward_t* trampoline = NULL;
 
-    if (capsule) {
+    if (capsule)
         trampoline = (infix_forward_t*)PyCapsule_GetPointer(capsule, "infix_trampoline");
-    } else {
+    else {
         // Not in cache: create, then store in cache via a PyCapsule.
         if (infix_forward_create_unbound(&trampoline, signature, NULL) != INFIX_SUCCESS) {
             PyErr_SetString(PyExc_RuntimeError, "Failed to create infix trampoline.");
@@ -1994,7 +2153,8 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
         if (PyLong_Check(py_arg)) {
             long* val = (long*)storage_ptr; *val = PyLong_AsLong(py_arg);
             c_args[i] = val; storage_ptr += sizeof(long);
-        } else if (PyFloat_Check(py_arg)) {
+        }
+        else if (PyFloat_Check(py_arg)) {
             double* val = (double*)storage_ptr; *val = PyFloat_AsDouble(py_arg);
             c_args[i] = val; storage_ptr += sizeof(double);
         } // ... etc.
