@@ -176,6 +176,19 @@ typedef struct {
 
 /**
  * @internal
+ * @struct infix_library_t
+ * @brief An opaque internal handle to a loaded dynamic library.
+ * @details This struct is a simple wrapper that holds the native OS handle for
+ * a loaded library. On Windows, this is an `HMODULE`. On POSIX-compliant
+ * systems (Linux, macOS, BSD), this is a `void*` pointer. By using this
+ * wrapper, the rest of the library can treat library handles generically.
+ */
+struct infix_library_t {
+    void * handle;
+};
+
+/**
+ * @internal
  * @def INFIX_MAX_STACK_ALLOC
  * @brief A safe upper limit on the stack space a trampoline can allocate.
  * @details This is a security and stability measure to prevent a malformed or
