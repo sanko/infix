@@ -588,6 +588,8 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
  * @return A pointer to the corresponding static singleton `infix_type`, or `nullptr`.
  */
 static infix_type * parse_primitive(parser_state * state) {
+    if (consume_keyword(state, "bool"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
     if (consume_keyword(state, "int8"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT8);
     if (consume_keyword(state, "uint8"))

@@ -39,19 +39,6 @@
 
 /**
  * @internal
- * @struct infix_library_t
- * @brief An opaque internal handle to a loaded dynamic library.
- * @details This struct is a simple wrapper that holds the native OS handle for
- * a loaded library. On Windows, this is an `HMODULE`. On POSIX-compliant
- * systems (Linux, macOS, BSD), this is a `void*` pointer. By using this
- * wrapper, the rest of the library can treat library handles generically.
- */
-struct infix_library_t {
-    void * handle;
-};
-
-/**
- * @internal
  * @brief Opens a dynamic library and returns a handle to it.
  * @details This is a cross-platform wrapper around `LoadLibraryA` (Windows) and
  * `dlopen` (POSIX). It attempts to load the specified library into the current

@@ -117,8 +117,9 @@ TEST {
     plan(6);
 
     subtest("Valid Single Types") {
-        plan(14);
+        plan(15);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
+        test_type_ok("bool", INFIX_TYPE_PRIMITIVE, "bool");
         test_type_ok("int32", INFIX_TYPE_PRIMITIVE, "int32");
         test_type_ok("*int32", INFIX_TYPE_POINTER, "pointer to int32");
         test_type_ok("[10:int32]", INFIX_TYPE_ARRAY, "array of int32");
