@@ -33,6 +33,7 @@ These keywords represent standard C types whose size can vary by platform. They 
 | `infix` Keyword | C/C++ Equivalent     | Common Size         | Description                                                                 |
 | :-------------- | :------------------- | :------------------ | :-------------------------------------------------------------------------- |
 | `void`          | `void`               | N/A                 | Represents the absence of a value. Valid only as a function return type.    |
+| `bool`          | `bool`, `_Bool`      | 1 bit               | Binary true or false.                                                       |
 | `char`          | `signed char`        | 8 bits              | A signed 8-bit integer.                                                     |
 | `uchar`         | `unsigned char`      | 8 bits              | An unsigned 8-bit integer.                                                  |
 | `short`         | `short`              | 16 bits             | A signed integer of at least 16 bits.                                       |
