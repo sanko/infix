@@ -8,6 +8,7 @@ var infix__internals_8h =
     [ "_infix_registry_entry_t", "struct__infix__registry__entry__t.html", "struct__infix__registry__entry__t" ],
     [ "infix_registry_t", "structinfix__registry__t.html", "structinfix__registry__t" ],
     [ "code_buffer", "structcode__buffer.html", "structcode__buffer" ],
+    [ "infix_library_t", "structinfix__library__t.html", "structinfix__library__t" ],
     [ "infix_arg_location", "structinfix__arg__location.html", "structinfix__arg__location" ],
     [ "infix_call_frame_layout", "structinfix__call__frame__layout.html", "structinfix__call__frame__layout" ],
     [ "infix_reverse_call_frame_layout", "structinfix__reverse__call__frame__layout.html", "structinfix__reverse__call__frame__layout" ],
