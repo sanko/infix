@@ -1267,7 +1267,10 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
                 if (i > 0)
                     _print(state, ",");
-                _infix_type_print_signature_recursive(state, type->meta.aggregate_info.members[i].type);
+                const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+                if (member->name)
+                    _print(state, "%s:", member->name);
+                _infix_type_print_signature_recursive(state, member->type);
             }
             _print(state, "}");
         }
@@ -1280,7 +1283,10 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
                 if (i > 0)
                     _print(state, ",");
-                _infix_type_print_signature_recursive(state, type->meta.aggregate_info.members[i].type);
+                const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+                if (member->name)
+                    _print(state, "%s:", member->name);
+                _infix_type_print_signature_recursive(state, member->type);
             }
             _print(state, ">");
         }
@@ -1291,7 +1297,10 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         for (size_t i = 0; i < type->meta.func_ptr_info.num_fixed_args; ++i) {
             if (i > 0)
                 _print(state, ",");
-            _infix_type_print_signature_recursive(state, type->meta.func_ptr_info.args[i].type);
+            const infix_function_argument * arg = &type->meta.func_ptr_info.args[i];
+            if (arg->name)
+                _print(state, "%s:", arg->name);
+            _infix_type_print_signature_recursive(state, arg->type);
         }
 
         // The parser does not distinguish between "(int)->void" and "(int;)->void".
@@ -1304,7 +1313,10 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
                 // Add a comma only if it's not the very first variadic argument.
                 if (i > type->meta.func_ptr_info.num_fixed_args)
                     _print(state, ",");
-                _infix_type_print_signature_recursive(state, type->meta.func_ptr_info.args[i].type);
+                const infix_function_argument * arg = &type->meta.func_ptr_info.args[i];
+                if (arg->name)
+                    _print(state, "%s:", arg->name);
+                _infix_type_print_signature_recursive(state, arg->type);
             }
         }
         _print(state, ")->");

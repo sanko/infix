@@ -63,9 +63,8 @@ static void normalize_string(char * s) {
         return;
     char * d = s;
     do {
-        while (isspace((unsigned char)*s)) {
+        while (isspace((unsigned char)*s))
             s++;
-        }
     } while ((*d++ = *s++));
 }
 
@@ -78,6 +77,7 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
         plan(1);
         infix_type * type = NULL;
         infix_arena_t * arena = NULL;
+        // NOTE: This test can only use signatures that do not require a registry.
         infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
 
         if (status != INFIX_SUCCESS) {
@@ -112,7 +112,7 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
 }
 
 TEST {
-    plan(6);
+    plan(7);
 
     subtest("Valid Single Types") {
         plan(15);
@@ -331,9 +331,8 @@ TEST {
             infix_type * next_pointee = next_member->type->meta.pointer_info.pointee_type;
             ok(next_pointee == node_type, "Recursive pointer correctly points to the parent struct type");
         }
-        else {
+        else
             skip(4, "Skipping detail checks due to parsing failure");
-        }
 
         infix_arena_destroy(temp_arena);
         infix_registry_destroy(registry);
@@ -348,5 +347,12 @@ TEST {
         test_print_roundtrip("{<int,char>, *char}", "{<sint32,sint8>,*sint8}");
         test_print_roundtrip("e:longlong", "e:sint64");
         test_print_roundtrip("v[4:float]", NULL);
+    }
+
+    subtest("Round trip with named fields") {
+        plan(3);
+        test_print_roundtrip("{id:sint32,score:double}", NULL);
+        test_print_roundtrip("<ival:sint32,fval:float>", NULL);
+        test_print_roundtrip("(count:sint32;data:*void)->void", NULL);
     }
 }
