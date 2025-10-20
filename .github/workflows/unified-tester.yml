@@ -55,22 +55,22 @@ jobs:
         shell: bash
         run: |
           ${{ inputs.prepare }}
-          perl build.pl --compiler=${{ inputs.toolchain }} -v test
+          perl build.pl --compiler=${{ inputs.toolchain }} -v coverage
 
       - name: Build and Test in FreeBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'freebsd'
-        uses: vmactions/freebsd-vm@v1.2.3
+        uses: vmactions/freebsd-vm@v1.2.4
         with:
           release: ${{ inputs.os_version }}
           usesh: true
           arch: ${{ inputs.arch }}
           prepare: ${{ inputs.prepare }}
           run: |
-            perl build.pl --compiler=${{ inputs.toolchain }} test
+            perl build.pl --compiler=${{ inputs.toolchain }} coverage
 
       - name: Build and Test in OpenBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'openbsd'
-        uses: vmactions/openbsd-vm@v1.1.8
+        uses: vmactions/openbsd-vm@v1.2.0
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -81,7 +81,7 @@ jobs:
 
       - name: Build and Test in NetBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'netbsd'
-        uses: vmactions/netbsd-vm@v1.1.8
+        uses: vmactions/netbsd-vm@v1.2.0
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -92,7 +92,7 @@ jobs:
 
       - name: Build and Test in DragonflyBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'dragonflybsd'
-        uses: vmactions/dragonflybsd-vm@v1.1.0
+        uses: vmactions/dragonflybsd-vm@v1.1.1
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -102,7 +102,7 @@ jobs:
 
       - name: Build and Test in Solaris
         if: inputs.runner_type == 'vm' && inputs.os == 'solaris'
-        uses: vmactions/solaris-vm@v1.1.4
+        uses: vmactions/solaris-vm@v1.1.5
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -112,7 +112,7 @@ jobs:
 
       - name: Build and Test in OmniOS
         if: inputs.runner_type == 'vm' && inputs.os == 'omnios'
-        uses: vmactions/omnios-vm@v1.1.0
+        uses: vmactions/omnios-vm@v1.1.1
         with:
           release: ${{ inputs.os_version }}
           usesh: true
