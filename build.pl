@@ -612,7 +612,7 @@ sub upload_to_codecov {
 sub run_command {
     my @cmd = grep { defined && length } @_;
     print "Executing: " . join( ' ', @_ ) . "\n";
-    my $exit_code = system(@cmd);
+    my $exit_code = system( join ' ', @cmd );
     my $status    = $exit_code >> 8;
     if ( $status != 0 ) {
         my $is_allowed_to_fail = 0;

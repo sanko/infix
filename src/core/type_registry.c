@@ -335,12 +335,13 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
     // Parse all definition bodies into unresolved type graphs in the main arena.
     for (size_t i = 0; i < num_defs_found; ++i) {
         _infix_registry_entry_t * entry = defs_found[i].entry;
+        const char * body_start = defs_found[i].def_body_start;
 
         // Create a temporary, null-terminated string for the definition body.
         char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
         if (!body_copy)
             return INFIX_ERROR_ALLOCATION_FAILED;
-        infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
+        infix_memcpy(body_copy, body_start, defs_found[i].def_body_len);
         body_copy[defs_found[i].def_body_len] = '\0';
 
         infix_type * parsed_type = nullptr;
@@ -351,6 +352,10 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         infix_free(body_copy);
 
         if (status != INFIX_SUCCESS) {
+            // Correct the error position to be relative to the original, full string.
+            infix_error_details_t err = infix_get_last_error();
+            size_t absolute_pos = (body_start - definitions) + err.position;
+            _infix_set_error(err.category, err.code, absolute_pos);
             infix_arena_destroy(temp_arena);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }

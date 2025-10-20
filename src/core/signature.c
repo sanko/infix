@@ -58,6 +58,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// A thread-local variable to hold the signature string being parsed, giving context to the error handler.
+extern INFIX_TLS const char * g_infix_last_signature_context;
+
 /**
  * @internal
  * @def MAX_RECURSION_DEPTH
@@ -392,6 +395,165 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
 
 /**
  * @internal
+ * @brief Parses the complete `(fixed...; variadic...) -> ret` structure of a function signature.
+ * @details This function is the core logic for both `infix_signature_parse` and the
+ *          internal `parse_function_type`. It handles fixed arguments, the optional
+ *          variadic separator `;`, variadic arguments, and the final return type.
+ * @param state The current parser state.
+ * @param[out] out_ret_type On success, the parsed return type.
+ * @param[out] out_args On success, a new arena-allocated array of `infix_function_argument`.
+ * @param[out] out_num_args On success, the total number of arguments.
+ * @param[out] out_num_fixed_args On success, the number of non-variadic arguments.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+static infix_status parse_function_signature_details(parser_state * state,
+                                                     infix_type ** out_ret_type,
+                                                     infix_function_argument ** out_args,
+                                                     size_t * out_num_args,
+                                                     size_t * out_num_fixed_args) {
+    if (*state->p != '(') {
+        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    state->p++;
+    skip_whitespace(state);
+    // Use the same two-pass, linked-list approach as parse_aggregate_members for arguments.
+    typedef struct arg_node {
+        infix_function_argument arg;
+        struct arg_node * next;
+    } arg_node;
+    arg_node *head = nullptr, *tail = nullptr;
+    size_t num_args = 0;
+    // Pass 1: Parse fixed arguments (before the ';')
+    if (*state->p != ')') {
+        while (1) {
+            skip_whitespace(state);
+            // Stop if we hit the end of the argument list or the variadic separator.
+            if (*state->p == ')' || *state->p == ';')
+                break;
+            const char * name = parse_optional_name_prefix(state);
+            infix_type * arg_type = parse_type(state);
+            if (!arg_type)
+                return INFIX_ERROR_INVALID_ARGUMENT;
+            // Add the parsed argument to our linked list.
+            arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
+            if (!node) {
+                _infix_set_error(
+                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+                return INFIX_ERROR_ALLOCATION_FAILED;
+            }
+            node->arg.type = arg_type;
+            node->arg.name = name;
+            node->next = nullptr;
+            if (!head)
+                head = tail = node;
+            else {
+                tail->next = node;
+                tail = node;
+            }
+            num_args++;
+            skip_whitespace(state);
+            if (*state->p == ',') {
+                state->p++;
+                skip_whitespace(state);
+                // Handle trailing comma error before ')' or ';'.
+                if (*state->p == ')' || *state->p == ';') {
+                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    return INFIX_ERROR_INVALID_ARGUMENT;
+                }
+            }
+            else if (*state->p != ')' && *state->p != ';') {
+                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                return INFIX_ERROR_INVALID_ARGUMENT;
+            }
+            else
+                break;
+        }
+    }
+    *out_num_fixed_args = num_args;
+    // Pass 2: Parse variadic arguments (after the ';')
+    if (*state->p == ';') {
+        state->p++;
+        // The loop is nearly identical to the one for fixed args.
+        if (*state->p != ')') {
+            while (1) {
+                skip_whitespace(state);
+                if (*state->p == ')')
+                    break;
+                const char * name = parse_optional_name_prefix(state);
+                infix_type * arg_type = parse_type(state);
+                if (!arg_type)
+                    return INFIX_ERROR_INVALID_ARGUMENT;
+                arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
+                if (!node) {
+                    _infix_set_error(
+                        INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+                    return INFIX_ERROR_ALLOCATION_FAILED;
+                }
+                node->arg.type = arg_type;
+                node->arg.name = name;
+                node->next = nullptr;
+                if (!head)
+                    head = tail = node;
+                else {
+                    tail->next = node;
+                    tail = node;
+                }
+                num_args++;  // Increment the *total* number of arguments.
+                skip_whitespace(state);
+                if (*state->p == ',') {
+                    state->p++;
+                    skip_whitespace(state);
+                    if (*state->p == ')') {
+                        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                        return INFIX_ERROR_INVALID_ARGUMENT;
+                    }
+                }
+                else if (*state->p != ')') {
+                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    return INFIX_ERROR_INVALID_ARGUMENT;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    // Finalize and Parse Return Type
+    skip_whitespace(state);
+    if (*state->p != ')') {
+        set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    state->p++;  // Consume ')'
+    skip_whitespace(state);
+    if (state->p[0] != '-' || state->p[1] != '>') {
+        set_parser_error(state, INFIX_CODE_MISSING_RETURN_TYPE);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    state->p += 2;  // Consume '->'
+    *out_ret_type = parse_type(state);
+    if (!*out_ret_type)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    // Convert linked list to array
+    infix_function_argument * args = (num_args > 0)
+        ? infix_arena_alloc(state->arena, sizeof(infix_function_argument) * num_args, _Alignof(infix_function_argument))
+        : nullptr;
+    if (num_args > 0 && !args) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    arg_node * current = head;
+    for (size_t i = 0; i < num_args; i++) {
+        args[i] = current->arg;
+        current = current->next;
+    }
+    *out_args = args;
+    *out_num_args = num_args;
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
  * @brief Parses a packed struct, e.g., `!{...}` or `!4:{...}`.
  * @details It consumes the optional alignment specifier and then calls into the
  *          standard aggregate member parsing logic. It uses the dedicated
@@ -588,25 +750,23 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
  * @return A pointer to the corresponding static singleton `infix_type`, or `nullptr`.
  */
 static infix_type * parse_primitive(parser_state * state) {
-    if (consume_keyword(state, "bool"))
-        return infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
-    if (consume_keyword(state, "int8"))
+    if (consume_keyword(state, "sint8") || consume_keyword(state, "int8"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT8);
     if (consume_keyword(state, "uint8"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_UINT8);
-    if (consume_keyword(state, "int16"))
+    if (consume_keyword(state, "sint16") || consume_keyword(state, "int16"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT16);
     if (consume_keyword(state, "uint16"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_UINT16);
-    if (consume_keyword(state, "int32"))
+    if (consume_keyword(state, "sint32") || consume_keyword(state, "int32"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
     if (consume_keyword(state, "uint32"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_UINT32);
-    if (consume_keyword(state, "int64"))
+    if (consume_keyword(state, "sint64") || consume_keyword(state, "int64"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT64);
     if (consume_keyword(state, "uint64"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_UINT64);
-    if (consume_keyword(state, "int128"))
+    if (consume_keyword(state, "sint128") || consume_keyword(state, "int128"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT128);
     if (consume_keyword(state, "uint128"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
@@ -614,10 +774,10 @@ static infix_type * parse_primitive(parser_state * state) {
         return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
     if (consume_keyword(state, "float64"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
-    if (consume_keyword(state, "float80"))
-        return infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
-    if (consume_keyword(state, "float128"))
-        return infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
+
+    // Abstract C types
+    if (consume_keyword(state, "bool"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
     if (consume_keyword(state, "void"))
         return infix_type_create_void();
     if (consume_keyword(state, "uchar"))
@@ -645,166 +805,10 @@ static infix_type * parse_primitive(parser_state * state) {
         return infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
     if (consume_keyword(state, "float"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
-    return nullptr;
-}
+    if (consume_keyword(state, "longdouble"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
 
-/**
- * @internal
- * @brief Parses the complete `(fixed...; variadic...) -> ret` structure of a function signature.
- * @details This function is the core logic for both `infix_signature_parse` and the
- *          internal `parse_function_type`. It handles fixed arguments, the optional
- *          variadic separator `;`, variadic arguments, and the final return type.
- * @param state The current parser state.
- * @param[out] out_ret_type On success, the parsed return type.
- * @param[out] out_args On success, a new arena-allocated array of `infix_function_argument`.
- * @param[out] out_num_args On success, the total number of arguments.
- * @param[out] out_num_fixed_args On success, the number of non-variadic arguments.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
- */
-static infix_status parse_function_signature_details(parser_state * state,
-                                                     infix_type ** out_ret_type,
-                                                     infix_function_argument ** out_args,
-                                                     size_t * out_num_args,
-                                                     size_t * out_num_fixed_args) {
-    if (*state->p != '(') {
-        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    }
-    state->p++;
-    skip_whitespace(state);
-    // Use the same two-pass, linked-list approach as parse_aggregate_members for arguments.
-    typedef struct arg_node {
-        infix_function_argument arg;
-        struct arg_node * next;
-    } arg_node;
-    arg_node *head = nullptr, *tail = nullptr;
-    size_t num_args = 0;
-    // Pass 1: Parse fixed arguments (before the ';')
-    if (*state->p != ')') {
-        while (1) {
-            skip_whitespace(state);
-            // Stop if we hit the end of the argument list or the variadic separator.
-            if (*state->p == ')' || *state->p == ';')
-                break;
-            const char * name = parse_optional_name_prefix(state);
-            infix_type * arg_type = parse_type(state);
-            if (!arg_type)
-                return INFIX_ERROR_INVALID_ARGUMENT;
-            // Add the parsed argument to our linked list.
-            arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
-            if (!node) {
-                _infix_set_error(
-                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
-                return INFIX_ERROR_ALLOCATION_FAILED;
-            }
-            node->arg.type = arg_type;
-            node->arg.name = name;
-            node->next = nullptr;
-            if (!head)
-                head = tail = node;
-            else {
-                tail->next = node;
-                tail = node;
-            }
-            num_args++;
-            skip_whitespace(state);
-            if (*state->p == ',') {
-                state->p++;
-                skip_whitespace(state);
-                // Handle trailing comma error before ')' or ';'.
-                if (*state->p == ')' || *state->p == ';') {
-                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
-                    return INFIX_ERROR_INVALID_ARGUMENT;
-                }
-            }
-            else if (*state->p != ')' && *state->p != ';') {
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
-                return INFIX_ERROR_INVALID_ARGUMENT;
-            }
-            else
-                break;
-        }
-    }
-    *out_num_fixed_args = num_args;
-    // Pass 2: Parse variadic arguments (after the ';')
-    if (*state->p == ';') {
-        state->p++;
-        // The loop is nearly identical to the one for fixed args.
-        if (*state->p != ')') {
-            while (1) {
-                skip_whitespace(state);
-                if (*state->p == ')')
-                    break;
-                const char * name = parse_optional_name_prefix(state);
-                infix_type * arg_type = parse_type(state);
-                if (!arg_type)
-                    return INFIX_ERROR_INVALID_ARGUMENT;
-                arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
-                if (!node) {
-                    _infix_set_error(
-                        INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
-                    return INFIX_ERROR_ALLOCATION_FAILED;
-                }
-                node->arg.type = arg_type;
-                node->arg.name = name;
-                node->next = nullptr;
-                if (!head)
-                    head = tail = node;
-                else {
-                    tail->next = node;
-                    tail = node;
-                }
-                num_args++;  // Increment the *total* number of arguments.
-                skip_whitespace(state);
-                if (*state->p == ',') {
-                    state->p++;
-                    skip_whitespace(state);
-                    if (*state->p == ')') {
-                        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
-                        return INFIX_ERROR_INVALID_ARGUMENT;
-                    }
-                }
-                else if (*state->p != ')') {
-                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
-                    return INFIX_ERROR_INVALID_ARGUMENT;
-                }
-                else
-                    break;
-            }
-        }
-    }
-    // Finalize and Parse Return Type
-    skip_whitespace(state);
-    if (*state->p != ')') {
-        set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    }
-    state->p++;  // Consume ')'
-    skip_whitespace(state);
-    if (state->p[0] != '-' || state->p[1] != '>') {
-        set_parser_error(state, INFIX_CODE_MISSING_RETURN_TYPE);
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    }
-    state->p += 2;  // Consume '->'
-    *out_ret_type = parse_type(state);
-    if (!*out_ret_type)
-        return INFIX_ERROR_INVALID_ARGUMENT;
-    // Convert linked list to array
-    infix_function_argument * args = (num_args > 0)
-        ? infix_arena_alloc(state->arena, sizeof(infix_function_argument) * num_args, _Alignof(infix_function_argument))
-        : nullptr;
-    if (num_args > 0 && !args) {
-        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
-        return INFIX_ERROR_ALLOCATION_FAILED;
-    }
-    arg_node * current = head;
-    for (size_t i = 0; i < num_args; i++) {
-        args[i] = current->arg;
-        current = current->next;
-    }
-    *out_args = args;
-    *out_num_args = num_args;
-    return INFIX_SUCCESS;
+    return nullptr;
 }
 
 /**
@@ -1048,6 +1052,8 @@ c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
+    g_infix_last_signature_context = signature;
+
     *out_arena = infix_arena_create(4096);
     if (!*out_arena) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
@@ -1135,6 +1141,8 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
+
+    g_infix_last_signature_context = signature;
 
     *out_arena = infix_arena_create(8192);
     if (!*out_arena) {
@@ -1323,28 +1331,28 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             _print(state, "bool");
             break;
         case INFIX_PRIMITIVE_SINT8:
-            _print(state, "char");
+            _print(state, "sint8");
             break;
         case INFIX_PRIMITIVE_UINT8:
-            _print(state, "uchar");
+            _print(state, "uint8");
             break;
         case INFIX_PRIMITIVE_SINT16:
-            _print(state, "short");
+            _print(state, "sint16");
             break;
         case INFIX_PRIMITIVE_UINT16:
-            _print(state, "ushort");
+            _print(state, "uint16");
             break;
         case INFIX_PRIMITIVE_SINT32:
-            _print(state, "int");
+            _print(state, "sint32");
             break;
         case INFIX_PRIMITIVE_UINT32:
-            _print(state, "uint");
+            _print(state, "uint32");
             break;
         case INFIX_PRIMITIVE_SINT64:
-            _print(state, "longlong");
+            _print(state, "sint64");
             break;
         case INFIX_PRIMITIVE_UINT64:
-            _print(state, "ulonglong");
+            _print(state, "uint64");
             break;
         case INFIX_PRIMITIVE_FLOAT:
             _print(state, "float");

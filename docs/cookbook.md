@@ -1780,7 +1780,7 @@ infix_arena_destroy(loop_arena);
 
 **Problem**: A user provides an invalid signature string, and you want to give them a helpful error message indicating exactly where the syntax error occurred.
 
-**Solution**: After a parsing function fails, call `infix_get_last_error()` and use the `position` field to point out the exact character that caused the failure.
+**Solution**: After a parsing function fails, call `infix_get_last_error()` and use the `position`, `code`, and `message` fields to generate a detailed diagnostic.
 
 ```c
 #include <infix/infix.h>
@@ -1797,7 +1797,8 @@ void report_parse_error(const char* signature) {
         fprintf(stderr, "  %s\n", signature);
         // Print a caret '^' pointing to the error location.
         fprintf(stderr, "  %*s^\n", (int)err.position, "");
-        fprintf(stderr, "Error Code: %d at position %zu\n", err.code, err.position);
+        fprintf(stderr, "Error: %s (code: %d, position: %zu)\n",
+                err.message, err.code, err.position);
     }
     else
         printf("Successfully parsed signature: %s\n", signature);
