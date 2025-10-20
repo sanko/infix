@@ -35,6 +35,19 @@
 #define INFIX_TLS
 #endif
 
+// A portable macro for safe string copying.
+#if defined(_MSC_VER)
+// Use the bounds-checked version provided by MSVC.
+#define _INFIX_SAFE_STRNCPY(dest, src, count) strncpy_s(dest, sizeof(dest), src, count)
+#else
+// On other compilers, use standard strncpy and ensure null-termination.
+#define _INFIX_SAFE_STRNCPY(dest, src, count) \
+    do {                                      \
+        strncpy(dest, src, (count));          \
+        (dest)[(sizeof(dest)) - 1] = '\0';    \
+    } while (0)
+#endif
+
 // The thread-local variable that stores the last error.
 static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE, INFIX_CODE_SUCCESS, 0, 0, {0}};
 // A thread-local buffer to hold the original signature string for parser errors.
@@ -111,7 +124,7 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
 
         const char * start_indicator = (start > 0) ? "... " : "";
         const char * end_indicator = (end < sig_len) ? " ..." : "";
-        int start_indicator_len = (start > 0) ? 4 : 0;
+        size_t start_indicator_len = (start > 0) ? 4 : 0;
 
         char snippet[128];
         snprintf(snippet,
@@ -123,21 +136,30 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
                  end_indicator);
 
         char pointer[128];
-        int caret_pos = position - start + start_indicator_len;
-        snprintf(pointer, sizeof(pointer), "%*s^", caret_pos, "");
+        size_t caret_pos = position - start + start_indicator_len;
+        snprintf(pointer, sizeof(pointer), "%*s^", (int)caret_pos, "");
 
-        snprintf(g_infix_last_error.message,
-                 sizeof(g_infix_last_error.message),
-                 "\n\n  %s\n  %s\n\nError: %s",
-                 snippet,
-                 pointer,
-                 _get_error_message_for_code(code));
+        // Build the message piece by piece to avoid buffer overflows.
+        char * p = g_infix_last_error.message;
+        size_t remaining = sizeof(g_infix_last_error.message);
+        int written;
+
+        written = snprintf(p, remaining, "\n\n  %s\n  %s", snippet, pointer);
+        if (written < 0 || (size_t)written >= remaining) {
+            const char * msg = _get_error_message_for_code(code);
+            _INFIX_SAFE_STRNCPY(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
+            return;
+        }
+        p += written;
+        remaining -= written;
+
+        written = snprintf(p, remaining, "\n\nError: %s", _get_error_message_for_code(code));
+        // If this last part gets truncated, that's acceptable. snprintf will null-terminate.
     }
     else {
         // For non-parser errors, just copy the standard message.
         const char * msg = _get_error_message_for_code(code);
-        strncpy(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
-        g_infix_last_error.message[sizeof(g_infix_last_error.message) - 1] = '\0';
+        _INFIX_SAFE_STRNCPY(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
     }
 }
 
@@ -154,13 +176,11 @@ void _infix_set_system_error(infix_error_category_t category,
     g_infix_last_error.position = 0;
     g_infix_last_error.system_error_code = system_code;
     if (msg) {
-        strncpy(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
-        g_infix_last_error.message[sizeof(g_infix_last_error.message) - 1] = '\0';
+        _INFIX_SAFE_STRNCPY(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
     }
     else {
         const char * default_msg = _get_error_message_for_code(code);
-        strncpy(g_infix_last_error.message, default_msg, sizeof(g_infix_last_error.message) - 1);
-        g_infix_last_error.message[sizeof(g_infix_last_error.message) - 1] = '\0';
+        _INFIX_SAFE_STRNCPY(g_infix_last_error.message, default_msg, sizeof(g_infix_last_error.message) - 1);
     }
 }
 

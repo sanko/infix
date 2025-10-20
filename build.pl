@@ -361,12 +361,18 @@ sub compile_and_run_tests {
     if ($is_coverage) {
         return run_coverage_individually( $config, $obj_suffix, $test_names_ref );
     }
+
+    # Instead of building a static library, we compile the object file(s) once
+    # and link them directly into each test executable. This resolves linker issues
+    # with coverage/profiling data in static archives.
+    my $obj_dir = File::Spec->catdir( $config->{lib_dir}, 'test_objects' );
+    make_path($obj_dir);
+    my @lib_obj_files = compile_objects( $config, $obj_suffix, $obj_dir );
+    die "Failed to compile library object files, cannot proceed." unless @lib_obj_files;
     my @test_c_files = get_test_files($test_names_ref);
-    print "\nPreparing to build static library for tests...\n";
-    my $static_lib_path = create_static_library( $config, $obj_suffix );
-    die "Failed to create static library, cannot proceed." unless $static_lib_path && -e $static_lib_path;
     print "\nCompiling all test executables...\n";
     my @test_executables;
+
     for my $test_c (@test_c_files) {
         if ( $test_c =~ m{821_threading_bare\.c$} ) {
             print "# INFO: Skipping '821_threading_bare.c' in regular test run. Use 'helgrindtest:bare' to run it.\n";
@@ -375,7 +381,7 @@ sub compile_and_run_tests {
         my @source_files = ($test_c);
         my @local_cflags = (
             @{ $config->{cflags} }, (
-                $config{arch} eq 'x64' ? ( $config->{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
+                $config{arch} eq 'x64' ? ( $config{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
                     $config{arch} eq 'arm64' ?
                     ''    #~ '-march=armv8-a+sve'
                 :
@@ -386,6 +392,11 @@ sub compile_and_run_tests {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
+        }
+
+        # Add a special flag if we're compiling the arena test.
+        if ( $test_c =~ /840_arena_allocator\.c$/ ) {
+            push @local_cflags, '-DINFIX_LINK_WHOLE_LIBRARY';
         }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
@@ -399,13 +410,18 @@ sub compile_and_run_tests {
                 run_command( $config->{cc}, @local_cflags, '-c', '-Fo' . $obj_path, $src );
                 push @obj_paths, $obj_path;
             }
+
+            # Link against the .lib file as usual
+            my $static_lib_path = create_static_library( $config, $obj_suffix );
             run_command( $config->{cc}, '-Fe' . $exe_path, @obj_paths, $static_lib_path, @ldflags );
         }
         else {
-            my @compile_cmd = ( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, $static_lib_path, @ldflags );
+            # Link directly against the library's object files, not the static archive.
+            my @compile_cmd = ( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @ldflags );
             run_command(@compile_cmd);
         }
     }
+    rmtree($obj_dir);    # Clean up temporary object files
     my $use_prove = command_exists('prove --version') && !$opts{abi} && !(
         $config->{is_windows}    # && $config->{arch} eq 'arm64'
     );
@@ -460,21 +476,36 @@ sub run_coverage_gcov {
     my $failed_tests = 0;
     my $cov_obj_dir  = File::Spec->catdir( $config->{lib_dir}, 'coverage_objects' );
     make_path($cov_obj_dir);
-    my @obj_files    = compile_objects( $config, $obj_suffix, $cov_obj_dir );
-    my $lib_path     = create_static_library_from_objects( $config, \@obj_files );
-    my @test_c_files = get_test_files($test_names_ref);
+
+    # Create a clean, uninstrumented version of the library object file.
+    my %clean_config = %$config;
+    my @clean_cflags = grep { $_ !~ /^-fprofile-instr-generate|-fcoverage-mapping|--coverage$/ } @{ $config->{cflags} };
+    $clean_config{cflags} = \@clean_cflags;
+    my @lib_obj_files = compile_objects( \%clean_config, $obj_suffix, $cov_obj_dir );
+    my @test_c_files  = get_test_files($test_names_ref);
     for my $test_c (@test_c_files) {
         if ( $test_c =~ m{82\d_} ) { next; }
         my @source_files = ($test_c);
+
+        # Use the original config with coverage flags for compiling the test itself.
         my @local_cflags = @{ $config->{cflags} };
         if ( $test_c =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to coverage build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
         }
+
+        # Add a special flag if we're compiling the arena test for coverage.
+        if ( $test_c =~ /840_arena_allocator\.c$/ ) {
+            push @local_cflags, '-DINFIX_LINK_WHOLE_LIBRARY';
+        }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
-        run_command( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, $lib_path, @{ $config->{ldflags} } );
+
+        # Link the instrumented test against the clean library object file.
+        # The coverage flags in @local_cflags and ldflags will cause the linker to
+        # instrument the library code in the final executable.
+        run_command( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @{ $config->{ldflags} } );
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }
     print "\nGenerating .gcov reports...\n";
@@ -557,7 +588,9 @@ sub run_coverage_msvc {
     my $report_path = File::Spec->catfile( $config->{coverage_dir}, 'coverage.xml' );
     my @input_args  = map { '--input_coverage=' . $_ } @cov_files;
     my @merge_cmd   = ( $tool_path, @input_args, '--export_type=cobertura:' . $report_path, '--sources=src/core' );
-    run_command(@merge_cmd);
+
+    #~ run_command(@merge_cmd);
+    system $tool_path, @input_args, '--export_type=cobertura:' . $report_path, '--sources=src\core';
     print "\nCoverage report generated successfully: $report_path\n";
     if ( $failed_tests > 0 ) {
         warn "\n# WARNING: $failed_tests test(s) failed during coverage run. See output above.\n";
@@ -609,10 +642,10 @@ sub upload_to_codecov {
     }
 }
 
-sub run_command {
-    my @cmd = grep { defined && length } @_;
-    print "Executing: " . join( ' ', @_ ) . "\n";
-    my $exit_code = system( join ' ', @cmd );
+sub run_command (@cmd) {
+    @cmd = grep { defined && length } @cmd;
+    print "Executing: " . join( ' ', @cmd ) . "\n";
+    my $exit_code = system @cmd;
     my $status    = $exit_code >> 8;
     if ( $status != 0 ) {
         my $is_allowed_to_fail = 0;

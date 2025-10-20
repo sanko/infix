@@ -33,10 +33,19 @@
 #define infix_realloc realloc
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
-#include "core/arena.c"  // Include the .c file directly for white-box testing
 #include <infix/infix.h>
 #include <stdint.h>
 #include <string.h>
+
+// This is a white-box test, so we need the internal definition of the arena struct
+// to check its internal state (like the error flag).
+#include "common/infix_internals.h"
+
+// We must still conditionally include the C file for standalone builds,
+// but prevent it when linking against the main library object.
+#ifndef INFIX_LINK_WHOLE_LIBRARY
+#include "core/arena.c"
+#endif
 
 TEST {
     plan(1);

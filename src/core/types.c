@@ -623,6 +623,20 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
 
     // Recursively copy any nested types based on the category.
     switch (src_type->category) {
+    case INFIX_TYPE_NAMED_REFERENCE:
+        {
+            const char * src_name = src_type->meta.named_reference.name;
+            if (src_name) {
+                size_t name_len = strlen(src_name) + 1;
+                char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                if (!dest_name)
+                    return nullptr;
+                infix_memcpy(dest_name, src_name, name_len);
+                // We need to cast away const to write to the destination.
+                *((const char **)&dest_type->meta.named_reference.name) = dest_name;
+            }
+        }
+        break;
     case INFIX_TYPE_POINTER:
         dest_type->meta.pointer_info.pointee_type =
             _copy_type_graph_to_arena(dest_arena, src_type->meta.pointer_info.pointee_type);

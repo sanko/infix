@@ -33,6 +33,9 @@
 #include <ctype.h>
 #include <string.h>
 
+// A thread-local variable to hold the signature string being parsed, giving context to the error handler.
+extern INFIX_TLS const char * g_infix_last_signature_context;
+
 /**
  * @internal
  * @brief The initial number of buckets for the registry's internal hash table.
@@ -51,9 +54,8 @@
 static uint64_t _registry_hash_string(const char * str) {
     uint64_t hash = 5381;
     int c;
-    while ((c = *str++)) {
+    while ((c = *str++))
         hash = ((hash << 5) + hash) + c;  // hash * 33 + c
-    }
     return hash;
 }
 
@@ -75,9 +77,8 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
     // Traverse the linked list (chain) at that bucket.
     _infix_registry_entry_t * current = registry->buckets[index];
     while (current) {
-        if (strcmp(current->name, name) == 0) {
+        if (strcmp(current->name, name) == 0)
             return current;  // Found a match.
-        }
         current = current->next;
     }
     return nullptr;  // Not found.
@@ -355,6 +356,8 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             // Correct the error position to be relative to the original, full string.
             infix_error_details_t err = infix_get_last_error();
             size_t absolute_pos = (body_start - definitions) + err.position;
+            // Set the global context to the full, valid string before re-setting the error.
+            g_infix_last_signature_context = definitions;
             _infix_set_error(err.category, err.code, absolute_pos);
             infix_arena_destroy(temp_arena);
             return INFIX_ERROR_INVALID_ARGUMENT;
@@ -376,18 +379,13 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
     for (size_t i = 0; i < num_defs_found; ++i) {
         _infix_registry_entry_t * entry = defs_found[i].entry;
         if (entry->type) {
-            if (_infix_resolve_type_graph(&entry->type, registry) != INFIX_SUCCESS) {
+            if (_infix_resolve_type_graph(&entry->type, registry) != INFIX_SUCCESS)
                 return INFIX_ERROR_INVALID_ARGUMENT;
-            }
         }
     }
 
     return INFIX_SUCCESS;
 }
-
-
-// Type Graph Resolver
-
 
 /**
  * @internal
@@ -433,19 +431,16 @@ c23_nodiscard infix_status _infix_resolve_type_graph(infix_type ** type_ptr, inf
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-            if (_infix_resolve_type_graph(&type->meta.aggregate_info.members[i].type, registry) != INFIX_SUCCESS) {
+            if (_infix_resolve_type_graph(&type->meta.aggregate_info.members[i].type, registry) != INFIX_SUCCESS)
                 return INFIX_ERROR_INVALID_ARGUMENT;
-            }
         }
         break;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
-        if (_infix_resolve_type_graph(&type->meta.func_ptr_info.return_type, registry) != INFIX_SUCCESS) {
+        if (_infix_resolve_type_graph(&type->meta.func_ptr_info.return_type, registry) != INFIX_SUCCESS)
             return INFIX_ERROR_INVALID_ARGUMENT;
-        }
         for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
-            if (_infix_resolve_type_graph(&type->meta.func_ptr_info.args[i].type, registry) != INFIX_SUCCESS) {
+            if (_infix_resolve_type_graph(&type->meta.func_ptr_info.args[i].type, registry) != INFIX_SUCCESS)
                 return INFIX_ERROR_INVALID_ARGUMENT;
-            }
         }
         break;
     default:
