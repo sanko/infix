@@ -10,5 +10,6 @@ var type__registry_8c =
     [ "_registry_parser_skip_whitespace", "type__registry_8c.html#aab35674fec56b76df1112649df588436", null ],
     [ "infix_register_types", "group__registry__api.html#ga4ece2363948c40fe528826bf65dac280", null ],
     [ "infix_registry_create", "group__registry__api.html#gac808273483db7a9db2bc275c41b13296", null ],
-    [ "infix_registry_destroy", "group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a", null ]
+    [ "infix_registry_destroy", "group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a", null ],
+    [ "g_infix_last_signature_context", "type__registry_8c.html#aebc75fad28db1e2a75eca6df7305c4e1", null ]
 ];

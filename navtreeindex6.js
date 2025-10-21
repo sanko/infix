@@ -1,5 +1,12 @@
 var NAVTREEINDEX6 =
 {
+"structregression__test__case__t.html":[10,0,30],
+"structregression__test__case__t.html#a66bf29f7276856355ce26052dd630494":[10,0,30,0],
+"structregression__test__case__t.html#a8d84cddb4f622127b503bc8b1c82a956":[10,0,30,1],
+"structregression__test__case__t.html#aed98b5d214919be70209e911177611e5":[10,0,30,2],
+"structregression__test__case__t.html#af90a3e3c9b148c3d159737f30829fb7b":[10,0,30,3],
+"structtest__struct__nested.html":[10,0,32],
+"structtest__struct__nested.html#a0954acc9d2850448dd335fdbe9785ade":[10,0,32,1],
 "structtest__struct__nested.html#a93abec9e74f3b52c8e5f3e91c71150af":[10,0,32,0],
 "structtest__struct__no__padding.html":[10,0,33],
 "structtest__struct__no__padding.html#a17f59c4a286cfe4fe495775cf3402237":[10,0,33,0],
@@ -32,6 +39,7 @@ var NAVTREEINDEX6 =
 "type__registry_8c.html#a9e581a824d0eaf99e357a24219d16467":[11,0,4,2,6,6],
 "type__registry_8c.html#aab35674fec56b76df1112649df588436":[11,0,4,2,6,7],
 "type__registry_8c.html#aacf904ed38a73d7bdb08b52ddb6d7b5c":[11,0,4,2,6,2],
+"type__registry_8c.html#aebc75fad28db1e2a75eca6df7305c4e1":[11,0,4,2,6,11],
 "type__registry_8c_source.html":[11,0,4,2,6],
 "types_8c.html":[9,0,3,0],
 "types_8h.html":[11,0,5,0,1],

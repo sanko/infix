@@ -1,13 +1,15 @@
 <map id="t/860_error_handling.c" name="t/860_error_handling.c">
-<area shape="rect" id="Node000001" title="Unit tests for the detailed error reporting system." alt="" coords="213,5,380,31"/>
+<area shape="rect" id="Node000001" title="Unit tests for the detailed error reporting system." alt="" coords="267,5,433,31"/>
 <area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,33,136,77,135,72,262,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,33,145,78,144,72,307,28"/>
 <area shape="rect" id="Node000003" href="$infix_8h.html" title=" " alt="" coords="196,79,291,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="290,33,262,69,258,66,286,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="334,33,274,73,271,69,331,28"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="315,79,385,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="308,29,335,66,331,69,303,33"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="353,31,353,65,347,65,347,31"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="410,79,477,104"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="321,28,408,70,406,75,319,33"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="367,29,419,68,416,72,363,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="501,79,572,104"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="381,28,494,71,493,76,379,33"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="71,225,154,251"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="196,105,122,126,91,139,72,154,67,168,71,184,92,214,87,217,66,186,62,168,68,150,88,135,120,121,195,100"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="189,225,263,251"/>

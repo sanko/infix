@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beab5309de4723327f2f604d0fb62152746":[11,0,4,0,0,1,32,6],
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beac61d78e3a51ddaca6fd5c96453974272":[11,0,4,0,0,1,32,16],
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beac80f7377f3aa70414a1fd94d39dbf577":[11,0,4,0,0,1,32,15],
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beac8a5a4fc12cd091fb68390ec31e7c2b9":[11,0,4,0,0,1,32,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "arena_8c.html":[9,0,5,0],
 "classes.html":[10,1],
 "compat__c23_8h.html":[11,0,4,1,0],
-"compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863":[11,0,4,1,0,3],
-"compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f":[11,0,4,1,0,2]
+"compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863":[11,0,4,1,0,3]
 };

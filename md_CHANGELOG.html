@@ -105,15 +105,15 @@ $(document).ready(function(){initNavTree('md_CHANGELOG.html',''); initResizable(
   <div class="headertitle"><div class="title">Changelog</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md209"></a> All notable changes to this project will (I hope) be documented in this file.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md211"></a> All notable changes to this project will (I hope) be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h1><a class="anchor" id="autotoc_md210"></a>
+<h1><a class="anchor" id="autotoc_md212"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.0...HEAD"</h1>
 <p>&gt;Unreleased</p>
-<h2><a class="anchor" id="autotoc_md211"></a>
+<h2><a class="anchor" id="autotoc_md213"></a>
 Initial Public Release</h2>
 <p>This is the first tagged version of <code>infix</code>. It's all downhill from here.</p>
-<h2><a class="anchor" id="autotoc_md212"></a>
+<h2><a class="anchor" id="autotoc_md214"></a>
 Added</h2>
 <p>Everything. It's brand new.</p>
 <ul>
@@ -153,7 +153,7 @@ Added</h2>
 <li>Manual API. A programmatic, arena-based API (<code>infix_type_create_struct</code>, etc.) for building <code>infix_type</code> objects without the string parser.</li>
 <li>Introspection API: A comprehensive suite of getter functions to inspect the layout of any type at runtime, including its size, alignment, and the name/offset/type of every member. This is ideal for building dynamic language bindings and data marshallers.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md213"></a>
+<h3><a class="anchor" id="autotoc_md215"></a>
 Security &amp; Hardening</h3>
 <ul>
 <li>W^X Memory Protection: JIT-compiled code is never writable and executable at the same time, enforced with platform-native APIs (<code>VirtualProtect</code>, <code>mprotect</code>, <code>MAP_JIT</code>).</li>
@@ -162,7 +162,7 @@ Security &amp; Hardening</h3>
 <li>Integer Overflow Hardening: All API functions and internal calculations are hardened against integer overflows from malformed or malicious inputs.</li>
 <li>Fuzz Tested: The entire API surface, especially the signature parser and ABI classifiers, is continuously validated with <code>libFuzzer</code> and <code>AFL++</code> to find and fix potential crashes and hangs.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md214"></a>
+<h3><a class="anchor" id="autotoc_md216"></a>
 Performance &amp; Memory Management</h3>
 <ul>
 <li>High-Performance Design: The API separates the one-time JIT compilation cost from the near-native call-time overhead, making cached trampolines extremely fast.</li>
@@ -170,7 +170,7 @@ Performance &amp; Memory Management</h3>
 <li>Self-Contained Objects: Trampoline handles (<code><a class="el" href="structinfix__forward__t.html">infix_forward_t</a></code>, <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code>) perform a deep copy of all necessary type information, making them fully self-contained and immune to use-after-free errors from other parts of the system.</li>
 <li>Zero Dependencies: The library is written in pure C11 and has no external library dependencies.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md215"></a>
+<h3><a class="anchor" id="autotoc_md217"></a>
 Platform Support</h3>
 <ul>
 <li>Architectures: x86-64 and AArch64 (ARM64).</li>

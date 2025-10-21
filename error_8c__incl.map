@@ -1,13 +1,15 @@
 <map id="src/core/error.c" name="src/core/error.c">
-<area shape="rect" id="Node000001" title="Implements the thread&#45;local error reporting system." alt="" coords="224,5,343,31"/>
+<area shape="rect" id="Node000001" title="Implements the thread&#45;local error reporting system." alt="" coords="261,5,380,31"/>
 <area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Declarations for internal&#45;only functions, types, and constants." alt="" coords="22,79,209,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,33,156,76,154,71,255,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,33,162,77,161,72,287,28"/>
 <area shape="rect" id="Node000004" href="$infix_8h.html" title=" " alt="" coords="199,152,293,177"/>
-<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="283,32,255,139,250,138,278,30"/>
+<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="310,33,292,54,274,80,261,110,253,139,248,138,256,108,269,77,287,50,307,29"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="283,79,358,104"/>
-<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="292,30,311,65,306,68,287,32"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="383,79,453,104"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="306,28,385,70,383,74,304,33"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="323,31,323,65,318,65,318,31"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="382,79,449,104"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="337,29,390,68,387,72,334,33"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="473,79,544,104"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="352,28,466,71,464,76,350,33"/>
 <area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="5,152,175,177"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,105,101,140,96,138,109,103"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="138,102,214,143,212,148,135,106"/>

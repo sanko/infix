@@ -1,18 +1,18 @@
 var searchData=
 [
   ['name_0',['name',['../structinfix__type__t.html#a736c003e9eef685d02153e46a46ad461',1,'infix_type_t::name'],['../structinfix__struct__member__t.html#a8dad067a06c5efd90028fb1cab9e2911',1,'infix_struct_member_t::name'],['../structinfix__function__argument__t.html#a8789f5063ea8ce9896f44c1c9d8f365c',1,'infix_function_argument_t::name'],['../struct__infix__registry__entry__t.html#a47809e7062a374f100926aa1f7d33228',1,'_infix_registry_entry_t::name'],['../structregression__test__case__t.html#aed98b5d214919be70209e911177611e5',1,'regression_test_case_t::name']]],
-  ['named_20type_20registry_1',['named type registry',['../md_docs_2signatures.html#autotoc_md199',1,'Part 3: The Named Type Registry'],['../index.html#autotoc_md13',1,'Using the Named Type Registry']]],
+  ['named_20type_20registry_1',['named type registry',['../md_docs_2signatures.html#autotoc_md201',1,'Part 3: The Named Type Registry'],['../index.html#autotoc_md13',1,'Using the Named Type Registry']]],
   ['named_20type_20registry_20api_2',['Named Type Registry API',['../group__registry__api.html',1,'']]],
-  ['named_20type_20registry_20tt_20registry_5fapi_20tt_3',['Named Type Registry (&lt;tt&gt;registry_api&lt;/tt&gt;)',['../index.html#autotoc_md19',1,'']]],
-  ['named_20types_4',['Using Named Types',['../md_docs_2signatures.html#autotoc_md201',1,'']]],
-  ['named_20types_20recursive_20forward_20declared_5',['Recipe: Advanced Named Types (Recursive &amp; Forward-Declared)',['../md_docs_2cookbook.html#autotoc_md52',1,'']]],
+  ['named_20type_20registry_20tt_20registry_5fapi_20tt_3',['Named Type Registry (&lt;tt&gt;registry_api&lt;/tt&gt;)',['../index.html#autotoc_md21',1,'']]],
+  ['named_20types_4',['Using Named Types',['../md_docs_2signatures.html#autotoc_md203',1,'']]],
+  ['named_20types_20recursive_20forward_20declared_5',['Recipe: Advanced Named Types (Recursive &amp; Forward-Declared)',['../md_docs_2cookbook.html#autotoc_md54',1,'']]],
   ['named_5freference_6',['named_reference',['../structinfix__type__t.html#aefbba96a3cadf0e38ba54f1ff7cb93b1',1,'infix_type_t']]],
-  ['native_20system_20libraries_20without_20linking_7',['Recipe: Calling Native System Libraries without Linking',['../md_docs_2cookbook.html#autotoc_md82',1,'']]],
-  ['nested_20ffi_20calls_8',['Recipe: Proving Reentrancy with Nested FFI Calls',['../md_docs_2cookbook.html#autotoc_md66',1,'']]],
-  ['new_20abi_9',['new abi',['../md_docs_2porting.html',1,'Porting infix to a New ABI'],['../md_docs_2porting.html#autotoc_md185',1,'Step 4: Integrate the New ABI']]],
-  ['new_20regression_20test_10',['How to Add a New Regression Test',['../850__regression__cases_8c.html#autotoc_md208',1,'']]],
+  ['native_20system_20libraries_20without_20linking_7',['Recipe: Calling Native System Libraries without Linking',['../md_docs_2cookbook.html#autotoc_md84',1,'']]],
+  ['nested_20ffi_20calls_8',['Recipe: Proving Reentrancy with Nested FFI Calls',['../md_docs_2cookbook.html#autotoc_md68',1,'']]],
+  ['new_20abi_9',['new abi',['../md_docs_2porting.html',1,'Porting infix to a New ABI'],['../md_docs_2porting.html#autotoc_md187',1,'Step 4: Integrate the New ABI']]],
+  ['new_20regression_20test_10',['How to Add a New Regression Test',['../850__regression__cases_8c.html#autotoc_md210',1,'']]],
   ['next_11',['next',['../struct__infix__registry__entry__t.html#a8f6cae58ec40201adf04aa2a6960be61',1,'_infix_registry_entry_t']]],
-  ['nmake_20windows_20with_20msvc_12',['NMake (Windows with MSVC)',['../md_docs_2INSTALL.html#autotoc_md140',1,'']]],
+  ['nmake_20windows_20with_20msvc_12',['NMake (Windows with MSVC)',['../md_docs_2INSTALL.html#autotoc_md142',1,'']]],
   ['no_5fclass_13',['NO_CLASS',['../abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92acd909de88b9a6bc292a6c39c4c033287',1,'abi_sysv_x64.c']]],
   ['nonpoweroftwostruct_14',['NonPowerOfTwoStruct',['../structNonPowerOfTwoStruct.html',1,'']]],
   ['normalize_5fstring_15',['normalize_string',['../004__signatures_8c.html#af37e8ab6a7739e06f92838b9208d3932',1,'004_signatures.c']]],
@@ -34,5 +34,5 @@ var searchData=
   ['num_5fxmm_5fargs_31',['num_xmm_args',['../structinfix__call__frame__layout.html#acce402d73219c05665e49c695d9cf1d2',1,'infix_call_frame_layout::num_xmm_args'],['../abi__win__x64_8c.html#ae43fd27e26591007a6e52ff762d515dc',1,'NUM_XMM_ARGS:&#160;abi_win_x64.c'],['../abi__sysv__x64_8c.html#ae43fd27e26591007a6e52ff762d515dc',1,'NUM_XMM_ARGS:&#160;abi_sysv_x64.c']]],
   ['number_32',['Number',['../unionNumber.html',1,'']]],
   ['number_5funion_5freturn_5fhandler_33',['number_union_return_handler',['../302__aggregates_8c.html#a70467ffbe02ac6056479d14ae084875b',1,'302_aggregates.c']]],
-  ['numbers_34',['Recipe: Working with Complex Numbers',['../md_docs_2cookbook.html#autotoc_md53',1,'']]]
+  ['numbers_34',['Recipe: Working with Complex Numbers',['../md_docs_2cookbook.html#autotoc_md55',1,'']]]
 ];

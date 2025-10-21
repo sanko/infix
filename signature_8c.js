@@ -24,5 +24,6 @@ var signature_8c =
     [ "parse_type", "signature_8c.html#ab4c5b55fdeb3f3391ba92636e7f83621", null ],
     [ "parse_vector_type", "signature_8c.html#a0dfa202198c964a05e8911d189ce80a7", null ],
     [ "set_parser_error", "signature_8c.html#a7487ff25b05bd0c29659902bfdd75828", null ],
-    [ "skip_whitespace", "signature_8c.html#aec8176eec4752cc7bb8193876ef20456", null ]
+    [ "skip_whitespace", "signature_8c.html#aec8176eec4752cc7bb8193876ef20456", null ],
+    [ "g_infix_last_signature_context", "signature_8c.html#aebc75fad28db1e2a75eca6df7305c4e1", null ]
 ];
