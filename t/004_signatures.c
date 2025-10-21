@@ -63,13 +63,16 @@ static void normalize_string(char * s) {
         return;
     char * d = s;
     do {
-        while (isspace((unsigned char)*s)) {
+        while (isspace((unsigned char)*s))
             s++;
-        }
     } while ((*d++ = *s++));
 }
 
-static void test_print_roundtrip(const char * signature) {
+// Updated round-trip test to handle normalization of abstract types.
+static void test_print_roundtrip(const char * signature, const char * expected_output) {
+    if (!expected_output)
+        expected_output = signature;
+
     subtest(signature) {
         plan(1);
         infix_type * type = NULL;
@@ -88,25 +91,20 @@ static void test_print_roundtrip(const char * signature) {
         if (status != INFIX_SUCCESS)
             fail("Printing failed.");
         else {
-            char original_normalized[1024];
+            char expected_normalized[1024];
             char printed_normalized[1024];
-            snprintf(original_normalized, sizeof(original_normalized), "%s", signature);
+            snprintf(expected_normalized, sizeof(expected_normalized), "%s", expected_output);
             snprintf(printed_normalized, sizeof(printed_normalized), "%s", buffer);
 
-            normalize_string(original_normalized);
+            normalize_string(expected_normalized);
             normalize_string(printed_normalized);
 
-            // Special case for round-tripping named references
-            if (original_normalized[0] == '@' && (printed_normalized[0] == '{' || printed_normalized[0] == '<')) {
-                pass("Printing a resolved named type correctly expands it.");
-            }
-            else {
-                ok(strcmp(original_normalized, printed_normalized) == 0,
-                   "Printed string should match original signature");
-                if (strcmp(original_normalized, printed_normalized) != 0) {
-                    diag("Original (normalized): %s", original_normalized);
-                    diag("Printed  (normalized): %s", printed_normalized);
-                }
+            ok(strcmp(expected_normalized, printed_normalized) == 0,
+               "Printed string should match expected canonical signature");
+            if (strcmp(expected_normalized, printed_normalized) != 0) {
+                diag("Original: %s", signature);
+                diag("Expected (normalized): %s", expected_normalized);
+                diag("Printed  (normalized): %s", printed_normalized);
             }
         }
         infix_arena_destroy(arena);
@@ -114,25 +112,25 @@ static void test_print_roundtrip(const char * signature) {
 }
 
 TEST {
-    plan(6);
+    plan(7);
 
     subtest("Valid Single Types") {
         plan(15);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
         test_type_ok("bool", INFIX_TYPE_PRIMITIVE, "bool");
-        test_type_ok("int32", INFIX_TYPE_PRIMITIVE, "int32");
-        test_type_ok("*int32", INFIX_TYPE_POINTER, "pointer to int32");
-        test_type_ok("[10:int32]", INFIX_TYPE_ARRAY, "array of int32");
-        test_type_ok("*[10:int32]", INFIX_TYPE_POINTER, "pointer to array");
-        test_type_ok("[10:*int32]", INFIX_TYPE_ARRAY, "array of pointers");
-        test_type_ok("{int32, double}", INFIX_TYPE_STRUCT, "simple struct");
-        test_type_ok("<int32, double>", INFIX_TYPE_UNION, "simple union");
-        test_type_ok("{int32, <double, *void>}", INFIX_TYPE_STRUCT, "nested aggregate");
+        test_type_ok("sint32", INFIX_TYPE_PRIMITIVE, "sint32");
+        test_type_ok("*sint32", INFIX_TYPE_POINTER, "pointer to sint32");
+        test_type_ok("[10:sint32]", INFIX_TYPE_ARRAY, "array of sint32");
+        test_type_ok("*[10:sint32]", INFIX_TYPE_POINTER, "pointer to array");
+        test_type_ok("[10:*sint32]", INFIX_TYPE_ARRAY, "array of pointers");
+        test_type_ok("{sint32, double}", INFIX_TYPE_STRUCT, "simple struct");
+        test_type_ok("<sint32, double>", INFIX_TYPE_UNION, "simple union");
+        test_type_ok("{sint32, <double, *void>}", INFIX_TYPE_STRUCT, "nested aggregate");
         test_type_ok("(int) -> void", INFIX_TYPE_REVERSE_TRAMPOLINE, "simple function pointer");
-        test_type_ok("(*void, int32) -> *int32", INFIX_TYPE_REVERSE_TRAMPOLINE, "complex function pointer");
-        test_type_ok("*( (int32) -> void )", INFIX_TYPE_POINTER, "pointer to a function type");
-        test_type_ok("e:int32", INFIX_TYPE_ENUM, "simple enum");
-        test_type_ok("!{char, int64}", INFIX_TYPE_STRUCT, "simple packed struct (pack 1)");
+        test_type_ok("(*void, sint32) -> *sint32", INFIX_TYPE_REVERSE_TRAMPOLINE, "complex function pointer");
+        test_type_ok("*((sint32) -> void)", INFIX_TYPE_POINTER, "pointer to a function type");
+        test_type_ok("e:sint32", INFIX_TYPE_ENUM, "simple enum");
+        test_type_ok("!{char, sint64}", INFIX_TYPE_STRUCT, "simple packed struct (pack 1)");
     }
 
     subtest("Valid Edge Cases (Whitespace, Nesting, Empty)") {
@@ -149,13 +147,13 @@ TEST {
 
     subtest("Valid Full Function Signatures") {
         plan(8);
-        subtest("Simple function: (int32, double) -> int64") {
+        subtest("Simple function: (sint32, double) -> sint64") {
             plan(4);
             infix_arena_t * a = nullptr;
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32, double) -> int64", &a, &rt, &at, &na, &nf, nullptr);
+            infix_status s = infix_signature_parse("(sint32, double) -> sint64", &a, &rt, &at, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
                 ok(na == 2 && nf == 2, "Correct arg count");
@@ -183,13 +181,13 @@ TEST {
                 skip(2, "Detail checks skipped");
             infix_arena_destroy(a);
         }
-        subtest("Variadic function with args: (int32; double) -> void") {
+        subtest("Variadic function with args: (sint32; double) -> void") {
             plan(4);
             infix_arena_t * a = nullptr;
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32; double) -> void", &a, &rt, &at, &na, &nf, nullptr);
+            infix_status s = infix_signature_parse("(sint32; double) -> void", &a, &rt, &at, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
                 ok(na == 2, "Correct total args");
@@ -200,13 +198,13 @@ TEST {
                 skip(3, "Detail checks skipped");
             infix_arena_destroy(a);
         }
-        subtest("Variadic function with no variadic args passed: (int32;) -> void") {
+        subtest("Variadic function with no variadic args passed: (sint32;) -> void") {
             plan(4);
             infix_arena_t * a = nullptr;
             infix_type * rt = nullptr;
             infix_function_argument * at = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(int32;) -> void", &a, &rt, &at, &na, &nf, nullptr);
+            infix_status s = infix_signature_parse("(sint32;) -> void", &a, &rt, &at, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
                 ok(na == 1, "Correct total args");
@@ -234,13 +232,13 @@ TEST {
                 skip(3, "Detail checks skipped");
             infix_arena_destroy(a);
         }
-        subtest("Complex nested function: (*( (int32) -> void )) -> void") {
+        subtest("Complex nested function: (*( (sint32) -> void )) -> void") {
             plan(4);
             infix_arena_t * a = nullptr;
             infix_type * rt = nullptr;
             infix_function_argument * args = nullptr;
             size_t na, nf;
-            infix_status s = infix_signature_parse("(*((int32) -> void)) -> void", &a, &rt, &args, &na, &nf, nullptr);
+            infix_status s = infix_signature_parse("(*((sint32) -> void)) -> void", &a, &rt, &args, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds");
             if (s == INFIX_SUCCESS) {
                 ok(na == 1 && nf == 1, "Has 1 arg");
@@ -269,7 +267,7 @@ TEST {
             infix_type * rt = nullptr;
             infix_function_argument * args = nullptr;
             size_t na, nf;
-            const char * sig = "(count: int32, name: *char) -> void";
+            const char * sig = "(count: sint32, name: *char) -> void";
             infix_status s = infix_signature_parse(sig, &a, &rt, &args, &na, &nf, nullptr);
             ok(s == INFIX_SUCCESS, "Parsing succeeds with named args");
             if (s == INFIX_SUCCESS) {
@@ -289,12 +287,12 @@ TEST {
 
     subtest("Invalid Syntax and Logic") {
         plan(21);
-        test_type_fail("int32 junk", "Junk after valid type");
+        test_type_fail("sint32 junk", "Junk after valid type");
         test_type_fail("*", "Pointer to nothing");
         test_type_fail("[10:]", "Array with no type after colon");
         test_type_fail("() ->", "Function with no return type");
-        test_type_fail("(int32,) -> void", "Trailing comma in arg list");
-        test_type_fail("(int32 -> void)", "Missing parentheses around args");
+        test_type_fail("(sint32,) -> void", "Trailing comma in arg list");
+        test_type_fail("(sint32 -> void)", "Missing parentheses around args");
         test_type_fail("e:double", "Enum with non-integer base");
         test_type_fail("{name:}", "Named member with no type");
         test_type_fail("!2:", "Incomplete packed struct definition");
@@ -333,9 +331,8 @@ TEST {
             infix_type * next_pointee = next_member->type->meta.pointer_info.pointee_type;
             ok(next_pointee == node_type, "Recursive pointer correctly points to the parent struct type");
         }
-        else {
+        else
             skip(4, "Skipping detail checks due to parsing failure");
-        }
 
         infix_arena_destroy(temp_arena);
         infix_registry_destroy(registry);
@@ -343,12 +340,19 @@ TEST {
 
     subtest("Round trip") {
         plan(7);
-        test_print_roundtrip("int");
-        test_print_roundtrip("*[10:{int,float}]");
-        test_print_roundtrip("<*void, double>");
-        test_print_roundtrip("(*char;int,double)->void");
-        test_print_roundtrip("{<int,char>, *char}");
-        test_print_roundtrip("e:longlong");
-        test_print_roundtrip("v[4:float]");
+        test_print_roundtrip("int", "sint32");
+        test_print_roundtrip("*[10:{int,float}]", "*[10:{sint32,float}]");
+        test_print_roundtrip("<*void, double>", NULL);
+        test_print_roundtrip("(*char;int,double)->void", "(*sint8;sint32,double)->void");
+        test_print_roundtrip("{<int,char>, *char}", "{<sint32,sint8>,*sint8}");
+        test_print_roundtrip("e:longlong", "e:sint64");
+        test_print_roundtrip("v[4:float]", NULL);
+    }
+
+    subtest("Round trip with named fields") {
+        plan(3);
+        test_print_roundtrip("{id:sint32,score:double}", NULL);
+        test_print_roundtrip("<ival:sint32,fval:float>", NULL);
+        test_print_roundtrip("(count:sint32;data:*void)->void", NULL);
     }
 }

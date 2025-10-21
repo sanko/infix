@@ -347,6 +347,8 @@ This runtime layout information allows you to, for example, take a Perl hash and
 
 Nearly all `infix` API functions return an `infix_status` enum. If an operation fails, you can get detailed, thread-safe error information.
 
+#### Trampoline Creation
+
 ```c
 infix_forward_t* trampoline = NULL;
 // This will fail if `registry` is NULL or doesn't contain `@MissingType`.
@@ -359,6 +361,36 @@ if (status != INFIX_SUCCESS) {
     fprintf(stderr, "  Code: %d\n", err.code);       // e.g., INFIX_CODE_UNRESOLVED_NAMED_TYPE
     fprintf(stderr, "  Position: %zu\n", err.position); // Byte offset in signature string
 }
+```
+
+#### Signature Parsing
+
+```c
+const char* bad_signature = "{int, double, ^*char}"; // Invalid character '^'
+infix_type* type = NULL;
+infix_arena_t* arena = NULL;
+infix_status status = infix_type_from_signature(&type, &arena, bad_signature, NULL);
+
+if (status != INFIX_SUCCESS) {
+    infix_error_details_t err = infix_get_last_error();
+    fprintf(stderr, "Failed to parse signature:\n");
+    fprintf(stderr, "  %s\n", bad_signature);
+    // Print a caret '^' pointing to the error location.
+    fprintf(stderr, "  %*s^\n", (int)err.position, "");
+    fprintf(stderr, "Error: %s (code: %d, position: %zu)\n",
+            err.message, err.code, err.position);
+}
+
+infix_arena_destroy(arena); // Safe to call on NULL
+```
+
+**Expected Output:**
+
+```
+Failed to parse signature:
+  {int, double, ^*char}
+               ^
+Error: Unexpected token or character (code: 200, position: 15)
 ```
 
 ## API Reference
