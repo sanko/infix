@@ -51,7 +51,7 @@
 // The thread-local variable that stores the last error.
 static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE, INFIX_CODE_SUCCESS, 0, 0, {0}};
 // A thread-local buffer to hold the original signature string for parser errors.
-static INFIX_TLS const char * g_infix_last_signature_context = NULL;
+static INFIX_TLS const char * g_infix_last_signature_context = nullptr;
 
 /**
  * @internal
@@ -113,7 +113,7 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
     g_infix_last_error.position = position;
     g_infix_last_error.system_error_code = 0;
 
-    if (category == INFIX_CATEGORY_PARSER && g_infix_last_signature_context != NULL) {
+    if (category == INFIX_CATEGORY_PARSER && g_infix_last_signature_context != nullptr) {
         // Generate a rich, GCC-style error message for parser failures.
         const char * signature = g_infix_last_signature_context;
         size_t sig_len = strlen(signature);
@@ -194,7 +194,7 @@ void _infix_clear_error(void) {
     g_infix_last_error.position = 0;
     g_infix_last_error.system_error_code = 0;
     g_infix_last_error.message[0] = '\0';
-    g_infix_last_signature_context = NULL;
+    g_infix_last_signature_context = nullptr;
 }
 
 /**

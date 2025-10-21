@@ -373,7 +373,7 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_tr
                                                        size_t num_args,
                                                        size_t num_fixed_args,
                                                        void * target_function) {
-    _infix_clear_error();
+
     return _infix_forward_create_internal(
         out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr, target_function);
 }
@@ -394,7 +394,7 @@ c23_nodiscard infix_status infix_forward_create_unbound_manual(infix_forward_t *
                                                                infix_type ** arg_types,
                                                                size_t num_args,
                                                                size_t num_fixed_args) {
-    _infix_clear_error();
+
     return _infix_forward_create_internal(
         out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr, nullptr);
 }
@@ -596,7 +596,6 @@ c23_nodiscard infix_status infix_reverse_create_callback_manual(infix_reverse_t 
                                                                 size_t num_args,
                                                                 size_t num_fixed_args,
                                                                 void * user_callback_fn) {
-    _infix_clear_error();
     return _infix_reverse_create_internal(
         out_context, return_type, arg_types, num_args, num_fixed_args, user_callback_fn, nullptr, true);
 }
@@ -611,7 +610,7 @@ c23_nodiscard infix_status infix_reverse_create_closure_manual(infix_reverse_t *
                                                                size_t num_fixed_args,
                                                                infix_closure_handler_fn user_callback_fn,
                                                                void * user_data) {
-    _infix_clear_error();
+
     return _infix_reverse_create_internal(
         out_context, return_type, arg_types, num_args, num_fixed_args, (void *)user_callback_fn, user_data, false);
 }
@@ -657,7 +656,7 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
                                                 const char * signature,
                                                 void * target_function,
                                                 infix_registry_t * registry) {
-    _infix_clear_error();
+
     infix_arena_t * arena = nullptr;
     infix_type * ret_type = nullptr;
     infix_function_argument * args = nullptr;
@@ -697,7 +696,7 @@ c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t ** out_
                                                          const char * signature,
                                                          void * user_callback_fn,
                                                          infix_registry_t * registry) {
-    _infix_clear_error();
+
     infix_arena_t * arena = nullptr;
     infix_type * ret_type = nullptr;
     infix_function_argument * args = nullptr;
@@ -728,7 +727,7 @@ c23_nodiscard infix_status infix_reverse_create_closure(infix_reverse_t ** out_c
                                                         infix_closure_handler_fn user_callback_fn,
                                                         void * user_data,
                                                         infix_registry_t * registry) {
-    _infix_clear_error();
+
     infix_arena_t * arena = nullptr;
     infix_type * ret_type = nullptr;
     infix_function_argument * args = nullptr;

@@ -186,7 +186,7 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
         }
     }
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -233,7 +233,7 @@ c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
     if (!out_type || !pointee_type)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -265,7 +265,7 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -298,7 +298,7 @@ c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -331,7 +331,7 @@ c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
     if (!is_float(base_type) && !is_double(base_type))
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -364,7 +364,7 @@ c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * arena,
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -403,7 +403,6 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_UNION;
-    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous union
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -432,7 +431,6 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     INFIX_DEBUG_PRINTF("Created arena union type. Size: %llu, Alignment: %llu",
                        (unsigned long long)type->size,
                        (unsigned long long)type->alignment);
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
@@ -457,7 +455,6 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
 
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_STRUCT;
-    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous struct
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -525,7 +522,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
     if (out_type == nullptr || (num_members > 0 && members == nullptr) || alignment == 0)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -547,7 +544,6 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
     type->size = total_size;
     type->alignment = alignment;
     type->category = INFIX_TYPE_STRUCT;
-    type->meta.aggregate_info.name = nullptr;  // Packed structs are anonymous by default via this API
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
@@ -567,7 +563,7 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
     if (out_type == nullptr || name == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
@@ -611,17 +607,26 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
     if (src_type == nullptr)
         return nullptr;
 
-    // Optimization: If the source type is a static primitive, we don't need to copy it.
-    if (!src_type->is_arena_allocated)
+    // Optimization: If the source is a static singleton (which are primitives or void), we don't need to copy it.
+    // We can just return the original pointer.
+    if ((src_type->category == INFIX_TYPE_PRIMITIVE || src_type->category == INFIX_TYPE_VOID ||
+         src_type->category == INFIX_TYPE_POINTER) &&
+        !src_type->is_arena_allocated) {
         return (infix_type *)src_type;
+    }
 
-    // Allocate space for the new type in the destination arena and copy the base struct.
-    infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
+    // Allocate a new, zero-initialized type in the destination arena.
+    infix_type * dest_type = infix_arena_calloc(dest_arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (dest_type == nullptr)
         return nullptr;
-    infix_memcpy(dest_type, src_type, sizeof(infix_type));
 
-    // Recursively copy any nested types based on the category.
+    // Manually copy the base properties. Crucially, set the is_arena_allocated flag to true for the new copy.
+    dest_type->is_arena_allocated = true;
+    dest_type->category = src_type->category;
+    dest_type->size = src_type->size;
+    dest_type->alignment = src_type->alignment;
+
+    // Now, perform a deep copy of the nested metadata.
     switch (src_type->category) {
     case INFIX_TYPE_NAMED_REFERENCE:
         {
@@ -632,9 +637,9 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                 if (!dest_name)
                     return nullptr;
                 infix_memcpy(dest_name, src_name, name_len);
-                // We need to cast away const to write to the destination.
-                *((const char **)&dest_type->meta.named_reference.name) = dest_name;
+                dest_type->meta.named_reference.name = dest_name;
             }
+            dest_type->meta.named_reference.aggregate_category = src_type->meta.named_reference.aggregate_category;
         }
         break;
     case INFIX_TYPE_POINTER:
@@ -644,35 +649,37 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
     case INFIX_TYPE_ARRAY:
         dest_type->meta.array_info.element_type =
             _copy_type_graph_to_arena(dest_arena, src_type->meta.array_info.element_type);
+        dest_type->meta.array_info.num_elements = src_type->meta.array_info.num_elements;
         break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
         {
-            // Deep copy the aggregate's own name, if it has one.
             const char * src_agg_name = src_type->meta.aggregate_info.name;
             if (src_agg_name) {
                 size_t name_len = strlen(src_agg_name) + 1;
                 char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
                 if (!dest_agg_name)
-                    return nullptr;  // Allocation failed
+                    return nullptr;
                 infix_memcpy(dest_agg_name, src_agg_name, name_len);
-                // We need to cast away const to write to the destination struct field.
-                *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
+                dest_type->meta.aggregate_info.name = dest_agg_name;
             }
 
+            dest_type->meta.aggregate_info.num_members = src_type->meta.aggregate_info.num_members;
             if (src_type->meta.aggregate_info.num_members > 0) {
                 size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
                 dest_type->meta.aggregate_info.members =
                     infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
                 if (dest_type->meta.aggregate_info.members == nullptr)
                     return nullptr;
-                infix_memcpy(
-                    dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
 
                 for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
+                    dest_type->meta.aggregate_info.members[i].offset = src_type->meta.aggregate_info.members[i].offset;
                     dest_type->meta.aggregate_info.members[i].type =
                         _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
-                    // Deep copy the member name string to avoid dangling pointers.
+                    if (dest_type->meta.aggregate_info.members[i].type == nullptr &&
+                        src_type->meta.aggregate_info.members[i].type != nullptr)
+                        return nullptr;
+
                     const char * src_name = src_type->meta.aggregate_info.members[i].name;
                     if (src_name) {
                         size_t name_len = strlen(src_name) + 1;
@@ -680,7 +687,7 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                         if (!dest_name)
                             return nullptr;
                         infix_memcpy(dest_name, src_name, name_len);
-                        *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
+                        dest_type->meta.aggregate_info.members[i].name = dest_name;
                     }
                 }
             }
@@ -689,17 +696,26 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
         dest_type->meta.func_ptr_info.return_type =
             _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.return_type);
+        if (dest_type->meta.func_ptr_info.return_type == nullptr && src_type->meta.func_ptr_info.return_type != nullptr)
+            return nullptr;
+
+        dest_type->meta.func_ptr_info.num_args = src_type->meta.func_ptr_info.num_args;
+        dest_type->meta.func_ptr_info.num_fixed_args = src_type->meta.func_ptr_info.num_fixed_args;
+
         if (src_type->meta.func_ptr_info.num_args > 0) {
             size_t args_size = sizeof(infix_function_argument) * src_type->meta.func_ptr_info.num_args;
             dest_type->meta.func_ptr_info.args =
                 infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
             if (dest_type->meta.func_ptr_info.args == nullptr)
                 return nullptr;
-            infix_memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
 
             for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
                 dest_type->meta.func_ptr_info.args[i].type =
                     _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.args[i].type);
+                if (dest_type->meta.func_ptr_info.args[i].type == nullptr &&
+                    src_type->meta.func_ptr_info.args[i].type != nullptr)
+                    return nullptr;
+
                 const char * src_name = src_type->meta.func_ptr_info.args[i].name;
                 if (src_name) {
                     size_t name_len = strlen(src_name) + 1;
@@ -707,13 +723,28 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                     if (!dest_name)
                         return nullptr;
                     infix_memcpy(dest_name, src_name, name_len);
-                    *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
+                    dest_type->meta.func_ptr_info.args[i].name = dest_name;
                 }
             }
         }
         break;
+    case INFIX_TYPE_ENUM:
+        dest_type->meta.enum_info.underlying_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.enum_info.underlying_type);
+        break;
+    case INFIX_TYPE_COMPLEX:
+        dest_type->meta.complex_info.base_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.complex_info.base_type);
+        break;
+    case INFIX_TYPE_VECTOR:
+        dest_type->meta.vector_info.element_type =
+            _copy_type_graph_to_arena(dest_arena, src_type->meta.vector_info.element_type);
+        dest_type->meta.vector_info.num_elements = src_type->meta.vector_info.num_elements;
+        break;
+    case INFIX_TYPE_PRIMITIVE:
+        dest_type->meta.primitive_id = src_type->meta.primitive_id;
+        break;
     default:
-        // For PRIMITIVE, VOID, ENUM, etc., the initial shallow copy is sufficient.
         break;
     }
     return dest_type;

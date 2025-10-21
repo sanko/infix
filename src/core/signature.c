@@ -189,7 +189,7 @@ static const char * parse_identifier(parser_state * state) {
         return nullptr;
     // Allocate space for the identifier in the arena and copy it. This makes the
     // resulting type graph self-contained, with no pointers back to the original string.
-    char * name = infix_arena_alloc(state->arena, len + 1, 1);
+    char * name = infix_arena_calloc(state->arena, 1, len + 1, 1);
     if (!name) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return nullptr;
@@ -338,7 +338,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 return nullptr;
             }
             // Add to linked list
-            member_node * node = infix_arena_alloc(state->arena, sizeof(member_node), _Alignof(member_node));
+            member_node * node = infix_arena_calloc(state->arena, 1, sizeof(member_node), _Alignof(member_node));
             if (!node) {
                 _infix_set_error(
                     INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
@@ -380,7 +380,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
         return nullptr;  // Return null for empty aggregates, but without an error.
     // Pass 2: Convert the linked list to a contiguous array for the final `infix_type`.
     infix_struct_member * members =
-        infix_arena_alloc(state->arena, sizeof(infix_struct_member) * num_members, _Alignof(infix_struct_member));
+        infix_arena_calloc(state->arena, 1, sizeof(infix_struct_member) * num_members, _Alignof(infix_struct_member));
     if (!members) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return nullptr;
@@ -436,7 +436,7 @@ static infix_status parse_function_signature_details(parser_state * state,
             if (!arg_type)
                 return INFIX_ERROR_INVALID_ARGUMENT;
             // Add the parsed argument to our linked list.
-            arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
+            arg_node * node = infix_arena_calloc(state->arena, 1, sizeof(arg_node), _Alignof(arg_node));
             if (!node) {
                 _infix_set_error(
                     INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
@@ -484,7 +484,7 @@ static infix_status parse_function_signature_details(parser_state * state,
                 infix_type * arg_type = parse_type(state);
                 if (!arg_type)
                     return INFIX_ERROR_INVALID_ARGUMENT;
-                arg_node * node = infix_arena_alloc(state->arena, sizeof(arg_node), _Alignof(arg_node));
+                arg_node * node = infix_arena_calloc(state->arena, 1, sizeof(arg_node), _Alignof(arg_node));
                 if (!node) {
                     _infix_set_error(
                         INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
@@ -536,7 +536,8 @@ static infix_status parse_function_signature_details(parser_state * state,
         return INFIX_ERROR_INVALID_ARGUMENT;
     // Convert linked list to array
     infix_function_argument * args = (num_args > 0)
-        ? infix_arena_alloc(state->arena, sizeof(infix_function_argument) * num_args, _Alignof(infix_function_argument))
+        ? infix_arena_calloc(
+              state->arena, 1, sizeof(infix_function_argument) * num_args, _Alignof(infix_function_argument))
         : nullptr;
     if (num_args > 0 && !args) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
@@ -674,7 +675,7 @@ static infix_type * parse_function_type(parser_state * state) {
     if (parse_function_signature_details(state, &ret_type, &args, &num_args, &num_fixed) != INFIX_SUCCESS)
         return nullptr;
     // Manually construct an `infix_type` of category INFIX_TYPE_REVERSE_TRAMPOLINE.
-    infix_type * func_type = infix_arena_alloc(state->arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * func_type = infix_arena_calloc(state->arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (!func_type) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return nullptr;

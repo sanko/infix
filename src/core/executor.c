@@ -180,9 +180,9 @@ static bool has_jit_entitlement(void) {
     // Create a CoreFoundation string for the entitlement key we're looking for.
     CFStringRef key = g_macos_apis.CFStringCreateWithCString(
         g_macos_apis.kCFAllocatorDefault, "com.apple.security.cs.allow-jit", kCFStringEncodingUTF8);
-    CFTypeRef value = NULL;
+    CFTypeRef value = nullptr;
     if (key) {  // Query the OS for the entitlement value.
-        value = g_macos_apis.SecTaskCopyValueForEntitlement(task, key, NULL);
+        value = g_macos_apis.SecTaskCopyValueForEntitlement(task, key, nullptr);
         g_macos_apis.CFRelease(key);  // Must release objects we create.
     }
     g_macos_apis.CFRelease(task);  // Must release the task reference.
@@ -285,7 +285,7 @@ static int shm_open_anonymous() {
  */
 c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
 #if defined(INFIX_OS_WINDOWS)
-    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .handle = NULL};
+    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .handle = nullptr};
 #else
     infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
 #endif

@@ -371,6 +371,7 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             return INFIX_ERROR_ALLOCATION_FAILED;
 
         entry->type = permanent_type;
+        permanent_type->is_arena_allocated = true;  // Ensure copied type is marked correctly
         entry->is_forward_declaration = false;
     }
 
@@ -425,9 +426,13 @@ c23_nodiscard infix_status _infix_resolve_type_graph(infix_type ** type_ptr, inf
     // The recursive cases: traverse into composite types.
     switch (type->category) {
     case INFIX_TYPE_POINTER:
-        return _infix_resolve_type_graph(&type->meta.pointer_info.pointee_type, registry);
+        if (_infix_resolve_type_graph(&type->meta.pointer_info.pointee_type, registry) != INFIX_SUCCESS)
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        break;
     case INFIX_TYPE_ARRAY:
-        return _infix_resolve_type_graph(&type->meta.array_info.element_type, registry);
+        if (_infix_resolve_type_graph(&type->meta.array_info.element_type, registry) != INFIX_SUCCESS)
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
@@ -442,6 +447,18 @@ c23_nodiscard infix_status _infix_resolve_type_graph(infix_type ** type_ptr, inf
             if (_infix_resolve_type_graph(&type->meta.func_ptr_info.args[i].type, registry) != INFIX_SUCCESS)
                 return INFIX_ERROR_INVALID_ARGUMENT;
         }
+        break;
+    case INFIX_TYPE_ENUM:
+        if (_infix_resolve_type_graph(&type->meta.enum_info.underlying_type, registry) != INFIX_SUCCESS)
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        break;
+    case INFIX_TYPE_COMPLEX:
+        if (_infix_resolve_type_graph(&type->meta.complex_info.base_type, registry) != INFIX_SUCCESS)
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        break;
+    case INFIX_TYPE_VECTOR:
+        if (_infix_resolve_type_graph(&type->meta.vector_info.element_type, registry) != INFIX_SUCCESS)
+            return INFIX_ERROR_INVALID_ARGUMENT;
         break;
     default:
         // Primitives and other simple types have no children to resolve.
