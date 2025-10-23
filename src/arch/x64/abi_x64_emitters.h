@@ -26,7 +26,7 @@
  * @endinternal
  */
 
-#include "abi_x64_common.h"
+#include "arch/x64/abi_x64_common.h"
 #include "common/infix_internals.h"
 
 // GPR <-> Immediate Value Emitters

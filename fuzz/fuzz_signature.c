@@ -11,38 +11,39 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
+
 /**
  * @file fuzz_signature.c
- * @brief A libFuzzer-based harness for the infix FFI signature parser.
+ * @brief Fuzzer target for the high-level signature parsing API.
+ * @ingroup internal_fuzz
  *
- * @details This harness is a critical security and stability component for the
- * library. It targets the main entry points of the high-level signature API,
- * which are responsible for parsing arbitrary user-provided strings.
+ * @internal
+ * This file defines a fuzz target that focuses on the public-facing signature
+ * parsing functions: `infix_signature_parse` and `infix_type_from_signature`.
+ * It is designed to be compiled with a fuzzing engine like libFuzzer or AFL.
  *
- * The fuzzer's primary goal is to find inputs that cause memory safety violations
- * (buffer overflows, use-after-free, memory leaks), crashes (segmentation faults,
- * assertion failures from integer overflows), or hangs (infinite loops) within
- * the parser logic.
+ * @section fuzz_strategy Fuzzing Strategy
  *
- * ### Fuzzing Targets
+ * The strategy is straightforward but effective:
+ * 1.  Take the raw, unmodified input data from the fuzzer.
+ * 2.  Treat this data as a null-terminated C string.
+ * 3.  Feed this string directly into `infix_signature_parse` and
+ *     `infix_type_from_signature`.
  *
- * This harness tests two key public API functions:
+ * The goal is to discover security vulnerabilities and stability issues within the
+ * entire "Parse -> Copy -> Resolve -> Layout" pipeline that these high-level
+ * functions orchestrate. This includes:
+ * - **Parser Crashes:** Invalid syntax causing segmentation faults or other crashes.
+ * - **Memory Errors:** Buffer overflows, use-after-free, or memory leaks detected by ASan.
+ * - **Hangs/Timeouts:** Pathological inputs that cause excessive recursion or looping
+ *   in any stage of the pipeline.
+ * - **Incorrect Error Handling:** Situations where the library fails to return an
+ *   error status for a clearly invalid signature.
  *
- * 1.  **`infix_signature_parse()`**: This function parses a full function signature
- *     (arguments and return type). A successful parse results in a complex graph
- *     of `infix_type` objects allocated within a dedicated memory arena. The test
- *     verifies that if parsing succeeds, the entire arena can be safely destroyed
- *     without leaking memory.
- *
- * 2.  **`infix_type_from_signature()`**: This function parses a string representing
- *     a single data type. It follows the same test-and-destroy pattern as the
- *     full signature parser.
- *
- * By fuzzing both functions, we ensure that all code paths within the
- * recursive-descent parser are exercised with a wide variety of valid, invalid,
- * and malicious inputs. This harness is intended to be compiled with Clang and
- * run with AddressSanitizer (`-fsanitize=address,fuzzer`) to automatically
- * detect memory errors.
+ * This fuzzer complements the other targets by testing the full, integrated system
+ * from the user's perspective, whereas other fuzzers might focus on specific internal
+ * components like the ABI classifier or the type generator in isolation.
+ * @endinternal
  */
 
 #include <infix/infix.h>
@@ -54,66 +55,55 @@
 #include "fuzz_helpers.h"
 
 /**
- * @brief The entry point called by the libFuzzer engine for each test case.
- * @details The fuzzer engine repeatedly calls this function, providing a
- * buffer of pseudo-random data. The function treats this data as a potential
- * signature string and feeds it to the target functions. The fuzzer's goal is to
- * find a data input that causes a crash or triggers a sanitizer error.
+ * @brief The entry point for libFuzzer.
  *
- * @param data A pointer to the raw byte buffer provided by the fuzzer.
- * @param size The size of the data buffer in bytes.
- * @return An integer, which is unused by libFuzzer but required by the function signature.
+ * This function is called by the libFuzzer runtime for each test case. It takes
+ * the raw fuzzer data, treats it as a signature string, and passes it to the
+ * main `infix` parsing APIs.
+ *
+ * @param data A pointer to the fuzzer-generated input data.
+ * @param size The size of the data.
+ * @return 0 on completion.
  */
 int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
-    if (size == 0)  // The parser expects a non-empty string.
+    if (size == 0)
         return 0;
 
-    // The input data from the fuzzer is not null-terminated. We must create
-    // a proper C string from it to safely pass it to our parser.
+    // Allocate a buffer and copy the fuzzer data, then null-terminate it to
+    // create a valid C string.
     char * signature = malloc(size + 1);
-    if (!signature)  // If malloc fails, we can't proceed.
+    if (!signature)
         goto cleanup;
 
     memcpy(signature, data, size);
     signature[size] = '\0';
 
-    // Target 1: The full function signature parser
-    // This is the most complex target, as it involves parsing multiple types
-    // and handling special separators like `=>` and `;`.
+    // Target 1: Full Function Signature Parsing
     infix_arena_t * arena = NULL;
     infix_type * ret_type = NULL;
     infix_function_argument * args = NULL;
     size_t num_args, num_fixed_args;
 
+    // Call the high-level API that handles the full "Parse->Copy->Resolve->Layout" pipeline.
     infix_status status =
         infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed_args, nullptr);
 
-    // The core of the test: If parsing was successful, we must prove that we
-    // can destroy the resulting arena and all the infix_type objects it contains
-    // without any memory errors (leaks, double-frees, etc.).
-    if (status == INFIX_SUCCESS)
+    // If parsing succeeds, we must clean up the resources that were allocated.
+    // If it fails, the function is responsible for its own cleanup.
+    if (status == INFIX_SUCCESS) {
         infix_arena_destroy(arena);
-    else
-        goto cleanup;
 
-    // Target 2: The single type signature parser
-    // This targets the same underlying parsing logic but through a different
-    // entry point, ensuring it handles single types and correctly rejects
-    // full function signatures.
-    infix_arena_t * type_arena = NULL;
-    infix_type * type_only = NULL;
-    status = infix_type_from_signature(&type_only, &type_arena, signature, nullptr);
+        // Target 2: Single Type Signature Parsing
+        infix_arena_t * type_arena = NULL;
+        infix_type * type_only = NULL;
+        status = infix_type_from_signature(&type_only, &type_arena, signature, nullptr);
 
-    // As with the first target, a successful parse must be followed by a clean
-    // destruction to pass the test under AddressSanitizer.
-    if (status == INFIX_SUCCESS)
-        infix_arena_destroy(type_arena);
-
+        if (status == INFIX_SUCCESS)
+            infix_arena_destroy(type_arena);
+    }
 cleanup:
-    // Clean up the temporary string we allocated.
+    // We only allocated the signature string, so that's all we need to free.
     free(signature);
 
-    // A return value of 0 indicates that this specific input was processed
-    // without a crash. The fuzzer continues to generate new inputs.
     return 0;
 }

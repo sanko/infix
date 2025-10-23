@@ -1,44 +1,33 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 403_special_types.c
- * @brief Tests FFI calls with types that have unique ABI handling rules.
+ * @brief Unit test for FFI calls with special, non-standard, or platform-dependent primitive types.
+ * @ingroup test_suite
  *
- * @details This suite focuses on C types that are not handled as simple
- * primitives by the target ABI. These often involve legacy hardware (like the
- * x87 FPU) or require values to be split across multiple registers.
+ * @details This test file validates the ABI implementation for primitive types that
+ * have unique or complex calling convention rules.
  *
- * It covers two main categories of special types:
- * 1.  **`long double`:** On the System V x64 ABI (Linux/BSD), this is an 80-bit
- *     extended-precision type passed on the x87 FPU stack, not in SSE/XMM
- *     registers. On AArch64, it's a 128-bit type passed in a full Q-register.
- *     This test verifies these special-case mechanisms for both passing and
- *     returning the type.
- * 2.  **`__int128_t` / `__uint128_t`:** These 128-bit integers are a
- *     non-standard compiler extension (not available on MSVC). They are too
- *     large for a single GPR and are passed/returned in a register pair
- *     (e.g., RAX:RDX on SysV, X0:X1 on AArch64). This test verifies that the
- *     library correctly splits and reassembles these large integer values for
- *     both forward and reverse FFI calls.
+ * The test covers:
+ *
+ * - **`long double`**: This type's size and representation vary by platform. On
+ *   System V x64, it's an 80-bit extended-precision float passed on the x87 FPU
+ *   stack, while on Windows and AArch64, it's often an alias for `double`. This
+ *   test verifies the correct handling for platforms where it is a distinct type.
+ *
+ * - **`__int128_t` / `__uint128_t`**: These are 128-bit integer types provided as
+ *   a compiler extension by GCC and Clang (but not MSVC). They are typically
+ *   passed in a pair of general-purpose registers (e.g., RDI/RSI on SysV x64).
+ *   This test verifies their handling in both forward and reverse calls.
+ *
+ * Each test is conditionally compiled to run only on architectures and compilers
+ * that support the specific type, ensuring the test suite remains portable.
  */
+
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
-#include "common/infix_config.h"  // Include the internal platform detection logic.
+#include "common/infix_config.h"
 #include <infix/infix.h>
 
-// A macro to check if the current platform has a distinct `long double` type.
-// On Windows and macOS, it's just an alias for `double` and is tested elsewhere.
+// Check if `long double` has a distinct representation on this platform.
 #if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
     defined(INFIX_OS_MACOS)
 #define HAS_DISTINCT_LONG_DOUBLE 0
@@ -46,13 +35,12 @@
 #define HAS_DISTINCT_LONG_DOUBLE 1
 #endif
 
-// Native C Functions and Handlers
 long double passthrough_long_double(long double v) {
     return v;
 }
 
 #if !defined(INFIX_COMPILER_MSVC)
-// Use constant values to check 128-bit integer passing.
+
 const __int128_t S128_CONSTANT = (((__int128_t)0x12345678ABCDDCBA) << 64) | 0x1122334455667788;
 const __uint128_t U128_CONSTANT = (((__uint128_t)0xFFFFFFFFFFFFFFFF) << 64) | 0xAABBCCDDEEFF0011;
 bool check_s128(__int128_t val) {
@@ -74,8 +62,9 @@ TEST {
     plan(3);
 
     subtest("Special type: long double") {
-#if HAS_DISTINCT_LONG_DOUBLE
         plan(2);
+
+#if HAS_DISTINCT_LONG_DOUBLE
         note("Testing 80-bit or 128-bit long double on SysV/AArch64");
 
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
@@ -94,19 +83,17 @@ TEST {
             diag("long double value mismatch (size: %llu bytes)", (unsigned long long)sizeof(long double));
         infix_forward_destroy(trampoline);
 #else
-        plan(1);
-        skip(1, "long double is an alias for double on this platform; tested in 001_primitives.c");
+        skip(2, "long double is an alias for double on this platform; tested in 001_primitives.c");
 #endif
     }
 
     subtest("Special type: __int128_t") {
-#if !defined(INFIX_COMPILER_MSVC)
         plan(6);
+#if !defined(INFIX_COMPILER_MSVC)
         infix_type * s128_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT128);
         infix_type * bool_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
         infix_status status;
 
-        // Test 1: Forward call passing __int128_t
         infix_forward_t * pass_trampoline = nullptr;
         status = infix_forward_create_unbound_manual(&pass_trampoline, bool_type, &s128_type, 1, 1);
         if (ok(status == INFIX_SUCCESS, "Pass trampoline created for __int128_t")) {
@@ -121,7 +108,6 @@ TEST {
 
         infix_forward_destroy(pass_trampoline);
 
-        // Test 2: Forward call returning __int128_t
         infix_forward_t * ret_trampoline = nullptr;
         status = infix_forward_create_unbound_manual(&ret_trampoline, s128_type, nullptr, 0, 0);
         if (ok(status == INFIX_SUCCESS, "Return trampoline created for __int128_t")) {
@@ -135,7 +121,6 @@ TEST {
 
         infix_forward_destroy(ret_trampoline);
 
-        // Test 3: Reverse call with __int128_t
         infix_reverse_t * rt = nullptr;
         status = infix_reverse_create_callback_manual(&rt, bool_type, &s128_type, 1, 1, (void *)s128_callback_handler);
         if (ok(status == INFIX_SUCCESS, "Reverse trampoline created for __int128_t")) {
@@ -149,14 +134,13 @@ TEST {
 
         infix_reverse_destroy(rt);
 #else
-        plan(1);
-        skip(1, "128-bit integers are not supported on MSVC");
+        skip(6, "128-bit integers are not supported on MSVC");
 #endif
     }
 
     subtest("Special type: __uint128_t") {
-#if !defined(INFIX_COMPILER_MSVC)
         plan(2);
+#if !defined(INFIX_COMPILER_MSVC)
         infix_type * u128_type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
         infix_type * bool_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
 
@@ -174,8 +158,7 @@ TEST {
 
         infix_forward_destroy(trampoline);
 #else
-        plan(1);
-        skip(1, "128-bit integers are not supported on MSVC");
+        skip(2, "128-bit integers are not supported on MSVC");
 #endif
     }
 }

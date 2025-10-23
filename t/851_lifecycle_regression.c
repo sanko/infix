@@ -1,23 +1,28 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 851_lifecycle_regression.c
- * @brief Regression tests for memory lifecycle bugs found in production.
+ * @brief Regression tests for specific memory lifecycle and ownership bugs.
+ * @ingroup test_suite
  *
- * @details This suite contains tests for specific, critical bugs related to the
- * memory lifecycle of `infix_type` objects, particularly the handoff between
- * temporary parser arenas and permanent trampoline arenas.
+ * @details This test file targets specific, subtle bugs related to the memory
+ * lifecycle of `infix_type` objects, particularly when they are copied between
+ * different memory arenas during the "Parse -> Copy -> Resolve -> Layout" pipeline.
+ *
+ * The tests verify:
+ *
+ * 1.  **Use-After-Free of Pointee Types:** Ensures that when a signature like `*@Point`
+ *     is parsed, the `Point` type object (resolved from the registry) remains valid
+ *     and is not prematurely freed after the temporary parser arena is destroyed.
+ *     This was the critical bug discovered previously.
+ *
+ * 2.  **Correct Printing of Copied Named Types:** Verifies that `infix_type_print` can
+ *     correctly serialize a type graph that has been deep-copied into a trampoline's
+ *     private arena, ensuring that pointers to type names remain valid after the copy.
+ *
+ * 3.  **Handling of Recursive Types:** Confirms that the deep-copy mechanism
+ *     (`_copy_type_graph_to_arena`) correctly handles recursive type definitions
+ *     (like a linked list node) without causing a stack overflow from infinite
+ *     recursion, and that the resulting copied graph maintains its correct
+ *     recursive structure.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -30,7 +35,6 @@ void dummy_func() {}
 TEST {
     plan(5);
 
-    // Original Test 1: Still valuable as a baseline.
     subtest("Use-after-free of resolved named pointee type") {
         plan(5);
         note("Verifies that a pointer to a named type (*@Point) remains valid after trampoline creation.");
@@ -62,7 +66,6 @@ TEST {
         infix_registry_destroy(registry);
     }
 
-    // Original Test 2: Also still valuable.
     subtest("Garbage output from infix_type_print on copied named type") {
         plan(3);
         note("Verifies that infix_type_print works correctly on a copied type graph.");
@@ -91,13 +94,12 @@ TEST {
         infix_registry_destroy(registry);
     }
 
-    // NEW TEST 1: Test direct and nested named types.
     subtest("Lifecycle with direct and nested named types") {
         plan(4);
         note("Verifies lifecycle for named types passed by value and nested in other structs.");
 
         infix_registry_t * registry = infix_registry_create();
-        // FIX: Added the missing semicolon between the two definitions.
+
         ok(infix_register_types(registry, "@Point = {x:double, y:double}; @Rect = {tl:@Point, br:@Point};") ==
                INFIX_SUCCESS,
            "Registered nested types @Point and @Rect");
@@ -113,7 +115,7 @@ TEST {
             ok(rect_type && rect_type->category == INFIX_TYPE_STRUCT, "Argument is a struct");
 
             const infix_struct_member * member = infix_type_get_member(rect_type, 0);
-            // After the copy, the member type should be a valid struct, not garbage.
+
             ok(member && member->type && member->type->category == INFIX_TYPE_STRUCT, "Nested member type is valid");
         }
         else {
@@ -124,7 +126,6 @@ TEST {
         infix_registry_destroy(registry);
     }
 
-    // NEW TEST 2: The recursive type test.
     subtest("Lifecycle with recursive named types") {
         plan(6);
         note("Verifies the copy mechanism handles recursive types without infinite loops or UAF.");
@@ -135,7 +136,7 @@ TEST {
 
         infix_forward_t * trampoline = NULL;
         const char * signature = "(*@Node) -> void";
-        // The creation itself is a test. If the memoization fix is wrong, this will infinite loop.
+
         infix_status status = infix_forward_create(&trampoline, signature, (void *)dummy_func, registry);
         ok(status == INFIX_SUCCESS && trampoline != NULL, "Trampoline with recursive type created (no infinite loop)");
 
@@ -150,7 +151,6 @@ TEST {
             ok(next_member && next_member->type && next_member->type->category == INFIX_TYPE_POINTER,
                "Member 'next' is a pointer");
 
-            // The ultimate test: The `next` pointer's pointee should be the *exact same* copied node_type.
             const infix_type * next_pointee_type = next_member->type->meta.pointer_info.pointee_type;
             ok(next_pointee_type == node_type, "Recursive pointer correctly points back to parent struct");
         }
@@ -162,7 +162,6 @@ TEST {
         infix_registry_destroy(registry);
     }
 
-    // NEW TEST 3: Expanded print test.
     subtest("Expanded infix_type_print validation for named types") {
         plan(5);
         note("Verifies name propagation for printing in various contexts (return, nested).");
@@ -172,7 +171,6 @@ TEST {
                INFIX_SUCCESS,
            "Registered types for print test");
 
-        // Test 1: Printing a named type as a return value.
         infix_forward_t * t_ret = NULL;
         if (ok(infix_forward_create(&t_ret, "()->@Rect", (void *)dummy_func, registry) == INFIX_SUCCESS,
                "Created return-type trampoline")) {
@@ -187,7 +185,6 @@ TEST {
             skip(1, "Skipping return type print test");
         }
 
-        // Test 2: Printing a signature containing a nested named type.
         infix_forward_t * t_nested = NULL;
         if (ok(infix_forward_create(&t_nested, "({sint32, r:@Rect})->void", (void *)dummy_func, registry) ==
                    INFIX_SUCCESS,

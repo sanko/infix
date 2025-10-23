@@ -1,50 +1,34 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 001_primitives.c
- * @brief Tests FFI functionality with all supported primitive C types.
+ * @brief Unit test for creating trampolines for functions with primitive C types.
+ * @ingroup test_suite
  *
- * @details This test suite verifies the core capability of the infix library to
- * handle all fundamental C data types. It does this by creating a simple
- * "passthrough" C function for each primitive (e.g., `bool`, `int8_t`, `double`,
- * `__int128_t`).
+ * @details This test file verifies the core functionality of the `infix` library for
+ * the most fundamental C types (integers, floats, bool). It is a critical
+ * "smoke test" that ensures the basic JIT compilation pipeline is working correctly
+ * for each supported platform ABI.
  *
- * For each type, the test performs the following steps:
- * 1. Defines the `infix_type` using `infix_type_create_primitive`.
- * 2. Generates a forward trampoline for the passthrough function's signature.
- * 3. Calls the native C function through the generated trampoline.
- * 4. Asserts that the value returned from the FFI call is identical to the
- *    value that was passed in.
+ * The test covers the following for each primitive type:
+ * - **`infix_forward_create_unbound_manual`**: Creation of an unbound trampoline.
+ * - **`infix_forward_create_manual`**: Creation of a bound trampoline.
+ * - **Calling:** Correctly calling both unbound and bound trampolines.
+ * - **Argument Passing:** Verifying that the primitive argument is passed correctly to the target C function.
+ * - **Return Value:** Verifying that the primitive return value is correctly received from the target C function.
  *
- * This process validates that the library correctly handles the size, alignment,
- * and ABI-specific calling conventions for every primitive type on the target
- * platform, forming the foundational layer of the entire test suite.
- *
- * These tests use the manual API to test primitive types to verify functionality
- * without bringing the signature system in.
+ * It uses a "passthrough" C function for each type (e.g., `passthrough_int32`)
+ * that simply returns its argument, allowing for a straightforward check of
+ * whether the value was transmitted correctly through the FFI boundary.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
-#include "common/infix_config.h"  // Include the internal platform detection logic.
+#include "common/infix_config.h"
 #include <infix/infix.h>
-#include <inttypes.h>  // Include for portable format specifiers like PRIu64
+#include <inttypes.h>
 
-// Native C Passthrough Functions
-// A simple "passthrough" function is defined for each C primitive type.
-// Each function takes one argument and returns it unmodified.
-
+// A set of simple "passthrough" functions, one for each primitive type.
+// These functions simply return their input argument, making it easy to verify
+// that the FFI call correctly transmitted the value.
 bool passthrough_bool(bool v) {
     return v;
 }
@@ -82,7 +66,6 @@ long double passthrough_long_double(long double v) {
     return v;
 }
 
-// 128-bit integers are a non-standard extension, not supported by MSVC.
 #if !defined(INFIX_COMPILER_MSVC)
 __uint128_t passthrough_uint128(__uint128_t v) {
     return v;
@@ -94,19 +77,17 @@ __int128_t passthrough_sint128(__int128_t v) {
 
 /**
  * @def TEST_PRIMITIVE
- * @brief A helper macro to generate a subtest for a specific primitive type.
+ * @brief A macro to generate a complete subtest for a single primitive type.
  *
- * @details This macro encapsulates the repetitive logic for testing a single
- * primitive type. It creates a subtest, generates a trampoline, performs the
- * FFI call, checks the result, and cleans up resources. This reduces code
- * duplication and makes the test suite easier to read and maintain.
- *
- * @param test_name The string name for the subtest.
- * @param c_type The C data type (e.g., `uint8_t`).
- * @param infix_id The `infix_primitive_type_id` enum value.
- * @param passthrough_func The name of the native C passthrough function.
- * @param input_val A literal value to use for testing.
- * @param format_specifier A printf format specifier for diagnostic messages.
+ * @details This macro automates the repetitive process of testing each primitive
+ * type. For a given C type and its corresponding `infix` ID, it generates a
+ * subtest that:
+ * 1. Creates the `infix_type` for the primitive.
+ * 2. Creates and calls an unbound trampoline.
+ * 3. Verifies the result of the unbound call.
+ * 4. Creates and calls a bound trampoline.
+ * 5. Verifies the result of the bound call.
+ * This reduces code duplication and makes the test easy to read and extend.
  */
 #define TEST_PRIMITIVE(test_name, c_type, infix_id, passthrough_func, input_val, format_specifier)                 \
     subtest(test_name) {                                                                                           \
@@ -115,7 +96,7 @@ __int128_t passthrough_sint128(__int128_t v) {
         c_type input = (input_val);                                                                                \
         void * args[] = {&input};                                                                                  \
                                                                                                                    \
-        /* Test Unbound Trampoline */                                                                              \
+        /* Test the unbound trampoline */                                                                          \
         infix_forward_t * unbound_t = nullptr;                                                                     \
         infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);               \
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");                               \
@@ -132,7 +113,7 @@ __int128_t passthrough_sint128(__int128_t v) {
         else                                                                                                       \
             fail("Unbound trampoline code pointer was nullptr");                                                   \
                                                                                                                    \
-        /* Test Bound Trampoline */                                                                                \
+        /* Test the bound trampoline */                                                                            \
         infix_forward_t * bound_t = nullptr;                                                                       \
         infix_status bound_s = infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_func); \
         ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");                                   \
@@ -154,8 +135,9 @@ __int128_t passthrough_sint128(__int128_t v) {
     }
 
 TEST {
-    plan(14);  // One subtest for each primitive type.
+    plan(14);  // One test for each primitive type subtest.
 
+    // Test fundamental integer and boolean types.
     TEST_PRIMITIVE("bool", bool, INFIX_PRIMITIVE_BOOL, passthrough_bool, true, "%d");
     TEST_PRIMITIVE("uint8_t", uint8_t, INFIX_PRIMITIVE_UINT8, passthrough_uint8, 255, "%u");
     TEST_PRIMITIVE("int8_t", int8_t, INFIX_PRIMITIVE_SINT8, passthrough_sint8, -128, "%d");
@@ -166,16 +148,19 @@ TEST {
     TEST_PRIMITIVE("uint64_t", uint64_t, INFIX_PRIMITIVE_UINT64, passthrough_uint64, 0xFFFFFFFFFFFFFFFF, "%" PRIu64);
     TEST_PRIMITIVE(
         "int64_t", int64_t, INFIX_PRIMITIVE_SINT64, passthrough_sint64, -9223372036854775807LL - 1, "%" PRId64);
+
+    // Test floating-point types.
     TEST_PRIMITIVE("float", float, INFIX_PRIMITIVE_FLOAT, passthrough_float, 3.14159f, "%f");
     TEST_PRIMITIVE("double", double, INFIX_PRIMITIVE_DOUBLE, passthrough_double, 2.718281828459045, "%f");
 
+    // `long double` has a unique representation on some platforms (e.g., 80-bit on SysV x64),
+    // so it gets a dedicated subtest instead of using the macro.
     subtest("long double") {
         plan(4);
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
         long double input = 1.234567890123456789L;
         void * args[] = {&input};
 
-        // Unbound
         infix_forward_t * unbound_t = nullptr;
         infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");
@@ -184,7 +169,6 @@ TEST {
         unbound_cif((void *)passthrough_long_double, &unbound_result, args);
         ok(unbound_result == input, "Unbound long double correct");
 
-        // Bound
         infix_forward_t * bound_t = nullptr;
         infix_status bound_s =
             infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_long_double);
@@ -199,6 +183,7 @@ TEST {
     }
 
 #if !defined(INFIX_COMPILER_MSVC)
+    // 128-bit integers are a GCC/Clang extension and not supported on MSVC.
     subtest("__uint128_t") {
         plan(4);
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
@@ -249,7 +234,7 @@ TEST {
         infix_forward_destroy(bound_t);
     }
 #else
-    // If MSVC is used, skip the 128-bit integer tests to satisfy the plan.
+    // If on MSVC, explicitly skip these tests.
     skip(2, "__int128_t and __uint128_t are not supported on MSVC");
 #endif
 }

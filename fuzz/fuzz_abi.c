@@ -11,46 +11,80 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
+
 /**
  * @file fuzz_abi.c
- * @brief A fuzzer targeting the ABI-specific classification logic.
+ * @brief Fuzzer target for the ABI classification layer.
+ * @ingroup internal_fuzz
  *
- * @details This harness is a highly-focused stress test of the `prepare_*_call_frame`
- * functions. It uses the shared helpers to generate a pool of random `infix_type`
- * objects within a single memory arena. It then constructs random function
- * signatures from this pool and calls the ABI classification logic directly.
+ * @internal
+ * This file defines a fuzz target that specifically stresses the ABI classification
+ * logic (`prepare_forward_call_frame` and `prepare_reverse_call_frame`). It is
+ * designed to be compiled with a fuzzing engine like libFuzzer or AFL.
  *
- * The test's only goal is to find inputs that cause crashes, hangs, or sanitizer
- * errors within the ABI classifiers.
+ * @section fuzz_strategy Fuzzing Strategy
+ *
+ * The fuzzer operates by:
+ * 1.  **Generating Random Types:** It consumes the raw input data from the fuzzer
+ *     to generate a pool of randomized `infix_type` objects using the `generate_random_type`
+ *     helper. This produces a wide variety of valid, invalid, and deeply nested
+ *     aggregate structures.
+ *
+ * 2.  **Generating Random Signatures:** It then consumes more data to construct a
+ *     random function signature (return type, argument count, and argument types)
+ *     by picking types from the generated pool.
+ *
+ * 3.  **Exercising the ABI Classifier:** Finally, it calls the `prepare_*_call_frame`
+ *     functions from the ABI v-table for the current platform, passing them the
+ *     randomly generated signature.
+ *
+ * The goal is to trigger crashes, hangs (timeouts), or memory errors (e.g., as detected
+ * by ASan) within the ABI classification code, which is some of the most complex and
+ * bug-prone logic in the library. This target does not generate or execute any JIT
+ * code; it focuses solely on the analysis and layout phase.
+ *
+ * @note This fuzzer was instrumental in finding numerous bugs, including infinite
+ * loops in the classification of zero-sized arrays, stack overflows from deep
+ * recursion, and out-of-bounds reads when classifying malformed aggregates.
+ * @endinternal
  */
 
 #include "fuzz_helpers.h"
 
-// Fuzzing Logic Core
+/**
+ * @internal
+ * @brief Main fuzzing logic for a single input.
+ *
+ * This function takes a block of fuzzer-generated data and uses it to construct
+ * random types and function signatures, which are then fed into the ABI
+ * classification functions to test for robustness and correctness.
+ *
+ * @param in The fuzzer input data stream.
+ */
 static void FuzzTest(fuzzer_input in) {
     infix_type * type_pool[MAX_TYPES_IN_POOL] = {0};
     int type_count = 0;
 
-    // Create a single arena to hold all generated types for this fuzz case.
+    // Use a single, large arena for all type generation to simplify cleanup.
     infix_arena_t * type_arena = infix_arena_create(65536);
     if (!type_arena)
         return;
 
-    // Phase 1: Generate a pool of complex types to build signatures from.
+    // 1. Generate a pool of random types based on the input data.
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
         size_t total_fields = 0;
-        // All types are now allocated from the same arena.
         infix_type * new_type = generate_random_type(type_arena, &in, 0, &total_fields);
         if (new_type)
             type_pool[type_count++] = new_type;
         else
-            break;
+            break;  // Stop if we run out of data or hit a generation limit.
     }
 
+    // We need at least one valid type to proceed.
     if (type_count == 0)
         goto cleanup;
 
-    // Phase 2: Construct a random signature from the type pool.
+    // 2. Construct a random function signature from the type pool.
     uint8_t arg_count_byte;
     if (consume_uint8_t(&in, &arg_count_byte)) {
         size_t num_args = arg_count_byte % MAX_ARGS_IN_SIGNATURE;
@@ -69,24 +103,27 @@ static void FuzzTest(fuzzer_input in) {
         for (size_t i = 0; i < num_args; ++i)
             arg_types[i] = type_pool[i % type_count];
 
-        // Target 1: Fuzz the forward call ABI classifier
+        // 3. Exercise the ABI classification functions with the random signature.
+        // Test the forward call classifier.
         const infix_forward_abi_spec * fwd_spec = get_current_forward_abi_spec();
         if (fwd_spec) {
             infix_arena_t * fwd_arena = infix_arena_create(16384);
             if (fwd_arena) {
                 infix_call_frame_layout * layout = NULL;
-                // Fuzz both bound and unbound classifiers
+                // Call it once for an unbound trampoline.
                 fwd_spec->prepare_forward_call_frame(
                     fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args, nullptr);
+                // Call it again for a bound trampoline to test both paths.
                 fwd_spec->prepare_forward_call_frame(
                     fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args, (void *)0x1);
                 infix_arena_destroy(fwd_arena);
             }
         }
 
-        // Target 2: Fuzz the reverse call ABI classifier
+        // Test the reverse call classifier.
         const infix_reverse_abi_spec * rev_spec = get_current_reverse_abi_spec();
         if (rev_spec) {
+            // Create a mock context object with the generated signature.
             infix_reverse_t mock_context = {.return_type = return_type,
                                             .arg_types = arg_types,
                                             .num_args = num_args,
@@ -104,11 +141,20 @@ static void FuzzTest(fuzzer_input in) {
     }
 
 cleanup:
-    // A single call destroys the arena and all types generated within it.
     infix_arena_destroy(type_arena);
 }
 
-// libFuzzer Entry Point
+/**
+ * @brief The entry point for libFuzzer.
+ *
+ * This function is called by the libFuzzer runtime for each test case. It wraps
+ * the raw input data in a `fuzzer_input` struct and passes it to the main
+ * test logic.
+ *
+ * @param data A pointer to the fuzzer-generated input data.
+ * @param size The size of the data.
+ * @return 0 on completion.
+ */
 int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     fuzzer_input in = {data, size};
     FuzzTest(in);

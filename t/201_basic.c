@@ -1,53 +1,45 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 201_basic.c
- * @brief Tests fundamental FFI operations involving pointers.
+ * @brief Unit test for FFI calls involving pointer types.
+ * @ingroup test_suite
  *
- * @details This test suite verifies that the library can correctly handle
- * pointers as both arguments and return values. It covers three essential
- * scenarios:
+ * @details This test file verifies that the `infix` library correctly handles
+ * pointer arguments and return values. Pointers are fundamental to C, and their
+ * correct handling (passing by value, dereferencing) is critical for any FFI library.
  *
- * 1.  **Passing and Returning Pointers:** A function similar to `strchr` is
- *     called to ensure that a pointer passed into a function and a pointer
- *     returned from a function both retain their correct values.
+ * The test covers three key scenarios:
  *
- * 2.  **Modifying Data Via Pointers:** A function is called with pointers to
- *     local variables. The test verifies that the native function can
- *     dereference these pointers and modify the original data in the caller's
- *     stack frame, a common C idiom.
+ * 1.  **Passing and Returning Pointers:** A call is made to a C function that
+ *     takes a `const char*` and returns a `const char*` (the result of `strchr`).
+ *     This validates that pointer values themselves are passed and returned correctly.
  *
- * 3.  **Passing nullptr Pointers:** A `nullptr` pointer is passed to a native
- *     function to ensure it is transmitted correctly without being corrupted
- *     or causing a crash.
+ * 2.  **Modifying Data Via Pointers:** A call is made to a C function that takes
+ *     pointers to an `int` and a `double` (`int*`, `double*`) and modifies the
+ *     data at those addresses. This verifies that the JIT-compiled code correctly
+ *     passes the pointers, allowing the callee to dereference them and modify the
+ *     caller's original data.
+ *
+ * 3.  **Passing `nullptr`:** Verifies that a `NULL` pointer can be correctly
+ *     passed through the FFI boundary and is received as `NULL` by the callee.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
-#include <math.h>    // Added for fabs()
-#include <string.h>  // For strcmp and strchr
+#include <math.h>
+#include <string.h>
 
-// Native C Target Functions
-/** @brief A `strchr`-like function to test pointer arguments and return values. */
+// Native C Functions for Testing
+
+/** @brief A C function that takes a string and a character, and returns a pointer into the string. */
 const char * find_char_in_string(const char * s, int c) {
     note("find_char_in_string received: s=\"%s\", c='%c'", s ? s : "(null)", (char)c);
     if (s == nullptr)
         return nullptr;
     return strchr(s, c);
 }
-/** @brief Modifies the data pointed to by its arguments. */
+
+/** @brief A C function that modifies the caller's data through pointers. */
 void modify_data_via_pointers(int * a, double * b) {
     note("modify_data_via_pointers received pointers: a=%p, b=%p", (void *)a, (void *)b);
     if (a)
@@ -56,7 +48,7 @@ void modify_data_via_pointers(int * a, double * b) {
         *b = 456.7;
 }
 
-/** @brief Checks if the pointer it received is nullptr. */
+/** @brief A simple helper to check if a received pointer is NULL. */
 bool check_if_null(void * ptr) {
     return ptr == nullptr;
 }
@@ -66,13 +58,14 @@ TEST {
 
     subtest("Passing and returning pointers") {
         plan(4);
+        // Signature: "(*char, int) -> *char"
         infix_type * ret_type = infix_type_create_pointer();
         infix_type * arg_types[] = {infix_type_create_pointer(), infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
         const char * str = "Hello, FFI World!";
         int char_to_find = 'F';
         void * args[] = {&str, &char_to_find};
 
-        // Unbound
+        // Test Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
@@ -81,7 +74,7 @@ TEST {
         unbound_cif((void *)find_char_in_string, &unbound_result, args);
         ok(unbound_result && strcmp(unbound_result, "FFI World!") == 0, "Unbound call correct");
 
-        // Bound
+        // Test Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)find_char_in_string) ==
                INFIX_SUCCESS,
@@ -97,6 +90,7 @@ TEST {
 
     subtest("Modifying data via pointer arguments") {
         plan(4);
+        // Signature: "(void*, void*) -> void"
         infix_type * ret_type = infix_type_create_void();
         infix_type * arg_types[] = {infix_type_create_pointer(), infix_type_create_pointer()};
         int val_a = 1;
@@ -105,7 +99,7 @@ TEST {
         double * ptr_b = &val_b;
         void * args[] = {&ptr_a, &ptr_b};
 
-        // Unbound
+        // Test Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
@@ -115,7 +109,7 @@ TEST {
         val_a = 1;
         val_b = 2.0;  // Reset for next test
 
-        // Bound
+        // Test Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)modify_data_via_pointers) ==
                INFIX_SUCCESS,
@@ -130,6 +124,7 @@ TEST {
 
     subtest("Passing nullptr pointers") {
         plan(6);
+        // Signature: "(*void) -> bool"
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
         infix_type * arg_types[] = {infix_type_create_pointer()};
         void * null_ptr = nullptr;
@@ -139,7 +134,7 @@ TEST {
         void * args_valid[] = {&valid_ptr};
         bool res_null, res_valid;
 
-        // Unbound
+        // Test Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS,
            "Unbound created");
@@ -149,7 +144,7 @@ TEST {
         unbound_cif((void *)check_if_null, &res_valid, args_valid);
         ok(res_valid == false, "Unbound non-nullptr correct");
 
-        // Bound
+        // Test Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)check_if_null) == INFIX_SUCCESS,
            "Bound created");

@@ -15,32 +15,37 @@
 
 /**
  * @file fuzz_regression_helpers.h
- * @brief Helpers for creating regression tests from fuzzer-discovered inputs.
+ * @brief Helper functions specifically for running regression tests from saved fuzzer inputs.
+ * @ingroup internal_fuzz
+ *
+ * @internal
+ * This header provides a self-contained Base64 decoding function. Its sole
+ * purpose is to allow the regression test suite (`850_regression_cases.c`) to
+ * decode hardcoded, Base64-encoded strings that represent fuzzer inputs that
+ * previously caused a crash, timeout, or memory error.
+ *
+ * By embedding these inputs directly into a standard unit test, we can ensure
+ * that past bugs do not reappear in future versions of the library. This file
+ * is not used by the live fuzzing targets themselves.
+ * @endinternal
  */
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
 /**
  * @internal
- * @brief Self-contained Base64 decoder.
- * @details This function correctly decodes Base64 strings, properly handling
- *          the '=' padding characters. It is used to convert the text-based
- *          crash artifacts from libFuzzer into the raw byte sequences needed
- *          to reproduce a failure.
+ * @brief Decodes a Base64-encoded string into a raw byte buffer.
  *
- *          This implementation is based on a well-known public domain algorithm
- *          to ensure correctness and avoid the bugs present in previous naive
- *          implementations.
- *
- * @param data The null-terminated Base64 string to decode.
- * @param[out] out_len A pointer to a size_t that will receive the length of the
- *                     decoded binary data.
+ * @param data The null-terminated, Base64-encoded input string.
+ * @param[out] out_len A pointer to a `size_t` that will receive the length of the decoded data.
  * @return A dynamically allocated `unsigned char*` buffer containing the decoded
- *         binary data. The caller is responsible for freeing this memory. Returns
- *         `NULL` on allocation failure or if the input string is malformed.
+ *         data. The caller is responsible for freeing this buffer with `free()`.
+ *         Returns `NULL` on allocation failure or if the input is not valid Base64.
  */
 static unsigned char * b64_decode(const char * data, size_t * out_len) {
+    // A standard lookup table for Base64 decoding. -1 represents an invalid character.
     static const int b64_decode_table[] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55,
@@ -50,8 +55,9 @@ static unsigned char * b64_decode(const char * data, size_t * out_len) {
 
     size_t in_len = strlen(data);
     if (in_len % 4 != 0)
-        return NULL;
+        return NULL;  // Base64 strings must have a length that is a multiple of 4.
 
+    // Calculate the output length, accounting for padding characters.
     *out_len = in_len / 4 * 3;
     if (data[in_len - 1] == '=')
         (*out_len)--;
@@ -62,20 +68,24 @@ static unsigned char * b64_decode(const char * data, size_t * out_len) {
     if (out == NULL)
         return NULL;
 
+    // Process the input string in 4-character chunks.
     for (size_t i = 0, j = 0; i < in_len;) {
         int sextet_a = b64_decode_table[(unsigned char)data[i++]];
         int sextet_b = b64_decode_table[(unsigned char)data[i++]];
         int sextet_c = b64_decode_table[(unsigned char)data[i++]];
         int sextet_d = b64_decode_table[(unsigned char)data[i++]];
 
+        // Validate the characters and handle padding.
         if (sextet_a == -1 || sextet_b == -1 || (data[i - 2] != '=' && sextet_c == -1) ||
             (data[i - 1] != '=' && sextet_d == -1)) {
             free(out);
             return NULL;
         }
 
+        // Combine the four 6-bit sextets into a 24-bit triple.
         unsigned int triple = (sextet_a << 3 * 6) + (sextet_b << 2 * 6) + (sextet_c << 1 * 6) + (sextet_d << 0 * 6);
 
+        // Extract the three 8-bit bytes from the triple.
         if (j < *out_len)
             out[j++] = (triple >> 2 * 8) & 0xFF;
         if (j < *out_len)

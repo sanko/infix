@@ -1,40 +1,29 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 821_threading_bare.c
- * @brief A "barebones" thread-safety test with no testing framework dependency.
+ * @brief A minimal, dependency-free version of the thread-safety stress test.
+ * @ingroup test_suite
  *
- * @details This test is designed to be the ultimate proof of thread safety for the
- *          infix library. It is intended to be compiled as a standalone executable
- *          and run under Valgrind's Helgrind tool.
+ * @internal
+ * This file is a stripped-down version of `820_threading_helgrind.c`. It performs
+ * the same multi-threaded stress test of creating and destroying trampolines, but
+ * it does not link against the `double_tap.h` test harness.
  *
- *          By removing the dependency on the `double_tap.h` testing framework (which
- *          is not designed for this kind of stress test and can create noisy,
- *          misleading reports), we ensure that the only shared code being stressed
- *          is the infix library itself. This provides a clean, unambiguous result.
+ * The purpose of this "bare" test is to provide a minimal-footprint executable
+ * that is easier and faster for thread sanitizers like Helgrind to analyze. The
+ * `double_tap` harness, while useful, adds extra complexity with its own mutexes
+ * and thread-local state for printing, which can sometimes clutter the output of
+ * a sanitizer.
  *
- *          The test's success is determined by two conditions:
- *          1.  The program must exit with code 0.
- *          2.  Valgrind/Helgrind must report ZERO errors.
+ * This test prints basic TAP output manually and exits with a status code, but
+ * its primary success condition is a clean report from the thread sanitizer.
  */
-#include "common/infix_config.h"  // Include the internal platform detection logic.
-#include <infix/infix.h>          // The library under test
-#include <stdbool.h>              // For bool type
-#include <stdint.h>               // For intptr_t
-#include <stdio.h>                // For printf
 
-// Platform-specific headers for threading
+#include "common/infix_config.h"
+#include <infix/infix.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+
 #if defined(INFIX_OS_WINDOWS) || defined(INFIX_ENV_CYGWIN)
 #include <windows.h>
 #else
@@ -44,17 +33,11 @@
 #define NUM_THREADS 8
 #define ITERATIONS_PER_THREAD 500
 
-/** @brief A simple C callback function; its only purpose is to be a valid call target. */
 void bare_helgrind_handler(int a, int b) {
     (void)a;
     (void)b;
 }
 
-/**
- * @brief The main function executed by each worker thread.
- * @details Creates, uses, and destroys a reverse trampoline in a tight loop.
- * @return Returns a status code (0 for success, 1 for failure) cast to a void pointer.
- */
 #if defined(INFIX_OS_WINDOWS) || defined(__CYGWIN__)
 DWORD WINAPI bare_thread_worker(LPVOID arg) {
 #else
@@ -62,7 +45,6 @@ void * bare_thread_worker(void * arg) {
 #endif
     (void)arg;
 
-    // Define the FFI types for the callback signature: void(int, int)
     infix_type * ret_type = infix_type_create_void();
     infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                 infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
@@ -70,7 +52,7 @@ void * bare_thread_worker(void * arg) {
 
     for (int i = 0; i < ITERATIONS_PER_THREAD; ++i) {
         infix_reverse_t * rt = nullptr;
-        // Generate the reverse trampoline. This is a critical area for thread-safety.
+
         infix_status status =
             infix_reverse_create_callback_manual(&rt, ret_type, arg_types, 2, 2, (void *)bare_helgrind_handler);
         if (status != INFIX_SUCCESS) {
@@ -82,12 +64,10 @@ void * bare_thread_worker(void * arg) {
 #endif
         }
 
-        // Get and invoke the callable function pointer.
         my_func_ptr callable_func = (my_func_ptr)infix_reverse_get_code(rt);
         if (callable_func)
             callable_func(i, i + 1);
 
-        // Destroy the reverse trampoline. This is also a critical area for thread-safety.
         infix_reverse_destroy(rt);
     }
 
@@ -135,7 +115,7 @@ int main(void) {
         }
         CloseHandle(threads[i]);
     }
-#else  // POSIX
+#else
     pthread_t threads[NUM_THREADS] = {0};
     for (int i = 0; i < NUM_THREADS; ++i) {
         if (pthread_create(&threads[i], nullptr, bare_thread_worker, nullptr) != 0) {

@@ -1,35 +1,23 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 302_aggregates.c
- * @brief Tests reverse trampolines (callbacks) with struct and union arguments/returns.
+ * @brief Unit test for reverse trampolines (callbacks) with aggregate types.
+ * @ingroup test_suite
  *
- * @details This is a comprehensive test suite for verifying the reverse FFI
- * (callback) functionality with aggregate types. It covers a wide range of
- * scenarios that are highly dependent on the target platform's ABI rules.
+ * @details This test file verifies that `infix` can correctly create and execute
+ * reverse trampolines for functions that take or return aggregate types (structs,
+ * unions, etc.) by value. This is a critical test of the reverse-call JIT-compiler
+ * and the ABI implementation's ability to correctly marshal arguments from their
+ * native locations (registers/stack) into the generic format for the C handler.
  *
- * The suite consolidates several previous tests and verifies:
- * - **Small Structs:** Passing and returning a `Point` struct, which is small
- *   enough to be handled in registers on most platforms.
- * - **Large Structs (Pass by Reference):** Passing a `LargeStruct` to a
- *   callback, which ABIs will handle by passing a pointer to a copy on the stack.
- * - **Large Structs (Return via Hidden Pointer):** Returning a `LargeStruct`
- *   from a callback, which ABIs handle by having the caller provide a hidden
- *   pointer to a buffer where the result is written.
- * - **ABI-Specific Aggregates (HFA):** Passing a `Vector4` struct, which is
- *   treated as a Homogeneous Floating-point Aggregate on AArch64.
- * - **Unions:** Returning a `Number` union from a callback.
+ * The test covers:
+ * - **Small Structs:** A `Point` struct, which is typically passed in registers.
+ *   Both the type-safe callback and generic closure models are tested.
+ * - **Large Structs:** A `LargeStruct`, which is passed/returned by reference via
+ *   a hidden pointer, testing the stub's ability to handle this ABI rule.
+ * - **Structs with Arrays:** A `Vector4` struct, which may be an HFA on some platforms.
+ * - **Unions:** A `Number` union, testing the handling of this aggregate type.
+ * - **Packed Structs:** A `PackedStruct` with non-natural alignment, testing that
+ *   the raw bytes are correctly marshalled regardless of internal layout.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -39,7 +27,6 @@
 #include <math.h>
 #include <string.h>
 
-// Type-Safe "Callback" Handlers
 Point point_callback_handler(Point p) {
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     return (Point){p.x * 2.0, p.y * 2.0};
@@ -65,7 +52,6 @@ Number number_union_return_handler(float f) {
     return n;
 }
 
-// Generic "Closure" Handlers
 void point_closure_handler(infix_context_t * ctx, void * ret, void ** args) {
     (void)ctx;
     Point p = *(Point *)args[0];
@@ -73,7 +59,6 @@ void point_closure_handler(infix_context_t * ctx, void * ret, void ** args) {
     memcpy(ret, &result, sizeof(Point));
 }
 
-// Harness Functions
 void execute_point_callback(Point (*func_ptr)(Point), Point p) {
     Point result = func_ptr(p);
     ok(fabs(result.x - p.x * 2.0) < 0.001 && fabs(result.y - p.y * 2.0) < 0.001, "Callback returned correct Point");
@@ -119,7 +104,6 @@ TEST {
             return;
         }
 
-        // Test Type-Safe Callback
         infix_reverse_t * rt_cb = nullptr;
         ok(infix_reverse_create_callback_manual(
                &rt_cb, point_type, &point_type, 1, 1, (void *)point_callback_handler) == INFIX_SUCCESS,
@@ -129,7 +113,6 @@ TEST {
         else
             skip(1, "Test skipped");
 
-        // Test Generic Closure
         infix_reverse_t * rt_cl = nullptr;
         ok(infix_reverse_create_closure_manual(&rt_cl, point_type, &point_type, 1, 1, point_closure_handler, nullptr) ==
                INFIX_SUCCESS,
@@ -145,7 +128,7 @@ TEST {
     }
 
     subtest("Callback with large struct argument: int(LargeStruct)") {
-        plan(2);  // Only testing the type-safe version for brevity
+        plan(2);
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_struct_member members[6];
@@ -177,7 +160,7 @@ TEST {
     }
 
     subtest("Callback returning large struct: LargeStruct(int)") {
-        plan(2);  // Only testing the type-safe version
+        plan(2);
         infix_arena_t * arena = infix_arena_create(4096);
         infix_struct_member members[6];
         for (int i = 0; i < 6; ++i)
@@ -207,7 +190,7 @@ TEST {
     }
 
     subtest("Callback with struct containing array: int(Vector4)") {
-        plan(3);  // Only testing the type-safe version
+        plan(3);
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_type * array_type = nullptr;
@@ -246,7 +229,7 @@ TEST {
     }
 
     subtest("Callback returning union: Number(float)") {
-        plan(2);  // Only testing the type-safe version
+        plan(2);
         infix_arena_t * arena = infix_arena_create(4096);
         infix_struct_member members[] = {
             infix_type_create_member("i", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0),
@@ -298,7 +281,6 @@ TEST {
         ok(packed_type->size == 9, "Packed struct size should be 9 bytes.");
         ok(packed_type->alignment == 1, "Packed struct alignment should be 1 byte.");
 
-        // Action: Generate and call the trampoline
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_forward_t * trampoline = nullptr;
         status = infix_forward_create_unbound_manual(&trampoline, ret_type, &packed_type, 1, 1);
@@ -311,10 +293,8 @@ TEST {
 
         cif_func((void *)process_packed_struct, &result, args);
 
-        // Verification
         ok(result == 42, "Packed struct was passed and processed correctly.");
 
-        // Teardown
         infix_forward_destroy(trampoline);
         infix_arena_destroy(arena);
     }

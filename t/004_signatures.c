@@ -1,19 +1,32 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 004_signatures.c
- * @brief Hardened test suite for the high-level signature API.
+ * @brief Unit test for the signature string parser.
+ * @ingroup test_suite
+ *
+ * @details This is one of the most important test files, as it exhaustively validates
+ * the correctness and robustness of the `infix` signature parser. It is divided
+ * into several subtests:
+ *
+ * - **Valid Single Types:** Checks that a wide variety of correct, individual type
+ *   signatures (primitives, pointers, arrays, aggregates) parse successfully and
+ *   result in the expected `infix_type_category`.
+ *
+ * - **Valid Edge Cases:** Tests the parser's handling of non-standard but valid
+ *   syntax, such as extra whitespace, comments, empty aggregates (`{}`), and
+ *   deeply nested pointer/function types.
+ *
+ * - **Valid Full Function Signatures:** Uses `infix_signature_parse` to test the
+ *   parsing of complete function signatures, including variadic functions (with `;`)
+ *   and named arguments.
+ *
+ * - **Invalid Syntax and Logic:** A large set of negative test cases that feed the
+ *   parser deliberately malformed or logically invalid signatures (e.g., `[10:void]`).
+ *   It verifies that the parser correctly fails for each case.
+ *
+ * - **Round Trip:** A critical test that parses a signature, then uses `infix_type_print`
+ *   to serialize the resulting type object back into a string. It then verifies that
+ *   the output string matches the canonical representation of the input, ensuring that
+ *   parsing and printing are inverse operations.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -22,9 +35,7 @@
 #include <infix/infix.h>
 #include <string.h>
 
-/**
- * @brief Helper subtest to verify that a single type signature string parses correctly.
- */
+/** @internal Helper to run a positive test case for `infix_type_from_signature`. */
 static void test_type_ok(const char * signature, infix_type_category expected_cat, const char * name) {
     subtest(name) {
         plan(2);
@@ -41,9 +52,7 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
     }
 }
 
-/**
- * @brief Helper subtest to verify that an invalid signature string fails to parse.
- */
+/** @internal Helper to run a negative test case for `infix_type_from_signature`. */
 static void test_type_fail(const char * signature, const char * name) {
     subtest(name) {
         plan(1);
@@ -55,9 +64,10 @@ static void test_type_fail(const char * signature, const char * name) {
     }
 }
 
+/** @internal A dummy function for creating valid trampolines during tests. */
 void dummy_handler() {}
 
-// Helper to remove all whitespace from a string for canonical comparison.
+/** @internal Helper to normalize a string by removing all whitespace. */
 static void normalize_string(char * s) {
     if (!s)
         return;
@@ -68,7 +78,7 @@ static void normalize_string(char * s) {
     } while ((*d++ = *s++));
 }
 
-// Updated round-trip test to handle normalization of abstract types.
+/** @internal Helper to test the parse -> print round trip. */
 static void test_print_roundtrip(const char * signature, const char * expected_output) {
     if (!expected_output)
         expected_output = signature;
@@ -77,7 +87,6 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
         plan(1);
         infix_type * type = NULL;
         infix_arena_t * arena = NULL;
-        // NOTE: This test can only use signatures that do not require a registry.
         infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
 
         if (status != INFIX_SUCCESS) {
@@ -91,11 +100,11 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
         if (status != INFIX_SUCCESS)
             fail("Printing failed.");
         else {
+            // Normalize both strings to perform a whitespace-insensitive comparison.
             char expected_normalized[1024];
             char printed_normalized[1024];
             snprintf(expected_normalized, sizeof(expected_normalized), "%s", expected_output);
             snprintf(printed_normalized, sizeof(printed_normalized), "%s", buffer);
-
             normalize_string(expected_normalized);
             normalize_string(printed_normalized);
 
@@ -328,6 +337,7 @@ TEST {
             const infix_struct_member * next_member = infix_type_get_member(node_type, 1);
             ok(next_member && next_member->type->category == INFIX_TYPE_POINTER, "Member 'next' is a pointer");
 
+            // This is the crucial check for recursive type resolution.
             infix_type * next_pointee = next_member->type->meta.pointer_info.pointee_type;
             ok(next_pointee == node_type, "Recursive pointer correctly points to the parent struct type");
         }

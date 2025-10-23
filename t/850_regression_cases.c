@@ -1,93 +1,39 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 850_regression_cases.c
- * @brief Contains a data-driven suite of deterministic unit tests for specific bugs found by fuzzing.
- * @details This file is a crucial part of the development lifecycle. When a
- * fuzzer discovers a crash or a timeout, the minimal input that triggers the
- * bug is captured and added to the `regression_tests` array in this file as a
- * permanent regression test. This ensures that once a bug is fixed, it can never
- * be accidentally reintroduced without causing an immediate and obvious CI failure.
+ * @brief A suite of regression tests for bugs discovered by fuzzing.
+ * @ingroup test_suite
  *
- * ### How to Add a New Regression Test
+ * @details This test file contains a collection of specific inputs that have been
+ * identified by fuzzing tools (like libFuzzer and AFL) as causing a crash,
+ * timeout, memory leak, or other bug in the past.
  *
- * This process turns a temporary fuzzer artifact into a permanent, valuable test.
+ * Each test case consists of:
+ * - A descriptive name of the bug it triggered.
+ * - A Base64-encoded string representing the raw fuzzer input.
+ * - The target component (`TARGET_TYPE_GENERATOR`, `TARGET_SIGNATURE_PARSER`, etc.)
+ *   that the input should be sent to.
  *
- * **Step 1: Get the Fuzzer Artifact**
- *
- *    After a fuzzing job fails, download the `crash-artifact-*` zip file. Inside,
- *    you will find one or more `crash-*` or `timeout-*` files. Open one.
- *
- * **Step 2: Copy the Base64 Input**
- *
- *    Near the bottom of the artifact file, find the `Base64:` line and copy the
- *    long string of characters. This is the fuzzer input.
- *
- * **Step 3: Add a New Entry to the `regression_tests` Array**
- *
- *    In this file, add a new `regression_test_case_t` struct to the
- *    `regression_tests` array. Fill in the fields:
- *
- *    - `.name`: A descriptive name of the bug (e.g., "SysV Timeout - Wide Structs").
- *    - `.b64_input`: The Base64 string you copied.
- *    - `.target`: Which part of the code is being tested?
- *        - `TARGET_TYPE_GENERATOR`: For bugs found in `fuzz_types`, `fuzz_trampoline`,
- *          or `fuzz_abi`. The test will call `generate_random_type()`.
- *        - `TARGET_SIGNATURE_PARSER`: For bugs found in `fuzz_signature`. The test
- *          will call `infix_type_from_signature()`.
- *    - `.expected_status`: The correct `infix_status` the function should now return.
- *        - For a fixed **timeout**, this should be `INFIX_SUCCESS`, as the valid-but-slow
- *          input should now be processed quickly and correctly.
- *        - For a fixed **crash**, this should be `INFIX_ERROR_INVALID_ARGUMENT`, as the
- *          invalid input should now be rejected gracefully.
- *
- * **Step 4: Update the Plan**
- *
- *    The `plan()` at the top of the `TEST` block is calculated automatically from the
- *    size of the array, so no manual update is needed. Your test is now integrated.
+ * By embedding these inputs into a permanent unit test, we can ensure that these
+ * specific bugs do not reappear in future versions of the library. This forms a
+ * crucial part of the project's quality assurance process. The `b64_decode`
+ * helper from `fuzz_regression_helpers.h` is used to unpack the inputs at runtime.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
-#include "fuzz_helpers.h"             // From the fuzz/ directory
-#include "fuzz_regression_helpers.h"  // The Base64 decoder
+#include "fuzz_helpers.h"
+#include "fuzz_regression_helpers.h"
 #include <infix/infix.h>
 
-/**
- * @internal
- * @enum fuzzer_target_t
- * @brief Enumerates the different parts of the infix library that can be targeted by a regression test.
- */
-typedef enum {
-    TARGET_TYPE_GENERATOR,       ///< Tests the `generate_random_type` function (for timeouts/crashes in Core API).
-    TARGET_SIGNATURE_PARSER,     ///< Tests the `infix_type_from_signature` function (for bugs in the Signature API).
-    TARGET_TRAMPOLINE_GENERATOR  ///< Tests `infix_*_create_manual` functions.
-} fuzzer_target_t;
+typedef enum { TARGET_TYPE_GENERATOR, TARGET_SIGNATURE_PARSER, TARGET_TRAMPOLINE_GENERATOR } fuzzer_target_t;
 
-/**
- * @internal
- * @struct regression_test_case_t
- * @brief A struct that defines a single, self-contained regression test case.
- */
 typedef struct {
-    const char * name;             ///< A human-readable name for the test.
-    const char * b64_input;        ///< The Base64-encoded input from the fuzzer artifact.
-    fuzzer_target_t target;        ///< Which part of the library to test.
-    infix_status expected_status;  ///< The expected outcome after the bug fix.
+    const char * name;
+    const char * b64_input;
+    fuzzer_target_t target;
+    infix_status expected_status;
 } regression_test_case_t;
 
-// To add a new test, simply add a new entry to this array.
 static const regression_test_case_t regression_tests[] = {
     {.name = "Timeout in SysV ABI Classifier (Wide Structs)",
      .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
@@ -99,7 +45,7 @@ static const regression_test_case_t regression_tests[] = {
      .target = TARGET_SIGNATURE_PARSER,
      .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
     {.name = "Timeout in SysV Classifier (Zero-Sized Array)",
-     .b64_input = "A/oEAA==",  // Decodes to: create array, 250 elements, of struct, with 0 members.
+     .b64_input = "A/oEAA==",
      .target = TARGET_TYPE_GENERATOR,
      .expected_status = INFIX_SUCCESS},
     {.name = "Timeout in SysV Classifier (Recursive Packed Structs)",
@@ -176,11 +122,6 @@ static const regression_test_case_t regression_tests[] = {
      .expected_status = INFIX_SUCCESS},
 };
 
-/**
- * @internal
- * @brief A helper function that runs a single regression test case.
- * @param test A pointer to the test case definition.
- */
 static void run_regression_case(const regression_test_case_t * test) {
     subtest(test->name) {
         plan(2);
@@ -245,13 +186,11 @@ static void run_regression_case(const regression_test_case_t * test) {
                 return;
             }
 
-            // This logic mirrors fuzz_trampoline.c to reproduce the bug.
             size_t total_fields = 0;
             infix_type * type_pool[1] = {generate_random_type(arena, &in, 0, &total_fields)};
             if (type_pool[0] == nullptr)
                 type_pool[0] = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
 
-            // The key part of the bug: create an args array with a nullptr type.
             infix_type * arg_types[] = {nullptr};
 
             infix_forward_t * fwd = nullptr;

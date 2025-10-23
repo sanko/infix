@@ -32,10 +32,7 @@ my %config            = (
     include_dirs => [
         File::Spec->catdir( $FindBin::Bin, 'include' ),
         File::Spec->catdir( $FindBin::Bin, 'src' ),
-        File::Spec->catdir( $FindBin::Bin, 'src/core' ),
-        File::Spec->catdir( $FindBin::Bin, 'src/arch/x64/' ),
-        File::Spec->catdir( $FindBin::Bin, 'src/arch/aarch64' ),
-        File::Spec->catdir( $FindBin::Bin, 't/include' ),
+        File::Spec->catdir( $FindBin::Bin, 't/include' )
     ],
     lib_dir      => 'build_lib',
     lib_name     => 'infix',

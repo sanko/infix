@@ -1,61 +1,46 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 811_fault_injection.c
- * @brief An advanced stress test that uses fault injection to find memory leaks
- *        in the library's error-handling code paths, adapted for the new arena model.
+ * @brief Unit test to verify resource cleanup under memory allocation failures.
+ * @ingroup test_suite
  *
- * @details This test replaces the standard malloc/calloc/free/realloc functions
- * with a custom, thread-safe allocator that can be programmed to fail after a
- * specific number of successful allocations.
+ * @details This test uses a fault injection technique to test the library's
+ * resilience to memory allocation failures. It overrides the standard `malloc`
+ * and `calloc` functions with custom versions (`test_malloc`, `test_calloc`) that
+ * can be configured to fail after a specific number of successful allocations.
  *
- * By repeatedly attempting to create complex FFI objects and forcing a
- * heap allocation failure at every possible point (e.g., arena creation,
- * handle creation, executable memory allocation), this test rigorously exercises
- * all error-handling and cleanup code in the library. It is designed to be
- * run under Valgrind's memcheck tool.
+ * The test strategy is as follows:
+ * 1.  It iterates from `N = 0` to a maximum limit.
+ * 2.  In each iteration `N`, it configures the custom allocator to fail on the N-th allocation.
+ * 3.  It then calls a complex `infix` API function (e.g., `infix_forward_create`).
+ * 4.  If the allocation failure was triggered, it asserts that the API function
+ *     correctly returned an `INFIX_ERROR_ALLOCATION_FAILED` status.
  *
- * The test is considered successful if two conditions are met:
- * 1.  The test program itself passes, confirming that the library correctly
- *     propagates `INFIX_ERROR_ALLOCATION_FAILED` status codes up the call stack.
- * 2.  Valgrind reports ZERO memory leaks, proving that all internal cleanup
- *     paths correctly free any partially allocated resources.
- *
- * This test targets the two most allocation-heavy high-level operations:
- * - `infix_reverse_create_callback`
- * - `infix_type_from_signature`
+ * The most important part of this test is not the assertion itself, but running
+ * it under a memory analysis tool like Valgrind or AddressSanitizer (ASan). A
+ * "pass" for this test is a clean report from the memory tool, which proves that
+ * even when an allocation fails midway through an operation, the `infix` library
+ * correctly cleans up all memory it had allocated up to that point, preventing
+ * memory leaks in error paths.
  */
 
-// Override infix's allocators with our custom ones *before* including headers.
+// Override standard memory functions with our fault-injecting versions.#define infix_malloc test_malloc
 #define infix_malloc test_malloc
 #define infix_calloc test_calloc
 #define infix_free test_free
 #define infix_realloc test_realloc
+
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
-// Platform-specific headers for thread-safe locking
+
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
 #else
 #include <pthread.h>
 #endif
 
-// Fault-Injecting Allocator (Thread-Safe and Portable)
-
-static int allocation_countdown = -1;  // -1 means "never fail"
+static int allocation_countdown = -1;
 static int allocation_counter = 0;
 static bool fault_triggered = false;
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -70,14 +55,13 @@ static bool allocator_mutex_initialized = false;
             allocator_mutex_initialized = true;          \
         }                                                \
     } while (0)
-#else  // POSIX
+#else
 static pthread_mutex_t allocator_mutex = PTHREAD_MUTEX_INITIALIZER;
 #define ALLOCATOR_LOCK() pthread_mutex_lock(&allocator_mutex)
 #define ALLOCATOR_UNLOCK() pthread_mutex_unlock(&allocator_mutex)
-#define ALLOCATOR_INIT() ((void)0)  // pthreads mutex is statically initialized
+#define ALLOCATOR_INIT() ((void)0)
 #endif
 
-/** @brief Configures the allocator to fail after a specific number of successful allocations. */
 void setup_fault_injector(int fail_after_n_allocs) {
     ALLOCATOR_LOCK();
     allocation_countdown = fail_after_n_allocs;
@@ -86,7 +70,6 @@ void setup_fault_injector(int fail_after_n_allocs) {
     ALLOCATOR_UNLOCK();
 }
 
-/** @brief Resets the allocator to its default (non-failing) behavior. */
 void reset_fault_injector() {
     ALLOCATOR_LOCK();
     allocation_countdown = -1;
@@ -98,7 +81,7 @@ void * test_malloc(size_t size) {
     ALLOCATOR_LOCK();
     if (allocation_countdown != -1) {
         if (allocation_counter >= allocation_countdown)
-            fault_triggered = true;  // Fail this allocation
+            fault_triggered = true;
         else {
             allocation_counter++;
             r = malloc(size);
@@ -150,13 +133,12 @@ void * test_realloc(void * ptr, size_t new_size) {
     return r;
 }
 
-// Dummy handler for trampoline generation.
 void fault_injection_handler(void) {}
 
 TEST {
     plan(3);
 
-    ALLOCATOR_INIT();  // Initialize mutexes if needed (for Windows)
+    ALLOCATOR_INIT();
 
     subtest("Leak test for infix_forward_create failures") {
         const int MAX_FAILS_TO_TEST = 20;
@@ -189,16 +171,15 @@ TEST {
     }
 
     subtest("Leak test for infix_reverse_create_callback failures") {
-        const int MAX_FAILS_TO_TEST = 20;  // A reasonable upper bound on heap allocations
+        const int MAX_FAILS_TO_TEST = 20;
         plan(MAX_FAILS_TO_TEST);
         note("Testing for leaks when infix_reverse_create_callback fails at every possible allocation.");
 
-        // A complex signature to exercise the parser and JIT engine.
         const char * signature = "({*char,int})->void";
         bool success_was_reached = false;
 
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
-            setup_fault_injector(i);  // Fail on the i-th allocation
+            setup_fault_injector(i);
             infix_reverse_t * context = nullptr;
             infix_status status =
                 infix_reverse_create_callback(&context, signature, (void *)fault_injection_handler, nullptr);
@@ -208,11 +189,10 @@ TEST {
                 ok(context == nullptr, "Context handle is nullptr on failure");
             }
             else {
-                // If we get here, it means we succeeded without triggering a fault.
-                // We have now found the exact number of allocations required.
+
                 success_was_reached = true;
                 pass("Successfully created reverse trampoline with %d allocations.", i);
-                // Since we plan for every test, we must explicitly skip the rest.
+
                 for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found, skipping further fault injections.");
 
@@ -229,11 +209,11 @@ TEST {
     }
 
     subtest("Leak test for infix_type_from_signature failures") {
-        const int MAX_FAILS_TO_TEST = 10;  // This function should have very few heap allocations
+        const int MAX_FAILS_TO_TEST = 10;
         plan(MAX_FAILS_TO_TEST);
         note("Testing for leaks when creating a complex type from signature fails.");
 
-        const char * signature = "{int, double, [10:{*char, short}]}";  // Nested struct/array
+        const char * signature = "{int, double, [10:{*char, short}]}";
         bool success_was_reached = false;
 
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
@@ -253,7 +233,6 @@ TEST {
                 for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found.");
 
-                // Cleanup on success
                 infix_arena_destroy(arena);
                 break;
             }

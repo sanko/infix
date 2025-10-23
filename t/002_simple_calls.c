@@ -1,75 +1,58 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 002_simple_calls.c
- * @brief Tests basic FFI calls with simple function signatures.
+ * @brief Unit test for basic forward trampoline calls with simple function signatures.
+ * @ingroup test_suite
  *
- * @details This test suite verifies the FFI for the most common and fundamental
- * function signatures, ensuring that the library correctly handles basic integer
- * and floating-point arguments, void returns, and proper sign-extension of
- * integer types.
+ * @details This test file verifies that the `infix` library can correctly create and
+ * execute forward trampolines for functions with simple, primitive arguments and
+ * return types. It covers:
+ * - `int(int, int)`: Basic integer arithmetic.
+ * - `float(float, float)`: Basic floating-point arithmetic.
+ * - `void(void)`: Functions with no arguments or return value.
+ * - `bool(int)`: A test to specifically verify correct sign-extension of integer
+ *   arguments that are smaller than a full register.
  *
- * It consolidates several smaller, single-purpose tests into one cohesive file
- * with the following subtests:
- * - `int(int, int)`: Verifies multiple integer arguments and an integer return.
- * - `float(float, float)`: Verifies multiple float arguments and a float return.
- * - `void(void)`: Verifies calls to functions with no arguments and no return value.
- * - `bool(int)`: Specifically tests that signed integer arguments are correctly
- *   sign-extended across the FFI boundary, a crucial requirement for ABI correctness.
+ * For each signature, it tests both **bound** and **unbound** trampolines to ensure
+ * both creation paths and calling conventions are working correctly.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
-#include <math.h>  // For fabs
+#include <math.h>
 
-// Native C Target Functions
+// C Functions to be Called via FFI
 
-/** @brief A simple function that adds two integers. */
 int add_ints(int a, int b) {
     return a + b;
 }
 
-/** @brief A simple function that multiplies two floats. */
 float multiply_floats(float a, float b) {
     return a * b;
 }
 
-/** @brief A simple function with no arguments or return value. */
 void do_nothing() {
-    // This function is called for its side effect, which is verified by `pass()`.
     pass("void(void) function was successfully called.");
 }
 
-/** @brief A function to check if an integer is negative. Used for sign-extension tests. */
 bool is_negative(int val) {
     note("is_negative() received value: %d", val);
     return val < 0;
 }
 
 TEST {
-    plan(4);  // One subtest for each simple signature.
+    plan(4);
 
     subtest("int(int, int)") {
         plan(4);
+        // 1. Define the signature programmatically using the Manual API.
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
         int a = 10, b = 25;
         void * args[] = {&a, &b};
 
-        // Unbound
+        // 2. Test the unbound trampoline.
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
@@ -79,7 +62,7 @@ TEST {
         ok(unbound_result == 35, "Unbound call correct");
         infix_forward_destroy(unbound_t);
 
-        // Bound
+        // 3. Test the bound trampoline.
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_ints) == INFIX_SUCCESS,
            "Bound created");
@@ -98,7 +81,6 @@ TEST {
         float a = 2.5f, b = 4.0f;
         void * args[] = {&a, &b};
 
-        // Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
@@ -108,7 +90,6 @@ TEST {
         ok(fabs(unbound_result - 10.0f) < 0.001, "Unbound call correct");
         infix_forward_destroy(unbound_t);
 
-        // Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)multiply_floats) == INFIX_SUCCESS,
            "Bound created");
@@ -120,10 +101,9 @@ TEST {
     }
 
     subtest("void(void)") {
-        plan(4);  // Two for creation, two for the side-effect `pass()` calls.
+        plan(4);
         infix_type * ret_type = infix_type_create_void();
 
-        // Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, nullptr, 0, 0) == INFIX_SUCCESS,
            "Unbound created");
@@ -131,7 +111,6 @@ TEST {
         unbound_cif((void *)do_nothing, nullptr, nullptr);
         infix_forward_destroy(unbound_t);
 
-        // Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, nullptr, 0, 0, (void *)do_nothing) == INFIX_SUCCESS,
            "Bound created");
@@ -142,14 +121,13 @@ TEST {
 
     subtest("Argument Sign-Extension: bool(int)") {
         plan(6);
-        note("Verifying that negative integers are correctly sign-extended.");
+        note("Verifying that negative integers are correctly sign-extended when passed as arguments.");
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_BOOL);
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
         int neg_val = -100, pos_val = 100;
         void * neg_args[] = {&neg_val};
         void * pos_args[] = {&pos_val};
 
-        // Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS,
            "Unbound created");
@@ -161,7 +139,6 @@ TEST {
         ok(pos_result_u == false, "Unbound is_negative(100) returned false");
         infix_forward_destroy(unbound_t);
 
-        // Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)is_negative) == INFIX_SUCCESS,
            "Bound created");

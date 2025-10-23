@@ -1,59 +1,53 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 901_call_overhead.c
- * @brief A microbenchmark to measure the performance overhead of an FFI call.
+ * @brief A micro-benchmark to measure the performance overhead of an FFI call.
+ * @ingroup test_suite
  *
- * @details This is a non-functional test designed to measure the raw speed of
- * the generated FFI trampolines. It should not be run as part of the standard
- * test suite, but rather invoked explicitly when performance analysis is needed.
+ * @details This is not a correctness test, but a performance benchmark. Its purpose
+ * is to quantify the "cost" of making a C function call through an `infix` trampoline
+ * compared to a direct C call.
  *
- * The test operates in two phases:
- * 1.  **Baseline (Direct Call):** It measures the time taken to execute millions
- *     of direct, native C function calls to a simple `int add(int, int)` function.
- *     This establishes a baseline performance measurement.
- * 2.  **FFI Call:** It then generates a forward trampoline for the same function and
- *     measures the time taken to execute the same number of calls through the FFI.
+ * The benchmark measures and reports the average time per call for:
  *
- * The difference between these two measurements, divided by the number of
- * iterations, gives the average per-call overhead of the trampoline mechanism in
- * nanoseconds. This is a critical metric for performance-sensitive applications.
+ * 1.  **Direct Call:** A tight loop of direct C-to-C function calls. This serves
+ *     as the baseline performance.
  *
- * An optional comparison against the `dyncall` library can be enabled by defining
- * the `DYNCALL_BENCHMARK` macro at compile time.
+ * 2.  **`infix` (Unbound):** A loop calling the same C function via an unbound
+ *     forward trampoline. This measures the overhead of the most flexible FFI path.
+ *
+ * 3.  **`infix` (Bound):** A loop calling the same C function via a bound forward
+ *     trampoline. This measures the overhead of the highest-performance FFI path.
+ *
+ * 4.  **dyncall (Optional):** If compiled with `DYNCALL_BENCHMARK`, it also measures
+ *     the performance of the popular `dyncall` library for the same function call,
+ *     providing a useful point of comparison against another FFI library.
+ *
+ * The output is a "nanoseconds per call" metric, which helps quantify the FFI
+ * overhead and track performance regressions or improvements over time.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
-#include <time.h>  // For clock()
+#include <time.h>
 
+// If this macro is defined (e.g., via a compiler flag), the benchmark will
+// also include a comparison against the dyncall library.
 #ifdef DYNCALL_BENCHMARK
 #include <dyncall.h>
 #endif
 
-// A simple, fast function to minimize the overhead of the target itself.
+/** @brief The simple C function used as the target for all benchmarked calls. */
 int add_for_benchmark(int a, int b) {
     return a + b;
 }
 
 TEST {
     plan(1);
-    // Use a large number of iterations to get a stable average and minimize
-    // the impact of clock resolution.
+
     const int BENCHMARK_ITERATIONS = 10000000;
-    // Use volatile to prevent the compiler from optimizing away the loop bodies.
+
+    // Use a volatile accumulator to prevent the compiler from optimizing away the function calls.
     volatile int accumulator = 0;
     clock_t start, end;
 
@@ -61,7 +55,7 @@ TEST {
     diag("Iterations: %d", BENCHMARK_ITERATIONS);
     diag("Target function: int(int, int)");
 
-    // Phase 1: Direct Call Baseline
+    // 1. Baseline: Direct C Call
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
         accumulator += add_for_benchmark(i, i + 1);
@@ -71,12 +65,10 @@ TEST {
     double direct_ns_per_call = (direct_time / BENCHMARK_ITERATIONS) * 1e9;
     diag("Direct Call Time: %.4f s (%.2f ns/call)", direct_time, direct_ns_per_call);
 
-    // Common setup for infix tests
+    // 2. `infix` Unbound Trampoline
     infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
     infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                 infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
-
-    // Phase 2: Unbound infix Trampoline Call
     infix_forward_t * unbound_t = nullptr;
     if (infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) != INFIX_SUCCESS)
         bail_out("Failed to create unbound trampoline");
@@ -97,7 +89,7 @@ TEST {
          unbound_ns,
          unbound_ns - direct_ns_per_call);
 
-    // Phase 3: Bound infix Trampoline Call
+    // 3. `infix` Bound Trampoline
     infix_forward_t * bound_t = nullptr;
     if (infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_for_benchmark) != INFIX_SUCCESS)
         bail_out("Failed to create bound trampoline");
@@ -121,8 +113,7 @@ TEST {
     infix_forward_destroy(unbound_t);
     infix_forward_destroy(bound_t);
 
-
-    // Phase 4: Optional Dyncall Comparison
+    // 4. (Optional) dyncall Comparison
 #ifdef DYNCALL_BENCHMARK
     DCCallVM * vm = dcNewCallVM(4096);
     start = clock();
@@ -145,7 +136,5 @@ TEST {
     note("dyncall benchmarking was not enabled.");
 #endif
 
-    // The single 'pass' here is just to satisfy the test harness.
-    // The real result is the diagnostic output printed above.
     pass("Benchmark completed (final accumulator value: %d)", accumulator);
 }

@@ -1,4 +1,18 @@
 /**
+ * Copyright (c) 2025 Sanko Robinson
+ *
+ * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
+ * You may choose to use this code under the terms of either license.
+ *
+ * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
+ *
+ * The documentation blocks within this file are licensed under the
+ * Creative Commons Attribution 4.0 International License (CC BY 4.0).
+ *
+ * SPDX-License-Identifier: CC-BY-4.0
+ */
+
+/**
  * @file infix.c
  * @brief The unity build source file for the infix library.
  * @ingroup internal_core
@@ -8,37 +22,66 @@
  * includes all other necessary C source files in a specific order to resolve
  * dependencies and create the final library object.
  *
- * Using a unity build simplifies the project's build process and can enable more
- * aggressive cross-file optimizations by the compiler.
+ * @section build_strategy Build Strategy
  *
- * To maintain proper encapsulation, all functions within the included source files
- * (except for the public API declared in infix.h) should be declared as `static`.
+ * Using a unity build (also known as a jumbo build) offers several advantages for
+ * a library of this nature:
+ * - **Simplified Build Process:** It eliminates the need for a complex build system
+ *   to manage dependencies between multiple object files. The entire library can
+ *   be compiled with a single command (e.g., `cc -o libinfix.so infix.c ...`).
+ * - **Improved Optimization:** Compilers can perform more aggressive cross-file
+ *   optimizations, such as inlining functions defined in different `.c` files,
+ *   potentially improving performance.
+ * - **Reduced Build Times:** For smaller to medium-sized projects, a unity build
+ *   can be faster as it reduces the overhead of opening and closing files and
+ *   parsing headers multiple times.
+ *
+ * @section inclusion_order Inclusion Order
+ *
+ * The order of inclusion is critical to respect dependencies between modules. The
+ * files are ordered from the most foundational components (like error handling and
+ * memory allocation) to the highest-level ones (like the JIT engine). The final
+ * `trampoline.c` file itself includes the platform- and architecture-specific
+ * ABI files, completing the build.
  *
  * @note This file is not intended to be compiled on its own without the
  * rest of the source tree. It is the entry point for the build system.
  * @endinternal
  */
 
-/*
- * The order of inclusion is important to respect dependencies. The files are ordered
- * from the most foundational components to the highest-level ones.
- */
-// 1. Error Messages: Provides information about internal errors.
+// 1. Error Handling: Provides the thread-local error reporting system.
+//    (No dependencies on other infix modules).
 #include "core/error.c"
+
 // 2. Arena Allocator: The fundamental memory management component.
+//    (Depends only on malloc/free).
 #include "core/arena.c"
+
 // 3. OS Executor: Handles OS-level memory management for executable code.
-#include "core/executor.c"
-// 4. Type System: Defines and manages `infix_type` objects; depends on the arena.
-#include "core/types.c"
-// 5. Type Registry: The new module for managing named types. Depends on arena and types.
+//    (Depends on error handling, debugging utilities).
+#include "jit/executor.c"
+
+// 4. Type Registry: Manages named types.
+//    (Depends on arena for storage and signature parser for definitions).
 #include "core/type_registry.c"
-// 6. Signature Parser: Implements the high-level string-based API; depends on types, arena, and registry.
+
+// 5. Signature Parser: Implements the high-level string-based API.
+//    (Depends on types, arena, and registry).
 #include "core/signature.c"
-// 7. Loader: Implements the low-level file loading and parsing logic; depends on types and arena. Platform independent.
+
+// 6. Dynamic Library Loader: Implements cross-platform `dlopen`/`dlsym`.
+//    (Depends on error handling, types, and arena).
 #include "core/loader.c"
+
+// 7. Type System: Defines and manages `infix_type` objects and graph algorithms.
+//    (Depends on the arena and error handling).
+#include "core/types.c"
+
 // 8. Debugging Utilities: Low-level helpers for logging and inspection.
+//    (No dependencies).
 #include "core/utility.c"
-// 9. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all
-//    other components and includes the final ABI- and architecture-specific C files itself.
-#include "core/trampoline.c"
+
+// 9. Trampoline Engine: The central JIT compiler.
+//    This must be last, as it depends on all other components and includes the
+//    final ABI- and architecture-specific C files itself.
+#include "jit/trampoline.c"

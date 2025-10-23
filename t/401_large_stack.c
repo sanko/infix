@@ -1,40 +1,32 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 401_large_stack.c
- * @brief Tests FFI calls with a large number of arguments, forcing stack usage.
+ * @brief Unit test for FFI calls with a large number of arguments passed on the stack.
+ * @ingroup test_suite
  *
- * @details This test suite is designed to stress-test the ABI implementation
- * when the number of arguments exceeds the number of available parameter
- * registers. It verifies correct stack layout, alignment, and argument marshalling
- * for both forward and reverse FFI calls.
+ * @details This test file is a stress test for the ABI implementation's handling
+ * of the stack. Modern calling conventions pass the first several arguments in
+ * registers, but all subsequent arguments are passed on the stack. This test
+ * verifies that `infix` can correctly handle both scenarios.
  *
- * It covers several key scenarios:
- * 1.  **Forward Call (Register Limit):** A function is called with the exact
- *     number of arguments to fill all available parameter registers, testing this
- *     important boundary condition.
- * 2.  **Forward Call (One on Stack):** A function is called with one more
- *     argument than fits in registers, testing the transition to stack-based
- *     passing.
- * 3.  **Forward Call (Massive Stack):** A function with over 500 arguments is
- *     called, verifying the library's ability to handle stack frames larger than
- *     a single memory page and exercising the bulk-copy optimization for
- *     homogeneous stack arguments.
- * 4.  **Reverse Call (Callback):** A callback is created for a handler with a
- *     mixed set of arguments that will spill onto the stack, ensuring the JIT
- *     stub can correctly retrieve arguments from both registers and the
- *     caller's stack frame.
+ * It covers:
+ *
+ * 1.  **Register-Only Calls:** A call is made with the maximum number of arguments
+ *     that can fit in registers, ensuring the register-passing logic is correct.
+ *
+ * 2.  **One Stack Argument:** A call is made with just enough arguments to force
+ *     one argument to be placed on the stack, verifying the transition from
+ *     registers to the stack.
+ *
+ * 3.  **Large Stack Allocation (>4KB):** A call is made with a very large number
+ *     of arguments (520 doubles), forcing the JIT-compiled trampoline to allocate
+ *     a significant amount of stack space (>4KB). This is a regression test for
+ *     bugs where stack offsets were calculated incorrectly for large frames, and
+ *     it stress-tests the stack allocation and argument marshalling logic.
+ *
+ * 4.  **Reverse Calls with Stack Arguments:** A reverse trampoline is created for
+ *     a function with enough arguments to require some to be passed on the stack.
+ *     This verifies that the reverse call stub can correctly retrieve arguments
+ *     from the caller's stack frame in addition to registers.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -44,17 +36,15 @@
 #include <math.h>
 #include <string.h>
 
-// Platform-Specific Definitions for Register Limits
+// Determine the number of floating-point registers used for arguments on the current ABI.
 #if defined(INFIX_ABI_WINDOWS_X64)
 #define MAX_REG_DOUBLES 4
-#else  // System V x64 and AArch64
+#else  // System V and AArch64
 #define MAX_REG_DOUBLES 8
 #endif
 #define ONE_STACK_DOUBLE (MAX_REG_DOUBLES + 1)
 
-// Native C Functions for Forward Call Tests
-
-/** @brief Sums the maximum number of doubles that can fit in registers for the target ABI. */
+/** @brief A function that takes the maximum number of doubles that can fit in registers. */
 double sum_max_reg_doubles(double a1,
                            double a2,
                            double a3,
@@ -75,7 +65,7 @@ double sum_max_reg_doubles(double a1,
         ;
 }
 
-/** @brief Sums one more double than can fit in registers, forcing one onto the stack. */
+/** @brief A function that takes just enough doubles to force one onto the stack. */
 double sum_one_stack_double(double a1,
                             double a2,
                             double a3,
@@ -97,21 +87,18 @@ double sum_one_stack_double(double a1,
         ;
 }
 
-// Helper macros to define the massive 520-argument function signature.
 #define ARG(N) c23_maybe_unused double arg##N
 #define LIST10(M, p) M(p##0), M(p##1), M(p##2), M(p##3), M(p##4), M(p##5), M(p##6), M(p##7), M(p##8), M(p##9)
 #define LIST100(M, p)                                                                                     \
     LIST10(M, p##0), LIST10(M, p##1), LIST10(M, p##2), LIST10(M, p##3), LIST10(M, p##4), LIST10(M, p##5), \
         LIST10(M, p##6), LIST10(M, p##7), LIST10(M, p##8), LIST10(M, p##9)
 
-// This construction is unambiguous and generates exactly 520 arguments (0-519).
 #define ARGS_0_TO_99                                                                                               \
     LIST10(ARG, ), LIST10(ARG, 1), LIST10(ARG, 2), LIST10(ARG, 3), LIST10(ARG, 4), LIST10(ARG, 5), LIST10(ARG, 6), \
         LIST10(ARG, 7), LIST10(ARG, 8), LIST10(ARG, 9)
 #define ARGS_100_TO_499 LIST100(ARG, 1), LIST100(ARG, 2), LIST100(ARG, 3), LIST100(ARG, 4)
 #define ARGS_500_TO_519 LIST10(ARG, 50), LIST10(ARG, 51)
 
-/** @brief A function with 520 arguments to test massive stack frames. */
 double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) {
     diag("Inside large_stack_callee");
     diag("Received arg0: %.1f (expected 0.0)", arg0);
@@ -119,10 +106,10 @@ double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) {
     return arg0 + arg519;
 }
 
-// Native C Handler and Harness for Reverse Call Test
-
-/** @brief A callback handler that takes a mix of register and stack arguments. */
+/** @brief A type-safe handler for a reverse call with mixed register and stack arguments. */
 int many_args_callback_handler(int a, double b, int c, const char * d, Point e, float f) {
+    // On most ABIs, 'a', 'b', 'c', 'd' will be in registers.
+    // 'e' and 'f' will be on the stack.
     subtest("Inside many_args_callback_handler") {
         plan(6);
         ok(a == 10, "Arg 1 (int) is correct");
@@ -132,10 +119,10 @@ int many_args_callback_handler(int a, double b, int c, const char * d, Point e, 
         ok(fabs(e.x - 5.5) < 0.001 && fabs(e.y - 6.6) < 0.001, "Arg 5 (Point) is correct (Stack Arg)");
         ok(fabs(f - 7.7f) < 0.001, "Arg 6 (float) is correct (Stack Arg)");
     };
-    return a + c;  // Return something to verify completion
+    return a + c;
 }
 
-/** @brief A harness to call the generated callback with many arguments. */
+/** @brief A C harness to call the JIT-compiled reverse trampoline. */
 void execute_many_args_callback(int (*func_ptr)(int, double, int, const char *, Point, float)) {
     Point p = {5.5, 6.6};
     int result = func_ptr(10, 20.2, -30, "arg4", p, 7.7f);

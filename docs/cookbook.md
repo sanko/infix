@@ -2146,6 +2146,7 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
     size_t num_args = PyTuple_GET_SIZE(py_func_args);
     void** c_args = (void**)alloca(sizeof(void*) * num_args);
     // In a real binding, this storage would need to be managed more robustly.
+    // Using an infix_arena_t here is the recommended production approach.
     void* storage = alloca(1024);
     char* storage_ptr = (char*)storage;
 

@@ -14,23 +14,22 @@
 
 /**
  * @file loader.c
- * @brief Implements the cross-platform dynamic library loading and symbol resolution API.
+ * @brief Implements cross-platform dynamic library loading.
  * @ingroup internal_core
  *
- * @internal
- * This file provides a crucial hardware abstraction layer (HAL) for interacting
- * with dynamic libraries (e.g., `.so`, `.dylib`, `.dll`). It abstracts the
- * platform-specific system calls for loading libraries, looking up symbol
- * addresses, and unloading libraries into a single, consistent internal API.
+ * This module provides a platform-agnostic API for opening shared libraries
+ * (`.dll`, `.so`, `.dylib`), looking up symbols within them, and reading or
+ * writing to exported global variables. It abstracts away the differences
+ * between the Windows API (`LoadLibrary`, `GetProcAddress`) and the POSIX API
+ * (`dlopen`, `dlsym`).
  *
- * This abstraction allows the rest of the infix library to operate on library
- * and symbol handles without needing to know the underlying operating system.
- * @endinternal
+ * The functions `infix_read_global` and `infix_write_global` combine this dynamic
+ * loading capability with the `infix` type system to safely interact with global
+ * variables of any type described by a signature string.
  */
 
 #include "common/infix_internals.h"
 
-// Platform-specific headers for dynamic library handling.
 #if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else
@@ -38,22 +37,20 @@
 #endif
 
 /**
- * @internal
  * @brief Opens a dynamic library and returns a handle to it.
- * @details This is a cross-platform wrapper around `LoadLibraryA` (Windows) and
- * `dlopen` (POSIX). It attempts to load the specified library into the current
- * process's address space.
  *
- * @param path The file path to the dynamic library.
- * @return A pointer to an `infix_library_t` handle on success, or `nullptr` if
- *         the library could not be found or loaded. The returned handle must
- *         be freed with `infix_library_close`.
+ * This function is a cross-platform wrapper around `LoadLibraryA` (Windows) and
+ * `dlopen` (POSIX). On failure, it sets the thread-local error state with
+ * detailed system-specific information using `_infix_set_system_error`.
+ *
+ * @param[in] path The file path to the library (e.g., `"./mylib.so"`, `"user32.dll"`).
+ * @return A pointer to an `infix_library_t` handle on success, or `nullptr` on failure.
+ *         The returned handle must be freed with `infix_library_close`.
  */
 c23_nodiscard infix_library_t * infix_library_open(const char * path) {
     if (path == nullptr)
         return nullptr;
 
-    // Allocate memory for our opaque wrapper struct.
     infix_library_t * lib = infix_calloc(1, sizeof(infix_library_t));
     if (lib == nullptr) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
@@ -61,28 +58,23 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
     }
 
 #if defined(INFIX_OS_WINDOWS)
-    // On Windows, use LoadLibraryA to load the DLL.
-    // 'A' specifies the ANSI version, which matches the `const char*` input.
     lib->handle = LoadLibraryA(path);
 #else
-    // On POSIX systems, use dlopen.
-    // - RTLD_LAZY: Resolves symbols only when they are first used (lazy binding),
-    //   which can improve startup performance.
-    // - RTLD_GLOBAL: Makes symbols from this library available for resolution
-    //   by subsequently loaded libraries. This is important for handling
-    //   complex dependencies between shared objects.
+    // Use RTLD_LAZY for performance (resolve symbols only when they are first used).
+    // Use RTLD_GLOBAL to make symbols from this library available for resolution
+    // by other libraries that might be loaded later. This is important for complex
+    // dependency chains.
     lib->handle = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
-    // Both LoadLibraryA and dlopen return NULL on failure.
     if (lib->handle == nullptr) {
 #if defined(INFIX_OS_WINDOWS)
+        // On Windows, GetLastError() provides the specific error code.
         _infix_set_system_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_LIBRARY_LOAD_FAILED, GetLastError(), nullptr);
 #else
+        // On POSIX, dlerror() returns a human-readable string.
         _infix_set_system_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_LIBRARY_LOAD_FAILED, 0, dlerror());
 #endif
-        // If the OS call failed, we must free the wrapper struct we allocated
-        // to prevent a memory leak.
         infix_free(lib);
         return nullptr;
     }
@@ -90,69 +82,68 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
 }
 
 /**
- * @internal
- * @brief Closes a dynamic library handle and unloads it from the process.
- * @details This is a cross-platform wrapper around `FreeLibrary` (Windows) and
- * `dlclose` (POSIX). It is safe to call with a `nullptr` argument.
+ * @brief Closes a dynamic library handle and frees associated resources.
  *
- * @param lib A handle to a previously opened library.
+ * This is a cross-platform wrapper around `FreeLibrary` (Windows) and `dlclose` (POSIX).
+ *
+ * @param[in] lib The library handle to close. It is safe to call this function with `nullptr`.
  */
 void infix_library_close(infix_library_t * lib) {
     if (lib == nullptr)
         return;
 
-    // Only attempt to unload if the native handle is valid.
     if (lib->handle) {
 #if defined(INFIX_OS_WINDOWS)
-        // On Windows, FreeLibrary decrements the library's reference count.
-        // The DLL is unloaded when its reference count reaches zero.
         FreeLibrary((HMODULE)lib->handle);
 #else
-        // On POSIX, dlclose does the same.
         dlclose(lib->handle);
 #endif
     }
-    // Finally, free our wrapper struct.
     infix_free(lib);
 }
 
 /**
- * @internal
- * @brief Retrieves the memory address of a symbol (function or global variable)
- *        from a loaded dynamic library.
- * @details This is a cross-platform wrapper around `GetProcAddress` (Windows) and
- * `dlsym` (POSIX).
+ * @brief Retrieves the address of a symbol (function or variable) from a loaded library.
  *
- * @param lib A handle to a previously opened library.
- * @param symbol_name The null-terminated name of the symbol to look up.
- * @return A `void*` pointer to the symbol's address on success, or `nullptr` if
- *         the symbol was not found in the specified library.
+ * This is a cross-platform wrapper around `GetProcAddress` (Windows) and `dlsym` (POSIX).
+ *
+ * @note On POSIX, `dlsym` returning `NULL` is not a definitive error condition, as a
+ *       symbol's address could itself be `NULL`. The official way to check for an
+ *       error is to call `dlerror()` afterwards. This function does not perform
+ *       that check and does not set the `infix` error state, as its primary callers
+ *       (`infix_read_global`, etc.) will set a more specific `INFIX_CODE_SYMBOL_NOT_FOUND`
+ *       error if the lookup fails.
+ *
+ * @param[in] lib The library handle.
+ * @param[in] symbol_name The name of the symbol to look up (e.g., `"my_function"`).
+ * @return A `void*` pointer to the symbol's address, or `nullptr` if not found.
  */
 c23_nodiscard void * infix_library_get_symbol(infix_library_t * lib, const char * symbol_name) {
     if (lib == nullptr || lib->handle == nullptr || symbol_name == nullptr)
         return nullptr;
 
 #if defined(INFIX_OS_WINDOWS)
-    // On Windows, use GetProcAddress. The return type is technically FARPROC,
-    // which must be cast to a generic `void*` for our cross-platform API.
     return (void *)GetProcAddress((HMODULE)lib->handle, symbol_name);
 #else
-    // On POSIX, use dlsym. It directly returns a `void*`.
     return dlsym(lib->handle, symbol_name);
 #endif
 }
 
 /**
- * @internal
- * @brief Reads a global variable from a library using its type signature for size.
- * @details This is a high-level convenience function that combines symbol lookup
- * with the type system to safely read a global variable.
+ * @brief Reads the value of an exported global variable from a library into a buffer.
  *
- * @param lib A handle to a loaded library.
- * @param symbol_name The name of the global variable.
- * @param type_signature A signature string describing the variable's type (e.g., "int").
- * @param[out] buffer A pointer to a user-provided buffer to store the read value.
- * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ * This function first looks up the symbol's address. It then uses the `infix`
+ * signature parser (`infix_type_from_signature`) to determine the size of the
+ * variable. This ensures that the correct number of bytes are copied from the
+ * library's data segment into the user's buffer, preventing buffer overflows.
+ *
+ * @param[in] lib The library handle.
+ * @param[in] symbol_name The name of the global variable.
+ * @param[in] type_signature The `infix` signature string describing the variable's type (e.g., `"int32"`,
+ * `"{double,double}"`).
+ * @param[out] buffer A pointer to the destination buffer to receive the data. This buffer must be large enough to hold
+ * the type described by the signature.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure (e.g., symbol not found, invalid signature).
  */
 c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
                                              const char * symbol_name,
@@ -161,40 +152,42 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    // Find the address of the global variable in the library.
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
     if (symbol_addr == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
-    // Parse the type signature to determine the size of the variable.
-    // This creates a temporary arena to hold the type information.
+    // Parse the signature to get the type's size.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
     infix_status status = infix_type_from_signature(&type, &arena, type_signature, nullptr);
-
     if (status != INFIX_SUCCESS)
         return status;
 
-    // Perform a memory copy of the correct size.
+    // Safely copy the data using the parsed size.
     infix_memcpy(buffer, symbol_addr, type->size);
 
-    // Clean up the temporary arena used for parsing.
     infix_arena_destroy(arena);
     return INFIX_SUCCESS;
 }
 
 /**
- * @internal
- * @brief Writes to a global variable in a library using its type signature for size.
- * @details This is a high-level convenience function that combines symbol lookup
- * with the type system to safely write a new value to a global variable.
+ * @brief Writes data from a buffer into an exported global variable in a library.
  *
- * @param lib A handle to a loaded library.
- * @param symbol_name The name of the global variable.
- * @param type_signature A signature string describing the variable's type.
- * @param[in] buffer A pointer to a buffer containing the new value to write.
+ * @details This function is analogous to `infix_read_global`. It finds the symbol's
+ * address and uses the signature string to determine the correct number of bytes
+ * to copy from the source buffer to the library's memory.
+ *
+ * @note This operation assumes that the memory page containing the global variable
+ *       is writable. This is typical for `.data` or `.bss` segments but may fail
+ *       if the variable is in a read-only segment (e.g., a `const` global). The
+ *       function does not attempt to change memory permissions.
+ *
+ * @param[in] lib The library handle.
+ * @param[in] symbol_name The name of the global variable.
+ * @param[in] type_signature The `infix` signature string describing the variable's type.
+ * @param[in] buffer A pointer to the source buffer containing the data to write.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
@@ -204,25 +197,22 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    // Find the address of the global variable in the library.
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
     if (symbol_addr == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
 
-    // Parse the type signature to determine the size of the variable.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
     infix_status status = infix_type_from_signature(&type, &arena, type_signature, nullptr);
-
     if (status != INFIX_SUCCESS)
         return status;
 
-    // Perform a memory copy of the correct size.
+    // Note: This assumes the memory page containing the global is writable.
+    // This is standard for data segments but could fail in unusual cases.
     infix_memcpy(symbol_addr, buffer, type->size);
 
-    // Clean up the temporary arena used for parsing.
     infix_arena_destroy(arena);
     return INFIX_SUCCESS;
 }

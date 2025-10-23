@@ -29,7 +29,7 @@
  * @endinternal
  */
 
-#include "abi_arm64_common.h"
+#include "arch/aarch64/abi_arm64_common.h"
 #include "common/infix_internals.h"
 
 // GPR <-> Immediate Value Emitters

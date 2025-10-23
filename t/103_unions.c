@@ -1,54 +1,48 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 103_unions.c
- * @brief Tests passing and returning C unions by value.
+ * @brief Unit test for passing and returning unions by value.
+ * @ingroup test_suite
  *
- * @details This test suite verifies that the library correctly handles C `union`
- * types according to the target platform's ABI. It ensures that the size and
- * alignment are calculated correctly and that the data is placed in the
- * appropriate registers or stack locations.
+ * @details This test verifies that `infix` correctly handles C unions in FFI calls.
+ * A union is a special type of aggregate, and its handling by the ABI often
+ * follows the same rules as structs of the same size and alignment.
  *
- * The suite covers two primary scenarios:
- * 1.  **Passing a Union:** A `Number` union is passed to native functions that
- *     interpret its contents as either an `int` or a `double`. This implicitly
- *     verifies the ABI classification rules (e.g., on System V x64, this union
- *     is passed in an XMM register, while on Windows x64 it's passed in a GPR).
- * 2.  **Returning a Union:** A native function returns a `Number` union by value,
- *     and the test verifies that the returned data is correct.
+ * This test uses a simple `Number` union containing an `int` and a `float`.
+ * It verifies that:
+ * 1.  The `infix_type` for the union is created with the correct size (the size
+ *     of the largest member) and alignment (the alignment of the most-aligned member).
+ * 2.  When the union is passed as an argument, its raw byte representation is
+ *     correctly transmitted, allowing the callee to interpret it as either an
+ *     `int` or a `float`.
+ * 3.  When a union is returned by value, its raw bytes are correctly received
+ *     by the caller.
+ *
+ * This test is important for validating the aggregate classification logic for
+ * a type that is less common than structs but still a core part of the C language.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
-#include "types.h"  // For the definition of the Number union
+#include "types.h"
 #include <infix/infix.h>
-#include <math.h>    // For fabs
-#include <string.h>  // For memcpy
+#include <math.h>
+#include <string.h>
 
-// Native C Target Functions
-/** @brief Receives a Number union and processes it as an integer. */
+// Native C Functions for Testing
+
+/** @brief A C function that interprets a passed-in `Number` union as an integer. */
 int process_number_union_as_int(Number num) {
     note("process_number_union_as_int received num.i = %d", num.i);
     return num.i * 2;
 }
 
-/** @brief Receives a Number union and processes it as a float. */
+/** @brief A C function that interprets a passed-in `Number` union as a float. */
 float process_number_union_as_float(Number num) {
     note("process_number_union_as_float received num.f = %f", num.f);
     return num.f + 1.0f;
 }
 
+/** @brief A C function that returns a `Number` union by value. */
 Number return_number_union(int selector) {
     Number n;
     if (selector == 1)
@@ -60,11 +54,9 @@ Number return_number_union(int selector) {
 
 TEST {
     plan(3);
-
-    // Setup: Create an arena for this test's type definitions.
     infix_arena_t * arena = infix_arena_create(4096);
 
-    // Create the infix_type for the Number union within the arena.
+    // 1. Create the `infix_type` for the `Number` union programmatically.
     infix_struct_member * members =
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
     members[0] =
@@ -83,12 +75,11 @@ TEST {
     subtest("Passing union as argument") {
         plan(4);
 
-        // Test 1: Pass as integer
+        // Test passing the union and interpreting it as an int.
         infix_forward_t * int_trampoline = nullptr;
         status = infix_forward_create_unbound_manual(
             &int_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &union_type, 1, 1);
         ok(status == INFIX_SUCCESS && int_trampoline != nullptr, "Trampoline for process_number_union_as_int created");
-
         infix_unbound_cif_func int_cif = infix_forward_get_unbound_code(int_trampoline);
         Number num_int;
         num_int.i = 123;
@@ -98,13 +89,12 @@ TEST {
         ok(int_result == 246, "Union passed as integer correctly");
         infix_forward_destroy(int_trampoline);
 
-        // Test 2: Pass as float
+        // Test passing the union and interpreting it as a float.
         infix_forward_t * flt_trampoline = nullptr;
         status = infix_forward_create_unbound_manual(
             &flt_trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), &union_type, 1, 1);
         ok(status == INFIX_SUCCESS && flt_trampoline != nullptr,
            "Trampoline for process_number_union_as_float created");
-
         infix_unbound_cif_func flt_cif = infix_forward_get_unbound_code(flt_trampoline);
         Number num_flt;
         num_flt.f = 99.5f;
@@ -121,17 +111,16 @@ TEST {
         infix_type * arg_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         status = infix_forward_create_unbound_manual(&trampoline, union_type, &arg_type, 1, 1);
         ok(status == INFIX_SUCCESS && trampoline != nullptr, "Trampoline for return_number_union created");
-
         infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
 
-        // Test 1: Return as integer
+        // Test receiving the union with an integer value.
         Number int_result;
         int selector_int = 1;
         void * int_args[] = {&selector_int};
         cif((void *)return_number_union, &int_result, int_args);
         ok(int_result.i == 500, "Union returned as integer correctly");
 
-        // Test 2: Return as float
+        // Test receiving the union with a float value.
         Number flt_result;
         int selector_flt = 2;
         void * flt_args[] = {&selector_flt};
@@ -141,6 +130,5 @@ TEST {
         infix_forward_destroy(trampoline);
     }
 
-    // A single call to destroy the arena frees all memory used for type creation.
     infix_arena_destroy(arena);
 }
