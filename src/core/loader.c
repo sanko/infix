@@ -54,7 +54,7 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
         return nullptr;
 
     // Allocate memory for our opaque wrapper struct.
-    infix_library_t * lib = infix_malloc(sizeof(infix_library_t));
+    infix_library_t * lib = infix_calloc(1, sizeof(infix_library_t));
     if (lib == nullptr) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;

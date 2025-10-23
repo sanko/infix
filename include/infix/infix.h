@@ -28,13 +28,13 @@ E ---------------------------------------
  * @ingroup public_api
  * @brief Advanced functions for manually building `infix_type` objects.
  *
- * @defgroup registry_api Named Type Registry API
- * @ingroup public_api
- * @brief Functions for defining, managing, and using a registry of named types.
- *
  * @defgroup type_system Type System
  * @ingroup public_api
  * @brief Structures and functions for describing C data types.
+ *
+ * @defgroup registry_api Named Type Registry API
+ * @ingroup public_api
+ * @brief Functions for defining, managing, and using a registry of named types.
  *
  * @defgroup introspection_api Introspection API
  * @ingroup public_api
@@ -120,7 +120,7 @@ typedef enum {
     INFIX_TYPE_REVERSE_TRAMPOLINE,  ///< A callback wrapper.
     INFIX_TYPE_ENUM,                ///< A C-style enumeration, with an underlying integer type.
     INFIX_TYPE_COMPLEX,             ///< A `_Complex` number type.
-    INFIX_TYPE_VECTOR,              ///< A SIMD vector type.
+    INFIX_TYPE_VECTOR,              ///< A SIMD vector type (e.g., `__m128d`, `float32x4_t`).
     INFIX_TYPE_NAMED_REFERENCE,     ///< A reference to a named type (e.g., `struct<Node>`).
     INFIX_TYPE_VOID                 ///< The `void` type, used for function returns with no value.
 } infix_type_category;
@@ -408,7 +408,7 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
  * @param target_function A pointer to the native C function to be bound to the trampoline.
- * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
+ * @param registry An optional handle to a type registry for resolving named types. Can be `nullptr`.
  * @return `INFIX_SUCCESS` on success.
  * @note The function pointer returned by `infix_forward_get_code` should be used.
  */
@@ -422,7 +422,7 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *
  *
  * @param[out] out_trampoline On success, will point to the handle for the new trampoline.
  * @param signature A null-terminated string describing the function signature.
- * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
+ * @param registry An optional handle to a type registr. Can be `nullptr`.
  * @return `INFIX_SUCCESS` on success.
  * @note The function pointer returned by `infix_forward_get_unbound_code` must be used.
  */
@@ -444,7 +444,7 @@ c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, cons
  * If the native C signature is `int (*my_callback)(int, int);`,
  * your `infix` handler function must be `int my_handler(int a, int b);`.
  *
- * @param registry An optional handle to a type registry for resolving named types. Pass `nullptr` if not used.
+ * @param registry An optional handle to a type registry. Can be `nullptr`.
  * @return `INFIX_SUCCESS` on success.
  * @note This type of callback is **stateless**. For stateful callbacks, use
  *       `infix_reverse_create_closure`.
@@ -462,7 +462,7 @@ c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, con
  *                         signature must match `infix_closure_handler_fn`.
  * @param user_data A user-defined pointer for passing state to the handler, accessible
  *                  inside the handler via `infix_reverse_get_user_data(context)`.
- * @param registry An optional handle to a type registry. Pass `nullptr` if not used.
+ * @param registry An optional handle to a type registry. Can be `nullptr`.
  * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status
@@ -714,7 +714,7 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type *
 /**
  * @brief Creates a new `infix_type` for an enum from an arena.
  * @param arena The arena from which to allocate.
- * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param underlying_type The integer `infix_type` that this enum is based on.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
@@ -723,7 +723,7 @@ c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **
 /**
  * @brief Creates a new `infix_type` for a named reference from an arena.
  * @param arena The arena from which to allocate.
- * @param[out] out_type On success, will point to the newly created `infix_type`.
+ * @param[out] out_type On success, this will point to the newly created `infix_type`.
  * @param name The name of the type being referenced.
  * @param aggregate_category Distinguishes between `struct` and `union` for the reference.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
@@ -1066,7 +1066,7 @@ typedef enum {
     INFIX_CODE_UNEXPECTED_TOKEN = 200,  ///< Parser ran into an invalid character at a given `position`.
     INFIX_CODE_UNTERMINATED_AGGREGATE,  ///< A `{...}`, `<...>`, or `[...]` was not properly closed.
     INFIX_CODE_INVALID_KEYWORD,         ///< Parser found an unknown keyword (e.g., "integer" instead of "int").
-    INFIX_CODE_MISSING_RETURN_TYPE,     ///< A function signature was missing the `->` or a return type.
+    INFIX_CODE_MISSING_RETURN_TYPE,     ///< A function signature was missing the `->` or a return type after it.
     INFIX_CODE_INTEGER_OVERFLOW,  ///< An integer overflow was detected, typically when calculating the size of a very
                                   ///< large array or struct.
     INFIX_CODE_RECURSION_DEPTH_EXCEEDED,  ///< The parser exceeded the max nesting depth (e.g., `{{{{...}}}}`).

@@ -29,14 +29,14 @@
 #include "core/arena.c"
 // 3. OS Executor: Handles OS-level memory management for executable code.
 #include "core/executor.c"
-// 4. Type Registry: The new module for managing named types. Depends on arena.
-#include "core/type_registry.c"
-// 5. Signature Parser: Implements the high-level string-based API; depends on types, arena, and registry.
-#include "core/signature.c"
-// 6. Loader: Implements the low-level file loading and parsing logic; depends on types and arena. Platform independent.
-#include "core/loader.c"
-// 7. Type System: Defines and manages `infix_type` objects; depends on the arena.
+// 4. Type System: Defines and manages `infix_type` objects; depends on the arena.
 #include "core/types.c"
+// 5. Type Registry: The new module for managing named types. Depends on arena and types.
+#include "core/type_registry.c"
+// 6. Signature Parser: Implements the high-level string-based API; depends on types, arena, and registry.
+#include "core/signature.c"
+// 7. Loader: Implements the low-level file loading and parsing logic; depends on types and arena. Platform independent.
+#include "core/loader.c"
 // 8. Debugging Utilities: Low-level helpers for logging and inspection.
 #include "core/utility.c"
 // 9. Trampoline Engine: The central JIT compiler. This must be last, as it depends on all

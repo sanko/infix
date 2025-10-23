@@ -174,39 +174,62 @@ void emit_int64(code_buffer * buf, int64_t value) {
 
 // Internal Type System Helpers
 /**
- * @internal
- * @brief Recursively checks if an entire type graph is fully resolved.
- * @details A type graph is "unresolved" if it contains any nodes of type
- *          `INFIX_TYPE_NAMED_REFERENCE`. Generating a trampoline from an
- *          unresolved graph is an error.
- * @return `true` if resolved, `false` otherwise.
+ * @internal @brief A node for tracking visited types to prevent infinite recursion.
  */
-static bool _is_type_graph_resolved(infix_type * type) {
+typedef struct visited_node_t {
+    const infix_type * type;
+    struct visited_node_t * next;
+} visited_node_t;
+
+/**
+ * @internal @brief The recursive implementation for checking if a type graph is resolved.
+ */
+static bool _is_type_graph_resolved_recursive(const infix_type * type, visited_node_t * visited_head) {
     if (!type)
         return true;
+
+    // Check if we've already visited this node in the current path to break cycles.
+    for (visited_node_t * v = visited_head; v != NULL; v = v->next) {
+        if (v->type == type) {
+            return true;  // Cycle detected, assume it's valid for now.
+        }
+    }
+
+    // Add current node to the visited list for this recursive path.
+    visited_node_t current_visited_node = {.type = type, .next = visited_head};
+
     switch (type->category) {
     case INFIX_TYPE_NAMED_REFERENCE:
         return false;
     case INFIX_TYPE_POINTER:
-        return _is_type_graph_resolved(type->meta.pointer_info.pointee_type);
+        return _is_type_graph_resolved_recursive(type->meta.pointer_info.pointee_type, &current_visited_node);
     case INFIX_TYPE_ARRAY:
-        return _is_type_graph_resolved(type->meta.array_info.element_type);
+        return _is_type_graph_resolved_recursive(type->meta.array_info.element_type, &current_visited_node);
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
-        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i)
-            if (!_is_type_graph_resolved(type->meta.aggregate_info.members[i].type))
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            if (!_is_type_graph_resolved_recursive(type->meta.aggregate_info.members[i].type, &current_visited_node))
                 return false;
+        }
         return true;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
-        if (!_is_type_graph_resolved(type->meta.func_ptr_info.return_type))
+        if (!_is_type_graph_resolved_recursive(type->meta.func_ptr_info.return_type, &current_visited_node))
             return false;
-        for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i)
-            if (!_is_type_graph_resolved(type->meta.func_ptr_info.args[i].type))
+        for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
+            if (!_is_type_graph_resolved_recursive(type->meta.func_ptr_info.args[i].type, &current_visited_node))
                 return false;
+        }
         return true;
     default:
         return true;
     }
+}
+
+/**
+ * @internal @brief Wrapper to start the recursive resolution check.
+ */
+static bool _is_type_graph_resolved(const infix_type * type) {
+    return _is_type_graph_resolved_recursive(type, NULL);
 }
 
 // Forward Trampoline Implementation
@@ -264,8 +287,10 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     for (size_t i = 0; i < num_args; ++i) {
-        if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i]))
+        if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i])) {
+            _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
+        }
     }
 
     const infix_forward_abi_spec * spec = get_current_forward_abi_spec();
@@ -523,7 +548,7 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
     }
 
     if (is_callback) {
-        // --- Type-Safe "Callback" Path ---
+        // Type-Safe "Callback" Path
         // The user's handler has a "clean" signature without the context.
         // The cached forward trampoline must therefore be generated for num_args.
         status = infix_forward_create_manual(&context->cached_forward_trampoline,
@@ -662,8 +687,10 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
     infix_function_argument * args = nullptr;
     size_t num_args = 0, num_fixed = 0;
     infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
-    if (status != INFIX_SUCCESS)
+    if (status != INFIX_SUCCESS) {
+        infix_arena_destroy(arena);
         return status;
+    }
     infix_type ** arg_types =
         (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
     if (num_args > 0 && !arg_types) {
@@ -702,8 +729,10 @@ c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t ** out_
     infix_function_argument * args = nullptr;
     size_t num_args = 0, num_fixed = 0;
     infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
-    if (status != INFIX_SUCCESS)
+    if (status != INFIX_SUCCESS) {
+        infix_arena_destroy(arena);
         return status;
+    }
     infix_type ** arg_types =
         (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
     if (num_args > 0 && !arg_types) {
@@ -733,8 +762,10 @@ c23_nodiscard infix_status infix_reverse_create_closure(infix_reverse_t ** out_c
     infix_function_argument * args = nullptr;
     size_t num_args = 0, num_fixed = 0;
     infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
-    if (status != INFIX_SUCCESS)
+    if (status != INFIX_SUCCESS) {
+        infix_arena_destroy(arena);
         return status;
+    }
     infix_type ** arg_types =
         (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
     if (num_args > 0 && !arg_types) {

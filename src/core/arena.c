@@ -40,12 +40,12 @@
  */
 infix_arena_t * infix_arena_create(size_t initial_size) {
     // Allocate the arena controller struct itself.
-    infix_arena_t * arena = infix_malloc(sizeof(infix_arena_t));
+    infix_arena_t * arena = infix_calloc(1, sizeof(infix_arena_t));
     if (arena == nullptr)
         return nullptr;
 
     // Allocate the main memory block for the arena.
-    arena->buffer = infix_malloc(initial_size);
+    arena->buffer = infix_calloc(1, initial_size);
     if (arena->buffer == nullptr && initial_size > 0) {
         // Critical cleanup: if the main buffer allocation fails, we must free
         // the `arena` struct itself to prevent a memory leak.
