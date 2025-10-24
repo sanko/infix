@@ -14,20 +14,26 @@
  */
 /**
  * @file abi_arm64_common.h
- * @brief Common register definitions for the AArch64 (ARM64) architecture.
+ * @brief Common register definitions and instruction encodings for the AArch64 (ARM64) architecture.
  * @ingroup internal_abi_aarch64
  *
  * @internal
- * This header defines enums for the general-purpose registers (GPRs) and
- * the floating-point/SIMD registers (VPRs) available on the ARM64 architecture.
- * These enums provide a clear, type-safe, and self-documenting way to refer to
- * specific registers when emitting machine code or implementing the ABI logic.
+ * This header serves two primary purposes for the AArch64 backend:
  *
- * This file also contains preprocessor definitions for the fixed bitfields of
- * various AArch64 instructions. This abstracts away the "magic numbers" of machine
- * code generation, making the emitter code in `abi_arm64_emitters.c` more readable
- * and easier to verify against the official ARM Architecture Reference Manual.
+ * 1.  **Register Enumerations:** It defines enums for the general-purpose registers (GPRs) and
+ *     the floating-point/SIMD registers (VPRs). These enums provide a clear, type-safe,
+ *     and self-documenting way to refer to specific registers when emitting machine
+ *     code or implementing the ABI logic. The comments on each register describe its
+ *     role according to the standard AAPCS64 calling convention.
  *
+ * 2.  **Instruction Encoding Constants:** It contains preprocessor definitions for the
+ *     fixed bitfields of various AArch64 instructions. This abstracts away the
+ *     "magic numbers" of machine code generation, making the emitter code in
+ *     `abi_arm64_emitters.c` more readable and easier to verify against the official
+ *     ARM Architecture Reference Manual.
+ *
+ * By centralizing these definitions, this header provides a single source of truth for
+ * the low-level architectural details, separating them from the higher-level ABI logic.
  * @endinternal
  */
 
@@ -38,11 +44,11 @@
  * @enum arm64_gpr
  * @brief Enumerates the ARM64 General-Purpose Registers (GPRs), X0-X30 and SP.
  *
- * @details The enum values correspond to the 5-bit register numbers used in machine
- * code instructions. The comments on each register describe its primary role
- * according to the standard Procedure Call Standard for the ARM 64-bit
- * Architecture (AAPCS64), indicating whether it is used for arguments, return
- * values, or must be preserved across function calls (callee-saved).
+ * @details The enum values (0-31) correspond directly to the 5-bit register numbers
+ * used in the encoding of machine code instructions. The comments on each register
+ * describe its primary role according to the standard "Procedure Call Standard for
+ * the ARM 64-bit Architecture" (AAPCS64), indicating whether it is used for
+ * arguments, return values, or must be preserved across function calls (callee-saved).
  */
 typedef enum {
     X0_REG = 0,   ///< Argument 1 / Return value / Volatile (caller-saved).
@@ -53,7 +59,7 @@ typedef enum {
     X5_REG,       ///< Argument 6 / Volatile.
     X6_REG,       ///< Argument 7 / Volatile.
     X7_REG,       ///< Argument 8 / Volatile.
-    X8_REG,       ///< Indirect result location register (holds address for large struct returns) / Volatile.
+    X8_REG,       ///< Indirect Result Location Register (holds address for large struct returns) / Volatile.
     X9_REG,       ///< Volatile (caller-saved) scratch register.
     X10_REG,      ///< Volatile scratch register.
     X11_REG,      ///< Volatile scratch register.
@@ -61,9 +67,9 @@ typedef enum {
     X13_REG,      ///< Volatile scratch register.
     X14_REG,      ///< Volatile scratch register.
     X15_REG,      ///< Volatile scratch register.
-    X16_REG,      ///< Intra-Procedure-call scratch register (IP0) / Volatile. Linker-modifiable.
-    X17_REG,      ///< Intra-Procedure-call scratch register (IP1) / Volatile. Linker-modifiable.
-    X18_REG,      ///< Platform Register (reserved, usage is platform-specific) / May be callee-saved. Avoid use.
+    X16_REG,      ///< Intra-Procedure-call scratch register (IP0) / Volatile. May be modified by the linker.
+    X17_REG,      ///< Intra-Procedure-call scratch register (IP1) / Volatile. May be modified by the linker.
+    X18_REG,      ///< Platform Register (reserved, usage is platform-specific) / May be callee-saved. Best to avoid.
     X19_REG,      ///< Callee-saved. Must be preserved by a called function.
     X20_REG,      ///< Callee-saved.
     X21_REG,      ///< Callee-saved.
@@ -75,7 +81,7 @@ typedef enum {
     X27_REG,      ///< Callee-saved.
     X28_REG,      ///< Callee-saved.
     X29_FP_REG,   ///< Frame Pointer (FP) / Callee-saved.
-    X30_LR_REG,   ///< Link Register (LR), holds the return address / Callee-saved by convention, but volatile on call.
+    X30_LR_REG,   ///< Link Register (LR), holds the return address / Volatile across calls.
     SP_REG = 31,  ///< Stack Pointer (SP). In some instructions, encoding 31 refers to the Zero Register (XZR/WZR).
 } arm64_gpr;
 
@@ -97,7 +103,7 @@ typedef enum {
     V5_REG,      ///< Argument 6 / Volatile.
     V6_REG,      ///< Argument 7 / Volatile.
     V7_REG,      ///< Argument 8 / Volatile.
-    V8_REG,      ///< Callee-saved (Note: only the lower 64 bits must be preserved).
+    V8_REG,      ///< Callee-saved (Note: only the lower 64 bits, D8-D15, must be preserved).
     V9_REG,      ///< Callee-saved (only lower 64 bits).
     V10_REG,     ///< Callee-saved (only lower 64 bits).
     V11_REG,     ///< Callee-saved (only lower 64 bits).
@@ -136,23 +142,23 @@ typedef enum {
  */
 
 // Common bitfields
-#define A64_SF_64BIT (1U << 31)  // 'sf' bit for 64-bit operations
-#define A64_SF_32BIT (0U << 31)
+#define A64_SF_64BIT (1U << 31)  // 'sf' (size field) bit for 64-bit operations
+#define A64_SF_32BIT (0U << 31)  // 'sf' bit for 32-bit operations
 #define A64_V_VECTOR (1U << 26)  // Vector bit for SIMD/FP instructions
 
-// Data Processing -- Immediate
+// Data Processing -- Immediate (e.g., ADD, SUB)
 #define A64_OPC_ADD (0b00U << 29)
 #define A64_OPC_ADDS (0b01U << 29)
 #define A64_OPC_SUB (0b10U << 29)
 #define A64_OPC_SUBS (0b11U << 29)
 #define A64_OP_ADD_SUB_IMM (0b0010001U << 24)
 
-// Data Processing -- Register
+// Data Processing -- Register (e.g., ADD, ORR)
 #define A64_OP_ADD_SUB_REG (0b01011U << 24)
 #define A64_OP_LOGICAL_REG (0b01010U << 24)
 #define A64_OPCODE_ORR (0b01U << 29)
 
-// Move Wide
+// Move Wide (MOVZ, MOVK)
 #define A64_OPC_MOVZ (0b10U << 29)
 #define A64_OPC_MOVK (0b11U << 29)
 #define A64_OP_MOVE_WIDE_IMM (0b100101U << 23)
@@ -163,12 +169,12 @@ typedef enum {
 #define A64_OP_LOAD_STORE_PAIR_BASE (0b101000U << 24)  // Base for all LDP/STP variants
 #define A64_OPC_STP (0b00U << 30)                      // opc field for Store Pair
 #define A64_OPC_LDP (0b01U << 30)                      // opc field for Load Pair
-#define A64_L_BIT_LOAD (1U << 22)                      // The 'L' bit: 1 for Load, 0 for Store
+#define A64_L_BIT_LOAD (1U << 22)                      // The 'L' bit distinguishes Load (1) from Store (0)
 
 // Addressing modes for LDP/STP
-#define A64_ADDR_POST_INDEX (0b01U << 23)
-#define A64_ADDR_PRE_INDEX (0b11U << 23)
-#define A64_ADDR_SIGNED_OFFSET (0b10U << 23)
+#define A64_ADDR_POST_INDEX (0b01U << 23)     // [Xn], #imm
+#define A64_ADDR_PRE_INDEX (0b11U << 23)      // [Xn, #imm]!
+#define A64_ADDR_SIGNED_OFFSET (0b10U << 23)  // [Xn, #imm]
 
 // Branching
 #define A64_OP_BRANCH_REG (0b1101011U << 25)

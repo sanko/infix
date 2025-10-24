@@ -19,7 +19,7 @@ coverage:
     patch: true
     project: true
 ignore:
-  - ^third_party.*
+  - ^fuzz.*
   - ^t.*
 slack_app: false
 fixes:

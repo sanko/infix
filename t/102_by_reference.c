@@ -1,36 +1,24 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 102_by_reference.c
- * @brief Tests passing and returning aggregates that are handled by reference.
+ * @brief Unit test for passing and returning large aggregates by reference.
+ * @ingroup test_suite
  *
- * @details This test suite focuses on aggregates that are too large to be
- * passed entirely in registers. According to most ABIs, such structs are either
- * passed as a pointer to a copy on the stack (by reference) or directly on the
- * stack. When returned, a hidden pointer to a caller-allocated buffer is often
- * used. This suite verifies these mechanisms.
+ * @details This test file validates the ABI implementation for handling aggregates
+ * (structs) that are too large to be passed or returned directly in registers.
+ * According to most ABIs (including System V and Windows x64), such aggregates are
+ * handled "by reference."
  *
- * It covers two main scenarios:
+ * - **Passing by Reference:** The caller allocates memory for the struct, and a
+ *   pointer to this memory is passed in a general-purpose register.
  *
- * 1.  **Large Structs (All Platforms):** A struct larger than 16 bytes is used
- *     to test the common case for stack-based passing and returning via a hidden
- *     pointer. This is expected behavior on SysV x64, Windows x64, and AArch64.
+ * - **Returning by Reference:** The caller allocates space for the return value
+ *   and passes a hidden pointer to this space as the *first* (often invisible)
+ *   argument to the function. The callee then writes its result to this location.
  *
- * 2.  **Windows x64 Specific Rule:** The Windows x64 ABI mandates that any
- *     aggregate whose size is not a power of two (1, 2, 4, or 8 bytes) must be
- *     passed by reference, regardless of its total size. This test verifies this
- *     specific edge case using a 12-byte struct.
+ * This test verifies both scenarios for:
+ * - A `LargeStruct` (24 bytes), which is guaranteed to be passed by reference.
+ * - A `NonPowerOfTwoStruct` (12 bytes), which is also passed by reference on many
+ *   ABIs (like Windows x64) that have strict size rules for register passing.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -38,15 +26,13 @@
 #include "types.h"
 #include <infix/infix.h>
 
-// Native C Target Functions
-
-/** @brief Processes a large struct, returning a value derived from its members. */
+/** @brief A C function that takes a large struct, which the ABI will pass by reference. */
 int process_large_struct(LargeStruct s) {
     note("process_large_struct received s = { .a=%d, ..., .f=%d }", s.a, s.f);
     return s.a + s.f;
 }
 
-/** @brief Returns a large struct by value, which the ABI turns into a hidden pointer return. */
+/** @brief A C function that returns a large struct, which the ABI will return by reference. */
 LargeStruct return_large_struct(int base_val) {
     return (LargeStruct){
         base_val,
@@ -58,6 +44,7 @@ LargeStruct return_large_struct(int base_val) {
     };
 }
 
+/** @brief A C function that takes a struct whose size is not a power of two. */
 int process_npot_struct(NonPowerOfTwoStruct s) {
     note("process_npot_struct received s = { .a=%d, .b=%d, .c=%d }", s.a, s.b, s.c);
     return s.a + s.b + s.c;
@@ -82,7 +69,7 @@ TEST {
             return;
         }
 
-        // Test Pass Arg
+        // Test passing the struct as an argument.
         infix_forward_t *unbound_pass, *bound_pass;
         ok(infix_forward_create_unbound_manual(&unbound_pass, s32_type, &large_struct_type, 1, 1) == INFIX_SUCCESS,
            "Unbound pass created");
@@ -98,7 +85,7 @@ TEST {
         bound_pass_cif(&bound_pass_res, pass_args);
         ok(unbound_pass_res == 70 && bound_pass_res == 70, "Pass arg correct");
 
-        // Test Return
+        // Test returning the struct by value (which the ABI implements by reference).
         infix_forward_t *unbound_ret, *bound_ret;
         ok(infix_forward_create_unbound_manual(&unbound_ret, large_struct_type, &s32_type, 1, 1) == INFIX_SUCCESS,
            "Unbound ret created");

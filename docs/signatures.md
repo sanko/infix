@@ -212,4 +212,4 @@ Integer             ::= [0-9]+
 
 *   **vs. Itanium C++ ABI:** Itanium is a "write-only" format designed for linkers. `infix` signatures are designed for humans to read and write.
 *   **vs. Python's `ctypes`:** `ctypes` uses a programmatic, object-oriented approach. The `infix` format is a standalone, declarative string that can be used by *any* language.
-*   **vs. `dyncall`'s Signature Format:** `dyncall`'s format is a flat string of single characters (e.g., `isL)d`), prioritizing brevity. `infix` prioritizes human readability (`(int, ushort, longlong) -> double`). Further, `dyncall` can only describe primitive types, whereas `infix` treats complex data structures as first-class citizens.
+*   **vs. `dyncall`'s Signature Format:** `dyncall`'s format is a flat string of single characters (e.g., `isL)d`), prioritizing brevity. `infix` prioritizes human readability (`(int, ushort, longlong) -> double`). Further, `dyncall` handles aggregate types programmatically via a separate `DCaggr` API, whereas `infix` treats complex data structures as first-class citizens *within the signature string itself*, making the call site much more declarative.

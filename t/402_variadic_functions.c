@@ -1,39 +1,33 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 402_variadic_functions.c
- * @brief Tests FFI calls for variadic functions.
+ * @brief Unit test for FFI calls to and from variadic C functions.
+ * @ingroup test_suite
  *
- * @details This test suite verifies the library's ability to handle variadic
- * functions (those with `...` in their signature) for both forward and reverse
- * FFI calls. Variadic argument passing involves special ABI rules that differ
- * significantly between platforms, making this a critical area to test.
+ * @details This test file is extremely important for verifying ABI-compliance, as
+ * the rules for passing variadic arguments differ significantly between platforms,
+ * even on the same architecture.
  *
- * This file consolidates all previous variadic tests and covers:
- * 1.  **Forward Call:** A custom C function (`forward_variadic_checker`) is
- *     called with a mix of fixed and variadic arguments (`const char*`, `int`,
- *     `double`) to verify the basic mechanism. Using a custom checker provides
- *     clearer diagnostics than calling an opaque library function like `snprintf`.
- * 2.  **Reverse Variadic Callback:** A reverse trampoline is created for a handler
- *     with a variadic signature, confirming that the JIT stub can correctly
- *     marshal both fixed and variadic arguments.
- * 3.  **Platform: Windows x64:** A specific test, compiled only on Windows, that
- *     verifies that a variadic `double` is correctly passed in both a GPR (for
- *     `va_arg`) and an XMM register (for direct use by the callee).
- * 4.  **Platform: macOS on AArch64:** A specific test, compiled only on macOS ARM,
- *     that verifies the unique rule where all variadic arguments (including
- *     structs) are passed on the stack.
+ * The test covers:
+ *
+ * - **Forward Variadic Call (Primitives):** A call is made to a `printf`-like
+ *   function with a mix of fixed and variadic arguments (`*char`, `int`, `double`).
+ *   This tests the core variadic calling mechanism.
+ *
+ * - **Forward Variadic Call (Aggregates):** A call is made passing a struct as a
+ *   variadic argument. This is highly platform-dependent:
+ *   - On **System V**, the struct is passed on the stack.
+ *   - On **Windows x64**, a pointer to the struct is passed in a GPR.
+ *   - On **AArch64**, the struct is passed on the stack.
+ *
+ * - **Reverse Variadic Callback:** A reverse trampoline is created for a variadic
+ *   function. The test verifies that when the JIT-compiled function pointer is
+ *   called with variadic arguments, the C handler receives them correctly via
+ *   `va_list`/`va_arg`.
+ *
+ * - **Platform-Specific ABI Deviations:** Includes dedicated subtests for known
+ *   tricky variadic cases, such as passing floats/doubles on Windows x64 (which
+ *   requires them to be passed in both GPRs and XMM registers) and passing structs
+ *   on macOS on ARM (which has its own unique stack-passing rules).
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -42,23 +36,13 @@
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
-#include <stdarg.h>  // For va_list
-#include <stdio.h>   // For snprintf (used in older versions, header kept for reference)
-#include <string.h>  // For strcmp
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 
-// Native C Handlers and Functions
-
-/**
- * @brief A custom checker function to transparently validate variadic arguments.
- * @details This function replaces `snprintf` from previous tests. It accepts a
- * variadic argument list and uses the `double_tap` harness to `ok()` each
- * argument it receives. This provides precise feedback on which argument, if
- * any, is being passed incorrectly.
- * @return 1 on success (all checks passed), 0 on failure.
- */
 int forward_variadic_checker(char * buffer, size_t size, const char * format, ...) {
     (void)buffer;
-    (void)size;  // Unused, kept to match the test signature.
+    (void)size;
 
     va_list args;
     va_start(args, format);
@@ -73,7 +57,6 @@ int forward_variadic_checker(char * buffer, size_t size, const char * format, ..
     note("  int_arg = %d", int_arg);
     note("  dbl_arg = %.2f", dbl_arg);
 
-    // Use a subtest to check all arguments. This is thread-safe.
     subtest("Inside forward_variadic_checker") {
         plan(4);
         ok(strcmp(format, "format string") == 0, "Fixed arg 'format' is correct");
@@ -81,24 +64,16 @@ int forward_variadic_checker(char * buffer, size_t size, const char * format, ..
         ok(int_arg == 123, "Variadic arg 2 (int) is correct");
         ok(fabs(dbl_arg - 3.14) < 0.001, "Variadic arg 3 (double) is correct");
     }
-    // Return 1 only if all checks passed.
+
     return 1;
 }
 
-/**
- * @brief A custom checker for variadic aggregate arguments.
- * @details This function's behavior depends on the ABI.
- * - On System V, the struct is passed by value on the stack, and `va_arg`
- *   retrieves the struct directly.
- * - On Windows x64, a pointer to the struct is passed on the stack, so we
- *   must use `va_arg(args, Point*)` and dereference it.
- */
 int forward_variadic_aggregate_checker(int fixed_arg, ...) {
     va_list args;
     va_start(args, fixed_arg);
 
 #if defined(INFIX_ABI_WINDOWS_X64)
-    // Windows ABI: va_arg for a struct returns a pointer to it.
+
     NonPowerOfTwoStruct * s_ptr = va_arg(args, NonPowerOfTwoStruct *);
     note("Windows variadic checker received struct pointer: %p", (void *)s_ptr);
     if (s_ptr)
@@ -106,7 +81,7 @@ int forward_variadic_aggregate_checker(int fixed_arg, ...) {
     else
         fail("Received a null pointer for variadic struct on Windows x64");
 #else
-    // System V / AAPCS64 ABI: va_arg returns the struct itself.
+
     Point p = va_arg(args, Point);
     note("System V/AAPCS64 variadic checker received Point: {%.1f, %.1f}", p.x, p.y);
     ok(fabs(p.x - 10.5) < 1e-9 && fabs(p.y - 20.5) < 1e-9, "Variadic Point struct correct on SysV/AAPCS64");
@@ -115,7 +90,6 @@ int forward_variadic_aggregate_checker(int fixed_arg, ...) {
     return 1;
 }
 
-/** @brief A handler for a reverse trampoline with a variadic signature. */
 int variadic_reverse_handler(const char * topic, ...) {
     va_list args;
     va_start(args, topic);
@@ -135,12 +109,12 @@ int variadic_reverse_handler(const char * topic, ...) {
 }
 
 #if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
-// Test specific to macOS on ARM (Apple Silicon)
+
 typedef struct {
     long a;
     long b;
 } MacTestStruct;
-// This native function checks that variadic arguments were passed on the stack.
+
 int macos_variadic_checker(int fixed_arg, ...) {
     va_list args;
     va_start(args, fixed_arg);
@@ -157,7 +131,7 @@ int macos_variadic_checker(int fixed_arg, ...) {
 #endif
 
 #if defined(INFIX_ABI_WINDOWS_X64)
-// Test specific to the Windows x64 ABI
+
 double win_variadic_float_checker(int fixed_arg, ...) {
     va_list args;
     va_start(args, fixed_arg);
@@ -179,8 +153,8 @@ TEST {
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic forward trampoline created");
 
-        char buffer[1] = {0};  // Dummy buffer for signature match
-        size_t size = 1;       // Dummy size for signature match
+        char buffer[1] = {0};
+        size_t size = 1;
         const char * fmt = "format string";
         const char * str_arg = "hello";
         int int_arg = 123;
@@ -190,21 +164,19 @@ TEST {
 
         infix_unbound_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
         cif_func((void *)forward_variadic_checker, &result, args);
-        // The subtest inside the checker performs its own ok() calls, so we don't check the return value here.
-        // We just need to ensure the test plan in the outer scope is correct.
+
         pass("Custom variadic checker function was called.");
 
         infix_forward_destroy(trampoline);
     }
 
     subtest("Forward variadic call (aggregates)") {
-#if defined(INFIX_ABI_WINDOWS_X64)
         plan(3);
+#if defined(INFIX_ABI_WINDOWS_X64)
         note("Testing variadic NonPowerOfTwoStruct on Windows x64 (pass-by-reference)");
         const char * signature = "(int;{int,int,int}) -> int";
         NonPowerOfTwoStruct s = {1, 2, 3};
-#else  // SysV and AAPCS64
-        plan(3);
+#else
         note("Testing variadic Point struct on System V / AAPCS64 (pass-on-stack)");
         const char * signature = "(int;{double,double}) -> int";
         Point s = {10.5, 20.5};
@@ -246,8 +218,8 @@ TEST {
     }
 
     subtest("Platform ABI: macOS AArch64 variadic struct passing") {
-#if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
         plan(2);
+#if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
         note("Testing variadic call with struct argument on macOS/ARM (must go on stack)");
         const char * signature = "(int32; double, {int64, int64}) -> int32";
         infix_forward_t * trampoline = nullptr;
@@ -265,14 +237,13 @@ TEST {
 
         infix_forward_destroy(trampoline);
 #else
-        plan(1);
-        skip(1, "Test is only for macOS on AArch64");
+        skip(2, "Test is only for macOS on AArch64");
 #endif
     }
 
     subtest("Platform ABI: Windows x64 variadic float/double passing") {
-#if defined(INFIX_ABI_WINDOWS_X64)
         plan(2);
+#if defined(INFIX_ABI_WINDOWS_X64)
         note("Testing if a variadic double is passed correctly on Windows x64");
 
         const char * signature = "(int32; double) -> double";
@@ -289,8 +260,7 @@ TEST {
         ok(fabs(result - 123.45) < 0.001, "Windows variadic double passed correctly");
         infix_forward_destroy(trampoline);
 #else
-        plan(1);
-        skip(1, "Test is only for the Windows x64 ABI");
+        skip(2, "Test is only for the Windows x64 ABI");
 #endif
     }
 }

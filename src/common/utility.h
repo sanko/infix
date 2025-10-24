@@ -18,21 +18,24 @@
  * @ingroup internal_utils
  *
  * @internal
- * This header is the central point for the library's debugging infrastructure.
+ * This header is the central point for the library's internal debugging infrastructure.
  * Its primary feature is that it behaves differently based on the `INFIX_DEBUG_ENABLED`
  * preprocessor macro. This allows debugging code to be seamlessly integrated
  * during development without affecting the performance or size of the final
  * production binary.
  *
  * - **When `INFIX_DEBUG_ENABLED` is defined and non-zero (Debug Mode):**
- *   - It declares the `infix_dump_hex` function for memory inspection.
- *   - It defines `INFIX_DEBUG_PRINTF` to use the `note()` macro from the `double_tap`
- *     test harness (if available) or a standard `printf` fallback.
+ *   - It declares the `infix_dump_hex` function for detailed memory inspection.
+ *   - It defines the `INFIX_DEBUG_PRINTF` macro, which integrates with the `double_tap`
+ *     test harness's logging system (`note()`) if available, or falls back to a
+ *     standard `printf`. This allows debug messages from the core library to appear
+ *     cleanly within the test output.
  *
  * - **When `INFIX_DEBUG_ENABLED` is not defined or is zero (Release Mode):**
  *   - All debugging macros are defined as no-ops (`((void)0)`).
- *   - `infix_dump_hex` is defined as an empty `static inline` function.
- *   - This ensures all debugging code is completely compiled out by the optimizer.
+ *   - The `infix_dump_hex` function is defined as an empty `static inline` function.
+ *   - This design ensures that all debugging code and calls are completely compiled
+ *     out by the optimizer, resulting in zero overhead in release builds.
  * @endinternal
  */
 
@@ -51,7 +54,8 @@
  * @def INFIX_DEBUG_PRINTF(...)
  * @brief A macro for printing formatted debug messages during a debug build with the test harness.
  * @details In debug builds where `double_tap.h` is active, this macro wraps the `note()`
- *          macro, integrating debug output cleanly into the test logs.
+ *          macro, integrating debug output from the library's internals cleanly into the
+ *          TAP-formatted test logs.
  * @example
  * ```c
  * INFIX_DEBUG_PRINTF("Processing type %d with size %zu", type->id, type->size);
@@ -64,8 +68,9 @@
  * @internal
  * @def INFIX_DEBUG_PRINTF(...)
  * @brief A macro for printing formatted debug messages (printf fallback).
- * @details In debug builds where the `double_tap.h` harness is *not* active, this macro
- *          falls back to a standard `printf`, ensuring that debug messages are still visible.
+ * @details In debug builds where the `double_tap.h` harness is *not* active (e.g., when
+ *          building a standalone example program), this macro falls back to a standard
+ *          `printf`, ensuring that debug messages are still visible.
  */
 #define INFIX_DEBUG_PRINTF(...)                \
     do {                                       \
@@ -76,10 +81,11 @@
 
 /**
  * @internal
- * @brief Declares the function prototype for `infix_dump_hex` (debug builds only).
- * @details This function is invaluable for inspecting the raw machine code generated
- *          by the JIT compiler. It prints a detailed hexadecimal and ASCII dump of a
- *          memory region to the standard output, formatted for readability.
+ * @brief Declares the function prototype for `infix_dump_hex` for use in debug builds.
+ * @details This function is an invaluable tool for inspecting the raw machine code generated
+ *          by the JIT compiler or examining the memory layout of complex structs. It prints
+ *          a detailed hexadecimal and ASCII dump of a memory region to the standard
+ *          output, formatted for readability.
  *
  * @param data A pointer to the start of the memory block to dump.
  * @param size The number of bytes to dump.
@@ -101,12 +107,13 @@ void infix_dump_hex(const void * data, size_t size, const char * title);
 
 /**
  * @internal
- * @brief A no-op version of `infix_dump_hex` for release builds.
+ * @brief A no-op version of `infix_dump_hex` for use in release builds.
  * @details This function is defined as an empty `static inline` function.
  *          - `static`: Prevents linker errors if this header is included in multiple files.
  *          - `inline`: Suggests to the compiler that the function body is empty,
  *            allowing it to completely remove any calls to this function at the call site.
- *          - `c23_maybe_unused`: Suppresses compiler warnings about unused parameters.
+ *          - `c23_maybe_unused`: Suppresses compiler warnings about the parameters
+ *            being unused in this empty implementation.
  *
  * @param data Unused in release builds.
  * @param size Unused in release builds.
@@ -115,6 +122,6 @@ void infix_dump_hex(const void * data, size_t size, const char * title);
 static inline void infix_dump_hex(c23_maybe_unused const void * data,
                                   c23_maybe_unused size_t size,
                                   c23_maybe_unused const char * title) {
-    // This function does nothing in release builds and will be optimized away.
+    // This function does nothing in release builds and will be optimized away entirely.
 }
 #endif  // INFIX_DEBUG_ENABLED

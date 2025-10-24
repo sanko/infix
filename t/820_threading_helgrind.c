@@ -1,58 +1,43 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 820_threading_helgrind.c
- * @brief A cross-platform test for thread-safety issues using Valgrind's Helgrind tool
- *        or other thread sanitizers.
+ * @brief A stress test to detect data races and other threading issues.
+ * @ingroup test_suite
  *
- * @details This test is designed to be run specifically under thread analysis tools.
- * It creates multiple threads that concurrently generate, use, and destroy FFI
- * reverse trampolines (callbacks). The tool will analyze the execution for
- * potential data races and other synchronization errors in the underlying library code.
+ * @details This test is designed to be run with a thread sanitizer tool, such as
+ * Valgrind's Helgrind or GCC/Clang's `-fsanitize=thread` (TSan). Its purpose is to
+ * verify that the `infix` library's use of thread-local storage (TLS) for error
+ * handling and other contexts is correct and free of data races.
  *
- * This version of the test is structured to be free of data races in the test
- * code itself. All reporting is done by the main thread after all worker threads
- * have completed. Therefore, a successful run should produce ZERO errors from the
- * analysis tool. Any reported error indicates a genuine thread-safety bug within the
- * infix library.
+ * The test spawns multiple threads, and each thread independently runs a tight loop
+ * of creating, using, and destroying `infix` trampolines.
+ *
+ * A "pass" for this test is not just that the program completes successfully, but
+ * that the thread sanitizer tool reports zero data races or other synchronization
+ * errors. This is critical for ensuring that `infix` is safe to use in multi-threaded
+ * applications.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
-#include "common/infix_config.h"  // Include the internal platform detection logic.
+#include "common/infix_config.h"
 #include <infix/infix.h>
-#include <stdbool.h>  // For bool type
+#include <stdbool.h>
 
-// Platform-specific headers and definitions for threading
 #if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else
 #include <pthread.h>
-#include <stdint.h>  // For intptr_t
+#include <stdint.h>
 #endif
 
 #define NUM_THREADS 8
 #define ITERATIONS_PER_THREAD 500
 
-// A simple C callback function. It does nothing, as its purpose is just to be a valid call target.
 void helgrind_test_handler(int a, int b) {
     (void)a;
     (void)b;
 }
 
-// The main function that will be executed by each worker thread.
-// It returns a status code (0 for success, 1 for failure) in a platform-agnostic way.
 #if defined(INFIX_OS_WINDOWS)
 DWORD WINAPI helgrind_thread_worker(LPVOID arg) {
 #else
@@ -60,7 +45,6 @@ void * helgrind_thread_worker(void * arg) {
 #endif
     (void)arg;
 
-    // Define the FFI types for the callback signature: void(int, int)
     infix_type * ret_type = infix_type_create_void();
     infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                 infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
@@ -69,27 +53,23 @@ void * helgrind_thread_worker(void * arg) {
     for (int i = 0; i < ITERATIONS_PER_THREAD; ++i) {
         infix_reverse_t * rt = nullptr;
 
-        // Generate the reverse trampoline. This is a critical area for thread-safety.
         infix_status status =
             infix_reverse_create_callback_manual(&rt, ret_type, arg_types, 2, 2, (void *)helgrind_test_handler);
         if (status != INFIX_SUCCESS)
-// Return a failure status that the main thread can check.
+
 #if defined(_WIN32)
             return 1;
 #else
             return (void *)(intptr_t)1;
 #endif
 
-        // Get and invoke the callable function pointer.
         my_func_ptr callable_func = (my_func_ptr)infix_reverse_get_code(rt);
         if (callable_func)
             callable_func(i, i + 1);
 
-        // Destroy the reverse trampoline. This is also a critical area for thread-safety.
         infix_reverse_destroy(rt);
     }
 
-    // Return a success status.
 #if defined(INFIX_OS_WINDOWS)
     return 0;
 #else
@@ -137,7 +117,7 @@ TEST {
             }
             CloseHandle(threads[i]);
         }
-#else  // POSIX
+#else
         pthread_t threads[NUM_THREADS] = {0};
         for (int i = 0; i < NUM_THREADS; ++i) {
             if (pthread_create(&threads[i], nullptr, helgrind_thread_worker, nullptr) != 0) {

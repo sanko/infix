@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](https://github.com/sanko/infix/actions/workflows/ci.yml) ([Matrix](#supported-platforms))
 
-`infix` is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It simplifies the process of calling native C functions from other environments and creating C-callable function pointers from your own handlers. All with a simple, human-readable string like `({int, *double}, *char) -> int`.
+`infix` is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It solves the complex problem of calling native functions across language boundaries, replacing brittle, hand-written binding code with a simple, human-readable signature string like `({int, *double}, *char) -> int`.
 
 At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code "trampolines" at runtime. These trampolines correctly handle the low-level Application Binary Interface (ABI) for the target platform, ensuring seamless and performant interoperability.
 

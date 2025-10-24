@@ -1,37 +1,43 @@
 /**
- * Copyright (c) 2025 Sanko Robinson
- *
- * This source code is dual-licensed under the Artistic License 2.0 or the MIT License.
- * You may choose to use this code under the terms of either license.
- *
- * SPDX-License-Identifier: (Artistic-2.0 OR MIT)
- *
- * The documentation blocks within this file are licensed under the
- * Creative Commons Attribution 4.0 International License (CC BY 4.0).
- *
- * SPDX-License-Identifier: CC-BY-4.0
- */
-/**
  * @file 005_layouts.c
- * @brief Tests the correctness of the ABI-aware layout calculation for aggregates.
+ * @brief Unit test for the Manual API's struct and union layout calculations.
+ * @ingroup test_suite
+ *
+ * @details This test file verifies that the layout algorithms in `types.c` (specifically
+ * `infix_type_create_struct` and `infix_type_create_union`) produce memory layouts
+ * that are identical to those produced by the host C compiler.
+ *
+ * It defines several native C `struct` and `union` types and then programmatically
+ * creates their `infix_type` equivalents. It then asserts that the `size`, `alignment`,
+ * and member `offset` fields of the generated types match the results of the `sizeof`,
+ * `_Alignof`, and `offsetof` operators on the native types.
+ *
+ * The test covers:
+ * - A struct with standard internal padding.
+ * - A struct with no padding.
+ * - A struct containing a nested struct.
+ * - A packed struct (`#pragma pack(1)`).
+ * - A union with members of different sizes and alignments.
+ *
+ * This test is crucial for ensuring that `infix` can correctly and portably reason
+ * about the memory representation of C data structures.
  */
 
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
-#include <stddef.h>  // For offsetof
+#include <stddef.h>
 
-// A series of native C structs to serve as the ground truth for our tests.
+// Native C types to use as a baseline for layout comparison
 
 typedef struct {
-    char a;  // size 1, align 1
-    // 3 bytes padding
-    int b;  // size 4, align 4
+    char a;
+    int b;
 } test_struct_padding;
 
 typedef struct {
-    long long a;  // size 8, align 8
-    char b;       // size 1, align 1
+    long long a;
+    char b;
 } test_struct_no_padding;
 
 typedef struct {
@@ -80,10 +86,8 @@ TEST {
 
     subtest("Struct with no padding") {
         plan(5);
-
         infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 0},
                                          {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0}};
-
         infix_type * type = nullptr;
         infix_status status = infix_type_create_struct(arena, &type, members, 2);
 
@@ -101,12 +105,14 @@ TEST {
     subtest("Nested struct") {
         plan(4);
 
+        // First, create the inner struct type.
         infix_struct_member inner_members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
                                                {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0}};
         infix_type * inner_type = nullptr;
         infix_status inner_status = infix_type_create_struct(arena, &inner_type, inner_members, 2);
         ok(inner_status == INFIX_SUCCESS, "Inner struct creation should succeed");
 
+        // Then, create the outer struct type that contains the inner one.
         infix_type * outer_type = nullptr;
         if (inner_type) {
             infix_struct_member outer_members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
@@ -128,6 +134,7 @@ TEST {
     subtest("Packed struct (pack 1)") {
         plan(3);
 
+        // For packed structs, we must provide the pre-calculated offsets.
         infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
                                          {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 1}};
 
@@ -146,7 +153,6 @@ TEST {
 
     subtest("Union layout") {
         plan(4);
-
         infix_type * char_array = nullptr;
         infix_status array_status =
             infix_type_create_array(arena, &char_array, infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 12);

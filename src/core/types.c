@@ -11,36 +11,51 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
+
 /**
  * @file types.c
  * @brief Implements the public API for creating and managing type descriptions.
- * @ingroup type_system
+ * @ingroup internal_core
  *
- * @internal
- * This file contains the definitions for the public API functions that create `infix_type`
- * objects. It defines static, singleton instances for all primitive C types to avoid
- * unnecessary allocations for common cases. It also provides the logic for dynamically
- * creating complex aggregate types like structs, unions, and arrays from a memory arena.
+ * @details This module serves two primary functions:
+ * 1.  It provides the public functions for programmatically constructing `infix_type`
+ *     objects (the "Manual API"). These functions are the building blocks for
+ *     users who need to create type information dynamically without parsing strings.
+ * 2.  It contains the crucial internal logic for two core stages of the data pipeline:
+ *     - **Copying (`_copy_type_graph_to_arena`):** Deep-copies a type graph to a
+ *       new memory arena, which is fundamental to creating self-contained trampoline
+ *       objects and ensuring memory safety.
+ *     - **Layout (`_infix_type_recalculate_layout`):** Traverses a fully resolved
+ *       type graph to compute the final memory layout (size, alignment, and offsets)
+ *       of all structures and unions.
  *
- * The functions here are responsible for correctly calculating the size and alignment
- * of these types according to standard C layout rules, which is fundamental to ensuring
- * ABI compliance. A key design principle is security: the functions that create dynamic types
- * (`infix_type_create_struct`, `_union`, `_array`) are hardened against integer
- * overflows from potentially malicious input.
- * @endinternal
+ * The creation functions (`infix_type_create_*`) perform an initial, preliminary layout
+ * calculation. This layout is considered unresolved until a final pass with
+ * `_infix_type_recalculate_layout` is performed after all named types have been
+ * resolved by the type registry.
  */
 
 #include "common/infix_internals.h"
 #include "common/utility.h"
-#include <limits.h>  // For SIZE_MAX
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Static Singleton Instances for Primitive Types
-/*
- * Helper macro to initialize a static `infix_type` for a primitive.
- * This ensures size and alignment are correct for the compilation target at compile time.
+// Static Descriptors for Primitive and Built-in Types
+
+/**
+ * @internal
+ * @def INFIX_TYPE_INIT
+ * @brief A macro to statically initialize a primitive `infix_type` descriptor.
+ *
+ * @details This macro ensures that all primitive type descriptors are initialized
+ * correctly at compile time with their `sizeof` and `_Alignof` values from the
+ * compiler. They are marked with `is_arena_allocated = false` to signify that
+ * they are static singletons. This has two important consequences:
+ * 1. They can be returned directly by API functions without requiring allocation.
+ * 2. They serve as the essential base case for the recursive `_copy_type_graph_to_arena`
+ *    algorithm, which stops recursing when it encounters a non-arena-allocated type.
  */
 #define INFIX_TYPE_INIT(id, T)         \
     {.category = INFIX_TYPE_PRIMITIVE, \
@@ -49,50 +64,68 @@
      .is_arena_allocated = false,      \
      .meta.primitive_id = id}
 
-/*
- * These statically allocated singletons are a performance optimization. They avoid
- * dynamic allocation for common types and simplify memory management for the user,
- * as they do not need to be freed.
+/**
+ * @internal
+ * @var _infix_type_void
+ * @brief Static singleton descriptor for the `void` type.
  */
 static infix_type _infix_type_void = {
     .category = INFIX_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .meta = {0}};
 
+/**
+ * @internal
+ * @var _infix_type_pointer
+ * @brief Static singleton descriptor for a generic pointer (`void*`).
+ */
 static infix_type _infix_type_pointer = {.category = INFIX_TYPE_POINTER,
                                          .size = sizeof(void *),
                                          .alignment = _Alignof(void *),
                                          .is_arena_allocated = false,
                                          .meta.pointer_info = {.pointee_type = &_infix_type_void}};
 
+/** @internal Static singleton for the `bool` primitive type. */
 static infix_type _infix_type_bool = INFIX_TYPE_INIT(INFIX_PRIMITIVE_BOOL, bool);
+/** @internal Static singleton for the `uint8_t` primitive type. */
 static infix_type _infix_type_uint8 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT8, uint8_t);
+/** @internal Static singleton for the `int8_t` primitive type. */
 static infix_type _infix_type_sint8 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT8, int8_t);
+/** @internal Static singleton for the `uint16_t` primitive type. */
 static infix_type _infix_type_uint16 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT16, uint16_t);
+/** @internal Static singleton for the `int16_t` primitive type. */
 static infix_type _infix_type_sint16 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT16, int16_t);
+/** @internal Static singleton for the `uint32_t` primitive type. */
 static infix_type _infix_type_uint32 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT32, uint32_t);
+/** @internal Static singleton for the `int32_t` primitive type. */
 static infix_type _infix_type_sint32 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT32, int32_t);
+/** @internal Static singleton for the `uint64_t` primitive type. */
 static infix_type _infix_type_uint64 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT64, uint64_t);
+/** @internal Static singleton for the `int64_t` primitive type. */
 static infix_type _infix_type_sint64 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT64, int64_t);
 #if !defined(INFIX_COMPILER_MSVC)
-// 128-bit integers are a non-standard GCC/Clang extension.
+/** @internal Static singleton for the `__uint128_t` primitive type (GCC/Clang only). */
 static infix_type _infix_type_uint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT128, __uint128_t);
+/** @internal Static singleton for the `__int128_t` primitive type (GCC/Clang only). */
 static infix_type _infix_type_sint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT128, __int128_t);
 #endif
+/** @internal Static singleton for the `float` primitive type. */
 static infix_type _infix_type_float = INFIX_TYPE_INIT(INFIX_PRIMITIVE_FLOAT, float);
+/** @internal Static singleton for the `double` primitive type. */
 static infix_type _infix_type_double = INFIX_TYPE_INIT(INFIX_PRIMITIVE_DOUBLE, double);
-
-// Only define a separate long double type if it's distinct from double on the target platform.
 #if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
     defined(INFIX_OS_MACOS)
-// On these platforms, long double is an alias for double.
+// On these platforms, long double is just an alias for double, so no separate singleton is needed.
 #else
+/** @internal Static singleton for the `long double` primitive type (where it is distinct from `double`). */
 static infix_type _infix_type_long_double = INFIX_TYPE_INIT(INFIX_PRIMITIVE_LONG_DOUBLE, long double);
 #endif
 
-/*
- * Implementation for infix_type_create_primitive.
- * This acts as a factory, returning a pointer to one of the static singletons.
- * It correctly handles platform-specific ABI differences, such as when `long double`
- * is just an alias for `double`.
+// Public API: Type Creation Functions
+
+/**
+ * @brief Creates a static descriptor for a primitive C type.
+ * @param[in] id The `infix_primitive_type_id` of the desired primitive type.
+ * @return A pointer to the corresponding static `infix_type` singleton descriptor. This pointer does not need to be
+ * freed.
  */
 c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id id) {
     switch (id) {
@@ -125,50 +158,63 @@ c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id i
     case INFIX_PRIMITIVE_DOUBLE:
         return &_infix_type_double;
     case INFIX_PRIMITIVE_LONG_DOUBLE:
-// On MSVC, Clang-for-Windows, and all Apple platforms, long double is just an alias for double.
-// Return the canonical double type to ensure correct ABI handling.
 #if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
     defined(INFIX_OS_MACOS)
+        // On platforms where long double is just an alias for double, return the double singleton
+        // to maintain consistent type representation.
         return &_infix_type_double;
 #else
         return &_infix_type_long_double;
 #endif
     default:
+        // Return null for any invalid primitive ID.
         return nullptr;
     }
 }
 
-/*
- * Implementation for infix_type_create_pointer.
- * Returns a pointer to the static singleton instance describing `void*`.
+/**
+ * @brief Creates a static descriptor for a generic pointer (`void*`).
+ * @return A pointer to the static `infix_type` descriptor. Does not need to be freed.
  */
 c23_nodiscard infix_type * infix_type_create_pointer(void) {
     return &_infix_type_pointer;
 }
 
-/*
- * Implementation for infix_type_create_void.
- * Returns a pointer to the static singleton instance describing the `void` type.
+/**
+ * @brief Creates a static descriptor for the `void` type.
+ * @return A pointer to the static `infix_type` descriptor. Does not need to be freed.
  */
 c23_nodiscard infix_type * infix_type_create_void(void) {
     return &_infix_type_void;
 }
 
-/*
- * Implementation for infix_type_create_member.
- * This is a simple helper function for creating an `infix_struct_member` value.
+/**
+ * @brief A factory function to create an `infix_struct_member`.
+ * @param[in] name The name of the member (optional, can be `nullptr`).
+ * @param[in] type The `infix_type` of the member.
+ * @param[in] offset The byte offset of the member from the start of its parent aggregate.
+ * @return An initialized `infix_struct_member` object.
  */
 infix_struct_member infix_type_create_member(const char * name, infix_type * type, size_t offset) {
     return (infix_struct_member){name, type, offset};
 }
 
-/*
+/**
  * @internal
- * This is a common setup function for creating any aggregate type (struct or union)
- * from an arena. It handles argument validation, allocates the main `infix_type`
- * struct, and crucially, copies the user-provided `members` array into the arena.
- * This copy makes the final `infix_type` object self-contained and immune to use-after-free
- * bugs if the original `members` array was stack-allocated.
+ * @brief Common setup logic for creating aggregate types (structs and unions).
+ *
+ * This helper function reduces code duplication by handling the common tasks of:
+ * 1. Validating that member types are not null.
+ * 2. Allocating the main `infix_type` object from the arena.
+ * 3. Allocating a new array for the members within the arena and copying the
+ *    user-provided member data into it.
+ *
+ * @param[in] arena The arena to allocate from.
+ * @param[out] out_type The output pointer for the new `infix_type`.
+ * @param[out] out_arena_members The output pointer for the newly copied members array.
+ * @param[in] members The user-provided array of members.
+ * @param[in] num_members The number of members in the array.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 static infix_status _create_aggregate_setup(infix_arena_t * arena,
                                             infix_type ** out_type,
@@ -177,22 +223,19 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
                                             size_t num_members) {
     if (out_type == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    // Validate that all member types are non-null before proceeding.
+    // Pre-flight check: ensure all provided member types are valid.
     for (size_t i = 0; i < num_members; ++i) {
         if (members[i].type == nullptr) {
             *out_type = nullptr;
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
     }
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
-    // Copy the caller's member data into the arena to make this type object self-contained.
     infix_struct_member * arena_members = nullptr;
     if (num_members > 0) {
         arena_members =
@@ -202,54 +245,46 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
         infix_memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
-        // Deep copy the member names to make the type fully self-contained.
-        for (size_t i = 0; i < num_members; ++i) {
-            const char * src_name = members[i].name;
-            if (src_name) {
-                size_t name_len = strlen(src_name) + 1;
-                char * dest_name = infix_arena_alloc(arena, name_len, 1);
-                if (!dest_name) {
-                    *out_type = nullptr;
-                    return INFIX_ERROR_ALLOCATION_FAILED;
-                }
-                infix_memcpy(dest_name, src_name, name_len);
-                arena_members[i].name = dest_name;
-            }
-        }
     }
-
     *out_type = type;
     *out_arena_members = arena_members;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_pointer_to.
- * Creates a pointer type that retains introspection information about its pointee.
+/**
+ * @brief Creates a new pointer type that points to a specific type.
+ * @param[in] arena The arena to allocate the new type object in.
+ * @param[out] out_type A pointer to receive the created `infix_type`.
+ * @param[in] pointee_type The `infix_type` that the new pointer will point to.
+ * @return `INFIX_SUCCESS` on success, or an error code on allocation failure.
  */
 c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
                                                         infix_type ** out_type,
                                                         infix_type * pointee_type) {
     if (!out_type || !pointee_type)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
-    *type = *infix_type_create_pointer();  // Copy base properties from the void* singleton
+    // Start by copying the layout of a generic pointer.
+    *type = *infix_type_create_pointer();
+    // Mark it as arena-allocated so it can be deep-copied and freed correctly.
     type->is_arena_allocated = true;
+    // Set the specific pointee type.
     type->meta.pointer_info.pointee_type = pointee_type;
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_array.
- * Calculates array layout, including a critical security check to prevent integer
- * overflow when calculating the total size from untrusted inputs (e.g., a fuzzer).
+/**
+ * @brief Creates a new fixed-size array type.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] element_type The type of each element in the array.
+ * @param[in] num_elements The number of elements.
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
                                                    infix_type ** out_type,
@@ -257,99 +292,95 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
                                                    size_t num_elements) {
     if (out_type == nullptr || element_type == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    // Security: Check for integer overflow before calculating the total array size.
+    // Harden against integer overflow when calculating total size.
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
         *out_type = nullptr;
         _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_ARRAY;
     type->meta.array_info.element_type = element_type;
     type->meta.array_info.num_elements = num_elements;
+    // An array's alignment is the same as its element's alignment.
     type->alignment = element_type->alignment;
     type->size = element_type->size * num_elements;
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_enum.
- * For ABI purposes, an enum is just a wrapper around its underlying integer type.
+/**
+ * @brief Creates a new enum type with a specified underlying integer type.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] underlying_type The integer `infix_type` (e.g., from
+ * `infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)`).
+ * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_INVALID_ARGUMENT` if the underlying type is not an integer.
  */
 c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
                                                   infix_type ** out_type,
                                                   infix_type * underlying_type) {
     if (out_type == nullptr || underlying_type == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    // Enums must be based on an integer type.
+    // Enums must have an integer base type.
     if (underlying_type->category != INFIX_TYPE_PRIMITIVE ||
         underlying_type->meta.primitive_id > INFIX_PRIMITIVE_SINT128) {
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
-    INFIX_DEBUG_PRINTF("Created struct type. Size: %llu, Alignment: %llu",
-                       (unsigned long long)type->size,
-                       (unsigned long long)type->alignment);
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_ENUM;
+    // An enum has the same memory layout as its underlying integer type.
     type->size = underlying_type->size;
     type->alignment = underlying_type->alignment;
     type->meta.enum_info.underlying_type = underlying_type;
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_complex.
- * A complex number is laid out in memory as two contiguous floating-point values.
+/**
+ * @brief Creates a new `_Complex` number type.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] base_type The base floating-point type (`float` or `double`).
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
                                                      infix_type ** out_type,
                                                      infix_type * base_type) {
-    if (out_type == nullptr || base_type == nullptr)
+    if (out_type == nullptr || base_type == nullptr || (!is_float(base_type) && !is_double(base_type)))
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    // A complex number must be based on a float or double.
-    if (!is_float(base_type) && !is_double(base_type))
-        return INFIX_ERROR_INVALID_ARGUMENT;
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_COMPLEX;
+    // A complex number is simply two floating-point numbers back-to-back.
     type->size = base_type->size * 2;
     type->alignment = base_type->alignment;
     type->meta.complex_info.base_type = base_type;
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_vector.
- * Calculates vector layout, including overflow checks.
+/**
+ * @brief Creates a new SIMD vector type.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] element_type The primitive type of each element.
+ * @param[in] num_elements The number of elements in the vector.
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * arena,
                                                     infix_type ** out_type,
@@ -357,37 +388,36 @@ c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * arena,
                                                     size_t num_elements) {
     if (out_type == nullptr || element_type == nullptr || element_type->category != INFIX_TYPE_PRIMITIVE)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    // Security: Check for integer overflow before calculating the total vector size.
+    // Harden against integer overflow.
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_VECTOR;
     type->meta.vector_info.element_type = element_type;
     type->meta.vector_info.num_elements = num_elements;
-    // A vector's size is the total size of its elements.
     type->size = element_type->size * num_elements;
-    // Common ABIs require 128-bit vectors to be 16-byte aligned.
-    // We will enforce this alignment, as it's the strictest requirement.
+    // Vector alignment is typically its total size, up to a platform-specific maximum (e.g., 16 on x64).
+    // This is a simplification; the ABI-specific classifiers will handle the true alignment rules.
     type->alignment = type->size > 8 ? 16 : type->size;
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_union.
- * This function calculates the size and alignment for a union according to standard
- * C layout rules: size is the max member size (padded), alignment is the max member alignment.
+/**
+ * @brief Creates a new union type from an array of members.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] members An array of `infix_struct_member` describing the union's members.
+ * @param[in] num_members The number of members.
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
                                                    infix_type ** out_type,
@@ -400,47 +430,41 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
         *out_type = nullptr;
         return status;
     }
-
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_UNION;
-    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous union
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
+    // A union's size is the size of its largest member, and its alignment is the
+    // alignment of its most-aligned member.
     size_t max_size = 0;
     size_t max_alignment = 1;
-
-    // A union's size is determined by its largest member, and its alignment
-    // by the strictest alignment of any member.
     for (size_t i = 0; i < num_members; ++i) {
-        arena_members[i].offset = 0;  // All union members are at offset 0.
+        arena_members[i].offset = 0;  // All union members have an offset of 0.
         if (arena_members[i].type->size > max_size)
             max_size = arena_members[i].type->size;
         if (arena_members[i].type->alignment > max_alignment)
             max_alignment = arena_members[i].type->alignment;
     }
     type->alignment = max_alignment;
-
-    // The final size is the size of the largest member, rounded up to a
-    // multiple of the union's overall alignment.
+    // The total size is the size of the largest member, padded up to the required alignment.
     type->size = _infix_align_up(max_size, max_alignment);
-    if (type->size < max_size) {  // Overflow check
+    // Overflow check
+    if (type->size < max_size) {
         *out_type = nullptr;
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
-    INFIX_DEBUG_PRINTF("Created arena union type. Size: %llu, Alignment: %llu",
-                       (unsigned long long)type->size,
-                       (unsigned long long)type->alignment);
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_struct.
- * This function calculates the size and alignment of the struct based on its
- * members, adhering to standard C layout and padding rules.
+/**
+ * @brief Creates a new struct type from an array of members, calculating layout automatically.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] members An array of `infix_struct_member` describing the struct's members. The `offset` field is ignored.
+ * @param[in] num_members The number of members in the array.
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
                                                     infix_type ** out_type,
@@ -454,67 +478,71 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
         *out_type = nullptr;
         return status;
     }
-
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_STRUCT;
-    type->meta.aggregate_info.name = nullptr;  // Initialize name for anonymous struct
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
 
+    // This performs a preliminary layout calculation based on standard C packing rules.
+    // Note: This layout may be incomplete if it contains unresolved named references.
+    // The final, correct layout will be computed by `_infix_type_recalculate_layout`.
     size_t current_offset = 0;
-    size_t max_alignment = 1;  // Empty structs have an alignment of 1.
-
-    // Calculate layout based on the safe, arena-allocated copy of members.
+    size_t max_alignment = 1;
     for (size_t i = 0; i < num_members; ++i) {
         infix_struct_member * member = &arena_members[i];
         size_t member_align = member->type->alignment;
 
+        // An unresolved named reference will have alignment 0 or 1. If it's 0, we treat it as 1 for
+        // this preliminary pass to avoid division by zero. The real alignment will be fixed later.
         if (member_align == 0) {
-            *out_type = nullptr;
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            if (member->type->category != INFIX_TYPE_NAMED_REFERENCE) {
+                // A zero-alignment type that isn't a named reference is invalid (e.g., a struct with a void member).
+                *out_type = nullptr;
+                return INFIX_ERROR_INVALID_ARGUMENT;
+            }
+            member_align = 1;
         }
 
-        // Align the current offset for this member.
+        // Align the current offset up to the boundary required by the current member.
         size_t aligned_offset = _infix_align_up(current_offset, member_align);
-
-        // Security: Check for integer overflow during alignment.
-        if (aligned_offset < current_offset) {
+        if (aligned_offset < current_offset) {  // Overflow check
             *out_type = nullptr;
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
         current_offset = aligned_offset;
         member->offset = current_offset;
 
-        // Security: Check for integer overflow before adding the member's size.
-        if (current_offset > SIZE_MAX - member->type->size) {
+        // Add the member's size to the current offset.
+        if (current_offset > SIZE_MAX - member->type->size) {  // Overflow check
             *out_type = nullptr;
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
         current_offset += member->type->size;
-
+        // Keep track of the largest alignment requirement.
         if (member_align > max_alignment)
             max_alignment = member_align;
     }
-
+    // A struct's alignment is the alignment of its most-aligned member.
     type->alignment = max_alignment;
-
-    // The final size is the calculated offset rounded up to the nearest multiple
-    // of the struct's overall alignment to account for trailing padding.
+    // The struct's total size is its occupied space, padded up to its alignment.
     type->size = _infix_align_up(current_offset, max_alignment);
-    // Security: Check for overflow during final alignment.
-    if (type->size < current_offset) {
+    if (type->size < current_offset) {  // Overflow check
         *out_type = nullptr;
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_packed_struct.
- * This variant does not calculate layout; it trusts the user-provided size, alignment,
- * and member offsets, which is necessary for non-standard packed layouts.
+/**
+ * @brief Creates a new packed struct type with a user-specified layout.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] total_size The total size of the packed struct in bytes.
+ * @param[in] alignment The alignment requirement of the struct (e.g., 1 for `#pragma pack(1)`).
+ * @param[in] members An array of `infix_struct_member` with pre-calculated offsets.
+ * @param[in] num_members The number of members.
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena,
                                                            infix_type ** out_type,
@@ -524,14 +552,11 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
                                                            size_t num_members) {
     if (out_type == nullptr || (num_members > 0 && members == nullptr) || alignment == 0)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
-    // Copy the caller's member data into the arena to make the type self-contained.
     infix_struct_member * arena_members = nullptr;
     if (num_members > 0) {
         arena_members =
@@ -542,23 +567,26 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
         }
         infix_memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
     }
-
     type->is_arena_allocated = true;
     type->size = total_size;
     type->alignment = alignment;
-    type->category = INFIX_TYPE_STRUCT;
-    type->meta.aggregate_info.name = nullptr;  // Packed structs are anonymous by default via this API
+    type->category = INFIX_TYPE_STRUCT;  // Packed structs are still fundamentally structs.
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
-/*
- * Implementation for infix_type_create_named_reference.
- * Creates a placeholder for a type that is referenced by name but not yet defined.
- * A type graph containing this node cannot be used to generate a trampoline.
+/**
+ * @brief Creates a placeholder for a named type that will be resolved later by a type registry.
+ * @details This is a key component for defining recursive or mutually-dependent types.
+ * The created type has a size and alignment of 0/1, which are updated during the
+ * "Resolve" and "Layout" stages of the pipeline.
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] name The name of the type (e.g., "MyStruct").
+ * @param[in] agg_cat The expected category of the aggregate (struct or union).
+ * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * arena,
                                                              infix_type ** out_type,
@@ -566,14 +594,12 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
                                                              infix_aggregate_category_t agg_cat) {
     if (out_type == nullptr || name == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
-    infix_type * type = infix_arena_alloc(arena, sizeof(infix_type), _Alignof(infix_type));
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
-    // Allocate a copy of the name into the arena to make the type self-contained.
+    // The name must be copied into the arena to ensure its lifetime matches the type's.
     size_t name_len = strlen(name) + 1;
     char * arena_name = infix_arena_alloc(arena, name_len, 1);
     if (arena_name == nullptr) {
@@ -581,48 +607,248 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     infix_memcpy(arena_name, name, name_len);
-
     type->is_arena_allocated = true;
     type->category = INFIX_TYPE_NAMED_REFERENCE;
-    // References are conceptual placeholders. Give them a minimal valid alignment
-    // so that they can be stored as members in aggregates without causing
-    // layout calculation errors in the parser. The FFI core will reject any
-    // attempt to generate a trampoline from a type graph containing this type.
-    type->size = 0;
-    type->alignment = 1;
+    type->size = 0;       // Size and alignment are unknown until resolution.
+    type->alignment = 1;  // Default to 1 to be safe in preliminary layout calculations.
     type->meta.named_reference.name = arena_name;
     type->meta.named_reference.aggregate_category = agg_cat;
-
     *out_type = type;
     return INFIX_SUCCESS;
 }
 
+// Internal Type Graph Management
+
 /**
  * @internal
- * @brief Recursively performs a deep copy of an `infix_type` object graph.
- * @details This function is the core of making trampolines self-contained. It walks a type
- *          graph and duplicates it in the destination arena. This prevents use-after-free
- *          errors if the user destroys the original arena used to create the types.
- * @param dest_arena The destination arena to copy the type graph into.
- * @param src_type The source type to copy.
- * @return A pointer to the newly-copied type, or `nullptr` on allocation failure.
+ * @struct recalc_visited_node_t
+ * @brief A node for a visited-list to prevent infinite recursion on cyclic types during layout calculation.
+ *
+ * @details This is a temporary structure, typically allocated on the main thread's heap,
+ * used during the layout recalculation process (`_infix_type_recalculate_layout_recursive`).
+ * It forms a singly-linked list that acts as a "visited set" for a depth-first
+ * traversal of the type graph. Its purpose is to detect and correctly handle cycles
+ * in type definitions (e.g., `struct Node { struct Node* next; };`) and prevent
+ * a stack overflow from infinite recursion.
  */
-infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type) {
+typedef struct recalc_visited_node_t {
+    infix_type * type; /**< The `infix_type` object that has been visited during the current traversal path. */
+    struct recalc_visited_node_t * next; /**< A pointer to the next node in the visited list. */
+} recalc_visited_node_t;
+
+/**
+ * @internal
+ * @brief Recursively recalculates the size, alignment, and member offsets for a type graph.
+ *
+ * This function is the implementation of the **"Layout"** stage of the
+ * "Parse -> Copy -> Resolve -> Layout" data pipeline. It is designed to be called
+ * *after* a type graph has been fully resolved, ensuring that all
+ * `INFIX_TYPE_NAMED_REFERENCE` nodes have been replaced with concrete types.
+ *
+ * The function performs a **post-order traversal** of the type graph. This is critical,
+ * as it ensures that the layout of nested types (like a struct member) is correctly
+ * calculated *before* the layout of the parent container that depends on it.
+ *
+ * It correctly handles cyclic graphs by using a `visited_head` linked list to track
+ * nodes currently in the recursion stack, preventing infinite loops.
+ *
+ * @param[in,out] type The `infix_type` object to recalculate. Its `size`, `alignment`, and
+ *        (if applicable) member `offset` fields are modified in-place. The function
+ *        does nothing if `type` is `nullptr` or a static primitive (`is_arena_allocated` is false).
+ * @param[in,out] visited_head A pointer to the head of the visited list for cycle detection.
+ *        The list is modified during the traversal.
+ */
+static void _infix_type_recalculate_layout_recursive(infix_type * type, recalc_visited_node_t ** visited_head) {
+    if (!type || !type->is_arena_allocated)
+        return;  // Base case: Don't modify static singleton types.
+
+    // Cycle detection: If we have already visited this node in the current recursion
+    // path, we are in a cycle. Return immediately to break the loop. The layout of
+    // this node will be calculated when the recursion unwinds to its first visit.
+    for (recalc_visited_node_t * v = *visited_head; v != nullptr; v = v->next) {
+        if (v->type == type)
+            return;
+    }
+    // Add this node to the visited list before recursing into its children.
+    recalc_visited_node_t * visited_node = infix_malloc(sizeof(recalc_visited_node_t));
+    if (!visited_node)
+        return;  // Cannot proceed without memory.
+    visited_node->type = type;
+    visited_node->next = *visited_head;
+    *visited_head = visited_node;
+
+    // Recurse into child types first (post-order traversal).
+    switch (type->category) {
+    case INFIX_TYPE_POINTER:
+        _infix_type_recalculate_layout_recursive(type->meta.pointer_info.pointee_type, visited_head);
+        break;
+    case INFIX_TYPE_ARRAY:
+        _infix_type_recalculate_layout_recursive(type->meta.array_info.element_type, visited_head);
+        break;
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            _infix_type_recalculate_layout_recursive(type->meta.aggregate_info.members[i].type, visited_head);
+        }
+        break;
+    default:
+        break;  // Other types have no child types to recurse into.
+    }
+
+    // After children are updated, recalculate this type's layout.
+    if (type->category == INFIX_TYPE_STRUCT) {
+        size_t current_offset = 0;
+        size_t max_alignment = 1;
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            infix_struct_member * member = &type->meta.aggregate_info.members[i];
+            size_t member_align = member->type->alignment;
+            if (member_align > max_alignment)
+                max_alignment = member_align;
+            current_offset = _infix_align_up(current_offset, member_align);
+            member->offset = current_offset;
+            current_offset += member->type->size;
+        }
+        type->alignment = max_alignment;
+        type->size = _infix_align_up(current_offset, max_alignment);
+    }
+    else if (type->category == INFIX_TYPE_UNION) {
+        size_t max_size = 0;
+        size_t max_alignment = 1;
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            infix_type * member_type = type->meta.aggregate_info.members[i].type;
+            if (member_type->size > max_size)
+                max_size = member_type->size;
+            if (member_type->alignment > max_alignment)
+                max_alignment = member_type->alignment;
+        }
+        type->alignment = max_alignment;
+        type->size = _infix_align_up(max_size, max_alignment);
+    }
+    else if (type->category == INFIX_TYPE_ARRAY) {
+        // Recalculate array size based on the (potentially updated) element size.
+        type->alignment = type->meta.array_info.element_type->alignment;
+        type->size = type->meta.array_info.element_type->size * type->meta.array_info.num_elements;
+    }
+
+    // Pop this node from the visited list before returning up the call stack.
+    *visited_head = visited_node->next;
+    infix_free(visited_node);
+}
+
+/**
+ * @internal
+ * @brief Public-internal wrapper for the recursive layout recalculation function.
+ *
+ * This function serves as the entry point for the "Layout" stage. It initializes
+ * the cycle detection mechanism and starts the recursive traversal of the type graph.
+ *
+ * @param[in,out] type The root of the type graph to recalculate. The graph is modified in-place.
+ */
+void _infix_type_recalculate_layout(infix_type * type) {
+    recalc_visited_node_t * visited_head = nullptr;
+    _infix_type_recalculate_layout_recursive(type, &visited_head);
+}
+
+/**
+ * @internal
+ * @struct memo_node_t
+ * @brief A memoization node for the deep copy algorithm.
+ * @details This temporary structure maps a source `infix_type` address to its
+ * newly copied destination address. It is used to prevent re-copying the same
+ * object and to correctly reconstruct cyclic type graphs.
+ */
+typedef struct memo_node_t {
+    const infix_type * src;    /**< The original type object's address. */
+    infix_type * dest;         /**< The copied type object's address. */
+    struct memo_node_t * next; /**< The next node in the memoization list. */
+} memo_node_t;
+
+/**
+ * @internal
+ * @brief Recursively performs a deep copy of a type graph into a destination arena.
+ *
+ * This function is the implementation of the **"Copy"** stage of the data pipeline.
+ * It is essential for creating self-contained trampoline objects and for safely
+ * managing type lifecycles. It uses a memoization table (`memo_head`) to correctly
+ * handle cyclic graphs and shared type objects, ensuring that each source type
+ * is copied exactly once.
+ *
+ * @param dest_arena The destination arena for the new type graph.
+ * @param src_type The source type to copy.
+ * @param memo_head A pointer to the head of the memoization list.
+ * @return A pointer to the newly created copy in `dest_arena`, or `nullptr` on failure.
+ */
+static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_arena,
+                                                        const infix_type * src_type,
+                                                        memo_node_t ** memo_head) {
     if (src_type == nullptr)
         return nullptr;
 
-    // Optimization: If the source type is a static primitive, we don't need to copy it.
+    // Base case: Static types don't need to be copied; return the singleton pointer.
     if (!src_type->is_arena_allocated)
         return (infix_type *)src_type;
 
-    // Allocate space for the new type in the destination arena and copy the base struct.
-    infix_type * dest_type = infix_arena_alloc(dest_arena, sizeof(infix_type), _Alignof(infix_type));
+    // Check memoization table: if we've already copied this node, return the existing copy.
+    // This correctly handles cycles and shared sub-graphs.
+    for (memo_node_t * node = *memo_head; node != NULL; node = node->next) {
+        if (node->src == src_type)
+            return node->dest;
+    }
+
+    // Allocate the new type object in the destination arena.
+    infix_type * dest_type = infix_arena_calloc(dest_arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (dest_type == nullptr)
         return nullptr;
-    infix_memcpy(dest_type, src_type, sizeof(infix_type));
 
-    // Recursively copy any nested types based on the category.
+    // Add this new pair to the memoization table BEFORE recursing. This is crucial
+    // for handling cycles: the recursive call will find this entry and return `dest_type`.
+    memo_node_t * new_memo_node = infix_arena_alloc(dest_arena, sizeof(memo_node_t), _Alignof(memo_node_t));
+    if (!new_memo_node)
+        return nullptr;
+    new_memo_node->src = src_type;
+    new_memo_node->dest = dest_type;
+    new_memo_node->next = *memo_head;
+    *memo_head = new_memo_node;
+
+    // Perform a shallow copy of the main struct, then recurse to deep copy child pointers.
+    *dest_type = *src_type;
+    dest_type->is_arena_allocated = true;
+
     switch (src_type->category) {
+    case INFIX_TYPE_POINTER:
+        dest_type->meta.pointer_info.pointee_type =
+            _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.pointer_info.pointee_type, memo_head);
+        break;
+    case INFIX_TYPE_ARRAY:
+        dest_type->meta.array_info.element_type =
+            _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.array_info.element_type, memo_head);
+        break;
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        if (src_type->meta.aggregate_info.num_members > 0) {
+            // Copy the members array itself.
+            size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
+            dest_type->meta.aggregate_info.members =
+                infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
+            if (dest_type->meta.aggregate_info.members == nullptr)
+                return nullptr;
+            // Now, recurse for each member's type and copy its name.
+            for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
+                dest_type->meta.aggregate_info.members[i] = src_type->meta.aggregate_info.members[i];
+                dest_type->meta.aggregate_info.members[i].type = _copy_type_graph_to_arena_recursive(
+                    dest_arena, src_type->meta.aggregate_info.members[i].type, memo_head);
+                const char * src_name = src_type->meta.aggregate_info.members[i].name;
+                if (src_name) {
+                    size_t name_len = strlen(src_name) + 1;
+                    char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+                    if (!dest_name)
+                        return nullptr;
+                    infix_memcpy(dest_name, src_name, name_len);
+                    dest_type->meta.aggregate_info.members[i].name = dest_name;
+                }
+            }
+        }
+        break;
     case INFIX_TYPE_NAMED_REFERENCE:
         {
             const char * src_name = src_type->meta.named_reference.name;
@@ -632,74 +858,23 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                 if (!dest_name)
                     return nullptr;
                 infix_memcpy(dest_name, src_name, name_len);
-                // We need to cast away const to write to the destination.
-                *((const char **)&dest_type->meta.named_reference.name) = dest_name;
+                dest_type->meta.named_reference.name = dest_name;
             }
+            break;
         }
-        break;
-    case INFIX_TYPE_POINTER:
-        dest_type->meta.pointer_info.pointee_type =
-            _copy_type_graph_to_arena(dest_arena, src_type->meta.pointer_info.pointee_type);
-        break;
-    case INFIX_TYPE_ARRAY:
-        dest_type->meta.array_info.element_type =
-            _copy_type_graph_to_arena(dest_arena, src_type->meta.array_info.element_type);
-        break;
-    case INFIX_TYPE_STRUCT:
-    case INFIX_TYPE_UNION:
-        {
-            // Deep copy the aggregate's own name, if it has one.
-            const char * src_agg_name = src_type->meta.aggregate_info.name;
-            if (src_agg_name) {
-                size_t name_len = strlen(src_agg_name) + 1;
-                char * dest_agg_name = infix_arena_alloc(dest_arena, name_len, 1);
-                if (!dest_agg_name)
-                    return nullptr;  // Allocation failed
-                infix_memcpy(dest_agg_name, src_agg_name, name_len);
-                // We need to cast away const to write to the destination struct field.
-                *((const char **)&dest_type->meta.aggregate_info.name) = dest_agg_name;
-            }
-
-            if (src_type->meta.aggregate_info.num_members > 0) {
-                size_t members_size = sizeof(infix_struct_member) * src_type->meta.aggregate_info.num_members;
-                dest_type->meta.aggregate_info.members =
-                    infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
-                if (dest_type->meta.aggregate_info.members == nullptr)
-                    return nullptr;
-                infix_memcpy(
-                    dest_type->meta.aggregate_info.members, src_type->meta.aggregate_info.members, members_size);
-
-                for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
-                    dest_type->meta.aggregate_info.members[i].type =
-                        _copy_type_graph_to_arena(dest_arena, src_type->meta.aggregate_info.members[i].type);
-                    // Deep copy the member name string to avoid dangling pointers.
-                    const char * src_name = src_type->meta.aggregate_info.members[i].name;
-                    if (src_name) {
-                        size_t name_len = strlen(src_name) + 1;
-                        char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
-                        if (!dest_name)
-                            return nullptr;
-                        infix_memcpy(dest_name, src_name, name_len);
-                        *((const char **)&dest_type->meta.aggregate_info.members[i].name) = dest_name;
-                    }
-                }
-            }
-        }
-        break;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
         dest_type->meta.func_ptr_info.return_type =
-            _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.return_type);
+            _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.func_ptr_info.return_type, memo_head);
         if (src_type->meta.func_ptr_info.num_args > 0) {
             size_t args_size = sizeof(infix_function_argument) * src_type->meta.func_ptr_info.num_args;
             dest_type->meta.func_ptr_info.args =
                 infix_arena_alloc(dest_arena, args_size, _Alignof(infix_function_argument));
             if (dest_type->meta.func_ptr_info.args == nullptr)
                 return nullptr;
-            infix_memcpy(dest_type->meta.func_ptr_info.args, src_type->meta.func_ptr_info.args, args_size);
-
             for (size_t i = 0; i < src_type->meta.func_ptr_info.num_args; ++i) {
-                dest_type->meta.func_ptr_info.args[i].type =
-                    _copy_type_graph_to_arena(dest_arena, src_type->meta.func_ptr_info.args[i].type);
+                dest_type->meta.func_ptr_info.args[i] = src_type->meta.func_ptr_info.args[i];
+                dest_type->meta.func_ptr_info.args[i].type = _copy_type_graph_to_arena_recursive(
+                    dest_arena, src_type->meta.func_ptr_info.args[i].type, memo_head);
                 const char * src_name = src_type->meta.func_ptr_info.args[i].name;
                 if (src_name) {
                     size_t name_len = strlen(src_name) + 1;
@@ -707,54 +882,75 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
                     if (!dest_name)
                         return nullptr;
                     infix_memcpy(dest_name, src_name, name_len);
-                    *((const char **)&dest_type->meta.func_ptr_info.args[i].name) = dest_name;
+                    dest_type->meta.func_ptr_info.args[i].name = dest_name;
                 }
             }
         }
         break;
+    case INFIX_TYPE_ENUM:
+        dest_type->meta.enum_info.underlying_type =
+            _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.enum_info.underlying_type, memo_head);
+        break;
+    case INFIX_TYPE_COMPLEX:
+        dest_type->meta.complex_info.base_type =
+            _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.complex_info.base_type, memo_head);
+        break;
+    case INFIX_TYPE_VECTOR:
+        dest_type->meta.vector_info.element_type =
+            _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.vector_info.element_type, memo_head);
+        break;
     default:
-        // For PRIMITIVE, VOID, ENUM, etc., the initial shallow copy is sufficient.
+        // Other types like primitives have no child pointers to copy.
         break;
     }
     return dest_type;
 }
-/*
- * The following functions are simple, null-safe getters that form the public
- * Introspection API. They provide a stable way for users to query type and
- * trampoline properties without needing to know the internal layout of the
- * opaque `infix_type_t`, `infix_forward_t`, or `infix_reverse_t` structs.
- */
 
-/*
- * Implementation for infix_type_get_category.
- * This is a simple, null-safe getter. It returns an invalid category enum
- * value if the type pointer is null, which is a safe failure mode.
+/**
+ * @internal
+ * @brief Public wrapper for the recursive type graph copy function.
+ * @param dest_arena The destination arena.
+ * @param src_type The source type graph to copy.
+ * @return A pointer to the new copy, or `nullptr` on failure.
+ */
+infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type) {
+    memo_node_t * memo_head = nullptr;
+    return _copy_type_graph_to_arena_recursive(dest_arena, src_type, &memo_head);
+}
+// Public API: Introspection Functions
+
+/**
+ * @brief Gets the fundamental category of a type.
+ * @param[in] type The type object to inspect.
+ * @return The `infix_type_category` enum value, or -1 if `type` is `nullptr`.
  */
 c23_nodiscard infix_type_category infix_type_get_category(const infix_type * type) {
     return type ? type->category : (infix_type_category)-1;
 }
 
-/*
- * Implementation for infix_type_get_size.
- * A simple, null-safe getter. Returns 0 if the type pointer is null, which
- * is a sensible default for an invalid type.
+/**
+ * @brief Gets the size of a type in bytes.
+ * @param[in] type The type object to inspect.
+ * @return The size in bytes, or 0 if `type` is `nullptr`.
  */
 c23_nodiscard size_t infix_type_get_size(const infix_type * type) {
     return type ? type->size : 0;
 }
 
-/*
- * Implementation for infix_type_get_alignment.
- * A simple, null-safe getter. Returns 0 if the type pointer is null.
+/**
+ * @brief Gets the alignment requirement of a type in bytes.
+ * @param[in] type The type object to inspect.
+ * @return The alignment in bytes, or 0 if `type` is `nullptr`.
  */
 c23_nodiscard size_t infix_type_get_alignment(const infix_type * type) {
     return type ? type->alignment : 0;
 }
 
-/*
- * Implementation for infix_type_get_member_count.
- * This getter is both null-safe and type-safe, ensuring we only access
- * aggregate metadata for struct or union types.
+/**
+ * @brief Gets the number of members in a struct or union type.
+ * @param[in] type The aggregate type object to inspect. Must have category
+ * `INFIX_TYPE_STRUCT` or `INFIX_TYPE_UNION`.
+ * @return The number of members, or 0 if the type is not a struct or union.
  */
 c23_nodiscard size_t infix_type_get_member_count(const infix_type * type) {
     if (!type || (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_UNION))
@@ -762,70 +958,78 @@ c23_nodiscard size_t infix_type_get_member_count(const infix_type * type) {
     return type->meta.aggregate_info.num_members;
 }
 
-/*
- * Implementation for infix_type_get_member.
- * Performs thorough validation (null-check, category check, and bounds check)
- * before returning a pointer to internal member data.
+/**
+ * @brief Gets a specific member from a struct or union type.
+ * @param[in] type The aggregate type object to inspect.
+ * @param[in] index The zero-based index of the member.
+ * @return A pointer to the `infix_struct_member`, or `nullptr` if the index is out of bounds or the type is invalid.
  */
 c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type * type, size_t index) {
-    if (!type || (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_UNION))
-        return nullptr;
-    if (index >= type->meta.aggregate_info.num_members)
+    if (!type || (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_UNION) ||
+        index >= type->meta.aggregate_info.num_members)
         return nullptr;
     return &type->meta.aggregate_info.members[index];
 }
 
-/*
- * Implementation for infix_type_get_arg_name.
- * Performs validation to ensure the type is a function signature and the index
- * is within bounds before accessing argument metadata.
+/**
+ * @brief Gets the name of a specific argument from a function type.
+ * @param[in] func_type The function type object to inspect (must have category `INFIX_TYPE_REVERSE_TRAMPOLINE`).
+ * @param[in] index The zero-based index of the argument.
+ * @return The name of the argument as a string, or `nullptr` if the argument is anonymous or the index is out of
+ * bounds.
  */
 c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type, size_t index) {
-    if (!func_type || func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE)
-        return nullptr;
-    if (index >= func_type->meta.func_ptr_info.num_args)  // Allow access to variadic names if present
+    if (!func_type || func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE ||
+        index >= func_type->meta.func_ptr_info.num_args)
         return nullptr;
     return func_type->meta.func_ptr_info.args[index].name;
 }
 
-/*
- * Implementation for infix_type_get_arg_type.
- * Performs validation to ensure the type is a function signature and the index
- * is within bounds before returning the argument's type.
+/**
+ * @brief Gets the type of a specific argument from a function type.
+ * @param[in] func_type The function type object to inspect.
+ * @param[in] index The zero-based index of the argument.
+ * @return A pointer to the argument's `infix_type`, or `nullptr` if the index is out of bounds.
  */
 c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func_type, size_t index) {
-    if (!func_type || func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE)
-        return nullptr;
-    if (index >= func_type->meta.func_ptr_info.num_args)
+    if (!func_type || func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE ||
+        index >= func_type->meta.func_ptr_info.num_args)
         return nullptr;
     return func_type->meta.func_ptr_info.args[index].type;
 }
 
-/*
- * Simple null-safe getter for the forward trampoline's argument count.
+/**
+ * @brief Gets the total number of arguments for a forward trampoline.
+ * @param[in] trampoline The trampoline handle.
+ * @return The number of arguments, or 0 if `trampoline` is `nullptr`.
  */
 c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->num_args : 0;
 }
 
 /**
- * @brief Retrieves the number of fixed (non-variadic) arguments for a forward trampoline.
- * @param trampoline A handle to a forward trampoline. Can be `nullptr`.
- * @return The number of fixed arguments. Returns `0` if the handle is `nullptr`.
+ * @brief Gets the number of fixed (non-variadic) arguments for a forward trampoline.
+ * @param[in] trampoline The trampoline handle.
+ * @return The number of fixed arguments, or 0 if `trampoline` is `nullptr`.
  */
 c23_nodiscard size_t infix_forward_get_num_fixed_args(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->num_fixed_args : 0;
 }
 
-/*
- * Simple null-safe getter for the forward trampoline's return type.
+/**
+ * @brief Gets the return type for a forward trampoline.
+ * @param[in] trampoline The trampoline handle.
+ * @return A pointer to the `infix_type` for the return value, or `nullptr` if `trampoline` is `nullptr`.
  */
 c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->return_type : nullptr;
 }
 
-/*
- * Null-safe and bounds-checked getter for a forward trampoline's argument type.
+/**
+ * @brief Gets the type of a specific argument for a forward trampoline.
+ * @param[in] trampoline The trampoline handle.
+ * @param[in] index The zero-based index of the argument.
+ * @return A pointer to the `infix_type`, or `nullptr` if the index is out of bounds or `trampoline` is `nullptr`.
  */
 c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t * trampoline, size_t index) {
     if (!trampoline || index >= trampoline->num_args)
@@ -833,30 +1037,38 @@ c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_
     return trampoline->arg_types[index];
 }
 
-/*
- * Simple null-safe getter for the reverse trampoline's argument count.
+/**
+ * @brief Gets the total number of arguments for a reverse trampoline.
+ * @param[in] trampoline The trampoline context handle.
+ * @return The number of arguments, or 0 if `trampoline` is `nullptr`.
  */
 c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t * trampoline) {
     return trampoline ? trampoline->num_args : 0;
 }
 
 /**
- * @brief Retrieves the number of fixed (non-variadic) arguments for a reverse trampoline.
- * @param trampoline A handle to a reverse trampoline. Can be `nullptr`.
- * @return The number of fixed arguments. Returns `0` if the handle is `nullptr`.
+ * @brief Gets the number of fixed (non-variadic) arguments for a reverse trampoline.
+ * @param[in] trampoline The trampoline context handle.
+ * @return The number of fixed arguments, or 0 if `trampoline` is `nullptr`.
  */
 c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t * trampoline) {
     return trampoline ? trampoline->num_fixed_args : 0;
 }
-/*
- * Simple null-safe getter for the reverse trampoline's return type.
+
+/**
+ * @brief Gets the return type for a reverse trampoline.
+ * @param[in] trampoline The trampoline context handle.
+ * @return A pointer to the `infix_type` for the return value, or `nullptr` if `trampoline` is `nullptr`.
  */
 c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t * trampoline) {
     return trampoline ? trampoline->return_type : nullptr;
 }
 
-/*
- * Null-safe and bounds-checked getter for a reverse trampoline's argument type.
+/**
+ * @brief Gets the type of a specific argument for a reverse trampoline.
+ * @param[in] trampoline The trampoline context handle.
+ * @param[in] index The zero-based index of the argument.
+ * @return A pointer to the `infix_type`, or `nullptr` if the index is out of bounds or `trampoline` is `nullptr`.
  */
 c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t * trampoline, size_t index) {
     if (!trampoline || index >= trampoline->num_args)
