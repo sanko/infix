@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('struct__infix__registry__entry__t.html
 </div><!--header-->
 <div class="contents">
 
+<p>A single entry in the registry's hash table.  
+ <a href="struct__infix__registry__entry__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for _infix_registry_entry_t:</div>
@@ -127,7 +130,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8f6cae58ec40201adf04aa2a6960be61" id="r_a8f6cae58ec40201adf04aa2a6960be61"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__infix__registry__entry__t.html#a8f6cae58ec40201adf04aa2a6960be61">next</a></td></tr>
 <tr class="separator:a8f6cae58ec40201adf04aa2a6960be61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A single entry in the registry's hash table. </p>
+<p>This is a node in a singly-linked list used for chaining in the event of a hash collision. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a393ed36b69638cf2a3f786b0b4a2c77b" name="a393ed36b69638cf2a3f786b0b4a2c77b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a393ed36b69638cf2a3f786b0b4a2c77b">&#9670;&#160;</a></span>is_forward_declaration</h2>
 
@@ -139,7 +145,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>True if defined like "@Name;" and not yet fully resolved. </p>
+<p><code>true</code> if this is just a forward declaration (<code>@Name;</code>). </p>
 
 </div>
 </div>
@@ -154,7 +160,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The key (e.g., "UI::Point"). This string is owned by the registry's arena. </p>
+<p>The registered name of the type. </p>
 
 </div>
 </div>
@@ -169,7 +175,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pointer to the next entry in the same bucket for collision resolution. </p>
+<p>The next entry in the hash bucket chain. </p>
 
 </div>
 </div>
@@ -184,7 +190,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The value (pointer to the type definition). Also owned by the arena. </p>
+<p>A pointer to the canonical <code>infix_type</code> object. </p>
 
 </div>
 </div>

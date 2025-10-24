@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('860__error__handling_8c.html',''); ini
 </div><!--header-->
 <div class="contents">
 
-<p>Unit tests for the detailed error reporting system.  
+<p>Unit test for the error reporting system.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -141,12 +141,24 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Unit tests for the detailed error reporting system. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0 </p>
+<div class="textblock"><p>Unit test for the error reporting system. </p>
+<p>This test file validates that the <code>infix</code> library correctly detects, categorizes, and reports errors to the user. A robust error reporting system is critical for a good developer experience.</p>
+<p>The test covers two main areas:</p>
+<ol type="1">
+<li><b>Signature Parser Error Reporting:</b><ul>
+<li>It feeds the parser a series of deliberately malformed signature strings.</li>
+<li>For each invalid signature, it calls <code><a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b" title="Retrieves detailed information about the last error that occurred on the current thread.">infix_get_last_error()</a></code> to retrieve the detailed error information.</li>
+<li>It then asserts that the returned <code><a class="el" href="structinfix__error__details__t.html" title="Provides detailed, thread-local information about the last error that occurred.">infix_error_details_t</a></code> struct contains the correct <code>category</code>, <code>code</code>, <code>position</code> (the byte offset of the error in the string), and a human-readable <code>message</code>.</li>
+<li>This ensures that users receive precise feedback when they make a syntax error in a signature.</li>
+</ul>
+</li>
+<li><b>API Hardening Error Reporting:</b><ul>
+<li>It tests how the API handles inputs that are syntactically valid but would lead to dangerous behavior, specifically integer overflows.</li>
+<li>It constructs a signature for an enormous array (e.g., <code>[SIZE_MAX:short]</code>) that would cause an overflow when calculating its total size.</li>
+<li>It verifies that the library detects this condition, returns an <code>INFIX_ERROR_INVALID_ARGUMENT</code> status, and sets the last error code to <code>INFIX_CODE_INTEGER_OVERFLOW</code>. This confirms that security and stability checks are in place and are reported correctly. </li>
+</ul>
+</li>
+</ol>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -213,7 +225,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(2)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

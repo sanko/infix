@@ -108,14 +108,14 @@ $(document).ready(function(){initNavTree('loader_8c.html',''); initResizable(); 
 </div><!--header-->
 <div class="contents">
 
-<p>Implements the cross-platform dynamic library loading and symbol resolution API.  
+<p>Implements cross-platform dynamic library loading.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &lt;dlfcn.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for loader.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="loader_8c__incl.svg" width="379" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="loader_8c__incl.svg" width="423" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -127,29 +127,31 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gabfd1bb148a39b758e57e772c09b9ea84" id="r_gabfd1bb148a39b758e57e772c09b9ea84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__library__api.html#gabfd1bb148a39b758e57e772c09b9ea84">infix_library_open</a> (const char *path)</td></tr>
+<tr class="memitem:gabfd1bb148a39b758e57e772c09b9ea84" id="r_gabfd1bb148a39b758e57e772c09b9ea84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#gabfd1bb148a39b758e57e772c09b9ea84">infix_library_open</a> (const char *path)</td></tr>
 <tr class="memdesc:gabfd1bb148a39b758e57e772c09b9ea84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens a dynamic library and returns a handle to it.  <br /></td></tr>
 <tr class="separator:gabfd1bb148a39b758e57e772c09b9ea84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1a55403ddf64eaed05f2fcb013412003" id="r_ga1a55403ddf64eaed05f2fcb013412003"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__library__api.html#ga1a55403ddf64eaed05f2fcb013412003">infix_library_close</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib)</td></tr>
-<tr class="memdesc:ga1a55403ddf64eaed05f2fcb013412003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes a dynamic library handle and unloads it.  <br /></td></tr>
+<tr class="memitem:ga1a55403ddf64eaed05f2fcb013412003" id="r_ga1a55403ddf64eaed05f2fcb013412003"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga1a55403ddf64eaed05f2fcb013412003">infix_library_close</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib)</td></tr>
+<tr class="memdesc:ga1a55403ddf64eaed05f2fcb013412003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes a dynamic library handle and frees associated resources.  <br /></td></tr>
 <tr class="separator:ga1a55403ddf64eaed05f2fcb013412003"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga227480098fa596f3c372837461a6b805" id="r_ga227480098fa596f3c372837461a6b805"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__library__api.html#ga227480098fa596f3c372837461a6b805">infix_library_get_symbol</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib, const char *symbol_name)</td></tr>
-<tr class="memdesc:ga227480098fa596f3c372837461a6b805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the memory address of a symbol (function or global variable).  <br /></td></tr>
+<tr class="memitem:ga227480098fa596f3c372837461a6b805" id="r_ga227480098fa596f3c372837461a6b805"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga227480098fa596f3c372837461a6b805">infix_library_get_symbol</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib, const char *symbol_name)</td></tr>
+<tr class="memdesc:ga227480098fa596f3c372837461a6b805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the address of a symbol (function or variable) from a loaded library.  <br /></td></tr>
 <tr class="separator:ga227480098fa596f3c372837461a6b805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae75c91d8011786875c73f26d2aa437a8" id="r_gae75c91d8011786875c73f26d2aa437a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix_read_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib, const char *symbol_name, const char *type_signature, void *buffer)</td></tr>
-<tr class="memdesc:gae75c91d8011786875c73f26d2aa437a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the value of a global variable from a loaded library.  <br /></td></tr>
-<tr class="separator:gae75c91d8011786875c73f26d2aa437a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3df4f2e6494af3e1fda98cd5a61d167f" id="r_ga3df4f2e6494af3e1fda98cd5a61d167f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f">infix_write_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib, const char *symbol_name, const char *type_signature, void *buffer)</td></tr>
-<tr class="memdesc:ga3df4f2e6494af3e1fda98cd5a61d167f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a value to a global variable in a loaded library.  <br /></td></tr>
-<tr class="separator:ga3df4f2e6494af3e1fda98cd5a61d167f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7f277b537378a53e4554e43a17d0039" id="r_gac7f277b537378a53e4554e43a17d0039"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#gac7f277b537378a53e4554e43a17d0039">infix_read_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib, const char *symbol_name, const char *type_signature, void *buffer)</td></tr>
+<tr class="memdesc:gac7f277b537378a53e4554e43a17d0039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the value of an exported global variable from a library into a buffer.  <br /></td></tr>
+<tr class="separator:gac7f277b537378a53e4554e43a17d0039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ff78ba25aec569971f85df6c233406c" id="r_ga0ff78ba25aec569971f85df6c233406c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga0ff78ba25aec569971f85df6c233406c">infix_write_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *lib, const char *symbol_name, const char *type_signature, void *buffer)</td></tr>
+<tr class="memdesc:ga0ff78ba25aec569971f85df6c233406c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data from a buffer into an exported global variable in a library.  <br /></td></tr>
+<tr class="separator:ga0ff78ba25aec569971f85df6c233406c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implements the cross-platform dynamic library loading and symbol resolution API. </p>
+<div class="textblock"><p>Implements cross-platform dynamic library loading. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This module provides a platform-agnostic API for opening shared libraries (<code>.dll</code>, <code>.so</code>, <code>.dylib</code>), looking up symbols within them, and reading or writing to exported global variables. It abstracts away the differences between the Windows API (<code>LoadLibrary</code>, <code>GetProcAddress</code>) and the POSIX API (<code>dlopen</code>, <code>dlsym</code>).</p>
+<p>The functions <code>infix_read_global</code> and <code>infix_write_global</code> combine this dynamic loading capability with the <code>infix</code> type system to safely interact with global variables of any type described by a signature string. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

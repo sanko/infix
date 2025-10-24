@@ -1,24 +1,24 @@
 <map id="t/303_advanced.c" name="t/303_advanced.c">
-<area shape="rect" id="Node000001" title="Tests advanced reverse trampoline (callback) patterns." alt="" coords="226,5,362,31"/>
-<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,33,136,77,134,72,260,28"/>
-<area shape="rect" id="Node000003" href="$types_8h.html" title="Defines common data structures used across the entire test suite." alt="" coords="196,79,267,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="286,33,253,70,249,66,282,29"/>
-<area shape="rect" id="Node000006" href="$infix_8h.html" title=" " alt="" coords="311,79,405,104"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,29,341,67,337,70,303,33"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="429,79,500,104"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="322,28,425,71,423,76,320,33"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="96,152,183,177"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,106,167,146,163,141,215,102"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="330,225,405,251"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="233,104,234,139,239,158,248,176,263,191,280,204,318,221,316,226,277,208,259,195,244,179,234,160,229,140,228,104"/>
-<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="361,104,368,211,363,212,356,105"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="514,225,597,251"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="406,101,523,128,571,141,595,150,601,167,598,185,579,217,574,214,593,183,596,168,591,154,570,146,521,133,405,106"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="259,152,329,177"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="349,106,315,144,311,140,345,103"/>
-<area shape="rect" id="Node000009" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="405,152,580,177"/>
-<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="381,102,460,143,457,148,378,106"/>
-<area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="474,180,401,221,398,216,471,175"/>
-<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="505,176,538,213,534,217,501,179"/>
+<area shape="rect" id="Node000001" title="Unit test for advanced reverse trampoline (callback) scenarios." alt="" coords="234,5,370,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="5,79,172,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,33,137,77,135,72,267,28"/>
+<area shape="rect" id="Node000003" href="$types_8h.html" title="Defines common C structures used across the infix test suite." alt="" coords="196,79,267,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="292,33,254,71,250,67,288,29"/>
+<area shape="rect" id="Node000006" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="325,79,420,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="316,29,354,67,350,71,312,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="444,79,515,104"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="331,28,439,71,437,76,330,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="89,152,176,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="217,106,161,146,158,142,214,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="227,225,302,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="235,104,249,177,259,211,254,213,243,178,230,105"/>
+<area shape="poly" id="edge10_Node000006_Node000005" title=" " alt="" coords="350,106,320,126,292,154,278,183,270,213,265,211,273,181,288,150,317,122,348,102"/>
+<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="303,152,477,177"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="378,104,387,138,381,140,373,105"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="411,225,494,251"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="422,101,460,120,478,133,492,151,497,168,494,185,476,216,471,213,489,183,492,168,488,153,474,137,458,124,419,106"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="553,152,624,177"/>
+<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="408,101,542,145,540,150,407,107"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="371,180,298,221,296,216,369,175"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="402,176,435,213,431,217,398,179"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="src/core/utility.c" name="src/core/utility.c">
-<area shape="rect" id="Node000001" title="Implementation of debugging utility functions." alt="" coords="5,5,129,31"/>
+<area shape="rect" id="Node000001" title="Implements internal debugging utilities." alt="" coords="5,5,129,31"/>
 <area shape="rect" id="Node000002" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="25,79,109,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,44,70,79,65,79,65,44"/>
 </map>

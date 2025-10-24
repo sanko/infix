@@ -1,8 +1,8 @@
 <map id="t/860_error_handling.c" name="t/860_error_handling.c">
-<area shape="rect" id="Node000001" title="Unit tests for the detailed error reporting system." alt="" coords="267,5,433,31"/>
-<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
+<area shape="rect" id="Node000001" title="Unit test for the error reporting system." alt="" coords="267,5,433,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="5,79,172,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,33,145,78,144,72,307,28"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title=" " alt="" coords="196,79,291,104"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="196,79,291,104"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="334,33,274,73,271,69,331,28"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="315,79,385,104"/>
 <area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="353,31,353,65,347,65,347,31"/>
@@ -10,14 +10,14 @@
 <area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="367,29,419,68,416,72,363,33"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="501,79,572,104"/>
 <area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="381,28,494,71,493,76,379,33"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="71,225,154,251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="196,105,122,126,91,139,72,154,67,168,71,184,92,214,87,217,66,186,62,168,68,150,88,135,120,121,195,100"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="189,225,263,251"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="289,102,323,114,353,130,364,141,371,152,372,165,367,179,349,199,327,214,278,232,276,227,324,209,345,195,362,176,367,164,366,154,360,144,350,135,321,119,288,107"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="281,152,352,177"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="257,102,297,140,293,144,254,106"/>
-<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="83,152,257,177"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="233,106,194,144,190,140,229,102"/>
-<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="163,179,133,216,129,213,158,176"/>
-<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="181,176,211,213,206,216,177,179"/>
+<area shape="rect" id="Node000004" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="93,152,268,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="235,106,202,143,198,140,231,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="82,225,165,251"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="196,106,128,127,100,140,83,154,78,168,81,184,103,214,98,217,76,186,73,168,78,150,97,136,126,122,195,101"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="199,225,274,251"/>
+<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="257,103,279,136,285,157,283,178,273,199,260,217,256,214,269,196,278,177,280,157,274,138,252,106"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="344,152,415,177"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="266,102,346,143,344,148,264,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="173,179,143,216,139,213,169,176"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="192,176,221,213,217,216,188,179"/>
 </map>

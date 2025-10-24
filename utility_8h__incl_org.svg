@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="compat__c23_8h.html" target="_top" xlink:title="Provides compatibility shims for C23 features in a C17/C11 project.">
+<g id="a_Node000002"><a xlink:href="compat__c23_8h.html" target="_top" xlink:title="Provides forward compatibility macros for C23 features.">
 <polygon fill="white" stroke="#666666" points="131,-74 0,-74 0,-55 131,-55 131,-74"/>
 <text text-anchor="middle" x="65.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">common/compat_c23.h</text>
 </a>

@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('403__special__types_8c.html',''); init
 </div><!--header-->
 <div class="contents">
 
-<p>Tests FFI calls with types that have unique ABI handling rules.  
+<p>Unit test for FFI calls with special, non-standard, or platform-dependent primitive types.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('403__special__types_8c.html',''); init
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 403_special_types.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="403__special__types_8c__incl.svg" width="570" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="403__special__types_8c__incl.svg" width="614" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -157,17 +157,14 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests FFI calls with types that have unique ABI handling rules. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This suite focuses on C types that are not handled as simple primitives by the target ABI. These often involve legacy hardware (like the x87 FPU) or require values to be split across multiple registers.</p>
-<p>It covers two main categories of special types:</p><ol type="1">
-<li>**<code>long double</code>:** On the System V x64 ABI (Linux/BSD), this is an 80-bit extended-precision type passed on the x87 FPU stack, not in SSE/XMM registers. On AArch64, it's a 128-bit type passed in a full Q-register. This test verifies these special-case mechanisms for both passing and returning the type.</li>
-<li>**<code>__int128_t</code> / <code>__uint128_t</code>:** These 128-bit integers are a non-standard compiler extension (not available on MSVC). They are too large for a single GPR and are passed/returned in a register pair (e.g., RAX:RDX on SysV, X0:X1 on AArch64). This test verifies that the library correctly splits and reassembles these large integer values for both forward and reverse FFI calls. </li>
-</ol>
+<div class="textblock"><p>Unit test for FFI calls with special, non-standard, or platform-dependent primitive types. </p>
+<p>This test file validates the ABI implementation for primitive types that have unique or complex calling convention rules.</p>
+<p>The test covers:</p>
+<ul>
+<li>**<code>long double</code>**: This type's size and representation vary by platform. On System V x64, it's an 80-bit extended-precision float passed on the x87 FPU stack, while on Windows and AArch64, it's often an alias for <code>double</code>. This test verifies the correct handling for platforms where it is a distinct type.</li>
+<li>**<code>__int128_t</code> / <code>__uint128_t</code>**: These are 128-bit integer types provided as a compiler extension by GCC and Clang (but not MSVC). They are typically passed in a pair of general-purpose registers (e.g., RDI/RSI on SysV x64). This test verifies their handling in both forward and reverse calls.</li>
+</ul>
+<p>Each test is conditionally compiled to run only on architectures and compilers that support the specific type, ensuring the test suite remains portable. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -370,7 +367,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(3)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

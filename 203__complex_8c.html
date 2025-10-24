@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('203__complex_8c.html',''); initResizab
 </div><!--header-->
 <div class="contents">
 
-<p>Tests FFI calls with C <code>_Complex</code> types.  
+<p>Unit test for FFI calls involving C99 <code>_Complex</code> types.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -121,7 +121,7 @@ $(document).ready(function(){initNavTree('203__complex_8c.html',''); initResizab
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 203_complex.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="203__complex_8c__incl.svg" width="652" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="203__complex_8c__incl.svg" width="100%" height="492"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -143,8 +143,9 @@ Functions</h2></td></tr>
 <tr class="memitem:acceecf3c1b527b162c52474b683850d7" id="r_acceecf3c1b527b162c52474b683850d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#acceecf3c1b527b162c52474b683850d7">callback_c_add</a> (<a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a> a, <a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a> b)</td></tr>
 <tr class="separator:acceecf3c1b527b162c52474b683850d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a520db0ba63e753e89a45b49c5794ae16" id="r_a520db0ba63e753e89a45b49c5794ae16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#a520db0ba63e753e89a45b49c5794ae16">execute_complex_callback</a> (<a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a>(*func_ptr)(<a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a>, <a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a>), <a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a> val_a, <a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a> val_b, <a class="el" href="203__complex_8c.html#a44a2dda38f5fbe665ad1738e055d1f65">complex_double_t</a> expected_val)</td></tr>
+<tr class="memdesc:a520db0ba63e753e89a45b49c5794ae16"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C harness to call a complex-number callback and verify the result.  <br /></td></tr>
 <tr class="separator:a520db0ba63e753e89a45b49c5794ae16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a016c1a751ae2b7677bcbb2d9ba2844c4" id="r_a016c1a751ae2b7677bcbb2d9ba2844c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#a016c1a751ae2b7677bcbb2d9ba2844c4">if</a> (!<a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a>(<a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a>==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Successfully created <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> double _Complex&quot;))</td></tr>
+<tr class="memitem:a016c1a751ae2b7677bcbb2d9ba2844c4" id="r_a016c1a751ae2b7677bcbb2d9ba2844c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#a016c1a751ae2b7677bcbb2d9ba2844c4">if</a> (!<a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a>(<a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a>==<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Successfully created <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> double _Complex&quot;))</td></tr>
 <tr class="separator:a016c1a751ae2b7677bcbb2d9ba2844c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96cfd287b11fd3fa24b969000623267e" id="r_a96cfd287b11fd3fa24b969000623267e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#a96cfd287b11fd3fa24b969000623267e">subtest</a> (&quot;Forward call with _Complex arguments and return&quot;)</td></tr>
 <tr class="separator:a96cfd287b11fd3fa24b969000623267e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,16 +164,19 @@ Variables</h2></td></tr>
 <tr class="separator:afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6551ba181c67f639aae00d3cb0ca031" id="r_af6551ba181c67f639aae00d3cb0ca031"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#af6551ba181c67f639aae00d3cb0ca031">complex_double_type</a> = NULL</td></tr>
 <tr class="separator:af6551ba181c67f639aae00d3cb0ca031"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></td></tr>
+<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="203__complex_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></td></tr>
 <tr class="separator:a433468dce2d10c4f34424732ef15ebdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests FFI calls with C <code>_Complex</code> types. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0 </p>
+<div class="textblock"><p>Unit test for FFI calls involving C99 <code>_Complex</code> types. </p>
+<p>This test verifies that <code>infix</code> correctly handles the C99 <code>_Complex</code> number types, which are not supported by all compilers (notably MSVC). The entire test is conditionally compiled to run only on platforms that support this feature.</p>
+<p>A <code>_Complex double</code> is typically treated by the ABI as a struct of two doubles: <code>struct { double real; double imag; }</code>. Therefore, this test is an important validation of the aggregate classification and handling logic for a specific, standardized C type.</p>
+<p>The test covers:</p><ul>
+<li><b>Signature Parsing:</b> Verifying that the <code>c[double]</code> signature is parsed correctly.</li>
+<li><b>Forward Calls:</b> Passing <code>_Complex double</code> arguments to a C function and receiving a <code>_Complex double</code> return value.</li>
+<li><b>Reverse Calls:</b> Creating a callback with a <code>_Complex double</code> signature and verifying that it can be called correctly from C.</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>This test is skipped entirely on MSVC. </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -326,6 +330,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A C harness to call a complex-number callback and verify the result. </p>
+
 </div>
 </div>
 <a id="a016c1a751ae2b7677bcbb2d9ba2844c4" name="a016c1a751ae2b7677bcbb2d9ba2844c4"></a>
@@ -454,17 +460,17 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">        <a class="code hl_function" href="group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf">infix_type_create_complex</a>(<a class="code hl_variable" href="203__complex_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="code hl_variable" href="203__complex_8c.html#af6551ba181c67f639aae00d3cb0ca031">complex_double_type</a>, <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a>))</div>
-<div class="ttc" id="a203__complex_8c_html_af6551ba181c67f639aae00d3cb0ca031"><div class="ttname"><a href="203__complex_8c.html#af6551ba181c67f639aae00d3cb0ca031">complex_double_type</a></div><div class="ttdeci">infix_type * complex_double_type</div><div class="ttdef"><b>Definition</b> 203_complex.c:61</div></div>
-<div class="ttc" id="a203__complex_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="203__complex_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 203_complex.c:58</div></div>
-<div class="ttc" id="agroup__type__system_html_ga642b11fa95d575f407b33a9dc28d81bf"><div class="ttname"><a href="group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf">infix_type_create_complex</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_create_complex(infix_arena_t *, infix_type **, infix_type *)</div><div class="ttdoc">Creates a new infix_type for a _Complex number from an arena.</div><div class="ttdef"><b>Definition</b> types.c:324</div></div>
-<div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:97</div></div>
-<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_DOUBLE</div><div class="ttdoc">double</div><div class="ttdef"><b>Definition</b> infix.h:146</div></div>
+<div class="ttc" id="a203__complex_8c_html_af6551ba181c67f639aae00d3cb0ca031"><div class="ttname"><a href="203__complex_8c.html#af6551ba181c67f639aae00d3cb0ca031">complex_double_type</a></div><div class="ttdeci">infix_type * complex_double_type</div><div class="ttdef"><b>Definition</b> 203_complex.c:65</div></div>
+<div class="ttc" id="a203__complex_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="203__complex_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 203_complex.c:62</div></div>
+<div class="ttc" id="agroup__type__system_html_ga642b11fa95d575f407b33a9dc28d81bf"><div class="ttname"><a href="group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf">infix_type_create_complex</a></div><div class="ttdeci">c23_nodiscard infix_status infix_type_create_complex(infix_arena_t *, infix_type **, infix_type *)</div><div class="ttdoc">Creates a new _Complex number type.</div><div class="ttdef"><b>Definition</b> types.c:357</div></div>
+<div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates a static descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:130</div></div>
+<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3">INFIX_PRIMITIVE_DOUBLE</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_DOUBLE</div><div class="ttdef"><b>Definition</b> infix.h:192</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -481,7 +487,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(4)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

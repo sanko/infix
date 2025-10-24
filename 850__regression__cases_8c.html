@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('850__regression__cases_8c.html',''); i
 </div><!--header-->
 <div class="contents">
 
-<p>Contains a data-driven suite of deterministic unit tests for specific bugs found by fuzzing.  
+<p>A suite of regression tests for bugs discovered by fuzzing.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&quot;</code><br />
@@ -159,38 +159,14 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Contains a data-driven suite of deterministic unit tests for specific bugs found by fuzzing. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This file is a crucial part of the development lifecycle. When a fuzzer discovers a crash or a timeout, the minimal input that triggers the bug is captured and added to the <code>regression_tests</code> array in this file as a permanent regression test. This ensures that once a bug is fixed, it can never be accidentally reintroduced without causing an immediate and obvious CI failure.</p>
-<h3><a class="anchor" id="autotoc_md210"></a>
-How to Add a New Regression Test</h3>
-<p>This process turns a temporary fuzzer artifact into a permanent, valuable test.</p>
-<p><b>Step 1: Get the Fuzzer Artifact</b></p>
-<p>After a fuzzing job fails, download the <code>crash-artifact-*</code> zip file. Inside, you will find one or more <code>crash-*</code> or <code>timeout-*</code> files. Open one.</p>
-<p><b>Step 2: Copy the Base64 Input</b></p>
-<p>Near the bottom of the artifact file, find the <code>Base64:</code> line and copy the long string of characters. This is the fuzzer input.</p>
-<p><b>Step 3: Add a New Entry to the <code>regression_tests</code> Array</b></p>
-<p>In this file, add a new <code><a class="el" href="structregression__test__case__t.html">regression_test_case_t</a></code> struct to the <code>regression_tests</code> array. Fill in the fields:</p>
-<ul>
-<li><code>.name</code>: A descriptive name of the bug (e.g., "SysV Timeout - Wide Structs").</li>
-<li><code>.b64_input</code>: The Base64 string you copied.</li>
-<li><code>.target</code>: Which part of the code is being tested?<ul>
-<li><code>TARGET_TYPE_GENERATOR</code>: For bugs found in <code>fuzz_types</code>, <code>fuzz_trampoline</code>, or <code>fuzz_abi</code>. The test will call <code><a class="el" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f" title="Recursively generates a randomized infix_type from the fuzzer&#39;s input data, allocating all objects fr...">generate_random_type()</a></code>.</li>
-<li><code>TARGET_SIGNATURE_PARSER</code>: For bugs found in <code>fuzz_signature</code>. The test will call <code><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61" title="Parses a signature string representing a single data type.">infix_type_from_signature()</a></code>.</li>
+<div class="textblock"><p>A suite of regression tests for bugs discovered by fuzzing. </p>
+<p>This test file contains a collection of specific inputs that have been identified by fuzzing tools (like libFuzzer and AFL) as causing a crash, timeout, memory leak, or other bug in the past.</p>
+<p>Each test case consists of:</p><ul>
+<li>A descriptive name of the bug it triggered.</li>
+<li>A Base64-encoded string representing the raw fuzzer input.</li>
+<li>The target component (<code>TARGET_TYPE_GENERATOR</code>, <code>TARGET_SIGNATURE_PARSER</code>, etc.) that the input should be sent to.</li>
 </ul>
-</li>
-<li><code>.expected_status</code>: The correct <code>infix_status</code> the function should now return.<ul>
-<li>For a fixed <b>timeout</b>, this should be <code>INFIX_SUCCESS</code>, as the valid-but-slow input should now be processed quickly and correctly.</li>
-<li>For a fixed <b>crash</b>, this should be <code>INFIX_ERROR_INVALID_ARGUMENT</code>, as the invalid input should now be rejected gracefully.</li>
-</ul>
-</li>
-</ul>
-<p><b>Step 4: Update the Plan</b></p>
-<p>The <code><a class="el" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan()</a></code> at the top of the <code>TEST</code> block is calculated automatically from the size of the array, so no manual update is needed. Your test is now integrated. </p>
+<p>By embedding these inputs into a permanent unit test, we can ensure that these specific bugs do not reappear in future versions of the library. This forms a crucial part of the project's quality assurance process. The <code>b64_decode</code> helper from <code><a class="el" href="fuzz__regression__helpers_8h.html" title="Helper functions specifically for running regression tests from saved fuzzer inputs.">fuzz_regression_helpers.h</a></code> is used to unpack the inputs at runtime. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -219,12 +195,9 @@ How to Add a New Regression Test</h3>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3" name="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3"></a>TARGET_TYPE_GENERATOR&#160;</td><td class="fielddoc"><p>Tests the <code>generate_random_type</code> function (for timeouts/crashes in Core API). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883" name="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883"></a>TARGET_SIGNATURE_PARSER&#160;</td><td class="fielddoc"><p>Tests the <code>infix_type_from_signature</code> function (for bugs in the Signature API). </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a" name="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a"></a>TARGET_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"><p>Tests <code>infix_*_create_manual</code> functions. </p>
-</td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3" name="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3"></a>TARGET_TYPE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883" name="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883"></a>TARGET_SIGNATURE_PARSER&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a" name="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a"></a>TARGET_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -327,7 +300,7 @@ How to Add a New Regression Test</h3>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="keywordtype">size_t</span> num_tests = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>[0])</div>
-<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:91</div></div>
+<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:37</div></div>
 </div><!-- fragment -->
 </div>
 </div>

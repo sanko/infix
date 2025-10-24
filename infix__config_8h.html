@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('infix__config_8h.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p>Internal-only header for platform, architecture, and ABI detection.  
+<p>Platform, architecture, and ABI detection macros.  
 <a href="#details">More...</a></p>
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -125,15 +125,18 @@ Macros</h2></td></tr>
 <tr class="memitem:a8a875b31b8469c5d09efa1279aa0c35c" id="r_a8a875b31b8469c5d09efa1279aa0c35c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#a8a875b31b8469c5d09efa1279aa0c35c">INFIX_COMPILER_NFI</a></td></tr>
 <tr class="separator:a8a875b31b8469c5d09efa1279aa0c35c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3d32fd45b8b48968091b55a8a6ca817" id="r_ae3d32fd45b8b48968091b55a8a6ca817"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#ae3d32fd45b8b48968091b55a8a6ca817">INFIX_TRAMPOLINE_HEADROOM</a>&#160;&#160;&#160;128</td></tr>
+<tr class="memdesc:ae3d32fd45b8b48968091b55a8a6ca817"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra bytes to allocate in a trampoline's private arena.  <br /></td></tr>
 <tr class="separator:ae3d32fd45b8b48968091b55a8a6ca817"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Internal-only header for platform, architecture, and ABI detection. </p>
+<div class="textblock"><p>Platform, architecture, and ABI detection macros. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This header is the first to be included by <code><a class="el" href="infix__internals_8h.html" title="Internal data structures, function prototypes, and constants.">infix_internals.h</a></code> and is responsible for defining a consistent set of <code>INFIX_*</code> macros that describe the build environment. It is the central point of configuration for the entire library, adapting the build to different operating systems, compilers, and CPU architectures.</p>
+<p>Its most critical function is to select the correct <b>Application Binary Interface (ABI)</b> implementation to use for JIT code generation. This is achieved through a cascade of preprocessor checks that can be overridden by the user for cross-compilation. By the end of this file, exactly one <code>INFIX_ABI_*</code> macro must be defined, which determines which <code>abi_*.c</code> file is included in the unity build. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a3024ccd4a9af5109d24e6c57565d74a1" name="a3024ccd4a9af5109d24e6c57565d74a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3024ccd4a9af5109d24e6c57565d74a1">&#9670;&#160;</a></span>_POSIX_C_SOURCE</h2>
@@ -146,6 +149,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>These macros are defined to ensure that standard POSIX and other necessary function declarations (like <code>dlopen</code>, <code>dlsym</code>, <code>snprintf</code>, <code>shm_open</code>) are made available by system headers in a portable way across different C library implementations (glibc, musl, BSD libc, etc.). Failing to define these can lead to compilation failures due to implicitly declared functions on stricter build environments. </p>
 
 </div>
 </div>
@@ -160,6 +164,8 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>This section defines <code>INFIX_OS_*</code> macros based on compiler-provided preprocessor definitions. It also defines the broader <code>INFIX_ENV_POSIX</code> for systems that follow POSIX conventions, which simplifies later <code>#ifdef</code> logic.</p>
+<p>Defines <code>INFIX_COMPILER_*</code> macros. The order is important, as Clang often defines <code>__GNUC__</code> for compatibility, so it must be checked for first. </p>
 
 </div>
 </div>
@@ -174,6 +180,15 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Extra bytes to allocate in a trampoline's private arena. </p>
+<p>Defines <code>INFIX_ARCH_*</code> for the two currently supported architectures. The library will fail to compile if the architecture is not one of these, as the JIT code emitters are architecture-specific.</p>
+<p>This is the most critical section of the configuration. It determines which ABI implementation will be compiled and used by the JIT engine.</p>
+<p>It supports two modes:</p><ol type="1">
+<li><b>Forced ABI:</b> A user can define <code>INFIX_FORCE_ABI_*</code> (e.g., via a compiler flag like <code>-DINFIX_FORCE_ABI_SYSV_X64</code>) to override automatic detection. This is essential for cross-compilation, where the host compiler's macros would not reflect the target environment.</li>
+<li><b>Automatic Detection:</b> If no ABI is forced, it uses the <code>INFIX_ARCH_*</code> and <code>INFIX_OS_*</code> macros to deduce the correct ABI for the current build target.</li>
+</ol>
+<p>When a trampoline handle is created, it deep-copies all type information from a source (like the parser's temporary arena) into its own private arena. The size of the source arena is used as a hint for the new arena's size, but the copy process itself requires a small amount of extra memory for its own bookkeeping (e.g., the memoization list in <code>_copy_type_graph_to_arena_recursive</code>). This headroom provides that extra space to prevent allocation failures during the copy. </p>
 
 </div>
 </div>

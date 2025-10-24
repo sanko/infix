@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('830__security_8c.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p>A test suite for security hardening and vulnerability prevention.  
+<p>Unit test for security-hardening features of the <code>infix</code> library.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
@@ -152,18 +152,27 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A test suite for security hardening and vulnerability prevention. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This suite consolidates several tests to verify the security-related features and hardening of the infix library. It is designed to be run on all platforms, with specific tests activating based on the target OS and compiler.</p>
-<p>The key areas verified are:</p><ol type="1">
-<li><b>Use-After-Free Prevention:</b> Confirms that attempting to call a freed trampoline results in a safe, immediate crash (e.g., SIGSEGV or Access Violation) due to the guard page mechanism in <code>infix_executable_free</code>. This is tested for both forward and reverse trampolines.</li>
-<li><b>Read-Only Context Protection:</b> Verifies that the context for a reverse trampoline is made read-only after creation. Attempting to write to this hardened memory should cause a crash, preventing exploits that might modify callback behavior at runtime.</li>
-<li><b>API Hardening (Integer Overflows):</b> Ensures that the <code>infix_type_create_*</code> functions are resilient to integer overflow attacks. It passes maliciously crafted size, offset, or element counts that would cause <code>size_t</code> to wrap around, and confirms that the API rejects these inputs gracefully.</li>
-<li><b>POSIX Hardened Allocator:</b> A simple check to confirm that the dual-mapping <code>shm_open</code> memory allocator, used on hardened Linux/BSD systems, functions correctly. </li>
+<div class="textblock"><p>Unit test for security-hardening features of the <code>infix</code> library. </p>
+<p>This test file verifies several critical security mechanisms designed to make the library resilient against common memory corruption vulnerabilities. Since these tests involve intentionally triggering crashes, they are executed in child processes to avoid terminating the main test runner.</p>
+<p>The test covers:</p>
+<ol type="1">
+<li><b>Use-After-Free (UAF) Prevention:</b><ul>
+<li>It creates a trampoline (forward bound, forward unbound, and reverse), destroys it, and then attempts to call the dangling function pointer.</li>
+<li>It verifies that this action results in an immediate and controlled crash (e.g., a <code>SIGSEGV</code>), proving that the "guard page" mechanism in <code>infix_executable_free</code> is working correctly.</li>
+</ul>
+</li>
+<li><b>Context Memory Hardening:</b><ul>
+<li>It creates a reverse trampoline, whose context struct is allocated in a special memory region.</li>
+<li>After creation, the JIT engine makes this memory region read-only.</li>
+<li>The test then attempts to write to a field within this context (<code>rt-&gt;user_data</code>).</li>
+<li>It verifies that this write attempt causes a crash, proving that the context is successfully protected from runtime memory corruption.</li>
+</ul>
+</li>
+<li><b>API Hardening against Integer Overflows:</b><ul>
+<li>It calls <code>infix_type_create_*</code> functions with maliciously crafted inputs designed to cause integer overflows during size and layout calculations (e.g., creating an array with <code>SIZE_MAX</code> elements).</li>
+<li>It verifies that the API functions detect these overflows, return an error status (<code>INFIX_ERROR_INVALID_ARGUMENT</code>), and do not proceed with a potentially dangerous allocation. </li>
+</ul>
+</li>
 </ol>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>

@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('810__memory__stress_8c.html',''); init
 </div><!--header-->
 <div class="contents">
 
-<p>A stress test for detecting memory leaks in the infix FFI library.  
+<p>A stress test to detect memory leaks under heavy allocation/deallocation cycles.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -150,21 +150,18 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A stress test for detecting memory leaks in the infix FFI library. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test is designed to be run under a memory analysis tool like Valgrind or AddressSanitizer. Its purpose is not to verify functional correctness, but to expose memory leaks by performing a large number of allocations and deallocations of all major dynamic FFI objects.</p>
-<p>In a tight loop, the test performs the following cycle:</p><ol type="1">
-<li>Creates a memory arena.</li>
-<li>Builds a deeply nested, complex <code>infix_type</code> graph within the arena.</li>
-<li>Generates a forward trampoline using this complex type.</li>
-<li>Generates a reverse trampoline (callback) using the same type.</li>
-<li>Frees all resources created in that cycle, including the arena itself.</li>
+<div class="textblock"><p>A stress test to detect memory leaks under heavy allocation/deallocation cycles. </p>
+<p>This test is not designed to check functional correctness, but rather to ensure the library's memory management is sound. It runs a tight loop that performs a large number of create/destroy cycles for complex forward and reverse trampolines.</p>
+<p>In each iteration, it:</p><ol type="1">
+<li>Creates a new arena.</li>
+<li>Programmatically builds a complex <code>infix_type</code> representing a nested struct with arrays.</li>
+<li>Creates a forward trampoline using this type.</li>
+<li>Destroys the forward trampoline.</li>
+<li>Creates a reverse trampoline using the same type.</li>
+<li>Destroys the reverse trampoline.</li>
+<li>Destroys the arena.</li>
 </ol>
-<p>The test is considered successful if it completes without crashing and the memory analysis tool reports ZERO memory leaks. </p>
+<p>The test itself only asserts that it completes. Its true purpose is to be run under a memory analysis tool like Valgrind or AddressSanitizer (ASan). A "pass" for this test is a clean report from the memory tool, indicating that no memory was leaked across the thousands of iterations. This is crucial for ensuring the long-term stability of applications that frequently create and destroy trampolines. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -263,7 +260,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(1)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

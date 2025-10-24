@@ -1,4 +1,4 @@
 <map id="Memory Management" name="Memory Management">
-<area shape="rect" id="Node000001" title="The arena allocator and configurable memory functions." alt="" coords="140,5,307,31"/>
-<area shape="rect" id="Node000002" href="$group__public__api.html" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,5,92,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000001" title="APIs for memory management, including custom allocators and arenas." alt="" coords="236,5,403,31"/>
 </map>

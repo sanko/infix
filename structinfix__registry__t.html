@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('structinfix__registry__t.html',''); in
 </div><!--header-->
 <div class="contents">
 
+<p>Internal definition of a named type registry.  
+ <a href="structinfix__registry__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for infix_registry_t:</div>
@@ -127,7 +130,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a5e4b310bcaaa29b2914b4cd575a94403" id="r_a5e4b310bcaaa29b2914b4cd575a94403"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__registry__t.html#a5e4b310bcaaa29b2914b4cd575a94403">buckets</a></td></tr>
 <tr class="separator:a5e4b310bcaaa29b2914b4cd575a94403"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Internal definition of a named type registry. </p>
+<p>Implemented as a hash table with separate chaining for collision resolution. All memory for the table, its entries, and the canonical <code>infix_type</code> objects it stores are owned by a single arena for simple lifecycle management. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a3dcf4c08a691518f0da36f3cc4429bcc" name="a3dcf4c08a691518f0da36f3cc4429bcc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3dcf4c08a691518f0da36f3cc4429bcc">&#9670;&#160;</a></span>arena</h2>
 
@@ -139,7 +145,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Owns all memory for the hash table, names, and its types. </p>
+<p>The arena that owns all type metadata and entry structs. </p>
 
 </div>
 </div>
@@ -154,7 +160,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The array of pointers to the heads of the collision chains. </p>
+<p>The array of hash table buckets (linked list heads). </p>
 
 </div>
 </div>
@@ -169,7 +175,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The size of the 'buckets' array. </p>
+<p>The number of buckets in the hash table. </p>
 
 </div>
 </div>
@@ -184,7 +190,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The total number of items stored in the hash table. </p>
+<p>The total number of items in the registry. </p>
 
 </div>
 </div>

@@ -112,8 +112,8 @@ $(document).ready(function(){initNavTree('abi__win__x64_8c.html',''); initResiza
 
 <p>Implements the FFI logic for the Windows x64 calling convention.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="abi__x64__common_8h_source.html">abi_x64_common.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="abi__x64__emitters_8h_source.html">abi_x64_emitters.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="abi__x64__common_8h_source.html">arch/x64/abi_x64_common.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="abi__x64__emitters_8h_source.html">arch/x64/abi_x64_emitters.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="utility_8h_source.html">common/utility.h</a>&quot;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
@@ -121,7 +121,7 @@ $(document).ready(function(){initNavTree('abi__win__x64_8c.html',''); initResiza
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for abi_win_x64.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="abi__win__x64_8c__incl.svg" width="555" height="418"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="abi__win__x64_8c__incl.svg" width="616" height="418"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -135,31 +135,31 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae83fafdc61baf5dc28716dbf4ed80146" id="r_ae83fafdc61baf5dc28716dbf4ed80146"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ae83fafdc61baf5dc28716dbf4ed80146">prepare_forward_call_frame_win_x64</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **out_layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_fn)</td></tr>
+<tr class="memitem:ae83fafdc61baf5dc28716dbf4ed80146" id="r_ae83fafdc61baf5dc28716dbf4ed80146"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ae83fafdc61baf5dc28716dbf4ed80146">prepare_forward_call_frame_win_x64</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **out_layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_fn)</td></tr>
 <tr class="separator:ae83fafdc61baf5dc28716dbf4ed80146"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0aeb3fa78e8451088628fed3ee7d4000" id="r_a0aeb3fa78e8451088628fed3ee7d4000"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a0aeb3fa78e8451088628fed3ee7d4000">generate_forward_prologue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
+<tr class="memitem:a0aeb3fa78e8451088628fed3ee7d4000" id="r_a0aeb3fa78e8451088628fed3ee7d4000"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a0aeb3fa78e8451088628fed3ee7d4000">generate_forward_prologue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
 <tr class="separator:a0aeb3fa78e8451088628fed3ee7d4000"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a630e1ac2c9abfe71f68a3f8b7dfeaf30" id="r_a630e1ac2c9abfe71f68a3f8b7dfeaf30"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a630e1ac2c9abfe71f68a3f8b7dfeaf30">generate_forward_argument_moves_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args)</td></tr>
+<tr class="memitem:a630e1ac2c9abfe71f68a3f8b7dfeaf30" id="r_a630e1ac2c9abfe71f68a3f8b7dfeaf30"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a630e1ac2c9abfe71f68a3f8b7dfeaf30">generate_forward_argument_moves_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args)</td></tr>
 <tr class="separator:a630e1ac2c9abfe71f68a3f8b7dfeaf30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5132bf202a802a9011b2cc99837631b" id="r_ac5132bf202a802a9011b2cc99837631b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ac5132bf202a802a9011b2cc99837631b">generate_forward_call_instruction_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td></tr>
+<tr class="memitem:ac5132bf202a802a9011b2cc99837631b" id="r_ac5132bf202a802a9011b2cc99837631b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ac5132bf202a802a9011b2cc99837631b">generate_forward_call_instruction_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td></tr>
 <tr class="separator:ac5132bf202a802a9011b2cc99837631b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb7b60f5c6084f780b842f07956a3d0a" id="r_afb7b60f5c6084f780b842f07956a3d0a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#afb7b60f5c6084f780b842f07956a3d0a">generate_forward_epilogue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>)</td></tr>
+<tr class="memitem:afb7b60f5c6084f780b842f07956a3d0a" id="r_afb7b60f5c6084f780b842f07956a3d0a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#afb7b60f5c6084f780b842f07956a3d0a">generate_forward_epilogue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>)</td></tr>
 <tr class="separator:afb7b60f5c6084f780b842f07956a3d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61142ce74731f3b68257a5ae1e492f74" id="r_a61142ce74731f3b68257a5ae1e492f74"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a61142ce74731f3b68257a5ae1e492f74">prepare_reverse_call_frame_win_x64</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> **out_layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
+<tr class="memitem:a61142ce74731f3b68257a5ae1e492f74" id="r_a61142ce74731f3b68257a5ae1e492f74"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a61142ce74731f3b68257a5ae1e492f74">prepare_reverse_call_frame_win_x64</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> **out_layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
 <tr class="separator:a61142ce74731f3b68257a5ae1e492f74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90b20f75e1f619202ef977f788efb7e9" id="r_a90b20f75e1f619202ef977f788efb7e9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a90b20f75e1f619202ef977f788efb7e9">generate_reverse_prologue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout)</td></tr>
+<tr class="memitem:a90b20f75e1f619202ef977f788efb7e9" id="r_a90b20f75e1f619202ef977f788efb7e9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a90b20f75e1f619202ef977f788efb7e9">generate_reverse_prologue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout)</td></tr>
 <tr class="separator:a90b20f75e1f619202ef977f788efb7e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5fb852f4ac5e5fd25a4f4ded23ed6ae" id="r_af5fb852f4ac5e5fd25a4f4ded23ed6ae"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#af5fb852f4ac5e5fd25a4f4ded23ed6ae">generate_reverse_argument_marshalling_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
+<tr class="memitem:af5fb852f4ac5e5fd25a4f4ded23ed6ae" id="r_af5fb852f4ac5e5fd25a4f4ded23ed6ae"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#af5fb852f4ac5e5fd25a4f4ded23ed6ae">generate_reverse_argument_marshalling_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
 <tr class="separator:af5fb852f4ac5e5fd25a4f4ded23ed6ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac88f31eaf1b794710f1bda9420593a6f" id="r_ac88f31eaf1b794710f1bda9420593a6f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ac88f31eaf1b794710f1bda9420593a6f">generate_reverse_dispatcher_call_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
+<tr class="memitem:ac88f31eaf1b794710f1bda9420593a6f" id="r_ac88f31eaf1b794710f1bda9420593a6f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ac88f31eaf1b794710f1bda9420593a6f">generate_reverse_dispatcher_call_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
 <tr class="separator:ac88f31eaf1b794710f1bda9420593a6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a635bf032f4935d965fca9557f3354b43" id="r_a635bf032f4935d965fca9557f3354b43"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a635bf032f4935d965fca9557f3354b43">generate_reverse_epilogue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
+<tr class="memitem:a635bf032f4935d965fca9557f3354b43" id="r_a635bf032f4935d965fca9557f3354b43"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a635bf032f4935d965fca9557f3354b43">generate_reverse_epilogue_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
 <tr class="separator:a635bf032f4935d965fca9557f3354b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9a7cb92ccddd3e068ea56768cd0a766" id="r_aa9a7cb92ccddd3e068ea56768cd0a766"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#aa9a7cb92ccddd3e068ea56768cd0a766">return_value_is_by_reference</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:aa9a7cb92ccddd3e068ea56768cd0a766"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7df0424ed580ffcb6d8ce28b8cac5a6" id="r_ad7df0424ed580ffcb6d8ce28b8cac5a6"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#ad7df0424ed580ffcb6d8ce28b8cac5a6">is_passed_by_reference</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:ad7df0424ed580ffcb6d8ce28b8cac5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d601ea53c3498ce6558cc5cd6b579bc" id="r_a5d601ea53c3498ce6558cc5cd6b579bc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a5d601ea53c3498ce6558cc5cd6b579bc">generate_forward_call_instruction_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f">c23_maybe_unused</a> <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
+<tr class="memitem:a5d601ea53c3498ce6558cc5cd6b579bc" id="r_a5d601ea53c3498ce6558cc5cd6b579bc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__win__x64_8c.html#a5d601ea53c3498ce6558cc5cd6b579bc">generate_forward_call_instruction_win_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f">c23_maybe_unused</a> <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
 <tr class="separator:a5d601ea53c3498ce6558cc5cd6b579bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -239,7 +239,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_argument_moves_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_argument_moves_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -293,7 +293,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_call_instruction_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_call_instruction_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname">, </td>
@@ -329,7 +329,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_call_instruction_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_call_instruction_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -365,7 +365,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_epilogue_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_epilogue_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -407,7 +407,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_prologue_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_forward_prologue_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -443,7 +443,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_argument_marshalling_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_argument_marshalling_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -485,7 +485,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_dispatcher_call_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_dispatcher_call_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -527,7 +527,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_epilogue_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_epilogue_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -569,7 +569,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_prologue_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_reverse_prologue_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -631,7 +631,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> prepare_forward_call_frame_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> prepare_forward_call_frame_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
           <td class="paramname"><em>arena</em>, </td>
@@ -697,7 +697,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> prepare_reverse_call_frame_win_x64 </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> prepare_reverse_call_frame_win_x64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
           <td class="paramname"><em>arena</em>, </td>

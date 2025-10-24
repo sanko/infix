@@ -1,5 +1,6 @@
 var group__manual__api =
 [
+    [ "Type System", "group__type__system.html", "group__type__system" ],
     [ "infix_forward_create_manual", "group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0", null ],
     [ "infix_forward_create_unbound_manual", "group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a", null ],
     [ "infix_forward_destroy", "group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032", null ],

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['information_0',['Version Information',['../group__version__macros.html',1,'']]],
-  ['introspection_20api_1',['Introspection API',['../group__introspection__api.html',1,'']]]
+  ['management_0',['Memory Management',['../group__memory__management.html',1,'']]],
+  ['manual_20api_1',['Manual API',['../group__manual__api.html',1,'']]],
+  ['memory_20management_2',['Memory Management',['../group__memory__management.html',1,'']]]
 ];

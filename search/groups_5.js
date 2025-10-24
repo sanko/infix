@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['globals_20api_0',['Dynamic Library &amp; Globals API',['../group__exports__api.html',1,'']]]
+  ['information_0',['Version Information',['../group__version__info.html',1,'']]],
+  ['introspection_20api_1',['Introspection API',['../group__introspection__api.html',1,'']]]
 ];

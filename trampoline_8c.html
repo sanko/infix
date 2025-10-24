@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: src/core/trampoline.c File Reference</title>
+<title>infix: src/jit/trampoline.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -103,12 +103,14 @@ $(document).ready(function(){initNavTree('trampoline_8c.html',''); initResizable
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">trampoline.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>The core engine for JIT compiling FFI trampolines.  
+<p>The core JIT engine for generating forward and reverse trampolines.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="utility_8h_source.html">common/utility.h</a>&quot;</code><br />
@@ -125,94 +127,128 @@ Include dependency graph for trampoline.c:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="trampoline_8c__dep__incl.svg" width="170" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="trampoline_8c__dep__incl.svg" width="155" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="trampoline_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvisited__node__t.html">visited_node_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a06320c0ecea4184c99fba3760dbd67db" id="r_a06320c0ecea4184c99fba3760dbd67db"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structvisited__node__t.html">visited_node_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a06320c0ecea4184c99fba3760dbd67db">visited_node_t</a></td></tr>
+<tr class="separator:a06320c0ecea4184c99fba3760dbd67db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a964917e57d373d129275a8733240fa6c" id="r_a964917e57d373d129275a8733240fa6c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a964917e57d373d129275a8733240fa6c">_infix_reverse_create_internal</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *, void *, bool)</td></tr>
-<tr class="separator:a964917e57d373d129275a8733240fa6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad080e7a5e3427a4f841793ef3bdb32bc" id="r_ad080e7a5e3427a4f841793ef3bdb32bc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#ad080e7a5e3427a4f841793ef3bdb32bc">_infix_reverse_create_internal</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *user_callback_fn, void *user_data, bool is_callback)</td></tr>
+<tr class="separator:ad080e7a5e3427a4f841793ef3bdb32bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b84d54f6e9f0ce8471541a5613d172a" id="r_a3b84d54f6e9f0ce8471541a5613d172a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a3b84d54f6e9f0ce8471541a5613d172a">get_current_forward_abi_spec</a> ()</td></tr>
-<tr class="memdesc:a3b84d54f6e9f0ce8471541a5613d172a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for the current target platform (forward calls).  <br /></td></tr>
+<tr class="memdesc:a3b84d54f6e9f0ce8471541a5613d172a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for forward calls for the current platform.  <br /></td></tr>
 <tr class="separator:a3b84d54f6e9f0ce8471541a5613d172a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae93b9ffeb475945247232b8e930a976b" id="r_ae93b9ffeb475945247232b8e930a976b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#ae93b9ffeb475945247232b8e930a976b">get_current_reverse_abi_spec</a> ()</td></tr>
-<tr class="memdesc:ae93b9ffeb475945247232b8e930a976b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for the current target platform (reverse calls).  <br /></td></tr>
+<tr class="memdesc:ae93b9ffeb475945247232b8e930a976b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for reverse calls for the current platform.  <br /></td></tr>
 <tr class="separator:ae93b9ffeb475945247232b8e930a976b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aa83ec657f76fd7a7c4959e4595a4ca" id="r_a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca">code_buffer_init</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>)</td></tr>
 <tr class="memdesc:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a code buffer for JIT code generation.  <br /></td></tr>
 <tr class="separator:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9d33eaa80bda7f5098a8c9a54f3a970" id="r_aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970">code_buffer_append</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, const void *data, size_t len)</td></tr>
-<tr class="memdesc:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends raw bytes to a code buffer, reallocating if necessary.  <br /></td></tr>
+<tr class="memdesc:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends raw bytes to a code buffer, reallocating within its arena if necessary.  <br /></td></tr>
 <tr class="separator:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d0918e753909d08082ed9b2824dcbb8" id="r_a0d0918e753909d08082ed9b2824dcbb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8">emit_byte</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint8_t byte)</td></tr>
-<tr class="memdesc:a0d0918e753909d08082ed9b2824dcbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a single byte to a code buffer.  <br /></td></tr>
+<tr class="memdesc:a0d0918e753909d08082ed9b2824dcbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a single byte to a code buffer.  <br /></td></tr>
 <tr class="separator:a0d0918e753909d08082ed9b2824dcbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd9ba2199b4fe230a75cccf849da3831" id="r_abd9ba2199b4fe230a75cccf849da3831"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#abd9ba2199b4fe230a75cccf849da3831">emit_int32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int32_t value)</td></tr>
-<tr class="memdesc:abd9ba2199b4fe230a75cccf849da3831"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a 32-bit integer to a code buffer.  <br /></td></tr>
+<tr class="memdesc:abd9ba2199b4fe230a75cccf849da3831"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 32-bit integer (little-endian) to a code buffer.  <br /></td></tr>
 <tr class="separator:abd9ba2199b4fe230a75cccf849da3831"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bb6e3bc5fc462f6d764002029c7dfe4" id="r_a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a8bb6e3bc5fc462f6d764002029c7dfe4">emit_int64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int64_t value)</td></tr>
-<tr class="memdesc:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a 64-bit integer to a code buffer.  <br /></td></tr>
+<tr class="memdesc:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 64-bit integer (little-endian) to a code buffer.  <br /></td></tr>
 <tr class="separator:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6806deef9c44b1fc8716f03c0d0d85f2" id="r_a6806deef9c44b1fc8716f03c0d0d85f2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a6806deef9c44b1fc8716f03c0d0d85f2">_is_type_graph_resolved</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
-<tr class="separator:a6806deef9c44b1fc8716f03c0d0d85f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5f3559908e6a7bcc72103c52937d67ad" id="r_ga5f3559908e6a7bcc72103c52937d67ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
-<tr class="memdesc:ga5f3559908e6a7bcc72103c52937d67ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the executable code pointer from an unbound forward trampoline.  <br /></td></tr>
+<tr class="memitem:a1349105d70d3ae24107ecda93db18e42" id="r_a1349105d70d3ae24107ecda93db18e42"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a1349105d70d3ae24107ecda93db18e42">_is_type_graph_resolved_recursive</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="structvisited__node__t.html">visited_node_t</a> *visited_head)</td></tr>
+<tr class="separator:a1349105d70d3ae24107ecda93db18e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7328162dbe6a7205bc6ce74ec7787c4f" id="r_a7328162dbe6a7205bc6ce74ec7787c4f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a7328162dbe6a7205bc6ce74ec7787c4f">_is_type_graph_resolved</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="separator:a7328162dbe6a7205bc6ce74ec7787c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5f3559908e6a7bcc72103c52937d67ad" id="r_ga5f3559908e6a7bcc72103c52937d67ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
+<tr class="memdesc:ga5f3559908e6a7bcc72103c52937d67ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the callable function pointer from an unbound forward trampoline.  <br /></td></tr>
 <tr class="separator:ga5f3559908e6a7bcc72103c52937d67ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga32fc7e60dd474cebc4ac082e49ac9ea8" id="r_ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
-<tr class="memdesc:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the executable code pointer from a bound forward trampoline.  <br /></td></tr>
+<tr class="memitem:ga32fc7e60dd474cebc4ac082e49ac9ea8" id="r_ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
+<tr class="memdesc:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the callable function pointer from a bound forward trampoline.  <br /></td></tr>
 <tr class="separator:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cc3a6bbf73695ec563aceeb6ed73fbb" id="r_a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *source_arena, void *target_fn)</td></tr>
-<tr class="memdesc:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The internal core logic for creating a forward trampoline.  <br /></td></tr>
+<tr class="memitem:a1cc3a6bbf73695ec563aceeb6ed73fbb" id="r_a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *source_arena, void *target_fn)</td></tr>
+<tr class="memdesc:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core implementation for creating all forward trampolines.  <br /></td></tr>
 <tr class="separator:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga017f14762b217bc6d0101e994481bfd0" id="r_ga017f14762b217bc6d0101e994481bfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_function)</td></tr>
-<tr class="memdesc:ga017f14762b217bc6d0101e994481bfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a bound forward-call trampoline for a given function signature.  <br /></td></tr>
+<tr class="memitem:ga017f14762b217bc6d0101e994481bfd0" id="r_ga017f14762b217bc6d0101e994481bfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_function)</td></tr>
+<tr class="memdesc:ga017f14762b217bc6d0101e994481bfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a bound forward trampoline from <code>infix_type</code> objects (Manual API).  <br /></td></tr>
 <tr class="separator:ga017f14762b217bc6d0101e994481bfd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa265f727b644889b3a6e0817532bfe6a" id="r_gaa265f727b644889b3a6e0817532bfe6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args)</td></tr>
-<tr class="memdesc:gaa265f727b644889b3a6e0817532bfe6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an "unbound" forward-call trampoline for a given function signature.  <br /></td></tr>
+<tr class="memitem:gaa265f727b644889b3a6e0817532bfe6a" id="r_gaa265f727b644889b3a6e0817532bfe6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args)</td></tr>
+<tr class="memdesc:gaa265f727b644889b3a6e0817532bfe6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an unbound forward trampoline from <code>infix_type</code> objects (Manual API).  <br /></td></tr>
 <tr class="separator:gaa265f727b644889b3a6e0817532bfe6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad87a8882dec00b89a4bc5c87db2fc032" id="r_gad87a8882dec00b89a4bc5c87db2fc032"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
-<tr class="memdesc:gad87a8882dec00b89a4bc5c87db2fc032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a forward trampoline and its associated executable memory.  <br /></td></tr>
+<tr class="memdesc:gad87a8882dec00b89a4bc5c87db2fc032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a forward trampoline and frees all associated memory.  <br /></td></tr>
 <tr class="separator:gad87a8882dec00b89a4bc5c87db2fc032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafe3a80a72de54323eb8bd0bee1be3ca" id="r_aafe3a80a72de54323eb8bd0bee1be3ca"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#aafe3a80a72de54323eb8bd0bee1be3ca">get_page_size</a> ()</td></tr>
 <tr class="separator:aafe3a80a72de54323eb8bd0bee1be3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28d7f22662c45343bd1c821fa79f19eb" id="r_ga28d7f22662c45343bd1c821fa79f19eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb">infix_reverse_create_callback_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *user_callback_fn)</td></tr>
-<tr class="memdesc:ga28d7f22662c45343bd1c821fa79f19eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a type-safe reverse-call trampoline (callback) from <code>infix_type</code> objects.  <br /></td></tr>
+<tr class="memitem:ga28d7f22662c45343bd1c821fa79f19eb" id="r_ga28d7f22662c45343bd1c821fa79f19eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb">infix_reverse_create_callback_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *user_callback_fn)</td></tr>
+<tr class="memdesc:ga28d7f22662c45343bd1c821fa79f19eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a type-safe reverse trampoline (callback) from <code>infix_type</code> objects (Manual API).  <br /></td></tr>
 <tr class="separator:ga28d7f22662c45343bd1c821fa79f19eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8aa8e7c6bc0e47f2e796c8899796012a" id="r_ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a">infix_reverse_create_closure_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a> user_callback_fn, void *user_data)</td></tr>
-<tr class="memdesc:ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a generic reverse-call trampoline (closure) from <code>infix_type</code> objects.  <br /></td></tr>
+<tr class="memitem:ga8aa8e7c6bc0e47f2e796c8899796012a" id="r_ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a">infix_reverse_create_closure_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a> user_callback_fn, void *user_data)</td></tr>
+<tr class="memdesc:ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a generic reverse trampoline (closure) from <code>infix_type</code> objects (Manual API).  <br /></td></tr>
 <tr class="separator:ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga00b101025663c423a28433e139be5d4e" id="r_ga00b101025663c423a28433e139be5d4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *reverse_trampoline)</td></tr>
-<tr class="memdesc:ga00b101025663c423a28433e139be5d4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a reverse trampoline, its JIT-compiled stub, and its context.  <br /></td></tr>
+<tr class="memdesc:ga00b101025663c423a28433e139be5d4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a reverse trampoline and frees all associated memory.  <br /></td></tr>
 <tr class="separator:ga00b101025663c423a28433e139be5d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3b75e8481ac13d11faa15046fc4adb66" id="r_ga3b75e8481ac13d11faa15046fc4adb66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *reverse_trampoline)</td></tr>
-<tr class="memdesc:ga3b75e8481ac13d11faa15046fc4adb66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the executable code pointer from a reverse trampoline.  <br /></td></tr>
+<tr class="memdesc:ga3b75e8481ac13d11faa15046fc4adb66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the native, callable C function pointer from a reverse trampoline.  <br /></td></tr>
 <tr class="separator:ga3b75e8481ac13d11faa15046fc4adb66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab41c717a6e4e4198c62284e526e5d9b3" id="r_gab41c717a6e4e4198c62284e526e5d9b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *reverse_trampoline)</td></tr>
-<tr class="memdesc:gab41c717a6e4e4198c62284e526e5d9b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the user_data stored with a reverse trampoline.  <br /></td></tr>
+<tr class="memdesc:gab41c717a6e4e4198c62284e526e5d9b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the user-provided data pointer from a closure context.  <br /></td></tr>
 <tr class="separator:gab41c717a6e4e4198c62284e526e5d9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5362b6f6976298aebefdb2a487e72e36" id="r_ga5362b6f6976298aebefdb2a487e72e36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, void *target_function, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga5362b6f6976298aebefdb2a487e72e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_forward_create</code> API function.  <br /></td></tr>
+<tr class="memitem:ga5362b6f6976298aebefdb2a487e72e36" id="r_ga5362b6f6976298aebefdb2a487e72e36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, void *target_function, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga5362b6f6976298aebefdb2a487e72e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a "bound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:ga5362b6f6976298aebefdb2a487e72e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga524a8ccebd24c9232d30cb2f79aee5a5" id="r_ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_forward_create_unbound</code> API function.  <br /></td></tr>
+<tr class="memitem:ga524a8ccebd24c9232d30cb2f79aee5a5" id="r_ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an "unbound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, void *user_callback_fn, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga010d41376c47f1100903d427776033ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_reverse_create_callback</code> API function.  <br /></td></tr>
+<tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, void *user_callback_fn, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga010d41376c47f1100903d427776033ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a type-safe reverse trampoline (callback).  <br /></td></tr>
 <tr class="separator:ga010d41376c47f1100903d427776033ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, <a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a> user_callback_fn, void *user_data, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga6d1281b61d196d1d06153aa1265fb971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_reverse_create_closure</code> API function.  <br /></td></tr>
+<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a> user_callback_fn, void *user_data, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga6d1281b61d196d1d06153aa1265fb971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a generic reverse trampoline (closure) for stateful callbacks.  <br /></td></tr>
 <tr class="separator:ga6d1281b61d196d1d06153aa1265fb971"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The core engine for JIT compiling FFI trampolines. </p>
+<div class="textblock"><p>The core JIT engine for generating forward and reverse trampolines. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>This module is the central orchestrator of the <code>infix</code> library. It brings together the type system, memory management, and ABI-specific logic to generate executable machine code at runtime.</p>
+<p>It implements both the high-level Signature API (e.g., <code>infix_forward_create</code>) and the low-level Manual API (e.g., <code>infix_forward_create_manual</code>). The high-level functions are convenient wrappers that use the signature parser to create the necessary <code>infix_type</code> objects before calling the core internal implementation.</p>
+<p>The core logic is encapsulated in <code>_infix_forward_create_internal</code> and <code>_infix_reverse_create_internal</code>. These functions follow a clear pipeline:</p><ol type="1">
+<li><b>Prepare:</b> Analyze the function signature with the appropriate ABI-specific <code>prepare_*_call_frame</code> function to create a layout blueprint.</li>
+<li><b>Generate:</b> Use the layout blueprint to call a sequence of ABI-specific <code>generate_*</code> functions, which emit machine code into a temporary <code><a class="el" href="structcode__buffer.html" title="A dynamic buffer for staged machine code generation.">code_buffer</a></code>.</li>
+<li><b>Finalize:</b> Allocate executable memory, copy the generated code into it, create the final self-contained trampoline handle (deep-copying all type metadata), and make the code executable. </li>
+</ol>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="a06320c0ecea4184c99fba3760dbd67db" name="a06320c0ecea4184c99fba3760dbd67db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06320c0ecea4184c99fba3760dbd67db">&#9670;&#160;</a></span>visited_node_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structvisited__node__t.html">visited_node_t</a> <a class="el" href="structvisited__node__t.html">visited_node_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a1cc3a6bbf73695ec563aceeb6ed73fbb" name="a1cc3a6bbf73695ec563aceeb6ed73fbb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1cc3a6bbf73695ec563aceeb6ed73fbb">&#9670;&#160;</a></span>_infix_forward_create_internal()</h2>
 
@@ -220,7 +256,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_forward_create_internal </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_forward_create_internal </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
           <td class="paramname"><em>out_trampoline</em>, </td>
@@ -269,12 +305,13 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The internal core logic for creating a forward trampoline. </p>
+<p>The core implementation for creating all forward trampolines. </p>
+<p>Located in <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">src/jit/trampoline.c</a></code>, this function orchestrates the entire JIT pipeline for forward calls, from ABI classification to code generation and final handle creation. </p><dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
-<a id="a964917e57d373d129275a8733240fa6c" name="a964917e57d373d129275a8733240fa6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a964917e57d373d129275a8733240fa6c">&#9670;&#160;</a></span>_infix_reverse_create_internal()</h2>
+<a id="ad080e7a5e3427a4f841793ef3bdb32bc" name="ad080e7a5e3427a4f841793ef3bdb32bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad080e7a5e3427a4f841793ef3bdb32bc">&#9670;&#160;</a></span>_infix_reverse_create_internal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,7 +320,7 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_reverse_create_internal </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_reverse_create_internal </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **&#160;</td>
           <td class="paramname"><em>out_context</em>, </td>
@@ -345,8 +382,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6806deef9c44b1fc8716f03c0d0d85f2" name="a6806deef9c44b1fc8716f03c0d0d85f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6806deef9c44b1fc8716f03c0d0d85f2">&#9670;&#160;</a></span>_is_type_graph_resolved()</h2>
+<a id="a7328162dbe6a7205bc6ce74ec7787c4f" name="a7328162dbe6a7205bc6ce74ec7787c4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7328162dbe6a7205bc6ce74ec7787c4f">&#9670;&#160;</a></span>_is_type_graph_resolved()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,9 +394,45 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">static bool _is_type_graph_resolved </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
           <td class="paramname"><em>type</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1349105d70d3ae24107ecda93db18e42" name="a1349105d70d3ae24107ecda93db18e42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1349105d70d3ae24107ecda93db18e42">&#9670;&#160;</a></span>_is_type_graph_resolved_recursive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool _is_type_graph_resolved_recursive </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structvisited__node__t.html">visited_node_t</a> *&#160;</td>
+          <td class="paramname"><em>visited_head</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -403,7 +476,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Appends raw bytes to a code buffer, reallocating if necessary. </p>
+<p>Appends raw bytes to a code buffer, reallocating within its arena if necessary. </p>
+<p>See <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">src/jit/trampoline.c</a></code>. This is the fundamental operation for building the machine code. If the buffer runs out of space, it is grown exponentially. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer to append to. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>A pointer to the bytes to append. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>The number of bytes to append. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -434,6 +515,13 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initializes a code buffer for JIT code generation. </p>
+<p>See <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">src/jit/trampoline.c</a></code>. Associates the buffer with a temporary arena and sets its initial capacity. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buf</td><td>A pointer to the <code><a class="el" href="structcode__buffer.html" title="A dynamic buffer for staged machine code generation.">code_buffer</a></code> to initialize. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arena</td><td>The temporary arena to use for the buffer's memory. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -463,7 +551,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Appends a single byte to a code buffer. </p>
+<p>A convenience wrapper to append a single byte to a code buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">byte</td><td>The byte to append. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -493,7 +588,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Appends a 32-bit integer to a code buffer. </p>
+<p>A convenience wrapper to append a 32-bit integer (little-endian) to a code buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The 32-bit integer to append. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -523,7 +625,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Appends a 64-bit integer to a code buffer. </p>
+<p>A convenience wrapper to append a 64-bit integer (little-endian) to a code buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The 64-bit integer to append. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -543,7 +652,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets the ABI v-table for the current target platform (forward calls). </p>
+<p>Gets the ABI v-table for forward calls for the current platform. </p>
+<p>See <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">src/jit/trampoline.c</a></code>. This function is the entry point to the ABI abstraction layer, returning the correct set of function pointers based on the compile-time ABI detection. </p><dl class="section return"><dt>Returns</dt><dd>A pointer to the active <code><a class="el" href="structinfix__forward__abi__spec.html" title="Defines the ABI-specific implementation interface for forward trampolines.">infix_forward_abi_spec</a></code>. </dd></dl>
 
 </div>
 </div>
@@ -563,7 +673,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets the ABI v-table for the current target platform (reverse calls). </p>
+<p>Gets the ABI v-table for reverse calls for the current platform. </p>
+<p>See <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">src/jit/trampoline.c</a></code>. This function mirrors <code>get_current_forward_abi_spec</code> for reverse call trampolines. </p><dl class="section return"><dt>Returns</dt><dd>A pointer to the active <code><a class="el" href="structinfix__reverse__abi__spec.html" title="Defines the ABI-specific implementation interface for reverse trampolines.">infix_reverse_abi_spec</a></code>. </dd></dl>
 
 </div>
 </div>
@@ -597,7 +708,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_aebb8dcc11953d78e620bbef0b9e2183.html">core</a></li><li class="navelem"><a class="el" href="trampoline_8c.html">trampoline.c</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_03578ffc625328032e8a57470fd83d21.html">jit</a></li><li class="navelem"><a class="el" href="trampoline_8c.html">trampoline.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

@@ -1,5 +1,5 @@
 var topics =
 [
-    [ "Public API", "group__public__api.html", "group__public__api" ],
-    [ "SIMD Feature Detection Macros", "group__simd__macros.html", null ]
+    [ "Version Information", "group__version__info.html", "group__version__info" ],
+    [ "High-Level Signature API", "group__high__level__api.html", "group__high__level__api" ]
 ];

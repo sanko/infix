@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="A single entry in the registry&#39;s hash table.">
 <polygon fill="#999999" stroke="#666666" points="125,-19 0,-19 0,0 125,0 125,-19"/>
 <text text-anchor="middle" x="62.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_infix_registry_entry_t</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="structinfix__type__t.html" target="_top" xlink:title="The central structure for describing any data type in the FFI system.">
+<g id="a_Node000002"><a xlink:href="structinfix__type__t.html" target="_top" xlink:title="A semi&#45;opaque structure that describes a C type.">
 <polygon fill="white" stroke="#666666" points="318.5,-103 244.5,-103 244.5,-84 318.5,-84 318.5,-103"/>
 <text text-anchor="middle" x="281.5" y="-91" font-family="Helvetica,sans-Serif" font-size="10.00">infix_type_t</text>
 </a>
@@ -63,7 +63,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="structinfix__struct__member__t.html" target="_top" xlink:title="Describes a single member of an aggregate type (struct or union).">
+<g id="a_Node000003"><a xlink:href="structinfix__struct__member__t.html" target="_top" xlink:title="Describes a single member of a C struct or union.">
 <polygon fill="white" stroke="#666666" points="312.5,-19 186.5,-19 186.5,0 312.5,0 312.5,-19"/>
 <text text-anchor="middle" x="249.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_struct_member_t</text>
 </a>
@@ -82,7 +82,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="structinfix__function__argument__t.html" target="_top" xlink:title="Describes a single argument to a function, pairing an optional name with its type.">
+<g id="a_Node000004"><a xlink:href="structinfix__function__argument__t.html" target="_top" xlink:title="Describes a single argument to a C function.">
 <polygon fill="white" stroke="#666666" points="474.5,-19 330.5,-19 330.5,0 474.5,0 474.5,-19"/>
 <text text-anchor="middle" x="402.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_function_argument_t</text>
 </a>

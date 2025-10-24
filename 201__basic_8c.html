@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('201__basic_8c.html',''); initResizable
 </div><!--header-->
 <div class="contents">
 
-<p>Tests fundamental FFI operations involving pointers.  
+<p>Unit test for FFI calls involving pointer types.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -130,13 +130,13 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a021325335442088553d22be0cd27cf58" id="r_a021325335442088553d22be0cd27cf58"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="201__basic_8c.html#a021325335442088553d22be0cd27cf58">find_char_in_string</a> (const char *s, int c)</td></tr>
-<tr class="memdesc:a021325335442088553d22be0cd27cf58"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <code>strchr</code>-like function to test pointer arguments and return values.  <br /></td></tr>
+<tr class="memdesc:a021325335442088553d22be0cd27cf58"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that takes a string and a character, and returns a pointer into the string.  <br /></td></tr>
 <tr class="separator:a021325335442088553d22be0cd27cf58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a753d781a50523af33317e7a04580755b" id="r_a753d781a50523af33317e7a04580755b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="201__basic_8c.html#a753d781a50523af33317e7a04580755b">modify_data_via_pointers</a> (int *a, double *b)</td></tr>
-<tr class="memdesc:a753d781a50523af33317e7a04580755b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the data pointed to by its arguments.  <br /></td></tr>
+<tr class="memdesc:a753d781a50523af33317e7a04580755b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that modifies the caller's data through pointers.  <br /></td></tr>
 <tr class="separator:a753d781a50523af33317e7a04580755b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ec4678338fe4607df715d80d8fea0e5" id="r_a9ec4678338fe4607df715d80d8fea0e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="201__basic_8c.html#a9ec4678338fe4607df715d80d8fea0e5">check_if_null</a> (void *ptr)</td></tr>
-<tr class="memdesc:a9ec4678338fe4607df715d80d8fea0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the pointer it received is nullptr.  <br /></td></tr>
+<tr class="memdesc:a9ec4678338fe4607df715d80d8fea0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple helper to check if a received pointer is NULL.  <br /></td></tr>
 <tr class="separator:a9ec4678338fe4607df715d80d8fea0e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ef021ab86822fb9247e295884218690" id="r_a7ef021ab86822fb9247e295884218690"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="201__basic_8c.html#a7ef021ab86822fb9247e295884218690">subtest</a> (&quot;Passing and returning pointers&quot;)</td></tr>
 <tr class="separator:a7ef021ab86822fb9247e295884218690"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,17 +151,13 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests fundamental FFI operations involving pointers. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite verifies that the library can correctly handle pointers as both arguments and return values. It covers three essential scenarios:</p>
+<div class="textblock"><p>Unit test for FFI calls involving pointer types. </p>
+<p>This test file verifies that the <code>infix</code> library correctly handles pointer arguments and return values. Pointers are fundamental to C, and their correct handling (passing by value, dereferencing) is critical for any FFI library.</p>
+<p>The test covers three key scenarios:</p>
 <ol type="1">
-<li><b>Passing and Returning Pointers:</b> A function similar to <code>strchr</code> is called to ensure that a pointer passed into a function and a pointer returned from a function both retain their correct values.</li>
-<li><b>Modifying Data Via Pointers:</b> A function is called with pointers to local variables. The test verifies that the native function can dereference these pointers and modify the original data in the caller's stack frame, a common C idiom.</li>
-<li><b>Passing nullptr Pointers:</b> A <code>nullptr</code> pointer is passed to a native function to ensure it is transmitted correctly without being corrupted or causing a crash. </li>
+<li><b>Passing and Returning Pointers:</b> A call is made to a C function that takes a <code>const char*</code> and returns a <code>const char*</code> (the result of <code>strchr</code>). This validates that pointer values themselves are passed and returned correctly.</li>
+<li><b>Modifying Data Via Pointers:</b> A call is made to a C function that takes pointers to an <code>int</code> and a <code>double</code> (<code>int*</code>, <code>double*</code>) and modifies the data at those addresses. This verifies that the JIT-compiled code correctly passes the pointers, allowing the callee to dereference them and modify the caller's original data.</li>
+<li><b>Passing <code>nullptr</code>:</b> Verifies that a <code>NULL</code> pointer can be correctly passed through the FFI boundary and is received as <code>NULL</code> by the callee. </li>
 </ol>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
@@ -195,7 +191,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if the pointer it received is nullptr. </p>
+<p>A simple helper to check if a received pointer is NULL. </p>
 
 </div>
 </div>
@@ -225,7 +221,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A <code>strchr</code>-like function to test pointer arguments and return values. </p>
+<p>A C function that takes a string and a character, and returns a pointer into the string. </p>
 
 </div>
 </div>
@@ -255,7 +251,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Modifies the data pointed to by its arguments. </p>
+<p>A C function that modifies the caller's data through pointers. </p>
 
 </div>
 </div>
@@ -327,7 +323,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(3)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

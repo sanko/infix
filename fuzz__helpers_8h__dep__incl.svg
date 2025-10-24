@@ -57,7 +57,7 @@ var sectionId = 'dynsection-1';
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Shared helper functions and types for infix FFI fuzzing harnesses.">
+<g id="a_Node000001"><a xlink:title="Common definitions, structures, and helpers for all fuzzer targets.">
 <polygon fill="#999999" stroke="#666666" points="420.5,-74 310.5,-74 310.5,-55 420.5,-55 420.5,-74"/>
 <text text-anchor="middle" x="365.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_helpers.h</text>
 </a>
@@ -66,7 +66,7 @@ var sectionId = 'dynsection-1';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="fuzz__abi_8c.html" target="_top" xlink:title="A fuzzer targeting the ABI&#45;specific classification logic.">
+<g id="a_Node000002"><a xlink:href="fuzz__abi_8c.html" target="_top" xlink:title="Fuzzer target for the ABI classification layer.">
 <polygon fill="white" stroke="#666666" points="89,-19 0,-19 0,0 89,0 89,-19"/>
 <text text-anchor="middle" x="44.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_abi.c</text>
 </a>
@@ -84,7 +84,7 @@ var sectionId = 'dynsection-1';
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="fuzz__helpers_8c.html" target="_top" xlink:title="Implementation of the shared recursive infix_type generator for fuzzing.">
+<g id="a_Node000003"><a xlink:href="fuzz__helpers_8c.html" target="_top" xlink:title="Implements the core logic for generating random infix_type graphs from fuzzer input.">
 <polygon fill="white" stroke="#666666" points="217.5,-19 107.5,-19 107.5,0 217.5,0 217.5,-19"/>
 <text text-anchor="middle" x="162.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_helpers.c</text>
 </a>
@@ -102,7 +102,7 @@ var sectionId = 'dynsection-1';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="fuzz__signature_8c.html" target="_top" xlink:title="A libFuzzer&#45;based harness for the infix FFI signature parser.">
+<g id="a_Node000004"><a xlink:href="fuzz__signature_8c.html" target="_top" xlink:title="Fuzzer target for the high&#45;level signature parsing API.">
 <polygon fill="white" stroke="#666666" points="355,-19 236,-19 236,0 355,0 355,-19"/>
 <text text-anchor="middle" x="295.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_signature.c</text>
 </a>
@@ -120,7 +120,7 @@ var sectionId = 'dynsection-1';
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="fuzz__trampoline_8c.html" target="_top" xlink:title="A dual&#45;purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI trampo...">
+<g id="a_Node000005"><a xlink:href="fuzz__trampoline_8c.html" target="_top" xlink:title="Fuzzer target for the trampoline generation functions.">
 <polygon fill="white" stroke="#666666" points="500,-19 373,-19 373,0 500,0 500,-19"/>
 <text text-anchor="middle" x="436.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_trampoline.c</text>
 </a>
@@ -138,7 +138,7 @@ var sectionId = 'dynsection-1';
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="fuzz__types_8c.html" target="_top" xlink:title="A dual&#45;purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI type c...">
+<g id="a_Node000006"><a xlink:href="fuzz__types_8c.html" target="_top" xlink:title="Fuzzer target for the random type generation logic.">
 <polygon fill="white" stroke="#666666" points="619,-19 518,-19 518,0 619,0 619,-19"/>
 <text text-anchor="middle" x="568.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_types.c</text>
 </a>
@@ -156,7 +156,7 @@ var sectionId = 'dynsection-1';
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="850__regression__cases_8c.html" target="_top" xlink:title="Contains a data&#45;driven suite of deterministic unit tests for specific bugs found by fuzzing.">
+<g id="a_Node000007"><a xlink:href="850__regression__cases_8c.html" target="_top" xlink:title="A suite of regression tests for bugs discovered by fuzzing.">
 <polygon fill="white" stroke="#666666" points="776,-19 637,-19 637,0 776,0 776,-19"/>
 <text text-anchor="middle" x="706.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">t/850_regression_cases.c</text>
 </a>

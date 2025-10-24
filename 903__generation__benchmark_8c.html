@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('903__generation__benchmark_8c.html',''
 </div><!--header-->
 <div class="contents">
 
-<p>A microbenchmark for FFI trampoline <em>generation</em> time.  
+<p>A micro-benchmark to measure the performance of trampoline generation.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('903__generation__benchmark_8c.html',''
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 903_generation_benchmark.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="903__generation__benchmark_8c__incl.svg" width="604" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="903__generation__benchmark_8c__incl.svg" width="630" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -132,13 +132,14 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:adeeb67e5d02656f1664829124034f3eb" id="r_adeeb67e5d02656f1664829124034f3eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#adeeb67e5d02656f1664829124034f3eb">benchmark_handler</a> (<a class="el" href="structPoint.html">Point</a> p)</td></tr>
+<tr class="memdesc:adeeb67e5d02656f1664829124034f3eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dummy handler function to provide a valid function pointer for creation.  <br /></td></tr>
 <tr class="separator:adeeb67e5d02656f1664829124034f3eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dbedaf8c7b1e7ddd952c3a4381da057" id="r_a0dbedaf8c7b1e7ddd952c3a4381da057"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#a0dbedaf8c7b1e7ddd952c3a4381da057">diag</a> (&quot;Trampoline Generation Benchmark&quot;)</td></tr>
 <tr class="separator:a0dbedaf8c7b1e7ddd952c3a4381da057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a995b400f1978d4445954d1990dd1bee5" id="r_a995b400f1978d4445954d1990dd1bee5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#a995b400f1978d4445954d1990dd1bee5">diag</a> (&quot;Iterations: %d&quot;, <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>)</td></tr>
 <tr class="separator:a995b400f1978d4445954d1990dd1bee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6a98c69ffaad8ccf7e68a691f1f444b" id="r_aa6a98c69ffaad8ccf7e68a691f1f444b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#aa6a98c69ffaad8ccf7e68a691f1f444b">diag</a> (&quot;Target: <a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb">infix_reverse_create_callback_manual</a> <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> <a class="el" href="structPoint.html">Point</a>(<a class="el" href="structPoint.html">Point</a>) using <a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> API&quot;)</td></tr>
-<tr class="separator:aa6a98c69ffaad8ccf7e68a691f1f444b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a770eb3b1e6c8a57c2e188f84cbe5f246" id="r_a770eb3b1e6c8a57c2e188f84cbe5f246"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#a770eb3b1e6c8a57c2e188f84cbe5f246">diag</a> (&quot;Target: Full create/destroy cycle <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> a reverse callback with signature 'void(<a class="el" href="structPoint.html">Point</a>)'&quot;)</td></tr>
+<tr class="separator:a770eb3b1e6c8a57c2e188f84cbe5f246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77168d3709d668c5c1836a8280cfdb5a" id="r_a77168d3709d668c5c1836a8280cfdb5a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#a77168d3709d668c5c1836a8280cfdb5a">for</a> (int i=0;i&lt; <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>;++i)</td></tr>
 <tr class="separator:a77168d3709d668c5c1836a8280cfdb5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3854398181355353e77a53f754ad320" id="r_ae3854398181355353e77a53f754ad320"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html#ae3854398181355353e77a53f754ad320">diag</a> (&quot;Total time: %.4f s&quot;, <a class="el" href="903__generation__benchmark_8c.html#abc276e47b85df9dd59f248e663b3b971">total_time</a>)</td></tr>
@@ -162,14 +163,16 @@ Variables</h2></td></tr>
 <tr class="separator:a5132e9886e71bdab9d220b0239762213"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A microbenchmark for FFI trampoline <em>generation</em> time. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test measures the performance of the trampoline creation process, which was the target of the arena allocator optimization. It should not be run as part of the regular test suite.</p>
-<p>It repeatedly generates and destroys a reverse trampoline for a complex function signature using the manual, arena-based API. This measures the full setup cost and quantifies the performance of the type system and JIT generator. </p>
+<div class="textblock"><p>A micro-benchmark to measure the performance of trampoline generation. </p>
+<p>This is not a correctness test, but a performance benchmark. Its purpose is to measure the time it takes to perform a complete create/destroy cycle for a reverse trampoline. This is a key metric for applications that need to create callbacks dynamically and frequently.</p>
+<p>The benchmark runs a tight loop that, in each iteration:</p><ol type="1">
+<li>Creates a memory arena.</li>
+<li>Programmatically creates a moderately complex <code>infix_type</code> for a struct.</li>
+<li>Calls <code>infix_reverse_create_callback_manual</code> to generate a JIT-compiled callback.</li>
+<li>Destroys the created trampoline.</li>
+<li>Destroys the arena.</li>
+</ol>
+<p>The output is the average time for one complete cycle, reported in microseconds per operation (<code>us/op</code>). This metric is useful for tracking the performance of the entire JIT pipeline, including type creation, ABI classification, code emission, and memory management. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ae09100a38fd2f3c0840b55298791ee3c" name="ae09100a38fd2f3c0840b55298791ee3c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae09100a38fd2f3c0840b55298791ee3c">&#9670;&#160;</a></span>BENCHMARK_ITERATIONS</h2>
@@ -215,6 +218,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A dummy handler function to provide a valid function pointer for creation. </p>
 
 </div>
 </div>
@@ -274,8 +279,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa6a98c69ffaad8ccf7e68a691f1f444b" name="aa6a98c69ffaad8ccf7e68a691f1f444b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6a98c69ffaad8ccf7e68a691f1f444b">&#9670;&#160;</a></span>diag() <span class="overload">[3/5]</span></h2>
+<a id="a770eb3b1e6c8a57c2e188f84cbe5f246" name="a770eb3b1e6c8a57c2e188f84cbe5f246"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a770eb3b1e6c8a57c2e188f84cbe5f246">&#9670;&#160;</a></span>diag() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,7 +288,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">diag </td>
           <td>(</td>
-          <td class="paramtype">&quot;Target: <a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb">infix_reverse_create_callback_manual</a> <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> <a class="el" href="structPoint.html">Point</a>(<a class="el" href="structPoint.html">Point</a>) using <a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> API&quot;&#160;</td>
+          <td class="paramtype">&quot;Target: Full create/destroy cycle <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> a reverse callback with signature 'void(<a class="el" href="structPoint.html">Point</a>)'&quot;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -415,7 +420,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(1)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

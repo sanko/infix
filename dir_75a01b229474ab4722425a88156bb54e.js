@@ -17,6 +17,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "301_primitives.c", "301__primitives_8c.html", "301__primitives_8c" ],
     [ "302_aggregates.c", "302__aggregates_8c.html", "302__aggregates_8c" ],
     [ "303_advanced.c", "303__advanced_8c.html", "303__advanced_8c" ],
+    [ "304_reverse_call_types.c", "304__reverse__call__types_8c.html", "304__reverse__call__types_8c" ],
     [ "401_large_stack.c", "401__large__stack_8c.html", "401__large__stack_8c" ],
     [ "402_variadic_functions.c", "402__variadic__functions_8c.html", "402__variadic__functions_8c" ],
     [ "403_special_types.c", "403__special__types_8c.html", "403__special__types_8c" ],
@@ -27,6 +28,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "830_security.c", "830__security_8c.html", "830__security_8c" ],
     [ "840_arena_allocator.c", "840__arena__allocator_8c.html", "840__arena__allocator_8c" ],
     [ "850_regression_cases.c", "850__regression__cases_8c.html", "850__regression__cases_8c" ],
+    [ "851_lifecycle_regression.c", "851__lifecycle__regression_8c.html", "851__lifecycle__regression_8c" ],
     [ "860_error_handling.c", "860__error__handling_8c.html", "860__error__handling_8c" ],
     [ "901_call_overhead.c", "901__call__overhead_8c.html", "901__call__overhead_8c" ],
     [ "903_generation_benchmark.c", "903__generation__benchmark_8c.html", "903__generation__benchmark_8c" ]

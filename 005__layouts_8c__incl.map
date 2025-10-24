@@ -1,18 +1,18 @@
 <map id="t/005_layouts.c" name="t/005_layouts.c">
-<area shape="rect" id="Node000001" title="Tests the correctness of the ABI&#45;aware layout calculation for aggregates." alt="" coords="149,5,271,31"/>
-<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A simple, header&#45;only TAP14&#45;compatible testing framework for C." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,33,121,74,119,69,189,28"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title=" " alt="" coords="309,79,404,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,28,322,70,319,75,232,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="319,225,394,251"/>
-<area shape="poly" id="edge9_Node000001_Node000005" title=" " alt="" coords="211,31,209,59,211,97,219,138,238,176,252,191,269,204,307,222,305,226,266,208,248,195,233,179,214,140,206,98,204,59,206,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="503,225,586,251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="405,96,508,115,555,131,572,140,584,150,591,167,588,185,569,216,564,213,583,183,585,168,580,154,569,144,552,135,507,120,404,101"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="359,104,359,212,354,212,354,104"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="248,152,319,177"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="346,106,307,144,303,140,343,102"/>
-<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="395,152,569,177"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="378,102,451,143,448,147,375,106"/>
-<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="494,176,527,213,523,217,490,179"/>
-<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="463,180,390,221,388,216,461,175"/>
+<area shape="rect" id="Node000001" title="Unit test for the Manual API&#39;s struct and union layout calculations." alt="" coords="183,5,304,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="5,79,172,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,33,127,75,125,70,217,28"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="196,79,291,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,31,246,65,241,65,241,31"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="206,225,281,251"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="266,29,306,54,347,90,363,111,373,133,375,156,367,179,353,196,335,210,295,228,293,223,332,205,349,192,362,176,370,155,368,134,358,114,343,94,302,59,263,33"/>
+<area shape="rect" id="Node000004" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="31,152,205,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="225,106,152,147,149,143,222,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="14,225,97,251"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="196,105,88,129,43,142,20,154,15,168,17,183,36,213,31,216,12,185,9,167,16,150,41,138,87,124,195,99"/>
+<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="246,104,246,212,241,212,241,104"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="281,152,352,177"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="257,102,297,140,293,144,254,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="110,179,77,217,73,213,106,176"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="139,175,212,216,210,221,137,180"/>
 </map>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: Named Type Registry API</title>
+<title>infix: Named Type Registry</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -104,32 +104,32 @@ $(document).ready(function(){initNavTree('group__registry__api.html',''); initRe
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">Named Type Registry API<div class="ingroups"><a class="el" href="group__public__api.html">Public API</a></div></div></div>
+  <div class="headertitle"><div class="title">Named Type Registry<div class="ingroups"><a class="el" href="group__high__level__api.html">High-Level Signature API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Functions for defining, managing, and using a registry of named types.  
+<p>APIs for defining, storing, and reusing complex types by name.  
 <a href="#details">More...</a></p>
 <div class="dynheader">
-Collaboration diagram for Named Type Registry API:</div>
+Collaboration diagram for Named Type Registry:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="group__registry__api.svg" width="332" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="group__registry__api.svg" width="403" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gac808273483db7a9db2bc275c41b13296" id="r_gac808273483db7a9db2bc275c41b13296"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a> (void)</td></tr>
-<tr class="memdesc:gac808273483db7a9db2bc275c41b13296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new, empty type registry.  <br /></td></tr>
+<tr class="memdesc:gac808273483db7a9db2bc275c41b13296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new, empty named type registry.  <br /></td></tr>
 <tr class="separator:gac808273483db7a9db2bc275c41b13296"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4c3b0c1f77732fc2f8aa0a8de62f8a1a" id="r_ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a">infix_registry_destroy</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a type registry and all type definitions and metadata contained within it.  <br /></td></tr>
-<tr class="separator:ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4ece2363948c40fe528826bf65dac280" id="r_ga4ece2363948c40fe528826bf65dac280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *, const char *)</td></tr>
-<tr class="memdesc:ga4ece2363948c40fe528826bf65dac280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string of definitions and populates a type registry.  <br /></td></tr>
+<tr class="memitem:ga48f8efad0f6e1d14d5adacf466116b61" id="r_ga48f8efad0f6e1d14d5adacf466116b61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61">infix_registry_destroy</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:ga48f8efad0f6e1d14d5adacf466116b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a type registry and frees all associated memory.  <br /></td></tr>
+<tr class="separator:ga48f8efad0f6e1d14d5adacf466116b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4ece2363948c40fe528826bf65dac280" id="r_ga4ece2363948c40fe528826bf65dac280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *, const char *)</td></tr>
+<tr class="memdesc:ga4ece2363948c40fe528826bf65dac280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string of type definitions and adds them to a registry.  <br /></td></tr>
 <tr class="separator:ga4ece2363948c40fe528826bf65dac280"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Functions for defining, managing, and using a registry of named types. </p>
+<p>APIs for defining, storing, and reusing complex types by name. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga4ece2363948c40fe528826bf65dac280" name="ga4ece2363948c40fe528826bf65dac280"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga4ece2363948c40fe528826bf65dac280">&#9670;&#160;</a></span>infix_register_types()</h2>
@@ -138,7 +138,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_register_types </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_register_types </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td>
           <td class="paramname"><em>registry</em>, </td>
@@ -157,19 +157,38 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Parses a string of definitions and populates a type registry. </p>
-<p>This function is the primary way to define named types. The definition string is a semicolon-separated list of <code>@Name = &lt;TypeDefinition&gt;;</code> entries.</p>
+<p>Parses a string of type definitions and adds them to a registry. </p>
+<p>This is the primary way to populate a registry. Definitions are separated by semicolons. The parser supports forward declarations (<code>@Name;</code>) and out-of-order definitions, making it easy to define mutually recursive types.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">registry</td><td>The registry to populate. </td></tr>
-    <tr><td class="paramname">definitions</td><td>A null-terminated, semicolon-separated string of type definitions. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to populate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">definitions</td><td>A semicolon-separated string of definitions. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd>
-<dd>
-<code>INFIX_ERROR_INVALID_ARGUMENT</code> if the definition string contains a syntax error or attempts to redefine an existing type in the registry.</dd></dl>
-<p>Parses a string of definitions and populates a type registry. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. <div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* my_types =</div>
+<div class="line">    <span class="stringliteral">&quot;@Point = { x: double, y: double };&quot;</span>    <span class="comment">// Define a struct</span></div>
+<div class="line">    <span class="stringliteral">&quot;@Node;&quot;</span>                                <span class="comment">// Forward-declare Node</span></div>
+<div class="line">    <span class="stringliteral">&quot;@List = { head: *@Node };&quot;</span>             <span class="comment">// Use the forward declaration</span></div>
+<div class="line">    <span class="stringliteral">&quot;@Node = { value: int, next: *@Node };&quot;</span> <span class="comment">// Define the recursive struct</span></div>
+<div class="line">;</div>
+<div class="line"><a class="code hl_function" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a>(registry, my_types);</div>
+<div class="ttc" id="agroup__registry__api_html_ga4ece2363948c40fe528826bf65dac280"><div class="ttname"><a href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a></div><div class="ttdeci">c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *)</div><div class="ttdoc">Parses a string of type definitions and adds them to a registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:389</div></div>
+</div><!-- fragment --></dd></dl>
+<p>This function uses a robust <b>three-pass approach</b> to handle complex dependencies, including out-of-order and mutually recursive definitions.</p>
+<ul>
+<li><b>Pass 1 (Scan &amp; Index):</b> The entire definition string is scanned. The parser identifies every type name being defined (<code>@Name = ...</code>) or forward-declared (<code>@Name;</code>). It creates an entry for each name in the registry's hash table and stores a pointer to the start of its definition body, without parsing it yet. This pass ensures that all type names are known before any parsing begins.</li>
+<li><b>Pass 2 (Parse &amp; Copy):</b> The function iterates through the definitions indexed in Pass 1. For each one, it calls the main signature parser (<code>_infix_parse_type_internal</code>) on the definition body to create a raw, unresolved <code>infix_type</code> graph. This graph is then deep-copied into the registry's permanent arena. At the end of this pass, every defined name has a corresponding (but still unresolved) type graph associated with it in the registry.</li>
+<li><b>Pass 3 (Resolve &amp; Layout):</b> The function iterates through all the newly created types from Pass 2. For each one, it performs the "Resolve" and "Layout" stages. Because all type graphs now exist, any <code>@Name</code> reference encountered during resolution is guaranteed to find a corresponding entry in the registry, successfully connecting the graph.</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to populate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">definitions</td><td>A semicolon-separated string of definitions. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
 
 </div>
 </div>
@@ -189,16 +208,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Creates a new, empty type registry. </p>
-<p>A type registry is a self-contained object that stores named type definitions. These definitions can then be referenced by name (e.g., <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code>) in any signature string passed to the library.</p>
-<dl class="section return"><dt>Returns</dt><dd>A handle to the new registry, or <code>nullptr</code> if memory allocation fails. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The returned registry must be freed with <code>infix_registry_destroy</code>.</dd></dl>
-<p>Creates a new, empty type registry. </p>
+<p>Creates a new, empty named type registry. </p>
+<p>A registry acts as a dictionary for <code>infix</code> types, allowing you to define complex structs, unions, or aliases once and refer to them by name (e.g., <code>@MyStruct</code>) in any signature string. This is essential for managing complex, recursive, or mutually-dependent types.</p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the new registry, or <code>nullptr</code> on allocation failure. The returned handle must be freed with <code>infix_registry_destroy</code>. </dd></dl>
 
 </div>
 </div>
-<a id="ga4c3b0c1f77732fc2f8aa0a8de62f8a1a" name="ga4c3b0c1f77732fc2f8aa0a8de62f8a1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4c3b0c1f77732fc2f8aa0a8de62f8a1a">&#9670;&#160;</a></span>infix_registry_destroy()</h2>
+<a id="ga48f8efad0f6e1d14d5adacf466116b61" name="ga48f8efad0f6e1d14d5adacf466116b61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga48f8efad0f6e1d14d5adacf466116b61">&#9670;&#160;</a></span>infix_registry_destroy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -213,14 +230,21 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Frees a type registry and all type definitions and metadata contained within it. </p>
+<p>Destroys a type registry and frees all associated memory. </p>
+<p>This includes freeing the registry handle itself, its internal hash table, and all <code>infix_type</code> objects that were created as part of a definition.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">registry</td><td>The registry to destroy. Can be <code>nullptr</code> (no-op).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to destroy. Safe to call with <code>nullptr</code>.</td></tr>
   </table>
   </dd>
 </dl>
-<p>Frees a type registry and all type definitions and metadata contained within it. </p>
+<p>This includes freeing the registry handle itself and its internal arena, which in turn frees the hash table, all entry structs, and all canonical <code>infix_type</code> objects that were created as part of a type definition.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to destroy. Safe to call with <code>nullptr</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

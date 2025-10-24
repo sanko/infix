@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('003__type__system__api_8c.html',''); i
 </div><!--header-->
 <div class="contents">
 
-<p>Tests the infix_type_* API functions for correctness and error handling.  
+<p>Unit test for the Manual API (<code>infix_type_create_*</code> functions).  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -160,17 +160,16 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests the infix_type_* API functions for correctness and error handling. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite focuses on the internal consistency of the type system's public API, rather than its use in FFI calls. It ensures that the functions for creating structs, unions, and arrays behave as expected under both normal and exceptional conditions.</p>
-<p>The tests verify:</p><ol type="1">
-<li><b>Correctness:</b> That <code>infix_type_create_struct</code>, <code>_union</code>, and <code>_array</code> calculate the size and alignment of types in a way that matches the C compiler's own <code>sizeof</code> and <code>_Alignof</code> operators.</li>
-<li><b>Error Handling:</b> That the creation functions correctly reject invalid arguments (e.g., nullptr pointers for required parameters) and return the appropriate error status. </li>
-</ol>
+<div class="textblock"><p>Unit test for the Manual API (<code>infix_type_create_*</code> functions). </p>
+<p>This test file validates the correctness of the programmatic type creation API. Its primary goal is to ensure that the <code>infix_type</code> objects created by these functions have a memory layout (size and alignment) that perfectly matches the layout produced by the C compiler for equivalent native types.</p>
+<p>It tests:</p><ul>
+<li><code>infix_type_create_struct</code>: Verifies standard padding and layout calculation.</li>
+<li><code>infix_type_create_union</code>: Verifies size and alignment for unions.</li>
+<li><code>infix_type_create_array</code>: Verifies layout for fixed-size arrays.</li>
+<li><code>infix_type_create_enum</code>: Verifies that enums have the layout of their underlying type.</li>
+<li><b>Introspection API</b>: Checks that functions like <code>infix_forward_get_num_args</code> and <code>infix_forward_get_arg_type</code> return correct information about a created trampoline.</li>
+</ul>
+<p>This test is crucial for guaranteeing that the library's internal understanding of C's data layout rules is accurate. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -306,7 +305,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(5)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

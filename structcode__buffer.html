@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('structcode__buffer.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
+<p>A dynamic buffer for staged machine code generation.  
+ <a href="structcode__buffer.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for code_buffer:</div>
@@ -119,22 +122,20 @@ Collaboration diagram for code_buffer:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a0cf05f4c0738809d22ab6151f2095d30" id="r_a0cf05f4c0738809d22ab6151f2095d30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcode__buffer.html#a6de76ff3da3d0b7176d0c7de499250bb">uint8_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcode__buffer.html#a0cf05f4c0738809d22ab6151f2095d30">code</a></td></tr>
-<tr class="memdesc:a0cf05f4c0738809d22ab6151f2095d30"><td class="mdescLeft">&#160;</td><td class="mdescRight">The buffer holding the machine code.  <br /></td></tr>
 <tr class="separator:a0cf05f4c0738809d22ab6151f2095d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb63e5bb1179a1b62a8ff16e51c7f6c8" id="r_acb63e5bb1179a1b62a8ff16e51c7f6c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcode__buffer.html#a6de76ff3da3d0b7176d0c7de499250bb">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcode__buffer.html#acb63e5bb1179a1b62a8ff16e51c7f6c8">capacity</a></td></tr>
-<tr class="memdesc:acb63e5bb1179a1b62a8ff16e51c7f6c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The allocated capacity of the buffer.  <br /></td></tr>
 <tr class="separator:acb63e5bb1179a1b62a8ff16e51c7f6c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6de76ff3da3d0b7176d0c7de499250bb" id="r_a6de76ff3da3d0b7176d0c7de499250bb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcode__buffer.html#a6de76ff3da3d0b7176d0c7de499250bb">size</a></td></tr>
-<tr class="memdesc:a6de76ff3da3d0b7176d0c7de499250bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current number of bytes written to the buffer.  <br /></td></tr>
 <tr class="separator:a6de76ff3da3d0b7176d0c7de499250bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cb019984e145a4803bdc62fcc8ae45f" id="r_a2cb019984e145a4803bdc62fcc8ae45f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcode__buffer.html#a6de76ff3da3d0b7176d0c7de499250bb">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcode__buffer.html#a2cb019984e145a4803bdc62fcc8ae45f">error</a></td></tr>
-<tr class="memdesc:a2cb019984e145a4803bdc62fcc8ae45f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A flag that is set if a memory allocation fails.  <br /></td></tr>
 <tr class="separator:a2cb019984e145a4803bdc62fcc8ae45f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6779cbcc55d6b96f313abce98f773a8" id="r_af6779cbcc55d6b96f313abce98f773a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcode__buffer.html#af6779cbcc55d6b96f313abce98f773a8">arena</a></td></tr>
-<tr class="memdesc:af6779cbcc55d6b96f313abce98f773a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The arena to use for allocations.  <br /></td></tr>
 <tr class="separator:af6779cbcc55d6b96f313abce98f773a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A dynamic buffer for staged machine code generation. </p>
+<p>This structure is used during the JIT compilation process. ABI-specific emitters append instruction bytes to this buffer. It automatically grows as needed, allocating memory from a temporary arena that is destroyed after the final code is copied to executable memory. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="af6779cbcc55d6b96f313abce98f773a8" name="af6779cbcc55d6b96f313abce98f773a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af6779cbcc55d6b96f313abce98f773a8">&#9670;&#160;</a></span>arena</h2>
 
@@ -146,8 +147,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The arena to use for allocations. </p>
+<p>The temporary arena used for code generation. </p>
 
 </div>
 </div>
@@ -162,8 +162,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The allocated capacity of the buffer. </p>
+<p>The current capacity of the buffer. </p>
 
 </div>
 </div>
@@ -178,8 +177,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The buffer holding the machine code. </p>
+<p>A pointer to the code buffer, allocated from the arena. </p>
 
 </div>
 </div>
@@ -194,8 +192,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A flag that is set if a memory allocation fails. </p>
+<p>A flag set on allocation failure. </p>
 
 </div>
 </div>
@@ -210,8 +207,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The current number of bytes written to the buffer. </p>
+<p>The number of bytes currently written to the buffer. </p>
 
 </div>
 </div>

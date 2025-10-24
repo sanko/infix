@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('302__aggregates_8c.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>Tests reverse trampolines (callbacks) with struct and union arguments/returns.  
+<p>Unit test for reverse trampolines (callbacks) with aggregate types.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -120,7 +120,7 @@ $(document).ready(function(){initNavTree('302__aggregates_8c.html',''); initResi
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 302_aggregates.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="302__aggregates_8c__incl.svg" width="604" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="302__aggregates_8c__incl.svg" width="630" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -173,19 +173,14 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests reverse trampolines (callbacks) with struct and union arguments/returns. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This is a comprehensive test suite for verifying the reverse FFI (callback) functionality with aggregate types. It covers a wide range of scenarios that are highly dependent on the target platform's ABI rules.</p>
-<p>The suite consolidates several previous tests and verifies:</p><ul>
-<li><b>Small Structs:</b> Passing and returning a <code><a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code> struct, which is small enough to be handled in registers on most platforms.</li>
-<li><b>Large Structs (Pass by Reference):</b> Passing a <code><a class="el" href="structLargeStruct.html" title="A struct with a size greater than 16 bytes.">LargeStruct</a></code> to a callback, which ABIs will handle by passing a pointer to a copy on the stack.</li>
-<li><b>Large Structs (Return via Hidden Pointer):</b> Returning a <code><a class="el" href="structLargeStruct.html" title="A struct with a size greater than 16 bytes.">LargeStruct</a></code> from a callback, which ABIs handle by having the caller provide a hidden pointer to a buffer where the result is written.</li>
-<li><b>ABI-Specific Aggregates (HFA):</b> Passing a <code><a class="el" href="structVector4.html" title="A struct containing a fixed-size array of floats.">Vector4</a></code> struct, which is treated as a Homogeneous Floating-point Aggregate on AArch64.</li>
-<li><b>Unions:</b> Returning a <code><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a></code> union from a callback. </li>
+<div class="textblock"><p>Unit test for reverse trampolines (callbacks) with aggregate types. </p>
+<p>This test file verifies that <code>infix</code> can correctly create and execute reverse trampolines for functions that take or return aggregate types (structs, unions, etc.) by value. This is a critical test of the reverse-call JIT-compiler and the ABI implementation's ability to correctly marshal arguments from their native locations (registers/stack) into the generic format for the C handler.</p>
+<p>The test covers:</p><ul>
+<li><b>Small Structs:</b> A <code><a class="el" href="structPoint.html" title="A simple struct with two doubles, often used to test pass-by-value on registers.">Point</a></code> struct, which is typically passed in registers. Both the type-safe callback and generic closure models are tested.</li>
+<li><b>Large Structs:</b> A <code><a class="el" href="structLargeStruct.html" title="A struct larger than 16 bytes, guaranteed to be passed by reference on most ABIs.">LargeStruct</a></code>, which is passed/returned by reference via a hidden pointer, testing the stub's ability to handle this ABI rule.</li>
+<li><b>Structs with Arrays:</b> A <code><a class="el" href="structVector4.html" title="A struct containing an array, often used to test HFA (Homogeneous Floating-point Aggregate) rules.">Vector4</a></code> struct, which may be an HFA on some platforms.</li>
+<li><b>Unions:</b> A <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union, testing the handling of this aggregate type.</li>
+<li><b>Packed Structs:</b> A <code><a class="el" href="structPackedStruct.html" title="A packed struct with an unusual size (9 bytes) and alignment (1).">PackedStruct</a></code> with non-natural alignment, testing that the raw bytes are correctly marshalled regardless of internal layout. </li>
 </ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
@@ -613,7 +608,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(6)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

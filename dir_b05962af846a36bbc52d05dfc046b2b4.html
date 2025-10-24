@@ -114,22 +114,25 @@ Directory dependency graph for fuzz:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
 Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__abi_8c.html">fuzz_abi.c</a></td></tr>
-<tr class="memdesc:fuzz__abi_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A fuzzer targeting the ABI-specific classification logic. <br /></td></tr>
+<tr class="memdesc:fuzz__abi_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fuzzer target for the ABI classification layer. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8c.html">fuzz_helpers.c</a></td></tr>
-<tr class="memdesc:fuzz__helpers_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the shared recursive infix_type generator for fuzzing. <br /></td></tr>
+<tr class="memdesc:fuzz__helpers_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the core logic for generating random <code>infix_type</code> graphs from fuzzer input. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="fuzz__helpers_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html">fuzz_helpers.h</a></td></tr>
-<tr class="memdesc:fuzz__helpers_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared helper functions and types for infix FFI fuzzing harnesses. <br /></td></tr>
+<tr class="memdesc:fuzz__helpers_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common definitions, structures, and helpers for all fuzzer targets. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="fuzz__regression__helpers_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__regression__helpers_8h.html">fuzz_regression_helpers.h</a></td></tr>
+<tr class="memdesc:fuzz__regression__helpers_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper functions specifically for running regression tests from saved fuzzer inputs. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__signature_8c.html">fuzz_signature.c</a></td></tr>
-<tr class="memdesc:fuzz__signature_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A libFuzzer-based harness for the infix FFI signature parser. <br /></td></tr>
+<tr class="memdesc:fuzz__signature_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fuzzer target for the high-level signature parsing API. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__trampoline_8c.html">fuzz_trampoline.c</a></td></tr>
-<tr class="memdesc:fuzz__trampoline_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dual-purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI trampoline generation API. <br /></td></tr>
+<tr class="memdesc:fuzz__trampoline_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fuzzer target for the trampoline generation functions. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__types_8c.html">fuzz_types.c</a></td></tr>
-<tr class="memdesc:fuzz__types_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dual-purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI type creation API's integrity using arenas. <br /></td></tr>
+<tr class="memdesc:fuzz__types_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fuzzer target for the random type generation logic. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

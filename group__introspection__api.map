@@ -1,4 +1,5 @@
 <map id="Introspection API" name="Introspection API">
-<area shape="rect" id="Node000001" title="Functions for querying the properties of trampolines and types." alt="" coords="140,5,272,31"/>
-<area shape="rect" id="Node000002" href="$group__public__api.html" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,5,92,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000001" title="Functions for inspecting the properties of trampolines and infix_type objects at runtime." alt="" coords="236,5,368,31"/>
+<area shape="rect" id="Node000003" href="$group__type__system.html" title="The core data structures and APIs for describing C types and function signatures." alt="" coords="416,5,521,31"/>
 </map>

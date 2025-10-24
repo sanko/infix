@@ -57,7 +57,7 @@ var sectionId = 'dynsection-0';
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Internal definition of a forward trampoline handle.">
 <polygon fill="#999999" stroke="#666666" points="195.5,-19 106.5,-19 106.5,0 195.5,0 195.5,-19"/>
 <text text-anchor="middle" x="151" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_forward_t</text>
 </a>
@@ -66,7 +66,7 @@ var sectionId = 'dynsection-0';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="structinfix__arena__t.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="structinfix__arena__t.html" target="_top" xlink:title="Internal definition of a memory arena.">
 <polygon fill="white" stroke="#666666" points="80,-114 0,-114 0,-95 80,-95 80,-114"/>
 <text text-anchor="middle" x="40" y="-102" font-family="Helvetica,sans-Serif" font-size="10.00">infix_arena_t</text>
 </a>
@@ -85,7 +85,7 @@ var sectionId = 'dynsection-0';
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="structinfix__executable__t.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="structinfix__executable__t.html" target="_top" xlink:title="Internal representation of an executable memory block for JIT code.">
 <polygon fill="white" stroke="#666666" points="203.5,-114 98.5,-114 98.5,-95 203.5,-95 203.5,-114"/>
 <text text-anchor="middle" x="151" y="-102" font-family="Helvetica,sans-Serif" font-size="10.00">infix_executable_t</text>
 </a>
@@ -104,7 +104,7 @@ var sectionId = 'dynsection-0';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="structinfix__type__t.html" target="_top" xlink:title="The central structure for describing any data type in the FFI system.">
+<g id="a_Node000004"><a xlink:href="structinfix__type__t.html" target="_top" xlink:title="A semi&#45;opaque structure that describes a C type.">
 <polygon fill="white" stroke="#666666" points="365,-114 291,-114 291,-95 365,-95 365,-114"/>
 <text text-anchor="middle" x="328" y="-102" font-family="Helvetica,sans-Serif" font-size="10.00">infix_type_t</text>
 </a>
@@ -138,7 +138,7 @@ var sectionId = 'dynsection-0';
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="structinfix__struct__member__t.html" target="_top" xlink:title="Describes a single member of an aggregate type (struct or union).">
+<g id="a_Node000005"><a xlink:href="structinfix__struct__member__t.html" target="_top" xlink:title="Describes a single member of a C struct or union.">
 <polygon fill="white" stroke="#666666" points="347,-19 221,-19 221,0 347,0 347,-19"/>
 <text text-anchor="middle" x="284" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_struct_member_t</text>
 </a>
@@ -157,7 +157,7 @@ var sectionId = 'dynsection-0';
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="structinfix__function__argument__t.html" target="_top" xlink:title="Describes a single argument to a function, pairing an optional name with its type.">
+<g id="a_Node000006"><a xlink:href="structinfix__function__argument__t.html" target="_top" xlink:title="Describes a single argument to a C function.">
 <polygon fill="white" stroke="#666666" points="517,-19 373,-19 373,0 517,0 517,-19"/>
 <text text-anchor="middle" x="445" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_function_argument_t</text>
 </a>

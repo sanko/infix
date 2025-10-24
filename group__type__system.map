@@ -1,4 +1,6 @@
 <map id="Type System" name="Type System">
-<area shape="rect" id="Node000002" href="$group__public__api.html" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,5,92,31"/>
-<area shape="rect" id="Node000001" title="Structures and functions for describing C data types." alt="" coords="140,5,245,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000001" title="The core data structures and APIs for describing C types and function signatures." alt="" coords="236,55,341,80"/>
+<area shape="rect" id="Node000004" href="$group__introspection__api.html" title="Functions for inspecting the properties of trampolines and infix_type objects at runtime." alt="" coords="31,55,163,80"/>
+<area shape="rect" id="Node000003" href="$group__manual__api.html" title="A lower&#45;level, programmatic API for creating trampolines from infix_type objects." alt="" coords="49,104,144,129"/>
 </map>

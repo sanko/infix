@@ -105,16 +105,16 @@ $(document).ready(function(){initNavTree('md_docs_2signatures.html',''); initRes
   <div class="headertitle"><div class="title">The infix Signature and Type System</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md189"></a> </p>
-<h2><a class="anchor" id="autotoc_md190"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md188"></a> </p>
+<h2><a class="anchor" id="autotoc_md189"></a>
 Part 1: Introduction</h2>
-<h3><a class="anchor" id="autotoc_md191"></a>
+<h3><a class="anchor" id="autotoc_md190"></a>
 1.1 The Challenge of Interoperability</h3>
 <p>The core challenge of any Foreign Function Interface (FFI) is establishing a precise, unambiguous contract between the caller and the callee. Both sides must agree on the exact size, alignment, and representation of every piece of data to avoid memory corruption and undefined behavior.</p>
-<h3><a class="anchor" id="autotoc_md192"></a>
+<h3><a class="anchor" id="autotoc_md191"></a>
 1.2 The Limitations of C Declarations</h3>
 <p>C's declaration syntax, while powerful, is notoriously difficult for both humans and machines to parse. It often hides the true memory layout of data, and complex declarations can be nearly indecipherable. A declaration like <code>void (*(*f[])())()</code> is a testament to this complexity.</p>
-<h3><a class="anchor" id="autotoc_md193"></a>
+<h3><a class="anchor" id="autotoc_md192"></a>
 1.3 Our Solution: A Human-First Signature System</h3>
 <p><code>infix</code> solves this with a string-based representation of C types and function signatures, built on three core principles:</p>
 <ol type="1">
@@ -123,12 +123,12 @@ Part 1: Introduction</h2>
 <li><b>Developer-Centric Type System:</b> The language provides two tiers of primitive types: abstract C-style keywords (like <code>int</code>, <code>long</code>) for general use, and explicit fixed-width keywords (like <code>int32</code>, <code>uint64</code>) for precise layout control and maximum portability.</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md194"></a>
+<h1><a class="anchor" id="autotoc_md193"></a>
 Part 2: The Signature Language Reference</h1>
 <p>The signature language allows you to describe any C type as a string. All whitespace and C++-style line comments (<code># ...</code>) are ignored, allowing you to format complex signatures for readability.</p>
-<h2><a class="anchor" id="autotoc_md195"></a>
+<h2><a class="anchor" id="autotoc_md194"></a>
 2.1 Primitives</h2>
-<h3><a class="anchor" id="autotoc_md196"></a>
+<h3><a class="anchor" id="autotoc_md195"></a>
 Tier 1: Abstract C Types</h3>
 <p>These keywords represent standard C types whose size can vary by platform. They are useful for quick prototyping or interacting with older C APIs.</p>
 <table class="markdownTable">
@@ -165,7 +165,7 @@ Tier 1: Abstract C Types</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>longdouble</code>   </td><td class="markdownTableBodyLeft"><code>long double</code>   </td><td class="markdownTableBodyLeft"><b>Varies</b>   </td><td class="markdownTableBodyLeft">80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md197"></a>
+<h3><a class="anchor" id="autotoc_md196"></a>
 Tier 2: Explicit Fixed-Width Types (Recommended)</h3>
 <p>For maximum portability and control, these keywords guarantee the size of the type across all platforms.</p>
 <table class="markdownTable">
@@ -186,7 +186,7 @@ Tier 2: Explicit Fixed-Width Types (Recommended)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>float64</code>   </td><td class="markdownTableBodyLeft"><code>double</code>   </td><td class="markdownTableBodyLeft">64 bits   </td><td class="markdownTableBodyLeft">An explicit alias for a 64-bit float.   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md198"></a>
+<h2><a class="anchor" id="autotoc_md197"></a>
 2.2 Type Constructors and Composite Structures</h2>
 <p>These syntax elements allow you to build complex types from simpler ones.</p>
 <table class="markdownTable">
@@ -213,11 +213,11 @@ Tier 2: Explicit Fixed-Width Types (Recommended)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><b>Variadic Function</b>   </td><td class="markdownTableBodyLeft"><code>(&lt;fixed&gt;;&lt;variadic&gt;)</code>   </td><td class="markdownTableBodyLeft"><code>"(*char; int)-&gt;int"</code>   </td><td class="markdownTableBodyLeft"><code>printf(const char*, ...)</code>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><b>Named Type</b>   </td><td class="markdownTableBodyLeft"><code>@Name</code> or <code>@NS::Name</code>   </td><td class="markdownTableBodyLeft"><code>"@Point"</code>, <code>"@UI::User"</code>   </td><td class="markdownTableBodyLeft"><code>typedef struct <a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a> {...}</code>    </td></tr>
+<td class="markdownTableBodyLeft"><b>Named Type</b>   </td><td class="markdownTableBodyLeft"><code>@Name</code> or <code>@NS::Name</code>   </td><td class="markdownTableBodyLeft"><code>"@Point"</code>, <code>"@UI::User"</code>   </td><td class="markdownTableBodyLeft"><code>typedef struct <a class="el" href="structPoint.html" title="A simple struct with two doubles, often used to test pass-by-value on registers.">Point</a> {...}</code>    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><b>Named Argument</b>   </td><td class="markdownTableBodyLeft"><code>&lt;name&gt;:&lt;type&gt;</code>   </td><td class="markdownTableBodyLeft"><code>"(count:int, data:*void)"</code>   </td><td class="markdownTableBodyLeft">(For reflection only)   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md199"></a>
+<h2><a class="anchor" id="autotoc_md198"></a>
 2.3 Syntax Showcase</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -251,17 +251,17 @@ Tier 2: Explicit Fixed-Width Types (Recommended)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><code>*((int, int) -&gt; int)</code>   </td><td class="markdownTableBodyLeft">A pointer to a function that takes two <code>int</code>s and returns an <code>int</code>.    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><code>{@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a>, callback:*((int)-&gt;void)}</code>   </td><td class="markdownTableBodyLeft">A struct with a named type <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a></code> and a function pointer field.    </td></tr>
+<td class="markdownTableBodyLeft"><code>{@<a class="el" href="structPoint.html" title="A simple struct with two doubles, often used to test pass-by-value on registers.">Point</a>, callback:*((int)-&gt;void)}</code>   </td><td class="markdownTableBodyLeft">A struct with a named type <code>@<a class="el" href="structPoint.html" title="A simple struct with two doubles, often used to test pass-by-value on registers.">Point</a></code> and a function pointer field.    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><code>c[float]</code>   </td><td class="markdownTableBodyLeft">A C <code>float _Complex</code> number.    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>v[4:float]</code>   </td><td class="markdownTableBodyLeft">A 128-bit SIMD vector containing four 32-bit floats.   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md201"></a>
+<h1><a class="anchor" id="autotoc_md200"></a>
 Part 3: The Named Type Registry</h1>
 <p>The registry is the key to managing complexity in large FFI projects. It provides a central, reusable, and readable way to define and use structs, unions, and type aliases.</p>
-<h2><a class="anchor" id="autotoc_md202"></a>
+<h2><a class="anchor" id="autotoc_md201"></a>
 Defining Types (&lt;tt&gt;infix_register_types&lt;/tt&gt;)</h2>
 <p>You populate a registry by passing a string of semicolon-separated definitions. The parser is robust and handles forward declarations and out-of-order definitions automatically.</p>
 <p><b>Syntax:</b> <code>@TypeName = &lt;TypeDefinition&gt;;</code></p>
@@ -285,14 +285,14 @@ Defining Types (&lt;tt&gt;infix_register_types&lt;/tt&gt;)</h2>
 <div class="line">    <span class="stringliteral">&quot;@B = { a_ptr: *@A };&quot;</span></div>
 <div class="line">;</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_enumeration" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> <a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_function" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a>(registry, my_types);</div>
-<div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:74</div></div>
-<div class="ttc" id="agroup__public__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">An enumeration of all possible success or failure codes from the public API.</div><div class="ttdef"><b>Definition</b> infix.h:351</div></div>
-<div class="ttc" id="agroup__registry__api_html_ga4ece2363948c40fe528826bf65dac280"><div class="ttname"><a href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a></div><div class="ttdeci">c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *)</div><div class="ttdoc">Parses a string of definitions and populates a type registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:234</div></div>
-<div class="ttc" id="agroup__registry__api_html_gac808273483db7a9db2bc275c41b13296"><div class="ttname"><a href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a></div><div class="ttdeci">c23_nodiscard infix_registry_t * infix_registry_create(void)</div><div class="ttdoc">Creates a new, empty type registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:132</div></div>
-<div class="ttc" id="astructinfix__registry__t_html"><div class="ttname"><a href="structinfix__registry__t.html">infix_registry_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:158</div></div>
+<div class="line"><a class="code hl_enumeration" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> <a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_function" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a>(registry, my_types);</div>
+<div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:66</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">Enumerates the possible status codes returned by infix API functions.</div><div class="ttdef"><b>Definition</b> infix.h:388</div></div>
+<div class="ttc" id="agroup__registry__api_html_ga4ece2363948c40fe528826bf65dac280"><div class="ttname"><a href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a></div><div class="ttdeci">c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *)</div><div class="ttdoc">Parses a string of type definitions and adds them to a registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:389</div></div>
+<div class="ttc" id="agroup__registry__api_html_gac808273483db7a9db2bc275c41b13296"><div class="ttname"><a href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a></div><div class="ttdeci">c23_nodiscard infix_registry_t * infix_registry_create(void)</div><div class="ttdoc">Creates a new, empty named type registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:154</div></div>
+<div class="ttc" id="astructinfix__registry__t_html"><div class="ttname"><a href="structinfix__registry__t.html">infix_registry_t</a></div><div class="ttdoc">Internal definition of a named type registry.</div><div class="ttdef"><b>Definition</b> infix_internals.h:170</div></div>
 </div><!-- fragment --><p><b>Rule:</b> Redefining a type that already exists in a registry is an error. Once a name is defined, it is immutable for the lifetime of the registry.</p>
-<h2><a class="anchor" id="autotoc_md203"></a>
+<h2><a class="anchor" id="autotoc_md202"></a>
 Using Named Types</h2>
 <p>Once registered, you can use named types in any signature string by passing the registry handle to the FFI creation function.</p>
 <div class="fragment"><div class="line"><span class="comment">// Using the registry from the example above:</span></div>
@@ -300,15 +300,15 @@ Using Named Types</h2>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, signature, my_func, registry);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Generates a bound forward-call trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:656</div></div>
-<div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:72</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:770</div></div>
+<div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:93</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md205"></a>
+<h1><a class="anchor" id="autotoc_md204"></a>
 Part 4: Technical Specification</h1>
-<h3><a class="anchor" id="autotoc_md206"></a>
+<h3><a class="anchor" id="autotoc_md205"></a>
 4.1 Whitespace and Comments</h3>
 <p>Insignificant whitespace (spaces, tabs, newlines) is permitted between any two tokens and should be ignored. Comments begin with a hash symbol (<code>#</code>) and continue to the end of the line.</p>
-<h3><a class="anchor" id="autotoc_md207"></a>
+<h3><a class="anchor" id="autotoc_md206"></a>
 4.2 EBNF Grammar</h3>
 <p>This Extended Backus-Naur Form grammar formally defines the signature format.</p>
 <div class="fragment"><div class="line">signature           ::= function_type | value_type</div>
@@ -346,19 +346,19 @@ Part 4: Technical Specification</h1>
 <div class="line"> </div>
 <div class="line">Identifier          ::= ([a-zA-Z_] [a-zA-Z0-9_]*) ( &#39;::&#39; [a-zA-Z_] [a-zA-Z0-9_]* )*</div>
 <div class="line">Integer             ::= [0-9]+</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md208"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md207"></a>
 4.3 Design Rationale: Why This Syntax?</h3>
 <ol type="1">
 <li><b>Readability over Brevity:</b> The two-tier type system (<code>int</code> vs. <code>int32</code>) directly maps to developer intent ("portability" vs. "specific layout").</li>
 <li><b>Unambiguous Grammar:</b> Using a pure prefix for pointers (<code>*</code>) and clear delimiters for all other composites (<code>[]</code>, <code>{}</code>, <code>&lt;&gt;</code>) eliminates ambiguity and allows for simple, linear parsing.</li>
 <li><b>Consistency:</b> The <code>c[...]</code> and <code>v[...]</code> syntax for complex and vector types creates a consistent "family" of specialized numeric constructors.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md209"></a>
+<h3><a class="anchor" id="autotoc_md208"></a>
 4.4 Comparison with Other Systems</h3>
 <ul>
 <li><b>vs. Itanium C++ ABI:</b> Itanium is a "write-only" format designed for linkers. <code>infix</code> signatures are designed for humans to read and write.</li>
 <li><b>vs. Python's <code>ctypes</code>:</b> <code>ctypes</code> uses a programmatic, object-oriented approach. The <code>infix</code> format is a standalone, declarative string that can be used by <em>any</em> language.</li>
-<li><b>vs. <code>dyncall</code>'s Signature Format:</b> <code>dyncall</code>'s format is a flat string of single characters (e.g., <code>isL)d</code>), prioritizing brevity. <code>infix</code> prioritizes human readability (<code>(int, ushort, longlong) -&gt; double</code>). Further, <code>dyncall</code> can only describe primitive types, whereas <code>infix</code> treats complex data structures as first-class citizens. </li>
+<li><b>vs. <code>dyncall</code>'s Signature Format:</b> <code>dyncall</code>'s format is a flat string of single characters (e.g., <code>isL)d</code>), prioritizing brevity. <code>infix</code> prioritizes human readability (<code>(int, ushort, longlong) -&gt; double</code>). Further, <code>dyncall</code> handles aggregate types programmatically via a separate <code>DCaggr</code> API, whereas <code>infix</code> treats complex data structures as first-class citizens <em>within the signature string itself</em>, making the call site much more declarative. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

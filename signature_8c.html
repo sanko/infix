@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('signature_8c.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 
-<p>Implements the high-level signature string parser.  
+<p>Implements the <code>infix</code> signature string parser and type printer.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &lt;ctype.h&gt;</code><br />
@@ -147,20 +147,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab4c5b55fdeb3f3391ba92636e7f83621" id="r_ab4c5b55fdeb3f3391ba92636e7f83621"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ab4c5b55fdeb3f3391ba92636e7f83621">parse_type</a> (<a class="el" href="structparser__state.html">parser_state</a> *)</td></tr>
-<tr class="separator:ab4c5b55fdeb3f3391ba92636e7f83621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f2b71e7230f975e0aca76a0f44b7135" id="r_a5f2b71e7230f975e0aca76a0f44b7135"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a5f2b71e7230f975e0aca76a0f44b7135">parse_function_signature_details</a> (<a class="el" href="structparser__state.html">parser_state</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **, size_t *, size_t *)</td></tr>
-<tr class="separator:a5f2b71e7230f975e0aca76a0f44b7135"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefdd9063b7ca0a9be42ce5ca2bcea10f" id="r_aefdd9063b7ca0a9be42ce5ca2bcea10f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#aefdd9063b7ca0a9be42ce5ca2bcea10f">parse_aggregate</a> (<a class="el" href="structparser__state.html">parser_state</a> *, char, char)</td></tr>
-<tr class="separator:aefdd9063b7ca0a9be42ce5ca2bcea10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dfa202198c964a05e8911d189ce80a7" id="r_a0dfa202198c964a05e8911d189ce80a7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a0dfa202198c964a05e8911d189ce80a7">parse_vector_type</a> (<a class="el" href="structparser__state.html">parser_state</a> *)</td></tr>
-<tr class="separator:a0dfa202198c964a05e8911d189ce80a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f" id="r_ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f">parse_function_type</a> (<a class="el" href="structparser__state.html">parser_state</a> *)</td></tr>
-<tr class="separator:ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72477cb1bc3a1a22e006a8563e61a5cd" id="r_a72477cb1bc3a1a22e006a8563e61a5cd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a72477cb1bc3a1a22e006a8563e61a5cd">parse_packed_struct</a> (<a class="el" href="structparser__state.html">parser_state</a> *)</td></tr>
-<tr class="separator:a72477cb1bc3a1a22e006a8563e61a5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6367f2a4ed400f15620f50d8dd880b57" id="r_a6367f2a4ed400f15620f50d8dd880b57"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a6367f2a4ed400f15620f50d8dd880b57">parse_primitive</a> (<a class="el" href="structparser__state.html">parser_state</a> *)</td></tr>
-<tr class="separator:a6367f2a4ed400f15620f50d8dd880b57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc89f75d8a90e79bc8bfc32678594c6c" id="r_abc89f75d8a90e79bc8bfc32678594c6c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#abc89f75d8a90e79bc8bfc32678594c6c">parse_type</a> (<a class="el" href="structparser__state.html">parser_state</a> *state)</td></tr>
+<tr class="separator:abc89f75d8a90e79bc8bfc32678594c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98d3e5cec4532c2da38922db3432e72e" id="r_a98d3e5cec4532c2da38922db3432e72e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a98d3e5cec4532c2da38922db3432e72e">parse_function_signature_details</a> (<a class="el" href="structparser__state.html">parser_state</a> *state, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_ret_type, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **out_args, size_t *out_num_args, size_t *out_num_fixed_args)</td></tr>
+<tr class="separator:a98d3e5cec4532c2da38922db3432e72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7487ff25b05bd0c29659902bfdd75828" id="r_a7487ff25b05bd0c29659902bfdd75828"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a7487ff25b05bd0c29659902bfdd75828">set_parser_error</a> (<a class="el" href="structparser__state.html">parser_state</a> *state, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code)</td></tr>
 <tr class="separator:a7487ff25b05bd0c29659902bfdd75828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec8176eec4752cc7bb8193876ef20456" id="r_aec8176eec4752cc7bb8193876ef20456"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#aec8176eec4752cc7bb8193876ef20456">skip_whitespace</a> (<a class="el" href="structparser__state.html">parser_state</a> *state)</td></tr>
@@ -177,38 +167,51 @@ Functions</h2></td></tr>
 <tr class="separator:a168864a18641ec5e852690df1599b2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12bc7588aa7d87826a0cf5d10a98c46c" id="r_a12bc7588aa7d87826a0cf5d10a98c46c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a12bc7588aa7d87826a0cf5d10a98c46c">parse_aggregate_members</a> (<a class="el" href="structparser__state.html">parser_state</a> *state, char end_char, size_t *out_num_members)</td></tr>
 <tr class="separator:a12bc7588aa7d87826a0cf5d10a98c46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd83c89fb461d359fd31cd097db9e1f5" id="r_afd83c89fb461d359fd31cd097db9e1f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#afd83c89fb461d359fd31cd097db9e1f5">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:afd83c89fb461d359fd31cd097db9e1f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core, non-resolving entry point for the signature parser.  <br /></td></tr>
-<tr class="separator:afd83c89fb461d359fd31cd097db9e1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3632147d55b80e520987d37722ddcf61" id="r_ga3632147d55b80e520987d37722ddcf61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga3632147d55b80e520987d37722ddcf61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_type_from_signature</code> API function.  <br /></td></tr>
+<tr class="memitem:ad95bd8bccc3ef5b0719f77b574374127" id="r_ad95bd8bccc3ef5b0719f77b574374127"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ad95bd8bccc3ef5b0719f77b574374127">parse_aggregate</a> (<a class="el" href="structparser__state.html">parser_state</a> *state, char start_char, char end_char)</td></tr>
+<tr class="separator:ad95bd8bccc3ef5b0719f77b574374127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0d360721bd7d641c08dd9e3022835de" id="r_ac0d360721bd7d641c08dd9e3022835de"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ac0d360721bd7d641c08dd9e3022835de">parse_packed_struct</a> (<a class="el" href="structparser__state.html">parser_state</a> *state)</td></tr>
+<tr class="separator:ac0d360721bd7d641c08dd9e3022835de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a7e10149bdc3a02d9069f61a6a489f7" id="r_a7a7e10149bdc3a02d9069f61a6a489f7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a7a7e10149bdc3a02d9069f61a6a489f7">parse_primitive</a> (<a class="el" href="structparser__state.html">parser_state</a> *state)</td></tr>
+<tr class="separator:a7a7e10149bdc3a02d9069f61a6a489f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7452e1dd72e4d81a19b91ebff91b8840" id="r_a7452e1dd72e4d81a19b91ebff91b8840"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a7452e1dd72e4d81a19b91ebff91b8840">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature)</td></tr>
+<tr class="memdesc:a7452e1dd72e4d81a19b91ebff91b8840"><td class="mdescLeft">&#160;</td><td class="mdescRight">The internal core of the signature parser.  <br /></td></tr>
+<tr class="separator:a7452e1dd72e4d81a19b91ebff91b8840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3632147d55b80e520987d37722ddcf61" id="r_ga3632147d55b80e520987d37722ddcf61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga3632147d55b80e520987d37722ddcf61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a signature string representing a single data type.  <br /></td></tr>
 <tr class="separator:ga3632147d55b80e520987d37722ddcf61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabc24d2667f9cac5f45bd9a71efe66cf7" id="r_gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7">infix_signature_parse</a> (const char *signature, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_ret_type, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **out_args, size_t *out_num_args, size_t *out_num_fixed_args, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_signature_parse</code> API function.  <br /></td></tr>
+<tr class="memitem:gabc24d2667f9cac5f45bd9a71efe66cf7" id="r_gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7">infix_signature_parse</a> (const char *signature, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_ret_type, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **out_args, size_t *out_num_args, size_t *out_num_fixed_args, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a full function signature string into its constituent parts.  <br /></td></tr>
 <tr class="separator:gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0188b3a9e1088b2e82af548e7e8037a4" id="r_a0188b3a9e1088b2e82af548e7e8037a4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a0188b3a9e1088b2e82af548e7e8037a4">_print</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const char *fmt,...)</td></tr>
 <tr class="separator:a0188b3a9e1088b2e82af548e7e8037a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae14dc307e72c05042cfa259c92fb09ce" id="r_ae14dc307e72c05042cfa259c92fb09ce"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ae14dc307e72c05042cfa259c92fb09ce">_infix_type_print_signature_recursive</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:ae14dc307e72c05042cfa259c92fb09ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4c701c9fe631b5e6d715eb2df9c3581e" id="r_ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e">infix_type_print</a> (char *buffer, size_t buffer_size, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
-<tr class="memdesc:ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_type_print</code> API function.  <br /></td></tr>
+<tr class="memitem:ga4c701c9fe631b5e6d715eb2df9c3581e" id="r_ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e">infix_type_print</a> (char *buffer, size_t buffer_size, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
+<tr class="memdesc:ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes an <code>infix_type</code> object graph back into a signature string.  <br /></td></tr>
 <tr class="separator:ga4c701c9fe631b5e6d715eb2df9c3581e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab498bd07df9d321ec54056c519899b53" id="r_gab498bd07df9d321ec54056c519899b53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#gab498bd07df9d321ec54056c519899b53">infix_function_print</a> (char *buffer, size_t buffer_size, const char *function_name, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, const <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
-<tr class="memdesc:gab498bd07df9d321ec54056c519899b53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of the public <code>infix_function_print</code> API function.  <br /></td></tr>
+<tr class="memitem:gab498bd07df9d321ec54056c519899b53" id="r_gab498bd07df9d321ec54056c519899b53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#gab498bd07df9d321ec54056c519899b53">infix_function_print</a> (char *buffer, size_t buffer_size, const char *function_name, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, const <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
+<tr class="memdesc:gab498bd07df9d321ec54056c519899b53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes a function signature's components into a string.  <br /></td></tr>
 <tr class="separator:gab498bd07df9d321ec54056c519899b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:aebc75fad28db1e2a75eca6df7305c4e1" id="r_aebc75fad28db1e2a75eca6df7305c4e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#aebc75fad28db1e2a75eca6df7305c4e1">g_infix_last_signature_context</a></td></tr>
+<tr class="memdesc:aebc75fad28db1e2a75eca6df7305c4e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A thread-local pointer to the full signature string being parsed.  <br /></td></tr>
 <tr class="separator:aebc75fad28db1e2a75eca6df7305c4e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implements the high-level signature string parser. </p>
+<div class="textblock"><p>Implements the <code>infix</code> signature string parser and type printer. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This module is responsible for two key functionalities that form the user-facing API of the library:</p>
+<ol type="1">
+<li><b>Parsing:</b> It contains a hand-written recursive descent parser that transforms a human-readable signature string (e.g., <code>"({int, *char}) -&gt; void"</code>) into an unresolved <code>infix_type</code> object graph. This is the **"Parse"** stage of the core data pipeline. The internal entry point for this stage is <code>_infix_parse_type_internal</code>.</li>
+<li><b>Printing:</b> It provides functions to serialize a fully resolved <code>infix_type</code> graph back into a canonical signature string. This is crucial for introspection, debugging, and verifying the library's understanding of a type.</li>
+</ol>
+<p>The public functions <code>infix_type_from_signature</code> and <code>infix_signature_parse</code> are high-level orchestrators. They manage the entire **"Parse -&gt; Copy -&gt; Resolve -&gt; Layout"** pipeline, providing the user with a fully validated, self-contained, and ready-to-use type object that is safe to use for the lifetime of its returned arena. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a4e3b689e9483994cfcd85954cba23338" name="a4e3b689e9483994cfcd85954cba23338"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e3b689e9483994cfcd85954cba23338">&#9670;&#160;</a></span>MAX_RECURSION_DEPTH</h2>
@@ -225,14 +228,14 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="afd83c89fb461d359fd31cd097db9e1f5" name="afd83c89fb461d359fd31cd097db9e1f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd83c89fb461d359fd31cd097db9e1f5">&#9670;&#160;</a></span>_infix_parse_type_internal()</h2>
+<a id="a7452e1dd72e4d81a19b91ebff91b8840" name="a7452e1dd72e4d81a19b91ebff91b8840"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7452e1dd72e4d81a19b91ebff91b8840">&#9670;&#160;</a></span>_infix_parse_type_internal()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_parse_type_internal </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_parse_type_internal </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
           <td class="paramname"><em>out_type</em>, </td>
@@ -247,13 +250,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>signature</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td>
-          <td class="paramname"><em>registry</em>&#160;</td>
+          <td class="paramname"><em>signature</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -263,7 +260,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The core, non-resolving entry point for the signature parser. </p>
+<p>The internal core of the signature parser. </p>
+<p>Located in <code><a class="el" href="signature_8c.html" title="Implements the infix signature string parser and type printer.">src/core/signature.c</a></code>. This is the "Parse" stage of the data pipeline. It takes a signature string and produces a raw, unresolved <code>infix_type</code> graph in a new, temporary arena. It does not perform any copying, resolution, or layout calculation. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, receives the parsed type graph. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, receives the temporary arena holding the graph. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string to parse. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
@@ -407,8 +413,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aefdd9063b7ca0a9be42ce5ca2bcea10f" name="aefdd9063b7ca0a9be42ce5ca2bcea10f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefdd9063b7ca0a9be42ce5ca2bcea10f">&#9670;&#160;</a></span>parse_aggregate()</h2>
+<a id="ad95bd8bccc3ef5b0719f77b574374127" name="ad95bd8bccc3ef5b0719f77b574374127"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad95bd8bccc3ef5b0719f77b574374127">&#9670;&#160;</a></span>parse_aggregate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -491,8 +497,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5f2b71e7230f975e0aca76a0f44b7135" name="a5f2b71e7230f975e0aca76a0f44b7135"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f2b71e7230f975e0aca76a0f44b7135">&#9670;&#160;</a></span>parse_function_signature_details()</h2>
+<a id="a98d3e5cec4532c2da38922db3432e72e" name="a98d3e5cec4532c2da38922db3432e72e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98d3e5cec4532c2da38922db3432e72e">&#9670;&#160;</a></span>parse_function_signature_details()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -501,7 +507,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> parse_function_signature_details </td>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> parse_function_signature_details </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structparser__state.html">parser_state</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -534,32 +540,6 @@ Variables</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f" name="ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5dc4fda4ecaf3ad4ccea8d2a7cb8c5f">&#9670;&#160;</a></span>parse_function_type()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * parse_function_type </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structparser__state.html">parser_state</a> *&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
-          <td></td>
         </tr>
       </table>
   </td>
@@ -623,8 +603,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a72477cb1bc3a1a22e006a8563e61a5cd" name="a72477cb1bc3a1a22e006a8563e61a5cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72477cb1bc3a1a22e006a8563e61a5cd">&#9670;&#160;</a></span>parse_packed_struct()</h2>
+<a id="ac0d360721bd7d641c08dd9e3022835de" name="ac0d360721bd7d641c08dd9e3022835de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0d360721bd7d641c08dd9e3022835de">&#9670;&#160;</a></span>parse_packed_struct()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -649,8 +629,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6367f2a4ed400f15620f50d8dd880b57" name="a6367f2a4ed400f15620f50d8dd880b57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6367f2a4ed400f15620f50d8dd880b57">&#9670;&#160;</a></span>parse_primitive()</h2>
+<a id="a7a7e10149bdc3a02d9069f61a6a489f7" name="a7a7e10149bdc3a02d9069f61a6a489f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a7e10149bdc3a02d9069f61a6a489f7">&#9670;&#160;</a></span>parse_primitive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -711,8 +691,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab4c5b55fdeb3f3391ba92636e7f83621" name="ab4c5b55fdeb3f3391ba92636e7f83621"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4c5b55fdeb3f3391ba92636e7f83621">&#9670;&#160;</a></span>parse_type()</h2>
+<a id="abc89f75d8a90e79bc8bfc32678594c6c" name="abc89f75d8a90e79bc8bfc32678594c6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc89f75d8a90e79bc8bfc32678594c6c">&#9670;&#160;</a></span>parse_type()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -722,32 +702,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * parse_type </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structparser__state.html">parser_state</a> *&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0dfa202198c964a05e8911d189ce80a7" name="a0dfa202198c964a05e8911d189ce80a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0dfa202198c964a05e8911d189ce80a7">&#9670;&#160;</a></span>parse_vector_type()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * parse_vector_type </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structparser__state.html">parser_state</a> *&#160;</td>
           <td class="paramname"><em>state</em></td><td>)</td>
@@ -845,6 +799,9 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>A thread-local pointer to the full signature string being parsed. </p>
+<p>This is set by the high-level API functions (<code>infix_type_from_signature</code>, etc.) before parsing begins. If a parser error occurs, <code>_infix_set_error</code> uses this context to generate a rich, contextual error message. </p>
 
 </div>
 </div>

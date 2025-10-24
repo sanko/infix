@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('004__signatures_8c.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>Hardened test suite for the high-level signature API.  
+<p>Unit test for the signature string parser.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;ctype.h&gt;</code><br />
@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('004__signatures_8c.html',''); initResi
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 004_signatures.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="004__signatures_8c__incl.svg" width="486" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="004__signatures_8c__incl.svg" width="515" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -130,10 +130,8 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0bd3e3e3ae6ba826363c8a0fa6a9e7ad" id="r_a0bd3e3e3ae6ba826363c8a0fa6a9e7ad"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a0bd3e3e3ae6ba826363c8a0fa6a9e7ad">test_type_ok</a> (const char *signature, <a class="el" href="group__type__system.html#ga909e562b00e504aeceac698bd272f0ca">infix_type_category</a> expected_cat, const char *name)</td></tr>
-<tr class="memdesc:a0bd3e3e3ae6ba826363c8a0fa6a9e7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper subtest to verify that a single type signature string parses correctly.  <br /></td></tr>
 <tr class="separator:a0bd3e3e3ae6ba826363c8a0fa6a9e7ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a042d2b7ff846c493446812236806bde0" id="r_a042d2b7ff846c493446812236806bde0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a042d2b7ff846c493446812236806bde0">test_type_fail</a> (const char *signature, const char *name)</td></tr>
-<tr class="memdesc:a042d2b7ff846c493446812236806bde0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper subtest to verify that an invalid signature string fails to parse.  <br /></td></tr>
 <tr class="separator:a042d2b7ff846c493446812236806bde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afde8060cdaa4da8e4b27cc4d9cc73422" id="r_afde8060cdaa4da8e4b27cc4d9cc73422"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#afde8060cdaa4da8e4b27cc4d9cc73422">dummy_handler</a> ()</td></tr>
 <tr class="separator:afde8060cdaa4da8e4b27cc4d9cc73422"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,12 +160,15 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Hardened test suite for the high-level signature API. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0 </p>
+<div class="textblock"><p>Unit test for the signature string parser. </p>
+<p>This is one of the most important test files, as it exhaustively validates the correctness and robustness of the <code>infix</code> signature parser. It is divided into several subtests:</p>
+<ul>
+<li><b>Valid Single Types:</b> Checks that a wide variety of correct, individual type signatures (primitives, pointers, arrays, aggregates) parse successfully and result in the expected <code>infix_type_category</code>.</li>
+<li><b>Valid Edge Cases:</b> Tests the parser's handling of non-standard but valid syntax, such as extra whitespace, comments, empty aggregates (<code>{}</code>), and deeply nested pointer/function types.</li>
+<li><b>Valid Full Function Signatures:</b> Uses <code>infix_signature_parse</code> to test the parsing of complete function signatures, including variadic functions (with <code>;</code>) and named arguments.</li>
+<li><b>Invalid Syntax and Logic:</b> A large set of negative test cases that feed the parser deliberately malformed or logically invalid signatures (e.g., <code>[10:void]</code>). It verifies that the parser correctly fails for each case.</li>
+<li><b>Round Trip:</b> A critical test that parses a signature, then uses <code>infix_type_print</code> to serialize the resulting type object back into a string. It then verifies that the output string matches the canonical representation of the input, ensuring that parsing and printing are inverse operations. </li>
+</ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -423,8 +424,6 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Helper subtest to verify that an invalid signature string fails to parse. </p>
-
 </div>
 </div>
 <a id="a0bd3e3e3ae6ba826363c8a0fa6a9e7ad" name="a0bd3e3e3ae6ba826363c8a0fa6a9e7ad"></a>
@@ -467,8 +466,6 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Helper subtest to verify that a single type signature string parses correctly. </p>
-
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
@@ -485,7 +482,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(7)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

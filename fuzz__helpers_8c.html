@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('fuzz__helpers_8c.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation of the shared recursive infix_type generator for fuzzing.  
+<p>Implements the core logic for generating random <code>infix_type</code> graphs from fuzzer input.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -120,17 +120,16 @@ Include dependency graph for fuzz_helpers.c:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0eebcc9807a7062cc16d500a5b22424f" id="r_a0eebcc9807a7062cc16d500a5b22424f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8c.html#a0eebcc9807a7062cc16d500a5b22424f">generate_random_type</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structfuzzer__input.html">fuzzer_input</a> *in, int depth, size_t *total_fields)</td></tr>
-<tr class="memdesc:a0eebcc9807a7062cc16d500a5b22424f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively generates a randomized infix_type from the fuzzer's input data, allocating all objects from the provided arena.  <br /></td></tr>
+<tr class="memdesc:a0eebcc9807a7062cc16d500a5b22424f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively generates a random <code>infix_type</code> graph from a fuzzer input stream.  <br /></td></tr>
 <tr class="separator:a0eebcc9807a7062cc16d500a5b22424f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation of the shared recursive infix_type generator for fuzzing. </p>
+<div class="textblock"><p>Implements the core logic for generating random <code>infix_type</code> graphs from fuzzer input. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This file contains the implementation of the <code>generate_random_type</code> function, which is the core of the fuzzing strategy. It is designed to be compiled and linked into multiple fuzzing harnesses, providing a consistent and powerful way to generate complex and pathological test cases for the infix library's type system and ABI logic. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a0eebcc9807a7062cc16d500a5b22424f" name="a0eebcc9807a7062cc16d500a5b22424f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0eebcc9807a7062cc16d500a5b22424f">&#9670;&#160;</a></span>generate_random_type()</h2>
@@ -170,17 +169,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Recursively generates a randomized infix_type from the fuzzer's input data, allocating all objects from the provided arena. </p>
+<p>Recursively generates a random <code>infix_type</code> graph from a fuzzer input stream. </p>
+<p>This function consumes bytes from the <code><a class="el" href="structfuzzer__input.html" title="Represents the fuzzer&#39;s input data as a consumable stream.">fuzzer_input</a></code> to make decisions about what kind of type to generate. It can create primitives, pointers, arrays, structs (packed and regular), and unions. For composite types, it calls itself recursively to generate member or element types.</p>
+<p>To prevent timeouts and stack overflows from pathological inputs, the function enforces two key limits:</p><ul>
+<li><code>MAX_RECURSION_DEPTH</code>: Limits how deeply types can be nested (e.g., struct within a struct).</li>
+<li><code>MAX_TOTAL_FUZZ_FIELDS</code>: Limits the total number of primitive fields in the entire graph.</li>
+</ul>
+<p>Once a limit is reached, the recursion terminates by generating a simple primitive type.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">arena</td><td>The arena from which all types and member arrays will be allocated. </td></tr>
-    <tr><td class="paramname">in</td><td>A pointer to the fuzzer input buffer. </td></tr>
-    <tr><td class="paramname">depth</td><td>The current recursion depth (used to prevent stack overflows). </td></tr>
-    <tr><td class="paramname">total_fields</td><td>[in,out] A pointer to a counter for the total fields generated. </td></tr>
+    <tr><td class="paramname">arena</td><td>The memory arena to allocate the new <code>infix_type</code> objects into. </td></tr>
+    <tr><td class="paramname">in</td><td>A pointer to the fuzzer input stream. The stream is consumed as types are generated. </td></tr>
+    <tr><td class="paramname">depth</td><td>The current recursion depth. </td></tr>
+    <tr><td class="paramname">total_fields</td><td>A pointer to a counter for the total number of fields generated so far. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A new <code>infix_type*</code> allocated within the arena, or NULL on failure. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the newly generated <code>infix_type</code>, or <code>nullptr</code> if generation fails or input is exhausted. </dd></dl>
 
 </div>
 </div>

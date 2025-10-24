@@ -1,6 +1,5 @@
 var group__memory__management =
 [
-    [ "arena.c", "arena_8c.html", null ],
     [ "infix_calloc", "group__memory__management.html#ga5c774b30b31bdd5524a1f34a89335fe6", null ],
     [ "infix_free", "group__memory__management.html#ga04e9a217a378e5c109ddfaef2f775d31", null ],
     [ "infix_malloc", "group__memory__management.html#gae386105bc20f1819f8ffc8e808f0a7d9", null ],

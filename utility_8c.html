@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('utility_8c.html',''); initResizable();
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation of debugging utility functions.  
+<p>Implements internal debugging utilities.  
 <a href="#details">More...</a></p>
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -116,12 +116,14 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="utility_8c_source.html">Go to the source code of this file.</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation of debugging utility functions. </p>
+<div class="textblock"><p>Implements internal debugging utilities. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This file provides the implementation for debugging functions that are conditionally compiled only when the <code>INFIX_DEBUG_ENABLED</code> preprocessor macro is defined and set to a non-zero value.</p>
+<p>In release builds, this entire translation unit is effectively empty, ensuring that debugging code has no impact on the final binary's size or performance. The corresponding function declarations in <code><a class="el" href="utility_8h.html" title="A header for conditionally compiled debugging utilities.">utility.h</a></code> become empty inline stubs, which are optimized away by the compiler. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

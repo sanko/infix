@@ -105,23 +105,23 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
   <div class="headertitle"><div class="title">Project Roadmap: infix FFI</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md218"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
-<h1><a class="anchor" id="autotoc_md219"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md216"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
+<h1><a class="anchor" id="autotoc_md217"></a>
 High Priority: Foundation &amp; Stability</h1>
 <p><em>These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.</em></p>
 <ul>
-<li>[x] <b>Design and Implement New Signature Parser (<code><a class="el" href="signature_8c.html" title="Implements the high-level signature string parser.">signature.c</a></code>)**<ul>
+<li>[x] <b>Design and Implement New Signature Parser (<code><a class="el" href="signature_8c.html" title="Implements the infix signature string parser and type printer.">signature.c</a></code>)**<ul>
 <li><b>Context:</b> The current single-character signature system is minimal and lacks the expressiveness needed for rich introspection and clarity. The v1.0 specification is the path forward.</li>
-<li><b>Idea:</b> Replace the existing recursive-descent parser in <code><a class="el" href="signature_8c.html" title="Implements the high-level signature string parser.">signature.c</a></code> with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.</li>
+<li><b>Idea:</b> Replace the existing recursive-descent parser in <code><a class="el" href="signature_8c.html" title="Implements the infix signature string parser and type printer.">signature.c</a></code> with a new one that implements the full v1.0 EBNF grammar. This will be a ground-up rewrite.</li>
 <li><b>Goal:</b> The new <code>infix_signature_parse</code> can correctly parse all valid examples from the v1.0 specification, including nested structs, unions, and pointers. It must produce a valid <code>infix_type</code> graph in an arena. The old parser will be completely removed.</li>
 <li><b>Possible Roadblocks:</b> This is the largest single task. It requires careful implementation to handle all grammatical rules, whitespace, and error conditions correctly.</li>
 </ul>
 </b></li>
-<li><b>[x] **Update Type System for New Concepts (<code><a class="el" href="types_8c.html" title="Implements the public API for creating and managing type descriptions.">types.c</a></code>, <code><a class="el" href="infix_8h.html">infix.h</a></code>)**<ul>
+<li><b>[x] **Update Type System for New Concepts (<code><a class="el" href="types_8c.html" title="Implements the public API for creating and managing type descriptions.">types.c</a></code>, <code><a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a></code>)**<ul>
 <li><b>Context:</b> The v1.0 spec introduces concepts like <code>enum</code> that are not present in the current type system.</li>
 <li><b>Idea:</b><ol type="1">
 <li>Add a new <code>INFIX_TYPE_ENUM</code> category to the <code>infix_type_category</code> enum.</li>
-<li>Add a corresponding <code>enum_info</code> struct to the <code><a class="el" href="structinfix__type__t.html" title="The central structure for describing any data type in the FFI system.">infix_type_t</a></code> <code>meta</code> union to store the underlying integer type.</li>
+<li>Add a corresponding <code>enum_info</code> struct to the <code><a class="el" href="structinfix__type__t.html" title="A semi-opaque structure that describes a C type.">infix_type_t</a></code> <code>meta</code> union to store the underlying integer type.</li>
 <li>Implement a new <code>infix_type_create_enum(arena, &amp;type, underlying_type)</code> function.</li>
 </ol>
 </li>
@@ -148,9 +148,9 @@ High Priority: Foundation &amp; Stability</h1>
 </ul>
 </b></b></li>
 <li><b><b>[x] <b>Refactor Platform-Specific Emitters</b><ul>
-<li><b>Context:</b> The initial design mixed platform-specific instruction emitters (e.g., for x86-64) into the generic <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> and public <code><a class="el" href="infix_8h.html">infix.h</a></code>, breaking the library's architectural abstraction.</li>
+<li><b>Context:</b> The initial design mixed platform-specific instruction emitters (e.g., for x86-64) into the generic <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">trampoline.c</a></code> and public <code><a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a></code>, breaking the library's architectural abstraction.</li>
 <li><b>Idea:</b> Move all platform-specific emitter functions into their own dedicated, internal modules (e.g., <code><a class="el" href="abi__x64__emitters_8c.html" title="Implements internal helper functions for emitting x86-64 machine code.">abi_x64_emitters.c</a></code>, <code><a class="el" href="abi__arm64__emitters_8c.html" title="Implements internal helper functions for emitting AArch64 machine code.">abi_arm64_emitters.c</a></code>) with non-public headers.</li>
-<li><b>Goal:</b> The generic <code><a class="el" href="trampoline_8c.html" title="The core engine for JIT compiling FFI trampolines.">trampoline.c</a></code> is now 100% platform-agnostic. The public <code><a class="el" href="infix_8h.html">infix.h</a></code> no longer exposes any internal emitter functions. The architecture is cleaner, more maintainable, and easier to extend to new platforms.</li>
+<li><b>Goal:</b> The generic <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">trampoline.c</a></code> is now 100% platform-agnostic. The public <code><a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a></code> no longer exposes any internal emitter functions. The architecture is cleaner, more maintainable, and easier to extend to new platforms.</li>
 </ul>
 </b></b></li>
 <li><b><b>[x] <b>Implement Fuzzing</b><ul>
@@ -188,7 +188,7 @@ High Priority: Foundation &amp; Stability</h1>
 </ul>
 </b></b></li>
 <li><b><b>[x] <b>Read-Only Callback Contexts (RELRO for Callbacks)</b><ul>
-<li><b>Context:</b> The <code><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a></code> struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.</li>
+<li><b>Context:</b> The <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> struct contains function pointers that could be targeted by memory corruption attacks to hijack control flow.</li>
 <li><b>Idea:</b> After a callback context is created, use <code>mprotect</code>/<code>VirtualProtect</code> on the memory page containing it to make it read-only.</li>
 <li><b>Goal:</b> The context is hardened by default. Any attempt to write to a hardened context struct will cause an immediate segmentation fault, preventing the attack.</li>
 <li><b>Possible Roadblocks:</b> <code>mprotect</code> operates on page boundaries, not on individual structs. This requires careful memory management to ensure unrelated writable data is not on the same page, which might make the implementation complex.</li>
@@ -196,7 +196,7 @@ High Priority: Foundation &amp; Stability</h1>
 </b></b></li>
 </ul>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md220"></a>
+<h1><a class="anchor" id="autotoc_md218"></a>
 Medium Priority: Expansion &amp; Optimization</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.</em></b></b></p>
@@ -240,7 +240,7 @@ Medium Priority: Expansion &amp; Optimization</h1>
 </ul>
 <p></b></b></p>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md221"></a>
+<h1><a class="anchor" id="autotoc_md219"></a>
 Low Priority: Advanced Features &amp; Polish</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>These items are valuable but less critical. They can be addressed over time to round out the library's feature set.</em></b></b></p>
@@ -336,10 +336,10 @@ Low Priority: Advanced Features &amp; Polish</h1>
 <li><b>Possible Roadblocks:</b> This is a very large undertaking, effectively doubling the number of supported ABIs that must be maintained and tested.</li>
 </ul>
 </li>
-<li>[x] <b>Decouple Debug Logging from <code><a class="el" href="double__tap_8h.html" title="A simple, header-only TAP14-compatible testing framework for C.">double_tap.h</a></code></b><ul>
+<li>[x] <b>Decouple Debug Logging from <code><a class="el" href="double__tap_8h.html" title="A lightweight, single-header TAP (Test Anything Protocol) library.">double_tap.h</a></code></b><ul>
 <li><b>Context:</b> The library's internal <code>INFIX_DEBUG_PRINTF</code> macro should not be tied to the test framework's <code><a class="el" href="double__tap_8h.html#a7a59fa444b44e2775bc266715a34f51a">note()</a></code> function, which improves modularity.</li>
 <li><b>Idea:</b> Refactor <code>INFIX_DEBUG_PRINTF</code> in <code><a class="el" href="utility_8h.html" title="A header for conditionally compiled debugging utilities.">utility.h</a></code> to use <code>fprintf(stderr, ...)</code> directly.</li>
-<li><b>Goal:</b> The library source code (<code>src/</code>) has no includes of <code><a class="el" href="double__tap_8h.html" title="A simple, header-only TAP14-compatible testing framework for C.">double_tap.h</a></code>. Internal debug messages are printed to <code>stderr</code> when <code>INFIX_DEBUG_ENABLED</code> is active.</li>
+<li><b>Goal:</b> The library source code (<code>src/</code>) has no includes of <code><a class="el" href="double__tap_8h.html" title="A lightweight, single-header TAP (Test Anything Protocol) library.">double_tap.h</a></code>. Internal debug messages are printed to <code>stderr</code> when <code>INFIX_DEBUG_ENABLED</code> is active.</li>
 <li><b>Possible Roadblocks:</b> Minimal; this is a straightforward refactoring task.</li>
 </ul>
 </li>

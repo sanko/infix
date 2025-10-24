@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('fuzz__trampoline_8c.html',''); initRes
 </div><!--header-->
 <div class="contents">
 
-<p>A dual-purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI trampoline generation API.  
+<p>Fuzzer target for the trampoline generation functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -126,18 +126,16 @@ Functions</h2></td></tr>
 <tr class="memitem:ab5dce8d9d24621dc447aa42584147cd3" id="r_ab5dce8d9d24621dc447aa42584147cd3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__trampoline_8c.html#ab5dce8d9d24621dc447aa42584147cd3">FuzzTest</a> (<a class="el" href="structfuzzer__input.html">fuzzer_input</a> in)</td></tr>
 <tr class="separator:ab5dce8d9d24621dc447aa42584147cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91ce7c16e9840492202299da2b451e60" id="r_a91ce7c16e9840492202299da2b451e60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__trampoline_8c.html#a91ce7c16e9840492202299da2b451e60">LLVMFuzzerTestOneInput</a> (const uint8_t *data, size_t size)</td></tr>
-<tr class="memdesc:a91ce7c16e9840492202299da2b451e60"><td class="mdescLeft">&#160;</td><td class="mdescRight">The entry point called by the libFuzzer engine.  <br /></td></tr>
+<tr class="memdesc:a91ce7c16e9840492202299da2b451e60"><td class="mdescLeft">&#160;</td><td class="mdescRight">The entry point for libFuzzer.  <br /></td></tr>
 <tr class="separator:a91ce7c16e9840492202299da2b451e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A dual-purpose fuzzing harness for libFuzzer (Clang) and AFL++ (GCC), focused on the infix FFI trampoline generation API. </p>
+<div class="textblock"><p>Fuzzer target for the trampoline generation functions. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This harness uses the shared recursive generator (<code><a class="el" href="fuzz__helpers_8h.html" title="Shared helper functions and types for infix FFI fuzzing harnesses.">fuzz_helpers.h</a></code>) to create a pool of complex <code>infix_type</code> objects within a memory arena. It then uses these types to construct randomized function signatures which are passed to <code>infix_forward_create_manual</code> and <code>infix_reverse_create_*_manual</code>.</p>
-<p>The goal is to find bugs in the ABI classification and JIT code generation stages. This harness now tests the fully arena-based workflow. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a538f66560cffcf319757fb932bb30458" name="a538f66560cffcf319757fb932bb30458"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a538f66560cffcf319757fb932bb30458">&#9670;&#160;</a></span>dummy_closure_handler()</h2>
@@ -243,7 +241,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The entry point called by the libFuzzer engine. </p>
+<p>The entry point for libFuzzer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>A pointer to the fuzzer-generated input data. </td></tr>
+    <tr><td class="paramname">size</td><td>The size of the data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on completion. </dd></dl>
 
 </div>
 </div>

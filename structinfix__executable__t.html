@@ -109,24 +109,30 @@ $(document).ready(function(){initNavTree('structinfix__executable__t.html',''); 
 </div><!--header-->
 <div class="contents">
 
+<p>Internal representation of an executable memory block for JIT code.  
+ <a href="structinfix__executable__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:abd89b86632cccfa6669bb07537c2c11f" id="r_abd89b86632cccfa6669bb07537c2c11f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#abd89b86632cccfa6669bb07537c2c11f">shm_fd</a></td></tr>
-<tr class="memdesc:abd89b86632cccfa6669bb07537c2c11f"><td class="mdescLeft">&#160;</td><td class="mdescRight">File descriptor for the shared memory object on POSIX systems that use dual-mapping.  <br /></td></tr>
 <tr class="separator:abd89b86632cccfa6669bb07537c2c11f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50e15399f44c62193a85a674ae393b3f" id="r_a50e15399f44c62193a85a674ae393b3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">void</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#a50e15399f44c62193a85a674ae393b3f">rx_ptr</a></td></tr>
-<tr class="memdesc:a50e15399f44c62193a85a674ae393b3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer with Read+Execute permissions (the callable address).  <br /></td></tr>
 <tr class="separator:a50e15399f44c62193a85a674ae393b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f12e7fb581ebd3b2b8c7c771aa8902b" id="r_a2f12e7fb581ebd3b2b8c7c771aa8902b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">void</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a></td></tr>
-<tr class="memdesc:a2f12e7fb581ebd3b2b8c7c771aa8902b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer with Read+Write permissions (where code is written).  <br /></td></tr>
 <tr class="separator:a2f12e7fb581ebd3b2b8c7c771aa8902b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fb7198de8f0b15b94a5b526c9f07c92" id="r_a0fb7198de8f0b15b94a5b526c9f07c92"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92">size</a></td></tr>
-<tr class="memdesc:a0fb7198de8f0b15b94a5b526c9f07c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total size of the allocated memory region in bytes.  <br /></td></tr>
 <tr class="separator:a0fb7198de8f0b15b94a5b526c9f07c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Internal representation of an executable memory block for JIT code. </p>
+<p>This struct encapsulates the platform-specific details of allocating and managing executable memory in a way that is compliant with modern OS security features like W^X (Write XOR Execute). It supports two primary strategies:</p>
+<ol type="1">
+<li><b>Single-Mapping W^X (Windows/macOS/Android):</b> A single memory region is allocated as Read-Write (<code>rw_ptr</code>). After the JIT compiler writes the machine code to this region, its permissions are changed to Read-Execute. In this model, <code>rx_ptr</code> and <code>rw_ptr</code> point to the same address.</li>
+<li><b>Dual-Mapping W^X (Linux/BSD):</b> A single underlying shared memory object is mapped into the process's address space twice: once as Read-Write (<code>rw_ptr</code>) and once as Read-Execute (<code>rx_ptr</code>). The pointers have different virtual addresses but point to the same physical memory. This is required on systems with stricter W^X enforcement. </li>
+</ol>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a2f12e7fb581ebd3b2b8c7c771aa8902b" name="a2f12e7fb581ebd3b2b8c7c771aa8902b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f12e7fb581ebd3b2b8c7c771aa8902b">&#9670;&#160;</a></span>rw_ptr</h2>
 
@@ -138,8 +144,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Pointer with Read+Write permissions (where code is written). </p>
+<p>The read-write memory address. The JIT compiler writes machine code here. </p>
 
 </div>
 </div>
@@ -154,8 +159,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Pointer with Read+Execute permissions (the callable address). </p>
+<p>The read-execute memory address. This is the callable function pointer. </p>
 
 </div>
 </div>
@@ -170,8 +174,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>File descriptor for the shared memory object on POSIX systems that use dual-mapping. </p>
+<p>The file descriptor for shared memory on dual-mapping POSIX systems. -1 otherwise. </p>
 
 </div>
 </div>
@@ -186,8 +189,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The total size of the allocated memory region in bytes. </p>
+<p>The size of the allocated memory region in bytes. </p>
 
 </div>
 </div>

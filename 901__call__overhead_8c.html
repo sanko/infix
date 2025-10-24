@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('901__call__overhead_8c.html',''); init
 </div><!--header-->
 <div class="contents">
 
-<p>A microbenchmark to measure the performance overhead of an FFI call.  
+<p>A micro-benchmark to measure the performance overhead of an FFI call.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('901__call__overhead_8c.html',''); init
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 901_call_overhead.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="901__call__overhead_8c__incl.svg" width="386" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="901__call__overhead_8c__incl.svg" width="420" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -129,6 +129,7 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aed3344f1605a3876df2f8bb77557f8b3" id="r_aed3344f1605a3876df2f8bb77557f8b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3">add_for_benchmark</a> (int a, int b)</td></tr>
+<tr class="memdesc:aed3344f1605a3876df2f8bb77557f8b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The simple C function used as the target for all benchmarked calls.  <br /></td></tr>
 <tr class="separator:aed3344f1605a3876df2f8bb77557f8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ca4b504fdc395555951cfe46fa47a00" id="r_a0ca4b504fdc395555951cfe46fa47a00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a0ca4b504fdc395555951cfe46fa47a00">diag</a> (&quot;infix Call Overhead Benchmark&quot;)</td></tr>
 <tr class="separator:a0ca4b504fdc395555951cfe46fa47a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,11 +141,11 @@ Functions</h2></td></tr>
 <tr class="separator:a77168d3709d668c5c1836a8280cfdb5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a94952f2ada02faaf8fe8571b069622" id="r_a8a94952f2ada02faaf8fe8571b069622"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a8a94952f2ada02faaf8fe8571b069622">diag</a> (&quot;Direct Call Time: %.4f s (%.2f ns/call)&quot;, direct_time, <a class="el" href="901__call__overhead_8c.html#a165c1c6b8f1e6ca33eb1518edbf3da50">direct_ns_per_call</a>)</td></tr>
 <tr class="separator:a8a94952f2ada02faaf8fe8571b069622"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25ec5bf2371dba8ff1cdb1cb6d499dbd" id="r_a25ec5bf2371dba8ff1cdb1cb6d499dbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a25ec5bf2371dba8ff1cdb1cb6d499dbd">if</a> (<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> &amp;,,, 2, 2<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a> !=<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>)</td></tr>
+<tr class="memitem:a25ec5bf2371dba8ff1cdb1cb6d499dbd" id="r_a25ec5bf2371dba8ff1cdb1cb6d499dbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a25ec5bf2371dba8ff1cdb1cb6d499dbd">if</a> (<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> &amp;,,, 2, 2<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a> !=<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>)</td></tr>
 <tr class="separator:a25ec5bf2371dba8ff1cdb1cb6d499dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4069e3c9baaa2e23160001053f7ec5f4" id="r_a4069e3c9baaa2e23160001053f7ec5f4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a4069e3c9baaa2e23160001053f7ec5f4">diag</a> (&quot;infix (Unbound):    %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;, <a class="el" href="901__call__overhead_8c.html#a583bc4a446d7d34ba26ee2d9c3b70268">unbound_time</a>, <a class="el" href="901__call__overhead_8c.html#a4e5cffb4af7f4131c94b742415f779cc">unbound_ns</a>, <a class="el" href="901__call__overhead_8c.html#a4e5cffb4af7f4131c94b742415f779cc">unbound_ns</a> - <a class="el" href="901__call__overhead_8c.html#a165c1c6b8f1e6ca33eb1518edbf3da50">direct_ns_per_call</a>)</td></tr>
 <tr class="separator:a4069e3c9baaa2e23160001053f7ec5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad36da003b2b775d02bc4b5e57d3a2332" id="r_ad36da003b2b775d02bc4b5e57d3a2332"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#ad36da003b2b775d02bc4b5e57d3a2332">if</a> (<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a>(&amp;<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>, <a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, 2, 2,(void *) <a class="el" href="901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3">add_for_benchmark</a>) !=<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) <a class="el" href="double__tap_8h.html#ae67140f57c292866c53eef6c962bc30d">bail_out</a>(&quot;Failed to create bound trampoline&quot;)</td></tr>
+<tr class="memitem:ad36da003b2b775d02bc4b5e57d3a2332" id="r_ad36da003b2b775d02bc4b5e57d3a2332"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#ad36da003b2b775d02bc4b5e57d3a2332">if</a> (<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a>(&amp;<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>, <a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, 2, 2,(void *) <a class="el" href="901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3">add_for_benchmark</a>) !=<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) <a class="el" href="double__tap_8h.html#ae67140f57c292866c53eef6c962bc30d">bail_out</a>(&quot;Failed to create bound trampoline&quot;)</td></tr>
 <tr class="separator:ad36da003b2b775d02bc4b5e57d3a2332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30d28852aed20dadb7729ee5835b9d99" id="r_a30d28852aed20dadb7729ee5835b9d99"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a30d28852aed20dadb7729ee5835b9d99">diag</a> (&quot;infix (Bound):      %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;, <a class="el" href="901__call__overhead_8c.html#af5223524456d9df67af038068758386e">bound_time</a>, <a class="el" href="901__call__overhead_8c.html#a8c00e10e354a6c5a7759581e3ac956a7">bound_ns</a>, <a class="el" href="901__call__overhead_8c.html#a8c00e10e354a6c5a7759581e3ac956a7">bound_ns</a> - <a class="el" href="901__call__overhead_8c.html#a165c1c6b8f1e6ca33eb1518edbf3da50">direct_ns_per_call</a>)</td></tr>
 <tr class="separator:a30d28852aed20dadb7729ee5835b9d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,7 +186,7 @@ Variables</h2></td></tr>
 <tr class="separator:a4e5cffb4af7f4131c94b742415f779cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235edff479963a1a75ebc21f02111491" id="r_a235edff479963a1a75ebc21f02111491"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a> = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td></tr>
 <tr class="separator:a235edff479963a1a75ebc21f02111491"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ec1b473015a48043ec831413cd04eb8" id="r_a1ec1b473015a48043ec831413cd04eb8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a1ec1b473015a48043ec831413cd04eb8">bound_cif</a> = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td></tr>
+<tr class="memitem:a1ec1b473015a48043ec831413cd04eb8" id="r_a1ec1b473015a48043ec831413cd04eb8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a1ec1b473015a48043ec831413cd04eb8">bound_cif</a> = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td></tr>
 <tr class="separator:a1ec1b473015a48043ec831413cd04eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5223524456d9df67af038068758386e" id="r_af5223524456d9df67af038068758386e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#af5223524456d9df67af038068758386e">bound_time</a> = ((double)(<a class="el" href="901__call__overhead_8c.html#afb358f48b1646c750fb9da6c6585be2b">end</a> - <a class="el" href="901__call__overhead_8c.html#a550769bbd4e7537ff90a656f5b0c23b2">start</a>)) / CLOCKS_PER_SEC</td></tr>
 <tr class="separator:af5223524456d9df67af038068758386e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,19 +194,16 @@ Variables</h2></td></tr>
 <tr class="separator:a8c00e10e354a6c5a7759581e3ac956a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A microbenchmark to measure the performance overhead of an FFI call. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This is a non-functional test designed to measure the raw speed of the generated FFI trampolines. It should not be run as part of the standard test suite, but rather invoked explicitly when performance analysis is needed.</p>
-<p>The test operates in two phases:</p><ol type="1">
-<li><b>Baseline (Direct Call):</b> It measures the time taken to execute millions of direct, native C function calls to a simple <code>int add(int, int)</code> function. This establishes a baseline performance measurement.</li>
-<li><b>FFI Call:</b> It then generates a forward trampoline for the same function and measures the time taken to execute the same number of calls through the FFI.</li>
+<div class="textblock"><p>A micro-benchmark to measure the performance overhead of an FFI call. </p>
+<p>This is not a correctness test, but a performance benchmark. Its purpose is to quantify the "cost" of making a C function call through an <code>infix</code> trampoline compared to a direct C call.</p>
+<p>The benchmark measures and reports the average time per call for:</p>
+<ol type="1">
+<li><b>Direct Call:</b> A tight loop of direct C-to-C function calls. This serves as the baseline performance.</li>
+<li>**<code>infix</code> (Unbound):** A loop calling the same C function via an unbound forward trampoline. This measures the overhead of the most flexible FFI path.</li>
+<li>**<code>infix</code> (Bound):** A loop calling the same C function via a bound forward trampoline. This measures the overhead of the highest-performance FFI path.</li>
+<li><b>dyncall (Optional):</b> If compiled with <code>DYNCALL_BENCHMARK</code>, it also measures the performance of the popular <code>dyncall</code> library for the same function call, providing a useful point of comparison against another FFI library.</li>
 </ol>
-<p>The difference between these two measurements, divided by the number of iterations, gives the average per-call overhead of the trampoline mechanism in nanoseconds. This is a critical metric for performance-sensitive applications.</p>
-<p>An optional comparison against the <code>dyncall</code> library can be enabled by defining the <code>DYNCALL_BENCHMARK</code> macro at compile time. </p>
+<p>The output is a "nanoseconds per call" metric, which helps quantify the FFI overhead and track performance regressions or improvements over time. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -247,6 +245,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The simple C function used as the target for all benchmarked calls. </p>
 
 </div>
 </div>
@@ -473,7 +473,7 @@ Variables</h2></td></tr>
           <td class="memname">if </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> &amp;,,, 2, 2<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a> !&#160;</td>
-          <td class="paramname"> = <code><a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></code></td><td>)</td>
+          <td class="paramname"> = <code><a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -591,8 +591,8 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {<a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>),</div>
 <div class="line">                                <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)}</div>
-<div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates an infix_type descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:97</div></div>
-<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdoc">signed int, int32_t</div><div class="ttdef"><b>Definition</b> infix.h:140</div></div>
+<div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates a static descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:130</div></div>
+<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdef"><b>Definition</b> infix.h:186</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -617,7 +617,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a> bound_cif = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a> bound_cif = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -749,7 +749,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(1)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

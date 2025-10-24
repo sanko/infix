@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('821__threading__bare_8c.html',''); ini
 </div><!--header-->
 <div class="contents">
 
-<p>A "barebones" thread-safety test with no testing framework dependency.  
+<p>A minimal, dependency-free version of the thread-safety stress test.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -133,27 +133,14 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aacbbeed9621a889ae02acd9ee9abd4a6" id="r_aacbbeed9621a889ae02acd9ee9abd4a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="821__threading__bare_8c.html#aacbbeed9621a889ae02acd9ee9abd4a6">bare_helgrind_handler</a> (int a, int b)</td></tr>
-<tr class="memdesc:aacbbeed9621a889ae02acd9ee9abd4a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple C callback function; its only purpose is to be a valid call target.  <br /></td></tr>
 <tr class="separator:aacbbeed9621a889ae02acd9ee9abd4a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7ccaadffc3f676752ea58cf2179cdb0" id="r_ad7ccaadffc3f676752ea58cf2179cdb0"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="821__threading__bare_8c.html#ad7ccaadffc3f676752ea58cf2179cdb0">bare_thread_worker</a> (void *arg)</td></tr>
-<tr class="memdesc:ad7ccaadffc3f676752ea58cf2179cdb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main function executed by each worker thread.  <br /></td></tr>
 <tr class="separator:ad7ccaadffc3f676752ea58cf2179cdb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a840291bc02cba5474a4cb46a9b9566fe" id="r_a840291bc02cba5474a4cb46a9b9566fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a> (void)</td></tr>
 <tr class="separator:a840291bc02cba5474a4cb46a9b9566fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A "barebones" thread-safety test with no testing framework dependency. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test is designed to be the ultimate proof of thread safety for the infix library. It is intended to be compiled as a standalone executable and run under Valgrind's Helgrind tool.</p>
-<p>By removing the dependency on the <code><a class="el" href="double__tap_8h.html" title="A simple, header-only TAP14-compatible testing framework for C.">double_tap.h</a></code> testing framework (which is not designed for this kind of stress test and can create noisy, misleading reports), we ensure that the only shared code being stressed is the infix library itself. This provides a clean, unambiguous result.</p>
-<p>The test's success is determined by two conditions:</p><ol type="1">
-<li>The program must exit with code 0.</li>
-<li>Valgrind/Helgrind must report ZERO errors. </li>
-</ol>
+<div class="textblock"><p>A minimal, dependency-free version of the thread-safety stress test. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a6a3c7d4a3a7ff9df5289e524f9c524af" name="a6a3c7d4a3a7ff9df5289e524f9c524af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a3c7d4a3a7ff9df5289e524f9c524af">&#9670;&#160;</a></span>ITERATIONS_PER_THREAD</h2>
@@ -210,8 +197,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A simple C callback function; its only purpose is to be a valid call target. </p>
-
 </div>
 </div>
 <a id="ad7ccaadffc3f676752ea58cf2179cdb0" name="ad7ccaadffc3f676752ea58cf2179cdb0"></a>
@@ -229,9 +214,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The main function executed by each worker thread. </p>
-<p>Creates, uses, and destroys a reverse trampoline in a tight loop. </p><dl class="section return"><dt>Returns</dt><dd>Returns a status code (0 for success, 1 for failure) cast to a void pointer. </dd></dl>
 
 </div>
 </div>

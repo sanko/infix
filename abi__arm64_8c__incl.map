@@ -1,35 +1,35 @@
 <map id="src/arch/aarch64/abi_arm64.c" name="src/arch/aarch64/abi_arm64.c">
-<area shape="rect" id="Node000001" title="Implements the FFI logic for the AArch64 (ARM64) architecture." alt="" coords="311,5,465,45"/>
-<area shape="rect" id="Node000002" href="$abi__arm64__common_8h.html" title="Common register definitions for the AArch64 (ARM64) architecture." alt="" coords="43,167,210,192"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="312,39,241,58,206,74,175,95,152,124,137,155,132,152,147,121,172,91,204,70,239,53,311,33"/>
-<area shape="rect" id="Node000004" href="$abi__arm64__emitters_8h.html" title="Declares internal helper functions for emitting AArch64 machine code." alt="" coords="185,93,351,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="360,48,299,88,296,84,357,43"/>
-<area shape="rect" id="Node000005" href="$infix__internals_8h.html" title="Declarations for internal&#45;only functions, types, and constants." alt="" coords="235,167,421,192"/>
-<area shape="poly" id="edge14_Node000001_Node000005" title=" " alt="" coords="387,46,378,81,365,120,345,157,341,154,360,118,373,79,382,45"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="185,387,268,412"/>
-<area shape="poly" id="edge18_Node000001_Node000008" title=" " alt="" coords="312,43,217,65,117,96,74,114,39,134,16,156,10,167,8,178,8,254,12,281,24,305,43,325,66,342,119,368,173,385,171,390,117,373,63,347,39,329,20,308,7,283,3,254,3,178,5,165,12,153,36,130,71,110,115,91,215,60,310,38"/>
-<area shape="rect" id="Node000011" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="407,240,537,265"/>
-<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="398,45,465,226,460,228,393,46"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="496,93,563,119"/>
-<area shape="poly" id="edge19_Node000001_Node000012" title=" " alt="" coords="423,43,497,84,495,89,421,48"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="587,93,658,119"/>
-<area shape="poly" id="edge20_Node000001_Node000013" title=" " alt="" coords="445,43,576,87,575,92,443,48"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="109,313,179,339"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,194,89,226,82,245,84,264,98,286,116,303,113,307,94,289,79,266,76,245,84,223,111,191"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="246,121,163,163,161,158,244,116"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="280,117,312,154,307,158,276,121"/>
-<area shape="rect" id="Node000006" href="$infix__config_8h.html" title="Internal&#45;only header for platform, architecture, and ABI detection." alt="" coords="94,240,263,265"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="305,194,217,236,214,232,303,190"/>
-<area shape="rect" id="Node000007" href="$infix_8h.html" title=" " alt="" coords="287,240,382,265"/>
-<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="332,192,335,226,330,227,326,193"/>
-<area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="305,268,189,311,187,306,303,263"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="328,267,246,377,241,374,324,264"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="365,387,440,412"/>
-<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="327,267,306,300,302,319,306,337,328,362,355,379,353,383,324,366,302,340,297,319,301,298,322,264"/>
-<area shape="rect" id="Node000010" href="$compat__c23_8h.html" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="315,313,490,339"/>
-<area shape="poly" id="edge11_Node000007_Node000010" title=" " alt="" coords="348,264,384,301,380,305,344,268"/>
-<area shape="poly" id="edge12_Node000010_Node000008" title=" " alt="" coords="375,341,269,384,267,379,373,336"/>
-<area shape="poly" id="edge13_Node000010_Node000009" title=" " alt="" coords="405,339,405,373,400,373,400,339"/>
-<area shape="poly" id="edge17_Node000011_Node000009" title=" " alt="" coords="484,264,505,298,510,319,505,340,482,366,453,383,451,379,479,362,500,337,505,319,500,300,480,267"/>
-<area shape="poly" id="edge16_Node000011_Node000010" title=" " alt="" coords="462,268,425,305,421,302,459,264"/>
+<area shape="rect" id="Node000001" title="Implements the FFI logic for the AArch64 (ARM64) architecture." alt="" coords="326,5,479,45"/>
+<area shape="rect" id="Node000002" href="$abi__arm64__common_8h.html" title="Common register definitions and instruction encodings for the AArch64 (ARM64) architecture." alt="" coords="43,181,221,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="326,35,288,42,248,54,210,71,176,95,163,111,152,130,140,169,135,167,148,128,158,108,173,91,207,67,246,49,287,37,325,30"/>
+<area shape="rect" id="Node000004" href="$abi__arm64__emitters_8h.html" title="Declares internal helper functions for emitting AArch64 machine code." alt="" coords="187,93,365,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="376,48,317,88,314,83,373,43"/>
+<area shape="rect" id="Node000005" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="245,189,432,214"/>
+<area shape="poly" id="edge14_Node000001_Node000005" title=" " alt="" coords="402,46,394,87,380,134,357,178,352,175,375,132,389,86,397,45"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="189,416,272,441"/>
+<area shape="poly" id="edge18_Node000001_Node000009" title=" " alt="" coords="326,30,227,40,174,50,123,66,78,88,41,117,27,135,17,154,10,176,8,200,8,283,12,311,25,334,43,355,67,372,122,398,176,415,175,420,120,403,64,377,40,359,20,338,7,312,3,284,3,200,5,175,12,152,23,132,37,114,75,84,121,61,173,45,226,34,325,25"/>
+<area shape="rect" id="Node000011" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="411,269,541,295"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="411,45,471,255,466,257,405,46"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="507,101,573,126"/>
+<area shape="poly" id="edge19_Node000001_Node000012" title=" " alt="" coords="434,43,511,91,509,96,431,48"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="598,101,669,126"/>
+<area shape="poly" id="edge20_Node000001_Node000013" title=" " alt="" coords="456,43,586,91,593,93,591,98,584,96,454,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="111,343,182,368"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,223,90,256,85,275,88,294,101,315,119,332,115,336,97,318,83,296,80,275,86,254,110,220"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="246,136,177,177,174,172,243,131"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="292,132,324,176,320,179,288,135"/>
+<area shape="rect" id="Node000006" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="98,269,267,295"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="317,216,219,266,216,261,315,212"/>
+<area shape="rect" id="Node000007" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="291,269,386,295"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="341,214,341,255,336,255,336,214"/>
+<area shape="poly" id="edge13_Node000007_Node000003" title=" " alt="" coords="309,297,192,340,190,335,307,292"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="319,343,494,368"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="352,293,388,331,384,334,348,297"/>
+<area shape="poly" id="edge11_Node000007_Node000009" title=" " alt="" coords="332,297,250,406,245,403,328,294"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="369,416,444,441"/>
+<area shape="poly" id="edge12_Node000007_Node000010" title=" " alt="" coords="331,296,310,330,306,349,310,367,332,391,359,408,357,413,328,395,306,369,301,349,305,328,326,293"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="379,370,273,413,271,408,377,366"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="409,368,409,402,404,402,404,368"/>
+<area shape="poly" id="edge16_Node000011_Node000008" title=" " alt="" coords="466,297,429,335,425,331,463,293"/>
+<area shape="poly" id="edge17_Node000011_Node000010" title=" " alt="" coords="488,293,509,328,514,349,509,369,486,395,457,413,455,408,483,391,504,367,509,349,504,330,484,296"/>
 </map>

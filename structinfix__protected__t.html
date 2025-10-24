@@ -109,18 +109,22 @@ $(document).ready(function(){initNavTree('structinfix__protected__t.html',''); i
 </div><!--header-->
 <div class="contents">
 
+<p>Internal representation of a memory block that will be made read-only.  
+ <a href="structinfix__protected__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad5763ea7155334fbe6d4a32a245f71c3" id="r_ad5763ea7155334fbe6d4a32a245f71c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__protected__t.html#a9de6debabf81ae52c30d2ff5f197dc77">void</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__protected__t.html#ad5763ea7155334fbe6d4a32a245f71c3">rw_ptr</a></td></tr>
-<tr class="memdesc:ad5763ea7155334fbe6d4a32a245f71c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer to the read-write data memory.  <br /></td></tr>
 <tr class="separator:ad5763ea7155334fbe6d4a32a245f71c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9de6debabf81ae52c30d2ff5f197dc77" id="r_a9de6debabf81ae52c30d2ff5f197dc77"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__protected__t.html#a9de6debabf81ae52c30d2ff5f197dc77">size</a></td></tr>
-<tr class="memdesc:a9de6debabf81ae52c30d2ff5f197dc77"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of the allocated memory region in bytes.  <br /></td></tr>
 <tr class="separator:a9de6debabf81ae52c30d2ff5f197dc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Internal representation of a memory block that will be made read-only. </p>
+<p>This is used to harden the <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> context against runtime memory corruption. The context is allocated in a standard read-write memory region, fully populated, and then its permissions are changed to read-only using this handle. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="ad5763ea7155334fbe6d4a32a245f71c3" name="ad5763ea7155334fbe6d4a32a245f71c3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad5763ea7155334fbe6d4a32a245f71c3">&#9670;&#160;</a></span>rw_ptr</h2>
 
@@ -132,8 +136,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A pointer to the read-write data memory. </p>
+<p>The read-write pointer before being made read-only. </p>
 
 </div>
 </div>
@@ -148,7 +151,6 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
 <p>The size of the allocated memory region in bytes. </p>
 
 </div>

@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="A dynamic buffer for staged machine code generation.">
 <polygon fill="#999999" stroke="#666666" points="77,-19 3,-19 3,0 77,0 77,-19"/>
 <text text-anchor="middle" x="40" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">code_buffer</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="structinfix__arena__t.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="structinfix__arena__t.html" target="_top" xlink:title="Internal definition of a memory arena.">
 <polygon fill="white" stroke="#666666" points="80,-85 0,-85 0,-66 80,-66 80,-85"/>
 <text text-anchor="middle" x="40" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">infix_arena_t</text>
 </a>

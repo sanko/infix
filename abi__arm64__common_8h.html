@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('abi__arm64__common_8h.html',''); initR
 </div><!--header-->
 <div class="contents">
 
-<p>Common register definitions for the AArch64 (ARM64) architecture.  
+<p>Common register definitions and instruction encodings for the AArch64 (ARM64) architecture.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -280,7 +280,7 @@ Enumerations</h2></td></tr>
 <tr class="separator:a84639a49e91a2455fb857495a718e3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Common register definitions for the AArch64 (ARM64) architecture. </p>
+<div class="textblock"><p>Common register definitions and instruction encodings for the AArch64 (ARM64) architecture. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
@@ -750,7 +750,7 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a45d807a6fb62dd94432a1b257a1f37e1" name="a7c1f154648630ca0306ce870180092b1a45d807a6fb62dd94432a1b257a1f37e1"></a>X7_REG&#160;</td><td class="fielddoc"><p>Argument 8 / Volatile. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a8eb432408cb01a824e1a17c059daa51d" name="a7c1f154648630ca0306ce870180092b1a8eb432408cb01a824e1a17c059daa51d"></a>X8_REG&#160;</td><td class="fielddoc"><p>Indirect result location register (holds address for large struct returns) / Volatile. </p>
+<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a8eb432408cb01a824e1a17c059daa51d" name="a7c1f154648630ca0306ce870180092b1a8eb432408cb01a824e1a17c059daa51d"></a>X8_REG&#160;</td><td class="fielddoc"><p>Indirect Result Location Register (holds address for large struct returns) / Volatile. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1ae68729324bef088e6624776653a8d475" name="a7c1f154648630ca0306ce870180092b1ae68729324bef088e6624776653a8d475"></a>X9_REG&#160;</td><td class="fielddoc"><p>Volatile (caller-saved) scratch register. </p>
 </td></tr>
@@ -766,11 +766,11 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a7880a4475f20919da562b58d3bcd1bbc" name="a7c1f154648630ca0306ce870180092b1a7880a4475f20919da562b58d3bcd1bbc"></a>X15_REG&#160;</td><td class="fielddoc"><p>Volatile scratch register. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a672af98eae104117af91c205ed30bee3" name="a7c1f154648630ca0306ce870180092b1a672af98eae104117af91c205ed30bee3"></a>X16_REG&#160;</td><td class="fielddoc"><p>Intra-Procedure-call scratch register (IP0) / Volatile. Linker-modifiable. </p>
+<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a672af98eae104117af91c205ed30bee3" name="a7c1f154648630ca0306ce870180092b1a672af98eae104117af91c205ed30bee3"></a>X16_REG&#160;</td><td class="fielddoc"><p>Intra-Procedure-call scratch register (IP0) / Volatile. May be modified by the linker. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1aad4b8be2a412b8557459db9fb274c1f7" name="a7c1f154648630ca0306ce870180092b1aad4b8be2a412b8557459db9fb274c1f7"></a>X17_REG&#160;</td><td class="fielddoc"><p>Intra-Procedure-call scratch register (IP1) / Volatile. Linker-modifiable. </p>
+<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1aad4b8be2a412b8557459db9fb274c1f7" name="a7c1f154648630ca0306ce870180092b1aad4b8be2a412b8557459db9fb274c1f7"></a>X17_REG&#160;</td><td class="fielddoc"><p>Intra-Procedure-call scratch register (IP1) / Volatile. May be modified by the linker. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1adc803990b637b94b68b58aef1140080d" name="a7c1f154648630ca0306ce870180092b1adc803990b637b94b68b58aef1140080d"></a>X18_REG&#160;</td><td class="fielddoc"><p>Platform Register (reserved, usage is platform-specific) / May be callee-saved. Avoid use. </p>
+<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1adc803990b637b94b68b58aef1140080d" name="a7c1f154648630ca0306ce870180092b1adc803990b637b94b68b58aef1140080d"></a>X18_REG&#160;</td><td class="fielddoc"><p>Platform Register (reserved, usage is platform-specific) / May be callee-saved. Best to avoid. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1aba4b3712296c162fecca975be6210901" name="a7c1f154648630ca0306ce870180092b1aba4b3712296c162fecca975be6210901"></a>X19_REG&#160;</td><td class="fielddoc"><p>Callee-saved. Must be preserved by a called function. </p>
 </td></tr>
@@ -794,7 +794,7 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a831b7d4c691fe30e4bab8e0e7b5a295b" name="a7c1f154648630ca0306ce870180092b1a831b7d4c691fe30e4bab8e0e7b5a295b"></a>X29_FP_REG&#160;</td><td class="fielddoc"><p>Frame Pointer (FP) / Callee-saved. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1ac846f03b45a1c48e5bcb603d11002443" name="a7c1f154648630ca0306ce870180092b1ac846f03b45a1c48e5bcb603d11002443"></a>X30_LR_REG&#160;</td><td class="fielddoc"><p>Link Register (LR), holds the return address / Callee-saved by convention, but volatile on call. </p>
+<tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1ac846f03b45a1c48e5bcb603d11002443" name="a7c1f154648630ca0306ce870180092b1ac846f03b45a1c48e5bcb603d11002443"></a>X30_LR_REG&#160;</td><td class="fielddoc"><p>Link Register (LR), holds the return address / Volatile across calls. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a7c1f154648630ca0306ce870180092b1a779a5703a710b6df83d92df2d80a9bff" name="a7c1f154648630ca0306ce870180092b1a779a5703a710b6df83d92df2d80a9bff"></a>SP_REG&#160;</td><td class="fielddoc"><p>Stack Pointer (SP). In some instructions, encoding 31 refers to the Zero Register (XZR/WZR). </p>
 </td></tr>
@@ -830,7 +830,7 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a84639a49e91a2455fb857495a718e3bea4093aa06e3b254d5ed8a69cdefc3c9f3" name="a84639a49e91a2455fb857495a718e3bea4093aa06e3b254d5ed8a69cdefc3c9f3"></a>V7_REG&#160;</td><td class="fielddoc"><p>Argument 8 / Volatile. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a84639a49e91a2455fb857495a718e3bea833f555fde105a843b7dcd4bfe57ca75" name="a84639a49e91a2455fb857495a718e3bea833f555fde105a843b7dcd4bfe57ca75"></a>V8_REG&#160;</td><td class="fielddoc"><p>Callee-saved (Note: only the lower 64 bits must be preserved). </p>
+<tr><td class="fieldname"><a id="a84639a49e91a2455fb857495a718e3bea833f555fde105a843b7dcd4bfe57ca75" name="a84639a49e91a2455fb857495a718e3bea833f555fde105a843b7dcd4bfe57ca75"></a>V8_REG&#160;</td><td class="fielddoc"><p>Callee-saved (Note: only the lower 64 bits, D8-D15, must be preserved). </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a84639a49e91a2455fb857495a718e3bea39d2e514751460f40a35b1215d0c0ef3" name="a84639a49e91a2455fb857495a718e3bea39d2e514751460f40a35b1215d0c0ef3"></a>V9_REG&#160;</td><td class="fielddoc"><p>Callee-saved (only lower 64 bits). </p>
 </td></tr>

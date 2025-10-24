@@ -109,30 +109,30 @@ $(document).ready(function(){initNavTree('structinfix__reverse__call__frame__lay
 </div><!--header-->
 <div class="contents">
 
+<p>A complete layout blueprint for a reverse call frame.  
+ <a href="structinfix__reverse__call__frame__layout.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aedb51aeb6365d359bcb27d1e9920a0d8" id="r_aedb51aeb6365d359bcb27d1e9920a0d8"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__call__frame__layout.html#aedb51aeb6365d359bcb27d1e9920a0d8">total_stack_alloc</a></td></tr>
-<tr class="memdesc:aedb51aeb6365d359bcb27d1e9920a0d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total bytes to allocate on the stub's stack frame.  <br /></td></tr>
 <tr class="separator:aedb51aeb6365d359bcb27d1e9920a0d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd245f8bdd79ae7fd8dc55fba7de58e7" id="r_afd245f8bdd79ae7fd8dc55fba7de58e7"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__call__frame__layout.html#afd245f8bdd79ae7fd8dc55fba7de58e7">return_buffer_offset</a></td></tr>
-<tr class="memdesc:afd245f8bdd79ae7fd8dc55fba7de58e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset from frame pointer to the return value buffer.  <br /></td></tr>
 <tr class="separator:afd245f8bdd79ae7fd8dc55fba7de58e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02c86eb3f8f4667fbe0562b636a4c55a" id="r_a02c86eb3f8f4667fbe0562b636a4c55a"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__call__frame__layout.html#a02c86eb3f8f4667fbe0562b636a4c55a">args_array_offset</a></td></tr>
-<tr class="memdesc:a02c86eb3f8f4667fbe0562b636a4c55a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset to the <code>void**</code> array passed to the C dispatcher.  <br /></td></tr>
 <tr class="separator:a02c86eb3f8f4667fbe0562b636a4c55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a296a2ef0817add8d64b6f1c0915a644d" id="r_a296a2ef0817add8d64b6f1c0915a644d"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__call__frame__layout.html#a296a2ef0817add8d64b6f1c0915a644d">saved_args_offset</a></td></tr>
-<tr class="memdesc:a296a2ef0817add8d64b6f1c0915a644d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset to the area where by-value argument data is saved.  <br /></td></tr>
 <tr class="separator:a296a2ef0817add8d64b6f1c0915a644d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a845e2eb5c5d49d4a710ba8af9c2428fb" id="r_a845e2eb5c5d49d4a710ba8af9c2428fb"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__call__frame__layout.html#a845e2eb5c5d49d4a710ba8af9c2428fb">gpr_save_area_offset</a></td></tr>
-<tr class="memdesc:a845e2eb5c5d49d4a710ba8af9c2428fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset to where incoming GPR arguments are saved.  <br /></td></tr>
 <tr class="separator:a845e2eb5c5d49d4a710ba8af9c2428fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a130be2fea30a8cdf0232ea0b9b7d6662" id="r_a130be2fea30a8cdf0232ea0b9b7d6662"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662">xmm_save_area_offset</a></td></tr>
-<tr class="memdesc:a130be2fea30a8cdf0232ea0b9b7d6662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset to where incoming XMM/VPR arguments are saved.  <br /></td></tr>
 <tr class="separator:a130be2fea30a8cdf0232ea0b9b7d6662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A complete layout blueprint for a reverse call frame. </p>
+<p>This structure serves as a plan for the JIT-compiled reverse call stub. It contains the offsets for all data structures that the stub needs to create on its stack frame before calling the universal C dispatcher. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a02c86eb3f8f4667fbe0562b636a4c55a" name="a02c86eb3f8f4667fbe0562b636a4c55a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a02c86eb3f8f4667fbe0562b636a4c55a">&#9670;&#160;</a></span>args_array_offset</h2>
 
@@ -144,8 +144,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Offset to the <code>void**</code> array passed to the C dispatcher. </p>
+<p>Stack offset for the <code>void**</code> array passed to the C dispatcher. </p>
 
 </div>
 </div>
@@ -160,8 +159,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Offset to where incoming GPR arguments are saved. </p>
+<p>(Win x64) Stack offset for saving non-volatile GPRs. </p>
 
 </div>
 </div>
@@ -176,8 +174,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Offset from frame pointer to the return value buffer. </p>
+<p>Stack offset for the buffer to store the return value. </p>
 
 </div>
 </div>
@@ -192,8 +189,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Offset to the area where by-value argument data is saved. </p>
+<p>Stack offset for the area where argument data is stored/marshalled. </p>
 
 </div>
 </div>
@@ -208,8 +204,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Total bytes to allocate on the stub's stack frame. </p>
+<p>Total bytes of local stack space needed. </p>
 
 </div>
 </div>
@@ -224,8 +219,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Offset to where incoming XMM/VPR arguments are saved. </p>
+<p>(Win x64) Stack offset for saving non-volatile XMMs. </p>
 
 </div>
 </div>

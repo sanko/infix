@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: Manual Type-Creation API</title>
+<title>infix: Manual API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -103,42 +103,50 @@ $(document).ready(function(){initNavTree('group__manual__api.html',''); initResi
 
 <div class="header">
   <div class="summary">
+<a href="#groups">Modules</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">Manual Type-Creation API<div class="ingroups"><a class="el" href="group__public__api.html">Public API</a></div></div></div>
+  <div class="headertitle"><div class="title">Manual API<div class="ingroups"><a class="el" href="group__high__level__api.html">High-Level Signature API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Advanced functions for manually building <code>infix_type</code> objects.  
+<p>A lower-level, programmatic API for creating trampolines from <code>infix_type</code> objects.  
 <a href="#details">More...</a></p>
 <div class="dynheader">
-Collaboration diagram for Manual Type-Creation API:</div>
+Collaboration diagram for Manual API:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="group__manual__api.svg" width="335" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="group__manual__api.svg" width="490" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
+Modules</h2></td></tr>
+<tr class="memitem:group__type__system" id="r_group__type__system"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html">Type System</a></td></tr>
+<tr class="memdesc:group__type__system"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core data structures and APIs for describing C types and function signatures. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga017f14762b217bc6d0101e994481bfd0" id="r_ga017f14762b217bc6d0101e994481bfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
-<tr class="memdesc:ga017f14762b217bc6d0101e994481bfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a bound forward-call trampoline for a given function signature.  <br /></td></tr>
+<tr class="memitem:ga017f14762b217bc6d0101e994481bfd0" id="r_ga017f14762b217bc6d0101e994481bfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
+<tr class="memdesc:ga017f14762b217bc6d0101e994481bfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a bound forward trampoline from <code>infix_type</code> objects.  <br /></td></tr>
 <tr class="separator:ga017f14762b217bc6d0101e994481bfd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa265f727b644889b3a6e0817532bfe6a" id="r_gaa265f727b644889b3a6e0817532bfe6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t)</td></tr>
-<tr class="memdesc:gaa265f727b644889b3a6e0817532bfe6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates an unbound forward-call trampoline for a given function signature.  <br /></td></tr>
+<tr class="memitem:gaa265f727b644889b3a6e0817532bfe6a" id="r_gaa265f727b644889b3a6e0817532bfe6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t)</td></tr>
+<tr class="memdesc:gaa265f727b644889b3a6e0817532bfe6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an unbound forward trampoline from <code>infix_type</code> objects.  <br /></td></tr>
 <tr class="separator:gaa265f727b644889b3a6e0817532bfe6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28d7f22662c45343bd1c821fa79f19eb" id="r_ga28d7f22662c45343bd1c821fa79f19eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb">infix_reverse_create_callback_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
-<tr class="memdesc:ga28d7f22662c45343bd1c821fa79f19eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a type-safe reverse-call trampoline (callback) from <code>infix_type</code> objects.  <br /></td></tr>
+<tr class="memitem:ga28d7f22662c45343bd1c821fa79f19eb" id="r_ga28d7f22662c45343bd1c821fa79f19eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb">infix_reverse_create_callback_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
+<tr class="memdesc:ga28d7f22662c45343bd1c821fa79f19eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a type-safe reverse trampoline (callback) from <code>infix_type</code> objects.  <br /></td></tr>
 <tr class="separator:ga28d7f22662c45343bd1c821fa79f19eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8aa8e7c6bc0e47f2e796c8899796012a" id="r_ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a">infix_reverse_create_closure_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, <a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a>, void *)</td></tr>
-<tr class="memdesc:ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a generic reverse-call trampoline (closure) from <code>infix_type</code> objects.  <br /></td></tr>
+<tr class="memitem:ga8aa8e7c6bc0e47f2e796c8899796012a" id="r_ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a">infix_reverse_create_closure_manual</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>, void *)</td></tr>
+<tr class="memdesc:ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a generic reverse trampoline (closure) from <code>infix_type</code> objects.  <br /></td></tr>
 <tr class="separator:ga8aa8e7c6bc0e47f2e796c8899796012a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad87a8882dec00b89a4bc5c87db2fc032" id="r_gad87a8882dec00b89a4bc5c87db2fc032"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *)</td></tr>
-<tr class="memdesc:gad87a8882dec00b89a4bc5c87db2fc032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a forward trampoline and its associated executable memory.  <br /></td></tr>
+<tr class="memdesc:gad87a8882dec00b89a4bc5c87db2fc032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a forward trampoline and frees all associated memory.  <br /></td></tr>
 <tr class="separator:gad87a8882dec00b89a4bc5c87db2fc032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga00b101025663c423a28433e139be5d4e" id="r_ga00b101025663c423a28433e139be5d4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *)</td></tr>
-<tr class="memdesc:ga00b101025663c423a28433e139be5d4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a reverse trampoline, its JIT-compiled stub, and its context.  <br /></td></tr>
+<tr class="memdesc:ga00b101025663c423a28433e139be5d4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a reverse trampoline and frees all associated memory.  <br /></td></tr>
 <tr class="separator:ga00b101025663c423a28433e139be5d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Advanced functions for manually building <code>infix_type</code> objects. </p>
+<p>A lower-level, programmatic API for creating trampolines from <code>infix_type</code> objects. </p>
+<p>This API is intended for performance-critical applications or language bindings that need to construct type information dynamically without the overhead of string parsing. All <code>infix_type</code> objects passed to these functions must be allocated from an <code><a class="el" href="structinfix__arena__t.html" title="Internal definition of a memory arena.">infix_arena_t</a></code>. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga017f14762b217bc6d0101e994481bfd0" name="ga017f14762b217bc6d0101e994481bfd0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga017f14762b217bc6d0101e994481bfd0">&#9670;&#160;</a></span>infix_forward_create_manual()</h2>
@@ -147,7 +155,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_manual </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_manual </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
           <td class="paramname"><em>out_trampoline</em>, </td>
@@ -190,20 +198,34 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a bound forward-call trampoline for a given function signature. </p>
+<p>Creates a bound forward trampoline from <code>infix_type</code> objects. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">return_type</td><td>The <code>infix_type</code> of the function's return value. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for each argument. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_args</td><td>The total number of arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_fixed_args</td><td>For variadic functions, the number of non-variadic arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">target_function</td><td>A pointer to the native C function to be bound to the trampoline. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>Receives the created trampoline handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The <code>infix_type</code> for the function's return value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for the function's arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_function</td><td>The address of the C function to call. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The function pointer returned by <code>infix_forward_get_code</code> should be used. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
+<p>Creates a bound forward trampoline from <code>infix_type</code> objects.</p>
+<p>This is the lower-level, programmatic way to create a bound forward trampoline. It bypasses the signature string parser, making it suitable for performance-critical applications or language bindings that construct type information dynamically.</p>
+<p>All <code>infix_type</code> objects passed to this function must be fully resolved and have a valid layout. They should be allocated from a user-managed <code><a class="el" href="structinfix__arena__t.html" title="Internal definition of a memory arena.">infix_arena_t</a></code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>Receives the created trampoline handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The <code>infix_type</code> for the function's return value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for the function's arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_function</td><td>The address of the C function to call. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
@@ -214,7 +236,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_unbound_manual </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_unbound_manual </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
           <td class="paramname"><em>out_trampoline</em>, </td>
@@ -251,32 +273,31 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates an unbound forward-call trampoline for a given function signature. </p>
+<p>Creates an unbound forward trampoline from <code>infix_type</code> objects. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">return_type</td><td>The <code>infix_type</code> of the function's return value. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for each argument. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_args</td><td>The total number of arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_fixed_args</td><td>For variadic functions, the number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>Receives the created trampoline handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The <code>infix_type</code> for the function's return value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for the function's arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The function pointer returned by <code>infix_forward_get_unbound_code</code> must be used.</dd></dl>
-<p>Generates an unbound forward-call trampoline for a given function signature.</p>
-<p>Creates a trampoline where the target function pointer is not hardcoded. </p><dl class="params"><dt>Parameters</dt><dd>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
+<p>Creates an unbound forward trampoline from <code>infix_type</code> objects.</p>
+<p>This is the lower-level, programmatic way to create an unbound forward trampoline. It bypasses the signature string parser.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">return_type</td><td>The <code>infix_type</code> of the function's return value. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for each argument. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_args</td><td>The total number of arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_fixed_args</td><td>For variadic functions, the number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>Receives the created trampoline handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The <code>infix_type</code> for the function's return value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of <code>infix_type*</code> for the function's arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The returned trampoline must be freed with <code>infix_forward_destroy</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
@@ -296,10 +317,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Frees a forward trampoline and its associated executable memory. </p>
+<p>Destroys a forward trampoline and frees all associated memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">trampoline</td><td>The trampoline to free. Can be <code>nullptr</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">trampoline</td><td>The trampoline to destroy. Safe to call with <code>nullptr</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function safely releases all resources owned by the trampoline, including its JIT-compiled executable code and its private memory arena which stores the deep-copied type information. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">trampoline</td><td>The trampoline to destroy. Safe to call with <code>nullptr</code>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -313,7 +340,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_callback_manual </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_callback_manual </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **&#160;</td>
           <td class="paramname"><em>out_context</em>, </td>
@@ -356,20 +383,32 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a type-safe reverse-call trampoline (callback) from <code>infix_type</code> objects. </p>
+<p>Creates a type-safe reverse trampoline (callback) from <code>infix_type</code> objects. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">return_type</td><td>The return type of the callback. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">arg_types</td><td>An array of <code>infix_type</code> pointers for the callback's arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_args</td><td>The total number of arguments in <code>arg_types</code>. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_fixed_args</td><td>The number of fixed arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to your type-safe C callback handler. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>Receives the created context handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The function's return type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of argument types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A pointer to the type-safe C handler function. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See <code>infix_reverse_create_callback</code> for details on the handler's signature. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
+<p>Creates a type-safe reverse trampoline (callback) from <code>infix_type</code> objects.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>Receives the created context handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The function's return type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of argument types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A pointer to the type-safe C handler function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
@@ -380,7 +419,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_closure_manual </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_closure_manual </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **&#160;</td>
           <td class="paramname"><em>out_context</em>, </td>
@@ -412,7 +451,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>&#160;</td>
           <td class="paramname"><em>user_callback_fn</em>, </td>
         </tr>
         <tr>
@@ -429,16 +468,30 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a generic reverse-call trampoline (closure) from <code>infix_type</code> objects. </p>
+<p>Creates a generic reverse trampoline (closure) from <code>infix_type</code> objects. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">return_type</td><td>The return type of the callback. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">arg_types</td><td>An array of <code>infix_type</code> pointers for the callback's arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_args</td><td>The total number of arguments in <code>arg_types</code>. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_fixed_args</td><td>The number of fixed arguments. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to your generic <code>infix_closure_handler_fn</code>. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_data</td><td>A user-defined pointer for passing state to the handler. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>Receives the created context handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The function's return type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of argument types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A pointer to the generic <code>infix_closure_handler_fn</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_data</td><td>A <code>void*</code> pointer to application-specific state. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
+<p>Creates a generic reverse trampoline (closure) from <code>infix_type</code> objects.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>Receives the created context handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_type</td><td>The function's return type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>An array of argument types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>The number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td>The number of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A pointer to the generic <code>infix_closure_handler_fn</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_data</td><td>A <code>void*</code> pointer to application-specific state. </td></tr>
   </table>
   </dd>
 </dl>
@@ -462,10 +515,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Frees a reverse trampoline, its JIT-compiled stub, and its context. </p>
+<p>Destroys a reverse trampoline and frees all associated memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">reverse_trampoline</td><td>The reverse trampoline to free. Can be <code>nullptr</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">reverse_trampoline</td><td>The reverse trampoline context to destroy. Safe to call with <code>nullptr</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function safely releases all resources owned by the reverse trampoline, including its JIT-compiled stub, its private memory arena, the cached forward trampoline (if any), and the special read-only memory region for the context itself. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">reverse_trampoline</td><td>The reverse trampoline context to destroy. Safe to call with <code>nullptr</code>. </td></tr>
   </table>
   </dd>
 </dl>

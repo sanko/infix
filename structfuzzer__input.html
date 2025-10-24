@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('structfuzzer__input.html',''); initRes
 </div><!--header-->
 <div class="contents">
 
-<p>A helper structure to safely consume bytes from the fuzzer's input buffer.  
+<p>Represents the fuzzer's input data as a consumable stream.  
  <a href="structfuzzer__input.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&gt;</code></p>
@@ -122,7 +122,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a9f65b66a26281b54de9526f40f3846e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A helper structure to safely consume bytes from the fuzzer's input buffer. </p>
+<div class="textblock"><p>Represents the fuzzer's input data as a consumable stream. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a9f8bec6bca0bfb2489eab028f8659e51" name="a9f8bec6bca0bfb2489eab028f8659e51"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f8bec6bca0bfb2489eab028f8659e51">&#9670;&#160;</a></span>data</h2>
@@ -135,6 +135,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>A pointer to the current position in the input data buffer. </p>
 
 </div>
 </div>
@@ -149,6 +150,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The number of bytes remaining in the buffer. </p>
 
 </div>
 </div>

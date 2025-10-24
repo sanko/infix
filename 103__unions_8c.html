@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('103__unions_8c.html',''); initResizabl
 </div><!--header-->
 <div class="contents">
 
-<p>Tests passing and returning C unions by value.  
+<p>Unit test for passing and returning unions by value.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -120,7 +120,7 @@ $(document).ready(function(){initNavTree('103__unions_8c.html',''); initResizabl
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 103_unions.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="103__unions_8c__incl.svg" width="604" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="103__unions_8c__incl.svg" width="630" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -131,14 +131,15 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a8ca9fbe8e3f444de61c7ab5ffedef0d5" id="r_a8ca9fbe8e3f444de61c7ab5ffedef0d5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a8ca9fbe8e3f444de61c7ab5ffedef0d5">process_number_union_as_int</a> (<a class="el" href="unionNumber.html">Number</a> num)</td></tr>
-<tr class="memdesc:a8ca9fbe8e3f444de61c7ab5ffedef0d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a <a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> union and processes it as an integer.  <br /></td></tr>
+<tr class="memdesc:a8ca9fbe8e3f444de61c7ab5ffedef0d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that interprets a passed-in <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union as an integer.  <br /></td></tr>
 <tr class="separator:a8ca9fbe8e3f444de61c7ab5ffedef0d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d5cb71979565a12786550066d212ac7" id="r_a6d5cb71979565a12786550066d212ac7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a6d5cb71979565a12786550066d212ac7">process_number_union_as_float</a> (<a class="el" href="unionNumber.html">Number</a> num)</td></tr>
-<tr class="memdesc:a6d5cb71979565a12786550066d212ac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a <a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> union and processes it as a float.  <br /></td></tr>
+<tr class="memdesc:a6d5cb71979565a12786550066d212ac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that interprets a passed-in <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union as a float.  <br /></td></tr>
 <tr class="separator:a6d5cb71979565a12786550066d212ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b4e3957ab39211fee1c5f1a19af3765" id="r_a6b4e3957ab39211fee1c5f1a19af3765"><td class="memItemLeft" align="right" valign="top"><a class="el" href="unionNumber.html">Number</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a6b4e3957ab39211fee1c5f1a19af3765">return_number_union</a> (int selector)</td></tr>
+<tr class="memdesc:a6b4e3957ab39211fee1c5f1a19af3765"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that returns a <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union by value.  <br /></td></tr>
 <tr class="separator:a6b4e3957ab39211fee1c5f1a19af3765"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22f98d6b985b7b5b68cc1f2ccf33fb95" id="r_a22f98d6b985b7b5b68cc1f2ccf33fb95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a22f98d6b985b7b5b68cc1f2ccf33fb95">if</a> (!<a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a>(<a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a>==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;infix_type <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> <a class="el" href="unionNumber.html">Number</a> union created successfully&quot;))</td></tr>
+<tr class="memitem:a22f98d6b985b7b5b68cc1f2ccf33fb95" id="r_a22f98d6b985b7b5b68cc1f2ccf33fb95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a22f98d6b985b7b5b68cc1f2ccf33fb95">if</a> (!<a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a>(<a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a>==<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;infix_type <a class="el" href="850__regression__cases_8c.html#a50f65082e97e1d033a811aff6044ff41">for</a> <a class="el" href="unionNumber.html">Number</a> union created successfully&quot;))</td></tr>
 <tr class="separator:a22f98d6b985b7b5b68cc1f2ccf33fb95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cabb68c277783452c8704c4772fe54a" id="r_a0cabb68c277783452c8704c4772fe54a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a0cabb68c277783452c8704c4772fe54a">subtest</a> (&quot;Passing union as argument&quot;)</td></tr>
 <tr class="separator:a0cabb68c277783452c8704c4772fe54a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,21 +158,18 @@ Variables</h2></td></tr>
 <tr class="separator:ab7fe37bb07add2b1981130a458016adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a009bce9a7a96f39a5bc9ba080de9aa61" id="r_a009bce9a7a96f39a5bc9ba080de9aa61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a> = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td></tr>
 <tr class="separator:a009bce9a7a96f39a5bc9ba080de9aa61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td></tr>
+<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td></tr>
 <tr class="separator:a433468dce2d10c4f34424732ef15ebdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests passing and returning C unions by value. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite verifies that the library correctly handles C <code>union</code> types according to the target platform's ABI. It ensures that the size and alignment are calculated correctly and that the data is placed in the appropriate registers or stack locations.</p>
-<p>The suite covers two primary scenarios:</p><ol type="1">
-<li><b>Passing a Union:</b> A <code><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a></code> union is passed to native functions that interpret its contents as either an <code>int</code> or a <code>double</code>. This implicitly verifies the ABI classification rules (e.g., on System V x64, this union is passed in an XMM register, while on Windows x64 it's passed in a GPR).</li>
-<li><b>Returning a Union:</b> A native function returns a <code><a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a></code> union by value, and the test verifies that the returned data is correct. </li>
+<div class="textblock"><p>Unit test for passing and returning unions by value. </p>
+<p>This test verifies that <code>infix</code> correctly handles C unions in FFI calls. A union is a special type of aggregate, and its handling by the ABI often follows the same rules as structs of the same size and alignment.</p>
+<p>This test uses a simple <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union containing an <code>int</code> and a <code>float</code>. It verifies that:</p><ol type="1">
+<li>The <code>infix_type</code> for the union is created with the correct size (the size of the largest member) and alignment (the alignment of the most-aligned member).</li>
+<li>When the union is passed as an argument, its raw byte representation is correctly transmitted, allowing the callee to interpret it as either an <code>int</code> or a <code>float</code>.</li>
+<li>When a union is returned by value, its raw bytes are correctly received by the caller.</li>
 </ol>
+<p>This test is important for validating the aggregate classification logic for a type that is less common than structs but still a core part of the C language. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -240,7 +238,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Receives a <a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> union and processes it as a float. </p>
+<p>A C function that interprets a passed-in <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union as a float. </p>
 
 </div>
 </div>
@@ -260,7 +258,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Receives a <a class="el" href="unionNumber.html" title="A simple union of an integer and a float.">Number</a> union and processes it as an integer. </p>
+<p>A C function that interprets a passed-in <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union as an integer. </p>
 
 </div>
 </div>
@@ -279,6 +277,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A C function that returns a <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union by value. </p>
 
 </div>
 </div>
@@ -346,9 +346,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">        <a class="code hl_function" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a>(<a class="code hl_variable" href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
-<div class="ttc" id="a103__unions_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 103_unions.c:65</div></div>
-<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from the arena with a specific alignment.</div><div class="ttdef"><b>Definition</b> arena.c:86</div></div>
-<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:219</div></div>
+<div class="ttc" id="a103__unions_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 103_unions.c:57</div></div>
+<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from an arena.</div><div class="ttdef"><b>Definition</b> arena.c:116</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of a C struct or union.</div><div class="ttdef"><b>Definition</b> infix.h:276</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -359,7 +359,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -379,7 +379,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(3)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

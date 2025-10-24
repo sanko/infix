@@ -1,4 +1,5 @@
-<map id="Manual Type&#45;Creation API" name="Manual Type&#45;Creation API">
-<area shape="rect" id="Node000001" title="Advanced functions for manually building infix_type objects." alt="" coords="140,5,329,31"/>
-<area shape="rect" id="Node000002" href="$group__public__api.html" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,5,92,31"/>
+<map id="Manual API" name="Manual API">
+<area shape="rect" id="Node000002" href="$group__high__level__api.html" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000001" title="A lower&#45;level, programmatic API for creating trampolines from infix_type objects." alt="" coords="236,5,331,31"/>
+<area shape="rect" id="Node000003" href="$group__type__system.html" title="The core data structures and APIs for describing C types and function signatures." alt="" coords="379,5,484,31"/>
 </map>

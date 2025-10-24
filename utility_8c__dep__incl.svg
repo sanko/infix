@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Implementation of debugging utility functions.">
+<g id="a_Node000001"><a xlink:title="Implements internal debugging utilities.">
 <polygon fill="#999999" stroke="#666666" points="93,-74 0,-74 0,-55 93,-55 93,-74"/>
 <text text-anchor="middle" x="46.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/utility.c</text>
 </a>

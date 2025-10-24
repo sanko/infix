@@ -66,7 +66,7 @@ var sectionId = 'dynsection-0';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Declarations for internal&#45;only functions, types, and constants.">
+<g id="a_Node000002"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Internal data structures, function prototypes, and constants.">
 <polygon fill="white" stroke="#666666" points="223.51,-184 83.51,-184 83.51,-165 223.51,-165 223.51,-184"/>
 <text text-anchor="middle" x="153.51" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">common/infix_internals.h</text>
 </a>
@@ -174,7 +174,7 @@ var sectionId = 'dynsection-0';
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="infix__config_8h.html" target="_top" xlink:title="Internal&#45;only header for platform, architecture, and ABI detection.">
+<g id="a_Node000003"><a xlink:href="infix__config_8h.html" target="_top" xlink:title="Platform, architecture, and ABI detection macros.">
 <polygon fill="white" stroke="#666666" points="217.01,-129 90.01,-129 90.01,-110 217.01,-110 217.01,-129"/>
 <text text-anchor="middle" x="153.51" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">common/infix_config.h</text>
 </a>
@@ -192,7 +192,7 @@ var sectionId = 'dynsection-0';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="infix_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="infix_8h.html" target="_top" xlink:title="The public interface for the infix FFI library.">
 <polygon fill="white" stroke="#666666" points="72.01,-129 1.01,-129 1.01,-110 72.01,-110 72.01,-129"/>
 <text text-anchor="middle" x="36.51" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">infix/infix.h</text>
 </a>
@@ -210,9 +210,9 @@ var sectionId = 'dynsection-0';
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="78.51,-19 16.51,-19 16.51,0 78.51,0 78.51,-19"/>
-<text text-anchor="middle" x="47.51" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stdbool.h</text>
+<g id="a_Node000005"><a xlink:href="compat__c23_8h.html" target="_top" xlink:title="Provides forward compatibility macros for C23 features.">
+<polygon fill="white" stroke="#666666" points="253.01,-74 122.01,-74 122.01,-55 253.01,-55 253.01,-74"/>
+<text text-anchor="middle" x="187.51" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">common/compat_c23.h</text>
 </a>
 </g>
 </g>
@@ -220,8 +220,8 @@ var sectionId = 'dynsection-0';
 <g id="edge4_Node000004_Node000005" class="edge">
 <title>Node4&#45;&gt;Node5</title>
 <g id="a_edge4_Node000004_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M26.14,-109.72C13.28,-97.71 -5.97,-75.31 2.51,-55 7.37,-43.36 16.92,-33.2 25.98,-25.55"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="28.31,-28.17 34.02,-19.25 23.99,-22.67 28.31,-28.17"/>
+<path fill="none" stroke="#63b8ff" d="M60.77,-109.98C85.82,-101.19 125.14,-87.39 153.34,-77.49"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="154.53,-80.78 162.8,-74.17 152.21,-74.18 154.53,-80.78"/>
 </a>
 </g>
 </g>
@@ -229,17 +229,17 @@ var sectionId = 'dynsection-0';
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="215.51,-19 159.51,-19 159.51,0 215.51,0 215.51,-19"/>
-<text text-anchor="middle" x="187.51" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stddef.h</text>
+<polygon fill="#e0e0e0" stroke="#999999" points="78.51,-19 16.51,-19 16.51,0 78.51,0 78.51,-19"/>
+<text text-anchor="middle" x="47.51" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stdbool.h</text>
 </a>
 </g>
 </g>
 <!-- Node4&#45;&gt;Node6 -->
-<g id="edge5_Node000004_Node000006" class="edge">
+<g id="edge7_Node000004_Node000006" class="edge">
 <title>Node4&#45;&gt;Node6</title>
-<g id="a_edge5_Node000004_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M45.94,-109.76C59.93,-97.01 87.24,-72.88 112.51,-55 128.42,-43.74 147.31,-32.54 162.14,-24.2"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="164.19,-27.07 171.24,-19.16 160.8,-20.95 164.19,-27.07"/>
+<g id="a_edge7_Node000004_Node000006"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M26.14,-109.72C13.28,-97.71 -5.97,-75.31 2.51,-55 7.37,-43.36 16.92,-33.2 25.98,-25.55"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="28.31,-28.17 34.02,-19.25 23.99,-22.67 28.31,-28.17"/>
 </a>
 </g>
 </g>
@@ -247,71 +247,71 @@ var sectionId = 'dynsection-0';
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="65.01,-74 12.01,-74 12.01,-55 65.01,-55 65.01,-74"/>
-<text text-anchor="middle" x="38.51" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">stdint.h</text>
+<polygon fill="#e0e0e0" stroke="#999999" points="215.51,-19 159.51,-19 159.51,0 215.51,0 215.51,-19"/>
+<text text-anchor="middle" x="187.51" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stddef.h</text>
 </a>
 </g>
 </g>
 <!-- Node4&#45;&gt;Node7 -->
-<g id="edge6_Node000004_Node000007" class="edge">
+<g id="edge8_Node000004_Node000007" class="edge">
 <title>Node4&#45;&gt;Node7</title>
-<g id="a_edge6_Node000004_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M36.84,-109.75C37.1,-102.8 37.47,-92.85 37.8,-84.13"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="41.3,-84.21 38.18,-74.09 34.31,-83.95 41.3,-84.21"/>
+<g id="a_edge8_Node000004_Node000007"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M45.94,-109.76C59.93,-97.01 87.24,-72.88 112.51,-55 128.42,-43.74 147.31,-32.54 162.14,-24.2"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="164.19,-27.07 171.24,-19.16 160.8,-20.95 164.19,-27.07"/>
 </a>
 </g>
 </g>
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="compat__c23_8h.html" target="_top" xlink:title="Provides compatibility shims for C23 features in a C17/C11 project.">
-<polygon fill="white" stroke="#666666" points="253.01,-74 122.01,-74 122.01,-55 253.01,-55 253.01,-74"/>
-<text text-anchor="middle" x="187.51" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">common/compat_c23.h</text>
+<g id="a_Node000008"><a xlink:title=" ">
+<polygon fill="#e0e0e0" stroke="#999999" points="65.01,-74 12.01,-74 12.01,-55 65.01,-55 65.01,-74"/>
+<text text-anchor="middle" x="38.51" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">stdint.h</text>
 </a>
 </g>
 </g>
 <!-- Node4&#45;&gt;Node8 -->
-<g id="edge7_Node000004_Node000008" class="edge">
+<g id="edge9_Node000004_Node000008" class="edge">
 <title>Node4&#45;&gt;Node8</title>
-<g id="a_edge7_Node000004_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M60.77,-109.98C85.82,-101.19 125.14,-87.39 153.34,-77.49"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="154.53,-80.78 162.8,-74.17 152.21,-74.18 154.53,-80.78"/>
+<g id="a_edge9_Node000004_Node000008"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M36.84,-109.75C37.1,-102.8 37.47,-92.85 37.8,-84.13"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="41.3,-84.21 38.18,-74.09 34.31,-83.95 41.3,-84.21"/>
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node5 -->
-<g id="edge8_Node000008_Node000005" class="edge">
-<title>Node8&#45;&gt;Node5</title>
-<g id="a_edge8_Node000008_Node000005"><a xlink:title=" ">
+<!-- Node5&#45;&gt;Node6 -->
+<g id="edge5_Node000005_Node000006" class="edge">
+<title>Node5&#45;&gt;Node6</title>
+<g id="a_edge5_Node000005_Node000006"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M165.01,-54.98C141.98,-46.27 105.97,-32.63 79.88,-22.75"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="81,-19.44 70.41,-19.17 78.52,-25.98 81,-19.44"/>
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node6 -->
-<g id="edge9_Node000008_Node000006" class="edge">
-<title>Node8&#45;&gt;Node6</title>
-<g id="a_edge9_Node000008_Node000006"><a xlink:title=" ">
+<!-- Node5&#45;&gt;Node7 -->
+<g id="edge6_Node000005_Node000007" class="edge">
+<title>Node5&#45;&gt;Node7</title>
+<g id="a_edge6_Node000005_Node000007"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M187.51,-54.75C187.51,-47.8 187.51,-37.85 187.51,-29.13"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="191.01,-29.09 187.51,-19.09 184.01,-29.09 191.01,-29.09"/>
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node6 -->
-<g id="edge12_Node000009_Node000006" class="edge">
-<title>Node9&#45;&gt;Node6</title>
-<g id="a_edge12_Node000009_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M283.25,-109.78C280.97,-96.62 275.06,-71.48 261.51,-55 250.26,-41.32 233.63,-30.8 218.99,-23.42"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="220.26,-20.15 209.73,-19.03 217.26,-26.48 220.26,-20.15"/>
+<!-- Node9&#45;&gt;Node5 -->
+<g id="edge11_Node000009_Node000005" class="edge">
+<title>Node9&#45;&gt;Node5</title>
+<g id="a_edge11_Node000009_Node000005"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M268.92,-109.98C253.74,-101.69 230.41,-88.94 212.61,-79.22"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="213.83,-75.89 203.37,-74.17 210.47,-82.04 213.83,-75.89"/>
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node8 -->
-<g id="edge11_Node000009_Node000008" class="edge">
-<title>Node9&#45;&gt;Node8</title>
-<g id="a_edge11_Node000009_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M268.92,-109.98C253.74,-101.69 230.41,-88.94 212.61,-79.22"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="213.83,-75.89 203.37,-74.17 210.47,-82.04 213.83,-75.89"/>
+<!-- Node9&#45;&gt;Node7 -->
+<g id="edge12_Node000009_Node000007" class="edge">
+<title>Node9&#45;&gt;Node7</title>
+<g id="a_edge12_Node000009_Node000007"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M283.25,-109.78C280.97,-96.62 275.06,-71.48 261.51,-55 250.26,-41.32 233.63,-30.8 218.99,-23.42"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="220.26,-20.15 209.73,-19.03 217.26,-26.48 220.26,-20.15"/>
 </a>
 </g>
 </g>

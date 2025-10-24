@@ -109,104 +109,163 @@ $(document).ready(function(){initNavTree('structinfix__forward__abi__spec.html',
 </div><!--header-->
 <div class="contents">
 
+<p>Defines the ABI-specific implementation interface for forward trampolines.  
+ <a href="structinfix__forward__abi__spec.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a22eebb39a18e18dc1c7bcf1df7974064" id="r_a22eebb39a18e18dc1c7bcf1df7974064"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a22eebb39a18e18dc1c7bcf1df7974064">prepare_forward_call_frame</a> )(<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
-<tr class="memdesc:a22eebb39a18e18dc1c7bcf1df7974064"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyzes a signature and produces a complete call frame layout.  <br /></td></tr>
-<tr class="separator:a22eebb39a18e18dc1c7bcf1df7974064"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0e395d536ca342d4a8db8d1b897c6d2" id="r_ab0e395d536ca342d4a8db8d1b897c6d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#ab0e395d536ca342d4a8db8d1b897c6d2">generate_forward_prologue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td></tr>
-<tr class="memdesc:ab0e395d536ca342d4a8db8d1b897c6d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the function prologue, including stack setup and saving registers.  <br /></td></tr>
-<tr class="separator:ab0e395d536ca342d4a8db8d1b897c6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd0d173dc42a6b1cabc0243265809423" id="r_afd0d173dc42a6b1cabc0243265809423"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#afd0d173dc42a6b1cabc0243265809423">generate_forward_argument_moves</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t)</td></tr>
-<tr class="memdesc:afd0d173dc42a6b1cabc0243265809423"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the instructions to move arguments from the generic <code>void**</code> array to their native locations.  <br /></td></tr>
-<tr class="separator:afd0d173dc42a6b1cabc0243265809423"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30c561bcf73ce7250c8d8e5b65fd268f" id="r_a30c561bcf73ce7250c8d8e5b65fd268f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a30c561bcf73ce7250c8d8e5b65fd268f">generate_forward_call_instruction</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td></tr>
-<tr class="memdesc:a30c561bcf73ce7250c8d8e5b65fd268f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the <code>call</code> instruction (e.g., <code>call rax</code>).  <br /></td></tr>
-<tr class="separator:a30c561bcf73ce7250c8d8e5b65fd268f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52d93723e5a00fe794855b212b0a3958" id="r_a52d93723e5a00fe794855b212b0a3958"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a52d93723e5a00fe794855b212b0a3958">generate_forward_epilogue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
-<tr class="memdesc:a52d93723e5a00fe794855b212b0a3958"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the function epilogue, handling the return value and restoring the stack.  <br /></td></tr>
-<tr class="separator:a52d93723e5a00fe794855b212b0a3958"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc3ba94bc101197461a5faf77abe9762" id="r_abc3ba94bc101197461a5faf77abe9762"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#abc3ba94bc101197461a5faf77abe9762">prepare_forward_call_frame</a> )(<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **out_layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_fn)</td></tr>
+<tr class="memdesc:abc3ba94bc101197461a5faf77abe9762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyzes a function signature to create a complete call frame layout.  <br /></td></tr>
+<tr class="separator:abc3ba94bc101197461a5faf77abe9762"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d7c11c5baeed348de066a3f6768492b" id="r_a1d7c11c5baeed348de066a3f6768492b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a1d7c11c5baeed348de066a3f6768492b">generate_forward_prologue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
+<tr class="memdesc:a1d7c11c5baeed348de066a3f6768492b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the function prologue (stack setup, saving registers).  <br /></td></tr>
+<tr class="separator:a1d7c11c5baeed348de066a3f6768492b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a759dbe27253a023d9ebf26780fe277f8" id="r_a759dbe27253a023d9ebf26780fe277f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a759dbe27253a023d9ebf26780fe277f8">generate_forward_argument_moves</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args)</td></tr>
+<tr class="memdesc:a759dbe27253a023d9ebf26780fe277f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates code to move arguments from the <code>void**</code> array into registers and/or the stack.  <br /></td></tr>
+<tr class="separator:a759dbe27253a023d9ebf26780fe277f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98973dc40a884585391b79278d6ca8bc" id="r_a98973dc40a884585391b79278d6ca8bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#a98973dc40a884585391b79278d6ca8bc">generate_forward_call_instruction</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
+<tr class="memdesc:a98973dc40a884585391b79278d6ca8bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the <code>call</code> instruction to the target function.  <br /></td></tr>
+<tr class="separator:a98973dc40a884585391b79278d6ca8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accb37813f9a68f9df1e8989f469cda6c" id="r_accb37813f9a68f9df1e8989f469cda6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__abi__spec.html#accb37813f9a68f9df1e8989f469cda6c">generate_forward_epilogue</a> )(<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>)</td></tr>
+<tr class="memdesc:accb37813f9a68f9df1e8989f469cda6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the function epilogue (handling return value, restoring stack, returning).  <br /></td></tr>
+<tr class="separator:accb37813f9a68f9df1e8989f469cda6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="afd0d173dc42a6b1cabc0243265809423" name="afd0d173dc42a6b1cabc0243265809423"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd0d173dc42a6b1cabc0243265809423">&#9670;&#160;</a></span>generate_forward_argument_moves</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Defines the ABI-specific implementation interface for forward trampolines. </p>
+<p>This structure is a virtual function table (v-table) that decouples the platform-agnostic JIT engine (<code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">trampoline.c</a></code>) from the platform-specific code generation logic (<code>arch/...</code>). Each supported ABI (e.g., SysV x64, Win x64, AArch64) provides a concrete implementation of this interface.</p>
+<p>The JIT pipeline for a forward call proceeds in a well-defined order:</p><ol type="1">
+<li><code>prepare_forward_call_frame</code> is called first to analyze the function signature and produce a complete <code><a class="el" href="structinfix__call__frame__layout.html" title="A complete layout blueprint for a forward call frame.">infix_call_frame_layout</a></code> blueprint.</li>
+<li>The <code>generate_*</code> functions are then called in sequence, consuming the layout blueprint to emit the corresponding machine code into a <code><a class="el" href="structcode__buffer.html" title="A dynamic buffer for staged machine code generation.">code_buffer</a></code>. </li>
+</ol>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a759dbe27253a023d9ebf26780fe277f8" name="a759dbe27253a023d9ebf26780fe277f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a759dbe27253a023d9ebf26780fe277f8">&#9670;&#160;</a></span>generate_forward_argument_moves</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_argument_moves) (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_argument_moves) (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates the instructions to move arguments from the generic <code>void**</code> array to their native locations. </p>
+<p>Generates code to move arguments from the <code>void**</code> array into registers and/or the stack. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layout</td><td>The layout blueprint. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>The array of argument types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>Total number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a> of fixed arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
-<a id="a30c561bcf73ce7250c8d8e5b65fd268f" name="a30c561bcf73ce7250c8d8e5b65fd268f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30c561bcf73ce7250c8d8e5b65fd268f">&#9670;&#160;</a></span>generate_forward_call_instruction</h2>
+<a id="a98973dc40a884585391b79278d6ca8bc" name="a98973dc40a884585391b79278d6ca8bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98973dc40a884585391b79278d6ca8bc">&#9670;&#160;</a></span>generate_forward_call_instruction</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_call_instruction) (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_call_instruction) (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates the <code>call</code> instruction (e.g., <code>call rax</code>). </p>
+<p>Generates the <code>call</code> instruction to the target function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layout</td><td>The layout blueprint. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
-<a id="a52d93723e5a00fe794855b212b0a3958" name="a52d93723e5a00fe794855b212b0a3958"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52d93723e5a00fe794855b212b0a3958">&#9670;&#160;</a></span>generate_forward_epilogue</h2>
+<a id="accb37813f9a68f9df1e8989f469cda6c" name="accb37813f9a68f9df1e8989f469cda6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accb37813f9a68f9df1e8989f469cda6c">&#9670;&#160;</a></span>generate_forward_epilogue</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_epilogue) (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_epilogue) (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates the function epilogue, handling the return value and restoring the stack. </p>
+<p>Generates the function epilogue (handling return value, restoring stack, returning). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layout</td><td>The layout blueprint. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ret_type</td><td>The function's return type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
-<a id="ab0e395d536ca342d4a8db8d1b897c6d2" name="ab0e395d536ca342d4a8db8d1b897c6d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0e395d536ca342d4a8db8d1b897c6d2">&#9670;&#160;</a></span>generate_forward_prologue</h2>
+<a id="a1d7c11c5baeed348de066a3f6768492b" name="a1d7c11c5baeed348de066a3f6768492b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d7c11c5baeed348de066a3f6768492b">&#9670;&#160;</a></span>generate_forward_prologue</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_prologue) (<a class="el" href="structcode__buffer.html">code_buffer</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::generate_forward_prologue) (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates the function prologue, including stack setup and saving registers. </p>
+<p>Generates the function prologue (stack setup, saving registers). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">buf</td><td>The code buffer to append machine code to. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">layout</td><td>The layout blueprint from the previous step. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
-<a id="a22eebb39a18e18dc1c7bcf1df7974064" name="a22eebb39a18e18dc1c7bcf1df7974064"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22eebb39a18e18dc1c7bcf1df7974064">&#9670;&#160;</a></span>prepare_forward_call_frame</h2>
+<a id="abc3ba94bc101197461a5faf77abe9762" name="abc3ba94bc101197461a5faf77abe9762"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc3ba94bc101197461a5faf77abe9762">&#9670;&#160;</a></span>prepare_forward_call_frame</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::prepare_forward_call_frame) (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>(* infix_forward_abi_spec::prepare_forward_call_frame) (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> **out_layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_fn)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Analyzes a signature and produces a complete call frame layout. </p>
+<p>Analyzes a function signature to create a complete call frame layout. </p>
+<p>This is the "classification" stage. It determines where each argument and the return value will be placed (in which registers or on what stack offset) according to the target ABI's rules. The resulting layout is a complete plan for the code emitters. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arena</td><td>A temporary arena for allocating the layout struct. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_layout</td><td>Receives the newly created layout blueprint. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ret_type</td><td>The function's return type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg_types</td><td>Array of argument types. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_args</td><td>Total number of arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_fixed_args</td><td><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a> of non-variadic arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_fn</td><td>The target function address. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>

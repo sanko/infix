@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('structinfix__reverse__t.html',''); ini
 </div><!--header-->
 <div class="contents">
 
+<p>Internal definition of a reverse trampoline (callback/closure) handle.  
+ <a href="structinfix__reverse__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for infix_reverse_t:</div>
@@ -119,43 +122,34 @@ Collaboration diagram for infix_reverse_t:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae013bffa36e879ea914d8bb24778354e" id="r_ae013bffa36e879ea914d8bb24778354e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#ae013bffa36e879ea914d8bb24778354e">arena</a></td></tr>
-<tr class="memdesc:ae013bffa36e879ea914d8bb24778354e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The arena that owns all type metadata for this callback.  <br /></td></tr>
 <tr class="separator:ae013bffa36e879ea914d8bb24778354e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b6b50c9fdecedb6a09e9d76e4ed8fdb" id="r_a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a1b6b50c9fdecedb6a09e9d76e4ed8fdb">exec</a></td></tr>
-<tr class="memdesc:a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the executable JIT-compiled entry stub.  <br /></td></tr>
 <tr class="separator:a1b6b50c9fdecedb6a09e9d76e4ed8fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa44f161934419cbdbc7300d47ec1544d" id="r_aa44f161934419cbdbc7300d47ec1544d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#aa44f161934419cbdbc7300d47ec1544d">protected_ctx</a></td></tr>
-<tr class="memdesc:aa44f161934419cbdbc7300d47ec1544d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle to the memory where this very context struct resides.  <br /></td></tr>
 <tr class="separator:aa44f161934419cbdbc7300d47ec1544d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f4e9e15154cd079228a60ce80c27219" id="r_a0f4e9e15154cd079228a60ce80c27219"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a0f4e9e15154cd079228a60ce80c27219">return_type</a></td></tr>
-<tr class="memdesc:a0f4e9e15154cd079228a60ce80c27219"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <code>infix_type</code> of the callback's return value.  <br /></td></tr>
 <tr class="separator:a0f4e9e15154cd079228a60ce80c27219"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af14fd25ab22adc0aeb3cae2c001b9d39" id="r_af14fd25ab22adc0aeb3cae2c001b9d39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#af14fd25ab22adc0aeb3cae2c001b9d39">arg_types</a></td></tr>
-<tr class="memdesc:af14fd25ab22adc0aeb3cae2c001b9d39"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array of <code>infix_type</code> pointers for each argument.  <br /></td></tr>
 <tr class="separator:af14fd25ab22adc0aeb3cae2c001b9d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4605bcf9bd27808db91ae172f50b5c9e" id="r_a4605bcf9bd27808db91ae172f50b5c9e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a4605bcf9bd27808db91ae172f50b5c9e">num_args</a></td></tr>
-<tr class="memdesc:a4605bcf9bd27808db91ae172f50b5c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of arguments.  <br /></td></tr>
 <tr class="separator:a4605bcf9bd27808db91ae172f50b5c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aeae580532069c4fecfb7a903382706" id="r_a5aeae580532069c4fecfb7a903382706"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a5aeae580532069c4fecfb7a903382706">num_fixed_args</a></td></tr>
-<tr class="memdesc:a5aeae580532069c4fecfb7a903382706"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of non-variadic arguments.  <br /></td></tr>
 <tr class="separator:a5aeae580532069c4fecfb7a903382706"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa966b58227b565dabfd4ed053ba90909" id="r_aa966b58227b565dabfd4ed053ba90909"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#aa966b58227b565dabfd4ed053ba90909">is_variadic</a></td></tr>
-<tr class="memdesc:aa966b58227b565dabfd4ed053ba90909"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the function signature is variadic.  <br /></td></tr>
 <tr class="separator:aa966b58227b565dabfd4ed053ba90909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14fd69f1efa6fedb2a879ae3e61cadaf" id="r_a14fd69f1efa6fedb2a879ae3e61cadaf"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf">user_callback_fn</a></td></tr>
-<tr class="memdesc:a14fd69f1efa6fedb2a879ae3e61cadaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the user's actual C callback handler function.  <br /></td></tr>
 <tr class="separator:a14fd69f1efa6fedb2a879ae3e61cadaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a108353aa68bb87b6cbe6d28fcb5318e1" id="r_a108353aa68bb87b6cbe6d28fcb5318e1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a108353aa68bb87b6cbe6d28fcb5318e1">user_data</a></td></tr>
-<tr class="memdesc:a108353aa68bb87b6cbe6d28fcb5318e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arbitrary user-data pointer associated with this callback.  <br /></td></tr>
 <tr class="separator:a108353aa68bb87b6cbe6d28fcb5318e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a310b74442c77d4871307491e47741bb6" id="r_a310b74442c77d4871307491e47741bb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__internals_8h.html#adb78772fefe4431ec3449802ca8fa192">infix_internal_dispatch_callback_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#a310b74442c77d4871307491e47741bb6">internal_dispatcher</a></td></tr>
-<tr class="memdesc:a310b74442c77d4871307491e47741bb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the C function that bridges from assembly.  <br /></td></tr>
 <tr class="separator:a310b74442c77d4871307491e47741bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf1d66dab26788e7353bb443cd741478" id="r_abf1d66dab26788e7353bb443cd741478"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__t.html#abf1d66dab26788e7353bb443cd741478">cached_forward_trampoline</a></td></tr>
-<tr class="memdesc:abf1d66dab26788e7353bb443cd741478"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pre-compiled forward trampoline for calling a type-safe user C callback.  <br /></td></tr>
 <tr class="separator:abf1d66dab26788e7353bb443cd741478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Internal definition of a reverse trampoline (callback/closure) handle. </p>
+<p>This is the concrete implementation of the opaque <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> pointer. The entire struct is allocated in a page-aligned memory region that is made read-only after initialization to prevent memory corruption vulnerabilities. Like the forward trampoline, it is self-contained and owns deep copies of all its type metadata. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="ae013bffa36e879ea914d8bb24778354e" name="ae013bffa36e879ea914d8bb24778354e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae013bffa36e879ea914d8bb24778354e">&#9670;&#160;</a></span>arena</h2>
 
@@ -167,8 +161,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The arena that owns all type metadata for this callback. </p>
+<p>Private arena for type metadata. </p>
 
 </div>
 </div>
@@ -183,8 +176,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>An array of <code>infix_type</code> pointers for each argument. </p>
+<p>Deep copy of the function's argument types. </p>
 
 </div>
 </div>
@@ -199,9 +191,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A pre-compiled forward trampoline for calling a type-safe user C callback. </p>
-<p>If this pointer is non-NULL, it signifies a high-level "callback" created with <code>infix_reverse_create_callback</code>. The dispatcher will use this trampoline to marshal arguments and call the user's type-safe C handler. If this is NULL, it signifies a low-level "closure" created with <code>infix_reverse_create_closure</code>, and the dispatcher will call the generic handler directly. </p>
+<p>For type-safe callbacks, a pre-generated trampoline to call the C handler. </p>
 
 </div>
 </div>
@@ -216,8 +206,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Handle to the executable JIT-compiled entry stub. </p>
+<p>Executable memory for the JIT stub. </p>
 
 </div>
 </div>
@@ -232,8 +221,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Pointer to the C function that bridges from assembly. </p>
+<p>Pointer to the universal C dispatcher implementation. </p>
 
 </div>
 </div>
@@ -248,8 +236,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>True if the function signature is variadic. </p>
+<p><code>true</code> if the signature contains variadic arguments. </p>
 
 </div>
 </div>
@@ -264,8 +251,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The total number of arguments. </p>
+<p>Total number of arguments. </p>
 
 </div>
 </div>
@@ -280,8 +266,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The number of non-variadic arguments. </p>
+<p><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a> of non-variadic arguments. </p>
 
 </div>
 </div>
@@ -296,8 +281,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Handle to the memory where this very context struct resides. </p>
+<p>The read-only memory region holding this struct. </p>
 
 </div>
 </div>
@@ -312,8 +296,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The <code>infix_type</code> of the callback's return value. </p>
+<p>Deep copy of the function's return type. </p>
 
 </div>
 </div>
@@ -328,8 +311,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Pointer to the user's actual C callback handler function. </p>
+<p>The user-provided handler function pointer (type-safe or generic). </p>
 
 </div>
 </div>
@@ -344,8 +326,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Arbitrary user-data pointer associated with this callback. </p>
+<p>The user-provided context pointer for closures. </p>
 
 </div>
 </div>

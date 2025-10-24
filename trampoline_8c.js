@@ -1,8 +1,11 @@
 var trampoline_8c =
 [
+    [ "visited_node_t", "structvisited__node__t.html", "structvisited__node__t" ],
+    [ "visited_node_t", "trampoline_8c.html#a06320c0ecea4184c99fba3760dbd67db", null ],
     [ "_infix_forward_create_internal", "trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb", null ],
-    [ "_infix_reverse_create_internal", "trampoline_8c.html#a964917e57d373d129275a8733240fa6c", null ],
-    [ "_is_type_graph_resolved", "trampoline_8c.html#a6806deef9c44b1fc8716f03c0d0d85f2", null ],
+    [ "_infix_reverse_create_internal", "trampoline_8c.html#ad080e7a5e3427a4f841793ef3bdb32bc", null ],
+    [ "_is_type_graph_resolved", "trampoline_8c.html#a7328162dbe6a7205bc6ce74ec7787c4f", null ],
+    [ "_is_type_graph_resolved_recursive", "trampoline_8c.html#a1349105d70d3ae24107ecda93db18e42", null ],
     [ "code_buffer_append", "trampoline_8c.html#aa9d33eaa80bda7f5098a8c9a54f3a970", null ],
     [ "code_buffer_init", "trampoline_8c.html#a4aa83ec657f76fd7a7c4959e4595a4ca", null ],
     [ "emit_byte", "trampoline_8c.html#a0d0918e753909d08082ed9b2824dcbb8", null ],

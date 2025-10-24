@@ -22,6 +22,7 @@ var annotated_dup =
     [ "infix_type_t", "structinfix__type__t.html", "structinfix__type__t" ],
     [ "LargeData", "structLargeData.html", "structLargeData" ],
     [ "LargeStruct", "structLargeStruct.html", "structLargeStruct" ],
+    [ "memo_node_t", "structmemo__node__t.html", "structmemo__node__t" ],
     [ "MixedIntDouble", "structMixedIntDouble.html", "structMixedIntDouble" ],
     [ "NonPowerOfTwoStruct", "structNonPowerOfTwoStruct.html", "structNonPowerOfTwoStruct" ],
     [ "Number", "unionNumber.html", "unionNumber" ],
@@ -30,7 +31,9 @@ var annotated_dup =
     [ "Point", "structPoint.html", "structPoint" ],
     [ "PointerStruct", "structPointerStruct.html", "structPointerStruct" ],
     [ "printer_state", "structprinter__state.html", "structprinter__state" ],
+    [ "recalc_visited_node_t", "structrecalc__visited__node__t.html", "structrecalc__visited__node__t" ],
     [ "regression_test_case_t", "structregression__test__case__t.html", "structregression__test__case__t" ],
+    [ "resolve_memo_node_t", "structresolve__memo__node__t.html", "structresolve__memo__node__t" ],
     [ "StressObject", "structStressObject.html", "structStressObject" ],
     [ "test_struct_nested", "structtest__struct__nested.html", "structtest__struct__nested" ],
     [ "test_struct_no_padding", "structtest__struct__no__padding.html", "structtest__struct__no__padding" ],
@@ -39,5 +42,6 @@ var annotated_dup =
     [ "test_union", "uniontest__union.html", "uniontest__union" ],
     [ "TestStruct", "structTestStruct.html", "structTestStruct" ],
     [ "TestUnion", "unionTestUnion.html", "unionTestUnion" ],
-    [ "Vector4", "structVector4.html", "structVector4" ]
+    [ "Vector4", "structVector4.html", "structVector4" ],
+    [ "visited_node_t", "structvisited__node__t.html", "structvisited__node__t" ]
 ];

@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('abi__x64__emitters_8h_source.html','')
 </div><!--header-->
 <div class="contents">
 <a href="abi__x64__emitters_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="abi__x64__common_8h.html">abi_x64_common.h</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="abi__x64__common_8h.html">arch/x64/abi_x64_common.h</a>&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="infix__internals_8h.html">common/infix_internals.h</a>&quot;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// GPR &lt;-&gt; Immediate Value Emitters</span></div>
@@ -252,8 +252,8 @@ $(document).ready(function(){initNavTree('abi__x64__emitters_8h_source.html','')
 <div class="ttc" id="aabi__x64__emitters_8h_html_af741e4795cba8c938890bb9df45f10f4"><div class="ttname"><a href="abi__x64__emitters_8h.html#af741e4795cba8c938890bb9df45f10f4">emit_movzx_reg64_mem8</a></div><div class="ttdeci">void emit_movzx_reg64_mem8(code_buffer *buf, x64_gpr dest, x64_gpr src_base, int32_t offset)</div><div class="ttdef"><b>Definition</b> abi_x64_emitters.c:252</div></div>
 <div class="ttc" id="aabi__x64__emitters_8h_html_afbe0ce8d2a6b21fd4662133b077106c1"><div class="ttname"><a href="abi__x64__emitters_8h.html#afbe0ce8d2a6b21fd4662133b077106c1">emit_modrm</a></div><div class="ttdeci">void emit_modrm(code_buffer *buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm)</div><div class="ttdef"><b>Definition</b> abi_x64_emitters.c:66</div></div>
 <div class="ttc" id="aabi__x64__emitters_8h_html_aff7b7c503d16adf7c32cbda720c750ac"><div class="ttname"><a href="abi__x64__emitters_8h.html#aff7b7c503d16adf7c32cbda720c750ac">emit_lea_reg_mem</a></div><div class="ttdeci">void emit_lea_reg_mem(code_buffer *buf, x64_gpr dest, x64_gpr src_base, int32_t offset)</div><div class="ttdef"><b>Definition</b> abi_x64_emitters.c:704</div></div>
-<div class="ttc" id="ainfix__internals_8h_html"><div class="ttname"><a href="infix__internals_8h.html">infix_internals.h</a></div><div class="ttdoc">Declarations for internal-only functions, types, and constants.</div></div>
-<div class="ttc" id="astructcode__buffer_html"><div class="ttname"><a href="structcode__buffer.html">code_buffer</a></div><div class="ttdef"><b>Definition</b> infix_internals.h:169</div></div>
+<div class="ttc" id="ainfix__internals_8h_html"><div class="ttname"><a href="infix__internals_8h.html">infix_internals.h</a></div><div class="ttdoc">Internal data structures, function prototypes, and constants.</div></div>
+<div class="ttc" id="astructcode__buffer_html"><div class="ttname"><a href="structcode__buffer.html">code_buffer</a></div><div class="ttdoc">A dynamic buffer for staged machine code generation.</div><div class="ttdef"><b>Definition</b> infix_internals.h:185</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

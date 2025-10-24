@@ -103,42 +103,426 @@ $(document).ready(function(){initNavTree('group__high__level__api.html',''); ini
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">High-Level Signature API<div class="ingroups"><a class="el" href="group__public__api.html">Public API</a></div></div></div>
+<a href="#groups">Modules</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#enumval-members">Enumerator</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">High-Level Signature API</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Recommended functions for creating trampolines from a signature string.  
+<p>The primary, recommended API for creating trampolines from human-readable strings.  
 <a href="#details">More...</a></p>
 <div class="dynheader">
 Collaboration diagram for High-Level Signature API:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="group__high__level__api.svg" width="328" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="group__high__level__api.svg" width="463" height="332"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
+Modules</h2></td></tr>
+<tr class="memitem:group__type__system" id="r_group__type__system"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html">Type System</a></td></tr>
+<tr class="memdesc:group__type__system"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core data structures and APIs for describing C types and function signatures. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__memory__management" id="r_group__memory__management"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html">Memory Management</a></td></tr>
+<tr class="memdesc:group__memory__management"><td class="mdescLeft">&#160;</td><td class="mdescRight">APIs for memory management, including custom allocators and arenas. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__registry__api" id="r_group__registry__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html">Named Type Registry</a></td></tr>
+<tr class="memdesc:group__registry__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">APIs for defining, storing, and reusing complex types by name. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__exports__api" id="r_group__exports__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html">Dynamic Library &amp; Globals API</a></td></tr>
+<tr class="memdesc:group__exports__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cross-platform functions for loading shared libraries and accessing exported symbols. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__manual__api" id="r_group__manual__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html">Manual API</a></td></tr>
+<tr class="memdesc:group__manual__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lower-level, programmatic API for creating trampolines from <code>infix_type</code> objects. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__introspection__api" id="r_group__introspection__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html">Introspection API</a></td></tr>
+<tr class="memdesc:group__introspection__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for inspecting the properties of trampolines and <code>infix_type</code> objects at runtime. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__error__api" id="r_group__error__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__api.html">Error Handling API</a></td></tr>
+<tr class="memdesc:group__error__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions and types for detailed, thread-safe error reporting. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga842dcfab1785e1b4bf1b22390955d31d" id="r_ga842dcfab1785e1b4bf1b22390955d31d"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a>) (void *target_function, void *return_value_ptr, void **args_array)</td></tr>
+<tr class="memdesc:ga842dcfab1785e1b4bf1b22390955d31d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for an unbound forward trampoline.  <br /></td></tr>
+<tr class="separator:ga842dcfab1785e1b4bf1b22390955d31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6f23c028781b7cc258c83b5bdf4c141a" id="r_ga6f23c028781b7cc258c83b5bdf4c141a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a>) (void *return_value_ptr, void **args_array)</td></tr>
+<tr class="memdesc:ga6f23c028781b7cc258c83b5bdf4c141a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for a bound forward trampoline.  <br /></td></tr>
+<tr class="separator:ga6f23c028781b7cc258c83b5bdf4c141a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9392f67966f6e2a2e7600e7c0b87a42c" id="r_ga9392f67966f6e2a2e7600e7c0b87a42c"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value_ptr, void **args_array)</td></tr>
+<tr class="memdesc:ga9392f67966f6e2a2e7600e7c0b87a42c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for a generic closure handler.  <br /></td></tr>
+<tr class="separator:ga9392f67966f6e2a2e7600e7c0b87a42c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga8643667be6ea1ef9269c2e46d8f11ff7" id="r_ga8643667be6ea1ef9269c2e46d8f11ff7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> { <br />
+&#160;&#160;<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a> = 0
+, <a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a059ba15d1ac5d065ab33d039aba51da1">INFIX_ERROR_ALLOCATION_FAILED</a>
+, <a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7afad878b13765c831a64f0d7d2c245e6d">INFIX_ERROR_INVALID_ARGUMENT</a>
+, <a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a8f19c7933e208a1bf33240fa85786b5e">INFIX_ERROR_UNSUPPORTED_ABI</a>
+, <br />
+&#160;&#160;<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a1a14039fc288e0f021f408bd13ab0422">INFIX_ERROR_LAYOUT_FAILED</a>
+, <a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a6df62fc328e34d8a94eeb8db95c12703">INFIX_ERROR_PROTECTION_FAILED</a>
+, <a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a3fad92c0e35ba68a75ac0f22339958d5">INFIX_ERROR_</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga8643667be6ea1ef9269c2e46d8f11ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the possible status codes returned by <code>infix</code> API functions.  <a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">More...</a><br /></td></tr>
+<tr class="separator:ga8643667be6ea1ef9269c2e46d8f11ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga5362b6f6976298aebefdb2a487e72e36" id="r_ga5362b6f6976298aebefdb2a487e72e36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
-<tr class="memdesc:ga5362b6f6976298aebefdb2a487e72e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a bound forward-call trampoline from a signature string.  <br /></td></tr>
+<tr class="memitem:ga5362b6f6976298aebefdb2a487e72e36" id="r_ga5362b6f6976298aebefdb2a487e72e36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:ga5362b6f6976298aebefdb2a487e72e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a "bound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:ga5362b6f6976298aebefdb2a487e72e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga524a8ccebd24c9232d30cb2f79aee5a5" id="r_ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
-<tr class="memdesc:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates an unbound forward-call trampoline from a signature string.  <br /></td></tr>
+<tr class="memitem:ga524a8ccebd24c9232d30cb2f79aee5a5" id="r_ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an "unbound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
-<tr class="memdesc:ga010d41376c47f1100903d427776033ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a type-safe reverse-call trampoline (callback) from a signature string.  <br /></td></tr>
+<tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:ga010d41376c47f1100903d427776033ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a type-safe reverse trampoline (callback).  <br /></td></tr>
 <tr class="separator:ga010d41376c47f1100903d427776033ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, <a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a>, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
-<tr class="memdesc:ga6d1281b61d196d1d06153aa1265fb971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a low-level reverse-call trampoline (closure) from a signature string.  <br /></td></tr>
+<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:ga6d1281b61d196d1d06153aa1265fb971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a generic reverse trampoline (closure) for stateful callbacks.  <br /></td></tr>
 <tr class="separator:ga6d1281b61d196d1d06153aa1265fb971"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabc24d2667f9cac5f45bd9a71efe66cf7" id="r_gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7">infix_signature_parse</a> (const char *, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **, size_t *, size_t *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
-<tr class="memdesc:gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a full function signature string into its constituent infix_type parts.  <br /></td></tr>
+<tr class="memitem:gabc24d2667f9cac5f45bd9a71efe66cf7" id="r_gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7">infix_signature_parse</a> (const char *, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **, size_t *, size_t *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a full function signature string into its constituent parts.  <br /></td></tr>
 <tr class="separator:gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3632147d55b80e520987d37722ddcf61" id="r_ga3632147d55b80e520987d37722ddcf61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, const char *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memitem:ga3632147d55b80e520987d37722ddcf61" id="r_ga3632147d55b80e520987d37722ddcf61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61">infix_type_from_signature</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, const char *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
 <tr class="memdesc:ga3632147d55b80e520987d37722ddcf61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a signature string representing a single data type.  <br /></td></tr>
 <tr class="separator:ga3632147d55b80e520987d37722ddcf61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga95e67389ced0dfc9e4d9a6e076d4c645" id="r_ga95e67389ced0dfc9e4d9a6e076d4c645"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga909e562b00e504aeceac698bd272f0ca">infix_type_category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga95e67389ced0dfc9e4d9a6e076d4c645">infix_type_t::category</a></td></tr>
+<tr class="separator:ga95e67389ced0dfc9e4d9a6e076d4c645"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48077b88e083d5e6fdad889427efaca7" id="r_ga48077b88e083d5e6fdad889427efaca7"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">infix_type_t::size</a></td></tr>
+<tr class="separator:ga48077b88e083d5e6fdad889427efaca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4dc08b6a109b67e1394e097c90d497d6" id="r_ga4dc08b6a109b67e1394e097c90d497d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga4dc08b6a109b67e1394e097c90d497d6">infix_type_t::alignment</a></td></tr>
+<tr class="separator:ga4dc08b6a109b67e1394e097c90d497d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafe120ad94ce32eb2d2150b64c7c2dccd" id="r_gafe120ad94ce32eb2d2150b64c7c2dccd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gafe120ad94ce32eb2d2150b64c7c2dccd">infix_type_t::is_arena_allocated</a></td></tr>
+<tr class="separator:gafe120ad94ce32eb2d2150b64c7c2dccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96e19f437574313e8e64ada0d752715d" id="r_ga96e19f437574313e8e64ada0d752715d"><td class="memItemLeft" ><a class="el" href="group__type__system.html#ga2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf629b23eea8b27c2b7934e6b53b9a12d">infix_type_t::primitive_id</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga96e19f437574313e8e64ada0d752715d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_PRIMITIVE</code>.  <a href="group__high__level__api.html#gaf629b23eea8b27c2b7934e6b53b9a12d">More...</a><br /></td></tr>
+<tr class="separator:ga96e19f437574313e8e64ada0d752715d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82f284856687ccfc35692651697fa733" id="r_ga82f284856687ccfc35692651697fa733"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa1b3a38155abc3e22a9dae4826c9f9bf">infix_type_t::pointee_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga82f284856687ccfc35692651697fa733"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga04a5b21d8ed8ace3646e92275330b6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82f284856687ccfc35692651697fa733" id="r_ga82f284856687ccfc35692651697fa733"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa1b3a38155abc3e22a9dae4826c9f9bf">infix_type_t::pointee_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga82f284856687ccfc35692651697fa733"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga04a5b21d8ed8ace3646e92275330b6a2">infix_type_t::pointer_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gadb37406a18179173704f3428561cb922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_POINTER</code>.  <a href="group__high__level__api.html#ga04a5b21d8ed8ace3646e92275330b6a2">More...</a><br /></td></tr>
+<tr class="separator:gadb37406a18179173704f3428561cb922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb473791e0145c30c452ad91c98c8c49" id="r_gacb473791e0145c30c452ad91c98c8c49"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461">infix_type_t::name</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gacb473791e0145c30c452ad91c98c8c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa15a8508483b37fe212fb479c2f44e2a" id="r_gaa15a8508483b37fe212fb479c2f44e2a"><td class="memItemLeft" ><a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga6129c5165e189c4e5aa99904a98079e1">infix_type_t::members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca307cbaffc95a71230aa9486593ff4f" id="r_gaca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaddead8d897d6058a40f4f49d9cc87c45">infix_type_t::num_members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga9d7572a9e837b5a8cb21010a91983abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb473791e0145c30c452ad91c98c8c49" id="r_gacb473791e0145c30c452ad91c98c8c49"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461">infix_type_t::name</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gacb473791e0145c30c452ad91c98c8c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa15a8508483b37fe212fb479c2f44e2a" id="r_gaa15a8508483b37fe212fb479c2f44e2a"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga6129c5165e189c4e5aa99904a98079e1">infix_type_t::members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca307cbaffc95a71230aa9486593ff4f" id="r_gaca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaddead8d897d6058a40f4f49d9cc87c45">infix_type_t::num_members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga9d7572a9e837b5a8cb21010a91983abb">infix_type_t::aggregate_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaeebefe41e0410c6cff0c01275bc37253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>.  <a href="group__high__level__api.html#ga9d7572a9e837b5a8cb21010a91983abb">More...</a><br /></td></tr>
+<tr class="separator:gaeebefe41e0410c6cff0c01275bc37253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefb17d7bf4661847a9a9b957dedd04a4" id="r_gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa9edbcf03dc1eadffbde6d90c23db918">infix_type_t::element_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga997d4a4a3c2ed791eb70781b1bfe307f" id="r_ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">infix_type_t::num_elements</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga9dcdb7c1762f7142954113f4c4db4aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefb17d7bf4661847a9a9b957dedd04a4" id="r_gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa9edbcf03dc1eadffbde6d90c23db918">infix_type_t::element_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga997d4a4a3c2ed791eb70781b1bfe307f" id="r_ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">infix_type_t::num_elements</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga9dcdb7c1762f7142954113f4c4db4aaa">infix_type_t::array_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaab386f4dc04faa543de51c13c86f79ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_ARRAY</code>.  <a href="group__high__level__api.html#ga9dcdb7c1762f7142954113f4c4db4aaa">More...</a><br /></td></tr>
+<tr class="separator:gaab386f4dc04faa543de51c13c86f79ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4595ce20cd9bd6749c598882586d02e" id="r_gaa4595ce20cd9bd6749c598882586d02e"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gab7190b72fd83d0a0384148f7606139dd">infix_type_t::return_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaa4595ce20cd9bd6749c598882586d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb0fa9d874938c89de1aad332d1d5dd8" id="r_gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memItemLeft" ><a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga7e98e476d66532fa296d00607d0851d1">infix_type_t::args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db4f34af67e79a44d63a04fac7e0f2e" id="r_ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf7dcb5be2588e96b70f497185348aa8f">infix_type_t::num_args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ff4aca821caf304e4181ecd0fb2a7d" id="r_ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf31ce4e5d44ef23d91ed0a3695b39f4a">infix_type_t::num_fixed_args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga2a2d9a8c127bba88a5da75433005bdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4595ce20cd9bd6749c598882586d02e" id="r_gaa4595ce20cd9bd6749c598882586d02e"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gab7190b72fd83d0a0384148f7606139dd">infix_type_t::return_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaa4595ce20cd9bd6749c598882586d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb0fa9d874938c89de1aad332d1d5dd8" id="r_gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga7e98e476d66532fa296d00607d0851d1">infix_type_t::args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db4f34af67e79a44d63a04fac7e0f2e" id="r_ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf7dcb5be2588e96b70f497185348aa8f">infix_type_t::num_args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ff4aca821caf304e4181ecd0fb2a7d" id="r_ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf31ce4e5d44ef23d91ed0a3695b39f4a">infix_type_t::num_fixed_args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb">infix_type_t::func_ptr_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>.  <a href="group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb">More...</a><br /></td></tr>
+<tr class="separator:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c923a189eb6700fd770f8f815aeef1e" id="r_ga8c923a189eb6700fd770f8f815aeef1e"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaeeeeac278209a4aa5f3024b196d89292">infix_type_t::underlying_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga8c923a189eb6700fd770f8f815aeef1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabf1c7bb07d550892095e914072a7658c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c923a189eb6700fd770f8f815aeef1e" id="r_ga8c923a189eb6700fd770f8f815aeef1e"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaeeeeac278209a4aa5f3024b196d89292">infix_type_t::underlying_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga8c923a189eb6700fd770f8f815aeef1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gabf1c7bb07d550892095e914072a7658c">infix_type_t::enum_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8efd553b2dd8682399057c026e61f839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_ENUM</code>.  <a href="group__high__level__api.html#gabf1c7bb07d550892095e914072a7658c">More...</a><br /></td></tr>
+<tr class="separator:ga8efd553b2dd8682399057c026e61f839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b5d4e2f45f812ae54b0f1b265d1d54d" id="r_ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gac70541d021d87d720c38b176fb39e4fc">infix_type_t::base_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga654909b4eaa71cf395f7324c581e163f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b5d4e2f45f812ae54b0f1b265d1d54d" id="r_ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gac70541d021d87d720c38b176fb39e4fc">infix_type_t::base_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga654909b4eaa71cf395f7324c581e163f">infix_type_t::complex_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8d6e1e8253d8911ce6754b06097d657f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_COMPLEX</code>.  <a href="group__high__level__api.html#ga654909b4eaa71cf395f7324c581e163f">More...</a><br /></td></tr>
+<tr class="separator:ga8d6e1e8253d8911ce6754b06097d657f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81abf1b30a3fab4312e3f20e74ab70b5" id="r_ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa9edbcf03dc1eadffbde6d90c23db918">infix_type_t::element_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80581ecc44d474e5b081a306f0ee09a2" id="r_ga80581ecc44d474e5b081a306f0ee09a2"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">infix_type_t::num_elements</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga80581ecc44d474e5b081a306f0ee09a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga07a9b5fb5a01455688c83d682686f62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81abf1b30a3fab4312e3f20e74ab70b5" id="r_ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa9edbcf03dc1eadffbde6d90c23db918">infix_type_t::element_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80581ecc44d474e5b081a306f0ee09a2" id="r_ga80581ecc44d474e5b081a306f0ee09a2"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">infix_type_t::num_elements</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga80581ecc44d474e5b081a306f0ee09a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c">infix_type_t::vector_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaac16a3039475a6fdce57b6599014b2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_VECTOR</code>.  <a href="group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c">More...</a><br /></td></tr>
+<tr class="separator:gaac16a3039475a6fdce57b6599014b2da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c9af9a10aedbc07aa46f4630fa35c1" id="r_ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memItemLeft" ><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461">infix_type_t::name</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae0e5d175600a09754e1dd8a80560fab1" id="r_gae0e5d175600a09754e1dd8a80560fab1"><td class="memItemLeft" ><a class="el" href="group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga820935723a98863101aa35b828fffe0b">infix_type_t::aggregate_category</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gae0e5d175600a09754e1dd8a80560fab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefbba96a3cadf0e38ba54f1ff7cb93b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c9af9a10aedbc07aa46f4630fa35c1" id="r_ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461">infix_type_t::name</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae0e5d175600a09754e1dd8a80560fab1" id="r_gae0e5d175600a09754e1dd8a80560fab1"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga820935723a98863101aa35b828fffe0b">infix_type_t::aggregate_category</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gae0e5d175600a09754e1dd8a80560fab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" valign="top">}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaefbba96a3cadf0e38ba54f1ff7cb93b1">infix_type_t::named_reference</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga69c567720b478d07b87af0ef17aa9f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_NAMED_REFERENCE</code>.  <a href="group__high__level__api.html#gaefbba96a3cadf0e38ba54f1ff7cb93b1">More...</a><br /></td></tr>
+<tr class="separator:ga69c567720b478d07b87af0ef17aa9f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga06717387732a6557d456a760bb3150cc" id="r_ga06717387732a6557d456a760bb3150cc"><td class="memItemLeft" >union {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96e19f437574313e8e64ada0d752715d" id="r_ga96e19f437574313e8e64ada0d752715d"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__type__system.html#ga2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf629b23eea8b27c2b7934e6b53b9a12d">infix_type_t::primitive_id</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga96e19f437574313e8e64ada0d752715d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_PRIMITIVE</code>.  <a href="group__high__level__api.html#gaf629b23eea8b27c2b7934e6b53b9a12d">More...</a><br /></td></tr>
+<tr class="separator:ga96e19f437574313e8e64ada0d752715d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga04a5b21d8ed8ace3646e92275330b6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82f284856687ccfc35692651697fa733" id="r_ga82f284856687ccfc35692651697fa733"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa1b3a38155abc3e22a9dae4826c9f9bf">infix_type_t::pointee_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga82f284856687ccfc35692651697fa733"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadb37406a18179173704f3428561cb922" id="r_gadb37406a18179173704f3428561cb922"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga04a5b21d8ed8ace3646e92275330b6a2">infix_type_t::pointer_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gadb37406a18179173704f3428561cb922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_POINTER</code>.  <a href="group__high__level__api.html#ga04a5b21d8ed8ace3646e92275330b6a2">More...</a><br /></td></tr>
+<tr class="separator:gadb37406a18179173704f3428561cb922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga9d7572a9e837b5a8cb21010a91983abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb473791e0145c30c452ad91c98c8c49" id="r_gacb473791e0145c30c452ad91c98c8c49"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461">infix_type_t::name</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gacb473791e0145c30c452ad91c98c8c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa15a8508483b37fe212fb479c2f44e2a" id="r_gaa15a8508483b37fe212fb479c2f44e2a"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga6129c5165e189c4e5aa99904a98079e1">infix_type_t::members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaa15a8508483b37fe212fb479c2f44e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca307cbaffc95a71230aa9486593ff4f" id="r_gaca307cbaffc95a71230aa9486593ff4f"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaddead8d897d6058a40f4f49d9cc87c45">infix_type_t::num_members</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaca307cbaffc95a71230aa9486593ff4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeebefe41e0410c6cff0c01275bc37253" id="r_gaeebefe41e0410c6cff0c01275bc37253"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga9d7572a9e837b5a8cb21010a91983abb">infix_type_t::aggregate_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaeebefe41e0410c6cff0c01275bc37253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>.  <a href="group__high__level__api.html#ga9d7572a9e837b5a8cb21010a91983abb">More...</a><br /></td></tr>
+<tr class="separator:gaeebefe41e0410c6cff0c01275bc37253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga9dcdb7c1762f7142954113f4c4db4aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefb17d7bf4661847a9a9b957dedd04a4" id="r_gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa9edbcf03dc1eadffbde6d90c23db918">infix_type_t::element_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefb17d7bf4661847a9a9b957dedd04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga997d4a4a3c2ed791eb70781b1bfe307f" id="r_ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">infix_type_t::num_elements</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga997d4a4a3c2ed791eb70781b1bfe307f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab386f4dc04faa543de51c13c86f79ff" id="r_gaab386f4dc04faa543de51c13c86f79ff"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga9dcdb7c1762f7142954113f4c4db4aaa">infix_type_t::array_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaab386f4dc04faa543de51c13c86f79ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_ARRAY</code>.  <a href="group__high__level__api.html#ga9dcdb7c1762f7142954113f4c4db4aaa">More...</a><br /></td></tr>
+<tr class="separator:gaab386f4dc04faa543de51c13c86f79ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga2a2d9a8c127bba88a5da75433005bdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4595ce20cd9bd6749c598882586d02e" id="r_gaa4595ce20cd9bd6749c598882586d02e"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gab7190b72fd83d0a0384148f7606139dd">infix_type_t::return_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaa4595ce20cd9bd6749c598882586d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb0fa9d874938c89de1aad332d1d5dd8" id="r_gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga7e98e476d66532fa296d00607d0851d1">infix_type_t::args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabb0fa9d874938c89de1aad332d1d5dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db4f34af67e79a44d63a04fac7e0f2e" id="r_ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf7dcb5be2588e96b70f497185348aa8f">infix_type_t::num_args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga1db4f34af67e79a44d63a04fac7e0f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ff4aca821caf304e4181ecd0fb2a7d" id="r_ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaf31ce4e5d44ef23d91ed0a3695b39f4a">infix_type_t::num_fixed_args</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga75ff4aca821caf304e4181ecd0fb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6f74fc69d9df9ad2f239b1bd101845b" id="r_gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb">infix_type_t::func_ptr_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>.  <a href="group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb">More...</a><br /></td></tr>
+<tr class="separator:gad6f74fc69d9df9ad2f239b1bd101845b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gabf1c7bb07d550892095e914072a7658c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c923a189eb6700fd770f8f815aeef1e" id="r_ga8c923a189eb6700fd770f8f815aeef1e"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaeeeeac278209a4aa5f3024b196d89292">infix_type_t::underlying_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga8c923a189eb6700fd770f8f815aeef1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8efd553b2dd8682399057c026e61f839" id="r_ga8efd553b2dd8682399057c026e61f839"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gabf1c7bb07d550892095e914072a7658c">infix_type_t::enum_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8efd553b2dd8682399057c026e61f839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_ENUM</code>.  <a href="group__high__level__api.html#gabf1c7bb07d550892095e914072a7658c">More...</a><br /></td></tr>
+<tr class="separator:ga8efd553b2dd8682399057c026e61f839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga654909b4eaa71cf395f7324c581e163f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b5d4e2f45f812ae54b0f1b265d1d54d" id="r_ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gac70541d021d87d720c38b176fb39e4fc">infix_type_t::base_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga5b5d4e2f45f812ae54b0f1b265d1d54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d6e1e8253d8911ce6754b06097d657f" id="r_ga8d6e1e8253d8911ce6754b06097d657f"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga654909b4eaa71cf395f7324c581e163f">infix_type_t::complex_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga8d6e1e8253d8911ce6754b06097d657f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_COMPLEX</code>.  <a href="group__high__level__api.html#ga654909b4eaa71cf395f7324c581e163f">More...</a><br /></td></tr>
+<tr class="separator:ga8d6e1e8253d8911ce6754b06097d657f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga07a9b5fb5a01455688c83d682686f62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81abf1b30a3fab4312e3f20e74ab70b5" id="r_ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaa9edbcf03dc1eadffbde6d90c23db918">infix_type_t::element_type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga81abf1b30a3fab4312e3f20e74ab70b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80581ecc44d474e5b081a306f0ee09a2" id="r_ga80581ecc44d474e5b081a306f0ee09a2"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga3c4a320aede1d81a156ef8dfec4109c0">infix_type_t::num_elements</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga80581ecc44d474e5b081a306f0ee09a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac16a3039475a6fdce57b6599014b2da" id="r_gaac16a3039475a6fdce57b6599014b2da"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c">infix_type_t::vector_info</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:gaac16a3039475a6fdce57b6599014b2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_VECTOR</code>.  <a href="group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c">More...</a><br /></td></tr>
+<tr class="separator:gaac16a3039475a6fdce57b6599014b2da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" >&#160;&#160;&#160;struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gaefbba96a3cadf0e38ba54f1ff7cb93b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c9af9a10aedbc07aa46f4630fa35c1" id="r_ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a> *&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461">infix_type_t::name</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:ga88c9af9a10aedbc07aa46f4630fa35c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae0e5d175600a09754e1dd8a80560fab1" id="r_gae0e5d175600a09754e1dd8a80560fab1"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;<a class="el" href="group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a>&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#ga820935723a98863101aa35b828fffe0b">infix_type_t::aggregate_category</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:gae0e5d175600a09754e1dd8a80560fab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69c567720b478d07b87af0ef17aa9f82" id="r_ga69c567720b478d07b87af0ef17aa9f82"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;&#160;&#160;<a class="el" href="group__high__level__api.html#gaefbba96a3cadf0e38ba54f1ff7cb93b1">infix_type_t::named_reference</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga69c567720b478d07b87af0ef17aa9f82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Metadata for <code>INFIX_TYPE_NAMED_REFERENCE</code>.  <a href="group__high__level__api.html#gaefbba96a3cadf0e38ba54f1ff7cb93b1">More...</a><br /></td></tr>
+<tr class="separator:ga69c567720b478d07b87af0ef17aa9f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga06717387732a6557d456a760bb3150cc" id="r_ga06717387732a6557d456a760bb3150cc"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga06717387732a6557d456a760bb3150cc">infix_type_t::meta</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memdesc:ga06717387732a6557d456a760bb3150cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">A union containing metadata specific to the type's category.  <br /></td></tr>
+<tr class="separator:ga06717387732a6557d456a760bb3150cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8dad067a06c5efd90028fb1cab9e2911" id="r_ga8dad067a06c5efd90028fb1cab9e2911"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga8dad067a06c5efd90028fb1cab9e2911">infix_struct_member_t::name</a></td></tr>
+<tr class="separator:ga8dad067a06c5efd90028fb1cab9e2911"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa89e6621da98f5115dcc807599c4ac77" id="r_gaa89e6621da98f5115dcc807599c4ac77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gaa89e6621da98f5115dcc807599c4ac77">infix_struct_member_t::type</a></td></tr>
+<tr class="separator:gaa89e6621da98f5115dcc807599c4ac77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc9fb3780626694111f4c8c74700a9b9" id="r_gabc9fb3780626694111f4c8c74700a9b9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc9fb3780626694111f4c8c74700a9b9">infix_struct_member_t::offset</a></td></tr>
+<tr class="separator:gabc9fb3780626694111f4c8c74700a9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8789f5063ea8ce9896f44c1c9d8f365c" id="r_ga8789f5063ea8ce9896f44c1c9d8f365c"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga8789f5063ea8ce9896f44c1c9d8f365c">infix_function_argument_t::name</a></td></tr>
+<tr class="separator:ga8789f5063ea8ce9896f44c1c9d8f365c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bd256c75cb6ec767cec121370e6a0ed" id="r_ga1bd256c75cb6ec767cec121370e6a0ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga1bd256c75cb6ec767cec121370e6a0ed">infix_function_argument_t::type</a></td></tr>
+<tr class="separator:ga1bd256c75cb6ec767cec121370e6a0ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0caa6458c1d70d81abdc4f530dcc96d8" id="r_ga0caa6458c1d70d81abdc4f530dcc96d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga0caa6458c1d70d81abdc4f530dcc96d8">infix_error_details_t::category</a></td></tr>
+<tr class="separator:ga0caa6458c1d70d81abdc4f530dcc96d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad9076024a7bb288a2a65f2fb8644c938" id="r_gad9076024a7bb288a2a65f2fb8644c938"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gad9076024a7bb288a2a65f2fb8644c938">infix_error_details_t::code</a></td></tr>
+<tr class="separator:gad9076024a7bb288a2a65f2fb8644c938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0530e44f33e347bfcfe3b663d76ba5b7" id="r_ga0530e44f33e347bfcfe3b663d76ba5b7"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga0530e44f33e347bfcfe3b663d76ba5b7">infix_error_details_t::position</a></td></tr>
+<tr class="separator:ga0530e44f33e347bfcfe3b663d76ba5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac82bf9221f1cd9f5b1b6d8698a1b3eb0" id="r_gac82bf9221f1cd9f5b1b6d8698a1b3eb0"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gac82bf9221f1cd9f5b1b6d8698a1b3eb0">infix_error_details_t::system_error_code</a></td></tr>
+<tr class="separator:gac82bf9221f1cd9f5b1b6d8698a1b3eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37930d8440e1f4ae46571bdce41aff5d" id="r_ga37930d8440e1f4ae46571bdce41aff5d"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga37930d8440e1f4ae46571bdce41aff5d">infix_error_details_t::message</a> [256]</td></tr>
+<tr class="separator:ga37930d8440e1f4ae46571bdce41aff5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Recommended functions for creating trampolines from a signature string. </p>
+<p>The primary, recommended API for creating trampolines from human-readable strings. </p>
+<p>This API provides the simplest and most powerful way to interact with <code>infix</code>. All functions in this group take a signature string and an optional type registry to parse and generate the required FFI trampolines. </p>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="ga6f23c028781b7cc258c83b5bdf4c141a" name="ga6f23c028781b7cc258c83b5bdf4c141a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6f23c028781b7cc258c83b5bdf4c141a">&#9670;&#160;</a></span>infix_cif_func</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* infix_cif_func) (void *return_value_ptr, void **args_array)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A function pointer type for a bound forward trampoline. </p>
+<p>This is the callable code generated by <code>infix_forward_create</code>. The target C function is "bound" into the JIT-compiled code, offering higher performance.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">return_value_ptr</td><td>A pointer to a buffer to receive the return value. Can be <code>nullptr</code> for <code>void</code> returns. </td></tr>
+    <tr><td class="paramname">args_array</td><td>An array of pointers, where each element points to an argument's value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga9392f67966f6e2a2e7600e7c0b87a42c" name="ga9392f67966f6e2a2e7600e7c0b87a42c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9392f67966f6e2a2e7600e7c0b87a42c">&#9670;&#160;</a></span>infix_closure_handler_fn</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* infix_closure_handler_fn) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value_ptr, void **args_array)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A function pointer type for a generic closure handler. </p>
+<p>This handler is used with <code>infix_reverse_create_closure</code> and is ideal for language bindings or stateful callbacks where the handler needs access to user-provided data.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>The reverse trampoline context, from which <code>user_data</code> can be retrieved via <code>infix_reverse_get_user_data</code>. </td></tr>
+    <tr><td class="paramname">return_value_ptr</td><td>A pointer to a buffer where the handler must write the function's return value. </td></tr>
+    <tr><td class="paramname">args_array</td><td>An array of pointers to the argument values passed by the native C caller. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga842dcfab1785e1b4bf1b22390955d31d" name="ga842dcfab1785e1b4bf1b22390955d31d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga842dcfab1785e1b4bf1b22390955d31d">&#9670;&#160;</a></span>infix_unbound_cif_func</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* infix_unbound_cif_func) (void *target_function, void *return_value_ptr, void **args_array)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A function pointer type for an unbound forward trampoline. </p>
+<p>This is the callable code generated by <code>infix_forward_create_unbound</code>. It takes the target function as its first argument, allowing it to be reused for any C function that matches the signature it was created with.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target_function</td><td>The native C function to call. </td></tr>
+    <tr><td class="paramname">return_value_ptr</td><td>A pointer to a buffer to receive the return value. Can be <code>nullptr</code> if the return type is <code>void</code>. </td></tr>
+    <tr><td class="paramname">args_array</td><td>An array of pointers, where each element points to an argument's value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga8643667be6ea1ef9269c2e46d8f11ff7" name="ga8643667be6ea1ef9269c2e46d8f11ff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8643667be6ea1ef9269c2e46d8f11ff7">&#9670;&#160;</a></span>infix_status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enumerates the possible status codes returned by <code>infix</code> API functions. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da" name="gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"></a>INFIX_SUCCESS&#160;</td><td class="fielddoc"><p>The operation completed successfully. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7a059ba15d1ac5d065ab33d039aba51da1" name="gga8643667be6ea1ef9269c2e46d8f11ff7a059ba15d1ac5d065ab33d039aba51da1"></a>INFIX_ERROR_ALLOCATION_FAILED&#160;</td><td class="fielddoc"><p>A memory allocation failed. Check <code>infix_get_last_error</code> for details. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7afad878b13765c831a64f0d7d2c245e6d" name="gga8643667be6ea1ef9269c2e46d8f11ff7afad878b13765c831a64f0d7d2c245e6d"></a>INFIX_ERROR_INVALID_ARGUMENT&#160;</td><td class="fielddoc"><p>An invalid argument was provided. Check <code>infix_get_last_error</code>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7a8f19c7933e208a1bf33240fa85786b5e" name="gga8643667be6ea1ef9269c2e46d8f11ff7a8f19c7933e208a1bf33240fa85786b5e"></a>INFIX_ERROR_UNSUPPORTED_ABI&#160;</td><td class="fielddoc"><p>The current platform's ABI is not supported. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7a1a14039fc288e0f021f408bd13ab0422" name="gga8643667be6ea1ef9269c2e46d8f11ff7a1a14039fc288e0f021f408bd13ab0422"></a>INFIX_ERROR_LAYOUT_FAILED&#160;</td><td class="fielddoc"><p>Failed to calculate a valid memory layout for a type. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7a6df62fc328e34d8a94eeb8db95c12703" name="gga8643667be6ea1ef9269c2e46d8f11ff7a6df62fc328e34d8a94eeb8db95c12703"></a>INFIX_ERROR_PROTECTION_FAILED&#160;</td><td class="fielddoc"><p>Failed to set memory protection flags (e.g., for W^X). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga8643667be6ea1ef9269c2e46d8f11ff7a3fad92c0e35ba68a75ac0f22339958d5" name="gga8643667be6ea1ef9269c2e46d8f11ff7a3fad92c0e35ba68a75ac0f22339958d5"></a>INFIX_ERROR_&#160;</td><td class="fielddoc"><p>Placeholder to ensure enum is sized correctly. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga5362b6f6976298aebefdb2a487e72e36" name="ga5362b6f6976298aebefdb2a487e72e36"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga5362b6f6976298aebefdb2a487e72e36">&#9670;&#160;</a></span>infix_forward_create()</h2>
@@ -147,7 +531,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
           <td class="paramname"><em>out_trampoline</em>, </td>
@@ -178,21 +562,54 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a bound forward-call trampoline from a signature string. </p>
-<p>This is the primary and recommended function for creating forward trampolines. It creates a trampoline where the target function address is hardcoded into the JIT-compiled code. This can offer a small performance improvement and a simpler call signature.</p>
+<p>Creates a "bound" forward trampoline from a signature string. </p>
+<p>A bound trampoline is a highly optimized JIT-compiled function where the target C function's address is compiled directly into the executable code. This provides the best performance for forward calls, as it involves a direct <code>call</code> instruction to a known address. It is ideal for situations where you will call the same C function repeatedly.</p>
+<p>The returned handle contains a callable function pointer of type <code>infix_cif_func</code>, which you can retrieve with <code>infix_forward_get_code</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">target_function</td><td>A pointer to the native C function to be bound to the trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">registry</td><td>An optional handle to a type registry for resolving named types. Pass <code>nullptr</code> if not used. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>A pointer to an <code>infix_forward_t*</code> that will receive the created trampoline handle upon success. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string of the target function (e.g., <code>"(int, int)-&gt;int"</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_function</td><td>The address of the C function to be called. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry for resolving named types (<code>@Name</code>) used within the signature. Can be <code>nullptr</code> if no named types are used. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The function pointer returned by <code>infix_forward_get_code</code> should be used.</dd></dl>
-<p>Generates a bound forward-call trampoline from a signature string. </p>
-
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an <code>INFIX_ERROR_...</code> code on failure. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_forward_destroy</code>.</dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// C function to call</span></div>
+<div class="line"><span class="keywordtype">int</span> add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
+<div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(int, int) -&gt; int&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Create a trampoline bound to the `add` function.</span></div>
+<div class="line"><a class="code hl_enumeration" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> <a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, signature, (<span class="keywordtype">void</span>*)add, NULL);</div>
+<div class="line"><span class="keywordflow">if</span> (<a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> != <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
+<div class="line">    <span class="comment">// Handle error...</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Get the callable JIT-compiled function pointer.</span></div>
+<div class="line"><a class="code hl_typedef" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Prepare arguments and return buffer.</span></div>
+<div class="line"><span class="keywordtype">int</span> a = 10, b = 32;</div>
+<div class="line"><span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;a, &amp;b };</div>
+<div class="line"><span class="keywordtype">int</span> result;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Call the C function through the FFI.</span></div>
+<div class="line">cif(&amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is now 42</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
+<div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:66</div></div>
+<div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:65</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:770</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga6f23c028781b7cc258c83b5bdf4c141a"><div class="ttname"><a href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *return_value_ptr, void **args_array)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:370</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">Enumerates the possible status codes returned by infix API functions.</div><div class="ttdef"><b>Definition</b> infix.h:388</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdef"><b>Definition</b> infix.h:389</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:270</div></div>
+<div class="ttc" id="agroup__manual__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Destroys a forward trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:483</div></div>
+<div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:93</div></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga524a8ccebd24c9232d30cb2f79aee5a5" name="ga524a8ccebd24c9232d30cb2f79aee5a5"></a>
@@ -202,7 +619,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_unbound </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_unbound </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
           <td class="paramname"><em>out_trampoline</em>, </td>
@@ -227,20 +644,45 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates an unbound forward-call trampoline from a signature string. </p>
-<p>Creates a flexible trampoline where the target function is not known at creation time and must be provided at each call. This is useful for interpreters or plugin systems where one trampoline may be used to call multiple functions of the same type.</p>
+<p>Creates an "unbound" forward trampoline from a signature string. </p>
+<p>An unbound trampoline is more flexible than a bound one. The target function address is not compiled in; instead, it is provided as the first argument at call time. This is useful for calling multiple C functions that share the same signature without needing to generate a separate trampoline for each one.</p>
+<p>The returned handle contains a callable function pointer of type <code>infix_unbound_cif_func</code>, which you can retrieve with <code>infix_forward_get_unbound_code</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>On success, will point to the handle for the new trampoline. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">registry</td><td>An optional handle to a type registry for resolving named types. Pass <code>nullptr</code> if not used. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>A pointer to an <code>infix_forward_t*</code> that will receive the created trampoline handle upon success. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string of the target function. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry for resolving named types. Can be <code>nullptr</code>. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The function pointer returned by <code>infix_forward_get_unbound_code</code> must be used.</dd></dl>
-<p>Generates an unbound forward-call trampoline from a signature string. </p>
-
+<dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_forward_destroy</code>.</dd></dl>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
+<div class="line"><span class="keywordtype">int</span> subtract(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a - b; }</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
+<div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(int, int) -&gt; int&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Create one unbound trampoline for the signature.</span></div>
+<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a>(&amp;trampoline, signature, NULL);</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_typedef" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(trampoline);</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> a = 10, b = 5;</div>
+<div class="line"><span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;a, &amp;b };</div>
+<div class="line"><span class="keywordtype">int</span> result;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Call `add` by passing its address at call time.</span></div>
+<div class="line">cif((<span class="keywordtype">void</span>*)add, &amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is 15</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Reuse the same trampoline to call `subtract`.</span></div>
+<div class="line">cif((<span class="keywordtype">void</span>*)subtract, &amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is 5</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
+<div class="ttc" id="agroup__high__level__api_html_ga524a8ccebd24c9232d30cb2f79aee5a5"><div class="ttname"><a href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Creates an &quot;unbound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:802</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga842dcfab1785e1b4bf1b22390955d31d"><div class="ttname"><a href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *target_function, void *return_value_ptr, void **args_array)</div><div class="ttdoc">A function pointer type for an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:360</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga5f3559908e6a7bcc72103c52937d67ad"><div class="ttname"><a href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a></div><div class="ttdeci">c23_nodiscard infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:264</div></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga010d41376c47f1100903d427776033ab" name="ga010d41376c47f1100903d427776033ab"></a>
@@ -250,7 +692,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_callback </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_callback </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **&#160;</td>
           <td class="paramname"><em>out_context</em>, </td>
@@ -281,27 +723,44 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a type-safe reverse-call trampoline (callback) from a signature string. </p>
-<p>This function parses a signature string to create a native, C-callable function pointer that invokes the provided user handler. This is the recommended API for C/C++ developers as it provides compile-time type safety for the handler.</p>
+<p>Creates a type-safe reverse trampoline (callback). </p>
+<p>This function generates a native C function pointer that, when called by external C code, will invoke your <code>user_callback_fn</code>. This API is designed primarily for C/C++ developers, as the provided handler function must have a clean, type-safe C signature that exactly matches the one described in the <code>signature</code> string. This provides a high level of convenience and compile-time safety.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the callback's signature. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's C callback handler. Its signature must be a "clean" C signature, exactly matching the types described in the signature string.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section user"><dt>Example:</dt><dd>If the native C signature is <code>int (*my_callback)(int, int);</code>, your <code>infix</code> handler function must be <code>int my_handler(int a, int b);</code>.</dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">registry</td><td>An optional handle to a type registry for resolving named types. Pass <code>nullptr</code> if not used. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>A pointer to an <code>infix_reverse_t*</code> that will receive the created context handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature of the function pointer to be created (e.g., <code>"(int, int)-&gt;int"</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A pointer to a C function with a matching signature to handle the call. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This type of callback is <b>stateless</b>. For stateful callbacks, use <code>infix_reverse_create_closure</code>.</dd></dl>
-<p>Generates a type-safe reverse-call trampoline (callback) from a signature string. </p>
-
+<dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_reverse_destroy</code>.</dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// 1. Define the type-safe C handler function.</span></div>
+<div class="line"><span class="comment">// Its signature must match &quot;(int, int)-&gt;int&quot;.</span></div>
+<div class="line"><span class="keywordtype">int</span> my_handler(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) {</div>
+<div class="line">    <span class="keywordflow">return</span> a * b;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 2. Create the reverse trampoline.</span></div>
+<div class="line"><a class="code hl_struct" href="structinfix__reverse__t.html">infix_reverse_t</a>* ctx = NULL;</div>
+<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a>(&amp;ctx, <span class="stringliteral">&quot;(int,int)-&gt;int&quot;</span>, (<span class="keywordtype">void</span>*)my_handler, NULL);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 3. Get the JIT-compiled C function pointer.</span></div>
+<div class="line"><span class="keyword">typedef</span> int (*my_func_ptr_t)(int, int);</div>
+<div class="line">my_func_ptr_t func_ptr = (my_func_ptr_t)<a class="code hl_function" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a>(ctx);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 4. Pass this `func_ptr` to some C library that expects a callback.</span></div>
+<div class="line"><span class="comment">// some_c_library_function(func_ptr);</span></div>
+<div class="line"><span class="comment">// When the library calls func_ptr(5, 10), `my_handler` will be invoked</span></div>
+<div class="line"><span class="comment">// and will return 50.</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(ctx);</div>
+<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:808</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga3b75e8481ac13d11faa15046fc4adb66"><div class="ttname"><a href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:751</div></div>
+<div class="ttc" id="agroup__manual__api_html_ga00b101025663c423a28433e139be5d4e"><div class="ttname"><a href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a></div><div class="ttdeci">void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:732</div></div>
+<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:118</div></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga6d1281b61d196d1d06153aa1265fb971" name="ga6d1281b61d196d1d06153aa1265fb971"></a>
@@ -311,7 +770,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_closure </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_reverse_create_closure </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **&#160;</td>
           <td class="paramname"><em>out_context</em>, </td>
@@ -325,7 +784,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__public__api.html#ga0493abb74a3f8ba3ce52c066390c722d">infix_closure_handler_fn</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>&#160;</td>
           <td class="paramname"><em>user_callback_fn</em>, </td>
         </tr>
         <tr>
@@ -348,21 +807,57 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a low-level reverse-call trampoline (closure) from a signature string. </p>
-<p>Creates a native C function pointer that invokes a generic handler. This is the recommended API for language binding authors and for creating stateful callbacks.</p>
+<p>Creates a generic reverse trampoline (closure) for stateful callbacks. </p>
+<p>This is the low-level API for reverse calls, designed for language bindings and advanced use cases. The handler function has a generic signature (<code>infix_closure_handler_fn</code>) and receives arguments as a <code>void**</code> array. A <code>user_data</code> pointer can be provided to maintain state between calls, making it a "closure".</p>
+<p>This is the most flexible way to handle callbacks, as it allows the handler to be implemented in another language and to access state associated with the callback object.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>On success, will point to the new reverse trampoline context. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">signature</td><td>A null-terminated string describing the callback's signature. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_callback_fn</td><td>A function pointer to the user's generic closure handler. Its signature must match <code>infix_closure_handler_fn</code>. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">user_data</td><td>A user-defined pointer for passing state to the handler, accessible inside the handler via <code>infix_reverse_get_user_data(context)</code>. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">registry</td><td>An optional handle to a type registry. Pass <code>nullptr</code> if not used. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_context</td><td>A pointer to an <code>infix_reverse_t*</code> that will receive the created context handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature of the function pointer to be created. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_callback_fn</td><td>A pointer to a generic <code>infix_closure_handler_fn</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">user_data</td><td>A <code>void*</code> pointer to application-specific state. This pointer can be retrieved inside the handler via <code>infix_reverse_get_user_data(context)</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
-<p>Generates a low-level reverse-call trampoline (closure) from a signature string. </p>
-
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_reverse_destroy</code>.</dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// User-defined state for our closure.</span></div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line">    <span class="keywordtype">int</span> call_count;</div>
+<div class="line">} my_state_t;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 1. Define the generic closure handler.</span></div>
+<div class="line"><span class="keywordtype">void</span> my_closure_handler(<a class="code hl_struct" href="structinfix__reverse__t.html">infix_context_t</a>* ctx, <span class="keywordtype">void</span>* ret_val, <span class="keywordtype">void</span>** <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>) {</div>
+<div class="line">    <span class="comment">// Retrieve our state.</span></div>
+<div class="line">    my_state_t* state = (my_state_t*)<a class="code hl_function" href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a>(ctx);</div>
+<div class="line">    state-&gt;call_count++;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Unpack arguments from the void** array.</span></div>
+<div class="line">    <span class="keywordtype">int</span> a = *(<span class="keywordtype">int</span>*)<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[0];</div>
+<div class="line">    <span class="keywordtype">int</span> b = *(<span class="keywordtype">int</span>*)<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[1];</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Perform the operation and write to the return value buffer.</span></div>
+<div class="line">    <span class="keywordtype">int</span> result = (a + b) * state-&gt;call_count;</div>
+<div class="line">    memcpy(ret_val, &amp;result, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 2. Create the state and the closure.</span></div>
+<div class="line">my_state_t my_state = { .call_count = 0 };</div>
+<div class="line"><a class="code hl_struct" href="structinfix__reverse__t.html">infix_reverse_t</a>* ctx = NULL;</div>
+<div class="line"><a class="code hl_function" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a>(&amp;ctx, <span class="stringliteral">&quot;(int,int)-&gt;int&quot;</span>, my_closure_handler, &amp;my_state, NULL);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 3. Get the JIT-compiled C function pointer.</span></div>
+<div class="line">int (*func_ptr)(int, int) = <a class="code hl_function" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a>(ctx);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// 4. Pass the func_ptr to C code.</span></div>
+<div class="line"><span class="keywordtype">int</span> result1 = func_ptr(10, 5); <span class="comment">// result1 is (10+5)*1 = 15</span></div>
+<div class="line"><span class="keywordtype">int</span> result2 = func_ptr(2, 3);  <span class="comment">// result2 is (2+3)*2 = 10</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(ctx);</div>
+<div class="ttc" id="agroup__high__level__api_html_ga6d1281b61d196d1d06153aa1265fb971"><div class="ttname"><a href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_closure(infix_reverse_t **, const char *, infix_closure_handler_fn, void *, infix_registry_t *)</div><div class="ttdoc">Creates a generic reverse trampoline (closure) for stateful callbacks.</div><div class="ttdef"><b>Definition</b> trampoline.c:838</div></div>
+<div class="ttc" id="agroup__introspection__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Gets the user-provided data pointer from a closure context.</div><div class="ttdef"><b>Definition</b> trampoline.c:762</div></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="gabc24d2667f9cac5f45bd9a71efe66cf7" name="gabc24d2667f9cac5f45bd9a71efe66cf7"></a>
@@ -372,7 +867,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_signature_parse </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_signature_parse </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>signature</em>, </td>
@@ -421,24 +916,35 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Parses a full function signature string into its constituent infix_type parts. </p>
-<p>This is an advanced function for callers who need to inspect type information before generating a trampoline. It creates a dedicated memory arena to hold the resulting <code>infix_type</code> object graph.</p>
+<p>Parses a full function signature string into its constituent parts. </p>
+<p>This function provides a way to deconstruct a signature string into its components (<code>return_type</code>, <code>arg_types</code>, etc.) without generating a trampoline. It is useful for introspection and for preparing arguments for the Manual API.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A null-terminated string describing the function signature. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, points to the new arena owning the type graph. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_ret_type</td><td>On success, points to the <code>infix_type</code> for the return value. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_args</td><td>On success, points to an array of <code>infix_function_argument</code>. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_args</td><td>On success, will be set to the total number of arguments. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_fixed_args</td><td>On success, will be set to the number of non-variadic arguments. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional handle to a type registry. Can be <code>nullptr</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string to parse. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, receives a pointer to an arena holding all parsed types. The caller owns this and must free it with <code>infix_arena_destroy</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_ret_type</td><td>On success, receives a pointer to the return type. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_args</td><td>On success, receives a pointer to the array of <code>infix_function_argument</code> structs. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_args</td><td>On success, receives the total number of arguments. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_fixed_args</td><td>On success, receives the number of fixed (non-variadic) arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> if parsing is successful. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Management:</b> On success, the caller takes ownership of the arena.</dd></dl>
-<p>Parses a full function signature string into its constituent infix_type parts.</p>
-<p>This function orchestrates the full process for parsing a complete function signature, including the lazy resolution pass if a registry is provided. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
+<p>Like <code>infix_type_from_signature</code>, this function orchestrates the full "Parse -&gt; Copy -&gt; Resolve -&gt; Layout" pipeline, but for a function signature. It unpacks the final, resolved components for the caller.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string to parse. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, receives a pointer to an arena holding the parsed types. The caller owns this and must free it with <code>infix_arena_destroy</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_ret_type</td><td>On success, receives a pointer to the return type. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_args</td><td>On success, receives a pointer to the array of argument types. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_args</td><td>On success, receives the total number of arguments. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_num_fixed_args</td><td>On success, receives the number of fixed arguments. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 
 </div>
 </div>
@@ -449,7 +955,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_from_signature </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_type_from_signature </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
           <td class="paramname"><em>out_type</em>, </td>
@@ -481,25 +987,980 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parses a signature string representing a single data type. </p>
-<p>A specialized parser for use cases like data marshalling or type inspection, where a full function signature is not needed.</p>
+<p>This is the core function for introspection, allowing you to get a detailed, fully resolved memory layout for any C type described by a signature.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, will point to the newly created <code>infix_type</code>. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, points to the new arena that owns the type graph. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>A string describing the data type (e.g., <code>"int32"</code>, <code>"{int, float}"</code>). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional handle to a type registry. Can be <code>nullptr</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, receives a pointer to the parsed type object. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, receives a pointer to the arena holding the type. The caller must free this with <code>infix_arena_destroy</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string of the data type (e.g., <code>"{id:int, name:*char}"</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry for resolving named types. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> if parsing is successful. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd><b>Memory Management:</b> On success, the caller takes ownership of the arena.</dd></dl>
-<p>Parses a signature string representing a single data type.</p>
-<p>This function orchestrates the full process for parsing a single type:</p><ol type="1">
-<li>Clears any previous thread-local error state.</li>
-<li>Calls the internal parser to generate a raw type graph.</li>
-<li>If a registry was provided, it calls the resolver to replace all <code>@Name</code> references with their concrete definitions.</li>
-<li>On failure, it ensures all allocated resources are cleaned up. </li>
-</ol>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success.</dd></dl>
+<p>This function orchestrates the full **"Parse -&gt; Copy -&gt; Resolve -&gt; Layout"** pipeline for a single type, resulting in a fully resolved and laid-out <code>infix_type</code> object graph.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_type</td><td>On success, receives a pointer to the parsed type object. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_arena</td><td>On success, receives a pointer to the arena holding the type. The caller is responsible for freeing this with <code>infix_arena_destroy</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string of the data type (e.g., <code>"{id:int, name:*char}"</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry for resolving named types. Can be <code>nullptr</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga820935723a98863101aa35b828fffe0b" name="ga820935723a98863101aa35b828fffe0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga820935723a98863101aa35b828fffe0b">&#9670;&#160;</a></span>aggregate_category <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a> infix_type_t::aggregate_category</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The expected kind of aggregate (struct or union). </p>
+
+</div>
+</div>
+<a id="gae0e5d175600a09754e1dd8a80560fab1" name="gae0e5d175600a09754e1dd8a80560fab1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae0e5d175600a09754e1dd8a80560fab1">&#9670;&#160;</a></span>[] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">infix_aggregate_category_t  { ... } ::aggregate_category</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The expected kind of aggregate (struct or union). </p>
+
+</div>
+</div>
+<a id="gaeebefe41e0410c6cff0c01275bc37253" name="gaeebefe41e0410c6cff0c01275bc37253"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeebefe41e0410c6cff0c01275bc37253">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::aggregate_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. </p>
+
+</div>
+</div>
+<a id="ga9d7572a9e837b5a8cb21010a91983abb" name="ga9d7572a9e837b5a8cb21010a91983abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9d7572a9e837b5a8cb21010a91983abb">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::aggregate_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_STRUCT</code> and <code>INFIX_TYPE_UNION</code>. </p>
+
+</div>
+</div>
+<a id="ga4dc08b6a109b67e1394e097c90d497d6" name="ga4dc08b6a109b67e1394e097c90d497d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4dc08b6a109b67e1394e097c90d497d6">&#9670;&#160;</a></span>alignment</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a> infix_type_t::alignment</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The alignment requirement of the type in bytes. </p>
+
+</div>
+</div>
+<a id="ga7e98e476d66532fa296d00607d0851d1" name="ga7e98e476d66532fa296d00607d0851d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7e98e476d66532fa296d00607d0851d1">&#9670;&#160;</a></span>args <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a>* infix_type_t::args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>An array of the function's arguments. </p>
+
+</div>
+</div>
+<a id="gabb0fa9d874938c89de1aad332d1d5dd8" name="gabb0fa9d874938c89de1aad332d1d5dd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabb0fa9d874938c89de1aad332d1d5dd8">&#9670;&#160;</a></span>[] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">infix_function_argument*  { ... } ::args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>An array of the function's arguments. </p>
+
+</div>
+</div>
+<a id="gaab386f4dc04faa543de51c13c86f79ff" name="gaab386f4dc04faa543de51c13c86f79ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab386f4dc04faa543de51c13c86f79ff">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::array_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_ARRAY</code>. </p>
+
+</div>
+</div>
+<a id="ga9dcdb7c1762f7142954113f4c4db4aaa" name="ga9dcdb7c1762f7142954113f4c4db4aaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9dcdb7c1762f7142954113f4c4db4aaa">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::array_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_ARRAY</code>. </p>
+
+</div>
+</div>
+<a id="ga5b5d4e2f45f812ae54b0f1b265d1d54d" name="ga5b5d4e2f45f812ae54b0f1b265d1d54d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5b5d4e2f45f812ae54b0f1b265d1d54d">&#9670;&#160;</a></span>[] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct infix_type_t*  { ... } ::base_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The base floating-point type (<code>float</code> or <code>double</code>). </p>
+
+</div>
+</div>
+<a id="gac70541d021d87d720c38b176fb39e4fc" name="gac70541d021d87d720c38b176fb39e4fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac70541d021d87d720c38b176fb39e4fc">&#9670;&#160;</a></span>base_type <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a>* infix_type_t::base_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The base floating-point type (<code>float</code> or <code>double</code>). </p>
+
+</div>
+</div>
+<a id="ga95e67389ced0dfc9e4d9a6e076d4c645" name="ga95e67389ced0dfc9e4d9a6e076d4c645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga95e67389ced0dfc9e4d9a6e076d4c645">&#9670;&#160;</a></span>category <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#ga909e562b00e504aeceac698bd272f0ca">infix_type_category</a> infix_type_t::category</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The fundamental category of the type. </p>
+
+</div>
+</div>
+<a id="ga0caa6458c1d70d81abdc4f530dcc96d8" name="ga0caa6458c1d70d81abdc4f530dcc96d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0caa6458c1d70d81abdc4f530dcc96d8">&#9670;&#160;</a></span>category <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> infix_error_details_t::category</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The general category of the error. </p>
+
+</div>
+</div>
+<a id="gad9076024a7bb288a2a65f2fb8644c938" name="gad9076024a7bb288a2a65f2fb8644c938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad9076024a7bb288a2a65f2fb8644c938">&#9670;&#160;</a></span>code</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> infix_error_details_t::code</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The specific error code. </p>
+
+</div>
+</div>
+<a id="ga654909b4eaa71cf395f7324c581e163f" name="ga654909b4eaa71cf395f7324c581e163f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga654909b4eaa71cf395f7324c581e163f">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::complex_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_COMPLEX</code>. </p>
+
+</div>
+</div>
+<a id="ga8d6e1e8253d8911ce6754b06097d657f" name="ga8d6e1e8253d8911ce6754b06097d657f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8d6e1e8253d8911ce6754b06097d657f">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::complex_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_COMPLEX</code>. </p>
+
+</div>
+</div>
+<a id="gaa9edbcf03dc1eadffbde6d90c23db918" name="gaa9edbcf03dc1eadffbde6d90c23db918"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa9edbcf03dc1eadffbde6d90c23db918">&#9670;&#160;</a></span>element_type <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a>* infix_type_t::element_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The type of each element in the array.</p>
+<p>The primitive type of each element in the vector. </p>
+
+</div>
+</div>
+<a id="gaefb17d7bf4661847a9a9b957dedd04a4" name="gaefb17d7bf4661847a9a9b957dedd04a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaefb17d7bf4661847a9a9b957dedd04a4">&#9670;&#160;</a></span>[] <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct infix_type_t*  { ... } ::element_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The type of each element in the array. </p>
+
+</div>
+</div>
+<a id="ga81abf1b30a3fab4312e3f20e74ab70b5" name="ga81abf1b30a3fab4312e3f20e74ab70b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga81abf1b30a3fab4312e3f20e74ab70b5">&#9670;&#160;</a></span>[] <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct infix_type_t*  { ... } ::element_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The primitive type of each element in the vector. </p>
+
+</div>
+</div>
+<a id="gabf1c7bb07d550892095e914072a7658c" name="gabf1c7bb07d550892095e914072a7658c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabf1c7bb07d550892095e914072a7658c">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::enum_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_ENUM</code>. </p>
+
+</div>
+</div>
+<a id="ga8efd553b2dd8682399057c026e61f839" name="ga8efd553b2dd8682399057c026e61f839"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8efd553b2dd8682399057c026e61f839">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::enum_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_ENUM</code>. </p>
+
+</div>
+</div>
+<a id="gad6f74fc69d9df9ad2f239b1bd101845b" name="gad6f74fc69d9df9ad2f239b1bd101845b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad6f74fc69d9df9ad2f239b1bd101845b">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::func_ptr_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. </p>
+
+</div>
+</div>
+<a id="ga2a2d9a8c127bba88a5da75433005bdfb" name="ga2a2d9a8c127bba88a5da75433005bdfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2a2d9a8c127bba88a5da75433005bdfb">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::func_ptr_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>. </p>
+
+</div>
+</div>
+<a id="gafe120ad94ce32eb2d2150b64c7c2dccd" name="gafe120ad94ce32eb2d2150b64c7c2dccd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafe120ad94ce32eb2d2150b64c7c2dccd">&#9670;&#160;</a></span>is_arena_allocated</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">bool</a> infix_type_t::is_arena_allocated</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="gaa15a8508483b37fe212fb479c2f44e2a" name="gaa15a8508483b37fe212fb479c2f44e2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa15a8508483b37fe212fb479c2f44e2a">&#9670;&#160;</a></span>[] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">infix_struct_member*  { ... } ::members</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>An array of the aggregate's members. </p>
+
+</div>
+</div>
+<a id="ga6129c5165e189c4e5aa99904a98079e1" name="ga6129c5165e189c4e5aa99904a98079e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6129c5165e189c4e5aa99904a98079e1">&#9670;&#160;</a></span>members <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a>* infix_type_t::members</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>An array of the aggregate's members. </p>
+
+</div>
+</div>
+<a id="ga37930d8440e1f4ae46571bdce41aff5d" name="ga37930d8440e1f4ae46571bdce41aff5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga37930d8440e1f4ae46571bdce41aff5d">&#9670;&#160;</a></span>message</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char infix_error_details_t::message[256]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A human-readable description of the error. For parser errors, this includes a code snippet. </p>
+
+</div>
+</div>
+<a id="ga06717387732a6557d456a760bb3150cc" name="ga06717387732a6557d456a760bb3150cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga06717387732a6557d456a760bb3150cc">&#9670;&#160;</a></span>[union]</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">union  { ... }  infix_type_t::meta</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A union containing metadata specific to the type's category. </p>
+
+</div>
+</div>
+<a id="gacb473791e0145c30c452ad91c98c8c49" name="gacb473791e0145c30c452ad91c98c8c49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacb473791e0145c30c452ad91c98c8c49">&#9670;&#160;</a></span>[] <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char*  { ... } ::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The registered name of the aggregate, or <code>nullptr</code>. </p>
+
+</div>
+</div>
+<a id="ga736c003e9eef685d02153e46a46ad461" name="ga736c003e9eef685d02153e46a46ad461"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga736c003e9eef685d02153e46a46ad461">&#9670;&#160;</a></span>name <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">const</a> <a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">char</a>* infix_type_t::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The registered name of the aggregate, or <code>nullptr</code>.</p>
+<p>The name to be looked up in a registry. </p>
+
+</div>
+</div>
+<a id="ga88c9af9a10aedbc07aa46f4630fa35c1" name="ga88c9af9a10aedbc07aa46f4630fa35c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga88c9af9a10aedbc07aa46f4630fa35c1">&#9670;&#160;</a></span>[] <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char*  { ... } ::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The name to be looked up in a registry. </p>
+
+</div>
+</div>
+<a id="ga8dad067a06c5efd90028fb1cab9e2911" name="ga8dad067a06c5efd90028fb1cab9e2911"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8dad067a06c5efd90028fb1cab9e2911">&#9670;&#160;</a></span>name <span class="overload">[4/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* infix_struct_member_t::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The name of the member, or <code>nullptr</code> if anonymous. </p>
+
+</div>
+</div>
+<a id="ga8789f5063ea8ce9896f44c1c9d8f365c" name="ga8789f5063ea8ce9896f44c1c9d8f365c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8789f5063ea8ce9896f44c1c9d8f365c">&#9670;&#160;</a></span>name <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* infix_function_argument_t::name</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The name of the argument, or <code>nullptr</code> if anonymous. </p>
+
+</div>
+</div>
+<a id="gaefbba96a3cadf0e38ba54f1ff7cb93b1" name="gaefbba96a3cadf0e38ba54f1ff7cb93b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaefbba96a3cadf0e38ba54f1ff7cb93b1">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::named_reference</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_NAMED_REFERENCE</code>. </p>
+
+</div>
+</div>
+<a id="ga69c567720b478d07b87af0ef17aa9f82" name="ga69c567720b478d07b87af0ef17aa9f82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga69c567720b478d07b87af0ef17aa9f82">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::named_reference</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_NAMED_REFERENCE</code>. </p>
+
+</div>
+</div>
+<a id="gaf7dcb5be2588e96b70f497185348aa8f" name="gaf7dcb5be2588e96b70f497185348aa8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf7dcb5be2588e96b70f497185348aa8f">&#9670;&#160;</a></span>num_args <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a> infix_type_t::num_args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The total number of arguments. </p>
+
+</div>
+</div>
+<a id="ga1db4f34af67e79a44d63a04fac7e0f2e" name="ga1db4f34af67e79a44d63a04fac7e0f2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1db4f34af67e79a44d63a04fac7e0f2e">&#9670;&#160;</a></span>[] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t  { ... } ::num_args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The total number of arguments. </p>
+
+</div>
+</div>
+<a id="ga997d4a4a3c2ed791eb70781b1bfe307f" name="ga997d4a4a3c2ed791eb70781b1bfe307f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga997d4a4a3c2ed791eb70781b1bfe307f">&#9670;&#160;</a></span>[] <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t  { ... } ::num_elements</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of elements in the array. </p>
+
+</div>
+</div>
+<a id="ga3c4a320aede1d81a156ef8dfec4109c0" name="ga3c4a320aede1d81a156ef8dfec4109c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3c4a320aede1d81a156ef8dfec4109c0">&#9670;&#160;</a></span>num_elements <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a> infix_type_t::num_elements</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of elements in the array.</p>
+<p>The number of elements in the vector. </p>
+
+</div>
+</div>
+<a id="ga80581ecc44d474e5b081a306f0ee09a2" name="ga80581ecc44d474e5b081a306f0ee09a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga80581ecc44d474e5b081a306f0ee09a2">&#9670;&#160;</a></span>[] <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t  { ... } ::num_elements</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of elements in the vector. </p>
+
+</div>
+</div>
+<a id="ga75ff4aca821caf304e4181ecd0fb2a7d" name="ga75ff4aca821caf304e4181ecd0fb2a7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga75ff4aca821caf304e4181ecd0fb2a7d">&#9670;&#160;</a></span>[] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t  { ... } ::num_fixed_args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of non-variadic arguments. </p>
+
+</div>
+</div>
+<a id="gaf31ce4e5d44ef23d91ed0a3695b39f4a" name="gaf31ce4e5d44ef23d91ed0a3695b39f4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf31ce4e5d44ef23d91ed0a3695b39f4a">&#9670;&#160;</a></span>num_fixed_args <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a> infix_type_t::num_fixed_args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of non-variadic arguments. </p>
+
+</div>
+</div>
+<a id="gaca307cbaffc95a71230aa9486593ff4f" name="gaca307cbaffc95a71230aa9486593ff4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaca307cbaffc95a71230aa9486593ff4f">&#9670;&#160;</a></span>[] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t  { ... } ::num_members</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of members in the array. </p>
+
+</div>
+</div>
+<a id="gaddead8d897d6058a40f4f49d9cc87c45" name="gaddead8d897d6058a40f4f49d9cc87c45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaddead8d897d6058a40f4f49d9cc87c45">&#9670;&#160;</a></span>num_members <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">size_t</a> infix_type_t::num_members</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of members in the array. </p>
+
+</div>
+</div>
+<a id="gabc9fb3780626694111f4c8c74700a9b9" name="gabc9fb3780626694111f4c8c74700a9b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabc9fb3780626694111f4c8c74700a9b9">&#9670;&#160;</a></span>offset</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t infix_struct_member_t::offset</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The byte offset of the member from the start of the aggregate. </p>
+
+</div>
+</div>
+<a id="ga82f284856687ccfc35692651697fa733" name="ga82f284856687ccfc35692651697fa733"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga82f284856687ccfc35692651697fa733">&#9670;&#160;</a></span>[] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct infix_type_t*  { ... } ::pointee_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The type that this pointer points to. </p>
+
+</div>
+</div>
+<a id="gaa1b3a38155abc3e22a9dae4826c9f9bf" name="gaa1b3a38155abc3e22a9dae4826c9f9bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa1b3a38155abc3e22a9dae4826c9f9bf">&#9670;&#160;</a></span>pointee_type <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a>* infix_type_t::pointee_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The type that this pointer points to. </p>
+
+</div>
+</div>
+<a id="gadb37406a18179173704f3428561cb922" name="gadb37406a18179173704f3428561cb922"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadb37406a18179173704f3428561cb922">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::pointer_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_POINTER</code>. </p>
+
+</div>
+</div>
+<a id="ga04a5b21d8ed8ace3646e92275330b6a2" name="ga04a5b21d8ed8ace3646e92275330b6a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga04a5b21d8ed8ace3646e92275330b6a2">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::pointer_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_POINTER</code>. </p>
+
+</div>
+</div>
+<a id="ga0530e44f33e347bfcfe3b663d76ba5b7" name="ga0530e44f33e347bfcfe3b663d76ba5b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0530e44f33e347bfcfe3b663d76ba5b7">&#9670;&#160;</a></span>position</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t infix_error_details_t::position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>For parser errors, the byte offset into the signature string. </p>
+
+</div>
+</div>
+<a id="gaf629b23eea8b27c2b7934e6b53b9a12d" name="gaf629b23eea8b27c2b7934e6b53b9a12d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf629b23eea8b27c2b7934e6b53b9a12d">&#9670;&#160;</a></span>primitive_id <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#ga2cd7b00c1f2606249654a8e8b7cbc044">infix_primitive_type_id</a> infix_type_t::primitive_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_PRIMITIVE</code>. </p>
+
+</div>
+</div>
+<a id="ga96e19f437574313e8e64ada0d752715d" name="ga96e19f437574313e8e64ada0d752715d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga96e19f437574313e8e64ada0d752715d">&#9670;&#160;</a></span>[] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">infix_primitive_type_id  { ... } ::primitive_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_PRIMITIVE</code>. </p>
+
+</div>
+</div>
+<a id="gaa4595ce20cd9bd6749c598882586d02e" name="gaa4595ce20cd9bd6749c598882586d02e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa4595ce20cd9bd6749c598882586d02e">&#9670;&#160;</a></span>[] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct infix_type_t*  { ... } ::return_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The return type of the function. </p>
+
+</div>
+</div>
+<a id="gab7190b72fd83d0a0384148f7606139dd" name="gab7190b72fd83d0a0384148f7606139dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab7190b72fd83d0a0384148f7606139dd">&#9670;&#160;</a></span>return_type <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a>* infix_type_t::return_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The return type of the function. </p>
+
+</div>
+</div>
+<a id="ga48077b88e083d5e6fdad889427efaca7" name="ga48077b88e083d5e6fdad889427efaca7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga48077b88e083d5e6fdad889427efaca7">&#9670;&#160;</a></span>size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t infix_type_t::size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The size of the type in bytes. </p>
+
+</div>
+</div>
+<a id="gac82bf9221f1cd9f5b1b6d8698a1b3eb0" name="gac82bf9221f1cd9f5b1b6d8698a1b3eb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac82bf9221f1cd9f5b1b6d8698a1b3eb0">&#9670;&#160;</a></span>system_error_code</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long infix_error_details_t::system_error_code</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The OS-specific error code (e.g., from <code>GetLastError()</code> or <code>errno</code>). </p>
+
+</div>
+</div>
+<a id="gaa89e6621da98f5115dcc807599c4ac77" name="gaa89e6621da98f5115dcc807599c4ac77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa89e6621da98f5115dcc807599c4ac77">&#9670;&#160;</a></span>type <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a>* infix_struct_member_t::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The <code>infix_type</code> of the member. </p>
+
+</div>
+</div>
+<a id="ga1bd256c75cb6ec767cec121370e6a0ed" name="ga1bd256c75cb6ec767cec121370e6a0ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1bd256c75cb6ec767cec121370e6a0ed">&#9670;&#160;</a></span>type <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a>* infix_function_argument_t::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The <code>infix_type</code> of the argument. </p>
+
+</div>
+</div>
+<a id="gaeeeeac278209a4aa5f3024b196d89292" name="gaeeeeac278209a4aa5f3024b196d89292"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeeeeac278209a4aa5f3024b196d89292">&#9670;&#160;</a></span>underlying_type <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7">struct</a> <a class="el" href="structinfix__type__t.html">infix_type_t</a>* infix_type_t::underlying_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The underlying integer type of the enum. </p>
+
+</div>
+</div>
+<a id="ga8c923a189eb6700fd770f8f815aeef1e" name="ga8c923a189eb6700fd770f8f815aeef1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8c923a189eb6700fd770f8f815aeef1e">&#9670;&#160;</a></span>[] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct infix_type_t*  { ... } ::underlying_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The underlying integer type of the enum. </p>
+
+</div>
+</div>
+<a id="gaac16a3039475a6fdce57b6599014b2da" name="gaac16a3039475a6fdce57b6599014b2da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaac16a3039475a6fdce57b6599014b2da">&#9670;&#160;</a></span>[struct] <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::vector_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_VECTOR</code>. </p>
+
+</div>
+</div>
+<a id="ga07a9b5fb5a01455688c83d682686f62c" name="ga07a9b5fb5a01455688c83d682686f62c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga07a9b5fb5a01455688c83d682686f62c">&#9670;&#160;</a></span>[struct] <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  infix_type_t::vector_info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Metadata for <code>INFIX_TYPE_VECTOR</code>. </p>
 
 </div>
 </div>

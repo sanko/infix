@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: src/core/executor.c File Reference</title>
+<title>infix: src/jit/executor.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('executor_8c.html',''); initResizable()
 </div><!--header-->
 <div class="contents">
 
-<p>Implements OS-level memory management and the internal callback dispatcher.  
+<p>Implements platform-specific memory management for JIT code and execution.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="utility_8h_source.html">common/utility.h</a>&quot;</code><br />
@@ -130,7 +130,7 @@ Include dependency graph for executor.c:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="executor_8c__dep__incl.svg" width="154" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="executor_8c__dep__incl.svg" width="139" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="executor_8c_source.html">Go to the source code of this file.</a></p>
@@ -140,34 +140,40 @@ Functions</h2></td></tr>
 <tr class="memitem:aa8f362c13a4f32d15b32f4980e685932" id="r_aa8f362c13a4f32d15b32f4980e685932"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#aa8f362c13a4f32d15b32f4980e685932">shm_open_anonymous</a> ()</td></tr>
 <tr class="separator:aa8f362c13a4f32d15b32f4980e685932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f1c9cffdcefd87ca6cf40b0d99adc" id="r_a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a721f1c9cffdcefd87ca6cf40b0d99adc">infix_executable_alloc</a> (size_t size)</td></tr>
-<tr class="memdesc:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a page-aligned block of W^X-compliant executable memory.  <br /></td></tr>
+<tr class="memdesc:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of executable memory using the platform's W^X strategy.  <br /></td></tr>
 <tr class="separator:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dc6a62860160637126cf984b77a2d46" id="r_a2dc6a62860160637126cf984b77a2d46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a2dc6a62860160637126cf984b77a2d46">infix_executable_free</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
-<tr class="memdesc:a2dc6a62860160637126cf984b77a2d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees executable memory, creating a guard page to prevent use-after-free.  <br /></td></tr>
+<tr class="memdesc:a2dc6a62860160637126cf984b77a2d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of executable memory and applies guard pages to prevent use-after-free.  <br /></td></tr>
 <tr class="separator:a2dc6a62860160637126cf984b77a2d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28b554e0d17b214853dca915ecc1afc1" id="r_a28b554e0d17b214853dca915ecc1afc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a28b554e0d17b214853dca915ecc1afc1">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
-<tr class="memdesc:a28b554e0d17b214853dca915ecc1afc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a JIT memory region readable and executable (and non-writable).  <br /></td></tr>
+<tr class="memdesc:a28b554e0d17b214853dca915ecc1afc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of JIT memory executable, completing the W^X process.  <br /></td></tr>
 <tr class="separator:a28b554e0d17b214853dca915ecc1afc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6661b906602a04bbd15a91ecc1c6adde" id="r_a6661b906602a04bbd15a91ecc1c6adde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a6661b906602a04bbd15a91ecc1c6adde">infix_protected_alloc</a> (size_t size)</td></tr>
-<tr class="memdesc:a6661b906602a04bbd15a91ecc1c6adde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a page-aligned block of data memory.  <br /></td></tr>
+<tr class="memdesc:a6661b906602a04bbd15a91ecc1c6adde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of standard memory for later protection.  <br /></td></tr>
 <tr class="separator:a6661b906602a04bbd15a91ecc1c6adde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cf96474020e05e7a98b191a61fd7fbf" id="r_a1cf96474020e05e7a98b191a61fd7fbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a1cf96474020e05e7a98b191a61fd7fbf">infix_protected_free</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
-<tr class="memdesc:a1cf96474020e05e7a98b191a61fd7fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of protected data memory.  <br /></td></tr>
+<tr class="memdesc:a1cf96474020e05e7a98b191a61fd7fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of protected memory.  <br /></td></tr>
 <tr class="separator:a1cf96474020e05e7a98b191a61fd7fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b41b11f951e09fb9ea8b609c312ac95" id="r_a9b41b11f951e09fb9ea8b609c312ac95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a9b41b11f951e09fb9ea8b609c312ac95">infix_protected_make_readonly</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
-<tr class="memdesc:a9b41b11f951e09fb9ea8b609c312ac95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hardens a block of protected data memory to be read-only.  <br /></td></tr>
+<tr class="memdesc:a9b41b11f951e09fb9ea8b609c312ac95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of memory read-only for security hardening.  <br /></td></tr>
 <tr class="separator:a9b41b11f951e09fb9ea8b609c312ac95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab973839755f4384eb456335fcb87cdc2" id="r_ab973839755f4384eb456335fcb87cdc2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#ab973839755f4384eb456335fcb87cdc2">infix_internal_dispatch_callback_fn_impl</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context, void *return_value_ptr, void **args_array)</td></tr>
-<tr class="memdesc:ab973839755f4384eb456335fcb87cdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The high-level C dispatcher function called by reverse trampoline stubs.  <br /></td></tr>
+<tr class="memdesc:ab973839755f4384eb456335fcb87cdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The universal C entry point for all reverse call trampolines.  <br /></td></tr>
 <tr class="separator:ab973839755f4384eb456335fcb87cdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implements OS-level memory management and the internal callback dispatcher. </p>
+<div class="textblock"><p>Implements platform-specific memory management for JIT code and execution. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This module serves as the critical OS abstraction layer for the JIT engine. Its primary responsibilities are:</p>
+<ol type="1">
+<li><b>Executable Memory Management:</b> It allocates, protects, and frees executable memory in a way that is secure and compliant with modern OS security features like <b>W^X (Write XOR Execute)</b>. It implements different strategies (single- vs. dual-mapping) depending on the platform's capabilities and security model.</li>
+<li><b>Security Hardening:</b> It provides mechanisms to make memory regions read-only, which is used to protect the <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> context from runtime memory corruption. It also implements "guard pages" on freed memory to immediately catch use-after-free bugs.</li>
+<li><b>Universal Dispatch:</b> It contains the <code>infix_internal_dispatch_callback_fn_impl</code>, the universal C entry point that is the final target of all reverse trampoline stubs. This function is the bridge between the low-level JIT code and the high-level user-provided C handlers. </li>
+</ol>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a721f1c9cffdcefd87ca6cf40b0d99adc" name="a721f1c9cffdcefd87ca6cf40b0d99adc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a721f1c9cffdcefd87ca6cf40b0d99adc">&#9670;&#160;</a></span>infix_executable_alloc()</h2>
@@ -185,7 +191,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Allocates a page-aligned block of W^X-compliant executable memory. </p>
+<p>Allocates a block of executable memory using the platform's W^X strategy. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>. This is a platform-specific function that abstracts <code>VirtualAlloc</code>, <code>mmap</code> with <code>MAP_JIT</code>, or <code>shm_open</code> with dual-mapping. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>The number of bytes to allocate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <code><a class="el" href="structinfix__executable__t.html" title="Internal representation of an executable memory block for JIT code.">infix_executable_t</a></code> handle containing pointers to the allocated memory. </dd></dl>
 
 </div>
 </div>
@@ -205,7 +218,13 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Frees executable memory, creating a guard page to prevent use-after-free. </p>
+<p>Frees a block of executable memory and applies guard pages to prevent use-after-free. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>. Before freeing, it attempts to change the memory's protection to be inaccessible, causing an immediate crash on a UAF. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exec</td><td>The handle to the memory block to free. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -225,7 +244,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Makes a JIT memory region readable and executable (and non-writable). </p>
+<p>Makes a block of JIT memory executable, completing the W^X process. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>. For single-map platforms, this calls <code>VirtualProtect</code> or <code>mprotect</code>. For dual-map platforms, this is a no-op. It also handles instruction cache flushing on relevant architectures like AArch64. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exec</td><td>The handle to the memory block to make executable. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> on failure. </dd></dl>
 
 </div>
 </div>
@@ -261,7 +287,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The high-level C dispatcher function called by reverse trampoline stubs. </p>
+<p>The universal C entry point for all reverse call trampolines. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>, this function is called by the JIT-compiled stub. It receives the marshalled arguments and dispatches the call to either the type-safe callback (via a cached forward trampoline) or the generic closure handler. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">context</td><td>The <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> context for this call. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">return_value_ptr</td><td>A pointer to the stack buffer for the return value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">args_array</td><td>A pointer to the <code>void**</code> array of argument pointers. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -281,7 +315,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Allocates a page-aligned block of data memory. </p>
+<p>Allocates a block of standard memory for later protection. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>. This is used to allocate the memory for an <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> context before it is made read-only. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>The number of bytes to allocate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <code><a class="el" href="structinfix__protected__t.html" title="Internal representation of a memory block that will be made read-only.">infix_protected_t</a></code> handle. </dd></dl>
 
 </div>
 </div>
@@ -301,7 +342,13 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Frees a block of protected data memory. </p>
+<p>Frees a block of protected memory. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prot</td><td>The memory block to free. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -321,7 +368,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Hardens a block of protected data memory to be read-only. </p>
+<p>Makes a block of memory read-only for security hardening. </p>
+<p>Located in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">src/jit/executor.c</a></code>. This is called on the <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code> context after it has been fully initialized. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prot</td><td>The memory block to make read-only. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> on failure. </dd></dl>
 
 </div>
 </div>
@@ -355,7 +409,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_aebb8dcc11953d78e620bbef0b9e2183.html">core</a></li><li class="navelem"><a class="el" href="executor_8c.html">executor.c</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_03578ffc625328032e8a57470fd83d21.html">jit</a></li><li class="navelem"><a class="el" href="executor_8c.html">executor.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

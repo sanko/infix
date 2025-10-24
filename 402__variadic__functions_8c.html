@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('402__variadic__functions_8c.html','');
 </div><!--header-->
 <div class="contents">
 
-<p>Tests FFI calls for variadic functions.  
+<p>Unit test for FFI calls to and from variadic C functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
@@ -134,13 +134,10 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ae984df7920796a4871aeec5b6f167b48" id="r_ae984df7920796a4871aeec5b6f167b48"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="402__variadic__functions_8c.html#ae984df7920796a4871aeec5b6f167b48">forward_variadic_checker</a> (char *buffer, size_t size, const char *format,...)</td></tr>
-<tr class="memdesc:ae984df7920796a4871aeec5b6f167b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">A custom checker function to transparently validate variadic arguments.  <br /></td></tr>
 <tr class="separator:ae984df7920796a4871aeec5b6f167b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac932e22334e2b910918d5ccecc0a36ce" id="r_ac932e22334e2b910918d5ccecc0a36ce"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="402__variadic__functions_8c.html#ac932e22334e2b910918d5ccecc0a36ce">forward_variadic_aggregate_checker</a> (int fixed_arg,...)</td></tr>
-<tr class="memdesc:ac932e22334e2b910918d5ccecc0a36ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">A custom checker for variadic aggregate arguments.  <br /></td></tr>
 <tr class="separator:ac932e22334e2b910918d5ccecc0a36ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aced15ac9661edd3705abafbe23c30364" id="r_aced15ac9661edd3705abafbe23c30364"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="402__variadic__functions_8c.html#aced15ac9661edd3705abafbe23c30364">variadic_reverse_handler</a> (const char *topic,...)</td></tr>
-<tr class="memdesc:aced15ac9661edd3705abafbe23c30364"><td class="mdescLeft">&#160;</td><td class="mdescRight">A handler for a reverse trampoline with a variadic signature.  <br /></td></tr>
 <tr class="separator:aced15ac9661edd3705abafbe23c30364"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a147a00e71c08f245bd8a01a6c7355644" id="r_a147a00e71c08f245bd8a01a6c7355644"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="402__variadic__functions_8c.html#a147a00e71c08f245bd8a01a6c7355644">subtest</a> (&quot;Forward variadic call&quot;)</td></tr>
 <tr class="separator:a147a00e71c08f245bd8a01a6c7355644"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,19 +156,20 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests FFI calls for variadic functions. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite verifies the library's ability to handle variadic functions (those with <code>...</code> in their signature) for both forward and reverse FFI calls. Variadic argument passing involves special ABI rules that differ significantly between platforms, making this a critical area to test.</p>
-<p>This file consolidates all previous variadic tests and covers:</p><ol type="1">
-<li><b>Forward Call:</b> A custom C function (<code>forward_variadic_checker</code>) is called with a mix of fixed and variadic arguments (<code>const char*</code>, <code>int</code>, <code>double</code>) to verify the basic mechanism. Using a custom checker provides clearer diagnostics than calling an opaque library function like <code>snprintf</code>.</li>
-<li><b>Reverse Variadic Callback:</b> A reverse trampoline is created for a handler with a variadic signature, confirming that the JIT stub can correctly marshal both fixed and variadic arguments.</li>
-<li><b>Platform: Windows x64:</b> A specific test, compiled only on Windows, that verifies that a variadic <code>double</code> is correctly passed in both a GPR (for <code>va_arg</code>) and an XMM register (for direct use by the callee).</li>
-<li><b>Platform: macOS on AArch64:</b> A specific test, compiled only on macOS ARM, that verifies the unique rule where all variadic arguments (including structs) are passed on the stack. </li>
-</ol>
+<div class="textblock"><p>Unit test for FFI calls to and from variadic C functions. </p>
+<p>This test file is extremely important for verifying ABI-compliance, as the rules for passing variadic arguments differ significantly between platforms, even on the same architecture.</p>
+<p>The test covers:</p>
+<ul>
+<li><b>Forward Variadic Call (Primitives):</b> A call is made to a <code>printf</code>-like function with a mix of fixed and variadic arguments (<code>*char</code>, <code>int</code>, <code>double</code>). This tests the core variadic calling mechanism.</li>
+<li><b>Forward Variadic Call (Aggregates):</b> A call is made passing a struct as a variadic argument. This is highly platform-dependent:<ul>
+<li>On <b>System V</b>, the struct is passed on the stack.</li>
+<li>On <b>Windows x64</b>, a pointer to the struct is passed in a GPR.</li>
+<li>On <b>AArch64</b>, the struct is passed on the stack.</li>
+</ul>
+</li>
+<li><b>Reverse Variadic Callback:</b> A reverse trampoline is created for a variadic function. The test verifies that when the JIT-compiled function pointer is called with variadic arguments, the C handler receives them correctly via <code>va_list</code>/<code>va_arg</code>.</li>
+<li><b>Platform-Specific ABI Deviations:</b> Includes dedicated subtests for known tricky variadic cases, such as passing floats/doubles on Windows x64 (which requires them to be passed in both GPRs and XMM registers) and passing structs on macOS on ARM (which has its own unique stack-passing rules). </li>
+</ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -214,12 +212,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A custom checker for variadic aggregate arguments. </p>
-<p>This function's behavior depends on the ABI.</p><ul>
-<li>On System V, the struct is passed by value on the stack, and <code>va_arg</code> retrieves the struct directly.</li>
-<li>On Windows x64, a pointer to the struct is passed on the stack, so we must use <code>va_arg(args, Point*)</code> and dereference it. </li>
-</ul>
-
 </div>
 </div>
 <a id="ae984df7920796a4871aeec5b6f167b48" name="ae984df7920796a4871aeec5b6f167b48"></a>
@@ -259,9 +251,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A custom checker function to transparently validate variadic arguments. </p>
-<p>This function replaces <code>snprintf</code> from previous tests. It accepts a variadic argument list and uses the <code>double_tap</code> harness to <code><a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok()</a></code> each argument it receives. This provides precise feedback on which argument, if any, is being passed incorrectly. </p><dl class="section return"><dt>Returns</dt><dd>1 on success (all checks passed), 0 on failure. </dd></dl>
 
 </div>
 </div>
@@ -381,8 +370,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A handler for a reverse trampoline with a variadic signature. </p>
-
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
@@ -399,7 +386,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(5)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

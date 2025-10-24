@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Implementation of the internal arena allocator.">
+<g id="a_Node000001"><a xlink:title="Implements a simple, fast arena (or region&#45;based) allocator.">
 <polygon fill="#999999" stroke="#666666" points="135.5,-74 41.5,-74 41.5,-55 135.5,-55 135.5,-74"/>
 <text text-anchor="middle" x="88.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/arena.c</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="840__arena__allocator_8c.html" target="_top" xlink:title="Unit tests for the internal arena allocator.">
+<g id="a_Node000003"><a xlink:href="840__arena__allocator_8c.html" target="_top" xlink:title="Unit test for the internal arena allocator.">
 <polygon fill="white" stroke="#666666" points="211.5,-19 81.5,-19 81.5,0 211.5,0 211.5,-19"/>
 <text text-anchor="middle" x="146.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">t/840_arena_allocator.c</text>
 </a>

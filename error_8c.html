@@ -142,24 +142,26 @@ Functions</h2></td></tr>
 <tr class="memitem:a264e26dcd6ced2c9f9e0d0acd683c482" id="r_a264e26dcd6ced2c9f9e0d0acd683c482"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#a264e26dcd6ced2c9f9e0d0acd683c482">_get_error_message_for_code</a> (<a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code)</td></tr>
 <tr class="separator:a264e26dcd6ced2c9f9e0d0acd683c482"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f7cc75767456985e072ee240664c50d" id="r_a2f7cc75767456985e072ee240664c50d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#a2f7cc75767456985e072ee240664c50d">_infix_set_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> category, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code, size_t position)</td></tr>
-<tr class="memdesc:a2f7cc75767456985e072ee240664c50d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error details for a library-internal error.  <br /></td></tr>
+<tr class="memdesc:a2f7cc75767456985e072ee240664c50d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error state with detailed information.  <br /></td></tr>
 <tr class="separator:a2f7cc75767456985e072ee240664c50d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67026feedb9cc35134aca1ecc41cfab6" id="r_a67026feedb9cc35134aca1ecc41cfab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#a67026feedb9cc35134aca1ecc41cfab6">_infix_set_system_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> category, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code, long system_code, const char *msg)</td></tr>
-<tr class="memdesc:a67026feedb9cc35134aca1ecc41cfab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error details for an error originating from the OS.  <br /></td></tr>
+<tr class="memdesc:a67026feedb9cc35134aca1ecc41cfab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error state for a system-level error.  <br /></td></tr>
 <tr class="separator:a67026feedb9cc35134aca1ecc41cfab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b1239dadced21f143442b72b77d52bf" id="r_a9b1239dadced21f143442b72b77d52bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#a9b1239dadced21f143442b72b77d52bf">_infix_clear_error</a> (void)</td></tr>
-<tr class="memdesc:a9b1239dadced21f143442b72b77d52bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the thread-local error state. Called at the start of every public API function.  <br /></td></tr>
+<tr class="memdesc:a9b1239dadced21f143442b72b77d52bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the thread-local error state.  <br /></td></tr>
 <tr class="separator:a9b1239dadced21f143442b72b77d52bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaeee66e7ba26a8f8dea16d441200d147b" id="r_gaeee66e7ba26a8f8dea16d441200d147b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__error__details__t.html">infix_error_details_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b">infix_get_last_error</a> (void)</td></tr>
-<tr class="memdesc:gaeee66e7ba26a8f8dea16d441200d147b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public API function to retrieve the last error.  <br /></td></tr>
+<tr class="memdesc:gaeee66e7ba26a8f8dea16d441200d147b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves detailed information about the last error that occurred on the current thread.  <br /></td></tr>
 <tr class="separator:gaeee66e7ba26a8f8dea16d441200d147b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aaf15e23c8b1ad701002b02a2588cba0b" id="r_aaf15e23c8b1ad701002b02a2588cba0b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> <a class="el" href="structinfix__error__details__t.html">infix_error_details_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#aaf15e23c8b1ad701002b02a2588cba0b">g_infix_last_error</a> = {<a class="el" href="group__error__api.html#ggaf83a0f846497c5e67af7577b047ba815a6947696424416ddbae74c5fe079c5b3e">INFIX_CATEGORY_NONE</a>, <a class="el" href="group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a28266f13daaaa4ace17e7d384db6d1c8">INFIX_CODE_SUCCESS</a>, 0, 0, {0}}</td></tr>
-<tr class="separator:aaf15e23c8b1ad701002b02a2588cba0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebc75fad28db1e2a75eca6df7305c4e1" id="r_aebc75fad28db1e2a75eca6df7305c4e1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#aebc75fad28db1e2a75eca6df7305c4e1">g_infix_last_signature_context</a> = NULL</td></tr>
-<tr class="separator:aebc75fad28db1e2a75eca6df7305c4e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac41d33174a9d8d98ad22f5d158201a39" id="r_ac41d33174a9d8d98ad22f5d158201a39"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> <a class="el" href="structinfix__error__details__t.html">infix_error_details_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#ac41d33174a9d8d98ad22f5d158201a39">g_infix_last_error</a> = {<a class="el" href="group__error__api.html#ggaf83a0f846497c5e67af7577b047ba815a6947696424416ddbae74c5fe079c5b3e">INFIX_CATEGORY_NONE</a>, <a class="el" href="group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a28266f13daaaa4ace17e7d384db6d1c8">INFIX_CODE_SUCCESS</a>, 0, 0, {0}}</td></tr>
+<tr class="memdesc:ac41d33174a9d8d98ad22f5d158201a39"><td class="mdescLeft">&#160;</td><td class="mdescRight">The thread-local variable that stores the details of the last error.  <br /></td></tr>
+<tr class="separator:ac41d33174a9d8d98ad22f5d158201a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c599cd6e6faa957c56632cad650466" id="r_a44c599cd6e6faa957c56632cad650466"><td class="memItemLeft" align="right" valign="top"><a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="error_8c.html#a44c599cd6e6faa957c56632cad650466">g_infix_last_signature_context</a> = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td></tr>
+<tr class="memdesc:a44c599cd6e6faa957c56632cad650466"><td class="mdescLeft">&#160;</td><td class="mdescRight">A thread-local pointer to the full signature string being parsed.  <br /></td></tr>
+<tr class="separator:a44c599cd6e6faa957c56632cad650466"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements the thread-local error reporting system. </p>
@@ -167,7 +169,15 @@ Variables</h2></td></tr>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0 </p>
+<p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This module provides the infrastructure for robust and thread-safe error handling within the <code>infix</code> library.</p>
+<p>The core principle is that all detailed error information is stored in <b>thread-local storage (TLS)</b>. This means that an error occurring in one thread will never interfere with or be accidentally reported by an operation in another thread.</p>
+<p>The workflow is as follows:</p><ol type="1">
+<li>Every public API function calls <code><a class="el" href="error_8c.html#a9b1239dadced21f143442b72b77d52bf" title="Clears the thread-local error state.">_infix_clear_error()</a></code> upon entry to reset the error state for the current thread.</li>
+<li>If an internal function encounters an error, it calls <code><a class="el" href="error_8c.html#a2f7cc75767456985e072ee240664c50d" title="Sets the thread-local error state with detailed information.">_infix_set_error()</a></code> or <code><a class="el" href="error_8c.html#a67026feedb9cc35134aca1ecc41cfab6" title="Sets the thread-local error state for a system-level error.">_infix_set_system_error()</a></code> to record detailed diagnostic information, including an error code, category, and a descriptive message.</li>
+<li>For parser errors, <code><a class="el" href="error_8c.html#a2f7cc75767456985e072ee240664c50d" title="Sets the thread-local error state with detailed information.">_infix_set_error()</a></code> generates a rich, multi-line diagnostic message with a code snippet and a caret pointing to the error location, similar to a compiler error.</li>
+<li>The user can call the public <code><a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b" title="Retrieves detailed information about the last error that occurred on the current thread.">infix_get_last_error()</a></code> function at any time to retrieve a copy of the last error that occurred on their thread. </li>
+</ol>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a8ffb2e71b9df06a35d3919835583dc8b" name="a8ffb2e71b9df06a35d3919835583dc8b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8ffb2e71b9df06a35d3919835583dc8b">&#9670;&#160;</a></span>_INFIX_SAFE_STRNCPY</h2>
@@ -264,7 +274,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Resets the thread-local error state. Called at the start of every public API function. </p>
+<p>Clears the thread-local error state. </p>
+<p>Located in <code><a class="el" href="error_8c.html" title="Implements the thread-local error reporting system.">src/core/error.c</a></code>. This is called at the beginning of every public API function to ensure that a prior error from an unrelated call is not accidentally returned. </p>
 
 </div>
 </div>
@@ -300,7 +311,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the thread-local error details for a library-internal error. </p>
+<p>Sets the thread-local error state with detailed information. </p>
+<p>Located in <code><a class="el" href="error_8c.html" title="Implements the thread-local error reporting system.">src/core/error.c</a></code>, this function is the primary mechanism for reporting errors from within the library. It populates the thread-local <code>g_infix_last_error</code> struct. For parser errors, it generates a rich diagnostic message with a code snippet. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">category</td><td>The general category of the error. </td></tr>
+    <tr><td class="paramname">code</td><td>The specific error code. </td></tr>
+    <tr><td class="paramname">position</td><td>For parser errors, the byte offset into the signature string where the error occurred. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -342,13 +361,22 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the thread-local error details for an error originating from the OS. </p>
+<p>Sets the thread-local error state for a system-level error. </p>
+<p>Located in <code><a class="el" href="error_8c.html" title="Implements the thread-local error reporting system.">src/core/error.c</a></code>, this is used for errors originating from the operating system, such as <code>dlopen</code> or <code>mmap</code> failures. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">category</td><td>The general category of the error. </td></tr>
+    <tr><td class="paramname">code</td><td>The <code>infix</code> error code that corresponds to the failure. </td></tr>
+    <tr><td class="paramname">system_code</td><td>The OS-specific error code (e.g., from <code>errno</code> or <code>GetLastError</code>). </td></tr>
+    <tr><td class="paramname">msg</td><td>An optional custom message from the OS (e.g., from <code>dlerror</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="aaf15e23c8b1ad701002b02a2588cba0b" name="aaf15e23c8b1ad701002b02a2588cba0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf15e23c8b1ad701002b02a2588cba0b">&#9670;&#160;</a></span>g_infix_last_error</h2>
+<a id="ac41d33174a9d8d98ad22f5d158201a39" name="ac41d33174a9d8d98ad22f5d158201a39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac41d33174a9d8d98ad22f5d158201a39">&#9670;&#160;</a></span>g_infix_last_error</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,7 +385,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> <a class="el" href="structinfix__error__details__t.html">infix_error_details_t</a> g_infix_last_error = {<a class="el" href="group__error__api.html#ggaf83a0f846497c5e67af7577b047ba815a6947696424416ddbae74c5fe079c5b3e">INFIX_CATEGORY_NONE</a>, <a class="el" href="group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a28266f13daaaa4ace17e7d384db6d1c8">INFIX_CODE_SUCCESS</a>, 0, 0, {0}}</td>
+          <td class="memname">g_infix_last_error = {<a class="el" href="group__error__api.html#ggaf83a0f846497c5e67af7577b047ba815a6947696424416ddbae74c5fe079c5b3e">INFIX_CATEGORY_NONE</a>, <a class="el" href="group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a28266f13daaaa4ace17e7d384db6d1c8">INFIX_CODE_SUCCESS</a>, 0, 0, {0}}</td>
         </tr>
       </table>
   </td>
@@ -367,27 +395,25 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>The thread-local variable that stores the details of the last error. </p>
+<p>Each thread gets its own independent instance of this variable. It is initialized to a "no error" state. </p>
+
 </div>
 </div>
-<a id="aebc75fad28db1e2a75eca6df7305c4e1" name="aebc75fad28db1e2a75eca6df7305c4e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebc75fad28db1e2a75eca6df7305c4e1">&#9670;&#160;</a></span>g_infix_last_signature_context</h2>
+<a id="a44c599cd6e6faa957c56632cad650466" name="a44c599cd6e6faa957c56632cad650466"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c599cd6e6faa957c56632cad650466">&#9670;&#160;</a></span>g_infix_last_signature_context</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="error_8c.html#ae538a6110237ff5067c6d0746fa04f33">INFIX_TLS</a> const char* g_infix_last_signature_context = NULL</td>
+          <td class="memname">g_infix_last_signature_context = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
+
+<p>A thread-local pointer to the full signature string being parsed. </p>
+<p>This is set by the high-level API functions (<code>infix_type_from_signature</code>, etc.) before parsing begins. If a parser error occurs, <code>_infix_set_error</code> uses this context to generate a rich, contextual error message. </p>
 
 </div>
 </div>

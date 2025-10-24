@@ -1,5 +1,5 @@
 <map id="src/common/compat_c23.h" name="src/common/compat_c23.h">
-<area shape="rect" id="Node000001" title="Provides compatibility shims for C23 features in a C17/C11 project." alt="" coords="5,5,203,31"/>
+<area shape="rect" id="Node000001" title="Provides forward compatibility macros for C23 features." alt="" coords="5,5,203,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="12,79,95,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,33,72,69,67,66,93,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="119,79,193,104"/>

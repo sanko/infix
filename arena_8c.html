@@ -104,11 +104,11 @@ $(document).ready(function(){initNavTree('arena_8c.html',''); initResizable(); }
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">arena.c File Reference<div class="ingroups"><a class="el" href="group__public__api.html">Public API</a> &raquo; <a class="el" href="group__memory__management.html">Memory Management</a></div></div></div>
+  <div class="headertitle"><div class="title">arena.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation of the internal arena allocator.  
+<p>Implements a simple, fast arena (or region-based) allocator.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
@@ -129,26 +129,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae39ca61ea3637aee7e87c1b41188c733" id="r_gae39ca61ea3637aee7e87c1b41188c733"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a> (size_t initial_size)</td></tr>
-<tr class="memdesc:gae39ca61ea3637aee7e87c1b41188c733"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and initializes a new memory arena.  <br /></td></tr>
+<tr class="memitem:gae39ca61ea3637aee7e87c1b41188c733" id="r_gae39ca61ea3637aee7e87c1b41188c733"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a> (size_t initial_size)</td></tr>
+<tr class="memdesc:gae39ca61ea3637aee7e87c1b41188c733"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new memory arena.  <br /></td></tr>
 <tr class="separator:gae39ca61ea3637aee7e87c1b41188c733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga50b7219c58789fc03898690254f0280e" id="r_ga50b7219c58789fc03898690254f0280e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e">infix_arena_destroy</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>)</td></tr>
-<tr class="memdesc:ga50b7219c58789fc03898690254f0280e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees an entire memory arena and all objects allocated within it.  <br /></td></tr>
+<tr class="memdesc:ga50b7219c58789fc03898690254f0280e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys an arena and frees all memory allocated from it.  <br /></td></tr>
 <tr class="separator:ga50b7219c58789fc03898690254f0280e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabb32fed25010a3111812c8dfacd4cf40" id="r_gabb32fed25010a3111812c8dfacd4cf40"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, size_t size, size_t alignment)</td></tr>
-<tr class="memdesc:gabb32fed25010a3111812c8dfacd4cf40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of memory from the arena with a specific alignment.  <br /></td></tr>
+<tr class="memitem:gabb32fed25010a3111812c8dfacd4cf40" id="r_gabb32fed25010a3111812c8dfacd4cf40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, size_t size, size_t alignment)</td></tr>
+<tr class="memdesc:gabb32fed25010a3111812c8dfacd4cf40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of memory from an arena.  <br /></td></tr>
 <tr class="separator:gabb32fed25010a3111812c8dfacd4cf40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga624819bf3bc628f63575001ed9c6ffd5" id="r_ga624819bf3bc628f63575001ed9c6ffd5"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga624819bf3bc628f63575001ed9c6ffd5">infix_arena_calloc</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, size_t num, size_t size, size_t alignment)</td></tr>
-<tr class="memdesc:ga624819bf3bc628f63575001ed9c6ffd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a zero-initialized block of memory from the arena.  <br /></td></tr>
+<tr class="memitem:ga624819bf3bc628f63575001ed9c6ffd5" id="r_ga624819bf3bc628f63575001ed9c6ffd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga624819bf3bc628f63575001ed9c6ffd5">infix_arena_calloc</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, size_t num, size_t size, size_t alignment)</td></tr>
+<tr class="memdesc:ga624819bf3bc628f63575001ed9c6ffd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates and zero-initializes a block of memory from an arena.  <br /></td></tr>
 <tr class="separator:ga624819bf3bc628f63575001ed9c6ffd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation of the internal arena allocator. </p>
+<div class="textblock"><p>Implements a simple, fast arena (or region-based) allocator. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>Arenas provide a mechanism for fast, grouped memory allocations that can all be freed at once with a single call. This allocation strategy is also known as region-based memory management.</p>
+<p>An arena works by pre-allocating a large, contiguous block of memory (the "region"). Subsequent allocation requests are satisfied by simply "bumping" a pointer within this block. This "bump allocation" is extremely fast as it involves only pointer arithmetic and avoids the overhead of system calls (<code>malloc</code>/<code>free</code>) for each small allocation.</p>
+<p>This model is used extensively by the <code>infix</code> type system to manage the lifetime of <code>infix_type</code> object graphs. When a type is created from a signature or via the Manual API, all its constituent nodes are allocated from a single arena. When the type is no longer needed, destroying the arena frees all associated memory at once, preventing memory leaks and eliminating the need for complex reference counting or garbage collection. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

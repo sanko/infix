@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('fuzz__helpers_8h.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 
-<p>Shared helper functions and types for infix FFI fuzzing harnesses.  
+<p>Common definitions, structures, and helpers for all fuzzer targets.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -136,44 +136,47 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfuzzer__input.html">fuzzer_input</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper structure to safely consume bytes from the fuzzer's input buffer.  <a href="structfuzzer__input.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the fuzzer's input data as a consumable stream.  <a href="structfuzzer__input.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a4e3b689e9483994cfcd85954cba23338" id="r_a4e3b689e9483994cfcd85954cba23338"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#a4e3b689e9483994cfcd85954cba23338">MAX_RECURSION_DEPTH</a>&#160;&#160;&#160;32</td></tr>
+<tr class="memdesc:a4e3b689e9483994cfcd85954cba23338"><td class="mdescLeft">&#160;</td><td class="mdescRight">A hard limit on the recursion depth for <code>generate_random_type</code> to prevent stack overflows.  <br /></td></tr>
 <tr class="separator:a4e3b689e9483994cfcd85954cba23338"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad557ebb93fbba9e2d1796a24516f58e5" id="r_ad557ebb93fbba9e2d1796a24516f58e5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#ad557ebb93fbba9e2d1796a24516f58e5">MAX_MEMBERS</a>&#160;&#160;&#160;16</td></tr>
+<tr class="memdesc:ad557ebb93fbba9e2d1796a24516f58e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A limit on the number of members in a randomly generated struct or union.  <br /></td></tr>
 <tr class="separator:ad557ebb93fbba9e2d1796a24516f58e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae061aaec2e2d149de67e2298cee91980" id="r_ae061aaec2e2d149de67e2298cee91980"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#ae061aaec2e2d149de67e2298cee91980">MAX_ARRAY_ELEMENTS</a>&#160;&#160;&#160;128</td></tr>
+<tr class="memdesc:ae061aaec2e2d149de67e2298cee91980"><td class="mdescLeft">&#160;</td><td class="mdescRight">A limit on the number of elements in a randomly generated array.  <br /></td></tr>
 <tr class="separator:ae061aaec2e2d149de67e2298cee91980"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1482b858e10348238e12ee3068501916" id="r_a1482b858e10348238e12ee3068501916"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#a1482b858e10348238e12ee3068501916">MAX_TYPES_IN_POOL</a>&#160;&#160;&#160;16</td></tr>
+<tr class="memdesc:a1482b858e10348238e12ee3068501916"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of random types to generate and place in the pool for constructing signatures.  <br /></td></tr>
 <tr class="separator:a1482b858e10348238e12ee3068501916"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace1f5fe283df57d856e4d18f76544078" id="r_ace1f5fe283df57d856e4d18f76544078"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#ace1f5fe283df57d856e4d18f76544078">MAX_ARGS_IN_SIGNATURE</a>&#160;&#160;&#160;16</td></tr>
+<tr class="memdesc:ace1f5fe283df57d856e4d18f76544078"><td class="mdescLeft">&#160;</td><td class="mdescRight">A limit on the number of arguments in a randomly generated function signature.  <br /></td></tr>
 <tr class="separator:ace1f5fe283df57d856e4d18f76544078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15cf039a9fdced07f0bf75589dc343c7" id="r_a15cf039a9fdced07f0bf75589dc343c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#a15cf039a9fdced07f0bf75589dc343c7">MAX_TOTAL_FUZZ_FIELDS</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memdesc:a15cf039a9fdced07f0bf75589dc343c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A global limit on the total number of primitive fields in a single generated type graph to prevent timeouts.  <br /></td></tr>
 <tr class="separator:a15cf039a9fdced07f0bf75589dc343c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a3095b072722fae3f76a6d936debfc6" id="r_a0a3095b072722fae3f76a6d936debfc6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#a0a3095b072722fae3f76a6d936debfc6">DEFINE_CONSUME_T</a>(type)</td></tr>
-<tr class="memdesc:a0a3095b072722fae3f76a6d936debfc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro to create a type-safe consumer for any given Plain Old Data (POD) type.  <br /></td></tr>
 <tr class="separator:a0a3095b072722fae3f76a6d936debfc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aaff585cc1418a3cf309a884cf8a10434" id="r_aaff585cc1418a3cf309a884cf8a10434"><td class="memItemLeft" align="right" valign="top">static const uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#aaff585cc1418a3cf309a884cf8a10434">consume_bytes</a> (<a class="el" href="structfuzzer__input.html">fuzzer_input</a> *in, size_t n)</td></tr>
-<tr class="memdesc:aaff585cc1418a3cf309a884cf8a10434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely consume 'n' bytes from the input buffer.  <br /></td></tr>
 <tr class="separator:aaff585cc1418a3cf309a884cf8a10434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0eebcc9807a7062cc16d500a5b22424f" id="r_a0eebcc9807a7062cc16d500a5b22424f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__helpers_8h.html#a0eebcc9807a7062cc16d500a5b22424f">generate_random_type</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structfuzzer__input.html">fuzzer_input</a> *in, int depth, size_t *total_fields)</td></tr>
-<tr class="memdesc:a0eebcc9807a7062cc16d500a5b22424f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively generates a randomized infix_type from the fuzzer's input data, allocating all objects from the provided arena.  <br /></td></tr>
+<tr class="memdesc:a0eebcc9807a7062cc16d500a5b22424f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively generates a random <code>infix_type</code> graph from a fuzzer input stream.  <br /></td></tr>
 <tr class="separator:a0eebcc9807a7062cc16d500a5b22424f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Shared helper functions and types for infix FFI fuzzing harnesses. </p>
+<div class="textblock"><p>Common definitions, structures, and helpers for all fuzzer targets. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This header provides the common infrastructure needed to build fuzzers for the infix library, including a structure for managing fuzzer input and a powerful recursive generator for creating complex, randomized <code>infix_type</code> objects. By centralizing this logic, individual fuzzing harnesses can be kept clean and focused on their specific targets. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a0a3095b072722fae3f76a6d936debfc6" name="a0a3095b072722fae3f76a6d936debfc6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0a3095b072722fae3f76a6d936debfc6">&#9670;&#160;</a></span>DEFINE_CONSUME_T</h2>
@@ -197,12 +200,9 @@ Functions</h2></td></tr>
 <div class="line">        memcpy(out, bytes, <span class="keyword">sizeof</span>(type));                              \</div>
 <div class="line">        <span class="keywordflow">return</span> <span class="keyword">true</span>;                                                   \</div>
 <div class="line">    }</div>
-<div class="ttc" id="afuzz__helpers_8h_html_aaff585cc1418a3cf309a884cf8a10434"><div class="ttname"><a href="fuzz__helpers_8h.html#aaff585cc1418a3cf309a884cf8a10434">consume_bytes</a></div><div class="ttdeci">static const uint8_t * consume_bytes(fuzzer_input *in, size_t n)</div><div class="ttdoc">Safely consume 'n' bytes from the input buffer.</div><div class="ttdef"><b>Definition</b> fuzz_helpers.h:65</div></div>
-<div class="ttc" id="astructfuzzer__input_html"><div class="ttname"><a href="structfuzzer__input.html">fuzzer_input</a></div><div class="ttdoc">A helper structure to safely consume bytes from the fuzzer's input buffer.</div><div class="ttdef"><b>Definition</b> fuzz_helpers.h:51</div></div>
+<div class="ttc" id="afuzz__helpers_8h_html_aaff585cc1418a3cf309a884cf8a10434"><div class="ttname"><a href="fuzz__helpers_8h.html#aaff585cc1418a3cf309a884cf8a10434">consume_bytes</a></div><div class="ttdeci">static const uint8_t * consume_bytes(fuzzer_input *in, size_t n)</div><div class="ttdef"><b>Definition</b> fuzz_helpers.h:79</div></div>
+<div class="ttc" id="astructfuzzer__input_html"><div class="ttname"><a href="structfuzzer__input.html">fuzzer_input</a></div><div class="ttdoc">Represents the fuzzer's input data as a consumable stream.</div><div class="ttdef"><b>Definition</b> fuzz_helpers.h:62</div></div>
 </div><!-- fragment -->
-<p>A macro to create a type-safe consumer for any given Plain Old Data (POD) type. </p>
-<p>This macro generates a static inline function <code>consume_&lt;type&gt;()</code> that safely reads bytes from the fuzzer input and copies them into the provided output variable. </p>
-
 </div>
 </div>
 <a id="ace1f5fe283df57d856e4d18f76544078" name="ace1f5fe283df57d856e4d18f76544078"></a>
@@ -216,6 +216,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A limit on the number of arguments in a randomly generated function signature. </p>
 
 </div>
 </div>
@@ -231,6 +233,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A limit on the number of elements in a randomly generated array. </p>
+
 </div>
 </div>
 <a id="ad557ebb93fbba9e2d1796a24516f58e5" name="ad557ebb93fbba9e2d1796a24516f58e5"></a>
@@ -244,6 +248,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A limit on the number of members in a randomly generated struct or union. </p>
 
 </div>
 </div>
@@ -259,6 +265,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A hard limit on the recursion depth for <code>generate_random_type</code> to prevent stack overflows. </p>
+
 </div>
 </div>
 <a id="a15cf039a9fdced07f0bf75589dc343c7" name="a15cf039a9fdced07f0bf75589dc343c7"></a>
@@ -273,6 +281,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A global limit on the total number of primitive fields in a single generated type graph to prevent timeouts. </p>
+
 </div>
 </div>
 <a id="a1482b858e10348238e12ee3068501916" name="a1482b858e10348238e12ee3068501916"></a>
@@ -286,6 +296,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The number of random types to generate and place in the pool for constructing signatures. </p>
 
 </div>
 </div>
@@ -323,17 +335,6 @@ Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Safely consume 'n' bytes from the input buffer. </p>
-<p>This is a security-critical helper. It checks if enough data is available before advancing the pointer, preventing the fuzzer from reading out of bounds.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">in</td><td>A pointer to the <a class="el" href="structfuzzer__input.html" title="A helper structure to safely consume bytes from the fuzzer&#39;s input buffer.">fuzzer_input</a> struct. </td></tr>
-    <tr><td class="paramname">n</td><td>The number of bytes to consume. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the consumed bytes, or NULL if insufficient data. </dd></dl>
 
 </div>
 </div>
@@ -375,17 +376,34 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Recursively generates a randomized infix_type from the fuzzer's input data, allocating all objects from the provided arena. </p>
+<p>Recursively generates a random <code>infix_type</code> graph from a fuzzer input stream. </p>
+<p>This is the core of the structure-aware type fuzzer. It consumes bytes from the input to probabilistically build a complex, potentially nested type.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">arena</td><td>The arena from which all types and member arrays will be allocated. </td></tr>
-    <tr><td class="paramname">in</td><td>A pointer to the fuzzer input buffer. </td></tr>
-    <tr><td class="paramname">depth</td><td>The current recursion depth (used to prevent stack overflows). </td></tr>
-    <tr><td class="paramname">total_fields</td><td>[in,out] A pointer to a counter for the total fields generated. </td></tr>
+    <tr><td class="paramname">arena</td><td>The memory arena for allocating the generated types. </td></tr>
+    <tr><td class="paramname">in</td><td>The fuzzer input stream. </td></tr>
+    <tr><td class="paramname">depth</td><td>The current recursion depth. </td></tr>
+    <tr><td class="paramname">total_fields</td><td>A counter for the total number of primitive fields generated. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A new <code>infix_type*</code> allocated within the arena, or NULL on failure. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to a newly generated <code>infix_type</code>, or <code>nullptr</code> on failure.</dd></dl>
+<p>This function consumes bytes from the <code><a class="el" href="structfuzzer__input.html" title="Represents the fuzzer&#39;s input data as a consumable stream.">fuzzer_input</a></code> to make decisions about what kind of type to generate. It can create primitives, pointers, arrays, structs (packed and regular), and unions. For composite types, it calls itself recursively to generate member or element types.</p>
+<p>To prevent timeouts and stack overflows from pathological inputs, the function enforces two key limits:</p><ul>
+<li><code>MAX_RECURSION_DEPTH</code>: Limits how deeply types can be nested (e.g., struct within a struct).</li>
+<li><code>MAX_TOTAL_FUZZ_FIELDS</code>: Limits the total number of primitive fields in the entire graph.</li>
+</ul>
+<p>Once a limit is reached, the recursion terminates by generating a simple primitive type.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arena</td><td>The memory arena to allocate the new <code>infix_type</code> objects into. </td></tr>
+    <tr><td class="paramname">in</td><td>A pointer to the fuzzer input stream. The stream is consumed as types are generated. </td></tr>
+    <tr><td class="paramname">depth</td><td>The current recursion depth. </td></tr>
+    <tr><td class="paramname">total_fields</td><td>A pointer to a counter for the total number of fields generated so far. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the newly generated <code>infix_type</code>, or <code>nullptr</code> if generation fails or input is exhausted. </dd></dl>
 
 </div>
 </div>

@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="A complete layout blueprint for a forward call frame.">
 <polygon fill="#999999" stroke="#666666" points="131,-19 0,-19 0,0 131,0 131,-19"/>
 <text text-anchor="middle" x="65.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_call_frame_layout</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="structinfix__arg__location.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="structinfix__arg__location.html" target="_top" xlink:title="Detailed location information for a single function argument.">
 <polygon fill="white" stroke="#666666" points="117,-85 14,-85 14,-66 117,-66 117,-85"/>
 <text text-anchor="middle" x="65.5" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">infix_arg_location</text>
 </a>

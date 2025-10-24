@@ -1,5 +1,5 @@
 <map id="t/include/types.h" name="t/include/types.h">
-<area shape="rect" id="Node000001" title="Defines common data structures used across the entire test suite." alt="" coords="35,5,166,31"/>
+<area shape="rect" id="Node000001" title="Defines common C structures used across the infix test suite." alt="" coords="35,5,166,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,92,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,33,67,69,63,66,90,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="117,79,191,104"/>

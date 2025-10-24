@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('002__simple__calls_8c.html',''); initR
 </div><!--header-->
 <div class="contents">
 
-<p>Tests basic FFI calls with simple function signatures.  
+<p>Unit test for basic forward trampoline calls with simple function signatures.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('002__simple__calls_8c.html',''); initR
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 002_simple_calls.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="002__simple__calls_8c__incl.svg" width="388" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="002__simple__calls_8c__incl.svg" width="420" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -129,16 +129,12 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a9af107eb75c4b1a86c6588d00a4be76c" id="r_a9af107eb75c4b1a86c6588d00a4be76c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="002__simple__calls_8c.html#a9af107eb75c4b1a86c6588d00a4be76c">add_ints</a> (int a, int b)</td></tr>
-<tr class="memdesc:a9af107eb75c4b1a86c6588d00a4be76c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple function that adds two integers.  <br /></td></tr>
 <tr class="separator:a9af107eb75c4b1a86c6588d00a4be76c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae36324576ee98de80cb5707530ff7aae" id="r_ae36324576ee98de80cb5707530ff7aae"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="002__simple__calls_8c.html#ae36324576ee98de80cb5707530ff7aae">multiply_floats</a> (float a, float b)</td></tr>
-<tr class="memdesc:ae36324576ee98de80cb5707530ff7aae"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple function that multiplies two floats.  <br /></td></tr>
 <tr class="separator:ae36324576ee98de80cb5707530ff7aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15196b401013e8f2274566f6432b4ba4" id="r_a15196b401013e8f2274566f6432b4ba4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="002__simple__calls_8c.html#a15196b401013e8f2274566f6432b4ba4">do_nothing</a> ()</td></tr>
-<tr class="memdesc:a15196b401013e8f2274566f6432b4ba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple function with no arguments or return value.  <br /></td></tr>
 <tr class="separator:a15196b401013e8f2274566f6432b4ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a086ff2e41f82cbd717955766a0901f7a" id="r_a086ff2e41f82cbd717955766a0901f7a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="002__simple__calls_8c.html#a086ff2e41f82cbd717955766a0901f7a">is_negative</a> (int val)</td></tr>
-<tr class="memdesc:a086ff2e41f82cbd717955766a0901f7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function to check if an integer is negative. Used for sign-extension tests.  <br /></td></tr>
 <tr class="separator:a086ff2e41f82cbd717955766a0901f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67e4105fd943548bb8ea277c7181366d" id="r_a67e4105fd943548bb8ea277c7181366d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="002__simple__calls_8c.html#a67e4105fd943548bb8ea277c7181366d">subtest</a> (&quot;int(int, int)&quot;)</td></tr>
 <tr class="separator:a67e4105fd943548bb8ea277c7181366d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,19 +151,14 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests basic FFI calls with simple function signatures. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite verifies the FFI for the most common and fundamental function signatures, ensuring that the library correctly handles basic integer and floating-point arguments, void returns, and proper sign-extension of integer types.</p>
-<p>It consolidates several smaller, single-purpose tests into one cohesive file with the following subtests:</p><ul>
-<li><code>int(int, int)</code>: Verifies multiple integer arguments and an integer return.</li>
-<li><code>float(float, float)</code>: Verifies multiple float arguments and a float return.</li>
-<li><code>void(void)</code>: Verifies calls to functions with no arguments and no return value.</li>
-<li><code>bool(int)</code>: Specifically tests that signed integer arguments are correctly sign-extended across the FFI boundary, a crucial requirement for ABI correctness. </li>
+<div class="textblock"><p>Unit test for basic forward trampoline calls with simple function signatures. </p>
+<p>This test file verifies that the <code>infix</code> library can correctly create and execute forward trampolines for functions with simple, primitive arguments and return types. It covers:</p><ul>
+<li><code>int(int, int)</code>: Basic integer arithmetic.</li>
+<li><code>float(float, float)</code>: Basic floating-point arithmetic.</li>
+<li><code>void(void)</code>: Functions with no arguments or return value.</li>
+<li><code>bool(int)</code>: A test to specifically verify correct sign-extension of integer arguments that are smaller than a full register.</li>
 </ul>
+<p>For each signature, it tests both <b>bound</b> and <b>unbound</b> trampolines to ensure both creation paths and calling conventions are working correctly. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -210,8 +201,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A simple function that adds two integers. </p>
-
 </div>
 </div>
 <a id="a15196b401013e8f2274566f6432b4ba4" name="a15196b401013e8f2274566f6432b4ba4"></a>
@@ -228,8 +217,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A simple function with no arguments or return value. </p>
 
 </div>
 </div>
@@ -248,8 +235,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A function to check if an integer is negative. Used for sign-extension tests. </p>
 
 </div>
 </div>
@@ -278,8 +263,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A simple function that multiplies two floats. </p>
 
 </div>
 </div>
@@ -369,7 +352,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(4)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

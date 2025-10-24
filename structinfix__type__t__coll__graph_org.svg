@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="The central structure for describing any data type in the FFI system.">
+<g id="a_Node000001"><a xlink:title="A semi&#45;opaque structure that describes a C type.">
 <polygon fill="#999999" stroke="#666666" points="180,-103 106,-103 106,-84 180,-84 180,-103"/>
 <text text-anchor="middle" x="143" y="-91" font-family="Helvetica,sans-Serif" font-size="10.00">infix_type_t</text>
 </a>
@@ -34,7 +34,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="structinfix__struct__member__t.html" target="_top" xlink:title="Describes a single member of an aggregate type (struct or union).">
+<g id="a_Node000002"><a xlink:href="structinfix__struct__member__t.html" target="_top" xlink:title="Describes a single member of a C struct or union.">
 <polygon fill="white" stroke="#666666" points="126,-19 0,-19 0,0 126,0 126,-19"/>
 <text text-anchor="middle" x="63" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_struct_member_t</text>
 </a>
@@ -53,7 +53,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="structinfix__function__argument__t.html" target="_top" xlink:title="Describes a single argument to a function, pairing an optional name with its type.">
+<g id="a_Node000003"><a xlink:href="structinfix__function__argument__t.html" target="_top" xlink:title="Describes a single argument to a C function.">
 <polygon fill="white" stroke="#666666" points="296,-19 152,-19 152,0 296,0 296,-19"/>
 <text text-anchor="middle" x="224" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">infix_function_argument_t</text>
 </a>

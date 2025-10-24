@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('101__by__value_8c.html',''); initResiz
 </div><!--header-->
 <div class="contents">
 
-<p>Tests passing and returning small aggregate types (structs) by value.  
+<p>Unit test for passing and returning aggregates and vectors by value.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -131,16 +131,12 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ae46bdb9a8ab17e7be33ea2951f54a842" id="r_ae46bdb9a8ab17e7be33ea2951f54a842"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#ae46bdb9a8ab17e7be33ea2951f54a842">process_point_by_value</a> (<a class="el" href="structPoint.html">Point</a> p)</td></tr>
-<tr class="memdesc:ae46bdb9a8ab17e7be33ea2951f54a842"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be defined by the user to disable all intrinsic-related code.  <br /></td></tr>
 <tr class="separator:ae46bdb9a8ab17e7be33ea2951f54a842"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae138bef4a8a05a582de44461ec2e79bf" id="r_ae138bef4a8a05a582de44461ec2e79bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPoint.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#ae138bef4a8a05a582de44461ec2e79bf">return_point_by_value</a> (void)</td></tr>
-<tr class="memdesc:ae138bef4a8a05a582de44461ec2e79bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a> struct by value.  <br /></td></tr>
 <tr class="separator:ae138bef4a8a05a582de44461ec2e79bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62b10b0c8a49ea3416056aa70b146deb" id="r_a62b10b0c8a49ea3416056aa70b146deb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a62b10b0c8a49ea3416056aa70b146deb">process_mixed_struct</a> (<a class="el" href="structMixedIntDouble.html">MixedIntDouble</a> s)</td></tr>
-<tr class="memdesc:a62b10b0c8a49ea3416056aa70b146deb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a mixed-type struct, checking its members. (SysV x64 only)  <br /></td></tr>
 <tr class="separator:a62b10b0c8a49ea3416056aa70b146deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5228d51b42d1399422c6689574a8640" id="r_ad5228d51b42d1399422c6689574a8640"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#ad5228d51b42d1399422c6689574a8640">sum_vector4</a> (<a class="el" href="structVector4.html">Vector4</a> vec)</td></tr>
-<tr class="memdesc:ad5228d51b42d1399422c6689574a8640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sums the elements of a <a class="el" href="structVector4.html" title="A struct containing a fixed-size array of floats.">Vector4</a> HFA. (AArch64 only)  <br /></td></tr>
 <tr class="separator:ad5228d51b42d1399422c6689574a8640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcb522a8c16222b5a7b655de5cac9e78" id="r_afcb522a8c16222b5a7b655de5cac9e78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#afcb522a8c16222b5a7b655de5cac9e78">subtest</a> (&quot;Simple struct (<a class="el" href="structPoint.html">Point</a>) passed and returned by value&quot;)</td></tr>
 <tr class="separator:afcb522a8c16222b5a7b655de5cac9e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,21 +157,15 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests passing and returning small aggregate types (structs) by value. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This suite verifies the library's ability to handle one of the most complex aspects of any ABI: the rules for passing and returning structs in CPU registers. The behavior is highly platform-dependent.</p>
-<p>This file consolidates several previous tests into a single, cohesive suite with the following goals:</p>
-<ol type="1">
-<li><b>General Case:</b> Tests a simple <code>struct { double; double; }</code> to verify basic aggregate handling on all platforms.</li>
-<li><b>System V x64 Specific:</b> Tests a <code>struct { int; double; }</code>, which the SysV ABI dictates should be split and passed in one GPR and one XMM register.</li>
-<li><b>AArch64 (ARM64) Specific:</b> Tests a <code>struct { float v[4]; }</code>, which is a Homogeneous Floating-point Aggregate (HFA) and should be passed in four consecutive floating-point registers.</li>
-<li><b>SIMD Vector Types:</b> Contains conditionally compiled tests for native SIMD vector types, including 128-bit SSE (<code>__m128d</code>), 256-bit AVX (<code>__m256d</code>), AArch64 NEON (<code>float64x2_t</code>), and AArch64 SVE (<code>svfloat64_t</code>).</li>
-</ol>
-<p>Platform-specific tests are conditionally compiled using preprocessor guards to ensure they only run on relevant targets. </p>
+<div class="textblock"><p>Unit test for passing and returning aggregates and vectors by value. </p>
+<p>This test file is crucial for validating the ABI implementation for passing and returning aggregate types (structs, arrays, vectors) directly in CPU registers, where the ABI allows it. Different ABIs have complex and divergent rules for this, which this test aims to cover.</p>
+<p>It tests several key ABI-specific scenarios:</p>
+<ul>
+<li><b>Simple Structs:</b> Verifies that small structs composed of identical types (e.g., <code>{ double, double }</code>) are correctly passed and returned in floating-point or general-purpose registers as per the ABI (e.g., in XMM0/XMM1 on SysV, or X0/X1 on AArch64).</li>
+<li><b>System V x64 Mixed-Register Structs:</b> Tests the specific SysV rule where a struct like <code>{ int, double }</code> is split and passed in both a GPR (for the <code>int</code>) and an XMM register (for the <code>double</code>).</li>
+<li><b>AArch64 Homogeneous Floating-point Aggregates (HFAs):</b> Tests the AAPCS64 rule where a struct of up to four identical floats or doubles is passed in consecutive floating-point registers (V0-V3).</li>
+<li><b>SIMD Vectors:</b> Verifies that native hardware vector types (like <code>__m128d</code> on x86 or <code>float64x2_t</code> on ARM) are correctly passed and returned in SIMD registers. This includes checks for SSE2, AVX2, and NEON types, conditionally compiled based on architecture. </li>
+</ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -208,8 +198,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Processes a mixed-type struct, checking its members. (SysV x64 only) </p>
-
 </div>
 </div>
 <a id="ae46bdb9a8ab17e7be33ea2951f54a842" name="ae46bdb9a8ab17e7be33ea2951f54a842"></a>
@@ -228,9 +216,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Can be defined by the user to disable all intrinsic-related code. </p>
-<p>Processes a <a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a> struct passed by value, returning a sum of its members. </p>
-
 </div>
 </div>
 <a id="ae138bef4a8a05a582de44461ec2e79bf" name="ae138bef4a8a05a582de44461ec2e79bf"></a>
@@ -248,8 +233,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Returns a <a class="el" href="structPoint.html" title="A simple struct with two doubles (16 bytes).">Point</a> struct by value. </p>
 
 </div>
 </div>
@@ -377,8 +360,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sums the elements of a <a class="el" href="structVector4.html" title="A struct containing a fixed-size array of floats.">Vector4</a> HFA. (AArch64 only) </p>
-
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
@@ -395,7 +376,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(6)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

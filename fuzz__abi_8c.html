@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('fuzz__abi_8c.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 
-<p>A fuzzer targeting the ABI-specific classification logic.  
+<p>Fuzzer target for the ABI classification layer.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -122,17 +122,16 @@ Functions</h2></td></tr>
 <tr class="memitem:ab5dce8d9d24621dc447aa42584147cd3" id="r_ab5dce8d9d24621dc447aa42584147cd3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__abi_8c.html#ab5dce8d9d24621dc447aa42584147cd3">FuzzTest</a> (<a class="el" href="structfuzzer__input.html">fuzzer_input</a> in)</td></tr>
 <tr class="separator:ab5dce8d9d24621dc447aa42584147cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91ce7c16e9840492202299da2b451e60" id="r_a91ce7c16e9840492202299da2b451e60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__abi_8c.html#a91ce7c16e9840492202299da2b451e60">LLVMFuzzerTestOneInput</a> (const uint8_t *data, size_t size)</td></tr>
+<tr class="memdesc:a91ce7c16e9840492202299da2b451e60"><td class="mdescLeft">&#160;</td><td class="mdescRight">The entry point for libFuzzer.  <br /></td></tr>
 <tr class="separator:a91ce7c16e9840492202299da2b451e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A fuzzer targeting the ABI-specific classification logic. </p>
+<div class="textblock"><p>Fuzzer target for the ABI classification layer. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This harness is a highly-focused stress test of the <code>prepare_*_call_frame</code> functions. It uses the shared helpers to generate a pool of random <code>infix_type</code> objects within a single memory arena. It then constructs random function signatures from this pool and calls the ABI classification logic directly.</p>
-<p>The test's only goal is to find inputs that cause crashes, hangs, or sanitizer errors within the ABI classifiers. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="ab5dce8d9d24621dc447aa42584147cd3" name="ab5dce8d9d24621dc447aa42584147cd3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab5dce8d9d24621dc447aa42584147cd3">&#9670;&#160;</a></span>FuzzTest()</h2>
@@ -185,6 +184,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The entry point for libFuzzer. </p>
+<p>This function is called by the libFuzzer runtime for each test case. It wraps the raw input data in a <code><a class="el" href="structfuzzer__input.html" title="Represents the fuzzer&#39;s input data as a consumable stream.">fuzzer_input</a></code> struct and passes it to the main test logic.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>A pointer to the fuzzer-generated input data. </td></tr>
+    <tr><td class="paramname">size</td><td>The size of the data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on completion. </dd></dl>
 
 </div>
 </div>

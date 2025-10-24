@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('structinfix__call__frame__layout.html'
 </div><!--header-->
 <div class="contents">
 
+<p>A complete layout blueprint for a forward call frame.  
+ <a href="structinfix__call__frame__layout.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for infix_call_frame_layout:</div>
@@ -119,34 +122,28 @@ Collaboration diagram for infix_call_frame_layout:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a743d543342256cf155458951d48c613e" id="r_a743d543342256cf155458951d48c613e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a743d543342256cf155458951d48c613e">total_stack_alloc</a></td></tr>
-<tr class="memdesc:a743d543342256cf155458951d48c613e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total bytes for ABI-compliant stack arguments, 16-byte aligned.  <br /></td></tr>
 <tr class="separator:a743d543342256cf155458951d48c613e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9827a359fd40e8588fda34310bbd1d43" id="r_a9827a359fd40e8588fda34310bbd1d43"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a9827a359fd40e8588fda34310bbd1d43">num_gpr_args</a></td></tr>
-<tr class="memdesc:a9827a359fd40e8588fda34310bbd1d43"><td class="mdescLeft">&#160;</td><td class="mdescRight">The highest index of a GPR used for arguments.  <br /></td></tr>
 <tr class="separator:a9827a359fd40e8588fda34310bbd1d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acce402d73219c05665e49c695d9cf1d2" id="r_acce402d73219c05665e49c695d9cf1d2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#acce402d73219c05665e49c695d9cf1d2">num_xmm_args</a></td></tr>
-<tr class="memdesc:acce402d73219c05665e49c695d9cf1d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The highest index of an XMM register used for arguments.  <br /></td></tr>
 <tr class="separator:acce402d73219c05665e49c695d9cf1d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63c49b82af2aa93113974f96dc1f4cf9" id="r_a63c49b82af2aa93113974f96dc1f4cf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arg__location.html">infix_arg_location</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a63c49b82af2aa93113974f96dc1f4cf9">arg_locations</a></td></tr>
-<tr class="memdesc:a63c49b82af2aa93113974f96dc1f4cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array detailing the location of each argument.  <br /></td></tr>
 <tr class="separator:a63c49b82af2aa93113974f96dc1f4cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaed0abd0984cf01711d0ac17731dd97d" id="r_aaed0abd0984cf01711d0ac17731dd97d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#aaed0abd0984cf01711d0ac17731dd97d">return_value_in_memory</a></td></tr>
-<tr class="memdesc:aaed0abd0984cf01711d0ac17731dd97d"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the return value is passed via a hidden pointer argument.  <br /></td></tr>
 <tr class="separator:aaed0abd0984cf01711d0ac17731dd97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1660ea186713ad11e2c373116f1ec2b6" id="r_a1660ea186713ad11e2c373116f1ec2b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a1660ea186713ad11e2c373116f1ec2b6">is_variadic</a></td></tr>
-<tr class="memdesc:a1660ea186713ad11e2c373116f1ec2b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the call is variadic, requiring special ABI handling.  <br /></td></tr>
 <tr class="separator:a1660ea186713ad11e2c373116f1ec2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d3bca5f73e48564f1def9de7071d528" id="r_a4d3bca5f73e48564f1def9de7071d528"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a4d3bca5f73e48564f1def9de7071d528">num_stack_args</a></td></tr>
-<tr class="memdesc:a4d3bca5f73e48564f1def9de7071d528"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of arguments passed on the stack.  <br /></td></tr>
 <tr class="separator:a4d3bca5f73e48564f1def9de7071d528"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac54ff0be4865e88a0ba2ae9cb6b8920d" id="r_ac54ff0be4865e88a0ba2ae9cb6b8920d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#ac54ff0be4865e88a0ba2ae9cb6b8920d">num_args</a></td></tr>
-<tr class="memdesc:ac54ff0be4865e88a0ba2ae9cb6b8920d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of arguments.  <br /></td></tr>
 <tr class="separator:ac54ff0be4865e88a0ba2ae9cb6b8920d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5eaab27cc161e119694a4508341acf20" id="r_a5eaab27cc161e119694a4508341acf20"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a5eaab27cc161e119694a4508341acf20">target_fn</a></td></tr>
-<tr class="memdesc:a5eaab27cc161e119694a4508341acf20"><td class="mdescLeft">&#160;</td><td class="mdescRight">If non-NULL, the target function for a bound trampoline.  <br /></td></tr>
 <tr class="separator:a5eaab27cc161e119694a4508341acf20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A complete layout blueprint for a forward call frame. </p>
+<p>This structure is the primary output of <code>prepare_forward_call_frame</code>. It serves as a complete plan for the JIT engine, detailing every register and stack slot that needs to be populated before making the <code>call</code> instruction. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a63c49b82af2aa93113974f96dc1f4cf9" name="a63c49b82af2aa93113974f96dc1f4cf9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a63c49b82af2aa93113974f96dc1f4cf9">&#9670;&#160;</a></span>arg_locations</h2>
 
@@ -158,8 +155,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>An array detailing the location of each argument. </p>
+<p>An array of location info for each argument. </p>
 
 </div>
 </div>
@@ -174,8 +170,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>True if the call is variadic, requiring special ABI handling. </p>
+<p><code>true</code> if the function is variadic. </p>
 
 </div>
 </div>
@@ -190,7 +185,6 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
 <p>The total number of arguments. </p>
 
 </div>
@@ -206,8 +200,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The highest index of a GPR used for arguments. </p>
+<p>The number of GPRs used for arguments. </p>
 
 </div>
 </div>
@@ -222,7 +215,6 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
 <p>The number of arguments passed on the stack. </p>
 
 </div>
@@ -238,8 +230,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The highest index of an XMM register used for arguments. </p>
+<p>The number of XMMs used for arguments. </p>
 
 </div>
 </div>
@@ -254,8 +245,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>True if the return value is passed via a hidden pointer argument. </p>
+<p><code>true</code> if the return value uses a hidden pointer argument (struct return). </p>
 
 </div>
 </div>
@@ -270,8 +260,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>If non-NULL, the target function for a bound trampoline. </p>
+<p>The target function address. </p>
 
 </div>
 </div>
@@ -286,8 +275,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Total bytes for ABI-compliant stack arguments, 16-byte aligned. </p>
+<p>Total bytes to allocate on the stack for arguments and ABI-required space. </p>
 
 </div>
 </div>

@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('structparser__state.html',''); initRes
 <div class="dynheader">
 Collaboration diagram for parser_state:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structparser__state__coll__graph.svg" width="100%" height="561"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structparser__state__coll__graph.svg" width="118" height="124"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -122,8 +122,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a027ec8ff26e2c7ab32f4867afd1a3ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04f15c3f4309338ad5f298eeac23bd6" id="r_aa04f15c3f4309338ad5f298eeac23bd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structparser__state.html#aa04f15c3f4309338ad5f298eeac23bd6">arena</a></td></tr>
 <tr class="separator:aa04f15c3f4309338ad5f298eeac23bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85ad48aa816ca1d632f1b79f71df8c31" id="r_a85ad48aa816ca1d632f1b79f71df8c31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structparser__state.html#a85ad48aa816ca1d632f1b79f71df8c31">registry</a></td></tr>
-<tr class="separator:a85ad48aa816ca1d632f1b79f71df8c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6acb3fad5e4ab8d8a0a656402ff13a4" id="r_aa6acb3fad5e4ab8d8a0a656402ff13a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structparser__state.html#aa6acb3fad5e4ab8d8a0a656402ff13a4">depth</a></td></tr>
 <tr class="separator:aa6acb3fad5e4ab8d8a0a656402ff13a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -139,7 +137,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The arena from which all type objects are allocated. </p>
+<p>The temporary arena for allocating the raw, unresolved type graph. </p>
 
 </div>
 </div>
@@ -154,7 +152,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The current recursion depth, checked against <code>MAX_RECURSION_DEPTH</code>. </p>
+<p>The current recursion depth, to prevent stack overflows. </p>
 
 </div>
 </div>
@@ -169,22 +167,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The current position (pointer) in the input string. </p>
-
-</div>
-</div>
-<a id="a85ad48aa816ca1d632f1b79f71df8c31" name="a85ad48aa816ca1d632f1b79f71df8c31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85ad48aa816ca1d632f1b79f71df8c31">&#9670;&#160;</a></span>registry</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a>* parser_state::registry</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The registry for resolving named types, or nullptr. </p>
+<p>The current read position (cursor) in the signature string. </p>
 
 </div>
 </div>
@@ -199,7 +182,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The start of the original string (for calculating error positions). </p>
+<p>The beginning of the signature string, used for calculating error positions. </p>
 
 </div>
 </div>

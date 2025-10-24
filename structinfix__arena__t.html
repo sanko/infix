@@ -109,24 +109,26 @@ $(document).ready(function(){initNavTree('structinfix__arena__t.html',''); initR
 </div><!--header-->
 <div class="contents">
 
+<p>Internal definition of a memory arena.  
+ <a href="structinfix__arena__t.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a2bafad85c37fba52aaa3dd3311fec20d" id="r_a2bafad85c37fba52aaa3dd3311fec20d"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#a2bafad85c37fba52aaa3dd3311fec20d">buffer</a></td></tr>
-<tr class="memdesc:a2bafad85c37fba52aaa3dd3311fec20d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to the large, pre-allocated memory block.  <br /></td></tr>
 <tr class="separator:a2bafad85c37fba52aaa3dd3311fec20d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53d46b399ce96dde2b87d4c4f1ec5657" id="r_a53d46b399ce96dde2b87d4c4f1ec5657"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#a53d46b399ce96dde2b87d4c4f1ec5657">capacity</a></td></tr>
-<tr class="memdesc:a53d46b399ce96dde2b87d4c4f1ec5657"><td class="mdescLeft">&#160;</td><td class="mdescRight">The total size of the buffer in bytes.  <br /></td></tr>
 <tr class="separator:a53d46b399ce96dde2b87d4c4f1ec5657"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac06321238d0579d5b548c58a68eaf036" id="r_ac06321238d0579d5b548c58a68eaf036"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#ac06321238d0579d5b548c58a68eaf036">current_offset</a></td></tr>
-<tr class="memdesc:ac06321238d0579d5b548c58a68eaf036"><td class="mdescLeft">&#160;</td><td class="mdescRight">The high-water mark; the offset of the next free byte.  <br /></td></tr>
 <tr class="separator:ac06321238d0579d5b548c58a68eaf036"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35df9e6f27e3c9aeb2248585d9c164ae" id="r_a35df9e6f27e3c9aeb2248585d9c164ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#a35df9e6f27e3c9aeb2248585d9c164ae">error</a></td></tr>
-<tr class="memdesc:a35df9e6f27e3c9aeb2248585d9c164ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">A sticky flag that is set if any allocation from this arena fails.  <br /></td></tr>
 <tr class="separator:a35df9e6f27e3c9aeb2248585d9c164ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Internal definition of a memory arena. </p>
+<p>An arena is a fast, region-based allocator. It pre-allocates a single block of memory and serves subsequent small allocation requests by simply "bumping" a pointer. All memory allocated from an arena is freed at once by destroying the arena itself, eliminating the need to track individual allocations. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a2bafad85c37fba52aaa3dd3311fec20d" name="a2bafad85c37fba52aaa3dd3311fec20d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2bafad85c37fba52aaa3dd3311fec20d">&#9670;&#160;</a></span>buffer</h2>
 
@@ -138,8 +140,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The pointer to the large, pre-allocated memory block. </p>
+<p>The backing memory buffer for the arena. </p>
 
 </div>
 </div>
@@ -154,8 +155,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The total size of the buffer in bytes. </p>
+<p>The total size of the buffer. </p>
 
 </div>
 </div>
@@ -170,8 +170,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>The high-water mark; the offset of the next free byte. </p>
+<p>The current high-water mark of allocation. </p>
 
 </div>
 </div>
@@ -186,8 +185,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>A sticky flag that is set if any allocation from this arena fails. </p>
+<p>A flag set if any allocation fails, preventing subsequent allocations. </p>
 
 </div>
 </div>

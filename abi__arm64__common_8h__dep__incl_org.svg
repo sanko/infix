@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Common register definitions for the AArch64 (ARM64) architecture.">
+<g id="a_Node000001"><a xlink:title="Common register definitions and instruction encodings for the AArch64 (ARM64) architecture.">
 <polygon fill="#999999" stroke="#666666" points="158,-162 43,-162 43,-132 158,-132 158,-162"/>
 <text text-anchor="start" x="51" y="-150" font-family="Helvetica,sans-Serif" font-size="10.00">src/arch/aarch64/abi</text>
 <text text-anchor="middle" x="100.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">_arm64_common.h</text>

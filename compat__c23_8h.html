@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('compat__c23_8h.html',''); initResizabl
 </div><!--header-->
 <div class="contents">
 
-<p>Provides compatibility shims for C23 features in a C17/C11 project.  
+<p>Provides forward compatibility macros for C23 features.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
@@ -128,25 +128,34 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ab979d9d4b4923f7c54d6caa6e1a61936" id="r_ab979d9d4b4923f7c54d6caa6e1a61936"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a>&#160;&#160;&#160;((void *)0)</td></tr>
+<tr class="memdesc:ab979d9d4b4923f7c54d6caa6e1a61936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines <code>nullptr</code> as a standard C-style null pointer constant (<code>(void*)0</code>).  <br /></td></tr>
 <tr class="separator:ab979d9d4b4923f7c54d6caa6e1a61936"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a375e33770fc0a906c61d85025ab11b70" id="r_a375e33770fc0a906c61d85025ab11b70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#a375e33770fc0a906c61d85025ab11b70">COMPAT_HAS_C_ATTRIBUTE</a>(x)&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:a375e33770fc0a906c61d85025ab11b70"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility macro to safely check for the existence of a C attribute.  <br /></td></tr>
 <tr class="separator:a375e33770fc0a906c61d85025ab11b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17f672198fb63e31ca0dba6aea752863" id="r_a17f672198fb63e31ca0dba6aea752863"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a></td></tr>
+<tr class="memdesc:a17f672198fb63e31ca0dba6aea752863"><td class="mdescLeft">&#160;</td><td class="mdescRight">A compatibility macro for the C23 <code>[[nodiscard]]</code> attribute.  <br /></td></tr>
 <tr class="separator:a17f672198fb63e31ca0dba6aea752863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4a4a817c350d80852d5cf89934e093d" id="r_aa4a4a817c350d80852d5cf89934e093d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#aa4a4a817c350d80852d5cf89934e093d">c23_deprecated</a></td></tr>
+<tr class="memdesc:aa4a4a817c350d80852d5cf89934e093d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A compatibility macro for the C23 <code>[[deprecated]]</code> attribute.  <br /></td></tr>
 <tr class="separator:aa4a4a817c350d80852d5cf89934e093d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a581ec67fa95d5b8986f253f766ccbd19" id="r_a581ec67fa95d5b8986f253f766ccbd19"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#a581ec67fa95d5b8986f253f766ccbd19">c23_fallthrough</a>&#160;&#160;&#160;/* fallthrough */</td></tr>
+<tr class="memitem:a581ec67fa95d5b8986f253f766ccbd19" id="r_a581ec67fa95d5b8986f253f766ccbd19"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#a581ec67fa95d5b8986f253f766ccbd19">c23_fallthrough</a></td></tr>
+<tr class="memdesc:a581ec67fa95d5b8986f253f766ccbd19"><td class="mdescLeft">&#160;</td><td class="mdescRight">A compatibility macro for the C23 <code>[[fallthrough]]</code> attribute.  <br /></td></tr>
 <tr class="separator:a581ec67fa95d5b8986f253f766ccbd19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e6bd75674e959d22513f27892b0e38f" id="r_a1e6bd75674e959d22513f27892b0e38f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f">c23_maybe_unused</a></td></tr>
+<tr class="memdesc:a1e6bd75674e959d22513f27892b0e38f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A compatibility macro for the C23 <code>[[maybe_unused]]</code> attribute.  <br /></td></tr>
 <tr class="separator:a1e6bd75674e959d22513f27892b0e38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides compatibility shims for C23 features in a C17/C11 project. </p>
+<div class="textblock"><p>Provides forward compatibility macros for C23 features. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
 <p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
+<p>This header is a crucial component for maintaining source code compatibility across a wide range of compilers that may not fully support the latest C23 standard. It acts as a "shim" or compatibility layer, allowing the rest of the codebase to be written using modern, standards-compliant syntax while ensuring it still compiles on older C11/C17 compilers.</p>
+<p>The primary purpose is to define a set of <code>c23_*</code> macros (e.g., <code>c23_nodiscard</code>) that translate modern C23 attribute syntax (<code>[[attribute]]</code>) into older, compiler-specific equivalents (like <code>__attribute__((...))</code> for GCC/Clang or <code>__declspec(...)</code> for MSVC). If a compiler supports none of these, the macros expand to nothing, ensuring compilation succeeds at the cost of losing the specific compiler check (a principle known as graceful degradation).</p>
+<p>This approach centralizes all compiler-specific feature detection, keeping the rest of the library's code clean and free of <code>#ifdef</code> clutter. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="aa4a4a817c350d80852d5cf89934e093d" name="aa4a4a817c350d80852d5cf89934e093d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4a4a817c350d80852d5cf89934e093d">&#9670;&#160;</a></span>c23_deprecated</h2>
@@ -160,6 +169,15 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A compatibility macro for the C23 <code>[[deprecated]]</code> attribute. </p>
+<p>This attribute is used to mark a function or type as obsolete. The compiler will issue a warning if any code attempts to use a deprecated entity, guiding users toward newer APIs and helping to manage API evolution.</p>
+<p>This macro expands to:</p><ul>
+<li><code>[[deprecated]]</code> on compilers that support the C23 standard syntax.</li>
+<li><code>__attribute__((deprecated))</code> on GCC and Clang.</li>
+<li><code>__declspec(deprecated)</code> on Microsoft Visual C++.</li>
+<li>Nothing on other compilers. </li>
+</ul>
+
 </div>
 </div>
 <a id="a581ec67fa95d5b8986f253f766ccbd19" name="a581ec67fa95d5b8986f253f766ccbd19"></a>
@@ -169,10 +187,18 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define c23_fallthrough&#160;&#160;&#160;/* fallthrough */</td>
+          <td class="memname">#define c23_fallthrough</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A compatibility macro for the C23 <code>[[fallthrough]]</code> attribute. </p>
+<p>This attribute is placed in a <code>switch</code> statement to explicitly indicate that a <code>case</code> is intended to fall through to the next one. It suppresses compiler warnings that would otherwise be generated for this pattern (e.g., <code>-Wimplicit-fallthrough</code>), making the code's intent clearer.</p>
+<p>This macro expands to:</p><ul>
+<li><code>[[fallthrough]]</code> on compilers that support the C23 standard syntax.</li>
+<li><code>__attribute__((fallthrough))</code> on GCC and Clang.</li>
+<li>Nothing on other compilers (including MSVC, which uses a different mechanism or lacks the warning). </li>
+</ul>
 
 </div>
 </div>
@@ -188,6 +214,14 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A compatibility macro for the C23 <code>[[maybe_unused]]</code> attribute. </p>
+<p>This attribute suppresses compiler warnings about unused variables, parameters, or functions. It is useful for parameters that are only used in certain build configurations (e.g., in an <code>#ifdef DEBUG</code> block) or for functions that are part of a public API but not used internally.</p>
+<p>This macro expands to:</p><ul>
+<li><code>[[maybe_unused]]</code> on compilers that support the C23 standard syntax.</li>
+<li><code>__attribute__((unused))</code> on GCC and Clang.</li>
+<li>Nothing on other compilers. </li>
+</ul>
+
 </div>
 </div>
 <a id="a17f672198fb63e31ca0dba6aea752863" name="a17f672198fb63e31ca0dba6aea752863"></a>
@@ -201,6 +235,15 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A compatibility macro for the C23 <code>[[nodiscard]]</code> attribute. </p>
+<p>This attribute is used to issue a compiler warning if the return value of a function is ignored by the caller. This is extremely useful for catching bugs where an error code or an important result is not checked.</p>
+<p>This macro expands to:</p><ul>
+<li><code>[[nodiscard]]</code> on compilers that support the C23 standard syntax.</li>
+<li><code>__attribute__((warn_unused_result))</code> on GCC and Clang.</li>
+<li><code>_Check_return_</code> on Microsoft Visual C++.</li>
+<li>Nothing on other compilers. </li>
+</ul>
 
 </div>
 </div>
@@ -220,6 +263,16 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A utility macro to safely check for the existence of a C attribute. </p>
+<p>This macro wraps the <code>__has_c_attribute</code> feature test macro, which is not universally available across all compilers. By defining this wrapper, the code can safely check for attribute support without causing a preprocessor error on compilers that do not define <code>__has_c_attribute</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>The name of the attribute to check (e.g., <code>nodiscard</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>1</code> if the attribute is supported, <code>0</code> otherwise. </dd></dl>
+
 </div>
 </div>
 <a id="ab979d9d4b4923f7c54d6caa6e1a61936" name="ab979d9d4b4923f7c54d6caa6e1a61936"></a>
@@ -233,6 +286,9 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Defines <code>nullptr</code> as a standard C-style null pointer constant (<code>(void*)0</code>). </p>
+<p>This provides a consistent null pointer constant across C and C++ compilation environments. While <code>NULL</code> is standard in C, <code>nullptr</code> is preferred in modern C++ and is being adopted in newer C standards. This macro ensures the codebase can use <code>nullptr</code> consistently without causing compilation errors in a strict C11/C17 environment. </p>
 
 </div>
 </div>

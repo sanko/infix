@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('811__fault__injection_8c.html',''); in
 </div><!--header-->
 <div class="contents">
 
-<p>An advanced stress test that uses fault injection to find memory leaks in the library's error-handling code paths, adapted for the new arena model.  
+<p>Unit test to verify resource cleanup under memory allocation failures.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('811__fault__injection_8c.html',''); in
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 811_fault_injection.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="811__fault__injection_8c__incl.svg" width="594" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="811__fault__injection_8c__incl.svg" width="511" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -144,10 +144,8 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:afa7d0f768f9d3b855ff208e62a639653" id="r_afa7d0f768f9d3b855ff208e62a639653"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="811__fault__injection_8c.html#afa7d0f768f9d3b855ff208e62a639653">setup_fault_injector</a> (int fail_after_n_allocs)</td></tr>
-<tr class="memdesc:afa7d0f768f9d3b855ff208e62a639653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the allocator to fail after a specific number of successful allocations.  <br /></td></tr>
 <tr class="separator:afa7d0f768f9d3b855ff208e62a639653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22b0089a906857dc064cc5ab9ff15c28" id="r_a22b0089a906857dc064cc5ab9ff15c28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="811__fault__injection_8c.html#a22b0089a906857dc064cc5ab9ff15c28">reset_fault_injector</a> ()</td></tr>
-<tr class="memdesc:a22b0089a906857dc064cc5ab9ff15c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the allocator to its default (non-failing) behavior.  <br /></td></tr>
 <tr class="separator:a22b0089a906857dc064cc5ab9ff15c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0f990a8f11c97496d0cae820153ddd1" id="r_ad0f990a8f11c97496d0cae820153ddd1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="811__fault__injection_8c.html#ad0f990a8f11c97496d0cae820153ddd1">test_malloc</a> (size_t size)</td></tr>
 <tr class="separator:ad0f990a8f11c97496d0cae820153ddd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,22 +178,15 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An advanced stress test that uses fault injection to find memory leaks in the library's error-handling code paths, adapted for the new arena model. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test replaces the standard malloc/calloc/free/realloc functions with a custom, thread-safe allocator that can be programmed to fail after a specific number of successful allocations.</p>
-<p>By repeatedly attempting to create complex FFI objects and forcing a heap allocation failure at every possible point (e.g., arena creation, handle creation, executable memory allocation), this test rigorously exercises all error-handling and cleanup code in the library. It is designed to be run under Valgrind's memcheck tool.</p>
-<p>The test is considered successful if two conditions are met:</p><ol type="1">
-<li>The test program itself passes, confirming that the library correctly propagates <code>INFIX_ERROR_ALLOCATION_FAILED</code> status codes up the call stack.</li>
-<li>Valgrind reports ZERO memory leaks, proving that all internal cleanup paths correctly free any partially allocated resources.</li>
+<div class="textblock"><p>Unit test to verify resource cleanup under memory allocation failures. </p>
+<p>This test uses a fault injection technique to test the library's resilience to memory allocation failures. It overrides the standard <code>malloc</code> and <code>calloc</code> functions with custom versions (<code>test_malloc</code>, <code>test_calloc</code>) that can be configured to fail after a specific number of successful allocations.</p>
+<p>The test strategy is as follows:</p><ol type="1">
+<li>It iterates from <code>N = 0</code> to a maximum limit.</li>
+<li>In each iteration <code>N</code>, it configures the custom allocator to fail on the N-th allocation.</li>
+<li>It then calls a complex <code>infix</code> API function (e.g., <code>infix_forward_create</code>).</li>
+<li>If the allocation failure was triggered, it asserts that the API function correctly returned an <code>INFIX_ERROR_ALLOCATION_FAILED</code> status.</li>
 </ol>
-<p>This test targets the two most allocation-heavy high-level operations:</p><ul>
-<li><code>infix_reverse_create_callback</code></li>
-<li><code>infix_type_from_signature</code> </li>
-</ul>
+<p>The most important part of this test is not the assertion itself, but running it under a memory analysis tool like Valgrind or AddressSanitizer (ASan). A "pass" for this test is a clean report from the memory tool, which proves that even when an allocation fails midway through an operation, the <code>infix</code> library correctly cleans up all memory it had allocated up to that point, preventing memory leaks in error paths. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a7dee31301b4ca956bedc6af80ec23cb3" name="a7dee31301b4ca956bedc6af80ec23cb3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7dee31301b4ca956bedc6af80ec23cb3">&#9670;&#160;</a></span>ALLOCATOR_INIT</h2>
@@ -352,8 +343,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Resets the allocator to its default (non-failing) behavior. </p>
-
 </div>
 </div>
 <a id="afa7d0f768f9d3b855ff208e62a639653" name="afa7d0f768f9d3b855ff208e62a639653"></a>
@@ -371,8 +360,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Configures the allocator to fail after a specific number of successful allocations. </p>
 
 </div>
 </div>
@@ -624,7 +611,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(3)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>

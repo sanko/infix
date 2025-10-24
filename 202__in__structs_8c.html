@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('202__in__structs_8c.html',''); initRes
 </div><!--header-->
 <div class="contents">
 
-<p>Tests passing structs that contain pointer members.  
+<p>Unit test for passing structs that contain pointer members.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('202__in__structs_8c.html',''); initRes
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 202_in_structs.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="202__in__structs_8c__incl.svg" width="604" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="202__in__structs_8c__incl.svg" width="630" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -130,17 +130,17 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0558d4c740ea348155e956bfdd914b61" id="r_a0558d4c740ea348155e956bfdd914b61"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a> (<a class="el" href="structPointerStruct.html">PointerStruct</a> ps)</td></tr>
-<tr class="memdesc:a0558d4c740ea348155e956bfdd914b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a <a class="el" href="structPointerStruct.html" title="A struct containing pointer members.">PointerStruct</a> and dereferences its members to verify them.  <br /></td></tr>
+<tr class="memdesc:a0558d4c740ea348155e956bfdd914b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that takes a struct containing pointers by value.  <br /></td></tr>
 <tr class="separator:a0558d4c740ea348155e956bfdd914b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0132bc6a84c11aa72fbedf0e08150824" id="r_a0132bc6a84c11aa72fbedf0e08150824"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a0132bc6a84c11aa72fbedf0e08150824">if</a> (!<a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a>(<a class="el" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Type created&quot;))</td></tr>
+<tr class="memitem:a0132bc6a84c11aa72fbedf0e08150824" id="r_a0132bc6a84c11aa72fbedf0e08150824"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a0132bc6a84c11aa72fbedf0e08150824">if</a> (!<a class="el" href="double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79">ok</a>(<a class="el" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2">infix_type_create_struct</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)==<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Type created&quot;))</td></tr>
 <tr class="separator:a0132bc6a84c11aa72fbedf0e08150824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a1b4aca5407326b0e3afbdfa4a45dfe" id="r_a3a1b4aca5407326b0e3afbdfa4a45dfe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a3a1b4aca5407326b0e3afbdfa4a45dfe">ok</a> (<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a>(&amp;<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>, <a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, &amp;<a class="el" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, 1, 1)==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Unbound created&quot;)</td></tr>
+<tr class="memitem:a3a1b4aca5407326b0e3afbdfa4a45dfe" id="r_a3a1b4aca5407326b0e3afbdfa4a45dfe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a3a1b4aca5407326b0e3afbdfa4a45dfe">ok</a> (<a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a>(&amp;<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>, <a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, &amp;<a class="el" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, 1, 1)==<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Unbound created&quot;)</td></tr>
 <tr class="separator:a3a1b4aca5407326b0e3afbdfa4a45dfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4b60b0e2fb863ab8698c9b411ef24bf" id="r_ab4b60b0e2fb863ab8698c9b411ef24bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#ab4b60b0e2fb863ab8698c9b411ef24bf">unbound_cif</a> ((void *) <a class="el" href="202__in__structs_8c.html#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a>, &amp;<a class="el" href="202__in__structs_8c.html#ab80bd7eb7c7fa41c5f703d92d33be76b">unbound_result</a>, <a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td></tr>
 <tr class="separator:ab4b60b0e2fb863ab8698c9b411ef24bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19c44ea5fe85ed18a39c7781c4a5d07e" id="r_a19c44ea5fe85ed18a39c7781c4a5d07e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a19c44ea5fe85ed18a39c7781c4a5d07e">ok</a> (<a class="el" href="202__in__structs_8c.html#ab80bd7eb7c7fa41c5f703d92d33be76b">unbound_result</a>==550, &quot;Unbound call correct&quot;)</td></tr>
 <tr class="separator:a19c44ea5fe85ed18a39c7781c4a5d07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a058e4209ac6ae408eff75a9893f9f9cd" id="r_a058e4209ac6ae408eff75a9893f9f9cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a058e4209ac6ae408eff75a9893f9f9cd">ok</a> (<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a>(&amp;<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>, <a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, &amp;<a class="el" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, 1, 1,(void *) <a class="el" href="202__in__structs_8c.html#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a>)==<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Bound created&quot;)</td></tr>
+<tr class="memitem:a058e4209ac6ae408eff75a9893f9f9cd" id="r_a058e4209ac6ae408eff75a9893f9f9cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a058e4209ac6ae408eff75a9893f9f9cd">ok</a> (<a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a>(&amp;<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>, <a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, &amp;<a class="el" href="202__in__structs_8c.html#a844037a22f98c1dcb5892a0ac2948a74">struct_type</a>, 1, 1,(void *) <a class="el" href="202__in__structs_8c.html#a0558d4c740ea348155e956bfdd914b61">process_pointer_struct</a>)==<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>, &quot;Bound created&quot;)</td></tr>
 <tr class="separator:a058e4209ac6ae408eff75a9893f9f9cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a174053e67b86029e7ca202ff79079f92" id="r_a174053e67b86029e7ca202ff79079f92"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a174053e67b86029e7ca202ff79079f92">ok</a> (<a class="el" href="202__in__structs_8c.html#a01588550c9a130fe9706ef3335716f7a">bound_result</a>==550, &quot;Bound call correct&quot;)</td></tr>
 <tr class="separator:a174053e67b86029e7ca202ff79079f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,24 +175,20 @@ Variables</h2></td></tr>
 <tr class="separator:a783f3f2953f385e8223af2d3568e4a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab80bd7eb7c7fa41c5f703d92d33be76b" id="r_ab80bd7eb7c7fa41c5f703d92d33be76b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#ab80bd7eb7c7fa41c5f703d92d33be76b">unbound_result</a> = 0</td></tr>
 <tr class="separator:ab80bd7eb7c7fa41c5f703d92d33be76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81ce70b649fdca6cdf6a3f0225d4a1c3" id="r_a81ce70b649fdca6cdf6a3f0225d4a1c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a81ce70b649fdca6cdf6a3f0225d4a1c3">unbound_cif</a> = <a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>)</td></tr>
+<tr class="memitem:a81ce70b649fdca6cdf6a3f0225d4a1c3" id="r_a81ce70b649fdca6cdf6a3f0225d4a1c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a81ce70b649fdca6cdf6a3f0225d4a1c3">unbound_cif</a> = <a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>)</td></tr>
 <tr class="separator:a81ce70b649fdca6cdf6a3f0225d4a1c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235edff479963a1a75ebc21f02111491" id="r_a235edff479963a1a75ebc21f02111491"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a> = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td></tr>
 <tr class="separator:a235edff479963a1a75ebc21f02111491"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01588550c9a130fe9706ef3335716f7a" id="r_a01588550c9a130fe9706ef3335716f7a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a01588550c9a130fe9706ef3335716f7a">bound_result</a> = 0</td></tr>
 <tr class="separator:a01588550c9a130fe9706ef3335716f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ec1b473015a48043ec831413cd04eb8" id="r_a1ec1b473015a48043ec831413cd04eb8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a1ec1b473015a48043ec831413cd04eb8">bound_cif</a> = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td></tr>
+<tr class="memitem:a1ec1b473015a48043ec831413cd04eb8" id="r_a1ec1b473015a48043ec831413cd04eb8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="202__in__structs_8c.html#a1ec1b473015a48043ec831413cd04eb8">bound_cif</a> = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td></tr>
 <tr class="separator:a1ec1b473015a48043ec831413cd04eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests passing structs that contain pointer members. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite verifies the library's ability to handle aggregates that have pointers as members. This is a critical test as it combines the rules for aggregate passing with the rules for pointer passing.</p>
-<p>The test defines a <code><a class="el" href="structPointerStruct.html" title="A struct containing pointer members.">PointerStruct</a></code> containing an <code>int*</code> and a <code>const char*</code>. An instance of this struct is passed through the FFI to a native C function. The native function's primary goal is to verify that it can successfully dereference both pointers and access the original, correct data. The test succeeds if the native function receives valid pointers and can return a value based on the data they point to. </p>
+<div class="textblock"><p>Unit test for passing structs that contain pointer members. </p>
+<p>This test case is an important follow-up to <code><a class="el" href="201__basic_8c.html" title="Unit test for FFI calls involving pointer types.">201_basic.c</a></code>. It verifies that <code>infix</code> can correctly handle structs that are passed by value, but which themselves contain pointer members.</p>
+<p>The ABI classifier must correctly identify the struct as an aggregate to be passed according to the platform's rules (e.g., in registers or on the stack). The JIT code must then correctly copy the entire struct, including the pointer values within it.</p>
+<p>The test defines a <code><a class="el" href="structPointerStruct.html" title="A struct containing pointers, used to test pointer argument handling.">PointerStruct</a></code> containing an <code>int*</code> and a <code>const char*</code>. It calls a C function that takes this struct by value, dereferences the pointers inside it, and verifies their contents. This confirms that the pointer values were correctly preserved through the FFI call. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -337,7 +333,7 @@ Variables</h2></td></tr>
           <td class="memname">ok </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a">infix_forward_create_unbound_manual</a> &amp;,, &amp;, 1,&#160;</td>
-          <td class="paramname"><em>1struct_type</em> = <code>=<a class="el" href="group__public__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></code>, </td>
+          <td class="paramname"><em>1struct_type</em> = <code>=<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -399,8 +395,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Receives a <a class="el" href="structPointerStruct.html" title="A struct containing pointer members.">PointerStruct</a> and dereferences its members to verify them. </p>
-<dl class="section return"><dt>Returns</dt><dd>An integer based on the dereferenced value to confirm success. </dd></dl>
+<p>A C function that takes a struct containing pointers by value. </p>
+<p>The ABI will pass this struct according to its size and alignment. The function then dereferences the pointers to verify they were passed correctly. </p>
 
 </div>
 </div>
@@ -474,7 +470,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a> bound_cif = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a> bound_cif = <a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -522,9 +518,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">        <a class="code hl_function" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a>(<a class="code hl_variable" href="202__in__structs_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
-<div class="ttc" id="a202__in__structs_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="202__in__structs_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:59</div></div>
-<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from the arena with a specific alignment.</div><div class="ttdef"><b>Definition</b> arena.c:86</div></div>
-<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of an aggregate type (struct or union).</div><div class="ttdef"><b>Definition</b> infix.h:219</div></div>
+<div class="ttc" id="a202__in__structs_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="202__in__structs_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:48</div></div>
+<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from an arena.</div><div class="ttdef"><b>Definition</b> arena.c:116</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of a C struct or union.</div><div class="ttdef"><b>Definition</b> infix.h:276</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -597,7 +593,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(5)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -608,7 +604,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a> unbound_cif = <a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a> unbound_cif = <a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">

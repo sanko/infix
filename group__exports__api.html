@@ -104,38 +104,164 @@ $(document).ready(function(){initNavTree('group__exports__api.html',''); initRes
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">Dynamic Library &amp; Globals API<div class="ingroups"><a class="el" href="group__public__api.html">Public API</a></div></div></div>
+  <div class="headertitle"><div class="title">Dynamic Library &amp; Globals API<div class="ingroups"><a class="el" href="group__high__level__api.html">High-Level Signature API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Functions for interacting with shared libraries and their global variables.  
+<p>Cross-platform functions for loading shared libraries and accessing exported symbols.  
 <a href="#details">More...</a></p>
 <div class="dynheader">
 Collaboration diagram for Dynamic Library &amp; Globals API:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="group__exports__api.svg" width="367" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="group__exports__api.svg" width="463" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae75c91d8011786875c73f26d2aa437a8" id="r_gae75c91d8011786875c73f26d2aa437a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#gae75c91d8011786875c73f26d2aa437a8">infix_read_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *, const char *, const char *, void *)</td></tr>
-<tr class="memdesc:gae75c91d8011786875c73f26d2aa437a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the value of a global variable from a loaded library.  <br /></td></tr>
-<tr class="separator:gae75c91d8011786875c73f26d2aa437a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3df4f2e6494af3e1fda98cd5a61d167f" id="r_ga3df4f2e6494af3e1fda98cd5a61d167f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga3df4f2e6494af3e1fda98cd5a61d167f">infix_write_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *, const char *, const char *, void *)</td></tr>
-<tr class="memdesc:ga3df4f2e6494af3e1fda98cd5a61d167f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a value to a global variable in a loaded library.  <br /></td></tr>
-<tr class="separator:ga3df4f2e6494af3e1fda98cd5a61d167f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabfd1bb148a39b758e57e772c09b9ea84" id="r_gabfd1bb148a39b758e57e772c09b9ea84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#gabfd1bb148a39b758e57e772c09b9ea84">infix_library_open</a> (const char *)</td></tr>
+<tr class="memdesc:gabfd1bb148a39b758e57e772c09b9ea84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens a dynamic library and returns a handle to it.  <br /></td></tr>
+<tr class="separator:gabfd1bb148a39b758e57e772c09b9ea84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a55403ddf64eaed05f2fcb013412003" id="r_ga1a55403ddf64eaed05f2fcb013412003"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga1a55403ddf64eaed05f2fcb013412003">infix_library_close</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *)</td></tr>
+<tr class="memdesc:ga1a55403ddf64eaed05f2fcb013412003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes a dynamic library handle.  <br /></td></tr>
+<tr class="separator:ga1a55403ddf64eaed05f2fcb013412003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga227480098fa596f3c372837461a6b805" id="r_ga227480098fa596f3c372837461a6b805"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga227480098fa596f3c372837461a6b805">infix_library_get_symbol</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *, const char *)</td></tr>
+<tr class="memdesc:ga227480098fa596f3c372837461a6b805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the address of a symbol (function or variable) from a loaded library.  <br /></td></tr>
+<tr class="separator:ga227480098fa596f3c372837461a6b805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7f277b537378a53e4554e43a17d0039" id="r_gac7f277b537378a53e4554e43a17d0039"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#gac7f277b537378a53e4554e43a17d0039">infix_read_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *, const char *, const char *, void *)</td></tr>
+<tr class="memdesc:gac7f277b537378a53e4554e43a17d0039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the value of a global variable from a library into a buffer.  <br /></td></tr>
+<tr class="separator:gac7f277b537378a53e4554e43a17d0039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ff78ba25aec569971f85df6c233406c" id="r_ga0ff78ba25aec569971f85df6c233406c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__exports__api.html#ga0ff78ba25aec569971f85df6c233406c">infix_write_global</a> (<a class="el" href="structinfix__library__t.html">infix_library_t</a> *, const char *, const char *, void *)</td></tr>
+<tr class="memdesc:ga0ff78ba25aec569971f85df6c233406c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data from a buffer into a global variable in a library.  <br /></td></tr>
+<tr class="separator:ga0ff78ba25aec569971f85df6c233406c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Functions for interacting with shared libraries and their global variables. </p>
+<p>Cross-platform functions for loading shared libraries and accessing exported symbols. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gae75c91d8011786875c73f26d2aa437a8" name="gae75c91d8011786875c73f26d2aa437a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae75c91d8011786875c73f26d2aa437a8">&#9670;&#160;</a></span>infix_read_global()</h2>
+<a id="ga1a55403ddf64eaed05f2fcb013412003" name="ga1a55403ddf64eaed05f2fcb013412003"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1a55403ddf64eaed05f2fcb013412003">&#9670;&#160;</a></span>infix_library_close()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_read_global </td>
+          <td class="memname">void infix_library_close </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td>
+          <td class="paramname"><em>lib</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Closes a dynamic library handle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle to close. Safe to call with <code>nullptr</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Closes a dynamic library handle.</p>
+<p>This is a cross-platform wrapper around <code>FreeLibrary</code> (Windows) and <code>dlclose</code> (POSIX).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle to close. It is safe to call this function with <code>nullptr</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga227480098fa596f3c372837461a6b805" name="ga227480098fa596f3c372837461a6b805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga227480098fa596f3c372837461a6b805">&#9670;&#160;</a></span>infix_library_get_symbol()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void * infix_library_get_symbol </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td>
+          <td class="paramname"><em>lib</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>symbol_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the address of a symbol (function or variable) from a loaded library. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbol_name</td><td>The name of the symbol to look up. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the symbol's address, or <code>nullptr</code> if not found.</dd></dl>
+<p>This is a cross-platform wrapper around <code>GetProcAddress</code> (Windows) and <code>dlsym</code> (POSIX).</p>
+<dl class="section note"><dt>Note</dt><dd>On POSIX, <code>dlsym</code> returning <code>NULL</code> is not a definitive error condition, as a symbol's address could itself be <code>NULL</code>. The official way to check for an error is to call <code>dlerror()</code> afterwards. This function does not perform that check and does not set the <code>infix</code> error state, as its primary callers (<code>infix_read_global</code>, etc.) will set a more specific <code>INFIX_CODE_SYMBOL_NOT_FOUND</code> error if the lookup fails.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbol_name</td><td>The name of the symbol to look up (e.g., <code>"my_function"</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>void*</code> pointer to the symbol's address, or <code>nullptr</code> if not found. </dd></dl>
+
+</div>
+</div>
+<a id="gabfd1bb148a39b758e57e772c09b9ea84" name="gabfd1bb148a39b758e57e772c09b9ea84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabfd1bb148a39b758e57e772c09b9ea84">&#9670;&#160;</a></span>infix_library_open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__library__t.html">infix_library_t</a> * infix_library_open </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Opens a dynamic library and returns a handle to it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>The file path to the library (e.g., <code>./mylib.so</code>, <code>user32.dll</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A handle to the library, or <code>nullptr</code> on failure. The handle must be freed with <code>infix_library_close</code>.</dd></dl>
+<p>This function is a cross-platform wrapper around <code>LoadLibraryA</code> (Windows) and <code>dlopen</code> (POSIX). On failure, it sets the thread-local error state with detailed system-specific information using <code>_infix_set_system_error</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>The file path to the library (e.g., <code>"./mylib.so"</code>, <code>"user32.dll"</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to an <code><a class="el" href="structinfix__library__t.html" title="Internal definition of a dynamic library handle.">infix_library_t</a></code> handle on success, or <code>nullptr</code> on failure. The returned handle must be freed with <code>infix_library_close</code>. </dd></dl>
+
+</div>
+</div>
+<a id="gac7f277b537378a53e4554e43a17d0039" name="gac7f277b537378a53e4554e43a17d0039"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac7f277b537378a53e4554e43a17d0039">&#9670;&#160;</a></span>infix_read_global()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_read_global </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td>
           <td class="paramname"><em>lib</em>, </td>
@@ -166,28 +292,41 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reads the value of a global variable from a loaded library. </p>
+<p>Reads the value of a global variable from a library into a buffer. </p>
+<p>Uses the signature parser to determine the size of the variable to ensure the correct number of bytes are copied.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lib</td><td>A handle to a loaded dynamic library. </td></tr>
-    <tr><td class="paramname">symbol_name</td><td>The name of the global variable. </td></tr>
-    <tr><td class="paramname">type_signature</td><td>A signature string describing the variable's type. </td></tr>
-    <tr><td class="paramname">buffer</td><td>A pointer to a buffer to store the value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbol_name</td><td>The name of the global variable. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_signature</td><td>The <code>infix</code> signature string describing the variable's type. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A pointer to the destination buffer to receive the data. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>INFIX_SUCCESS on success. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure.</dd></dl>
+<p>Reads the value of a global variable from a library into a buffer.</p>
+<p>This function first looks up the symbol's address. It then uses the <code>infix</code> signature parser (<code>infix_type_from_signature</code>) to determine the size of the variable. This ensures that the correct number of bytes are copied from the library's data segment into the user's buffer, preventing buffer overflows.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbol_name</td><td>The name of the global variable. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_signature</td><td>The <code>infix</code> signature string describing the variable's type (e.g., <code>"int32"</code>, <code>"{double,double}"</code>). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A pointer to the destination buffer to receive the data. This buffer must be large enough to hold the type described by the signature. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure (e.g., symbol not found, invalid signature). </dd></dl>
 
 </div>
 </div>
-<a id="ga3df4f2e6494af3e1fda98cd5a61d167f" name="ga3df4f2e6494af3e1fda98cd5a61d167f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3df4f2e6494af3e1fda98cd5a61d167f">&#9670;&#160;</a></span>infix_write_global()</h2>
+<a id="ga0ff78ba25aec569971f85df6c233406c" name="ga0ff78ba25aec569971f85df6c233406c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0ff78ba25aec569971f85df6c233406c">&#9670;&#160;</a></span>infix_write_global()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__public__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_write_global </td>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_write_global </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__library__t.html">infix_library_t</a> *&#160;</td>
           <td class="paramname"><em>lib</em>, </td>
@@ -218,17 +357,30 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Writes a value to a global variable in a loaded library. </p>
+<p>Writes data from a buffer into a global variable in a library. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lib</td><td>A handle to a loaded dynamic library. </td></tr>
-    <tr><td class="paramname">symbol_name</td><td>The name of the global variable. </td></tr>
-    <tr><td class="paramname">type_signature</td><td>A signature string describing the variable's type. </td></tr>
-    <tr><td class="paramname">buffer</td><td>A pointer to the new value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbol_name</td><td>The name of the global variable. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_signature</td><td>The <code>infix</code> signature string describing the variable's type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>A pointer to the source buffer containing the data to write. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>INFIX_SUCCESS on success. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure.</dd></dl>
+<p>Writes data from a buffer into a global variable in a library.</p>
+<p>This function is analogous to <code>infix_read_global</code>. It finds the symbol's address and uses the signature string to determine the correct number of bytes to copy from the source buffer to the library's memory.</p>
+<dl class="section note"><dt>Note</dt><dd>This operation assumes that the memory page containing the global variable is writable. This is typical for <code>.data</code> or <code>.bss</code> segments but may fail if the variable is in a read-only segment (e.g., a <code>const</code> global). The function does not attempt to change memory permissions.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib</td><td>The library handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbol_name</td><td>The name of the global variable. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type_signature</td><td>The <code>infix</code> signature string describing the variable's type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>A pointer to the source buffer containing the data to write. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an error code on failure. </dd></dl>
 
 </div>
 </div>

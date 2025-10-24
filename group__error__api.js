@@ -1,11 +1,11 @@
 var group__error__api =
 [
     [ "infix_error_details_t", "structinfix__error__details__t.html", [
-      [ "category", "structinfix__error__details__t.html#a0caa6458c1d70d81abdc4f530dcc96d8", null ],
-      [ "code", "structinfix__error__details__t.html#ad9076024a7bb288a2a65f2fb8644c938", null ],
-      [ "message", "structinfix__error__details__t.html#a37930d8440e1f4ae46571bdce41aff5d", null ],
-      [ "position", "structinfix__error__details__t.html#a0530e44f33e347bfcfe3b663d76ba5b7", null ],
-      [ "system_error_code", "structinfix__error__details__t.html#ac82bf9221f1cd9f5b1b6d8698a1b3eb0", null ]
+      [ "category", "group__high__level__api.html#ga0caa6458c1d70d81abdc4f530dcc96d8", null ],
+      [ "code", "group__high__level__api.html#gad9076024a7bb288a2a65f2fb8644c938", null ],
+      [ "message", "group__high__level__api.html#ga37930d8440e1f4ae46571bdce41aff5d", null ],
+      [ "position", "group__high__level__api.html#ga0530e44f33e347bfcfe3b663d76ba5b7", null ],
+      [ "system_error_code", "group__high__level__api.html#gac82bf9221f1cd9f5b1b6d8698a1b3eb0", null ]
     ] ],
     [ "infix_error_category_t", "group__error__api.html#gaf83a0f846497c5e67af7577b047ba815", [
       [ "INFIX_CATEGORY_NONE", "group__error__api.html#ggaf83a0f846497c5e67af7577b047ba815a6947696424416ddbae74c5fe079c5b3e", null ],

@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Implementation of the shared recursive infix_type generator for fuzzing.">
+<g id="a_Node000001"><a xlink:title="Implements the core logic for generating random infix_type graphs from fuzzer input.">
 <polygon fill="#999999" stroke="#666666" points="365,-294 255,-294 255,-275 365,-275 365,-294"/>
 <text text-anchor="middle" x="310" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_helpers.c</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="fuzz__helpers_8h.html" target="_top" xlink:title="Shared helper functions and types for infix FFI fuzzing harnesses.">
+<g id="a_Node000002"><a xlink:href="fuzz__helpers_8h.html" target="_top" xlink:title="Common definitions, structures, and helpers for all fuzzer targets.">
 <polygon fill="white" stroke="#666666" points="353.5,-239 266.5,-239 266.5,-220 353.5,-220 353.5,-239"/>
 <text text-anchor="middle" x="310" y="-227" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz_helpers.h</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Declarations for internal&#45;only functions, types, and constants.">
+<g id="a_Node000003"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Internal data structures, function prototypes, and constants.">
 <polygon fill="white" stroke="#666666" points="225,-184 85,-184 85,-165 225,-165 225,-184"/>
 <text text-anchor="middle" x="155" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">common/infix_internals.h</text>
 </a>
@@ -56,7 +56,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="infix_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000005"><a xlink:href="infix_8h.html" target="_top" xlink:title="The public interface for the infix FFI library.">
 <polygon fill="white" stroke="#666666" points="254.5,-129 183.5,-129 183.5,-110 254.5,-110 254.5,-129"/>
 <text text-anchor="middle" x="219" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">infix/infix.h</text>
 </a>
@@ -71,39 +71,21 @@
 </a>
 </g>
 </g>
-<!-- Node6 -->
-<g id="Node000006" class="node">
-<title>Node6</title>
-<g id="a_Node000006"><a xlink:title=" ">
+<!-- Node7 -->
+<g id="Node000007" class="node">
+<title>Node7</title>
+<g id="a_Node000007"><a xlink:title=" ">
 <polygon fill="#e0e0e0" stroke="#999999" points="62,-19 0,-19 0,0 62,0 62,-19"/>
 <text text-anchor="middle" x="31" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stdbool.h</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node6 -->
-<g id="edge12_Node000002_Node000006" class="edge">
-<title>Node2&#45;&gt;Node6</title>
-<g id="a_edge12_Node000002_Node000006"><a xlink:title=" ">
+<!-- Node2&#45;&gt;Node7 -->
+<g id="edge12_Node000002_Node000007" class="edge">
+<title>Node2&#45;&gt;Node7</title>
+<g id="a_edge12_Node000002_Node000007"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M266.48,-228.67C217.11,-227.04 135.73,-218.66 76,-184 48.19,-167.86 40.13,-159.17 29,-129 16.64,-95.51 21.95,-52.97 26.66,-29.05"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="30.1,-29.7 28.78,-19.19 23.26,-28.23 30.1,-29.7"/>
-</a>
-</g>
-</g>
-<!-- Node7 -->
-<g id="Node000007" class="node">
-<title>Node7</title>
-<g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="247,-19 191,-19 191,0 247,0 247,-19"/>
-<text text-anchor="middle" x="219" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stddef.h</text>
-</a>
-</g>
-</g>
-<!-- Node2&#45;&gt;Node7 -->
-<g id="edge13_Node000002_Node000007" class="edge">
-<title>Node2&#45;&gt;Node7</title>
-<g id="a_edge13_Node000002_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M313.04,-219.66C321.79,-192.5 344.3,-108.86 310,-55 298.25,-36.56 276.45,-25.53 257.14,-19.07"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="257.91,-15.65 247.33,-16.09 255.88,-22.35 257.91,-15.65"/>
 </a>
 </g>
 </g>
@@ -111,15 +93,33 @@
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:title=" ">
+<polygon fill="#e0e0e0" stroke="#999999" points="247,-19 191,-19 191,0 247,0 247,-19"/>
+<text text-anchor="middle" x="219" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stddef.h</text>
+</a>
+</g>
+</g>
+<!-- Node2&#45;&gt;Node8 -->
+<g id="edge13_Node000002_Node000008" class="edge">
+<title>Node2&#45;&gt;Node8</title>
+<g id="a_edge13_Node000002_Node000008"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M313.04,-219.66C321.79,-192.5 344.3,-108.86 310,-55 298.25,-36.56 276.45,-25.53 257.14,-19.07"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="257.91,-15.65 247.33,-16.09 255.88,-22.35 257.91,-15.65"/>
+</a>
+</g>
+</g>
+<!-- Node9 -->
+<g id="Node000009" class="node">
+<title>Node9</title>
+<g id="a_Node000009"><a xlink:title=" ">
 <polygon fill="#e0e0e0" stroke="#999999" points="300.5,-74 247.5,-74 247.5,-55 300.5,-55 300.5,-74"/>
 <text text-anchor="middle" x="274" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">stdint.h</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node8 -->
-<g id="edge14_Node000002_Node000008" class="edge">
-<title>Node2&#45;&gt;Node8</title>
-<g id="a_edge14_Node000002_Node000008"><a xlink:title=" ">
+<!-- Node2&#45;&gt;Node9 -->
+<g id="edge14_Node000002_Node000009" class="edge">
+<title>Node2&#45;&gt;Node9</title>
+<g id="a_edge14_Node000002_Node000009"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M308.06,-219.74C302.42,-194.2 285.91,-119.43 278.14,-84.23"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="281.52,-83.32 275.95,-74.31 274.68,-84.83 281.52,-83.32"/>
 </a>
@@ -182,7 +182,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="infix__config_8h.html" target="_top" xlink:title="Internal&#45;only header for platform, architecture, and ABI detection.">
+<g id="a_Node000004"><a xlink:href="infix__config_8h.html" target="_top" xlink:title="Platform, architecture, and ABI detection macros.">
 <polygon fill="white" stroke="#666666" points="165.5,-129 38.5,-129 38.5,-110 165.5,-110 165.5,-129"/>
 <text text-anchor="middle" x="102" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">common/infix_config.h</text>
 </a>
@@ -206,64 +206,64 @@
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node6 -->
-<g id="edge5_Node000005_Node000006" class="edge">
-<title>Node5&#45;&gt;Node6</title>
-<g id="a_edge5_Node000005_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M183.41,-111.07C136.75,-101.03 59.65,-83.33 50,-74 37.99,-62.38 33.49,-43.52 31.85,-29.36"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="35.33,-28.94 31.05,-19.25 28.35,-29.49 35.33,-28.94"/>
-</a>
-</g>
-</g>
-<!-- Node5&#45;&gt;Node7 -->
-<g id="edge6_Node000005_Node000007" class="edge">
-<title>Node5&#45;&gt;Node7</title>
-<g id="a_edge6_Node000005_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M219,-109.66C219,-92.17 219,-52.8 219,-29.27"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="222.5,-29.16 219,-19.16 215.5,-29.16 222.5,-29.16"/>
-</a>
-</g>
-</g>
-<!-- Node5&#45;&gt;Node8 -->
-<g id="edge7_Node000005_Node000008" class="edge">
-<title>Node5&#45;&gt;Node8</title>
-<g id="a_edge7_Node000005_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M228.08,-109.75C236.09,-102.03 247.96,-90.6 257.62,-81.28"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="260.31,-83.55 265.09,-74.09 255.46,-78.51 260.31,-83.55"/>
-</a>
-</g>
-</g>
-<!-- Node9 -->
-<g id="Node000009" class="node">
-<title>Node9</title>
-<g id="a_Node000009"><a xlink:href="compat__c23_8h.html" target="_top" xlink:title="Provides compatibility shims for C23 features in a C17/C11 project.">
+<!-- Node6 -->
+<g id="Node000006" class="node">
+<title>Node6</title>
+<g id="a_Node000006"><a xlink:href="compat__c23_8h.html" target="_top" xlink:title="Provides forward compatibility macros for C23 features.">
 <polygon fill="white" stroke="#666666" points="190.5,-74 59.5,-74 59.5,-55 190.5,-55 190.5,-74"/>
 <text text-anchor="middle" x="125" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">common/compat_c23.h</text>
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node9 -->
-<g id="edge8_Node000005_Node000009" class="edge">
-<title>Node5&#45;&gt;Node9</title>
-<g id="a_edge8_Node000005_Node000009"><a xlink:title=" ">
+<!-- Node5&#45;&gt;Node6 -->
+<g id="edge5_Node000005_Node000006" class="edge">
+<title>Node5&#45;&gt;Node6</title>
+<g id="a_edge5_Node000005_Node000006"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M203.9,-109.98C189.18,-101.69 166.58,-88.94 149.33,-79.22"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="150.81,-76.03 140.38,-74.17 147.37,-82.13 150.81,-76.03"/>
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node6 -->
-<g id="edge9_Node000009_Node000006" class="edge">
-<title>Node9&#45;&gt;Node6</title>
-<g id="a_edge9_Node000009_Node000006"><a xlink:title=" ">
+<!-- Node5&#45;&gt;Node7 -->
+<g id="edge8_Node000005_Node000007" class="edge">
+<title>Node5&#45;&gt;Node7</title>
+<g id="a_edge8_Node000005_Node000007"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M183.41,-111.07C136.75,-101.03 59.65,-83.33 50,-74 37.99,-62.38 33.49,-43.52 31.85,-29.36"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="35.33,-28.94 31.05,-19.25 28.35,-29.49 35.33,-28.94"/>
+</a>
+</g>
+</g>
+<!-- Node5&#45;&gt;Node8 -->
+<g id="edge9_Node000005_Node000008" class="edge">
+<title>Node5&#45;&gt;Node8</title>
+<g id="a_edge9_Node000005_Node000008"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M219,-109.66C219,-92.17 219,-52.8 219,-29.27"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="222.5,-29.16 219,-19.16 215.5,-29.16 222.5,-29.16"/>
+</a>
+</g>
+</g>
+<!-- Node5&#45;&gt;Node9 -->
+<g id="edge10_Node000005_Node000009" class="edge">
+<title>Node5&#45;&gt;Node9</title>
+<g id="a_edge10_Node000005_Node000009"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M228.08,-109.75C236.09,-102.03 247.96,-90.6 257.62,-81.28"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="260.31,-83.55 265.09,-74.09 255.46,-78.51 260.31,-83.55"/>
+</a>
+</g>
+</g>
+<!-- Node6&#45;&gt;Node7 -->
+<g id="edge6_Node000006_Node000007" class="edge">
+<title>Node6&#45;&gt;Node7</title>
+<g id="a_edge6_Node000006_Node000007"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M109.9,-54.98C95.18,-46.69 72.58,-33.94 55.33,-24.22"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="56.81,-21.03 46.38,-19.17 53.37,-27.13 56.81,-21.03"/>
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node7 -->
-<g id="edge10_Node000009_Node000007" class="edge">
-<title>Node9&#45;&gt;Node7</title>
-<g id="a_edge10_Node000009_Node000007"><a xlink:title=" ">
+<!-- Node6&#45;&gt;Node8 -->
+<g id="edge7_Node000006_Node000008" class="edge">
+<title>Node6&#45;&gt;Node8</title>
+<g id="a_edge7_Node000006_Node000008"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M140.1,-54.98C154.82,-46.69 177.42,-33.94 194.67,-24.22"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="196.63,-27.13 203.62,-19.17 193.19,-21.03 196.63,-27.13"/>
 </a>

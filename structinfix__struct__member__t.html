@@ -105,11 +105,11 @@ $(document).ready(function(){initNavTree('structinfix__struct__member__t.html','
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structinfix__struct__member__t-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">infix_struct_member_t Struct Reference<div class="ingroups"><a class="el" href="group__public__api.html">Public API</a> &raquo; <a class="el" href="group__type__system.html">Type System</a></div></div></div>
+  <div class="headertitle"><div class="title">infix_struct_member_t Struct Reference<div class="ingroups"><a class="el" href="group__high__level__api.html">High-Level Signature API</a> &#124; <a class="el" href="group__high__level__api.html">High-Level Signature API</a> &raquo; <a class="el" href="group__manual__api.html">Manual API</a> &#124; <a class="el" href="group__high__level__api.html">High-Level Signature API</a> &raquo; <a class="el" href="group__introspection__api.html">Introspection API</a> &raquo; <a class="el" href="group__type__system.html">Type System</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Describes a single member of an aggregate type (struct or union).  
+<p>Describes a single member of a C struct or union.  
  <a href="structinfix__struct__member__t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="infix_8h_source.html">infix.h</a>&gt;</code></p>
@@ -121,69 +121,16 @@ Collaboration diagram for infix_struct_member_t:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8dad067a06c5efd90028fb1cab9e2911" id="r_a8dad067a06c5efd90028fb1cab9e2911"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__struct__member__t.html#a8dad067a06c5efd90028fb1cab9e2911">name</a></td></tr>
-<tr class="memdesc:a8dad067a06c5efd90028fb1cab9e2911"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the member (for debugging/reflection).  <br /></td></tr>
-<tr class="separator:a8dad067a06c5efd90028fb1cab9e2911"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa89e6621da98f5115dcc807599c4ac77" id="r_aa89e6621da98f5115dcc807599c4ac77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__struct__member__t.html#aa89e6621da98f5115dcc807599c4ac77">type</a></td></tr>
-<tr class="memdesc:aa89e6621da98f5115dcc807599c4ac77"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <code>infix_type</code> describing the member's type.  <br /></td></tr>
-<tr class="separator:aa89e6621da98f5115dcc807599c4ac77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc9fb3780626694111f4c8c74700a9b9" id="r_abc9fb3780626694111f4c8c74700a9b9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__struct__member__t.html#abc9fb3780626694111f4c8c74700a9b9">offset</a></td></tr>
-<tr class="memdesc:abc9fb3780626694111f4c8c74700a9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The byte offset of the member from the start of the aggregate.  <br /></td></tr>
-<tr class="separator:abc9fb3780626694111f4c8c74700a9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8dad067a06c5efd90028fb1cab9e2911" id="r_ga8dad067a06c5efd90028fb1cab9e2911"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga8dad067a06c5efd90028fb1cab9e2911">name</a></td></tr>
+<tr class="separator:ga8dad067a06c5efd90028fb1cab9e2911"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa89e6621da98f5115dcc807599c4ac77" id="r_gaa89e6621da98f5115dcc807599c4ac77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gaa89e6621da98f5115dcc807599c4ac77">type</a></td></tr>
+<tr class="separator:gaa89e6621da98f5115dcc807599c4ac77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc9fb3780626694111f4c8c74700a9b9" id="r_gabc9fb3780626694111f4c8c74700a9b9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc9fb3780626694111f4c8c74700a9b9">offset</a></td></tr>
+<tr class="separator:gabc9fb3780626694111f4c8c74700a9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Describes a single member of an aggregate type (struct or union). </p>
-<p>This structure provides the necessary metadata to define the layout of a C struct or union, which is essential for correct ABI classification. </p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8dad067a06c5efd90028fb1cab9e2911" name="a8dad067a06c5efd90028fb1cab9e2911"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8dad067a06c5efd90028fb1cab9e2911">&#9670;&#160;</a></span>name</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* infix_struct_member_t::name</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The name of the member (for debugging/reflection). </p>
-
-</div>
-</div>
-<a id="abc9fb3780626694111f4c8c74700a9b9" name="abc9fb3780626694111f4c8c74700a9b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc9fb3780626694111f4c8c74700a9b9">&#9670;&#160;</a></span>offset</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t infix_struct_member_t::offset</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The byte offset of the member from the start of the aggregate. </p>
-
-</div>
-</div>
-<a id="aa89e6621da98f5115dcc807599c4ac77" name="aa89e6621da98f5115dcc807599c4ac77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa89e6621da98f5115dcc807599c4ac77">&#9670;&#160;</a></span>type</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a>* infix_struct_member_t::type</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>An <code>infix_type</code> describing the member's type. </p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<div class="textblock"><p>Describes a single member of a C struct or union. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/infix/<a class="el" href="infix_8h_source.html">infix.h</a></li>
 </ul>
 </div><!-- contents -->

@@ -1,4 +1,4 @@
-<map id="Error Reporting" name="Error Reporting">
-<area shape="rect" id="Node000001" title="Public structures and enumerations for detailed error reporting." alt="" coords="140,5,260,31"/>
-<area shape="rect" id="Node000002" href="$group__public__api.html" title="The primary public&#45;facing functions for using the infix library." alt="" coords="5,5,92,31"/>
+<map id="Error Handling API" name="Error Handling API">
+<area shape="rect" id="Node000001" title="Functions and types for detailed, thread&#45;safe error reporting." alt="" coords="236,5,376,31"/>
+<area shape="rect" id="Node000002" href="$group__high__level__api.html" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,5,188,31"/>
 </map>

@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('102__by__reference_8c.html',''); initR
 </div><!--header-->
 <div class="contents">
 
-<p>Tests passing and returning aggregates that are handled by reference.  
+<p>Unit test for passing and returning large aggregates by reference.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('102__by__reference_8c.html',''); initR
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 102_by_reference.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="102__by__reference_8c__incl.svg" width="615" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="102__by__reference_8c__incl.svg" width="647" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -129,12 +129,13 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac636dc1477b7068c2c53a515809232b8" id="r_ac636dc1477b7068c2c53a515809232b8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="102__by__reference_8c.html#ac636dc1477b7068c2c53a515809232b8">process_large_struct</a> (<a class="el" href="structLargeStruct.html">LargeStruct</a> s)</td></tr>
-<tr class="memdesc:ac636dc1477b7068c2c53a515809232b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a large struct, returning a value derived from its members.  <br /></td></tr>
+<tr class="memdesc:ac636dc1477b7068c2c53a515809232b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that takes a large struct, which the ABI will pass by reference.  <br /></td></tr>
 <tr class="separator:ac636dc1477b7068c2c53a515809232b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87c529dcbda53d1380fb3acff0e734b2" id="r_a87c529dcbda53d1380fb3acff0e734b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structLargeStruct.html">LargeStruct</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="102__by__reference_8c.html#a87c529dcbda53d1380fb3acff0e734b2">return_large_struct</a> (int base_val)</td></tr>
-<tr class="memdesc:a87c529dcbda53d1380fb3acff0e734b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a large struct by value, which the ABI turns into a hidden pointer return.  <br /></td></tr>
+<tr class="memdesc:a87c529dcbda53d1380fb3acff0e734b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that returns a large struct, which the ABI will return by reference.  <br /></td></tr>
 <tr class="separator:a87c529dcbda53d1380fb3acff0e734b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedc9f4d03d5d37bfc181efe7e1f66477" id="r_aedc9f4d03d5d37bfc181efe7e1f66477"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="102__by__reference_8c.html#aedc9f4d03d5d37bfc181efe7e1f66477">process_npot_struct</a> (<a class="el" href="structNonPowerOfTwoStruct.html">NonPowerOfTwoStruct</a> s)</td></tr>
+<tr class="memdesc:aedc9f4d03d5d37bfc181efe7e1f66477"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that takes a struct whose size is not a power of two.  <br /></td></tr>
 <tr class="separator:aedc9f4d03d5d37bfc181efe7e1f66477"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ee03187ca12eb3433b0a764b856cf85" id="r_a2ee03187ca12eb3433b0a764b856cf85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="102__by__reference_8c.html#a2ee03187ca12eb3433b0a764b856cf85">subtest</a> (&quot;Large struct (&gt;16 bytes) passed and returned by reference/stack&quot;)</td></tr>
 <tr class="separator:a2ee03187ca12eb3433b0a764b856cf85"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,18 +148,16 @@ Variables</h2></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Tests passing and returning aggregates that are handled by reference. </p>
-<p>Copyright (c) 2025 Sanko Robinson</p>
-<p>This source code is dual-licensed under the Artistic License 2.0 or the MIT License. You may choose to use this code under the terms of either license.</p>
-<p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
-<p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
-<p>SPDX-License-Identifier: CC-BY-4.0</p>
-<p>This test suite focuses on aggregates that are too large to be passed entirely in registers. According to most ABIs, such structs are either passed as a pointer to a copy on the stack (by reference) or directly on the stack. When returned, a hidden pointer to a caller-allocated buffer is often used. This suite verifies these mechanisms.</p>
-<p>It covers two main scenarios:</p>
-<ol type="1">
-<li><b>Large Structs (All Platforms):</b> A struct larger than 16 bytes is used to test the common case for stack-based passing and returning via a hidden pointer. This is expected behavior on SysV x64, Windows x64, and AArch64.</li>
-<li><b>Windows x64 Specific Rule:</b> The Windows x64 ABI mandates that any aggregate whose size is not a power of two (1, 2, 4, or 8 bytes) must be passed by reference, regardless of its total size. This test verifies this specific edge case using a 12-byte struct. </li>
-</ol>
+<div class="textblock"><p>Unit test for passing and returning large aggregates by reference. </p>
+<p>This test file validates the ABI implementation for handling aggregates (structs) that are too large to be passed or returned directly in registers. According to most ABIs (including System V and Windows x64), such aggregates are handled "by reference."</p>
+<ul>
+<li><b>Passing by Reference:</b> The caller allocates memory for the struct, and a pointer to this memory is passed in a general-purpose register.</li>
+<li><b>Returning by Reference:</b> The caller allocates space for the return value and passes a hidden pointer to this space as the <em>first</em> (often invisible) argument to the function. The callee then writes its result to this location.</li>
+</ul>
+<p>This test verifies both scenarios for:</p><ul>
+<li>A <code><a class="el" href="structLargeStruct.html" title="A struct larger than 16 bytes, guaranteed to be passed by reference on most ABIs.">LargeStruct</a></code> (24 bytes), which is guaranteed to be passed by reference.</li>
+<li>A <code><a class="el" href="structNonPowerOfTwoStruct.html" title="A struct whose size (12 bytes) is not a power of two, used to test ABI rules for such types.">NonPowerOfTwoStruct</a></code> (12 bytes), which is also passed by reference on many ABIs (like Windows x64) that have strict size rules for register passing. </li>
+</ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -191,7 +190,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Processes a large struct, returning a value derived from its members. </p>
+<p>A C function that takes a large struct, which the ABI will pass by reference. </p>
 
 </div>
 </div>
@@ -211,6 +210,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>A C function that takes a struct whose size is not a power of two. </p>
+
 </div>
 </div>
 <a id="a87c529dcbda53d1380fb3acff0e734b2" name="a87c529dcbda53d1380fb3acff0e734b2"></a>
@@ -229,7 +230,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns a large struct by value, which the ABI turns into a hidden pointer return. </p>
+<p>A C function that returns a large struct, which the ABI will return by reference. </p>
 
 </div>
 </div>
@@ -283,7 +284,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(2)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:132</div></div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>
 </div>
