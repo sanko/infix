@@ -72,7 +72,7 @@ graph TD
     end
 
     subgraph "Forward Call - Call Phase"
-        I[cif_func(...)] --> J(Prologue: Set up stack);
+        I["cif_func(...)"] --> J(Prologue: Set up stack);
         J --> K(Argument Marshalling);
         K --> L[call native_func];
         L --> M(Epilogue: Handle return, restore stack);
@@ -109,8 +109,8 @@ graph TD
         K[Native Call] --> L(JIT Stub: Marshal args to void**);
         L --> M[Call C Dispatcher];
         M --> N{context->cached_forward_trampoline != NULL?};
-        N -->|Yes (Callback)| O[Use Fwd Trampoline to call Type-Safe Handler];
-        N -->|No (Closure)| P[Directly call Generic Handler];
+        N -->|"Yes (Callback)"| O[Use Fwd Trampoline to call Type-Safe Handler];
+        N -->|"No (Closure)"| P[Directly call Generic Handler];
         O --> Q(Return to Dispatcher);
         P --> Q;
         Q --> R(Return to JIT Stub);
@@ -129,14 +129,10 @@ graph TD
 A memory region is never simultaneously writable and executable. The implementation strategy varies by platform for maximum security and compatibility:
 
 ```mermaid
----
-config:
-  theme: dark
----
 graph TD
     subgraph "Windows/macOS/etc. (Single-Mapping)"
-        A[VirtualAlloc / mmap<br>PROT_READ | PROT_WRITE] --> B[Write JIT Code];
-        B --> C[VirtualProtect / mprotect<br>PROT_READ | PROT_EXEC];
+        A["VirtualAlloc / mmap<br>PROT_READ | PROT_WRITE"] --> B[Write JIT Code];
+        B --> C["VirtualProtect / mprotect<br>PROT_READ | PROT_EXEC"];
         C --> D(Return RX Pointer);
     end
     subgraph "Linux/BSD (Dual-Mapping)"
@@ -177,7 +173,7 @@ This ensures the library "just works" for developers, while automatically "level
 
 ```mermaid
 graph TD
-    A[infix_executable_alloc() called on macOS] --> B{Is this the first call?};
+    A["infix_executable_alloc() called on macOS"] --> B{Is this the first call?};
     B -->|Yes| C[Runtime Detection];
     B -->|No| G[Use cached strategy];
 

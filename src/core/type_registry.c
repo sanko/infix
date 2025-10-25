@@ -223,7 +223,7 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_type ** type_ptr
 
     // Cycle detection: If we've seen this node before, we're in a cycle.
     // Return success to break the loop.
-    for (resolve_memo_node_t * node = *memo_head; node != NULL; node = node->next) {
+    for (resolve_memo_node_t * node = *memo_head; node != nullptr; node = node->next) {
         if (node->src == type)
             return INFIX_SUCCESS;
     }
@@ -305,7 +305,7 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_type ** type_ptr
  * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status _infix_resolve_type_graph_inplace(infix_type ** type_ptr, infix_registry_t * registry) {
-    resolve_memo_node_t * memo_head = NULL;
+    resolve_memo_node_t * memo_head = nullptr;
     return _resolve_type_graph_inplace_recursive(type_ptr, registry, &memo_head);
 }
 
@@ -521,4 +521,141 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         }
     }
     return INFIX_SUCCESS;
+}
+
+// Registry Introspection API Implementation
+
+/**
+ * @internal
+ * @struct registry_printer_state
+ * @brief A state object for the recursive registry-to-string printer.
+ */
+typedef struct {
+    char * p;            /**< Current write position in the output buffer. */
+    size_t remaining;    /**< Bytes remaining in the buffer. */
+    infix_status status; /**< Current status, set to an error on buffer overflow. */
+} registry_printer_state;
+
+/**
+ * @internal
+ * @brief A safe `vsnprintf` wrapper for building the registry string.
+ */
+static void _registry_print(registry_printer_state * state, const char * fmt, ...) {
+    if (state->status != INFIX_SUCCESS)
+        return;
+    va_list args;
+    va_start(args, fmt);
+    int written = vsnprintf(state->p, state->remaining, fmt, args);
+    va_end(args);
+    if (written < 0 || (size_t)written >= state->remaining)
+        state->status = INFIX_ERROR_INVALID_ARGUMENT;
+    else {
+        state->p += written;
+        state->remaining -= written;
+    }
+}
+
+c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_size, const infix_registry_t * registry) {
+    if (!buffer || buffer_size == 0 || !registry)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    registry_printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    *state.p = '\0';
+
+    // Iterate through all buckets and their chains.
+    for (size_t i = 0; i < registry->num_buckets; ++i) {
+        for (const _infix_registry_entry_t * entry = registry->buckets[i]; entry != nullptr; entry = entry->next) {
+            // Only print fully defined types, not forward declarations.
+            if (entry->type && !entry->is_forward_declaration) {
+                char type_body_buffer[1024];
+
+                if (_infix_type_print_body_only(
+                        type_body_buffer, sizeof(type_body_buffer), entry->type, INFIX_DIALECT_SIGNATURE) !=
+                    INFIX_SUCCESS) {
+                    state.status = INFIX_ERROR_INVALID_ARGUMENT;
+                    goto end_print_loop;
+                }
+
+                _registry_print(&state, "@%s = %s;\n", entry->name, type_body_buffer);
+                if (state.status != INFIX_SUCCESS)
+                    goto end_print_loop;
+            }
+        }
+    }
+end_print_loop:;
+    return state.status;
+}
+
+c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t * registry) {
+    // Return an iterator positioned before the first element.
+    // The first call to next() will advance it to the first valid element.
+    return (infix_registry_iterator_t){registry, 0, nullptr};
+}
+
+c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter) {
+    if (!iter || !iter->registry)
+        return false;
+
+
+    const _infix_registry_entry_t * entry = iter->current_entry;
+
+    // If we have a current entry, start from the next one in the chain.
+    if (iter->current_entry)
+        entry = entry->next;
+
+    // Otherwise, if we are starting, begin with the head of the current bucket.
+    else if (iter->current_bucket < iter->registry->num_buckets)
+        entry = iter->registry->buckets[iter->current_bucket];
+
+    while (true) {
+        // Traverse the current chain looking for a valid entry.
+        while (entry) {
+            if (entry->type && !entry->is_forward_declaration) {
+                // Found one. Update the iterator and return successfully.
+                iter->current_entry = entry;
+                return true;
+            }
+            entry = entry->next;
+        }
+
+        // If we're here, the current chain is exhausted. Move to the next bucket.
+        iter->current_bucket++;
+
+        // If there are no more buckets, we're done.
+        if (iter->current_bucket >= iter->registry->num_buckets) {
+            iter->current_entry = nullptr;
+            return false;
+        }
+
+        // Start the search from the head of the new bucket.
+        entry = iter->registry->buckets[iter->current_bucket];
+    }
+}
+c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry_iterator_t * iter) {
+    if (!iter || !iter->current_entry)
+        return nullptr;
+    return iter->current_entry->name;
+}
+
+c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_registry_iterator_t * iter) {
+    if (!iter || !iter->current_entry)
+        return nullptr;
+    return iter->current_entry->type;
+}
+
+c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, const char * name) {
+    if (!registry || !name)
+        return false;
+    _infix_registry_entry_t * entry = _registry_lookup((infix_registry_t *)registry, name);
+    // It's defined if an entry exists, it has a type, and it's not a lingering forward declaration.
+    return entry != nullptr && entry->type != nullptr && !entry->is_forward_declaration;
+}
+
+c23_nodiscard const infix_type * infix_registry_lookup_type(const infix_registry_t * registry, const char * name) {
+    if (!registry || !name)
+        return nullptr;
+    _infix_registry_entry_t * entry = _registry_lookup((infix_registry_t *)registry, name);
+    if (entry && entry->type && !entry->is_forward_declaration)
+        return entry->type;
+    return nullptr;
 }

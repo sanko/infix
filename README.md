@@ -6,6 +6,14 @@
 
 At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code "trampolines" at runtime. These trampolines correctly handle the low-level Application Binary Interface (ABI) for the target platform, ensuring seamless and performant interoperability.
 
+## Documentation
+
+*   **[Cookbook](docs/cookbook.md):** The best place to start. A comprehensive guide with practical, copy-pasteable recipes for common FFI tasks.
+*   **[Signature Reference](docs/signatures.md):** The complete guide for the `infix` signature mini-language spec.
+*   **[Internals](docs/internals.md):** A deep dive into the library's architecture for maintainers and contributors.
+*   **[Porting Guide](docs/porting.md):** A guide for porting `infix` to new CPU architectures and ABIs.
+*   **[INSTALL.md](docs/INSTALL.md):** Detailed build and integration instructions.
+
 ## Who is this for?
 
 `infix` is designed for developers who need to bridge the gap between different codebases or language runtimes. You'll find it especially useful if you are:
@@ -100,299 +108,6 @@ int main() {
 }
 ```
 
-## Usage Guide
-
-### Part 1: The Signature Language
-
-The signature language is the most powerful and convenient way to use `infix`.
-
-| Name                  | `infix` Syntax                 | Example Signature               | C/C++ Equivalent                 |
-| :--------------------- | :---------------------------- | :------------------------------ | :------------------------------- |
-| **Primitives**         | C type names                  | `"int"`, `"double"`, `"uint64"` | `int`, `double`, `uint64_t`      |
-| **Pointers**           | `*<type>`                     | `"*int"`, `"*void"`             | `int*`, `void*`                  |
-| **Structs**            | `{<members>}`                 | `"{int, double, *char}"`        | `struct { ... }`                 |
-| **Unions**             | `<<members>>`                 | `"<int, float>"`                | `union { ... }`                  |
-| **Arrays**             | `[<size>:<type>]`             | `"[10:double]"`                 | `double[10]`                     |
-| **Function Pointers**  | `(<args>)-><ret>`             | `"(int, int)->int"`             | `int (*)(int, int)`              |
-| **_Complex**           | `c[<base_type>]`              | `"c[double]"`                   | `_Complex double`                |
-| **SIMD Vectors**       | `v[<size>:<type>]`            | `"v[4:float]"`                  | `__m128`, `float32x4_t`          |
-| **Enums**              | `e:<int_type>`                | `"e:int"`                       | `enum { ... }`                   |
-| **Packed Structs**     | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`           | `__attribute__((packed))`        |
-| **Variadic Functions** | `(<fixed>;<variadic>)`        | `"(*char; int)->int"`           | `printf(const char*, ...)`       |
-| **Named Types**        | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`       | `typedef struct Point {...}`     |
-| **Named Arguments**    | `<name>:<type>`               | `"(count:int, data:*void)"`     | (For reflection only)            |
-
-See [the complete signature specification](docs/signatures.md).
-
-### Part 2: Common Recipes
-
-A wide range of recipes may be found in [infix's cookbook](docs/cookbook.md).
-
-#### Forward Call (Calling C from your code)
-
-```c
-#include <stdio.h>
-#include <infix/infix.h>
-
-int main() {
-    // 1. Describe the function signature: int puts(const char*);
-    const char* signature = "(*char) -> int32";
-
-    // 2. Create a "bound" trampoline, hardcoding the address of `puts`.
-    //    Pass nullptr for the registry as we are not using named types.
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, signature, (void*)puts, nullptr);
-
-    // 3. Get the callable function pointer.
-    infix_cif_func cif = infix_forward_get_code(trampoline);
-
-    // 4. Prepare arguments and call.
-    const char* my_string = "Hello from infix!";
-    void* args[] = { &my_string };
-    int return_value;
-    cif(&return_value, args);
-
-    printf("puts returned: %d\n", return_value);
-
-    // 5. Clean up.
-    infix_forward_destroy(trampoline);
-    return 0;
-}
-```
-
-#### Reverse Call (Creating a C callback)
-
-```c
-// 1. The handler for a type-safe callback is a clean C function.
-//    Its signature exactly matches the types in the signature string.
-int my_adder_handler(int a, int b) {
-    return a + b;
-}
-
-// 2. The native C code that will receive and call our callback.
-void run_callback(int (*func_ptr)(int, int)) {
-    int result = func_ptr(20, 22);
-    printf("Native code received result: %d\n", result); // Prints 42
-}
-
-int main() {
-    // 3. Create the reverse trampoline (the callback).
-    infix_reverse_t* context = NULL;
-    const char* signature = "(int32, int32) -> int32";
-    infix_reverse_create_callback(&context, signature, (void*)my_adder_handler, NULL);
-
-    // 4. Get the native C function pointer and pass it to the C code.
-    typedef int (*AdderFunc)(int, int);
-    run_callback((AdderFunc)infix_reverse_get_code(context));
-
-    // 5. Clean up.
-    infix_reverse_destroy(context);
-    return 0;
-}
-```
-
-#### Using the Named Type Registry
-
-```c
-// 1. Create a registry.
-infix_registry_t* registry = infix_registry_create();
-
-// 2. Define your types as a semicolon-separated string.
-const char* my_types =
-    "@UserID = uint64;"                          // Create a readable alias.
-    "@UI::Point = { x: double, y: double };"     // Define a struct in a namespace.
-    "@Node = { value: int, next: *@Node };";     // Define a recursive linked-list node.
-
-// 3. Register the types.
-infix_register_types(registry, my_types);
-
-// 4. Use the named types in any signature by passing the registry.
-infix_forward_t* trampoline = NULL;
-// Assume `get_user_id_from_node` is a C function you want to call.
-// infix_forward_create(&trampoline, "(*@Node) -> @UserID", (void*)get_user_id_from_node, registry);
-
-// 5. Clean up.
-infix_forward_destroy(trampoline);
-infix_registry_destroy(registry);
-```
-
-#### Reading Global Variables from a Shared Library
-
-`infix` can read and write to global variables exported from a dynamic library.
-
-**Library Code (`libglobals.c`):**
-```c
-#if defined(_WIN32)
-#define EXPORT __declspec(dllexport)
-#else
-#define EXPORT
-#endif
-
-EXPORT int my_global_counter = 42;
-```
-Compile this into `libglobals.so` or `libglobals.dll`.
-
-**Main Application Code:**
-```c
-#include <infix/infix.h>
-#include <stdio.h>
-
-void main() {
-    infix_library_t* lib = infix_library_open("./libglobals.so");
-    if (!lib) return;
-
-    int counter_value = 0;
-    // 1. Use a signature to describe the variable's type.
-    infix_status status = infix_read_global(lib, "my_global_counter", "int32", &counter_value);
-    if (status == INFIX_SUCCESS) {
-        printf("Initial global value: %d\n", counter_value); // Expected: 42
-    }
-
-    // 2. Write a new value.
-    int new_value = 100;
-    infix_write_global(lib, "my_global_counter", "int32", &new_value);
-
-    // 3. Read it back to confirm.
-    infix_read_global(lib, "my_global_counter", "int32", &counter_value);
-    printf("Updated global value: %d\n", counter_value); // Expected: 100
-
-    infix_library_close(lib);
-}
-```
-
-### Part 3: The Manual C API (Advanced)
-
-For dynamic use cases, you can build `infix_type` objects programmatically. All types are allocated from an `infix_arena_t`.
-
-```c
-#include <stddef.h> // For offsetof
-typedef struct { double x; double y; } Point; // C struct for reference
-
-void build_point_manually() {
-    infix_arena_t* arena = infix_arena_create(4096);
-
-    infix_struct_member members;
-    members = infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x));
-    members = infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y));
-
-    infix_type* point_type = NULL;
-    infix_type_create_struct(arena, &point_type, members, 2);
-
-    // Now `point_type` can be used to create trampolines.
-
-    infix_arena_destroy(arena); // Frees the arena and all types within it.
-}
-```
-
-### Powerful Introspection for Dynamic Data Marshalling
-
-Beyond just calling functions, `infix` provides a powerful introspection API that allows you to parse a signature string and examine the complete memory layout of a C type at runtime. This is the key feature that makes `infix` an ideal engine for building language bindings, serializers, or any tool that needs to dynamically interact with C data structures.
-
-**Example: Inspecting a C Struct at Runtime**
-```c
-#include <infix/infix.h>
-#include <stdio.h>
-
-// The C struct we want to understand.
-typedef struct {
-    int32_t user_id;
-    double score;
-    const char* name;
-} UserProfile;
-
-int main() {
-    // 1. A signature describing the C struct, with named fields.
-    const char* profile_sig = "{id:int32, score:double, name:*char}";
-
-    infix_type* struct_type = NULL;
-    infix_arena_t* arena = NULL;
-
-    // 2. Parse the signature to get a detailed, introspectable type object.
-    if (infix_type_from_signature(&struct_type, &arena, profile_sig, nullptr) != INFIX_SUCCESS) {
-        return 1;
-    }
-
-    // 3. Use the introspection API to query the layout.
-    printf("Inspecting struct layout for: %s\n", profile_sig);
-    printf("Total size: %zu bytes, Alignment: %zu bytes\n",
-           infix_type_get_size(struct_type),
-           infix_type_get_alignment(struct_type));
-
-    for (size_t i = 0; i < infix_type_get_member_count(struct_type); ++i) {
-        const infix_struct_member* member = infix_type_get_member(struct_type, i);
-        printf("  - Member '%s': offset=%zu, size=%zu\n",
-               member->name,
-               member->offset,
-               infix_type_get_size(member->type));
-    }
-
-    // 4. Clean up the parser's temporary memory.
-    infix_arena_destroy(arena);
-    return 0;
-}
-```
-
-**Output on a typical 64-bit system:**
-```
-Inspecting struct layout for: {id:int32, score:double, name:*char}
-Total size: 24 bytes, Alignment: 8 bytes
-  - Member 'id': offset=0, size=4
-  - Member 'score': offset=8, size=8
-  - Member 'name': offset=16, size=8
-```
-
-This runtime layout information allows you to, for example, take a Perl hash and correctly pack its key/value pairs into a C `UserProfile` struct in memory, byte by byte.
-
-### Error Handling
-
-Nearly all `infix` API functions return an `infix_status` enum. If an operation fails, you can get detailed, thread-safe error information.
-
-#### Trampoline Creation
-
-```c
-infix_forward_t* trampoline = NULL;
-// This will fail if `registry` is NULL or doesn't contain `@MissingType`.
-// infix_status status = infix_forward_create(&trampoline, "(@MissingType)->void", my_func, registry);
-
-if (status != INFIX_SUCCESS) {
-    infix_error_details_t err = infix_get_last_error();
-    fprintf(stderr, "Error creating trampoline!\n");
-    fprintf(stderr, "  Category: %d\n", err.category); // e.g., INFIX_CATEGORY_PARSER
-    fprintf(stderr, "  Code: %d\n", err.code);       // e.g., INFIX_CODE_UNRESOLVED_NAMED_TYPE
-    fprintf(stderr, "  Position: %zu\n", err.position); // Byte offset in signature string
-}
-```
-
-#### Signature Parsing
-
-```c
-const char* bad_signature = "{int, double, ^*char}"; // Invalid character '^'
-infix_type* type = NULL;
-infix_arena_t* arena = NULL;
-infix_status status = infix_type_from_signature(&type, &arena, bad_signature, NULL);
-
-if (status != INFIX_SUCCESS) {
-    infix_error_details_t err = infix_get_last_error();
-    fprintf(stderr, "Failed to parse signature:\n");
-    fprintf(stderr, "  %s\n", bad_signature);
-    // Print a caret '^' pointing to the error location.
-    fprintf(stderr, "  %*s^\n", (int)err.position, "");
-    fprintf(stderr, "Error: %s (code: %d, position: %zu)\n",
-            err.message, err.code, err.position);
-}
-
-infix_arena_destroy(arena); // Safe to call on NULL
-```
-
-**Expected Output:**
-
-```
-Failed to parse signature:
-  {int, double, ^*char}
-               ^
-Error: Unexpected token or character (code: 200, position: 15)
-```
-
 ## API Reference
 
 A brief overview of the complete public API, grouped by functionality.
@@ -404,6 +119,15 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_registry_create()`: Creates a new, empty type registry.
 - `infix_registry_destroy()`: Frees a registry and all types defined within it.
 - `infix_register_types()`: Parses a string of definitions to populate a registry.
+
+### Registry Introspection API (`registry_introspection_api`)
+- `infix_registry_print()`: Serializes all defined types in a registry to a string.
+- `infix_registry_iterator_begin()`: Creates an iterator to traverse the types in a registry.
+- `infix_registry_iterator_next()`: Advances the iterator to the next type.
+- `infix_registry_iterator_get_name()`: Gets the name of the type at the current iterator position.
+- `infix_registry_iterator_get_type()`: Gets the `infix_type` at the current iterator position.
+- `infix_registry_is_defined()`: Checks if a type name is fully defined in the registry.
+- `infix_registry_lookup_type()`: Retrieves a canonical `infix_type` from the registry by name.
 
 ### High-Level Signature API (`high_level_api`)
 - `infix_forward_create()`: Creates a bound forward trampoline from a signature.
@@ -514,14 +238,6 @@ In addition to the CI platforms tested here on Github, I can verify infix builds
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs, feature requests, or documentation improvements.
-
-## Learn More
-
-*   **[Cookbook](docs/cookbook.md):** Practical, copy-pasteable recipes for common FFI tasks.
-*   **[Signature Reference](docs/signatures.md):** The complete guide to the signature mini-language.
-*   **[Internals](docs/internals.md):** A deep dive into the library's architecture, JIT engine, and security features.
-*   **[Porting Guide](docs/porting.md):** Instructions for adding support for new architectures.
-*   **[INSTALL.md](docs/INSTALL.md):** Detailed build and integration instructions.
 
 ## License & Legal
 

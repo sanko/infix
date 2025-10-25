@@ -446,8 +446,89 @@ void infix_registry_destroy(infix_registry_t *);
  * @endcode
  */
 c23_nodiscard infix_status infix_register_types(infix_registry_t *, const char *);
-
 /** @} */  // end of registry_api group
+
+/**
+ * @defgroup registry_introspection_api Registry Introspection API
+ * @brief APIs for inspecting and serializing the contents of a named type registry.
+ * @ingroup high_level_api
+ * @{
+ */
+
+/** @brief An opaque handle to a registry iterator. Created by `infix_registry_iterator_begin`. */
+typedef struct infix_registry_iterator_t infix_registry_iterator_t;
+
+/**
+ * @brief Serializes all defined types within a registry into a single, human-readable string.
+ *
+ * The output format is a sequence of definitions (e.g., `@Name = { ... };`) separated
+ * by newlines, suitable for logging, debugging, or saving to a file. This function
+ * will not print forward declarations that have not been fully defined.
+ *
+ * @param[out] buffer The output buffer to write the string into.
+ * @param[in] buffer_size The size of the output buffer.
+ * @param[in] registry The registry to serialize.
+ * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_INVALID_ARGUMENT` if the buffer is too small.
+ */
+c23_nodiscard infix_status infix_registry_print(char *, size_t, const infix_registry_t *);
+
+/**
+ * @brief Initializes an iterator for traversing the types in a registry.
+ *
+ * @param[in] registry The registry to iterate over.
+ * @return An initialized iterator. If the registry is empty, the first call to
+ *         `infix_registry_iterator_next` on this iterator will return `false`.
+ */
+c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t *);
+
+/**
+ * @brief Advances the iterator to the next defined type in the registry.
+ *
+ * @param[in,out] iterator The iterator to advance.
+ * @return `true` if the iterator was advanced to a valid type, or `false` if there are no more types.
+ */
+c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t *);
+
+/**
+ * @brief Gets the name of the type at the iterator's current position.
+ *
+ * @param[in] iterator The iterator.
+ * @return The name of the type (e.g., "MyStruct"), or `nullptr` if the iterator is invalid or at the end.
+ */
+c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry_iterator_t *);
+
+/**
+ * @brief Gets the `infix_type` object of the type at the iterator's current position.
+ *
+ * @param[in] iterator The iterator.
+ * @return A pointer to the canonical `infix_type` object, or `nullptr` if the iterator is invalid or at the end.
+ */
+c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_registry_iterator_t *);
+
+/**
+ * @brief Checks if a type with the given name is fully defined in the registry.
+ *
+ * This function will return `false` for names that are only forward-declared but
+ * have not been given a definition.
+ *
+ * @param[in] registry The registry to search.
+ * @param[in] name The name of the type to check (e.g., "MyStruct").
+ * @return `true` if a complete definition for the name exists, `false` otherwise.
+ */
+c23_nodiscard bool infix_registry_is_defined(const infix_registry_t *, const char *);
+
+/**
+ * @brief Retrieves the canonical `infix_type` object for a given name from the registry.
+ *
+ * @param[in] registry The registry to search.
+ * @param[in] name The name of the type to retrieve.
+ * @return A pointer to the canonical `infix_type` object if found and fully defined.
+ *         Returns `nullptr` if the name is not found or is only a forward declaration.
+ *         The returned pointer is owned by the registry and is valid for its lifetime.
+ */
+c23_nodiscard const infix_type * infix_registry_lookup_type(const infix_registry_t *, const char *);
+
+/** @} */  // end of registry_introspection_api group
 
 /**
  * @brief Creates a "bound" forward trampoline from a signature string.
