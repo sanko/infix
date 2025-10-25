@@ -120,6 +120,15 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_registry_destroy()`: Frees a registry and all types defined within it.
 - `infix_register_types()`: Parses a string of definitions to populate a registry.
 
+### Registry Introspection API (`registry_introspection_api`)
+- `infix_registry_print()`: Serializes all defined types in a registry to a string.
+- `infix_registry_iterator_begin()`: Creates an iterator to traverse the types in a registry.
+- `infix_registry_iterator_next()`: Advances the iterator to the next type.
+- `infix_registry_iterator_get_name()`: Gets the name of the type at the current iterator position.
+- `infix_registry_iterator_get_type()`: Gets the `infix_type` at the current iterator position.
+- `infix_registry_is_defined()`: Checks if a type name is fully defined in the registry.
+- `infix_registry_lookup_type()`: Retrieves a canonical `infix_type` from the registry by name.
+
 ### High-Level Signature API (`high_level_api`)
 - `infix_forward_create()`: Creates a bound forward trampoline from a signature.
 - `infix_forward_create_unbound()`: Creates an unbound forward trampoline from a signature.

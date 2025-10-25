@@ -175,6 +175,19 @@ struct infix_registry_t {
 };
 
 /**
+ * @struct infix_registry_iterator_t
+ * @brief Internal definition of a registry iterator.
+ * @details This struct holds the complete state needed to traverse the registry's
+ * internal hash table, including the current bucket and the current entry within
+ * that bucket's linked list.
+ */
+struct infix_registry_iterator_t {
+    const infix_registry_t * registry;             /**< The registry being iterated. */
+    size_t current_bucket;                         /**< The index of the current hash bucket. */
+    const _infix_registry_entry_t * current_entry; /**< The current entry in the bucket's chain. */
+};
+
+/**
  * @struct code_buffer
  * @brief A dynamic buffer for staged machine code generation.
  * @details This structure is used during the JIT compilation process. ABI-specific
@@ -510,6 +523,22 @@ c23_nodiscard infix_status _infix_resolve_type_graph_inplace(infix_type ** type_
 c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
                                                       infix_arena_t ** out_arena,
                                                       const char * signature);
+
+/**
+ * @brief An internal-only function to serialize a type's body without its registered name.
+ * @details Located in `src/core/signature.c`. Unlike `infix_type_print`, which will
+ * print `@Name` for a named struct, this function will always print the full `{...}`
+ * body. This is essential for `infix_registry_print` to function correctly.
+ * @param[out] buffer The output buffer.
+ * @param[in] buffer_size The size of the buffer.
+ * @param[in] type The type to print.
+ * @param[in] dialect The output format dialect.
+ * @return `INFIX_SUCCESS` on success.
+ */
+c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
+                                                       size_t buffer_size,
+                                                       const infix_type * type,
+                                                       infix_print_dialect_t dialect);
 
 /**
  * @brief Performs a deep copy of a type graph into a destination arena.

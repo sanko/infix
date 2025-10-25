@@ -1279,6 +1279,91 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
 }
 
 /**
+ * @internal
+ * @brief Recursively prints a type's body, ignoring any registered name.
+ */
+static void _infix_type_print_body_only_recursive(registry_printer_state * state, const infix_type * type) {
+    if (state->status != INFIX_SUCCESS || !type) {
+        if (state->status == INFIX_SUCCESS)
+            state->status = INFIX_ERROR_INVALID_ARGUMENT;
+        return;
+    }
+
+    // For structs and unions, always print the body, ignoring the name.
+    // This is the key difference from the standard recursive printer.
+    if (type->category == INFIX_TYPE_STRUCT) {
+        _registry_print(state, "{");
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            if (i > 0)
+                _registry_print(state, ",");
+            const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+            if (member->name)
+                _registry_print(state, "%s:", member->name);
+            // For nested members, revert to the standard printer which can use @Name shorthand.
+            char temp_buffer[256];
+            if (infix_type_print(temp_buffer, sizeof(temp_buffer), member->type, INFIX_DIALECT_SIGNATURE) !=
+                INFIX_SUCCESS) {
+                state->status = INFIX_ERROR_INVALID_ARGUMENT;
+                return;
+            }
+            _registry_print(state, "%s", temp_buffer);
+        }
+        _registry_print(state, "}");
+    }
+    else if (type->category == INFIX_TYPE_UNION) {
+        _registry_print(state, "<");
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            if (i > 0)
+                _registry_print(state, ",");
+            const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+            if (member->name)
+                _registry_print(state, "%s:", member->name);
+            char temp_buffer[256];
+            if (infix_type_print(temp_buffer, sizeof(temp_buffer), member->type, INFIX_DIALECT_SIGNATURE) !=
+                INFIX_SUCCESS) {
+                state->status = INFIX_ERROR_INVALID_ARGUMENT;
+                return;
+            }
+            _registry_print(state, "%s", temp_buffer);
+        }
+        _registry_print(state, ">");
+    }
+    else {
+        // For all other types, the standard print logic is fine.
+        char temp_buffer[256];
+        if (infix_type_print(temp_buffer, sizeof(temp_buffer), type, INFIX_DIALECT_SIGNATURE) != INFIX_SUCCESS) {
+            state->status = INFIX_ERROR_INVALID_ARGUMENT;
+            return;
+        }
+        _registry_print(state, "%s", temp_buffer);
+    }
+}
+
+/**
+ * @internal
+ * @brief The internal-only function to serialize a type's body without its registered name.
+ */
+c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
+                                                       size_t buffer_size,
+                                                       const infix_type * type,
+                                                       infix_print_dialect_t dialect) {
+    if (!buffer || buffer_size == 0 || !type || dialect != INFIX_DIALECT_SIGNATURE)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    registry_printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    *buffer = '\0';
+
+    _infix_type_print_body_only_recursive(&state, type);
+
+    if (state.remaining > 0)
+        *state.p = '\0';
+    else
+        buffer[buffer_size - 1] = '\0';
+
+    return state.status;
+}
+
+/**
  * @brief Serializes an `infix_type` object graph back into a signature string.
  * @param[out] buffer The output buffer to write the string into.
  * @param[in] buffer_size The size of the output buffer.
