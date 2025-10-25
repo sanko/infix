@@ -105,8 +105,8 @@ $(document).ready(function(){initNavTree('md_docs_2INSTALL.html',''); initResiza
   <div class="headertitle"><div class="title">Building and Integrating infix</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md127"></a> This guide provides detailed instructions for building the <code>infix</code> library from source and integrating it into your own projects. <code>infix</code> is designed to be easy to compile and supports several popular build systems.</p>
-<h1><a class="anchor" id="autotoc_md128"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md116"></a> This guide provides detailed instructions for building the <code>infix</code> library from source and integrating it into your own projects. <code>infix</code> is designed to be easy to compile and supports several popular build systems.</p>
+<h1><a class="anchor" id="autotoc_md117"></a>
 Prerequisites</h1>
 <p>To build <code>infix</code>, you will need:</p>
 <ul>
@@ -125,10 +125,10 @@ Prerequisites</h1>
 </li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md130"></a>
+<h1><a class="anchor" id="autotoc_md119"></a>
 1. Building &lt;tt&gt;infix&lt;/tt&gt; from Source</h1>
 <p>Choose the build system that best fits your environment.</p>
-<h2><a class="anchor" id="autotoc_md131"></a>
+<h2><a class="anchor" id="autotoc_md120"></a>
 Using xmake (Recommended)</h2>
 <p>xmake is the recommended build system for most platforms as it provides a simple, cross-platform build experience.</p>
 <ol type="1">
@@ -140,7 +140,7 @@ Using xmake (Recommended)</h2>
 </li>
 </ol>
 <p>Now, you can simply include the header (<code>#include &lt;<a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a>&gt;</code>) in your source files and build your project with <code>xmake</code>.</p>
-<h2><a class="anchor" id="autotoc_md132"></a>
+<h2><a class="anchor" id="autotoc_md121"></a>
 Using Perl</h2>
 <p>This is what I use to develop <code>infix</code> itself but it might be great for just building the lib without installing cmake or xmake. Perl is everywhere!*</p>
 <div class="fragment"><div class="line"># Run the advanced perl based builder</div>
@@ -152,23 +152,23 @@ Using Perl</h2>
 <div class="line"># Build infix for another ABI than the current machine&#39;s</div>
 <div class="line"># Great for fuzzing</div>
 <div class="line">perl build.pl --abi=sysv_x64 build</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md133"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md122"></a>
 Using CMake</h2>
 <p>CMake can generate native build files for your environment (e.g., Makefiles on Linux, Visual Studio solutions on Windows).</p>
 <p><b>Standard Build &amp; Install:</b></p>
 <ol type="1">
 <li><p class="startli"><b>Configure:</b> From the root of the <code>infix</code> project, run CMake to generate the build files in a <code>build</code> directory.</p>
-<p class="startli"><code>bash @section autotoc_md134 Creates a 'build' directory and prepares it for compilation cmake -B build </code></p>
+<p class="startli"><code>bash @section autotoc_md123 Creates a 'build' directory and prepares it for compilation cmake -B build </code></p>
 </li>
 <li><p class="startli"><b>Build:</b> Compile the library using the generated files.</p>
-<p class="startli"><code>bash @section autotoc_md135 Compiles libinfix.a (or infix.lib on Windows) inside the 'build' directory cmake --build build </code></p>
+<p class="startli"><code>bash @section autotoc_md124 Compiles libinfix.a (or infix.lib on Windows) inside the 'build' directory cmake --build build </code></p>
 </li>
 <li><p class="startli"><b>Test:</b> Run the compiled unit tests.</p>
 <div class="fragment"><div class="line"># Verify</div>
 <div class="line">ctest --test-dir build</div>
 </div><!-- fragment --></li>
 <li><p class="startli"><b>Install:</b> Install the library and headers to the location specified by <code>CMAKE_INSTALL_PREFIX</code>.</p>
-<p class="startli"><code>bash @section autotoc_md136 Installs headers to /usr/local/include, library to /usr/local/lib, etc. @section autotoc_md137 On Linux/macOS, you may need sudo. cmake --install build </code></p>
+<p class="startli"><code>bash @section autotoc_md125 Installs headers to /usr/local/include, library to /usr/local/lib, etc. @section autotoc_md126 On Linux/macOS, you may need sudo. cmake --install build </code></p>
 </li>
 </ol>
 <p><b>Custom Install Location:</b></p>
@@ -179,9 +179,9 @@ Using CMake</h2>
 <div class="line"># Build and install as before</div>
 <div class="line">cmake --build build</div>
 <div class="line">cmake --install build</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md138"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md127"></a>
 Using Makefiles</h3>
-<h4><a class="anchor" id="autotoc_md139"></a>
+<h4><a class="anchor" id="autotoc_md128"></a>
 GNU Make (Linux, macOS, BSDs)</h4>
 <p>A standard Makefile is provided for POSIX-like systems.</p>
 <ol type="1">
@@ -192,10 +192,10 @@ GNU Make (Linux, macOS, BSDs)</h4>
 <p class="startli"><code>bash make test </code></p>
 </li>
 <li><p class="startli"><b>Install:</b></p>
-<p class="startli"><code>bash @section autotoc_md140 This usually requires root privileges sudo make install </code></p>
+<p class="startli"><code>bash @section autotoc_md129 This usually requires root privileges sudo make install </code></p>
 </li>
 </ol>
-<h4><a class="anchor" id="autotoc_md141"></a>
+<h4><a class="anchor" id="autotoc_md130"></a>
 NMake (Windows with MSVC)</h4>
 <p>If you are using Microsoft Visual C++, open a <b>Developer Command Prompt for VS</b> and use <code>nmake</code>.</p>
 <ol type="1">
@@ -203,7 +203,7 @@ NMake (Windows with MSVC)</h4>
 <p class="startli"><code>bash nmake /f Makefile.win </code></p>
 </li>
 </ol>
-<h3><a class="anchor" id="autotoc_md142"></a>
+<h3><a class="anchor" id="autotoc_md131"></a>
 Manual Compilation (Advanced)</h3>
 <p>Since <code>infix</code> uses a unity build, you can compile it into a static library with a single command. This is useful for minimal environments or for embedding directly into another build system.</p>
 <p><b>On Linux/macOS (GCC/Clang):</b></p>
@@ -219,10 +219,10 @@ Manual Compilation (Advanced)</h3>
 <div class="line"># 2. Archive into a static library</div>
 <div class="line">lib infix.obj /OUT:infix.lib</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md144"></a>
+<h2><a class="anchor" id="autotoc_md133"></a>
 2. Integrating &lt;tt&gt;infix&lt;/tt&gt; into Your Project</h2>
 <p>After building and installing <code>infix</code>, you can link it into your application.</p>
-<h3><a class="anchor" id="autotoc_md145"></a>
+<h3><a class="anchor" id="autotoc_md134"></a>
 Using CMake with &lt;tt&gt;find_package&lt;/tt&gt;</h3>
 <p>If you installed <code>infix</code> to a standard location, you can use <code>find_package</code> in your project's <code>CMakeLists.txt</code>.</p>
 <div class="fragment"><div class="line"># Your project&#39;s CMakeLists.txt</div>
@@ -238,7 +238,7 @@ Using CMake with &lt;tt&gt;find_package&lt;/tt&gt;</h3>
 <div class="line"> </div>
 <div class="line"># Link your application against the imported infix::infix target.</div>
 <div class="line">target_link_libraries(my_app PRIVATE infix::infix)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md146"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md135"></a>
 Using pkg-config</h3>
 <p>If you installed <code>infix</code>, a <code>infix.pc</code> file will be available for <code>pkg-config</code>. This is useful in Makefiles or for autotools-based projects.</p>
 <p><b>Example Makefile:</b></p>
@@ -247,7 +247,7 @@ Using pkg-config</h3>
 <div class="line"> </div>
 <div class="line">my_app: main.c</div>
 <div class="line">    $(CC) $(CFLAGS) -o my_app main.c $(LIBS)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md147"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md136"></a>
 Using xmake</h3>
 <p>Add <code>infix</code> as a dependency in your <code>xmake.lua</code>.</p>
 <div class="fragment"><div class="line">-- Your project&#39;s xmake.lua</div>
@@ -265,7 +265,7 @@ Using xmake</h3>
 <div class="line"> </div>
 <div class="line">    -- 2. Link against the &quot;infix&quot; static library target</div>
 <div class="line">    add_deps(&quot;infix&quot;)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md148"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md137"></a>
 Using in Visual Studio Code</h3>
 <ol type="1">
 <li>Place the <code>infix</code> source code in a subdirectory of your project (e.g., <code>libs/infix</code>).</li>
@@ -305,7 +305,7 @@ Using in Visual Studio Code</h3>
 <div class="line">        }</div>
 <div class="line">    ]</div>
 <div class="line">}</div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md149"></a>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md138"></a>
 Manual Integration into an Existing Project</h4>
 <p>Because <code>infix</code> uses a "unity build," you do not need to build it as a separate static or shared library. You can compile it directly into your project. This is the simplest method and allows for better compiler optimizations.</p>
 <ol type="1">
@@ -318,9 +318,9 @@ Manual Integration into an Existing Project</h4>
 </blockquote>
 <p>That's it. Your project will now build with the <code>infix</code> library compiled directly in.</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md151"></a>
+<h2><a class="anchor" id="autotoc_md140"></a>
 3. Packaging &lt;tt&gt;infix&lt;/tt&gt; (For Maintainers)</h2>
-<h3><a class="anchor" id="autotoc_md152"></a>
+<h3><a class="anchor" id="autotoc_md141"></a>
 Linux Distributions (DEB/RPM)</h3>
 <p>The CMake install target is the standard way to integrate with packaging systems. The key is to use the <code>DESTDIR</code> environment variable during the install step.</p>
 <p><b>Example for a Debian <code>rules</code> file:</b></p>
@@ -333,7 +333,7 @@ Linux Distributions (DEB/RPM)</h3>
 <div class="line"> </div>
 <div class="line">override_dh_auto_install:</div>
 <div class="line">    dh_auto_install --destdir=$(CURDIR)/debian/tmp</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md153"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md142"></a>
 xmake Repository</h3>
 <p>To submit <code>infix</code> to the public <code>xmake-repo</code>, you would create a <code>packages/i/infix/xmake.lua</code> file in a fork of the repository.</p>
 <div class="fragment"><div class="line">package(&quot;infix&quot;)</div>

@@ -3,6 +3,7 @@ var group__high__level__api =
     [ "Type System", "group__type__system.html", "group__type__system" ],
     [ "Memory Management", "group__memory__management.html", "group__memory__management" ],
     [ "Named Type Registry", "group__registry__api.html", "group__registry__api" ],
+    [ "Registry Introspection API", "group__registry__introspection__api.html", "group__registry__introspection__api" ],
     [ "Dynamic Library & Globals API", "group__exports__api.html", "group__exports__api" ],
     [ "Manual API", "group__manual__api.html", "group__manual__api" ],
     [ "Introspection API", "group__introspection__api.html", "group__introspection__api" ],

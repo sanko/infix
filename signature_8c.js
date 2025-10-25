@@ -4,6 +4,8 @@ var signature_8c =
     [ "printer_state", "structprinter__state.html", "structprinter__state" ],
     [ "MAX_RECURSION_DEPTH", "signature_8c.html#a4e3b689e9483994cfcd85954cba23338", null ],
     [ "_infix_parse_type_internal", "signature_8c.html#a7452e1dd72e4d81a19b91ebff91b8840", null ],
+    [ "_infix_type_print_body_only", "signature_8c.html#a318cbbcc66e97bc549fea21d23a9ac4d", null ],
+    [ "_infix_type_print_body_only_recursive", "signature_8c.html#ace1f774be61302f1c50c3b4d033ae3b0", null ],
     [ "_infix_type_print_signature_recursive", "signature_8c.html#ae14dc307e72c05042cfa259c92fb09ce", null ],
     [ "_print", "signature_8c.html#a0188b3a9e1088b2e82af548e7e8037a4", null ],
     [ "consume_keyword", "signature_8c.html#aa5348733033b9920a7e2e5556bfe4cb6", null ],

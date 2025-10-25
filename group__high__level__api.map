@@ -1,10 +1,11 @@
 <map id="High&#45;Level Signature API" name="High&#45;Level Signature API">
-<area shape="rect" id="Node000008" href="$group__error__api.html" title="Functions and types for detailed, thread&#45;safe error reporting." alt="" coords="277,5,417,31"/>
-<area shape="rect" id="Node000005" href="$group__exports__api.html" title="Cross&#45;platform functions for loading shared libraries and accessing exported symbols." alt="" coords="236,55,457,80"/>
-<area shape="rect" id="Node000001" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,153,188,179"/>
-<area shape="rect" id="Node000007" href="$group__introspection__api.html" title="Functions for inspecting the properties of trampolines and infix_type objects at runtime." alt="" coords="281,104,413,129"/>
-<area shape="rect" id="Node000006" href="$group__manual__api.html" title="A lower&#45;level, programmatic API for creating trampolines from infix_type objects." alt="" coords="299,153,394,179"/>
+<area shape="rect" id="Node000009" href="$group__error__api.html" title="Functions and types for detailed, thread&#45;safe error reporting." alt="" coords="277,5,417,31"/>
+<area shape="rect" id="Node000006" href="$group__exports__api.html" title="Cross&#45;platform functions for loading shared libraries and accessing exported symbols." alt="" coords="236,55,457,80"/>
+<area shape="rect" id="Node000001" title="The primary, recommended API for creating trampolines from human&#45;readable strings." alt="" coords="5,179,188,204"/>
+<area shape="rect" id="Node000008" href="$group__introspection__api.html" title="Functions for inspecting the properties of trampolines and infix_type objects at runtime." alt="" coords="281,104,413,129"/>
+<area shape="rect" id="Node000007" href="$group__manual__api.html" title="A lower&#45;level, programmatic API for creating trampolines from infix_type objects." alt="" coords="299,153,394,179"/>
 <area shape="rect" id="Node000003" href="$group__memory__management.html" title="APIs for memory management, including custom allocators and arenas." alt="" coords="263,203,430,228"/>
 <area shape="rect" id="Node000004" href="$group__registry__api.html" title="APIs for defining, storing, and reusing complex types by name." alt="" coords="266,252,427,277"/>
-<area shape="rect" id="Node000002" href="$group__type__system.html" title="The core data structures and APIs for describing C types and function signatures." alt="" coords="294,301,399,327"/>
+<area shape="rect" id="Node000005" href="$group__registry__introspection__api.html" title="APIs for inspecting and serializing the contents of a named type registry." alt="" coords="251,301,442,327"/>
+<area shape="rect" id="Node000002" href="$group__type__system.html" title="The core data structures and APIs for describing C types and function signatures." alt="" coords="294,351,399,376"/>
 </map>

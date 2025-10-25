@@ -136,6 +136,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__registry__parser__state__t.html">_registry_parser_state_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -173,6 +175,29 @@ Functions</h2></td></tr>
 <tr class="memitem:ga4ece2363948c40fe528826bf65dac280" id="r_ga4ece2363948c40fe528826bf65dac280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *definitions)</td></tr>
 <tr class="memdesc:ga4ece2363948c40fe528826bf65dac280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string of type definitions and adds them to a registry.  <br /></td></tr>
 <tr class="separator:ga4ece2363948c40fe528826bf65dac280"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1bad774d01989f84e0b86bee6a489d7" id="r_ad1bad774d01989f84e0b86bee6a489d7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#ad1bad774d01989f84e0b86bee6a489d7">_registry_print</a> (<a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *state, const char *fmt,...)</td></tr>
+<tr class="separator:ad1bad774d01989f84e0b86bee6a489d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga722db5aa0d69f7be25b026a2d6a333a8" id="r_ga722db5aa0d69f7be25b026a2d6a333a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga722db5aa0d69f7be25b026a2d6a333a8">infix_registry_print</a> (char *buffer, size_t buffer_size, const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga722db5aa0d69f7be25b026a2d6a333a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes all defined types within a registry into a single, human-readable string.  <br /></td></tr>
+<tr class="separator:ga722db5aa0d69f7be25b026a2d6a333a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82e78887d2b9b756c839980e08f1f780" id="r_ga82e78887d2b9b756c839980e08f1f780"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780">infix_registry_iterator_begin</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memdesc:ga82e78887d2b9b756c839980e08f1f780"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an iterator for traversing the types in a registry.  <br /></td></tr>
+<tr class="separator:ga82e78887d2b9b756c839980e08f1f780"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga84444c174ba84274c0e033b66648f1f0" id="r_ga84444c174ba84274c0e033b66648f1f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga84444c174ba84274c0e033b66648f1f0">infix_registry_iterator_next</a> (<a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a> *iter)</td></tr>
+<tr class="memdesc:ga84444c174ba84274c0e033b66648f1f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advances the iterator to the next defined type in the registry.  <br /></td></tr>
+<tr class="separator:ga84444c174ba84274c0e033b66648f1f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8daf0bbf75db96eb0859ab59d33a35fb" id="r_ga8daf0bbf75db96eb0859ab59d33a35fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga8daf0bbf75db96eb0859ab59d33a35fb">infix_registry_iterator_get_name</a> (const <a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a> *iter)</td></tr>
+<tr class="memdesc:ga8daf0bbf75db96eb0859ab59d33a35fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of the type at the iterator's current position.  <br /></td></tr>
+<tr class="separator:ga8daf0bbf75db96eb0859ab59d33a35fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga530939c6ddc67de89ae87b8126f2bec1" id="r_ga530939c6ddc67de89ae87b8126f2bec1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga530939c6ddc67de89ae87b8126f2bec1">infix_registry_iterator_get_type</a> (const <a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a> *iter)</td></tr>
+<tr class="memdesc:ga530939c6ddc67de89ae87b8126f2bec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the <code>infix_type</code> object of the type at the iterator's current position.  <br /></td></tr>
+<tr class="separator:ga530939c6ddc67de89ae87b8126f2bec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaabc09998582eb655aa592d341e302657" id="r_gaabc09998582eb655aa592d341e302657"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657">infix_registry_is_defined</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *name)</td></tr>
+<tr class="memdesc:gaabc09998582eb655aa592d341e302657"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a type with the given name is fully defined in the registry.  <br /></td></tr>
+<tr class="separator:gaabc09998582eb655aa592d341e302657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0f79cbbbe50468b6569593e5a7d43fb6" id="r_ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga0f79cbbbe50468b6569593e5a7d43fb6">infix_registry_lookup_type</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *name)</td></tr>
+<tr class="memdesc:ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the canonical <code>infix_type</code> object for a given name from the registry.  <br /></td></tr>
+<tr class="separator:ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -417,6 +442,48 @@ Variables</h2></td></tr>
           <td class="paramtype"><a class="el" href="struct__registry__parser__state__t.html">_registry_parser_state_t</a> *&#160;</td>
           <td class="paramname"><em>state</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1bad774d01989f84e0b86bee6a489d7" name="ad1bad774d01989f84e0b86bee6a489d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1bad774d01989f84e0b86bee6a489d7">&#9670;&#160;</a></span>_registry_print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void _registry_print </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
