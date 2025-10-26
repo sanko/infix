@@ -391,10 +391,6 @@ sub compile_and_run_tests {
             push @local_cflags, '-Ifuzz';
         }
 
-        # Add a special flag if we're compiling the arena test.
-        if ( $test_c =~ /840_arena_allocator\.c$/ ) {
-            push @local_cflags, '-DINFIX_LINK_WHOLE_LIBRARY';
-        }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
         push @test_executables, $exe_path;
@@ -492,10 +488,6 @@ sub run_coverage_gcov {
             push @local_cflags, '-Ifuzz';
         }
 
-        # Add a special flag if we're compiling the arena test for coverage.
-        if ( $test_c =~ /840_arena_allocator\.c$/ ) {
-            push @local_cflags, '-DINFIX_LINK_WHOLE_LIBRARY';
-        }
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
 

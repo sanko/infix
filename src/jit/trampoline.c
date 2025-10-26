@@ -292,7 +292,6 @@ c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t * trampoline
  * @param arg_types An array of fully resolved argument types.
  * @param num_args Total number of arguments.
  * @param num_fixed_args Number of fixed (non-variadic) arguments.
- * @param source_arena An optional arena from the parser, used to hint the size of the new private arena.
  * @param target_fn The target function pointer, or `nullptr` for an unbound trampoline.
  * @return `INFIX_SUCCESS` on success.
  */
@@ -301,10 +300,11 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
                                                           infix_type ** arg_types,
                                                           size_t num_args,
                                                           size_t num_fixed_args,
-                                                          infix_arena_t * source_arena,
                                                           void * target_fn) {
-    if (out_trampoline == nullptr || (arg_types == nullptr && num_args > 0))
+    if (out_trampoline == nullptr || (arg_types == nullptr && num_args > 0)) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     // Pre-flight check: ensure all types are resolved before passing to ABI layer.
     if (!_is_type_graph_resolved(return_type)) {
@@ -319,8 +319,10 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     }
 
     const infix_forward_abi_spec * spec = get_current_forward_abi_spec();
-    if (spec == nullptr)
+    if (spec == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNSUPPORTED_ABI, 0);
         return INFIX_ERROR_UNSUPPORTED_ABI;
+    }
 
     infix_status status = INFIX_SUCCESS;
     infix_call_frame_layout * layout = nullptr;
@@ -328,8 +330,10 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
 
     // Use a temporary arena for all intermediate allocations during code generation.
     infix_arena_t * temp_arena = infix_arena_create(65536);
-    if (!temp_arena)
+    if (!temp_arena) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
+    }
 
     code_buffer buf;
     code_buffer_init(&buf, temp_arena);
@@ -345,16 +349,18 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     status = spec->generate_forward_prologue(&buf, layout);
     if (status != INFIX_SUCCESS)
         goto cleanup;
+
     status = spec->generate_forward_argument_moves(&buf, layout, arg_types, num_args, num_fixed_args);
     if (status != INFIX_SUCCESS)
         goto cleanup;
+
     status = spec->generate_forward_call_instruction(&buf, layout);
     if (status != INFIX_SUCCESS)
         goto cleanup;
+
     status = spec->generate_forward_epilogue(&buf, layout, return_type);
     if (status != INFIX_SUCCESS)
         goto cleanup;
-    // End of Pipeline
 
     if (buf.error || temp_arena->error) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
@@ -362,15 +368,15 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     }
 
     // Finalize Handle
-    // Allocate the handle that will be returned to the user.
     handle = infix_calloc(1, sizeof(infix_forward_t));
     if (handle == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
     }
 
-    // Create a private arena for the handle to own its type metadata.
-    size_t required_size = source_arena ? source_arena->current_offset : 8192;
+    // THIS IS THE HARDCODED WORKAROUND
+    size_t required_size = 65536;
+
     handle->arena = infix_arena_create(required_size + INFIX_TRAMPOLINE_HEADROOM);
     if (handle->arena == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
@@ -379,18 +385,22 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
 
     // "Copy" stage: Deep copy all type info into the handle's private arena.
     handle->return_type = _copy_type_graph_to_arena(handle->arena, return_type);
-    handle->arg_types = infix_arena_alloc(handle->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
-    if ((handle->return_type == nullptr && return_type != nullptr) || (num_args > 0 && handle->arg_types == nullptr)) {
-        status = INFIX_ERROR_ALLOCATION_FAILED;
-        goto cleanup;
-    }
-    for (size_t i = 0; i < num_args; ++i) {
-        handle->arg_types[i] = _copy_type_graph_to_arena(handle->arena, arg_types[i]);
-        if (handle->arg_types[i] == nullptr && arg_types[i] != nullptr) {
+    if (num_args > 0) {
+        handle->arg_types = infix_arena_alloc(handle->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+        if (handle->arg_types == nullptr) {
             status = INFIX_ERROR_ALLOCATION_FAILED;
             goto cleanup;
         }
+        for (size_t i = 0; i < num_args; ++i) {
+            handle->arg_types[i] = _copy_type_graph_to_arena(handle->arena, arg_types[i]);
+            // Check for allocation failure during copy
+            if (arg_types[i] != nullptr && handle->arg_types[i] == nullptr && !handle->arena->error) {
+                status = INFIX_ERROR_ALLOCATION_FAILED;
+                goto cleanup;
+            }
+        }
     }
+
     handle->num_args = num_args;
     handle->num_fixed_args = num_fixed_args;
     handle->target_fn = target_fn;
@@ -447,8 +457,9 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_tr
     // This is part of the "Manual API". It calls the internal implementation directly
     // without involving the signature parser. `source_arena` is null because the
     // types are assumed to be managed by the user.
+    _infix_clear_error();
     return _infix_forward_create_internal(
-        out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr, target_function);
+        out_trampoline, return_type, arg_types, num_args, num_fixed_args, target_function);
 }
 
 /**
@@ -469,8 +480,8 @@ c23_nodiscard infix_status infix_forward_create_unbound_manual(infix_forward_t *
                                                                infix_type ** arg_types,
                                                                size_t num_args,
                                                                size_t num_fixed_args) {
-    return _infix_forward_create_internal(
-        out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr, nullptr);
+    _infix_clear_error();
+    return _infix_forward_create_internal(out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr);
 }
 
 /**
@@ -541,22 +552,32 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
                                                    void * user_callback_fn,
                                                    void * user_data,
                                                    bool is_callback) {
-    if (out_context == nullptr || num_fixed_args > num_args)
+    if (out_context == nullptr || num_fixed_args > num_args) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     // Pre-flight check: ensure all types are fully resolved.
-    if (!_is_type_graph_resolved(return_type))
+    if (!_is_type_graph_resolved(return_type)) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
-    if (arg_types == nullptr && num_args > 0)
+    }
+    if (arg_types == nullptr && num_args > 0) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     for (size_t i = 0; i < num_args; ++i) {
-        if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i]))
+        if (arg_types[i] == nullptr || !_is_type_graph_resolved(arg_types[i])) {
+            _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
+        }
     }
 
     const infix_reverse_abi_spec * spec = get_current_reverse_abi_spec();
-    if (spec == nullptr)
+    if (spec == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNSUPPORTED_ABI, 0);
         return INFIX_ERROR_UNSUPPORTED_ABI;
+    }
 
     infix_status status = INFIX_SUCCESS;
     infix_reverse_call_frame_layout * layout = nullptr;
@@ -566,8 +587,10 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
     code_buffer buf;
 
     temp_arena = infix_arena_create(65536);
-    if (!temp_arena)
+    if (!temp_arena) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
+    }
 
     code_buffer_init(&buf, temp_arena);
 
@@ -583,8 +606,10 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
     context = (infix_reverse_t *)prot.rw_ptr;
     infix_memset(context, 0, context_alloc_size);
 
-    // Create the private arena for this context's type metadata.
-    context->arena = infix_arena_create(8192);
+    // THIS IS THE HARDCODED WORKAROUND
+    size_t required_size = 65536;
+
+    context->arena = infix_arena_create(required_size + INFIX_TRAMPOLINE_HEADROOM);
     if (context->arena == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
@@ -602,17 +627,14 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
 
     // "Copy" stage: deep copy all types into the context's private arena.
     context->return_type = _copy_type_graph_to_arena(context->arena, return_type);
-    context->arg_types = infix_arena_alloc(context->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
-    if ((context->return_type == nullptr && return_type != nullptr) ||
-        (num_args > 0 && context->arg_types == nullptr)) {
-        status = INFIX_ERROR_ALLOCATION_FAILED;
-        goto cleanup;
-    }
-    for (size_t i = 0; i < num_args; ++i) {
-        context->arg_types[i] = _copy_type_graph_to_arena(context->arena, arg_types[i]);
-        if (context->arg_types[i] == nullptr && arg_types[i] != nullptr) {
+    if (num_args > 0) {
+        context->arg_types = infix_arena_alloc(context->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+        if (context->arg_types == nullptr) {
             status = INFIX_ERROR_ALLOCATION_FAILED;
             goto cleanup;
+        }
+        for (size_t i = 0; i < num_args; ++i) {
+            context->arg_types[i] = _copy_type_graph_to_arena(context->arena, arg_types[i]);
         }
     }
 
@@ -674,8 +696,12 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
     *out_context = context;
 
 cleanup:
-    if (status != INFIX_SUCCESS && context != nullptr)
-        infix_reverse_destroy(context);
+    if (status != INFIX_SUCCESS) {
+        // If allocation of the context itself failed, prot.rw_ptr will be null.
+        if (prot.rw_ptr != nullptr) {
+            infix_reverse_destroy(context);
+        }
+    }
     infix_arena_destroy(temp_arena);
     return status;
 }
@@ -696,6 +722,7 @@ c23_nodiscard infix_status infix_reverse_create_callback_manual(infix_reverse_t 
                                                                 size_t num_args,
                                                                 size_t num_fixed_args,
                                                                 void * user_callback_fn) {
+    _infix_clear_error();
     return _infix_reverse_create_internal(
         out_context, return_type, arg_types, num_args, num_fixed_args, user_callback_fn, nullptr, true);
 }
@@ -718,6 +745,7 @@ c23_nodiscard infix_status infix_reverse_create_closure_manual(infix_reverse_t *
                                                                size_t num_fixed_args,
                                                                infix_closure_handler_fn user_callback_fn,
                                                                void * user_data) {
+    _infix_clear_error();
     return _infix_reverse_create_internal(
         out_context, return_type, arg_types, num_args, num_fixed_args, (void *)user_callback_fn, user_data, false);
 }
@@ -793,8 +821,7 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
         arg_types[i] = args[i].type;
 
     // Call the core internal implementation with the parsed types.
-    status = _infix_forward_create_internal(
-        out_trampoline, ret_type, arg_types, num_args, num_fixed, arena, target_function);
+    status = _infix_forward_create_internal(out_trampoline, ret_type, arg_types, num_args, num_fixed, target_function);
     infix_arena_destroy(arena);  // Clean up the temporary arena from parsing.
     return status;
 }

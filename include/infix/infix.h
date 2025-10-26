@@ -1303,6 +1303,7 @@ typedef enum {
     INFIX_CODE_TYPE_TOO_LARGE,        /**< A data type exceeded the ABI's size limits. */
     INFIX_CODE_UNRESOLVED_NAMED_TYPE, /**< A named type (`@Name`) was not found in the provided registry. */
     INFIX_CODE_INVALID_MEMBER_TYPE,   /**< An aggregate contained an illegal member type (e.g., `void`). */
+    INFIX_CODE_LAYOUT_FAILED,         /**< The ABI layer failed to calculate a valid memory layout for a type. */
 
     // Library Loading Codes (400-499)
     INFIX_CODE_LIBRARY_NOT_FOUND = 400, /**< The requested dynamic library could not be found. */

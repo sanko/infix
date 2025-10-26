@@ -34,10 +34,6 @@
 
 #include "common/infix_internals.h"
 
-#ifndef INFIX_LINK_WHOLE_LIBRARY
-#include "core/arena.c"
-#endif
-
 TEST {
     plan(1);
 

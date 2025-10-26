@@ -227,12 +227,14 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
     for (size_t i = 0; i < num_members; ++i) {
         if (members[i].type == nullptr) {
             *out_type = nullptr;
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
     }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
@@ -242,6 +244,7 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
             infix_arena_alloc(arena, sizeof(infix_struct_member) * num_members, _Alignof(infix_struct_member));
         if (arena_members == nullptr) {
             *out_type = nullptr;
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
         infix_memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
@@ -261,11 +264,14 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
 c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
                                                         infix_type ** out_type,
                                                         infix_type * pointee_type) {
-    if (!out_type || !pointee_type)
+    if (!out_type || !pointee_type) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     // Start by copying the layout of a generic pointer.
@@ -290,9 +296,10 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
                                                    infix_type ** out_type,
                                                    infix_type * element_type,
                                                    size_t num_elements) {
-    if (out_type == nullptr || element_type == nullptr)
+    if (out_type == nullptr || element_type == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
-    // Harden against integer overflow when calculating total size.
+    }
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
         *out_type = nullptr;
         _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
@@ -301,6 +308,7 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     type->is_arena_allocated = true;
@@ -325,16 +333,19 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
 c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
                                                   infix_type ** out_type,
                                                   infix_type * underlying_type) {
-    if (out_type == nullptr || underlying_type == nullptr)
+    if (out_type == nullptr || underlying_type == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
-    // Enums must have an integer base type.
+    }
     if (underlying_type->category != INFIX_TYPE_PRIMITIVE ||
         underlying_type->meta.primitive_id > INFIX_PRIMITIVE_SINT128) {
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     type->is_arena_allocated = true;
@@ -357,11 +368,14 @@ c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
 c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
                                                      infix_type ** out_type,
                                                      infix_type * base_type) {
-    if (out_type == nullptr || base_type == nullptr || (!is_float(base_type) && !is_double(base_type)))
+    if (out_type == nullptr || base_type == nullptr || (!is_float(base_type) && !is_double(base_type))) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     type->is_arena_allocated = true;
@@ -386,9 +400,10 @@ c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * arena,
                                                     infix_type ** out_type,
                                                     infix_type * element_type,
                                                     size_t num_elements) {
-    if (out_type == nullptr || element_type == nullptr || element_type->category != INFIX_TYPE_PRIMITIVE)
+    if (out_type == nullptr || element_type == nullptr || element_type->category != INFIX_TYPE_PRIMITIVE) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
-    // Harden against integer overflow.
+    }
     if (element_type->size > 0 && num_elements > SIZE_MAX / element_type->size) {
         *out_type = nullptr;
         _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
@@ -397,6 +412,7 @@ c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * arena,
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     type->is_arena_allocated = true;
@@ -452,6 +468,7 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     // Overflow check
     if (type->size < max_size) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     *out_type = type;
@@ -498,6 +515,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
             if (member->type->category != INFIX_TYPE_NAMED_REFERENCE) {
                 // A zero-alignment type that isn't a named reference is invalid (e.g., a struct with a void member).
                 *out_type = nullptr;
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
                 return INFIX_ERROR_INVALID_ARGUMENT;
             }
             member_align = 1;
@@ -507,6 +525,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
         size_t aligned_offset = _infix_align_up(current_offset, member_align);
         if (aligned_offset < current_offset) {  // Overflow check
             *out_type = nullptr;
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
         current_offset = aligned_offset;
@@ -515,6 +534,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
         // Add the member's size to the current offset.
         if (current_offset > SIZE_MAX - member->type->size) {  // Overflow check
             *out_type = nullptr;
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
         current_offset += member->type->size;
@@ -528,6 +548,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
     type->size = _infix_align_up(current_offset, max_alignment);
     if (type->size < current_offset) {  // Overflow check
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     *out_type = type;
@@ -550,11 +571,14 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
                                                            size_t alignment,
                                                            infix_struct_member * members,
                                                            size_t num_members) {
-    if (out_type == nullptr || (num_members > 0 && members == nullptr) || alignment == 0)
+    if (out_type == nullptr || (num_members > 0 && members == nullptr) || alignment == 0) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     infix_struct_member * arena_members = nullptr;
@@ -563,6 +587,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
             infix_arena_alloc(arena, sizeof(infix_struct_member) * num_members, _Alignof(infix_struct_member));
         if (arena_members == nullptr) {
             *out_type = nullptr;
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             return INFIX_ERROR_ALLOCATION_FAILED;
         }
         infix_memcpy(arena_members, members, sizeof(infix_struct_member) * num_members);
@@ -592,11 +617,14 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
                                                              infix_type ** out_type,
                                                              const char * name,
                                                              infix_aggregate_category_t agg_cat) {
-    if (out_type == nullptr || name == nullptr)
+    if (out_type == nullptr || name == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
     if (type == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     // The name must be copied into the arena to ensure its lifetime matches the type's.
@@ -604,6 +632,7 @@ c23_nodiscard infix_status infix_type_create_named_reference(infix_arena_t * are
     char * arena_name = infix_arena_alloc(arena, name_len, 1);
     if (arena_name == nullptr) {
         *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
     infix_memcpy(arena_name, name, name_len);
@@ -658,7 +687,9 @@ typedef struct recalc_visited_node_t {
  * @param[in,out] visited_head A pointer to the head of the visited list for cycle detection.
  *        The list is modified during the traversal.
  */
-static void _infix_type_recalculate_layout_recursive(infix_type * type, recalc_visited_node_t ** visited_head) {
+static void _infix_type_recalculate_layout_recursive(infix_arena_t * temp_arena,
+                                                     infix_type * type,
+                                                     recalc_visited_node_t ** visited_head) {
     if (!type || !type->is_arena_allocated)
         return;  // Base case: Don't modify static singleton types.
 
@@ -669,8 +700,10 @@ static void _infix_type_recalculate_layout_recursive(infix_type * type, recalc_v
         if (v->type == type)
             return;
     }
-    // Add this node to the visited list before recursing into its children.
-    recalc_visited_node_t * visited_node = infix_malloc(sizeof(recalc_visited_node_t));
+
+    // Allocate the memoization node from a stable temporary arena.
+    recalc_visited_node_t * visited_node =
+        infix_arena_alloc(temp_arena, sizeof(recalc_visited_node_t), _Alignof(recalc_visited_node_t));
     if (!visited_node)
         return;  // Cannot proceed without memory.
     visited_node->type = type;
@@ -680,15 +713,16 @@ static void _infix_type_recalculate_layout_recursive(infix_type * type, recalc_v
     // Recurse into child types first (post-order traversal).
     switch (type->category) {
     case INFIX_TYPE_POINTER:
-        _infix_type_recalculate_layout_recursive(type->meta.pointer_info.pointee_type, visited_head);
+        _infix_type_recalculate_layout_recursive(temp_arena, type->meta.pointer_info.pointee_type, visited_head);
         break;
     case INFIX_TYPE_ARRAY:
-        _infix_type_recalculate_layout_recursive(type->meta.array_info.element_type, visited_head);
+        _infix_type_recalculate_layout_recursive(temp_arena, type->meta.array_info.element_type, visited_head);
         break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-            _infix_type_recalculate_layout_recursive(type->meta.aggregate_info.members[i].type, visited_head);
+            _infix_type_recalculate_layout_recursive(
+                temp_arena, type->meta.aggregate_info.members[i].type, visited_head);
         }
         break;
     default:
@@ -729,10 +763,6 @@ static void _infix_type_recalculate_layout_recursive(infix_type * type, recalc_v
         type->alignment = type->meta.array_info.element_type->alignment;
         type->size = type->meta.array_info.element_type->size * type->meta.array_info.num_elements;
     }
-
-    // Pop this node from the visited list before returning up the call stack.
-    *visited_head = visited_node->next;
-    infix_free(visited_node);
 }
 
 /**
@@ -745,8 +775,15 @@ static void _infix_type_recalculate_layout_recursive(infix_type * type, recalc_v
  * @param[in,out] type The root of the type graph to recalculate. The graph is modified in-place.
  */
 void _infix_type_recalculate_layout(infix_type * type) {
+    // Create a temporary arena solely for the visited list's lifetime.
+    infix_arena_t * temp_arena = infix_arena_create(1024);
+    if (!temp_arena)
+        return;
+
     recalc_visited_node_t * visited_head = nullptr;
-    _infix_type_recalculate_layout_recursive(type, &visited_head);
+    _infix_type_recalculate_layout_recursive(temp_arena, type, &visited_head);
+
+    infix_arena_destroy(temp_arena);
 }
 
 /**
@@ -917,6 +954,14 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
     memo_node_t * memo_head = nullptr;
     return _copy_type_graph_to_arena_recursive(dest_arena, src_type, &memo_head);
 }
+
+// Memory Estimation (currently unused in favor of hardcoded sizes)
+size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type * type) {
+    (void)temp_arena;
+    (void)type;
+    return 0;
+}
+
 // Public API: Introspection Functions
 
 /**
