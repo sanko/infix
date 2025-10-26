@@ -148,6 +148,8 @@ static bool return_value_is_by_reference(infix_type * type) {
  * reference if their size is not a power of two (1, 2, 4, or 8 bytes).
  */
 static bool is_passed_by_reference(infix_type * type) {
+    if (type == nullptr)
+        return false;
     return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
 }
 

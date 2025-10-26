@@ -120,6 +120,10 @@ static const regression_test_case_t regression_tests[] = {
      .b64_input = "PjL/gUAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAJWVlZWV/////////////////////////////////////5WVlZWFPg==",
      .target = TARGET_TYPE_GENERATOR,
      .expected_status = INFIX_SUCCESS},
+    {.name = "nullptr type in arg_types for reverse trampoline (case 2)",
+     .b64_input = "0NT//////////wBo//3//9r//2n////////////+/////////////////yz//3///+lo",
+     .target = TARGET_TRAMPOLINE_GENERATOR,
+     .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
 };
 
 static void run_regression_case(const regression_test_case_t * test) {

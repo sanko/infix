@@ -390,7 +390,6 @@ sub compile_and_run_tests {
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
         }
-
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
         push @test_executables, $exe_path;
@@ -487,7 +486,6 @@ sub run_coverage_gcov {
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
         }
-
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
 

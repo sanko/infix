@@ -635,6 +635,10 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
         }
         for (size_t i = 0; i < num_args; ++i) {
             context->arg_types[i] = _copy_type_graph_to_arena(context->arena, arg_types[i]);
+            if (arg_types[i] != nullptr && context->arg_types[i] == nullptr) {
+                status = INFIX_ERROR_ALLOCATION_FAILED;
+                goto cleanup;
+            }
         }
     }
 
