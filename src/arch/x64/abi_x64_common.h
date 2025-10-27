@@ -86,5 +86,21 @@ typedef enum {
     XMM12_REG,  ///< Volatile in both ABIs.
     XMM13_REG,  ///< Volatile in both ABIs.
     XMM14_REG,  ///< Volatile in both ABIs.
-    XMM15_REG   ///< Volatile in both ABIs.
+    XMM15_REG,  ///< Volatile in both ABIs.
+    XMM16_REG,  ///< Volatile in both ABIs. Used for AVX-512 (ZMM16).
+    XMM17_REG,  ///< Volatile in both ABIs.
+    XMM18_REG,  ///< Volatile in both ABIs.
+    XMM19_REG,  ///< Volatile in both ABIs.
+    XMM20_REG,  ///< Volatile in both ABIs.
+    XMM21_REG,  ///< Volatile in both ABIs.
+    XMM22_REG,  ///< Volatile in both ABIs.
+    XMM23_REG,  ///< Volatile in both ABIs.
+    XMM24_REG,  ///< Volatile in both ABIs.
+    XMM25_REG,  ///< Volatile in both ABIs.
+    XMM26_REG,  ///< Volatile in both ABIs.
+    XMM27_REG,  ///< Volatile in both ABIs.
+    XMM28_REG,  ///< Volatile in both ABIs.
+    XMM29_REG,  ///< Volatile in both ABIs.
+    XMM30_REG,  ///< Volatile in both ABIs.
+    XMM31_REG   ///< Volatile in both ABIs.
 } x64_xmm;

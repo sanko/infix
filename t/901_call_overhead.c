@@ -38,9 +38,7 @@
 #endif
 
 /** @brief The simple C function used as the target for all benchmarked calls. */
-int add_for_benchmark(int a, int b) {
-    return a + b;
-}
+int add_for_benchmark(int a, int b) { return a + b; }
 
 TEST {
     plan(1);
@@ -57,9 +55,8 @@ TEST {
 
     // 1. Baseline: Direct C Call
     start = clock();
-    for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
+    for (int i = 0; i < BENCHMARK_ITERATIONS; ++i)
         accumulator += add_for_benchmark(i, i + 1);
-    }
     end = clock();
     double direct_time = ((double)(end - start)) / CLOCKS_PER_SEC;
     double direct_ns_per_call = (direct_time / BENCHMARK_ITERATIONS) * 1e9;

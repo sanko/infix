@@ -96,10 +96,9 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
         return nullptr;
     size_t index = _registry_hash_string(name) % registry->num_buckets;
     // Traverse the linked list (chain) at the computed bucket index.
-    for (_infix_registry_entry_t * current = registry->buckets[index]; current; current = current->next) {
+    for (_infix_registry_entry_t * current = registry->buckets[index]; current; current = current->next)
         if (strcmp(current->name, name) == 0)
             return current;
-    }
     return nullptr;
 }
 
@@ -107,7 +106,7 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
  * @internal
  * @brief Inserts a new, empty entry into the registry's hash table.
  *
- * This function creates a new entry for a given name and adds it to the appropriate
+ * @details This function creates a new entry for a given name and adds it to the appropriate
  * hash bucket. The `type` field is initially `nullptr` and is populated later during
  * the parsing pass of `infix_register_types`. All allocations are made from the
  * registry's own arena.
@@ -120,13 +119,16 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
     size_t index = _registry_hash_string(name) % registry->num_buckets;
     _infix_registry_entry_t * new_entry =
         infix_arena_alloc(registry->arena, sizeof(_infix_registry_entry_t), _Alignof(_infix_registry_entry_t));
-    if (!new_entry)
+    if (!new_entry) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
-    // The name string must be copied into the registry's arena to ensure its lifetime.
+    }
     size_t name_len = strlen(name) + 1;
     char * name_copy = infix_arena_alloc(registry->arena, name_len, 1);
-    if (!name_copy)
+    if (!name_copy) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
+    }
     infix_memcpy(name_copy, name, name_len);
     new_entry->name = name_copy;
     new_entry->type = nullptr;
@@ -199,7 +201,7 @@ void infix_registry_destroy(infix_registry_t * registry) {
  * @internal
  * @brief Recursively walks a type graph and resolves all named type references in-place.
  *
- * This function implements the **"Resolve"** stage of the data pipeline. It modifies
+ * @details This function implements the **"Resolve"** stage of the data pipeline. It modifies
  * the type graph by replacing `INFIX_TYPE_NAMED_REFERENCE` nodes with direct
  * pointers to the canonical types stored in the registry. It uses a "visited set"
  * (`memo_head`) to handle cycles correctly and avoid infinite recursion.
@@ -213,87 +215,94 @@ void infix_registry_destroy(infix_registry_t * registry) {
  * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_INVALID_ARGUMENT` if a type
  *         cannot be resolved.
  */
-static infix_status _resolve_type_graph_inplace_recursive(infix_type ** type_ptr,
+static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_arena,
+                                                          infix_type ** type_ptr,
                                                           infix_registry_t * registry,
                                                           resolve_memo_node_t ** memo_head) {
     if (!type_ptr || !*type_ptr || !(*type_ptr)->is_arena_allocated)
-        return INFIX_SUCCESS;  // Base case: Don't touch static or null types.
+        return INFIX_SUCCESS;
 
     infix_type * type = *type_ptr;
 
     // Cycle detection: If we've seen this node before, we're in a cycle.
     // Return success to break the loop.
-    for (resolve_memo_node_t * node = *memo_head; node != nullptr; node = node->next) {
+    for (resolve_memo_node_t * node = *memo_head; node != nullptr; node = node->next)
         if (node->src == type)
             return INFIX_SUCCESS;
-    }
-    // Add this node to the visited list before recursing.
-    resolve_memo_node_t memo_node = {.src = type, .next = *memo_head};
-    *memo_head = &memo_node;
 
-    // Base case: Resolve a named reference.
+    // Allocate the memoization node from the stable temporary arena.
+    resolve_memo_node_t * memo_node =
+        infix_arena_alloc(temp_arena, sizeof(resolve_memo_node_t), _Alignof(resolve_memo_node_t));
+    if (!memo_node) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    memo_node->src = type;
+    memo_node->next = *memo_head;
+    *memo_head = memo_node;
+
     if (type->category == INFIX_TYPE_NAMED_REFERENCE) {
         if (!registry) {
-            *memo_head = memo_node.next;          // Pop from list before returning.
-            return INFIX_ERROR_INVALID_ARGUMENT;  // Cannot resolve without a registry.
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
+            return INFIX_ERROR_INVALID_ARGUMENT;
         }
         const char * name = type->meta.named_reference.name;
         _infix_registry_entry_t * entry = _registry_lookup(registry, name);
-        // Fail if the name is not in the registry or if it's an unresolved forward declaration.
         if (!entry || !entry->type) {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
-            *memo_head = memo_node.next;
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
-        // This is the critical step: replace the pointer to the named reference
-        // with a direct pointer to the canonical type from the registry.
         *type_ptr = entry->type;
-        *memo_head = memo_node.next;
         return INFIX_SUCCESS;
     }
 
-    // Recursive step: Recurse into all child types.
     infix_status status = INFIX_SUCCESS;
     switch (type->category) {
     case INFIX_TYPE_POINTER:
-        status = _resolve_type_graph_inplace_recursive(&type->meta.pointer_info.pointee_type, registry, memo_head);
+        status = _resolve_type_graph_inplace_recursive(
+            temp_arena, &type->meta.pointer_info.pointee_type, registry, memo_head);
         break;
     case INFIX_TYPE_ARRAY:
-        status = _resolve_type_graph_inplace_recursive(&type->meta.array_info.element_type, registry, memo_head);
+        status =
+            _resolve_type_graph_inplace_recursive(temp_arena, &type->meta.array_info.element_type, registry, memo_head);
         break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-            status =
-                _resolve_type_graph_inplace_recursive(&type->meta.aggregate_info.members[i].type, registry, memo_head);
+            status = _resolve_type_graph_inplace_recursive(
+                temp_arena, &type->meta.aggregate_info.members[i].type, registry, memo_head);
             if (status != INFIX_SUCCESS)
                 break;
         }
         break;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
-        status = _resolve_type_graph_inplace_recursive(&type->meta.func_ptr_info.return_type, registry, memo_head);
+        status = _resolve_type_graph_inplace_recursive(
+            temp_arena, &type->meta.func_ptr_info.return_type, registry, memo_head);
         if (status != INFIX_SUCCESS)
             break;
         for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
-            status = _resolve_type_graph_inplace_recursive(&type->meta.func_ptr_info.args[i].type, registry, memo_head);
+            status = _resolve_type_graph_inplace_recursive(
+                temp_arena, &type->meta.func_ptr_info.args[i].type, registry, memo_head);
             if (status != INFIX_SUCCESS)
                 break;
         }
         break;
     case INFIX_TYPE_ENUM:
-        status = _resolve_type_graph_inplace_recursive(&type->meta.enum_info.underlying_type, registry, memo_head);
+        status = _resolve_type_graph_inplace_recursive(
+            temp_arena, &type->meta.enum_info.underlying_type, registry, memo_head);
         break;
     case INFIX_TYPE_COMPLEX:
-        status = _resolve_type_graph_inplace_recursive(&type->meta.complex_info.base_type, registry, memo_head);
+        status =
+            _resolve_type_graph_inplace_recursive(temp_arena, &type->meta.complex_info.base_type, registry, memo_head);
         break;
     case INFIX_TYPE_VECTOR:
-        status = _resolve_type_graph_inplace_recursive(&type->meta.vector_info.element_type, registry, memo_head);
+        status = _resolve_type_graph_inplace_recursive(
+            temp_arena, &type->meta.vector_info.element_type, registry, memo_head);
         break;
     default:
         break;
     }
 
-    *memo_head = memo_node.next;  // Pop from visited list before returning.
     return status;
 }
 
@@ -305,8 +314,18 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_type ** type_ptr
  * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status _infix_resolve_type_graph_inplace(infix_type ** type_ptr, infix_registry_t * registry) {
+    // Create a temporary arena solely for the visited list's lifetime.
+    infix_arena_t * temp_arena = infix_arena_create(1024);
+    if (!temp_arena) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+
     resolve_memo_node_t * memo_head = nullptr;
-    return _resolve_type_graph_inplace_recursive(type_ptr, registry, &memo_head);
+    infix_status status = _resolve_type_graph_inplace_recursive(temp_arena, type_ptr, registry, &memo_head);
+
+    infix_arena_destroy(temp_arena);
+    return status;
 }
 
 // Public API: Type Registration
@@ -324,21 +343,31 @@ typedef struct {
     const char * start; /**< The start of the definition string for error reporting. */
 } _registry_parser_state_t;
 
-/** @internal Skips whitespace and C++-style line comments in a definition string. */
+/**
+ * @internal
+ * @brief Skips whitespace and C++-style line comments in a definition string.
+ * @param state The parser state to advance.
+ */
 static void _registry_parser_skip_whitespace(_registry_parser_state_t * state) {
     while (1) {
         while (isspace((unsigned char)*state->p))
             state->p++;
-        if (*state->p == '#') {  // Skip comments
+        if (*state->p == '#')  // Skip comments
             while (*state->p != '\n' && *state->p != '\0')
                 state->p++;
-        }
         else
             break;
     }
 }
 
-/** @internal Parses a type name (e.g., `MyType`, `NS::MyType`) from the definition string. */
+/**
+ * @internal
+ * @brief Parses a type name (e.g., `MyType`, `NS::MyType`) from the definition string.
+ * @param state The parser state to advance.
+ * @param buffer A buffer to store the parsed name.
+ * @param buf_size The size of the buffer.
+ * @return A pointer to the `buffer` on success, or `nullptr` if no valid identifier is found.
+ */
 static char * _registry_parser_parse_name(_registry_parser_state_t * state, char * buffer, size_t buf_size) {
     _registry_parser_skip_whitespace(state);
     const char * name_start = state->p;
@@ -360,7 +389,7 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
 /**
  * @brief Parses a string of type definitions and adds them to a registry.
  *
- * This function uses a robust **three-pass approach** to handle complex dependencies,
+ * @details This function uses a robust **three-pass approach** to handle complex dependencies,
  * including out-of-order and mutually recursive definitions.
  *
  * - **Pass 1 (Scan & Index):** The entire definition string is scanned. The parser
@@ -388,8 +417,10 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
  */
 c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, const char * definitions) {
     _infix_clear_error();
-    if (!registry || !definitions)
+    if (!registry || !definitions) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     _registry_parser_state_t state = {.p = definitions, .start = definitions};
     g_infix_last_signature_context = definitions;
@@ -436,8 +467,10 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
                 if (!entry)
                     return INFIX_ERROR_ALLOCATION_FAILED;
             }
-            if (num_defs_found >= 256)
-                return INFIX_ERROR_INVALID_ARGUMENT;  // Too many definitions.
+            if (num_defs_found >= 256) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_RECURSION_DEPTH_EXCEEDED, state.p - state.start);
+                return INFIX_ERROR_INVALID_ARGUMENT;
+            }
 
             // Find the end of the type definition body (the next top-level ';').
             defs_found[num_defs_found].entry = entry;
@@ -479,8 +512,10 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         _infix_registry_entry_t * entry = defs_found[i].entry;
         // Make a temporary, null-terminated copy of the definition body substring.
         char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
-        if (!body_copy)
+        if (!body_copy) {
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             return INFIX_ERROR_ALLOCATION_FAILED;
+        }
         infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
         body_copy[defs_found[i].def_body_len] = '\0';
 
@@ -490,7 +525,6 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         infix_status status = _infix_parse_type_internal(&raw_type, &parser_arena, body_copy);
         infix_free(body_copy);
         if (status != INFIX_SUCCESS) {
-            infix_arena_destroy(parser_arena);
             // Adjust the error position to be relative to the full definition string.
             infix_error_details_t err = infix_get_last_error();
             _infix_set_error(err.category, err.code, (defs_found[i].def_body_start - definitions) + err.position);
@@ -499,14 +533,15 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
 
         // "Copy" step: copy from temp arena to the registry's permanent arena.
         entry->type = _copy_type_graph_to_arena(registry->arena, raw_type);
-        infix_arena_destroy(parser_arena);  // Destroy temp arena.
-        if (!entry->type)
+        infix_arena_destroy(parser_arena);
+        if (!entry->type) {
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             return INFIX_ERROR_ALLOCATION_FAILED;
+        }
 
         // Annotate the type with its own name for printing and introspection.
-        if (entry->type->category == INFIX_TYPE_STRUCT || entry->type->category == INFIX_TYPE_UNION) {
+        if (entry->type->category == INFIX_TYPE_STRUCT || entry->type->category == INFIX_TYPE_UNION)
             entry->type->meta.aggregate_info.name = entry->name;
-        }
         entry->is_forward_declaration = false;
     }
 
@@ -524,67 +559,6 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
 }
 
 // Registry Introspection API Implementation
-
-/**
- * @internal
- * @struct registry_printer_state
- * @brief A state object for the recursive registry-to-string printer.
- */
-typedef struct {
-    char * p;            /**< Current write position in the output buffer. */
-    size_t remaining;    /**< Bytes remaining in the buffer. */
-    infix_status status; /**< Current status, set to an error on buffer overflow. */
-} registry_printer_state;
-
-/**
- * @internal
- * @brief A safe `vsnprintf` wrapper for building the registry string.
- */
-static void _registry_print(registry_printer_state * state, const char * fmt, ...) {
-    if (state->status != INFIX_SUCCESS)
-        return;
-    va_list args;
-    va_start(args, fmt);
-    int written = vsnprintf(state->p, state->remaining, fmt, args);
-    va_end(args);
-    if (written < 0 || (size_t)written >= state->remaining)
-        state->status = INFIX_ERROR_INVALID_ARGUMENT;
-    else {
-        state->p += written;
-        state->remaining -= written;
-    }
-}
-
-c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_size, const infix_registry_t * registry) {
-    if (!buffer || buffer_size == 0 || !registry)
-        return INFIX_ERROR_INVALID_ARGUMENT;
-
-    registry_printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
-    *state.p = '\0';
-
-    // Iterate through all buckets and their chains.
-    for (size_t i = 0; i < registry->num_buckets; ++i) {
-        for (const _infix_registry_entry_t * entry = registry->buckets[i]; entry != nullptr; entry = entry->next) {
-            // Only print fully defined types, not forward declarations.
-            if (entry->type && !entry->is_forward_declaration) {
-                char type_body_buffer[1024];
-
-                if (_infix_type_print_body_only(
-                        type_body_buffer, sizeof(type_body_buffer), entry->type, INFIX_DIALECT_SIGNATURE) !=
-                    INFIX_SUCCESS) {
-                    state.status = INFIX_ERROR_INVALID_ARGUMENT;
-                    goto end_print_loop;
-                }
-
-                _registry_print(&state, "@%s = %s;\n", entry->name, type_body_buffer);
-                if (state.status != INFIX_SUCCESS)
-                    goto end_print_loop;
-            }
-        }
-    }
-end_print_loop:;
-    return state.status;
-}
 
 c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t * registry) {
     // Return an iterator positioned before the first element.

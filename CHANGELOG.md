@@ -5,7 +5,7 @@ All notable changes to this project will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2025-10-27
 
 ### Initial Public Release
 
@@ -34,13 +34,16 @@ Everything. It's brand new.
   - Function Pointers: `(*((int)->void))`
   - Variadic functions using a semicolon separator: `(*char; int, double) -> int`
   - `_Complex` numbers: `c[double]`
-  - SIMD vectors: `v[4:float]`
+  - SIMD Vectors: Comprehensive support for architecture-specific vectors, including:
+    - `x86-64:` SSE, AVX, and AVX-512 (`__m128`, `__m256`, `__m512`)
+    - `AArch64:` NEON and the Scalable Vector Extension (SVE)
+    - Convenience keywords like `m256d` and `m512d` for common types.
   - Enums with an explicit underlying type: `e:int`
 - Named Type Registry: A powerful system for defining and reusing complex types by name
   - Simple aliases: `@UserID = uint64;`
   - Recursive types: `@Node = { value: int, next: *@Node };`
   - Mutually recursive types via forward declarations: `@A; @B; ...`
-- Manual API.
+- Manual API:
   A programmatic, arena-based API (`infix_type_create_struct`, etc.) for building `infix_type` objects without the string parser.
 - Introspection API:
   A comprehensive suite of getter functions to inspect the layout of any type at runtime, including its size, alignment, and the name/offset/type of every member. This is ideal for building dynamic language bindings and data marshallers.
@@ -50,6 +53,7 @@ Everything. It's brand new.
 - Guard Pages: Freed trampolines are made inaccessible to cause a safe, immediate crash on any use-after-free attempt.
 - Read-Only Contexts: The internal metadata for reverse callbacks is made read-only after creation to prevent runtime memory corruption vulnerabilities.
 - Integer Overflow Hardening: All API functions and internal calculations are hardened against integer overflows from malformed or malicious inputs.
+- Comprehensive Test Suite: Over 30 unit and regression tests covering more than 300 assertions for ABI edge cases, memory lifecycle bugs, and security features.
 - Fuzz Tested: The entire API surface, especially the signature parser and ABI classifiers, is continuously validated with `libFuzzer` and `AFL++` to find and fix potential crashes and hangs.
 
 #### Performance & Memory Management
@@ -66,6 +70,7 @@ Everything. It's brand new.
   - Procedure Call Standard for the ARM 64-bit Architecture (AAPCS64) on Linux, macOS, and Windows.
 - Compilers: GCC, Clang, and Microsoft Visual C++ (MSVC).
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
+- Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
 [unreleased]: https://github.com/sanko/infix/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/sanko/infix/releases/tag/v0.1.0

@@ -577,13 +577,64 @@ static void emit_vex_prefix(
 }
 
 /*
+ * @internal
+ * Emits a 4-byte EVEX prefix for an AVX-512 instruction, following the Intel SDM.
+ */
+static void emit_evex_prefix(code_buffer * buf,
+                             uint8_t map,  // 1 for 0F, 2 for 0F38, 3 for 0F3A
+                             uint8_t pp,   // 00=none, 01=66, 10=F3, 11=F2
+                             bool W,
+                             bool R,
+                             bool X,
+                             bool B,
+                             bool R_prime,  // Register bits
+                             uint8_t vvvv,  // Source register (inverted)
+                             bool L,
+                             bool L_prime,
+                             bool z,
+                             bool b,
+                             uint8_t aaa)  // Masking/control bits
+{
+    emit_byte(buf, 0x62);
+
+    // Byte 2: P0
+    uint8_t p0 = 0;
+    p0 |= (map & 0b11) << 5;
+    p0 |= R_prime ? 0 : (1 << 4);  // R' is inverted
+    p0 |= B ? 0 : (1 << 5);        // B is inverted
+    p0 |= X ? 0 : (1 << 6);        // X is inverted
+    p0 |= R ? 0 : (1 << 7);        // R is inverted
+    emit_byte(buf, p0);
+
+    // Byte 3: P1
+    uint8_t p1 = 0;
+    p1 |= (pp & 0b11);
+    p1 |= (1 << 2);              // ' (marks EVEX), must be 1
+    p1 |= ((~vvvv & 0xF) << 3);  // vvvv field is inverted
+    p1 |= W ? (1 << 7) : 0;
+    emit_byte(buf, p1);
+
+    // Byte 4: P2
+    uint8_t p2 = 0;
+    p2 |= (aaa & 0b111);
+    p2 |= b ? (1 << 4) : 0;
+    p2 |= L_prime ? (1 << 6) : 0;
+    p2 |= L ? (1 << 5) : 0;
+    p2 |= z ? (1 << 7) : 0;
+    // V' bit is part of vvvv, but needs to be encoded here.
+    p2 |= ((~(vvvv >> 4) & 1) << 3);
+    emit_byte(buf, p2);
+}
+
+
+/*
  * Implementation for emit_vmovupd_ymm_mem (load 256-bit AVX vector).
  * Instruction format: VEX.256.66.0F.WIG 10 /r
  */
 void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset) {
     // VEX prefix fields for vmovupd ymm, m256:
-    // L=1 (256-bit), p=1 (from 66 prefix), m-mmmm=01 (from 0F map).
-    emit_vex_prefix(buf, dest >= XMM8_REG, 0, src_base >= R8_REG, 1, false, 0, true, 1);
+    // L=1 (256-bit), p=1 (from 66 prefix), m-mmmm=01 (from 0F map), vvvv must be 1111b
+    emit_vex_prefix(buf, dest >= XMM8_REG, 0, src_base >= R8_REG, 1, false, 0xF, true, 1);
     emit_byte(buf, 0x10);  // Opcode for MOVUPD
     uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
     if (offset == 0 && (src_base % 8) != RBP_REG)
@@ -602,7 +653,76 @@ void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int
  * Instruction format: VEX.256.66.0F.WIG 11 /r
  */
 void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src) {
-    emit_vex_prefix(buf, src >= XMM8_REG, 0, dest_base >= R8_REG, 1, false, 0, true, 1);
+    emit_vex_prefix(buf, src >= XMM8_REG, 0, dest_base >= R8_REG, 1, false, 0xF, true, 1);
+    emit_byte(buf, 0x11);  // Opcode for MOVUPD (store)
+    uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
+    if (offset == 0 && (dest_base % 8) != RBP_REG)
+        mod = 0x00;
+    emit_modrm(buf, mod >> 6, src % 8, dest_base % 8);
+    if (dest_base % 8 == RSP_REG)
+        emit_byte(buf, 0x24);
+    if (mod == 0x40)
+        emit_byte(buf, (uint8_t)offset);
+    else if (mod == 0x80)
+        emit_int32(buf, offset);
+}
+
+/*
+ * Implementation for emit_vmovupd_zmm_mem (load 512-bit AVX-512 vector).
+ * Instruction format: EVEX.512.66.0F.W0 10 /r
+ */
+void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset) {
+    // For vmovupd zmm, m512:
+    // map=0F(1), pp=66(1), W=0, L'L=10 (512-bit), vvvv=1111 (not used)
+    // z=0, b=0, aaa=0 (no masking)
+    emit_evex_prefix(buf,
+                     1,
+                     1,
+                     false,
+                     dest >= XMM8_REG,
+                     false,
+                     src_base >= R8_REG,
+                     dest >= XMM16_REG,
+                     0xF,  // vvvv = 1111b
+                     true,
+                     false,  // L'L = 10 for 512-bit
+                     false,
+                     false,
+                     0);
+    emit_byte(buf, 0x10);  // Opcode for MOVUPD
+    uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
+    if (offset == 0 && (src_base % 8) != RBP_REG)
+        mod = 0x00;
+    emit_modrm(buf, mod >> 6, dest % 8, src_base % 8);
+    if (src_base % 8 == RSP_REG)
+        emit_byte(buf, 0x24);
+    if (mod == 0x40)
+        emit_byte(buf, (uint8_t)offset);
+    else if (mod == 0x80)
+        emit_int32(buf, offset);
+}
+
+/*
+ * Implementation for emit_vmovupd_mem_zmm (store 512-bit AVX-512 vector).
+ * Instruction format: EVEX.512.66.0F.W0 11 /r
+ */
+void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src) {
+    // For vmovupd m512, zmm:
+    // map=0F(1), pp=66(1), W=0, L'L=10 (512-bit), vvvv is unused (must be 1111b).
+    emit_evex_prefix(buf,
+                     1,
+                     1,
+                     false,
+                     src >= XMM8_REG,
+                     false,
+                     dest_base >= R8_REG,
+                     src >= XMM16_REG,
+                     0xF,  // vvvv = 1111b
+                     true,
+                     false,  // L'L = 10 for 512-bit
+                     false,
+                     false,
+                     0);
     emit_byte(buf, 0x11);  // Opcode for MOVUPD (store)
     uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
     if (offset == 0 && (dest_base % 8) != RBP_REG)
@@ -812,9 +932,7 @@ void emit_call_reg(code_buffer * buf, x64_gpr reg) {
  * Implementation for emit_ret.
  * Opcode: C3
  */
-void emit_ret(code_buffer * buf) {
-    emit_byte(buf, 0xC3);
-}
+void emit_ret(code_buffer * buf) { emit_byte(buf, 0xC3); }
 
 /*
  * Implementation for emit_test_reg_reg.
@@ -830,9 +948,7 @@ void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2) {
  * Implementation for emit_jnz_short.
  * Opcode format: 75 rel8
  */
-void emit_jnz_short(code_buffer * buf, int8_t offset) {
-    EMIT_BYTES(buf, 0x75, (uint8_t)offset);
-}
+void emit_jnz_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x75, (uint8_t)offset); }
 
 /**
  * Emits a `jmp r64` instruction.
@@ -854,6 +970,4 @@ void emit_jmp_reg(code_buffer * buf, x64_gpr reg) {
  * Implementation for emit_ud2.
  * Opcode format: 0F 0B
  */
-void emit_ud2(code_buffer * buf) {
-    EMIT_BYTES(buf, 0x0F, 0x0B);
-}
+void emit_ud2(code_buffer * buf) { EMIT_BYTES(buf, 0x0F, 0x0B); }

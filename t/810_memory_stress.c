@@ -38,12 +38,8 @@ typedef struct {
     Point elements[10];
 } StressObject;
 
-void dummy_stress_func_fwd(StressObject obj) {
-    (void)obj;
-}
-void dummy_stress_handler_rev(StressObject obj) {
-    (void)obj;
-}
+void dummy_stress_func_fwd(StressObject obj) { (void)obj; }
+void dummy_stress_handler_rev(StressObject obj) { (void)obj; }
 
 TEST {
     plan(1);
@@ -55,9 +51,8 @@ TEST {
         for (int i = 0; i < STRESS_ITERATIONS; ++i) {
 
             infix_arena_t * arena = infix_arena_create(8192);
-            if (!arena) {
+            if (!arena)
                 bail_out("Failed to create arena in iteration %d", i);
-            }
 
             infix_struct_member * point_members =
                 infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));

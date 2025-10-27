@@ -180,10 +180,8 @@ void test_body(void);
 #ifndef note
 #define note(...) ((void)0)
 #endif
-#define TEST         \
-    int main(void) { \
-        return 0;    \
-    }
+#define TEST \
+    int main(void) { return 0; }
 
 #endif  // DBLTAP_ENABLE
 
@@ -298,9 +296,7 @@ static void pop_state(void) {
 
 // Public API Implementation
 
-void tap_init(void) {
-    _tap_ensure_initialized();
-}
+void tap_init(void) { _tap_ensure_initialized(); }
 
 void tap_plan(size_t count) {
     _tap_ensure_initialized();

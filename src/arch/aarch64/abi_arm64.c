@@ -129,6 +129,7 @@ const infix_reverse_abi_spec g_arm64_reverse_spec = {
  * @details This function performs a depth-first search to find the very first `float`
  *          or `double` primitive within an aggregate. This becomes the candidate
  *          "base type" that all other members of the aggregate will be compared against.
+ * @param type The type to search within.
  * @return A pointer to the `infix_type` of the base element, or `nullptr` if not found.
  */
 static infix_type * get_hfa_base_type(infix_type * type) {
@@ -183,10 +184,9 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
     if (type->category == INFIX_TYPE_STRUCT) {
         if (type->meta.aggregate_info.num_members == 0)
             return false;
-        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i)
             if (!is_hfa_recursive_check(type->meta.aggregate_info.members[i].type, base_type, field_count))
                 return false;
-        }
         return true;
     }
     // If it's not a float, complex, array, or struct, it cannot be part of an HFA.
@@ -240,6 +240,13 @@ static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
  *          deviations on Apple and Windows platforms, especially for variadic arguments
  *          and 16-byte aggregate alignment.
  *
+ * @param arena The temporary arena for allocations.
+ * @param out_layout Receives the created layout blueprint.
+ * @param ret_type The function's return type.
+ * @param arg_types Array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of non-variadic arguments.
+ * @param target_fn The target function address.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
@@ -407,6 +414,9 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
  *          saves callee-saved registers (X19-X22) that will be used to hold the trampoline's
  *          context, moves the trampoline's arguments into those preserved registers, and
  *          allocates the necessary stack space for stack-passed arguments.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout) {
     // `stp x29, x30, [sp, #-16]!` : Push Frame Pointer and Link Register to the stack, pre-decrementing SP.
@@ -442,6 +452,12 @@ static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_cal
  * @details This function marshals arguments from the generic `void**` array (pointed to by X21)
  *          into the correct GPRs, VPRs, or stack slots, respecting HFA rules and platform-specific
  *          variadic conventions like Apple's stack-only approach.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param arg_types The array of argument types.
+ * @param num_args The total number of arguments.
+ * @param num_fixed_args The number of fixed (non-variadic) arguments.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                                                           infix_call_frame_layout * layout,
@@ -590,6 +606,9 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
  * @details Emits a null-check on the target function pointer followed by a
  *          `BLR` (Branch with Link to Register) instruction. If the pointer
  *          is null, a `BRK` instruction is executed to crash safely.
+ * @param buf The code buffer.
+ * @param layout The call frame layout.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
                                                             c23_maybe_unused infix_call_frame_layout * layout) {
@@ -613,6 +632,10 @@ static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
  * @brief Stage 4 (Forward): Generates the function epilogue.
  * @details Emits code to handle the return value (from X0/X1 or V0-V3), deallocates
  *          the stack frame, restores callee-saved registers, and returns to the caller.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param ret_type The function's return type.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
                                                     infix_call_frame_layout * layout,
@@ -681,6 +704,7 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
  *          3. A contiguous data area where the contents of all incoming arguments
  *             (from registers or the caller's stack) will be saved.
  *
+ * @param arena The temporary arena for allocations.
  * @param[out] out_layout The resulting reverse call frame layout blueprint, populated with offsets.
  * @param context The reverse trampoline context with full signature information.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
@@ -764,6 +788,10 @@ static infix_status generate_reverse_prologue_arm64(code_buffer * buf, infix_rev
  *          locations (GPRs, VPRs, or the caller's stack) into a contiguous "saved args"
  *          area on the stub's local stack. It then populates the `args_array` with
  *          pointers to this saved data, respecting all platform-specific ABI deviations.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * buf,
                                                                 infix_reverse_call_frame_layout * layout,
@@ -929,18 +957,16 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                 else
                     is_from_stack = true;
             }
-            else {
-                if (gpr_idx < NUM_GPR_ARGS) {
-                    if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
-                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
-                    else {
-                        emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
-                    }
+            else if (gpr_idx < NUM_GPR_ARGS) {
+                if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
+                    emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
+                else {
+                    emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
+                    emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
                 }
-                else
-                    is_from_stack = true;
             }
+            else
+                is_from_stack = true;
         }
 
         if (is_from_stack) {
@@ -1024,6 +1050,10 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
  *          return buffer on the stub's local stack and places it into the correct native return
  *          registers (X0, X1, V0, etc.) as required by the AAPCS64. It then tears down the
  *          stack frame and returns control to the native caller.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
                                                     infix_reverse_call_frame_layout * layout,

@@ -30,9 +30,7 @@
 #define BENCHMARK_ITERATIONS 10000
 
 /** @brief A dummy handler function to provide a valid function pointer for creation. */
-void benchmark_handler(Point p) {
-    (void)p;
-}
+void benchmark_handler(Point p) { (void)p; }
 
 TEST {
     plan(1);

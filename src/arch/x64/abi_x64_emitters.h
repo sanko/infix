@@ -97,6 +97,12 @@ void emit_movups_mem_xmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x
 /** @internal @brief Emits `vmovupd ymm, [base + offset]` to load a 256-bit unaligned value (AVX). */
 void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset);
 
+/** @internal @brief Emits `vmovupd zmm, [base + offset]` to load a 512-bit unaligned value (AVX-512). */
+void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset);
+
+/** @internal @brief Emits `vmovupd [base + offset], zmm` to store a 512-bit unaligned value (AVX-512). */
+void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
+
 /** @internal @brief Emits `vmovupd [base + offset], ymm` to store a 256-bit unaligned value (AVX). */
 void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
 

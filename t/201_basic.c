@@ -49,9 +49,7 @@ void modify_data_via_pointers(int * a, double * b) {
 }
 
 /** @brief A simple helper to check if a received pointer is NULL. */
-bool check_if_null(void * ptr) {
-    return ptr == nullptr;
-}
+bool check_if_null(void * ptr) { return ptr == nullptr; }
 
 TEST {
     plan(3);

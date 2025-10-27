@@ -35,23 +35,15 @@
 #define HAS_DISTINCT_LONG_DOUBLE 1
 #endif
 
-long double passthrough_long_double(long double v) {
-    return v;
-}
+long double passthrough_long_double(long double v) { return v; }
 
 #if !defined(INFIX_COMPILER_MSVC)
 
 const __int128_t S128_CONSTANT = (((__int128_t)0x12345678ABCDDCBA) << 64) | 0x1122334455667788;
 const __uint128_t U128_CONSTANT = (((__uint128_t)0xFFFFFFFFFFFFFFFF) << 64) | 0xAABBCCDDEEFF0011;
-bool check_s128(__int128_t val) {
-    return val == S128_CONSTANT;
-}
-bool check_u128(__uint128_t val) {
-    return val == U128_CONSTANT;
-}
-__int128_t return_s128(void) {
-    return S128_CONSTANT;
-}
+bool check_s128(__int128_t val) { return val == S128_CONSTANT; }
+bool check_u128(__uint128_t val) { return val == U128_CONSTANT; }
+__int128_t return_s128(void) { return S128_CONSTANT; }
 bool s128_callback_handler(__int128_t val) {
     note("s128_callback_handler received value.");
     return val == S128_CONSTANT;

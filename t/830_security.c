@@ -50,9 +50,7 @@
 #endif
 
 // Dummy functions to provide valid pointers for trampoline creation.
-int dummy_target_func(int a) {
-    return a * 10;
-}
+int dummy_target_func(int a) { return a * 10; }
 void dummy_handler_func(void) {}
 
 /**

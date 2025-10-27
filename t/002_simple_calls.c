@@ -23,17 +23,11 @@
 
 // C Functions to be Called via FFI
 
-int add_ints(int a, int b) {
-    return a + b;
-}
+int add_ints(int a, int b) { return a + b; }
 
-float multiply_floats(float a, float b) {
-    return a * b;
-}
+float multiply_floats(float a, float b) { return a * b; }
 
-void do_nothing() {
-    pass("void(void) function was successfully called.");
-}
+void do_nothing() { pass("void(void) function was successfully called."); }
 
 bool is_negative(int val) {
     note("is_negative() received value: %d", val);

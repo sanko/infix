@@ -91,10 +91,9 @@ static void skip_whitespace(parser_state * state) {
     while (true) {
         while (isspace((unsigned char)*state->p))
             state->p++;
-        if (*state->p == '#') {  // C-style line comments
+        if (*state->p == '#')  // C-style line comments
             while (*state->p != '\n' && *state->p != '\0')
                 state->p++;
-        }
         else
             break;
     }
@@ -235,10 +234,9 @@ static bool is_function_signature_ahead(const parser_state * state) {
         return false;  // Mismatched parentheses.
     // Skip any whitespace or comments after the ')'
     while (isspace((unsigned char)*p) || *p == '#') {
-        if (*p == '#') {
+        if (*p == '#')
             while (*p != '\n' && *p != '\0')
                 p++;
-        }
         else
             p++;
     }
@@ -285,7 +283,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 return nullptr;
             // Structs and unions cannot have `void` members.
             if (member_type->category == INFIX_TYPE_VOID) {
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
                 return nullptr;
             }
 
@@ -321,8 +319,10 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             else if (*state->p == end_char)
                 break;
             else {  // Unexpected token (e.g., missing comma).
-                if (*state->p == '\0')
-                    return nullptr;  // EOF is handled by the caller.
+                if (*state->p == '\0') {
+                    set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+                    return nullptr;
+                }
                 set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                 return nullptr;
             }
@@ -390,9 +390,6 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
                                               : infix_type_create_union(state->arena, &agg_type, members, num_members);
 
     if (status != INFIX_SUCCESS) {
-        _infix_set_error(INFIX_CATEGORY_GENERAL,
-                         (status == INFIX_ERROR_ALLOCATION_FAILED) ? INFIX_CODE_OUT_OF_MEMORY : INFIX_CODE_UNKNOWN,
-                         (size_t)(state->p - state->start));
         state->depth--;
         return nullptr;
     }
@@ -453,12 +450,8 @@ static infix_type * parse_packed_struct(parser_state * state) {
     infix_status status =
         infix_type_create_packed_struct(state->arena, &packed_type, total_size, alignment, members, num_members);
 
-    if (status != INFIX_SUCCESS) {
-        _infix_set_error(INFIX_CATEGORY_GENERAL,
-                         (status == INFIX_ERROR_ALLOCATION_FAILED) ? INFIX_CODE_OUT_OF_MEMORY : INFIX_CODE_UNKNOWN,
-                         (size_t)(state->p - state->start));
+    if (status != INFIX_SUCCESS)
         return nullptr;
-    }
     return packed_type;
 }
 
@@ -534,6 +527,55 @@ static infix_type * parse_primitive(parser_state * state) {
     if (consume_keyword(state, "longdouble"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
 
+    // AVX convenience aliases
+    if (consume_keyword(state, "m256d")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 4);
+        if (status != INFIX_SUCCESS)
+            return nullptr;    // Propagate failure
+        type->alignment = 32;  // YMM registers require 32-byte alignment
+        return type;
+    }
+
+    if (consume_keyword(state, "m256")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 8);
+        if (status != INFIX_SUCCESS)
+            return nullptr;    // Propagate failure
+        type->alignment = 32;  // YMM registers require 32-byte alignment
+        return type;
+    }
+
+    if (consume_keyword(state, "m512d")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 8);
+        if (status != INFIX_SUCCESS)
+            return nullptr;
+        type->alignment = 64;  // ZMM registers have 64-byte alignment
+        return type;
+    }
+    if (consume_keyword(state, "m512")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 16);
+        if (status != INFIX_SUCCESS)
+            return nullptr;
+        type->alignment = 64;
+        return type;
+    }
+    if (consume_keyword(state, "m512i")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 8);
+        if (status != INFIX_SUCCESS)
+            return nullptr;
+        type->alignment = 64;
+        return type;
+    }
+
     return nullptr;
 }
 
@@ -598,7 +640,8 @@ static infix_type * parse_type(parser_state * state) {
                 state->depth--;
                 return nullptr;
             }
-            *func_type = *infix_type_create_pointer();  // Function pointers have the layout of a generic pointer.
+            func_type->size = sizeof(void *);
+            func_type->alignment = _Alignof(void *);
             func_type->is_arena_allocated = true;
             func_type->category = INFIX_TYPE_REVERSE_TRAMPOLINE;  // Special category for function types.
             func_type->meta.func_ptr_info.return_type = ret_type;
@@ -617,7 +660,7 @@ static infix_type * parse_type(parser_state * state) {
             }
             skip_whitespace(state);
             if (*state->p != ')') {
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
                 result_type = nullptr;
             }
             else
@@ -646,7 +689,7 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         if (element_type->category == INFIX_TYPE_VOID) {  // An array of `void` is illegal in C.
-            set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+            set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
             state->depth--;
             return nullptr;
         }
@@ -671,7 +714,7 @@ static infix_type * parse_type(parser_state * state) {
         skip_whitespace(state);
         infix_type * underlying_type = parse_type(state);
         if (!underlying_type || underlying_type->category != INFIX_TYPE_PRIMITIVE) {
-            set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+            set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
             state->depth--;
             return nullptr;
         }
@@ -787,8 +830,11 @@ static infix_status parse_function_signature_details(parser_state * state,
                 return INFIX_ERROR_INVALID_ARGUMENT;
 
             arg_node * node = infix_arena_calloc(state->arena, 1, sizeof(arg_node), _Alignof(arg_node));
-            if (!node)
+            if (!node) {
+                _infix_set_error(
+                    INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
                 return INFIX_ERROR_ALLOCATION_FAILED;
+            }
             node->arg.type = arg_type;
             node->arg.name = name;
             node->next = nullptr;
@@ -832,8 +878,11 @@ static infix_status parse_function_signature_details(parser_state * state,
                     return INFIX_ERROR_INVALID_ARGUMENT;
 
                 arg_node * node = infix_arena_calloc(state->arena, 1, sizeof(arg_node), _Alignof(arg_node));
-                if (!node)
+                if (!node) {
+                    _infix_set_error(
+                        INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
                     return INFIX_ERROR_ALLOCATION_FAILED;
+                }
                 node->arg.type = arg_type;
                 node->arg.name = name;
                 node->next = nullptr;
@@ -884,8 +933,10 @@ static infix_status parse_function_signature_details(parser_state * state,
     infix_function_argument * args = (num_args > 0)
         ? infix_arena_calloc(state->arena, num_args, sizeof(infix_function_argument), _Alignof(infix_function_argument))
         : nullptr;
-    if (num_args > 0 && !args)
+    if (num_args > 0 && !args) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return INFIX_ERROR_ALLOCATION_FAILED;
+    }
     arg_node * current = head;
     for (size_t i = 0; i < num_args; i++) {
         args[i] = current->arg;
@@ -951,7 +1002,7 @@ c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
 /**
  * @brief Parses a signature string representing a single data type.
  *
- * This function orchestrates the full **"Parse -> Copy -> Resolve -> Layout"** pipeline
+ * This function orchestrates the full **"Parse -> Estimate -> Copy -> Resolve -> Layout"** pipeline
  * for a single type, resulting in a fully resolved and laid-out `infix_type` object graph.
  *
  * @param[out] out_type On success, receives a pointer to the parsed type object.
@@ -989,6 +1040,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
     if (!final_type) {
         infix_arena_destroy(*out_arena);
         *out_arena = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
@@ -1007,20 +1059,21 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
     return status;
 }
 
+
 /**
  * @brief Parses a full function signature string into its constituent parts.
  *
  * Like `infix_type_from_signature`, this function orchestrates the full
- * "Parse -> Copy -> Resolve -> Layout" pipeline, but for a function signature.
+ * "Parse -> Estimate -> Copy -> Resolve -> Layout" pipeline, but for a function signature.
  * It unpacks the final, resolved components for the caller.
  *
  * @param[in] signature The signature string to parse.
- * @param[out] out_arena On success, receives a pointer to an arena holding the parsed types. The caller owns this and
+ * @param[out] out_arena On success, receives a pointer to an arena holding all parsed types. The caller owns this and
  * must free it with `infix_arena_destroy`.
  * @param[out] out_ret_type On success, receives a pointer to the return type.
- * @param[out] out_args On success, receives a pointer to the array of argument types.
+ * @param[out] out_args On success, receives a pointer to the array of `infix_function_argument` structs.
  * @param[out] out_num_args On success, receives the total number of arguments.
- * @param[out] out_num_fixed_args On success, receives the number of fixed arguments.
+ * @param[out] out_num_fixed_args On success, receives the number of fixed (non-variadic) arguments.
  * @param[in] registry An optional type registry.
  * @return `INFIX_SUCCESS` on success.
  */
@@ -1032,8 +1085,10 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
                                                  size_t * out_num_fixed_args,
                                                  infix_registry_t * registry) {
     _infix_clear_error();
-    if (!signature || !out_arena || !out_ret_type || !out_args || !out_num_args || !out_num_fixed_args)
+    if (!signature || !out_arena || !out_ret_type || !out_args || !out_num_args || !out_num_fixed_args) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     g_infix_last_signature_context = signature;
 
     // 1. "Parse" stage
@@ -1060,9 +1115,11 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
     // 2. "Copy" stage
     infix_type * final_func_type = _copy_type_graph_to_arena(*out_arena, raw_func_type);
     infix_arena_destroy(parser_arena);
+
     if (!final_func_type) {
         infix_arena_destroy(*out_arena);
         *out_arena = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
 
@@ -1222,9 +1279,40 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "]");
         break;
     case INFIX_TYPE_VECTOR:
-        _print(state, "v[%zu:", type->meta.vector_info.num_elements);
-        _infix_type_print_signature_recursive(state, type->meta.vector_info.element_type);
-        _print(state, "]");
+        {
+            const infix_type * element_type = type->meta.vector_info.element_type;
+            size_t num_elements = type->meta.vector_info.num_elements;
+            bool printed_alias = false;
+
+            if (element_type->category == INFIX_TYPE_PRIMITIVE) {
+                if (num_elements == 8 && is_double(element_type)) {
+                    _print(state, "m512d");
+                    printed_alias = true;
+                }
+                else if (num_elements == 16 && is_float(element_type)) {
+                    _print(state, "m512");
+                    printed_alias = true;
+                }
+                else if (num_elements == 8 && element_type->meta.primitive_id == INFIX_PRIMITIVE_SINT64) {
+                    _print(state, "m512i");
+                    printed_alias = true;
+                }
+                else if (num_elements == 4 && is_double(element_type)) {
+                    _print(state, "m256d");
+                    printed_alias = true;
+                }
+                else if (num_elements == 8 && is_float(element_type)) {
+                    _print(state, "m256");
+                    printed_alias = true;
+                }
+            }
+
+            if (!printed_alias) {
+                _print(state, "v[%zu:", num_elements);
+                _infix_type_print_signature_recursive(state, element_type);
+                _print(state, "]");
+            }
+        }
         break;
     case INFIX_TYPE_PRIMITIVE:
         switch (type->meta.primitive_id) {
@@ -1275,6 +1363,36 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
     default:
         state->status = INFIX_ERROR_INVALID_ARGUMENT;
         break;
+    }
+}
+
+/**
+ * @internal
+ * @struct registry_printer_state
+ * @brief A state object for the recursive registry-to-string printer.
+ */
+typedef struct {
+    char * p;            /**< Current write position in the output buffer. */
+    size_t remaining;    /**< Bytes remaining in the buffer. */
+    infix_status status; /**< Current status, set to an error on buffer overflow. */
+} registry_printer_state;
+
+/**
+ * @internal
+ * @brief A safe `vsnprintf` wrapper for building the registry string.
+ */
+static void _registry_print(registry_printer_state * state, const char * fmt, ...) {
+    if (state->status != INFIX_SUCCESS)
+        return;
+    va_list args;
+    va_start(args, fmt);
+    int written = vsnprintf(state->p, state->remaining, fmt, args);
+    va_end(args);
+    if (written < 0 || (size_t)written >= state->remaining)
+        state->status = INFIX_ERROR_INVALID_ARGUMENT;
+    else {
+        state->p += written;
+        state->remaining -= written;
     }
 }
 
@@ -1376,8 +1494,10 @@ c23_nodiscard infix_status infix_type_print(char * buffer,
                                             const infix_type * type,
                                             infix_print_dialect_t dialect) {
     _infix_clear_error();
-    if (!buffer || buffer_size == 0 || !type)
+    if (!buffer || buffer_size == 0 || !type) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
     *buffer = '\0';
@@ -1427,8 +1547,10 @@ c23_nodiscard infix_status infix_function_print(char * buffer,
                                                 size_t num_fixed_args,
                                                 infix_print_dialect_t dialect) {
     _infix_clear_error();
-    if (!buffer || buffer_size == 0 || !ret_type || (num_args > 0 && !args))
+    if (!buffer || buffer_size == 0 || !ret_type || (num_args > 0 && !args)) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
     *buffer = '\0';
@@ -1469,5 +1591,36 @@ c23_nodiscard infix_status infix_function_print(char * buffer,
     else if (buffer_size > 0)
         buffer[buffer_size - 1] = '\0';
 
+    return state.status;
+}
+
+c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_size, const infix_registry_t * registry) {
+    if (!buffer || buffer_size == 0 || !registry)
+        return INFIX_ERROR_INVALID_ARGUMENT;
+
+    registry_printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    *state.p = '\0';
+
+    // Iterate through all buckets and their chains.
+    for (size_t i = 0; i < registry->num_buckets; ++i) {
+        for (const _infix_registry_entry_t * entry = registry->buckets[i]; entry != nullptr; entry = entry->next) {
+            // Only print fully defined types, not forward declarations.
+            if (entry->type && !entry->is_forward_declaration) {
+                char type_body_buffer[1024];
+
+                if (_infix_type_print_body_only(
+                        type_body_buffer, sizeof(type_body_buffer), entry->type, INFIX_DIALECT_SIGNATURE) !=
+                    INFIX_SUCCESS) {
+                    state.status = INFIX_ERROR_INVALID_ARGUMENT;
+                    goto end_print_loop;
+                }
+
+                _registry_print(&state, "@%s = %s;\n", entry->name, type_body_buffer);
+                if (state.status != INFIX_SUCCESS)
+                    goto end_print_loop;
+            }
+        }
+    }
+end_print_loop:;
     return state.status;
 }

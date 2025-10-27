@@ -120,6 +120,10 @@ static const regression_test_case_t regression_tests[] = {
      .b64_input = "PjL/gUAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAJWVlZWV/////////////////////////////////////5WVlZWFPg==",
      .target = TARGET_TYPE_GENERATOR,
      .expected_status = INFIX_SUCCESS},
+    {.name = "nullptr type in arg_types for reverse trampoline (case 2)",
+     .b64_input = "0NT//////////wBo//3//9r//2n////////////+/////////////////yz//3///+lo",
+     .target = TARGET_TRAMPOLINE_GENERATOR,
+     .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
 };
 
 static void run_regression_case(const regression_test_case_t * test) {
@@ -147,17 +151,13 @@ static void run_regression_case(const regression_test_case_t * test) {
             size_t total_fields = 0;
             infix_type * generated_type = generate_random_type(arena, &in, 0, &total_fields);
 
-            if (test->expected_status == INFIX_SUCCESS) {
-                if (arena->error) {
+            if (test->expected_status == INFIX_SUCCESS)
+                if (arena->error)
                     fail("Type generation failed due to internal arena error, but was expected to succeed.");
-                }
-                else {
+                else
                     pass("Successfully processed pathological input without timeout/crash.");
-                }
-            }
-            else {
+            else
                 ok(generated_type == nullptr || arena->error, "Generator correctly failed on invalid input.");
-            }
             infix_arena_destroy(arena);
         }
         else if (test->target == TARGET_SIGNATURE_PARSER) {

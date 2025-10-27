@@ -46,7 +46,7 @@
  *
  * Allocates an `infix_arena_t` struct and its backing buffer in a single block
  * of memory. If allocation fails at any point, it cleans up successfully allocated
- * parts and returns `nullptr`.
+ * parts, sets a detailed error, and returns `nullptr`.
  *
  * @param initial_size The number of bytes for the initial backing buffer. A larger
  *        size can reduce the chance of reallocation for complex types.
@@ -55,12 +55,15 @@
 c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
     // Use calloc to ensure the initial struct state is zeroed.
     infix_arena_t * arena = infix_calloc(1, sizeof(infix_arena_t));
-    if (arena == nullptr)
+    if (arena == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
+    }
 
     arena->buffer = infix_calloc(1, initial_size);
     if (arena->buffer == nullptr && initial_size > 0) {
         infix_free(arena);
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
 
@@ -104,8 +107,8 @@ void infix_arena_destroy(infix_arena_t * arena) {
  * integer and pointer arithmetic.
  *
  * If an allocation fails (due to insufficient space or invalid arguments), the
- * arena's `error` flag is set, and all subsequent allocations from this arena
- * will also fail.
+ * arena's `error` flag is set, a detailed error is reported, and all subsequent
+ * allocations from this arena will also fail.
  *
  * @param arena The arena to allocate from.
  * @param size The number of bytes to allocate.
@@ -120,6 +123,8 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_
     // Alignment must be a power of two for the bitwise alignment trick to work.
     if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         arena->error = true;
+        // This is a programmatic error. `INFIX_CODE_UNKNOWN` is the best fit from existing codes.
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return nullptr;
     }
 
@@ -133,12 +138,15 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_
     // Security: Check for integer overflow on the alignment calculation.
     if (aligned_offset < arena->current_offset) {
         arena->error = true;
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return nullptr;
     }
 
     // Security: Check for integer overflow on the final size calculation and for capacity.
     if (SIZE_MAX - size < aligned_offset || aligned_offset + size > arena->capacity) {
         arena->error = true;
+        // This is an out-of-memory condition for this specific arena.
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
 
@@ -153,7 +161,8 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_
  *
  * This function is a convenience wrapper around `infix_arena_alloc` that also
  * ensures the allocated memory is set to zero, mimicking the behavior of `calloc`.
- * It includes a check for integer overflow on the `num * size` calculation.
+ * It includes a check for integer overflow on the `num * size` calculation and
+ * will set a detailed error on failure.
  *
  * @param arena The arena to allocate from.
  * @param num The number of elements to allocate.
@@ -166,6 +175,7 @@ c23_nodiscard void * infix_arena_calloc(infix_arena_t * arena, size_t num, size_
     if (size > 0 && num > SIZE_MAX / size) {
         if (arena)
             arena->error = true;
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return nullptr;
     }
 

@@ -330,6 +330,13 @@ static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], s
  * @brief Stage 1 (Forward): Analyzes a signature and creates a call frame layout for System V.
  * @details This function iterates through a function's arguments, classifying each one
  *          to determine its location (GPR, XMM, or stack) according to the SysV ABI rules.
+ * @param arena The temporary arena for allocations.
+ * @param out_layout Receives the created layout blueprint.
+ * @param ret_type The function's return type.
+ * @param arg_types Array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of non-variadic arguments.
+ * @param target_fn The target function address.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
@@ -367,9 +374,9 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                              ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
 
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
-    // Exception: 256-bit vectors are returned in YMM0.
+    // Exception: 256/512-bit vectors are returned in YMM0/ZMM0.
     layout->return_value_in_memory =
-        (ret_is_aggregate && ret_type->size > 16) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size > 32);
+        (ret_is_aggregate && ret_type->size > 16) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size > 64);
 
 
     // Rule 2: Small aggregates (<= 16 bytes) must also be returned via hidden pointer
@@ -428,10 +435,10 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             if (is_float(type) || is_double(type) || type->category == INFIX_TYPE_VECTOR) {
                 classes[0] = SSE;
                 num_classes = 1;
-                // Special classification for 256-bit AVX vectors.
-                // They are passed in a single YMM register, which we model as a single SSE class.
-                // The size check distinguishes it from 128-bit vectors.
-                if (type->category == INFIX_TYPE_VECTOR && type->size == 32)
+                // Special classification for large AVX vectors (YMM/ZMM).
+                // They are passed in a single register, which we model as a single SSE class.
+                // The size check distinguishes them from 128-bit vectors.
+                if (type->category == INFIX_TYPE_VECTOR && (type->size == 32 || type->size == 64))
                     num_classes = 1;  // Treat as a single unit for classification
             }
             else {
@@ -456,9 +463,9 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                     layout->arg_locations[i].reg_index = gpr_count++;
                     placed_in_register = true;
                 }
-                else if (classes[0] == SSE && type->category == INFIX_TYPE_VECTOR && type->size == 32 &&
-                         xmm_count < NUM_XMM_ARGS) {
-                    // AVX/256-bit vector case
+                else if (classes[0] == SSE && type->category == INFIX_TYPE_VECTOR &&
+                         (type->size == 32 || type->size == 64) && xmm_count < NUM_XMM_ARGS) {
+                    // AVX/256-bit or AVX-512/512-bit vector case
                     layout->arg_locations[i].type = ARG_LOCATION_XMM;  // Re-use XMM type
                     layout->arg_locations[i].reg_index = xmm_count++;
                     placed_in_register = true;
@@ -535,6 +542,9 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
  * @brief Stage 2 (Forward): Generates the function prologue for the System V trampoline.
  * @details Sets up a standard stack frame, saves registers for the trampoline's context,
  *          and allocates stack space for arguments.
+ * @param buf The code buffer.
+ * @param layout The call frame layout.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_call_frame_layout * layout) {
     // Standard Function Prologue
@@ -576,6 +586,12 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
  * @internal
  * @brief Stage 3 (Forward): Generates code to move arguments from the `void**` array
  *          into their correct native locations (registers or stack).
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param arg_types The array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of fixed arguments.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                                                              infix_call_frame_layout * layout,
@@ -633,6 +649,9 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             else if (arg_types[i]->category == INFIX_TYPE_VECTOR && arg_types[i]->size == 32)
                 // AVX case: Use the new 256-bit move emitter
                 emit_vmovupd_ymm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
+            else if (arg_types[i]->category == INFIX_TYPE_VECTOR && arg_types[i]->size == 64)
+                // AVX-512 case: Use the new 512-bit move emitter
+                emit_vmovupd_zmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else if (arg_types[i]->category == INFIX_TYPE_VECTOR)
                 emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else
@@ -690,17 +709,19 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 3.5 (Forward): Generates the null-check and call instruction.
+ * @param buf The code buffer.
+ * @param layout The call frame layout.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf,
                                                                c23_maybe_unused infix_call_frame_layout * layout) {
     // For a bound trampoline, load the hardcoded address into R12.
     // For an unbound trampoline, R12 was already loaded from RDI in the prologue.
-    if (layout->target_fn) {
+    if (layout->target_fn)
         emit_mov_reg_imm64(buf, R12_REG, (uint64_t)layout->target_fn);
-    }
 
     // On SysV x64, the target function pointer is stored in R12.
     emit_test_reg_reg(buf, R12_REG, R12_REG);  // test r12, r12 ; check if function pointer is null
@@ -714,6 +735,10 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf
  * @brief Stage 4 (Forward): Generates the function epilogue for the System V trampoline.
  * @details Emits code to handle the function's return value (from RAX/RDX, XMM0/XMM1, or
  *          the x87 FPU stack for `long double`) and properly tear down the stack frame.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param ret_type The function's return type.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_call_frame_layout * layout,
@@ -735,18 +760,16 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
 
             if (is_aggregate)
                 classify_aggregate_sysv(ret_type, classes, &num_classes);
+            else if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
+                classes[0] = SSE;
+                num_classes = 1;
+            }
             else {
-                if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
-                    classes[0] = SSE;
-                    num_classes = 1;
-                }
-                else {
-                    classes[0] = INTEGER;
-                    num_classes = 1;
-                    if (ret_type->size > 8) {
-                        classes[1] = INTEGER;
-                        num_classes = 2;
-                    }
+                classes[0] = INTEGER;
+                num_classes = 1;
+                if (ret_type->size > 8) {
+                    classes[1] = INTEGER;
+                    num_classes = 2;
                 }
             }
 
@@ -756,6 +779,8 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                         emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movss [r13], xmm0
                     else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32)
                         emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);  // AVX case
+                    else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 64)
+                        emit_vmovupd_mem_zmm(buf, R13_REG, 0, XMM0_REG);  // AVX-512 case
                     else if (ret_type->category == INFIX_TYPE_VECTOR)
                         emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
                     else
@@ -827,8 +852,12 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
 /**
  * @internal
  * @brief Stage 1 (Reverse): Calculates the stack layout for a reverse trampoline stub.
- * @details Determines the total stack space needed for the stub's local variables,
+ * @details This function determines the total stack space needed for the stub's local variables,
  *          including the return buffer, the `void**` args_array, and the saved argument data.
+ * @param arena The temporary arena for allocations.
+ * @param[out] out_layout The resulting reverse call frame layout blueprint.
+ * @param context The reverse trampoline context.
+ * @return `INFIX_SUCCESS` on success.
  */
 static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_reverse_call_frame_layout ** out_layout,
@@ -882,6 +911,9 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
  * @brief Stage 2 (Reverse): Generates the prologue for the reverse trampoline stub.
  * @details Emits standard System V function entry code, creates a stack frame,
  *          and allocates all necessary local stack space.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
     emit_push_reg(buf, RBP_REG);                                  // push rbp
@@ -894,6 +926,10 @@ static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_
  * @internal
  * @brief Stage 3 (Reverse): Generates code to marshal arguments from their native
  *          locations into the generic `void**` array for the C dispatcher.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse trampoline context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * buf,
                                                                    infix_reverse_call_frame_layout * layout,
@@ -942,18 +978,16 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
         if (classes[0] == MEMORY)
             is_from_stack = true;
         else if (num_classes == 1) {
-            if (classes[0] == SSE) {
+            if (classes[0] == SSE)
                 if (xmm_idx < NUM_XMM_ARGS)
                     emit_movsd_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
                 else
                     is_from_stack = true;
-            }
-            else {  // INTEGER
+            else  // INTEGER
                 if (gpr_idx < NUM_GPR_ARGS)
                     emit_mov_mem_reg(buf, RBP_REG, arg_save_loc, GPR_ARGS[gpr_idx++]);
                 else
                     is_from_stack = true;
-            }
         }
         else if (num_classes == 2) {
             size_t gprs_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
@@ -989,7 +1023,7 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 4 (Reverse): Generates the code to call the high-level C dispatcher function.
  * @details Emits code to load the dispatcher's arguments into the correct registers
@@ -1006,6 +1040,10 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
  *          3. `RDX` (Arg 3): The pointer to the `args_array` on the local stack.
  *          4. The address of the dispatcher function itself is loaded into a scratch
  *             register (`RAX`), which is then called.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
                                                               infix_reverse_call_frame_layout * layout,
@@ -1056,6 +1094,10 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
  * @details Retrieves the return value from the local buffer and places it into the
  *          correct return registers (RAX/RDX, XMM0/XMM1) or the x87 FPU stack. Then,
  *          it tears down the stack frame and returns to the native caller.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_reverse_call_frame_layout * layout,
@@ -1092,7 +1134,8 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
             // Classify the return type to determine which registers to load.
             arg_class_t classes[2];
             size_t num_classes;
-            if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32) {
+            if (context->return_type->category == INFIX_TYPE_VECTOR &&
+                (context->return_type->size == 32 || context->return_type->size == 64)) {
                 classes[0] = SSE;
                 num_classes = 1;
             }
@@ -1105,6 +1148,8 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                         emit_movss_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
                         emit_vmovupd_ymm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
+                    else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 64)
+                        emit_vmovupd_zmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else
                         emit_movsd_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                 }
@@ -1112,12 +1157,11 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
             }
             if (num_classes == 2) {  // Second eightbyte
-                if (classes[1] == SSE) {
+                if (classes[1] == SSE)
                     if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
                         emit_vmovupd_ymm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 32);
                     else
                         emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
-                }
                 else  // INTEGER
                     emit_mov_reg_mem(buf, RDX_REG, RBP_REG, layout->return_buffer_offset + 8);
             }

@@ -102,8 +102,7 @@ static struct {
 /**
  * @internal
  * @brief One-time initialization to dynamically load macOS framework functions.
- *
- * Uses `dlopen` and `dlsym` to find the necessary CoreFoundation and Security
+ * @details Uses `dlopen` and `dlsym` to find the necessary CoreFoundation and Security
  * framework functions at runtime. This avoids a hard link-time dependency,
  * making the library more portable and resilient if these frameworks change.
  */
@@ -185,7 +184,7 @@ static bool has_jit_entitlement(void) {
  * @internal
  * @brief Creates an anonymous, unlinked shared memory object for dual-mapping.
  *
- * This is the core of the dual-mapping W^X strategy on platforms like Linux
+ * @details This is the core of the dual-mapping W^X strategy on platforms like Linux
  * and FreeBSD. It creates a temporary shared memory object using a randomized
  * name to avoid collisions, immediately unlinks it so it cannot be accessed by
  * other processes and is automatically cleaned up by the kernel on process exit,
@@ -442,7 +441,7 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
  * @internal
  * @brief Allocates a block of standard read-write memory for a context object.
  *
- * This is used to allocate the memory for an `infix_reverse_t` context. The
+ * @details This is used to allocate the memory for an `infix_reverse_t` context. The
  * memory is allocated as standard RW memory, populated, and then made read-only
  * via `infix_protected_make_readonly` for security hardening.
  *
@@ -494,7 +493,7 @@ void infix_protected_free(infix_protected_t prot) {
  * @internal
  * @brief Makes a block of memory read-only for security hardening.
  *
- * This function is called on the `infix_reverse_t` context after it has been
+ * @details This function is called on the `infix_reverse_t` context after it has been
  * fully initialized. By making the context read-only, it helps prevent bugs or
  * security vulnerabilities from corrupting critical state like function pointers.
  *

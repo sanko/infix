@@ -34,9 +34,8 @@ int process_pointer_struct(PointerStruct ps) {
     note("  ps.val_ptr points to value: %d", (ps.val_ptr ? *ps.val_ptr : -1));
     note("  ps.str_ptr points to string: \"%s\"", (ps.str_ptr ? ps.str_ptr : "(null)"));
 
-    if (ps.val_ptr && *ps.val_ptr == 500 && ps.str_ptr && strcmp(ps.str_ptr, "Hello Pointers") == 0) {
+    if (ps.val_ptr && *ps.val_ptr == 500 && ps.str_ptr && strcmp(ps.str_ptr, "Hello Pointers") == 0)
         return *ps.val_ptr + 50;
-    }
 
     return -1;
 }

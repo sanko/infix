@@ -35,6 +35,7 @@
 #pragma once
 
 #include "common/infix_config.h"
+#include "common/platform.h"
 #include <infix/infix.h>
 
 /**
@@ -552,6 +553,17 @@ c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
 infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type);
 
 /**
+ * @brief Estimates the total memory required to deep-copy a complete type graph.
+ * @details Located in `src/core/types.c`. This function recursively walks the entire
+ * type graph, including all nested aggregates and function arguments, to calculate
+ * the exact size needed for an arena that will hold a deep copy.
+ * @param[in] temp_arena A temporary arena used for the estimator's own bookkeeping (e.g., cycle detection).
+ * @param[in] type The root of the type graph to estimate.
+ * @return The estimated size in bytes required for a deep copy.
+ */
+size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type * type);
+
+/**
  * @brief Gets the ABI v-table for forward calls for the current platform.
  * @details See `src/jit/trampoline.c`. This function is the entry point to the ABI
  * abstraction layer, returning the correct set of function pointers based on the
@@ -616,7 +628,6 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
                                                           infix_type ** arg_types,
                                                           size_t num_args,
                                                           size_t num_fixed_args,
-                                                          infix_arena_t * source_arena,
                                                           void * target_fn);
 
 /**
