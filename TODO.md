@@ -113,7 +113,7 @@ This document outlines the planned development goals for the infix FFI library, 
 
 *These items are valuable but less critical. They can be addressed over time to round out the library's feature set.*
 
-- [ ] **Add SIMD Vector Type Support (Phased)**
+- [x] **Add SIMD Vector Type Support (Phased)**
     *   **Context:** High-performance computing, multimedia processing, and cryptography rely heavily on SIMD vector types (`__m128`, NEON types). Direct support for these types is a critical feature for advanced use cases.
     *   **Idea (Phased Approach):**
         1.  **Phase 1 (128-bit Vectors):** Add an `INFIX_TYPE_VECTOR` category and a signature syntax like `vector(f, 4)` for `__m128`. Update ABI backends to pass these types in XMM (x64) or VFP (AArch64) registers.
@@ -129,7 +129,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The library successfully compiles and passes the entire test suite on a RISC-V 64-bit platform (e.g., in QEMU within the CI).
     *   **Possible Roadblocks:** Access to RISC-V hardware or a reliable CI-based emulator is required for testing.
 
-- [ ] **(Re-scoped) Enhance `symbol_finder.pl` with Multi-Language Demangling**
+- [ ] **(Re-scoped: Should be done from the wrapper's language) Enhance `symbol_finder.pl` with Multi-Language Demangling**
     *   **Context:** The `symbol_finder.pl` script can be extended to demangle symbols from C++, Rust, and Fortran, making it a powerful tool for FFI development.
     *   **Idea:** Adopt a pragmatic, phased approach to implementation.
     *   **Goal:**

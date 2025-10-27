@@ -149,13 +149,6 @@ end
 
 -- The examples, if enabled
 if get_config("examples") then
-    -- Helper library for C++ example
-    target("counter")
-        set_kind("shared")
-        add_files("eg/cookbook/lib/counter.cpp")
-        add_includedirs("eg/cookbook/lib", {public = true})
-        set_default(false)
-
     -- All example executables
     for _, example_file in ipairs(os.files("eg/cookbook/*.c")) do
         local target_name = path.basename(example_file)
