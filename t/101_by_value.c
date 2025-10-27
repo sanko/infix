@@ -111,9 +111,7 @@ double process_point_by_value(Point p) {
     return p.x + p.y;
 }
 
-Point return_point_by_value(void) {
-    return (Point){100.0, 200.0};
-}
+Point return_point_by_value(void) { return (Point){100.0, 200.0}; }
 
 int process_mixed_struct(MixedIntDouble s) {
     note("process_mixed_struct received: i=%d, d=%.2f", s.i, s.d);
@@ -121,27 +119,19 @@ int process_mixed_struct(MixedIntDouble s) {
     return s.i == -500 && fabs(s.d - 3.14) < 0.001;
 }
 
-float sum_vector4(Vector4 vec) {
-    return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3];
-}
+float sum_vector4(Vector4 vec) { return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3]; }
 
 #if defined(INFIX_ARCH_X86_SSE2)
 
-__m128d native_vector_add(__m128d a, __m128d b) {
-    return _mm_add_pd(a, b);
-}
+__m128d native_vector_add(__m128d a, __m128d b) { return _mm_add_pd(a, b); }
 #elif defined(INFIX_ARCH_ARM_NEON)
 
-float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) {
-    return vaddq_f64(a, b);
-}
+float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) { return vaddq_f64(a, b); }
 #endif
 
 #if defined(INFIX_ARCH_X86_AVX2)
 
-__m256d native_vector_add_256(__m256d a, __m256d b) {
-    return _mm256_add_pd(a, b);
-}
+__m256d native_vector_add_256(__m256d a, __m256d b) { return _mm256_add_pd(a, b); }
 #endif
 
 #if defined(INFIX_ARCH_ARM_SVE)
@@ -177,9 +167,8 @@ static bool is_sve_supported(void) {
     int sve_present = 0;
     size_t size = sizeof(sve_present);
 
-    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0) {
+    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0)
         return sve_present == 1;
-    }
     return false;
 #elif defined(INFIX_OS_WINDOWS)
     return IsProcessorFeaturePresent(PF_ARM_SVE_INSTRUCTIONS_AVAILABLE);
@@ -191,7 +180,7 @@ static bool is_sve_supported(void) {
 #endif
 
 TEST {
-    plan(6);
+    plan(8);
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(7);
@@ -438,6 +427,121 @@ TEST {
         }
 #else
         skip(2, "No supported 256-bit SIMD vector type on this platform (requires AVX2).");
+#endif
+    }
+
+
+// Conditionally compile these tests only if AVX-512 is enabled.
+// This requires a compiler flag like -mavx512f.
+#if defined(__AVX512F__)
+#define INFIX_ARCH_X86_AVX512
+#include <immintrin.h>
+
+    // Native C functions using AVX-512 types to be called by the trampolines.
+    __m512d native_vector_add_512d(__m512d a, __m512d b) { return _mm512_add_pd(a, b); }
+
+    __m512 native_vector_add_512(__m512 a, __m512 b) { return _mm512_add_ps(a, b); }
+#endif
+
+    // In the main TEST block, add these subtests:
+    subtest("ABI Specific: 512-bit AVX-512 Vector (__m512d)") {
+        plan(2);
+#if defined(INFIX_ARCH_X86_AVX512)
+        note("Testing __m512d (8x double) passed and returned by value on x86-64 with AVX-512F.");
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        infix_type * vector_type = nullptr;
+        infix_status status =
+            infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 8);
+
+        if (!ok(status == INFIX_SUCCESS, "infix_type for __m512d created successfully")) {
+            skip(1, "Cannot proceed without vector type");
+        }
+        else {
+            infix_type * arg_types[] = {vector_type, vector_type};
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
+
+            // Prepare vector arguments
+            __m512d vec_a = _mm512_set_pd(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
+            __m512d vec_b = _mm512_set_pd(34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0);
+            void * args[] = {&vec_a, &vec_b};
+            union {
+                __m512d v;
+                double d[8];
+            } result;
+            result.v = _mm512_setzero_pd();
+
+            // Call via FFI
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add_512d, &result.v, args);
+
+            // Verify result
+            bool all_correct = true;
+            for (int i = 0; i < 8; ++i)
+                if (fabs(result.d[i] - 42.0) > 1e-9)
+                    all_correct = false;
+            ok(all_correct, "512-bit double vector (__m512d) passed/returned correctly");
+            diag("Result: [%.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f]",
+                 result.d[0],
+                 result.d[1],
+                 result.d[2],
+                 result.d[3],
+                 result.d[4],
+                 result.d[5],
+                 result.d[6],
+                 result.d[7]);
+            infix_forward_destroy(trampoline);
+        }
+        infix_arena_destroy(arena);
+#else
+        skip(2, "No AVX-512 support: compile with e.g., -mavx512f to enable this test.");
+#endif
+    }
+
+    subtest("ABI Specific: 512-bit AVX-512 Vector (__m512)") {
+        plan(2);
+#if defined(INFIX_ARCH_X86_AVX512)
+        note("Testing __m512 (16x float) passed and returned by value on x86-64 with AVX-512F.");
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        infix_type * vector_type = nullptr;
+        infix_status status =
+            infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 16);
+
+        if (!ok(status == INFIX_SUCCESS, "infix_type for __m512 created successfully")) {
+            skip(1, "Cannot proceed without vector type");
+        }
+        else {
+            infix_type * arg_types[] = {vector_type, vector_type};
+            infix_forward_t * trampoline = nullptr;
+            status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
+
+            // Prepare vector arguments
+            __m512 vec_a = _mm512_set_ps(16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+            __m512 vec_b = _mm512_set_ps(26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41);
+            void * args[] = {&vec_a, &vec_b};
+            union {
+                __m512 v;
+                float f[16];
+            } result;
+            result.v = _mm512_setzero_ps();
+
+            // Call via FFI
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add_512, &result.v, args);
+
+            // Verify result
+            bool all_correct = true;
+            for (int i = 0; i < 16; ++i)
+                if (fabs(result.f[i] - 42.0f) > 1e-6)
+                    all_correct = false;
+            ok(all_correct, "512-bit float vector (__m512) passed/returned correctly");
+            infix_forward_destroy(trampoline);
+        }
+        infix_arena_destroy(arena);
+#else
+        skip(2, "No AVX-512 support: compile with e.g., -mavx512f to enable this test.");
 #endif
     }
 

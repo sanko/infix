@@ -812,9 +812,7 @@ void emit_call_reg(code_buffer * buf, x64_gpr reg) {
  * Implementation for emit_ret.
  * Opcode: C3
  */
-void emit_ret(code_buffer * buf) {
-    emit_byte(buf, 0xC3);
-}
+void emit_ret(code_buffer * buf) { emit_byte(buf, 0xC3); }
 
 /*
  * Implementation for emit_test_reg_reg.
@@ -830,9 +828,7 @@ void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2) {
  * Implementation for emit_jnz_short.
  * Opcode format: 75 rel8
  */
-void emit_jnz_short(code_buffer * buf, int8_t offset) {
-    EMIT_BYTES(buf, 0x75, (uint8_t)offset);
-}
+void emit_jnz_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x75, (uint8_t)offset); }
 
 /**
  * Emits a `jmp r64` instruction.
@@ -854,6 +850,4 @@ void emit_jmp_reg(code_buffer * buf, x64_gpr reg) {
  * Implementation for emit_ud2.
  * Opcode format: 0F 0B
  */
-void emit_ud2(code_buffer * buf) {
-    EMIT_BYTES(buf, 0x0F, 0x0B);
-}
+void emit_ud2(code_buffer * buf) { EMIT_BYTES(buf, 0x0F, 0x0B); }

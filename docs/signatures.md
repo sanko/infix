@@ -74,7 +74,7 @@ These syntax elements allow you to build complex types from simpler ones.
 | **Array**            | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                     |
 | **Function Pointer** | `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`              |
 | **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                |
-| **SIMD Vector**      | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`          |
+| **SIMD Vector**      | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`, `svfloat32_t` |
 | **Enum**             | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                   |
 | **Packed Struct**    | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`          | `__attribute__((packed))`        |
 | **Variadic Function**| `(<fixed>;<variadic>)`        | `"(*char; int)->int"`          | `printf(const char*, ...)`       |
@@ -101,7 +101,8 @@ These syntax elements allow you to build complex types from simpler ones.
 | `*((int, int) -> int)`                    | A pointer to a function that takes two `int`s and returns an `int`.             |
 | `{@Point, callback:*((int)->void)}`       | A struct with a named type `@Point` and a function pointer field.               |
 | `c[float]`                                | A C `float _Complex` number.                                                    |
-| `v[4:float]`                              | A 128-bit SIMD vector containing four 32-bit floats.                            |
+| `v[4:float]`                              | A 128-bit SIMD vector of four 32-bit floats (e.g., `__m128` on x86, `float32x4_t` on ARM NEON). |
+| `v[8:double]`                             | A 512-bit SIMD vector of eight 64-bit doubles (e.g., `__m512d` on x86 AVX-512). |
 
 ---
 

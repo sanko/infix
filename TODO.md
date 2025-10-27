@@ -106,7 +106,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** Implement `infix_forward_create_packed`, where the JIT'd code reads arguments from offsets relative to a single pointer.
     *   **Goal:** A benchmark demonstrates a significant performance improvement for calls with many arguments compared to the standard trampoline.
 
-- [ ] **Implement Validation for Unresolved Types**
+- [x] **Implement Validation for Unresolved Types**
     *   **Context:** The JIT might try creating a trampoline if the signature contains an unresolved named reference (like `struct<Foo>`).
 
 ## Low Priority: Advanced Features & Polish
@@ -203,4 +203,4 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** Basic support for a function taking a scalable vector type.
     *   **Possible Roadblocks:** Monumental implementation effort. Likely out of scope for the current library
 
-- [ ] **Typedef System**
+- [x] **Typedef System**
