@@ -547,50 +547,49 @@ void recipe_complex() {
 
 **Problem**: You need to call a high-performance C function that uses architecture-specific SIMD vector types for parallel data processing.
 
-**Solution**: Use the `v[<elements>:<type>]` syntax in your signature string. `infix`'s ABI logic contains the specific rules for each platform to ensure that these vectors are correctly passed in the appropriate SIMD registers (e.g., XMM/YMM on x86-64, V/Z registers on AArch64).
+**Solution**: Use the generic `v[<elements>:<type>]` syntax or, where available, a convenient keyword alias (like `m512d`). The `infix` ABI logic contains the specific rules for each platform to ensure that these vectors are correctly passed in the appropriate SIMD registers (e.g., XMM/YMM/ZMM on x86-64, V/Z registers on AArch64).
 
-This recipe is broken down by architecture, as the C types and intrinsics are platform-specific.
+This recipe is broken down by architecture, as the C types and intrinsic functions are platform-specific.
 
 ---
 
-#### x86-64 (SSE / AVX)
+#### x86-64 (SSE, AVX, and AVX-512)
 
-This example calls a function that uses SSE2's 128-bit `__m128d` type to add two vectors of two `double`s each.
+This example calls a function that uses AVX-512's 512-bit `__m512d` type to add two vectors of eight `double`s each. The same principle applies to 128-bit SSE (`__m128d`) and 256-bit AVX (`__m256d`) types by simply adjusting the signature.
 
 ```c
 #include <infix/infix.h>
 #include <stdio.h>
-#include <emmintrin.h> // For SSE2 intrinsics on x86/x64
+#include <immintrin.h> // For AVX-512 intrinsics
 
-// Native C function using SSE2 vectors
-__m128d vector_add(__m128d a, __m128d b) {
-    return _mm_add_pd(a, b);
-}
+// Native C function using AVX-512 vectors
+__m512d vector_add_512(__m512d a, __m512d b) { return _mm512_add_pd(a, b); }
 
-void recipe_simd_sse() {
-    // The signature v[2:double] directly maps to __m128d (a vector of 2 doubles).
-    const char* signature = "(v[2:double], v[2:double]) -> v[2:double]";
+void recipe_simd_avx512() {
+    // The signature "m512d" is a convenient alias for "v[8:double]".
+    const char* signature = "(m512d, m512d) -> m512d";
     infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)vector_add, NULL);
+    // Note: This test must be compiled with AVX-512 support (e.g., -mavx512f)
+    // and run on a CPU that supports it to avoid a crash.
+    infix_forward_create(&t, signature, (void*)vector_add_512, NULL);
 
-    // Prepare arguments using SSE intrinsics.
-    __m128d a = _mm_set_pd(20.0, 10.0); // Creates a vector [20.0, 10.0]
-    __m128d b = _mm_set_pd(22.0, 32.0); // Creates a vector [22.0, 32.0]
+    // Prepare arguments using AVX-512 intrinsics.
+    // _mm512_set_pd sets values from right-to-left in memory.
+    __m512d a = _mm512_set_pd(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
+    __m512d b = _mm512_set_pd(34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0);
     void* args[] = {&a, &b};
-    __m128d result;
+    __m512d result;
 
     infix_forward_get_code(t)(&result, args);
 
     // Unpack the result for verification.
     double* d = (double*)&result;
-    // Note: The result of _mm_add_pd is {a[0]+b[0], a[1]+b[1]}, which is {10+32, 20+22}
-    printf("SSE vector result: [%.1f, %.1f]\n", d[0], d[1]); // Expected: [42.0, 42.0]
+    printf("AVX-512 vector result: [%.1f, %.1f, ..., %.1f, %.1f]\n", d[0], d[1], d[6], d[7]);
+    // Expected: {1+41, 2+40, ..., 8+34} -> {42.0, 42.0, ..., 42.0, 42.0}
 
     infix_forward_destroy(t);
 }
 ```
-
-> **Note on AVX:** The same principle applies to AVX (`__m256d`) and AVX-512 (`__m512d`). You would simply change the signature to match the number of elements, for example: `v[4:double]` for `__m256d`.
 
 ---
 
@@ -659,9 +658,8 @@ static bool is_sve_supported(void) {
     return (getauxval(AT_HWCAP) & HWCAP_SVE) != 0;
 #elif defined(__APPLE__)
     int sve_present = 0; size_t size = sizeof(sve_present);
-    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0) {
+    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0)
         return sve_present == 1;
-    }
     return false;
 #else // Windows, etc. would have their own checks.
     return false;
@@ -669,9 +667,7 @@ static bool is_sve_supported(void) {
 }
 
 // Native C function using SVE for a horizontal add.
-double sve_horizontal_add(svfloat64_t vec) {
-    return svaddv_f64(svptrue_b64(), vec);
-}
+double sve_horizontal_add(svfloat64_t vec) { return svaddv_f64(svptrue_b64(), vec); }
 
 void recipe_simd_sve() {
     if (!is_sve_supported()) {
@@ -694,10 +690,11 @@ void recipe_simd_sve() {
 
     // 4. Prepare arguments and call.
     double* data = (double*)malloc(sizeof(double) * num_doubles);
-    for (size_t i = 0; i < num_doubles; ++i) {
+    for (size_t i = 0; i < num_doubles; ++i)
         data[i] = (i == 0) ? 42.0 : 0.0; // Put 42 in the first lane.
-    }
-    svfloat64_t input_vec = svld1_f64(svptrue_b64(), data);
+
+    svbool_t pg = svptrue_b64();
+    svfloat64_t input_vec = svld1_f64(pg, data);
     void* args[] = {&input_vec};
     double result;
 

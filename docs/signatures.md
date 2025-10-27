@@ -62,24 +62,36 @@ For maximum portability and control, these keywords guarantee the size of the ty
 | `float32`             | `float`               | 32 bits  | An explicit alias for a 32-bit float.             |
 | `float64`             | `double`              | 64 bits  | An explicit alias for a 64-bit float.             |
 
+#### Tier 3: SIMD Vector Aliases
+
+For convenience when working with common SIMD types on x86-64, `infix` provides the following keywords as aliases for the more verbose `v[...]` syntax.
+
+| `infix` Keyword | C Equivalent | `infix` Equivalent | Description                                           |
+| :-------------- | :----------- | :----------------- | :---------------------------------------------------- |
+| `m256d`         | `__m256d`    | `v[4:double]`      | An AVX vector of four 64-bit `double`s.               |
+| `m256`          | `__m256`     | `v[8:float]`       | An AVX vector of eight 32-bit `float`s.               |
+| `m512d`         | `__m512d`    | `v[8:double]`      | An AVX-512 vector of eight 64-bit `double`s.          |
+| `m512`          | `__m512`     | `v[16:float]`      | An AVX-512 vector of sixteen 32-bit `float`s.         |
+| `m512i`         | `__m512i`    | `v[8:sint64]`      | An AVX-512 vector of eight 64-bit `long long` integers. |
+
 ### 2.2 Type Constructors and Composite Structures
 
 These syntax elements allow you to build complex types from simpler ones.
 
-| Name                 | `infix` Syntax                | Example Signature              | C/C++ Equivalent                 |
-| :------------------- | :---------------------------- | :----------------------------- | :------------------------------- |
-| **Pointer**          | `*<type>`                     | `"*int"`, `"*void"`            | `int*`, `void*`                  |
-| **Struct**           | `{<members>}`                 | `"{int, double, *char}"`       | `struct { ... }`                 |
-| **Union**            | `<`<members>`>`               | `"<int, float>"`               | `union { ... }`                  |
-| **Array**            | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                     |
-| **Function Pointer** | `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`              |
-| **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                |
-| **SIMD Vector**      | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `float32x4_t`, `svfloat32_t` |
-| **Enum**             | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                   |
-| **Packed Struct**    | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`          | `__attribute__((packed))`        |
-| **Variadic Function**| `(<fixed>;<variadic>)`        | `"(*char; int)->int"`          | `printf(const char*, ...)`       |
-| **Named Type**       | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`      | `typedef struct Point {...}`     |
-| **Named Argument**   | `<name>:<type>`               | `"(count:int, data:*void)"`    | (For reflection only)            |
+| Name                 | `infix` Syntax                | Example Signature              | C/C++ Equivalent                                         |
+| :------------------- | :---------------------------- | :----------------------------- | :------------------------------------------------------- |
+| **Pointer**          | `*<type>`                     | `"*int"`, `"*void"`            | `int*`, `void*`                                          |
+| **Struct**           | `{<members>}`                 | `"{int, double, *char}"`       | `struct { ... }`                                         |
+| **Union**            | `<`<members>`>`               | `"<int, float>"`               | `union { ... }`                                          |
+| **Array**            | `[<size>:<type>]`             | `"[10:double]"`                | `double[10]`                                             |
+| **Function Pointer** | `(<args>)-><ret>`             | `"(int, int)->int"`            | `int (*)(int, int)`                                      |
+| **_Complex**         | `c[<base_type>]`              | `"c[double]"`                  | `_Complex double`                                        |
+| **SIMD Vector**      | `v[<size>:<type>]`            | `"v[4:float]"`                 | `__m128`, `__m512`, `float32x4_t`, `svfloat32_t`          |
+| **Enum**             | `e:<int_type>`                | `"e:int"`                      | `enum { ... }`                                           |
+| **Packed Struct**    | `!{...}` or `!<N>:{...}`      | `"!{char, longlong}"`          | `__attribute__((packed))`                                |
+| **Variadic Function**| `(<fixed>;<variadic>)`        | `"(*char; int)->int"`          | `printf(const char*, ...)`                               |
+| **Named Type**       | `@Name` or `@NS::Name`        | `"@Point"`, `"@UI::User"`      | `typedef struct Point {...}`                             |
+| **Named Argument**   | `<name>:<type>`               | `"(count:int, data:*void)"`    | (For reflection only)                                    |
 
 ### 2.3 Syntax Showcase
 
@@ -103,6 +115,8 @@ These syntax elements allow you to build complex types from simpler ones.
 | `c[float]`                                | A C `float _Complex` number.                                                    |
 | `v[4:float]`                              | A 128-bit SIMD vector of four 32-bit floats (e.g., `__m128` on x86, `float32x4_t` on ARM NEON). |
 | `v[8:double]`                             | A 512-bit SIMD vector of eight 64-bit doubles (e.g., `__m512d` on x86 AVX-512). |
+| `m256d`                                   | An alias for `v[4:double]`, an AVX vector of 4 `double`s (`__m256d`).           |
+| `m512d`                                   | An alias for `v[8:double]`, an AVX-512 vector of 8 `double`s (`__m512d`).       |
 
 ---
 
@@ -198,6 +212,7 @@ primitive_type      ::= 'void' | 'bool'
                     | 'sint8' | 'uint8' | 'sint16' | 'uint16' | 'sint32' | 'uint32'
                     | 'sint64' | 'uint64' | 'sint128' | 'uint128'
                     | 'float32' | 'float64'
+                    | 'm256' | 'm256d' | 'm512' | 'm512d' | 'm512i'
 
 Identifier          ::= ([a-zA-Z_] [a-zA-Z0-9_]*) ( '::' [a-zA-Z_] [a-zA-Z0-9_]* )*
 Integer             ::= [0-9]+
