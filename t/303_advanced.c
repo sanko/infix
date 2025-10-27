@@ -54,9 +54,7 @@ void execute_callback_as_arg_harness(void (*cb)(int)) {
     cb(42);
 }
 
-int final_multiply_handler(int val) {
-    return val * 10;
-}
+int final_multiply_handler(int val) { return val * 10; }
 
 void closure_provider_handler(infix_context_t * context, void * ret, void ** args) {
     (void)args;

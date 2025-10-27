@@ -717,9 +717,8 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf
                                                                c23_maybe_unused infix_call_frame_layout * layout) {
     // For a bound trampoline, load the hardcoded address into R12.
     // For an unbound trampoline, R12 was already loaded from RDI in the prologue.
-    if (layout->target_fn) {
+    if (layout->target_fn)
         emit_mov_reg_imm64(buf, R12_REG, (uint64_t)layout->target_fn);
-    }
 
     // On SysV x64, the target function pointer is stored in R12.
     emit_test_reg_reg(buf, R12_REG, R12_REG);  // test r12, r12 ; check if function pointer is null
@@ -758,18 +757,16 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
 
             if (is_aggregate)
                 classify_aggregate_sysv(ret_type, classes, &num_classes);
+            else if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
+                classes[0] = SSE;
+                num_classes = 1;
+            }
             else {
-                if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
-                    classes[0] = SSE;
-                    num_classes = 1;
-                }
-                else {
-                    classes[0] = INTEGER;
-                    num_classes = 1;
-                    if (ret_type->size > 8) {
-                        classes[1] = INTEGER;
-                        num_classes = 2;
-                    }
+                classes[0] = INTEGER;
+                num_classes = 1;
+                if (ret_type->size > 8) {
+                    classes[1] = INTEGER;
+                    num_classes = 2;
                 }
             }
 
@@ -976,18 +973,16 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
         if (classes[0] == MEMORY)
             is_from_stack = true;
         else if (num_classes == 1) {
-            if (classes[0] == SSE) {
+            if (classes[0] == SSE)
                 if (xmm_idx < NUM_XMM_ARGS)
                     emit_movsd_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
                 else
                     is_from_stack = true;
-            }
-            else {  // INTEGER
+            else  // INTEGER
                 if (gpr_idx < NUM_GPR_ARGS)
                     emit_mov_mem_reg(buf, RBP_REG, arg_save_loc, GPR_ARGS[gpr_idx++]);
                 else
                     is_from_stack = true;
-            }
         }
         else if (num_classes == 2) {
             size_t gprs_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
@@ -1154,12 +1149,11 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                     emit_mov_reg_mem(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
             }
             if (num_classes == 2) {  // Second eightbyte
-                if (classes[1] == SSE) {
+                if (classes[1] == SSE)
                     if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
                         emit_vmovupd_ymm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 32);
                     else
                         emit_movsd_xmm_mem(buf, XMM1_REG, RBP_REG, layout->return_buffer_offset + 8);
-                }
                 else  // INTEGER
                     emit_mov_reg_mem(buf, RDX_REG, RBP_REG, layout->return_buffer_offset + 8);
             }

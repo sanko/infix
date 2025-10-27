@@ -36,17 +36,11 @@ typedef double _Complex complex_double_t;
 
 // Native C Functions for Testing
 
-complex_double_t c_add(complex_double_t a, complex_double_t b) {
-    return a + b;
-}
+complex_double_t c_add(complex_double_t a, complex_double_t b) { return a + b; }
 
-complex_double_t c_mul(complex_double_t a, complex_double_t b) {
-    return a * b;
-}
+complex_double_t c_mul(complex_double_t a, complex_double_t b) { return a * b; }
 
-complex_double_t callback_c_add(complex_double_t a, complex_double_t b) {
-    return a + b;
-}
+complex_double_t callback_c_add(complex_double_t a, complex_double_t b) { return a + b; }
 
 /** @brief A C harness to call a complex-number callback and verify the result. */
 void execute_complex_callback(complex_double_t (*func_ptr)(complex_double_t, complex_double_t),

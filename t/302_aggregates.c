@@ -42,9 +42,7 @@ LargeStruct large_struct_return_handler(int a) {
     return (LargeStruct){a, a + 1, a + 2, a + 3, a + 4, a + 5};
 }
 
-int vector4_callback_handler(Vector4 v) {
-    return (int)(v.v[0] + v.v[1] + v.v[2] + v.v[3]);
-}
+int vector4_callback_handler(Vector4 v) { return (int)(v.v[0] + v.v[1] + v.v[2] + v.v[3]); }
 
 Number number_union_return_handler(float f) {
     Number n;

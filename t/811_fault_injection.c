@@ -111,9 +111,7 @@ void * test_calloc(size_t num, size_t size) {
     return r;
 }
 
-void test_free(void * ptr) {
-    free(ptr);
-}
+void test_free(void * ptr) { free(ptr); }
 
 void * test_realloc(void * ptr, size_t new_size) {
     void * r = nullptr;
@@ -159,9 +157,8 @@ TEST {
                 success_was_reached = true;
                 pass("Successfully created bound trampoline with %d allocations.", i);
                 infix_forward_destroy(trampoline);
-                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j) {
+                for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found.");
-                }
                 break;
             }
         }

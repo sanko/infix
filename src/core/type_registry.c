@@ -96,10 +96,9 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
         return nullptr;
     size_t index = _registry_hash_string(name) % registry->num_buckets;
     // Traverse the linked list (chain) at the computed bucket index.
-    for (_infix_registry_entry_t * current = registry->buckets[index]; current; current = current->next) {
+    for (_infix_registry_entry_t * current = registry->buckets[index]; current; current = current->next)
         if (strcmp(current->name, name) == 0)
             return current;
-    }
     return nullptr;
 }
 
@@ -227,10 +226,9 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_a
 
     // Cycle detection: If we've seen this node before, we're in a cycle.
     // Return success to break the loop.
-    for (resolve_memo_node_t * node = *memo_head; node != nullptr; node = node->next) {
+    for (resolve_memo_node_t * node = *memo_head; node != nullptr; node = node->next)
         if (node->src == type)
             return INFIX_SUCCESS;
-    }
 
     // Allocate the memoization node from the stable temporary arena.
     resolve_memo_node_t * memo_node =
@@ -354,10 +352,9 @@ static void _registry_parser_skip_whitespace(_registry_parser_state_t * state) {
     while (1) {
         while (isspace((unsigned char)*state->p))
             state->p++;
-        if (*state->p == '#') {  // Skip comments
+        if (*state->p == '#')  // Skip comments
             while (*state->p != '\n' && *state->p != '\0')
                 state->p++;
-        }
         else
             break;
     }
@@ -543,9 +540,8 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         }
 
         // Annotate the type with its own name for printing and introspection.
-        if (entry->type->category == INFIX_TYPE_STRUCT || entry->type->category == INFIX_TYPE_UNION) {
+        if (entry->type->category == INFIX_TYPE_STRUCT || entry->type->category == INFIX_TYPE_UNION)
             entry->type->meta.aggregate_info.name = entry->name;
-        }
         entry->is_forward_declaration = false;
     }
 

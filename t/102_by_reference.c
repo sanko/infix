@@ -59,9 +59,8 @@ TEST {
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 6, _Alignof(infix_struct_member));
         infix_type * s32_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 6; ++i)
             members[i] = infix_type_create_member(nullptr, s32_type, sizeof(int) * i);
-        }
         infix_type * large_struct_type = nullptr;
         if (!ok(infix_type_create_struct(arena, &large_struct_type, members, 6) == INFIX_SUCCESS, "Type created")) {
             skip(6, "Cannot proceed");

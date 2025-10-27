@@ -29,50 +29,22 @@
 // A set of simple "passthrough" functions, one for each primitive type.
 // These functions simply return their input argument, making it easy to verify
 // that the FFI call correctly transmitted the value.
-bool passthrough_bool(bool v) {
-    return v;
-}
-uint8_t passthrough_uint8(uint8_t v) {
-    return v;
-}
-int8_t passthrough_sint8(int8_t v) {
-    return v;
-}
-uint16_t passthrough_uint16(uint16_t v) {
-    return v;
-}
-int16_t passthrough_sint16(int16_t v) {
-    return v;
-}
-uint32_t passthrough_uint32(uint32_t v) {
-    return v;
-}
-int32_t passthrough_sint32(int32_t v) {
-    return v;
-}
-uint64_t passthrough_uint64(uint64_t v) {
-    return v;
-}
-int64_t passthrough_sint64(int64_t v) {
-    return v;
-}
-float passthrough_float(float v) {
-    return v;
-}
-double passthrough_double(double v) {
-    return v;
-}
-long double passthrough_long_double(long double v) {
-    return v;
-}
+bool passthrough_bool(bool v) { return v; }
+uint8_t passthrough_uint8(uint8_t v) { return v; }
+int8_t passthrough_sint8(int8_t v) { return v; }
+uint16_t passthrough_uint16(uint16_t v) { return v; }
+int16_t passthrough_sint16(int16_t v) { return v; }
+uint32_t passthrough_uint32(uint32_t v) { return v; }
+int32_t passthrough_sint32(int32_t v) { return v; }
+uint64_t passthrough_uint64(uint64_t v) { return v; }
+int64_t passthrough_sint64(int64_t v) { return v; }
+float passthrough_float(float v) { return v; }
+double passthrough_double(double v) { return v; }
+long double passthrough_long_double(long double v) { return v; }
 
 #if !defined(INFIX_COMPILER_MSVC)
-__uint128_t passthrough_uint128(__uint128_t v) {
-    return v;
-}
-__int128_t passthrough_sint128(__int128_t v) {
-    return v;
-}
+__uint128_t passthrough_uint128(__uint128_t v) { return v; }
+__int128_t passthrough_sint128(__int128_t v) { return v; }
 #endif
 
 /**

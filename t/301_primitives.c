@@ -86,9 +86,7 @@ void execute_float_callback(float (*func_ptr)(float, float), float a, float b) {
     ok(fabs(result - (a + b)) < 0.01, "callback/closure returned correct sum");
 }
 
-void execute_void_callback(void (*func_ptr)(int), int val) {
-    func_ptr(val);
-}
+void execute_void_callback(void (*func_ptr)(int), int val) { func_ptr(val); }
 
 TEST {
     plan(3);

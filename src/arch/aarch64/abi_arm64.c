@@ -184,10 +184,9 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
     if (type->category == INFIX_TYPE_STRUCT) {
         if (type->meta.aggregate_info.num_members == 0)
             return false;
-        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i)
             if (!is_hfa_recursive_check(type->meta.aggregate_info.members[i].type, base_type, field_count))
                 return false;
-        }
         return true;
     }
     // If it's not a float, complex, array, or struct, it cannot be part of an HFA.
@@ -958,18 +957,16 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                 else
                     is_from_stack = true;
             }
-            else {
-                if (gpr_idx < NUM_GPR_ARGS) {
-                    if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
-                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
-                    else {
-                        emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                        emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
-                    }
+            else if (gpr_idx < NUM_GPR_ARGS) {
+                if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / 8) <= 0xFFF && (arg_save_loc % 8 == 0))
+                    emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], SP_REG, arg_save_loc);
+                else {
+                    emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
+                    emit_arm64_str_imm(buf, true, GPR_ARGS[gpr_idx++], X10_REG, 0);
                 }
-                else
-                    is_from_stack = true;
             }
+            else
+                is_from_stack = true;
         }
 
         if (is_from_stack) {

@@ -151,17 +151,13 @@ static void run_regression_case(const regression_test_case_t * test) {
             size_t total_fields = 0;
             infix_type * generated_type = generate_random_type(arena, &in, 0, &total_fields);
 
-            if (test->expected_status == INFIX_SUCCESS) {
-                if (arena->error) {
+            if (test->expected_status == INFIX_SUCCESS)
+                if (arena->error)
                     fail("Type generation failed due to internal arena error, but was expected to succeed.");
-                }
-                else {
+                else
                     pass("Successfully processed pathological input without timeout/crash.");
-                }
-            }
-            else {
+            else
                 ok(generated_type == nullptr || arena->error, "Generator correctly failed on invalid input.");
-            }
             infix_arena_destroy(arena);
         }
         else if (test->target == TARGET_SIGNATURE_PARSER) {

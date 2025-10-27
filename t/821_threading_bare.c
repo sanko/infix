@@ -100,9 +100,8 @@ int main(void) {
         }
     }
 
-    if (!any_thread_failed) {
+    if (!any_thread_failed)
         WaitForMultipleObjects(NUM_THREADS, threads, TRUE, INFINITE);
-    }
 
     for (int i = 0; i < NUM_THREADS; ++i) {
         if (threads[i] == nullptr)

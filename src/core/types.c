@@ -176,17 +176,13 @@ c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id i
  * @brief Creates a static descriptor for a generic pointer (`void*`).
  * @return A pointer to the static `infix_type` descriptor. Does not need to be freed.
  */
-c23_nodiscard infix_type * infix_type_create_pointer(void) {
-    return &_infix_type_pointer;
-}
+c23_nodiscard infix_type * infix_type_create_pointer(void) { return &_infix_type_pointer; }
 
 /**
  * @brief Creates a static descriptor for the `void` type.
  * @return A pointer to the static `infix_type` descriptor. Does not need to be freed.
  */
-c23_nodiscard infix_type * infix_type_create_void(void) {
-    return &_infix_type_void;
-}
+c23_nodiscard infix_type * infix_type_create_void(void) { return &_infix_type_void; }
 
 /**
  * @brief A factory function to create an `infix_struct_member`.
@@ -696,10 +692,9 @@ static void _infix_type_recalculate_layout_recursive(infix_arena_t * temp_arena,
     // Cycle detection: If we have already visited this node in the current recursion
     // path, we are in a cycle. Return immediately to break the loop. The layout of
     // this node will be calculated when the recursion unwinds to its first visit.
-    for (recalc_visited_node_t * v = *visited_head; v != nullptr; v = v->next) {
+    for (recalc_visited_node_t * v = *visited_head; v != nullptr; v = v->next)
         if (v->type == type)
             return;
-    }
 
     // Allocate the memoization node from a stable temporary arena.
     recalc_visited_node_t * visited_node =
@@ -827,10 +822,9 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
 
     // Check memoization table: if we've already copied this node, return the existing copy.
     // This correctly handles cycles and shared sub-graphs.
-    for (memo_node_t * node = *memo_head; node != NULL; node = node->next) {
+    for (memo_node_t * node = *memo_head; node != NULL; node = node->next)
         if (node->src == src_type)
             return node->dest;
-    }
 
     // Allocate the new type object in the destination arena.
     infix_type * dest_type = infix_arena_calloc(dest_arena, 1, sizeof(infix_type), _Alignof(infix_type));
@@ -984,10 +978,9 @@ static size_t _estimate_graph_size_recursive(infix_arena_t * temp_arena,
         return 0;
 
     // Cycle detection: if we've seen this node, it's already accounted for.
-    for (estimate_visited_node_t * v = *visited_head; v != NULL; v = v->next) {
+    for (estimate_visited_node_t * v = *visited_head; v != NULL; v = v->next)
         if (v->type == type)
             return 0;
-    }
 
     // Add this node to the visited list before recursing.
     estimate_visited_node_t * visited_node =
@@ -1086,18 +1079,14 @@ c23_nodiscard infix_type_category infix_type_get_category(const infix_type * typ
  * @param[in] type The type object to inspect.
  * @return The size in bytes, or 0 if `type` is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_size(const infix_type * type) {
-    return type ? type->size : 0;
-}
+c23_nodiscard size_t infix_type_get_size(const infix_type * type) { return type ? type->size : 0; }
 
 /**
  * @brief Gets the alignment requirement of a type in bytes.
  * @param[in] type The type object to inspect.
  * @return The alignment in bytes, or 0 if `type` is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_alignment(const infix_type * type) {
-    return type ? type->alignment : 0;
-}
+c23_nodiscard size_t infix_type_get_alignment(const infix_type * type) { return type ? type->alignment : 0; }
 
 /**
  * @brief Gets the number of members in a struct or union type.
