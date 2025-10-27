@@ -44,10 +44,11 @@ $config{is_windows} = ( $^O =~ /MSWin32|msys|cygwin/i );
 my @base_cflags;
 
 # Enable verbose/debug mode if requested
-#~ if ( $opts{verbose} ) {
-#~ print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
-#~ push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
-#~ }
+if ( $opts{verbose} ) {
+    print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
+    push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
+}
+
 # Environment Detection
 $config{arch} = 'x64';
 my $host_arch_raw = '';
@@ -376,15 +377,31 @@ sub compile_and_run_tests {
             next;
         }
         my @source_files = ($test_c);
-        my @local_cflags = (
-            @{ $config->{cflags} }, (
-                $config{arch} eq 'x64' ? ( $config{compiler} eq 'msvc' ? '-arch:AVX2' : '-mavx2' ) :
-                    $config{arch} eq 'arm64' ?
-                    ''    #~ '-march=armv8-a+sve'
-                :
-                    ''
-            )
-        );
+
+        # Create a copy of the main cflags to modify locally for this test.
+        my @local_cflags = @{ $config->{cflags} };
+
+        # Add architecture-specific flags to enable SIMD instruction sets required by vector tests.
+        if ( $config{arch} eq 'x64' ) {
+            if ( $config{compiler} eq 'msvc' ) {
+
+                # For MSVC, /arch:AVX512 is the most inclusive flag.
+                push @local_cflags, '/arch:AVX512';
+            }
+            else {
+                # For GCC/Clang, explicitly enable all vector extensions we want to test.
+                push @local_cflags, '-msse2', '-mavx2', '-mavx512f';
+            }
+        }
+        elsif ( $config{arch} eq 'arm64' ) {
+            if ( $config{compiler} eq 'gcc' || $config{compiler} eq 'clang' ) {
+
+                # For GCC/Clang on ARM, enable SVE. NEON is baseline and needs no flag.
+                push @local_cflags, '-march=armv8-a+sve';
+            }
+
+            # MSVC on ARM64 enables NEON/SVE by default, no flag needed.
+        }
         if ( $test_c =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
