@@ -31,6 +31,7 @@ var group__error__api =
       [ "INFIX_CODE_TYPE_TOO_LARGE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a7eda8cac209f1169e3d9b48790f7dbc8", null ],
       [ "INFIX_CODE_UNRESOLVED_NAMED_TYPE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a6642324c557b0d7b167142de6abd6f5d", null ],
       [ "INFIX_CODE_INVALID_MEMBER_TYPE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a5928b6a091b7c459cbf34a38756da685", null ],
+      [ "INFIX_CODE_LAYOUT_FAILED", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a2f59eae778d0115b936b51edac94d580", null ],
       [ "INFIX_CODE_LIBRARY_NOT_FOUND", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a4888b2e9be9e161c9499f6c650001a7a", null ],
       [ "INFIX_CODE_SYMBOL_NOT_FOUND", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a9c8699662d2ee3ae2f8375737973efd6", null ],
       [ "INFIX_CODE_LIBRARY_LOAD_FAILED", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ab361be082168c39d3c673a344b86e4b7", null ]

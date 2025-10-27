@@ -2,7 +2,6 @@ var type__registry_8c =
 [
     [ "resolve_memo_node_t", "structresolve__memo__node__t.html", "structresolve__memo__node__t" ],
     [ "_registry_parser_state_t", "struct__registry__parser__state__t.html", "struct__registry__parser__state__t" ],
-    [ "registry_printer_state", "structregistry__printer__state.html", "structregistry__printer__state" ],
     [ "INITIAL_REGISTRY_BUCKETS", "type__registry_8c.html#a4b82c5f5c89861fc1bb702865e1deaea", null ],
     [ "resolve_memo_node_t", "type__registry_8c.html#a9236e85a4e9ba2c2c9fa1c414b82f65d", null ],
     [ "_infix_resolve_type_graph_inplace", "type__registry_8c.html#a65e11dc8cc3a958fc03f93d473f4e51d", null ],
@@ -11,8 +10,7 @@ var type__registry_8c =
     [ "_registry_lookup", "type__registry_8c.html#a8933487ad2bb32e44e6b8f0be8b5e08e", null ],
     [ "_registry_parser_parse_name", "type__registry_8c.html#a9e581a824d0eaf99e357a24219d16467", null ],
     [ "_registry_parser_skip_whitespace", "type__registry_8c.html#aab35674fec56b76df1112649df588436", null ],
-    [ "_registry_print", "type__registry_8c.html#ad1bad774d01989f84e0b86bee6a489d7", null ],
-    [ "_resolve_type_graph_inplace_recursive", "type__registry_8c.html#a95459dc991975dacbc54dfa87f5bcf5a", null ],
+    [ "_resolve_type_graph_inplace_recursive", "type__registry_8c.html#ab3539e7a6f3626d8a4dae8f86b491ef0", null ],
     [ "infix_register_types", "group__registry__api.html#ga4ece2363948c40fe528826bf65dac280", null ],
     [ "infix_registry_create", "group__registry__api.html#gac808273483db7a9db2bc275c41b13296", null ],
     [ "infix_registry_destroy", "group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61", null ],
@@ -22,6 +20,5 @@ var type__registry_8c =
     [ "infix_registry_iterator_get_type", "group__registry__introspection__api.html#ga530939c6ddc67de89ae87b8126f2bec1", null ],
     [ "infix_registry_iterator_next", "group__registry__introspection__api.html#ga84444c174ba84274c0e033b66648f1f0", null ],
     [ "infix_registry_lookup_type", "group__registry__introspection__api.html#ga0f79cbbbe50468b6569593e5a7d43fb6", null ],
-    [ "infix_registry_print", "group__registry__introspection__api.html#ga722db5aa0d69f7be25b026a2d6a333a8", null ],
     [ "g_infix_last_signature_context", "type__registry_8c.html#aebc75fad28db1e2a75eca6df7305c4e1", null ]
 ];

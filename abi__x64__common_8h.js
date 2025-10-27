@@ -34,6 +34,22 @@ var abi__x64__common_8h =
       [ "XMM12_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cacaad43cc3535a6f188320b0e1b9e9de4", null ],
       [ "XMM13_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca0e20fdaa048d50414994b617c22975b4", null ],
       [ "XMM14_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca6a3162426c7499c0fc957e9bcb7955c9", null ],
-      [ "XMM15_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cac4591fdcf5c89e987d4a22cd6134bddd", null ]
+      [ "XMM15_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cac4591fdcf5c89e987d4a22cd6134bddd", null ],
+      [ "XMM16_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca00ca97df669eb40a8ab3ec86cd212a83", null ],
+      [ "XMM17_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca5b8842716e03fcdbb8d867f58229fb44", null ],
+      [ "XMM18_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cacfbc6be35ec056b720c21ab67b7684ab", null ],
+      [ "XMM19_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca35a59c2eb772e33909d77491526022cc", null ],
+      [ "XMM20_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca50b49c1a5c8b093611677c682a9edab2", null ],
+      [ "XMM21_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca3af5848c35da146a1b56780a7bf6c2ea", null ],
+      [ "XMM22_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cab5fafeb2983c27f455efa2cc79d6c8ef", null ],
+      [ "XMM23_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caf7955a32968f1aca8dbd192c26266b4c", null ],
+      [ "XMM24_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cad76549594b0257fadce3c509619d55dd", null ],
+      [ "XMM25_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca54575caf4375a073b4328c50713e5e8c", null ],
+      [ "XMM26_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca0a2824dcf68d11c0a0c560ff8e7c6711", null ],
+      [ "XMM27_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cadf94f292cca1de6d81b925e39408af98", null ],
+      [ "XMM28_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cabfbb89f184f3d63bbe51164df887b3af", null ],
+      [ "XMM29_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caefa34c3d0148e3a03894fbda0168776a", null ],
+      [ "XMM30_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca57e06860475d8f346b7580a8d1ddc6eb", null ],
+      [ "XMM31_REG", "abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca6188fac24e3c012e4efb3b9207011b27", null ]
     ] ]
 ];

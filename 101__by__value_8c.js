@@ -6,6 +6,8 @@ var 101__by__value_8c =
     [ "return_point_by_value", "101__by__value_8c.html#ae138bef4a8a05a582de44461ec2e79bf", null ],
     [ "subtest", "101__by__value_8c.html#a08da2b435f79e4bf893aa21c59ff8f3a", null ],
     [ "subtest", "101__by__value_8c.html#aae7b96909c21fa422844ecc0b38d8c85", null ],
+    [ "subtest", "101__by__value_8c.html#a852b39e71064b3976817a0233a5bc60e", null ],
+    [ "subtest", "101__by__value_8c.html#a4d3a260d7f197c4637365c3f6b114e6b", null ],
     [ "subtest", "101__by__value_8c.html#a05247196fb186b7ae9d16efef3f21140", null ],
     [ "subtest", "101__by__value_8c.html#a81d065ae50ca5d9a3fec3100f280c6cc", null ],
     [ "subtest", "101__by__value_8c.html#ad17e967090fc52ff46e3f39b56313de3", null ],

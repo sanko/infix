@@ -32,6 +32,7 @@ var group__high__level__api =
     [ "INFIX_CODE_INTEGER_OVERFLOW", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a778f15a55b751fbfb6f4dc2f521895ce", null ],
     [ "INFIX_CODE_INVALID_KEYWORD", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ac8ccd68f54ea98104ac6593c6a1e6a2c", null ],
     [ "INFIX_CODE_INVALID_MEMBER_TYPE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a5928b6a091b7c459cbf34a38756da685", null ],
+    [ "INFIX_CODE_LAYOUT_FAILED", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a2f59eae778d0115b936b51edac94d580", null ],
     [ "INFIX_CODE_LIBRARY_LOAD_FAILED", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ab361be082168c39d3c673a344b86e4b7", null ],
     [ "INFIX_CODE_LIBRARY_NOT_FOUND", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a4888b2e9be9e161c9499f6c650001a7a", null ],
     [ "INFIX_CODE_MISSING_RETURN_TYPE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a8c2081fae39247466dd0509f152d63ec", null ],

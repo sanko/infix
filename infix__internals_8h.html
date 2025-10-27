@@ -115,11 +115,12 @@ $(document).ready(function(){initNavTree('infix__internals_8h.html',''); initRes
 <p>Internal data structures, function prototypes, and constants.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="platform_8h_source.html">common/platform.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for infix_internals.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="infix__internals_8h__incl.svg" width="423" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="infix__internals_8h__incl.svg" width="628" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -227,7 +228,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a2fbfba2a7a90f3d1bd898c4b577e1487" id="r_a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a2fbfba2a7a90f3d1bd898c4b577e1487">_infix_type_recalculate_layout</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="memdesc:a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recalculates the layout of a fully resolved type graph.  <br /></td></tr>
 <tr class="separator:a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65e11dc8cc3a958fc03f93d473f4e51d" id="r_a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a65e11dc8cc3a958fc03f93d473f4e51d">_infix_resolve_type_graph_inplace</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:a65e11dc8cc3a958fc03f93d473f4e51d" id="r_a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a65e11dc8cc3a958fc03f93d473f4e51d">_infix_resolve_type_graph_inplace</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:a65e11dc8cc3a958fc03f93d473f4e51d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves all named type references in a type graph in-place.  <br /></td></tr>
 <tr class="separator:a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7452e1dd72e4d81a19b91ebff91b8840" id="r_a7452e1dd72e4d81a19b91ebff91b8840"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a7452e1dd72e4d81a19b91ebff91b8840">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **out_arena, const char *signature)</td></tr>
@@ -239,6 +240,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a4e3d2d9a18e581454c339d2d1a7b03f6" id="r_a4e3d2d9a18e581454c339d2d1a7b03f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a4e3d2d9a18e581454c339d2d1a7b03f6">_copy_type_graph_to_arena</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *dest_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *src_type)</td></tr>
 <tr class="memdesc:a4e3d2d9a18e581454c339d2d1a7b03f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep copy of a type graph into a destination arena.  <br /></td></tr>
 <tr class="separator:a4e3d2d9a18e581454c339d2d1a7b03f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c625d2f656fb0050bc9495a32c586e5" id="r_a5c625d2f656fb0050bc9495a32c586e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a5c625d2f656fb0050bc9495a32c586e5">_infix_estimate_graph_size</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="memdesc:a5c625d2f656fb0050bc9495a32c586e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates the total memory required to deep-copy a complete type graph.  <br /></td></tr>
+<tr class="separator:a5c625d2f656fb0050bc9495a32c586e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1494081d07d1f770d1d6d0b6811df28a" id="r_a1494081d07d1f770d1d6d0b6811df28a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1494081d07d1f770d1d6d0b6811df28a">get_current_forward_abi_spec</a> (void)</td></tr>
 <tr class="memdesc:a1494081d07d1f770d1d6d0b6811df28a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for forward calls for the current platform.  <br /></td></tr>
 <tr class="separator:a1494081d07d1f770d1d6d0b6811df28a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -260,9 +264,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8bb6e3bc5fc462f6d764002029c7dfe4" id="r_a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a8bb6e3bc5fc462f6d764002029c7dfe4">emit_int64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int64_t value)</td></tr>
 <tr class="memdesc:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 64-bit integer (little-endian) to a code buffer.  <br /></td></tr>
 <tr class="separator:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cc3a6bbf73695ec563aceeb6ed73fbb" id="r_a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1cc3a6bbf73695ec563aceeb6ed73fbb">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *source_arena, void *target_fn)</td></tr>
-<tr class="memdesc:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core implementation for creating all forward trampolines.  <br /></td></tr>
-<tr class="separator:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3829aab1121c690c830a5367fa27530" id="r_ab3829aab1121c690c830a5367fa27530"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ab3829aab1121c690c830a5367fa27530">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_fn)</td></tr>
+<tr class="memdesc:ab3829aab1121c690c830a5367fa27530"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core implementation for creating all forward trampolines.  <br /></td></tr>
+<tr class="separator:ab3829aab1121c690c830a5367fa27530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f1c9cffdcefd87ca6cf40b0d99adc" id="r_a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a721f1c9cffdcefd87ca6cf40b0d99adc">infix_executable_alloc</a> (size_t size)</td></tr>
 <tr class="memdesc:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of executable memory using the platform's W^X strategy.  <br /></td></tr>
 <tr class="separator:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -546,8 +550,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1cc3a6bbf73695ec563aceeb6ed73fbb" name="a1cc3a6bbf73695ec563aceeb6ed73fbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cc3a6bbf73695ec563aceeb6ed73fbb">&#9670;&#160;</a></span>_infix_forward_create_internal()</h2>
+<a id="a5c625d2f656fb0050bc9495a32c586e5" name="a5c625d2f656fb0050bc9495a32c586e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c625d2f656fb0050bc9495a32c586e5">&#9670;&#160;</a></span>_infix_estimate_graph_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t _infix_estimate_graph_size </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>temp_arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Estimates the total memory required to deep-copy a complete type graph. </p>
+<p>Located in <code><a class="el" href="types_8c.html" title="Implements the public API for creating and managing type descriptions.">src/core/types.c</a></code>. This function recursively walks the entire type graph, including all nested aggregates and function arguments, to calculate the exact size needed for an arena that will hold a deep copy. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">temp_arena</td><td>A temporary arena used for the estimator's own bookkeeping (e.g., cycle detection). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The root of the type graph to estimate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The estimated size in bytes required for a deep copy. </dd></dl>
+
+</div>
+</div>
+<a id="ab3829aab1121c690c830a5367fa27530" name="ab3829aab1121c690c830a5367fa27530"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3829aab1121c690c830a5367fa27530">&#9670;&#160;</a></span>_infix_forward_create_internal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -581,12 +623,6 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>num_fixed_args</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
-          <td class="paramname"><em>source_arena</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

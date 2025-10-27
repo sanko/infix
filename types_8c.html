@@ -139,6 +139,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmemo__node__t.html">memo_node_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structestimate__visited__node__t.html">estimate_visited_node_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -151,6 +153,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:a27a59c035936d19136e9947a8fce720a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afac54ad7722a68baed86cf8615433ad3" id="r_afac54ad7722a68baed86cf8615433ad3"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structmemo__node__t.html">memo_node_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#afac54ad7722a68baed86cf8615433ad3">memo_node_t</a></td></tr>
 <tr class="separator:afac54ad7722a68baed86cf8615433ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73b6613abf6a76bb2d8d9c2ce33e2377" id="r_a73b6613abf6a76bb2d8d9c2ce33e2377"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structestimate__visited__node__t.html">estimate_visited_node_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a73b6613abf6a76bb2d8d9c2ce33e2377">estimate_visited_node_t</a></td></tr>
+<tr class="separator:a73b6613abf6a76bb2d8d9c2ce33e2377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -195,8 +199,8 @@ Functions</h2></td></tr>
 <tr class="memitem:gad83c177871541f45a24c9df3e780d341" id="r_gad83c177871541f45a24c9df3e780d341"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#gad83c177871541f45a24c9df3e780d341">infix_type_create_named_reference</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **out_type, const char *name, <a class="el" href="group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7">infix_aggregate_category_t</a> agg_cat)</td></tr>
 <tr class="memdesc:gad83c177871541f45a24c9df3e780d341"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a placeholder for a named type that will be resolved later by a type registry.  <br /></td></tr>
 <tr class="separator:gad83c177871541f45a24c9df3e780d341"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcd8c9359932a9f8f0d9dee312a73b68" id="r_abcd8c9359932a9f8f0d9dee312a73b68"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#abcd8c9359932a9f8f0d9dee312a73b68">_infix_type_recalculate_layout_recursive</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="structrecalc__visited__node__t.html">recalc_visited_node_t</a> **visited_head)</td></tr>
-<tr class="separator:abcd8c9359932a9f8f0d9dee312a73b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade23edfdd11b5f7f895baf767d243523" id="r_ade23edfdd11b5f7f895baf767d243523"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#ade23edfdd11b5f7f895baf767d243523">_infix_type_recalculate_layout_recursive</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="structrecalc__visited__node__t.html">recalc_visited_node_t</a> **visited_head)</td></tr>
+<tr class="separator:ade23edfdd11b5f7f895baf767d243523"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fbfba2a7a90f3d1bd898c4b577e1487" id="r_a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a2fbfba2a7a90f3d1bd898c4b577e1487">_infix_type_recalculate_layout</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="memdesc:a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recalculates the layout of a fully resolved type graph.  <br /></td></tr>
 <tr class="separator:a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,6 +209,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a4e3d2d9a18e581454c339d2d1a7b03f6" id="r_a4e3d2d9a18e581454c339d2d1a7b03f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a4e3d2d9a18e581454c339d2d1a7b03f6">_copy_type_graph_to_arena</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *dest_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *src_type)</td></tr>
 <tr class="memdesc:a4e3d2d9a18e581454c339d2d1a7b03f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep copy of a type graph into a destination arena.  <br /></td></tr>
 <tr class="separator:a4e3d2d9a18e581454c339d2d1a7b03f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1adc4843739d3819be33b409e5e82501" id="r_a1adc4843739d3819be33b409e5e82501"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a1adc4843739d3819be33b409e5e82501">_estimate_graph_size_recursive</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="structestimate__visited__node__t.html">estimate_visited_node_t</a> **visited_head)</td></tr>
+<tr class="separator:a1adc4843739d3819be33b409e5e82501"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c625d2f656fb0050bc9495a32c586e5" id="r_a5c625d2f656fb0050bc9495a32c586e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a5c625d2f656fb0050bc9495a32c586e5">_infix_estimate_graph_size</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="memdesc:a5c625d2f656fb0050bc9495a32c586e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates the total memory required to deep-copy a complete type graph.  <br /></td></tr>
+<tr class="separator:a5c625d2f656fb0050bc9495a32c586e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d8374030d014a748fd0d2b26e5415e3" id="r_ga9d8374030d014a748fd0d2b26e5415e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__type__system.html#ga909e562b00e504aeceac698bd272f0ca">infix_type_category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3">infix_type_get_category</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="memdesc:ga9d8374030d014a748fd0d2b26e5415e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fundamental category of a type.  <br /></td></tr>
 <tr class="separator:ga9d8374030d014a748fd0d2b26e5415e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -338,6 +347,20 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a73b6613abf6a76bb2d8d9c2ce33e2377" name="a73b6613abf6a76bb2d8d9c2ce33e2377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73b6613abf6a76bb2d8d9c2ce33e2377">&#9670;&#160;</a></span>estimate_visited_node_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structestimate__visited__node__t.html">estimate_visited_node_t</a> <a class="el" href="structestimate__visited__node__t.html">estimate_visited_node_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afac54ad7722a68baed86cf8615433ad3" name="afac54ad7722a68baed86cf8615433ad3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afac54ad7722a68baed86cf8615433ad3">&#9670;&#160;</a></span>memo_node_t</h2>
 
@@ -501,6 +524,86 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a1adc4843739d3819be33b409e5e82501" name="a1adc4843739d3819be33b409e5e82501"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1adc4843739d3819be33b409e5e82501">&#9670;&#160;</a></span>_estimate_graph_size_recursive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t _estimate_graph_size_recursive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>temp_arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structestimate__visited__node__t.html">estimate_visited_node_t</a> **&#160;</td>
+          <td class="paramname"><em>visited_head</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5c625d2f656fb0050bc9495a32c586e5" name="a5c625d2f656fb0050bc9495a32c586e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c625d2f656fb0050bc9495a32c586e5">&#9670;&#160;</a></span>_infix_estimate_graph_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t _infix_estimate_graph_size </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>temp_arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Estimates the total memory required to deep-copy a complete type graph. </p>
+<p>Located in <code><a class="el" href="types_8c.html" title="Implements the public API for creating and managing type descriptions.">src/core/types.c</a></code>. This function recursively walks the entire type graph, including all nested aggregates and function arguments, to calculate the exact size needed for an arena that will hold a deep copy. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">temp_arena</td><td>A temporary arena used for the estimator's own bookkeeping (e.g., cycle detection). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The root of the type graph to estimate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The estimated size in bytes required for a deep copy. </dd></dl>
+
+</div>
+</div>
 <a id="a2fbfba2a7a90f3d1bd898c4b577e1487" name="a2fbfba2a7a90f3d1bd898c4b577e1487"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2fbfba2a7a90f3d1bd898c4b577e1487">&#9670;&#160;</a></span>_infix_type_recalculate_layout()</h2>
 
@@ -527,8 +630,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abcd8c9359932a9f8f0d9dee312a73b68" name="abcd8c9359932a9f8f0d9dee312a73b68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abcd8c9359932a9f8f0d9dee312a73b68">&#9670;&#160;</a></span>_infix_type_recalculate_layout_recursive()</h2>
+<a id="ade23edfdd11b5f7f895baf767d243523" name="ade23edfdd11b5f7f895baf767d243523"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade23edfdd11b5f7f895baf767d243523">&#9670;&#160;</a></span>_infix_type_recalculate_layout_recursive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -539,6 +642,12 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void _infix_type_recalculate_layout_recursive </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>temp_arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>

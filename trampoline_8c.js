@@ -2,7 +2,8 @@ var trampoline_8c =
 [
     [ "visited_node_t", "structvisited__node__t.html", "structvisited__node__t" ],
     [ "visited_node_t", "trampoline_8c.html#a06320c0ecea4184c99fba3760dbd67db", null ],
-    [ "_infix_forward_create_internal", "trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb", null ],
+    [ "_estimate_metadata_size", "trampoline_8c.html#ac35b3251383067cd1416c6774381121f", null ],
+    [ "_infix_forward_create_internal", "trampoline_8c.html#ab3829aab1121c690c830a5367fa27530", null ],
     [ "_infix_reverse_create_internal", "trampoline_8c.html#ad080e7a5e3427a4f841793ef3bdb32bc", null ],
     [ "_is_type_graph_resolved", "trampoline_8c.html#a7328162dbe6a7205bc6ce74ec7787c4f", null ],
     [ "_is_type_graph_resolved_recursive", "trampoline_8c.html#a1349105d70d3ae24107ecda93db18e42", null ],

@@ -4,5 +4,6 @@ var dir_fdedb0aba14d44ce9d99bc100e026e6a =
     [ "double_tap.h", "double__tap_8h.html", "double__tap_8h" ],
     [ "infix_config.h", "infix__config_8h.html", "infix__config_8h" ],
     [ "infix_internals.h", "infix__internals_8h.html", "infix__internals_8h" ],
+    [ "platform.h", "platform_8h.html", null ],
     [ "utility.h", "utility_8h.html", "utility_8h" ]
 ];

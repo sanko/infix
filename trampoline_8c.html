@@ -171,15 +171,17 @@ Functions</h2></td></tr>
 <tr class="separator:a1349105d70d3ae24107ecda93db18e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7328162dbe6a7205bc6ce74ec7787c4f" id="r_a7328162dbe6a7205bc6ce74ec7787c4f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a7328162dbe6a7205bc6ce74ec7787c4f">_is_type_graph_resolved</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:a7328162dbe6a7205bc6ce74ec7787c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac35b3251383067cd1416c6774381121f" id="r_ac35b3251383067cd1416c6774381121f"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#ac35b3251383067cd1416c6774381121f">_estimate_metadata_size</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args)</td></tr>
+<tr class="separator:ac35b3251383067cd1416c6774381121f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f3559908e6a7bcc72103c52937d67ad" id="r_ga5f3559908e6a7bcc72103c52937d67ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
 <tr class="memdesc:ga5f3559908e6a7bcc72103c52937d67ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the callable function pointer from an unbound forward trampoline.  <br /></td></tr>
 <tr class="separator:ga5f3559908e6a7bcc72103c52937d67ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga32fc7e60dd474cebc4ac082e49ac9ea8" id="r_ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
 <tr class="memdesc:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the callable function pointer from a bound forward trampoline.  <br /></td></tr>
 <tr class="separator:ga32fc7e60dd474cebc4ac082e49ac9ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cc3a6bbf73695ec563aceeb6ed73fbb" id="r_a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#a1cc3a6bbf73695ec563aceeb6ed73fbb">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *source_arena, void *target_fn)</td></tr>
-<tr class="memdesc:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core implementation for creating all forward trampolines.  <br /></td></tr>
-<tr class="separator:a1cc3a6bbf73695ec563aceeb6ed73fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3829aab1121c690c830a5367fa27530" id="r_ab3829aab1121c690c830a5367fa27530"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="trampoline_8c.html#ab3829aab1121c690c830a5367fa27530">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_fn)</td></tr>
+<tr class="memdesc:ab3829aab1121c690c830a5367fa27530"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core implementation for creating all forward trampolines.  <br /></td></tr>
+<tr class="separator:ab3829aab1121c690c830a5367fa27530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga017f14762b217bc6d0101e994481bfd0" id="r_ga017f14762b217bc6d0101e994481bfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0">infix_forward_create_manual</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="202__in__structs_8c.html#a0ce0ce0c7e8fe28259fbbb5a3638c5d5">return_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, size_t num_fixed_args, void *target_function)</td></tr>
 <tr class="memdesc:ga017f14762b217bc6d0101e994481bfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a bound forward trampoline from <code>infix_type</code> objects (Manual API).  <br /></td></tr>
 <tr class="separator:ga017f14762b217bc6d0101e994481bfd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,16 +208,16 @@ Functions</h2></td></tr>
 <tr class="memitem:gab41c717a6e4e4198c62284e526e5d9b3" id="r_gab41c717a6e4e4198c62284e526e5d9b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *reverse_trampoline)</td></tr>
 <tr class="memdesc:gab41c717a6e4e4198c62284e526e5d9b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the user-provided data pointer from a closure context.  <br /></td></tr>
 <tr class="separator:gab41c717a6e4e4198c62284e526e5d9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5362b6f6976298aebefdb2a487e72e36" id="r_ga5362b6f6976298aebefdb2a487e72e36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, void *target_function, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ga5362b6f6976298aebefdb2a487e72e36" id="r_ga5362b6f6976298aebefdb2a487e72e36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, void *target_function, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:ga5362b6f6976298aebefdb2a487e72e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a "bound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:ga5362b6f6976298aebefdb2a487e72e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga524a8ccebd24c9232d30cb2f79aee5a5" id="r_ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ga524a8ccebd24c9232d30cb2f79aee5a5" id="r_ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **out_trampoline, const char *signature, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an "unbound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:ga524a8ccebd24c9232d30cb2f79aee5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, void *user_callback_fn, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, void *user_callback_fn, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:ga010d41376c47f1100903d427776033ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a type-safe reverse trampoline (callback).  <br /></td></tr>
 <tr class="separator:ga010d41376c47f1100903d427776033ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a> user_callback_fn, void *user_data, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **out_context, const char *signature, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a> user_callback_fn, void *user_data, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:ga6d1281b61d196d1d06153aa1265fb971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a generic reverse trampoline (closure) for stateful callbacks.  <br /></td></tr>
 <tr class="separator:ga6d1281b61d196d1d06153aa1265fb971"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -249,8 +251,56 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a1cc3a6bbf73695ec563aceeb6ed73fbb" name="a1cc3a6bbf73695ec563aceeb6ed73fbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cc3a6bbf73695ec563aceeb6ed73fbb">&#9670;&#160;</a></span>_infix_forward_create_internal()</h2>
+<a id="ac35b3251383067cd1416c6774381121f" name="ac35b3251383067cd1416c6774381121f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac35b3251383067cd1416c6774381121f">&#9670;&#160;</a></span>_estimate_metadata_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t _estimate_metadata_size </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>temp_arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>return_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
+          <td class="paramname"><em>arg_types</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab3829aab1121c690c830a5367fa27530" name="ab3829aab1121c690c830a5367fa27530"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3829aab1121c690c830a5367fa27530">&#9670;&#160;</a></span>_infix_forward_create_internal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,12 +334,6 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>num_fixed_args</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
-          <td class="paramname"><em>source_arena</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

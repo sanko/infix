@@ -8,6 +8,7 @@ var abi__x64__emitters_8c =
     [ "emit_add_reg_imm8", "abi__x64__emitters_8c.html#a71403e87cc9138ee7fee9c892b2f14f8", null ],
     [ "emit_call_reg", "abi__x64__emitters_8c.html#a8f9e2617fa516d5ead8dea8d24243127", null ],
     [ "emit_dec_reg", "abi__x64__emitters_8c.html#a6487e4953ffbbadd032df97e107e2be6", null ],
+    [ "emit_evex_prefix", "abi__x64__emitters_8c.html#a80c467770d58bdb5d3f2e8b8ae4cfcc2", null ],
     [ "emit_fldt_mem", "abi__x64__emitters_8c.html#a1a61576293f58d03b5e1733879edfe80", null ],
     [ "emit_fstpt_mem", "abi__x64__emitters_8c.html#a858220710202cecc0565a2d4b09537ce", null ],
     [ "emit_jmp_reg", "abi__x64__emitters_8c.html#a792c75d3780343d6ab4fc818bf1f4c18", null ],
@@ -45,5 +46,7 @@ var abi__x64__emitters_8c =
     [ "emit_ud2", "abi__x64__emitters_8c.html#aa7993e38c8ddf6aa07a7928e2c98b72f", null ],
     [ "emit_vex_prefix", "abi__x64__emitters_8c.html#aa1c841bad414f9b05db64740d1fcd551", null ],
     [ "emit_vmovupd_mem_ymm", "abi__x64__emitters_8c.html#a5b2a2a6c600f4053ad6c4d6b76fe98df", null ],
-    [ "emit_vmovupd_ymm_mem", "abi__x64__emitters_8c.html#aa98fe3d0067efea2ecc616a6ef3e2976", null ]
+    [ "emit_vmovupd_mem_zmm", "abi__x64__emitters_8c.html#a6146595ae12549b606c5725bc71652a7", null ],
+    [ "emit_vmovupd_ymm_mem", "abi__x64__emitters_8c.html#aa98fe3d0067efea2ecc616a6ef3e2976", null ],
+    [ "emit_vmovupd_zmm_mem", "abi__x64__emitters_8c.html#a0df58e4513026fa5dc4f231127e7b93c", null ]
 ];

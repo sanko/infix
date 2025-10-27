@@ -113,14 +113,15 @@ $(document).ready(function(){initNavTree('101__by__value_8c.html',''); initResiz
 <p>Unit test for passing and returning aggregates and vectors by value.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
-<code>#include &lt;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 101_by_value.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="101__by__value_8c__incl.svg" width="100%" height="492"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="101__by__value_8c__incl.svg" width="100%" height="547"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -150,6 +151,10 @@ Functions</h2></td></tr>
 <tr class="separator:aae7b96909c21fa422844ecc0b38d8c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81d065ae50ca5d9a3fec3100f280c6cc" id="r_a81d065ae50ca5d9a3fec3100f280c6cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a81d065ae50ca5d9a3fec3100f280c6cc">subtest</a> (&quot;ABI Specific: ARM64 Scalable Vector (SVE)&quot;)</td></tr>
 <tr class="separator:a81d065ae50ca5d9a3fec3100f280c6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d3a260d7f197c4637365c3f6b114e6b" id="r_a4d3a260d7f197c4637365c3f6b114e6b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a4d3a260d7f197c4637365c3f6b114e6b">subtest</a> (&quot;ABI Specific: 512-bit AVX-512 Vector (__m512d)&quot;)</td></tr>
+<tr class="separator:a4d3a260d7f197c4637365c3f6b114e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a852b39e71064b3976817a0233a5bc60e" id="r_a852b39e71064b3976817a0233a5bc60e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a852b39e71064b3976817a0233a5bc60e">subtest</a> (&quot;ABI Specific: 512-bit AVX-512 Vector (__m512)&quot;)</td></tr>
+<tr class="separator:a852b39e71064b3976817a0233a5bc60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -237,7 +242,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a08da2b435f79e4bf893aa21c59ff8f3a" name="a08da2b435f79e4bf893aa21c59ff8f3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08da2b435f79e4bf893aa21c59ff8f3a">&#9670;&#160;</a></span>subtest() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a08da2b435f79e4bf893aa21c59ff8f3a">&#9670;&#160;</a></span>subtest() <span class="overload">[1/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,7 +260,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aae7b96909c21fa422844ecc0b38d8c85" name="aae7b96909c21fa422844ecc0b38d8c85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae7b96909c21fa422844ecc0b38d8c85">&#9670;&#160;</a></span>subtest() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae7b96909c21fa422844ecc0b38d8c85">&#9670;&#160;</a></span>subtest() <span class="overload">[2/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -272,8 +277,44 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a852b39e71064b3976817a0233a5bc60e" name="a852b39e71064b3976817a0233a5bc60e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a852b39e71064b3976817a0233a5bc60e">&#9670;&#160;</a></span>subtest() <span class="overload">[3/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subtest </td>
+          <td>(</td>
+          <td class="paramtype">&quot;ABI Specific: 512-bit AVX-512 Vector (__m512)&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d3a260d7f197c4637365c3f6b114e6b" name="a4d3a260d7f197c4637365c3f6b114e6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d3a260d7f197c4637365c3f6b114e6b">&#9670;&#160;</a></span>subtest() <span class="overload">[4/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subtest </td>
+          <td>(</td>
+          <td class="paramtype">&quot;ABI Specific: 512-bit AVX-512 Vector (__m512d)&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a05247196fb186b7ae9d16efef3f21140" name="a05247196fb186b7ae9d16efef3f21140"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05247196fb186b7ae9d16efef3f21140">&#9670;&#160;</a></span>subtest() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a05247196fb186b7ae9d16efef3f21140">&#9670;&#160;</a></span>subtest() <span class="overload">[5/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,7 +332,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a81d065ae50ca5d9a3fec3100f280c6cc" name="a81d065ae50ca5d9a3fec3100f280c6cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81d065ae50ca5d9a3fec3100f280c6cc">&#9670;&#160;</a></span>subtest() <span class="overload">[4/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a81d065ae50ca5d9a3fec3100f280c6cc">&#9670;&#160;</a></span>subtest() <span class="overload">[6/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -309,7 +350,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ad17e967090fc52ff46e3f39b56313de3" name="ad17e967090fc52ff46e3f39b56313de3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad17e967090fc52ff46e3f39b56313de3">&#9670;&#160;</a></span>subtest() <span class="overload">[5/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad17e967090fc52ff46e3f39b56313de3">&#9670;&#160;</a></span>subtest() <span class="overload">[7/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -327,7 +368,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="afcb522a8c16222b5a7b655de5cac9e78" name="afcb522a8c16222b5a7b655de5cac9e78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcb522a8c16222b5a7b655de5cac9e78">&#9670;&#160;</a></span>subtest() <span class="overload">[6/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afcb522a8c16222b5a7b655de5cac9e78">&#9670;&#160;</a></span>subtest() <span class="overload">[8/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -375,7 +416,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(6)</div>
+<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(8)</div>
 <div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
 </div><!-- fragment -->
 </div>

@@ -8,6 +8,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "005_layouts.c", "005__layouts_8c.html", "005__layouts_8c" ],
     [ "006_end_to_end_calls.c", "006__end__to__end__calls_8c.html", "006__end__to__end__calls_8c" ],
     [ "007_type_registry.c", "007__type__registry_8c.html", "007__type__registry_8c" ],
+    [ "008_registry_introspection.c", "008__registry__introspection_8c.html", "008__registry__introspection_8c" ],
     [ "101_by_value.c", "101__by__value_8c.html", "101__by__value_8c" ],
     [ "102_by_reference.c", "102__by__reference_8c.html", "102__by__reference_8c" ],
     [ "103_unions.c", "103__unions_8c.html", "103__unions_8c" ],

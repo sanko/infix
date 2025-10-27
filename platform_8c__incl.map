@@ -1,0 +1,14 @@
+<map id="src/core/platform.c" name="src/core/platform.c">
+<area shape="rect" id="Node000001" title="Implements runtime detection of CPU and OS features." alt="" coords="88,5,232,31"/>
+<area shape="rect" id="Node000002" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="85,79,235,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,31,163,65,157,65,157,31"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="73,152,247,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="163,104,163,138,157,138,157,104"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,88,251"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="127,107,92,125,76,138,62,153,51,182,48,212,43,211,46,181,58,151,72,134,89,121,125,102"/>
+<area shape="rect" id="Node000006" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="271,152,441,177"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="192,102,312,145,310,150,191,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="143,180,78,220,75,216,140,175"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="123,225,197,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="163,178,163,212,157,212,157,178"/>
+</map>

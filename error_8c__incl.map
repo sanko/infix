@@ -1,26 +1,31 @@
 <map id="src/core/error.c" name="src/core/error.c">
-<area shape="rect" id="Node000001" title="Implements the thread&#45;local error reporting system." alt="" coords="261,5,380,31"/>
-<area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="22,79,209,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,33,162,77,161,72,287,28"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="199,152,293,177"/>
-<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="310,33,292,54,274,80,261,110,253,139,248,138,256,108,269,77,287,50,307,29"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="283,79,358,104"/>
-<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="323,31,323,65,318,65,318,31"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="382,79,449,104"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="337,29,390,68,387,72,334,33"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="473,79,544,104"/>
-<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="352,28,466,71,464,76,350,33"/>
-<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,152,175,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,105,101,140,96,138,109,103"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="138,102,214,143,212,148,135,106"/>
-<area shape="rect" id="Node000005" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="96,225,271,251"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="238,179,205,217,201,213,234,176"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="85,299,167,324"/>
-<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="199,180,131,200,102,213,86,227,81,242,84,257,105,288,101,291,79,259,75,241,81,224,100,209,129,196,198,174"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="202,299,277,324"/>
-<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="259,176,280,209,286,230,285,251,275,272,262,290,258,287,270,269,279,250,281,231,275,211,255,179"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="347,225,417,251"/>
-<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="269,175,349,217,347,221,267,180"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="176,253,146,290,142,286,172,249"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="195,249,224,286,220,289,190,253"/>
+<area shape="rect" id="Node000001" title="Implements the thread&#45;local error reporting system." alt="" coords="396,5,515,31"/>
+<area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="153,79,339,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="423,33,294,77,292,72,421,28"/>
+<area shape="rect" id="Node000008" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="389,152,484,177"/>
+<area shape="poly" id="edge14_Node000001_Node000008" title=" " alt="" coords="443,33,424,53,409,80,406,95,408,110,422,140,417,142,403,112,401,95,403,78,420,50,439,29"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="418,79,493,104"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="458,31,458,65,453,65,453,31"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="517,79,583,104"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="472,29,525,68,522,72,469,33"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="608,79,679,104"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="486,28,601,71,599,76,485,33"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,225,175,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="223,107,188,127,152,154,125,184,105,215,101,212,121,181,148,150,185,122,220,102"/>
+<area shape="rect" id="Node000004" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="163,152,313,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="247,105,243,139,238,138,242,104"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="278,102,394,144,392,149,276,107"/>
+<area shape="poly" id="edge7_Node000004_Node000003" title=" " alt="" coords="215,180,128,222,125,217,213,175"/>
+<area shape="rect" id="Node000005" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="251,225,425,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="256,175,312,215,309,219,253,180"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="297,299,379,324"/>
+<area shape="poly" id="edge8_Node000004_Node000006" title=" " alt="" coords="237,178,232,212,234,231,240,249,262,274,290,291,287,295,258,278,236,252,229,233,227,212,232,178"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="341,251,341,285,335,285,335,251"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="439,299,514,324"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="361,248,443,290,441,295,359,253"/>
+<area shape="poly" id="edge10_Node000008_Node000005" title=" " alt="" coords="422,180,367,219,364,215,419,175"/>
+<area shape="poly" id="edge11_Node000008_Node000006" title=" " alt="" coords="443,177,448,212,446,233,439,252,417,278,388,295,385,291,413,274,434,249,441,231,442,212,437,178"/>
+<area shape="poly" id="edge12_Node000008_Node000007" title=" " alt="" coords="451,176,470,197,485,224,489,256,486,285,481,284,484,256,479,226,465,200,447,179"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="552,225,623,251"/>
+<area shape="poly" id="edge13_Node000008_Node000009" title=" " alt="" coords="462,175,551,217,549,222,460,180"/>
 </map>

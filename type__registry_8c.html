@@ -120,7 +120,7 @@ $(document).ready(function(){initNavTree('type__registry_8c.html',''); initResiz
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for type_registry.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="type__registry_8c__incl.svg" width="456" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="type__registry_8c__incl.svg" width="628" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -135,8 +135,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structresolve__memo__node__t.html">resolve_memo_node_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__registry__parser__state__t.html">_registry_parser_state_t</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -153,34 +151,29 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a07fbe5120fb9214f646d12370d936d6a" id="r_a07fbe5120fb9214f646d12370d936d6a"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a07fbe5120fb9214f646d12370d936d6a">_registry_hash_string</a> (const char *str)</td></tr>
 <tr class="separator:a07fbe5120fb9214f646d12370d936d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8933487ad2bb32e44e6b8f0be8b5e08e" id="r_a8933487ad2bb32e44e6b8f0be8b5e08e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a8933487ad2bb32e44e6b8f0be8b5e08e">_registry_lookup</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *name)</td></tr>
+<tr class="memitem:a8933487ad2bb32e44e6b8f0be8b5e08e" id="r_a8933487ad2bb32e44e6b8f0be8b5e08e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a8933487ad2bb32e44e6b8f0be8b5e08e">_registry_lookup</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>, const char *name)</td></tr>
 <tr class="separator:a8933487ad2bb32e44e6b8f0be8b5e08e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c3594909e192f16b725d7e2ca272435" id="r_a8c3594909e192f16b725d7e2ca272435"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a8c3594909e192f16b725d7e2ca272435">_registry_insert</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *name)</td></tr>
+<tr class="memitem:a8c3594909e192f16b725d7e2ca272435" id="r_a8c3594909e192f16b725d7e2ca272435"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a8c3594909e192f16b725d7e2ca272435">_registry_insert</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>, const char *name)</td></tr>
 <tr class="separator:a8c3594909e192f16b725d7e2ca272435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac808273483db7a9db2bc275c41b13296" id="r_gac808273483db7a9db2bc275c41b13296"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a> (void)</td></tr>
 <tr class="memdesc:gac808273483db7a9db2bc275c41b13296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new, empty named type registry.  <br /></td></tr>
 <tr class="separator:gac808273483db7a9db2bc275c41b13296"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga48f8efad0f6e1d14d5adacf466116b61" id="r_ga48f8efad0f6e1d14d5adacf466116b61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61">infix_registry_destroy</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ga48f8efad0f6e1d14d5adacf466116b61" id="r_ga48f8efad0f6e1d14d5adacf466116b61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61">infix_registry_destroy</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:ga48f8efad0f6e1d14d5adacf466116b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a type registry and frees all associated memory.  <br /></td></tr>
 <tr class="separator:ga48f8efad0f6e1d14d5adacf466116b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95459dc991975dacbc54dfa87f5bcf5a" id="r_a95459dc991975dacbc54dfa87f5bcf5a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a95459dc991975dacbc54dfa87f5bcf5a">_resolve_type_graph_inplace_recursive</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, <a class="el" href="structresolve__memo__node__t.html">resolve_memo_node_t</a> **memo_head)</td></tr>
-<tr class="separator:a95459dc991975dacbc54dfa87f5bcf5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65e11dc8cc3a958fc03f93d473f4e51d" id="r_a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a65e11dc8cc3a958fc03f93d473f4e51d">_infix_resolve_type_graph_inplace</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ab3539e7a6f3626d8a4dae8f86b491ef0" id="r_ab3539e7a6f3626d8a4dae8f86b491ef0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#ab3539e7a6f3626d8a4dae8f86b491ef0">_resolve_type_graph_inplace_recursive</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>, <a class="el" href="structresolve__memo__node__t.html">resolve_memo_node_t</a> **memo_head)</td></tr>
+<tr class="separator:ab3539e7a6f3626d8a4dae8f86b491ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65e11dc8cc3a958fc03f93d473f4e51d" id="r_a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a65e11dc8cc3a958fc03f93d473f4e51d">_infix_resolve_type_graph_inplace</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:a65e11dc8cc3a958fc03f93d473f4e51d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves all named type references in a type graph in-place.  <br /></td></tr>
 <tr class="separator:a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab35674fec56b76df1112649df588436" id="r_aab35674fec56b76df1112649df588436"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#aab35674fec56b76df1112649df588436">_registry_parser_skip_whitespace</a> (<a class="el" href="struct__registry__parser__state__t.html">_registry_parser_state_t</a> *state)</td></tr>
 <tr class="separator:aab35674fec56b76df1112649df588436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e581a824d0eaf99e357a24219d16467" id="r_a9e581a824d0eaf99e357a24219d16467"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#a9e581a824d0eaf99e357a24219d16467">_registry_parser_parse_name</a> (<a class="el" href="struct__registry__parser__state__t.html">_registry_parser_state_t</a> *state, char *buffer, size_t buf_size)</td></tr>
 <tr class="separator:a9e581a824d0eaf99e357a24219d16467"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4ece2363948c40fe528826bf65dac280" id="r_ga4ece2363948c40fe528826bf65dac280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *definitions)</td></tr>
+<tr class="memitem:ga4ece2363948c40fe528826bf65dac280" id="r_ga4ece2363948c40fe528826bf65dac280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a> (<a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>, const char *<a class="el" href="008__registry__introspection_8c.html#a875b04be0934afe498d8c3fa958c335c">definitions</a>)</td></tr>
 <tr class="memdesc:ga4ece2363948c40fe528826bf65dac280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string of type definitions and adds them to a registry.  <br /></td></tr>
 <tr class="separator:ga4ece2363948c40fe528826bf65dac280"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1bad774d01989f84e0b86bee6a489d7" id="r_ad1bad774d01989f84e0b86bee6a489d7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="type__registry_8c.html#ad1bad774d01989f84e0b86bee6a489d7">_registry_print</a> (<a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *state, const char *fmt,...)</td></tr>
-<tr class="separator:ad1bad774d01989f84e0b86bee6a489d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga722db5aa0d69f7be25b026a2d6a333a8" id="r_ga722db5aa0d69f7be25b026a2d6a333a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga722db5aa0d69f7be25b026a2d6a333a8">infix_registry_print</a> (char *buffer, size_t buffer_size, const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
-<tr class="memdesc:ga722db5aa0d69f7be25b026a2d6a333a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes all defined types within a registry into a single, human-readable string.  <br /></td></tr>
-<tr class="separator:ga722db5aa0d69f7be25b026a2d6a333a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga82e78887d2b9b756c839980e08f1f780" id="r_ga82e78887d2b9b756c839980e08f1f780"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780">infix_registry_iterator_begin</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry)</td></tr>
+<tr class="memitem:ga82e78887d2b9b756c839980e08f1f780" id="r_ga82e78887d2b9b756c839980e08f1f780"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780">infix_registry_iterator_begin</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
 <tr class="memdesc:ga82e78887d2b9b756c839980e08f1f780"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes an iterator for traversing the types in a registry.  <br /></td></tr>
 <tr class="separator:ga82e78887d2b9b756c839980e08f1f780"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84444c174ba84274c0e033b66648f1f0" id="r_ga84444c174ba84274c0e033b66648f1f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga84444c174ba84274c0e033b66648f1f0">infix_registry_iterator_next</a> (<a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a> *iter)</td></tr>
@@ -192,10 +185,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ga530939c6ddc67de89ae87b8126f2bec1" id="r_ga530939c6ddc67de89ae87b8126f2bec1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga530939c6ddc67de89ae87b8126f2bec1">infix_registry_iterator_get_type</a> (const <a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a> *iter)</td></tr>
 <tr class="memdesc:ga530939c6ddc67de89ae87b8126f2bec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the <code>infix_type</code> object of the type at the iterator's current position.  <br /></td></tr>
 <tr class="separator:ga530939c6ddc67de89ae87b8126f2bec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaabc09998582eb655aa592d341e302657" id="r_gaabc09998582eb655aa592d341e302657"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657">infix_registry_is_defined</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *name)</td></tr>
+<tr class="memitem:gaabc09998582eb655aa592d341e302657" id="r_gaabc09998582eb655aa592d341e302657"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657">infix_registry_is_defined</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>, const char *name)</td></tr>
 <tr class="memdesc:gaabc09998582eb655aa592d341e302657"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a type with the given name is fully defined in the registry.  <br /></td></tr>
 <tr class="separator:gaabc09998582eb655aa592d341e302657"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0f79cbbbe50468b6569593e5a7d43fb6" id="r_ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga0f79cbbbe50468b6569593e5a7d43fb6">infix_registry_lookup_type</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *registry, const char *name)</td></tr>
+<tr class="memitem:ga0f79cbbbe50468b6569593e5a7d43fb6" id="r_ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga0f79cbbbe50468b6569593e5a7d43fb6">infix_registry_lookup_type</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>, const char *name)</td></tr>
 <tr class="memdesc:ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the canonical <code>infix_type</code> object for a given name from the registry.  <br /></td></tr>
 <tr class="separator:ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -453,50 +446,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad1bad774d01989f84e0b86bee6a489d7" name="ad1bad774d01989f84e0b86bee6a489d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1bad774d01989f84e0b86bee6a489d7">&#9670;&#160;</a></span>_registry_print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void _registry_print </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a95459dc991975dacbc54dfa87f5bcf5a" name="a95459dc991975dacbc54dfa87f5bcf5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95459dc991975dacbc54dfa87f5bcf5a">&#9670;&#160;</a></span>_resolve_type_graph_inplace_recursive()</h2>
+<a id="ab3539e7a6f3626d8a4dae8f86b491ef0" name="ab3539e7a6f3626d8a4dae8f86b491ef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3539e7a6f3626d8a4dae8f86b491ef0">&#9670;&#160;</a></span>_resolve_type_graph_inplace_recursive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -507,6 +458,12 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _resolve_type_graph_inplace_recursive </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>temp_arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
           <td class="paramname"><em>type_ptr</em>, </td>
         </tr>

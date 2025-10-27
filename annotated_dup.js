@@ -3,6 +3,7 @@ var annotated_dup =
     [ "_infix_registry_entry_t", "struct__infix__registry__entry__t.html", "struct__infix__registry__entry__t" ],
     [ "_registry_parser_state_t", "struct__registry__parser__state__t.html", "struct__registry__parser__state__t" ],
     [ "code_buffer", "structcode__buffer.html", "structcode__buffer" ],
+    [ "estimate_visited_node_t", "structestimate__visited__node__t.html", "structestimate__visited__node__t" ],
     [ "fuzzer_input", "structfuzzer__input.html", "structfuzzer__input" ],
     [ "infix_arena_t", "structinfix__arena__t.html", "structinfix__arena__t" ],
     [ "infix_arg_location", "structinfix__arg__location.html", "structinfix__arg__location" ],

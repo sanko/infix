@@ -2,7 +2,7 @@ var searchData=
 [
   ['reg_5findex_0',['reg_index',['../structinfix__arg__location.html#a4ca356cdf0cdc055bde2bb312278559a',1,'infix_arg_location']]],
   ['reg_5findex2_1',['reg_index2',['../structinfix__arg__location.html#aa26753e6a3c286d4c3e1510c9c187c84',1,'infix_arg_location']]],
-  ['registry_2',['registry',['../structinfix__registry__iterator__t.html#a0e762586e319f285e8f841e53c4989ff',1,'infix_registry_iterator_t']]],
+  ['registry_2',['registry',['../structinfix__registry__iterator__t.html#a0e762586e319f285e8f841e53c4989ff',1,'infix_registry_iterator_t::registry'],['../008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa',1,'registry:&#160;008_registry_introspection.c']]],
   ['regression_5ftests_3',['regression_tests',['../850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894',1,'850_regression_cases.c']]],
   ['remaining_4',['remaining',['../structprinter__state.html#a4af569fea1547a6bbda013ebf3dbb601',1,'printer_state::remaining'],['../structregistry__printer__state.html#aa1cedaba34d757c3efaeb832bbbc0356',1,'registry_printer_state::remaining']]],
   ['ret_5ftype_5',['ret_type',['../901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa',1,'901_call_overhead.c']]],
