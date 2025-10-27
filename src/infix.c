@@ -81,7 +81,11 @@
 //    (No dependencies).
 #include "core/utility.c"
 
-// 9. Trampoline Engine: The central JIT compiler.
+// 9. Platform and processor feature detection.
+//    (No dependencies).
+#include "core/platform.c"
+
+// 10. Trampoline Engine: The central JIT compiler.
 //    This must be last, as it depends on all other components and includes the
 //    final ABI- and architecture-specific C files itself.
 #include "jit/trampoline.c"

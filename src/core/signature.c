@@ -548,6 +548,34 @@ static infix_type * parse_primitive(parser_state * state) {
         return type;
     }
 
+    if (consume_keyword(state, "m512d")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 8);
+        if (status != INFIX_SUCCESS)
+            return nullptr;
+        type->alignment = 64;  // ZMM registers have 64-byte alignment
+        return type;
+    }
+    if (consume_keyword(state, "m512")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 16);
+        if (status != INFIX_SUCCESS)
+            return nullptr;
+        type->alignment = 64;
+        return type;
+    }
+    if (consume_keyword(state, "m512i")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 8);
+        if (status != INFIX_SUCCESS)
+            return nullptr;
+        type->alignment = 64;
+        return type;
+    }
+
     return nullptr;
 }
 
@@ -1251,9 +1279,40 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "]");
         break;
     case INFIX_TYPE_VECTOR:
-        _print(state, "v[%zu:", type->meta.vector_info.num_elements);
-        _infix_type_print_signature_recursive(state, type->meta.vector_info.element_type);
-        _print(state, "]");
+        {
+            const infix_type * element_type = type->meta.vector_info.element_type;
+            size_t num_elements = type->meta.vector_info.num_elements;
+            bool printed_alias = false;
+
+            if (element_type->category == INFIX_TYPE_PRIMITIVE) {
+                if (num_elements == 8 && is_double(element_type)) {
+                    _print(state, "m512d");
+                    printed_alias = true;
+                }
+                else if (num_elements == 16 && is_float(element_type)) {
+                    _print(state, "m512");
+                    printed_alias = true;
+                }
+                else if (num_elements == 8 && element_type->meta.primitive_id == INFIX_PRIMITIVE_SINT64) {
+                    _print(state, "m512i");
+                    printed_alias = true;
+                }
+                else if (num_elements == 4 && is_double(element_type)) {
+                    _print(state, "m256d");
+                    printed_alias = true;
+                }
+                else if (num_elements == 8 && is_float(element_type)) {
+                    _print(state, "m256");
+                    printed_alias = true;
+                }
+            }
+
+            if (!printed_alias) {
+                _print(state, "v[%zu:", num_elements);
+                _infix_type_print_signature_recursive(state, element_type);
+                _print(state, "]");
+            }
+        }
         break;
     case INFIX_TYPE_PRIMITIVE:
         switch (type->meta.primitive_id) {

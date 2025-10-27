@@ -35,6 +35,7 @@
 #pragma once
 
 #include "common/infix_config.h"
+#include "common/platform.h"
 #include <infix/infix.h>
 
 /**
