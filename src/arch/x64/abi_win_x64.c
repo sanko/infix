@@ -506,14 +506,24 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
         arena, 1, sizeof(infix_reverse_call_frame_layout), _Alignof(infix_reverse_call_frame_layout));
     if (!layout)
         return INFIX_ERROR_ALLOCATION_FAILED;
+    if (!context || !context->return_type)
+        return INFIX_ERROR_INVALID_ARGUMENT;
 
     // Calculate space needed for each component, ensuring 16-byte alignment for safety.
     size_t return_size = (context->return_type->size + 15) & ~15;
     size_t args_array_size = context->num_args * sizeof(void *);
     size_t saved_args_data_size = 0;
-    for (size_t i = 0; i < context->num_args; ++i)
+
+    for (size_t i = 0; i < context->num_args; ++i) {
+        if (context->arg_types[i] == nullptr) {
+            *out_layout = nullptr;
+            // Set error for an illegal type in an aggregate (a NULL type pointer).
+            _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        }
         if (!is_passed_by_reference(context->arg_types[i]))
             saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
+    }
 
     // Security: Check against excessively large argument data size.
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
