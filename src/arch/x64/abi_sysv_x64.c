@@ -330,6 +330,13 @@ static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], s
  * @brief Stage 1 (Forward): Analyzes a signature and creates a call frame layout for System V.
  * @details This function iterates through a function's arguments, classifying each one
  *          to determine its location (GPR, XMM, or stack) according to the SysV ABI rules.
+ * @param arena The temporary arena for allocations.
+ * @param out_layout Receives the created layout blueprint.
+ * @param ret_type The function's return type.
+ * @param arg_types Array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of non-variadic arguments.
+ * @param target_fn The target function address.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
@@ -535,6 +542,9 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
  * @brief Stage 2 (Forward): Generates the function prologue for the System V trampoline.
  * @details Sets up a standard stack frame, saves registers for the trampoline's context,
  *          and allocates stack space for arguments.
+ * @param buf The code buffer.
+ * @param layout The call frame layout.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_call_frame_layout * layout) {
     // Standard Function Prologue
@@ -576,6 +586,12 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
  * @internal
  * @brief Stage 3 (Forward): Generates code to move arguments from the `void**` array
  *          into their correct native locations (registers or stack).
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param arg_types The array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of fixed arguments.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                                                              infix_call_frame_layout * layout,
@@ -690,9 +706,12 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 3.5 (Forward): Generates the null-check and call instruction.
+ * @param buf The code buffer.
+ * @param layout The call frame layout.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf,
                                                                c23_maybe_unused infix_call_frame_layout * layout) {
@@ -714,6 +733,10 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf
  * @brief Stage 4 (Forward): Generates the function epilogue for the System V trampoline.
  * @details Emits code to handle the function's return value (from RAX/RDX, XMM0/XMM1, or
  *          the x87 FPU stack for `long double`) and properly tear down the stack frame.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param ret_type The function's return type.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_call_frame_layout * layout,
@@ -827,8 +850,12 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
 /**
  * @internal
  * @brief Stage 1 (Reverse): Calculates the stack layout for a reverse trampoline stub.
- * @details Determines the total stack space needed for the stub's local variables,
+ * @details This function determines the total stack space needed for the stub's local variables,
  *          including the return buffer, the `void**` args_array, and the saved argument data.
+ * @param arena The temporary arena for allocations.
+ * @param[out] out_layout The resulting reverse call frame layout blueprint.
+ * @param context The reverse trampoline context.
+ * @return `INFIX_SUCCESS` on success.
  */
 static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_reverse_call_frame_layout ** out_layout,
@@ -882,6 +909,9 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
  * @brief Stage 2 (Reverse): Generates the prologue for the reverse trampoline stub.
  * @details Emits standard System V function entry code, creates a stack frame,
  *          and allocates all necessary local stack space.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
     emit_push_reg(buf, RBP_REG);                                  // push rbp
@@ -894,6 +924,10 @@ static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_
  * @internal
  * @brief Stage 3 (Reverse): Generates code to marshal arguments from their native
  *          locations into the generic `void**` array for the C dispatcher.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse trampoline context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer * buf,
                                                                    infix_reverse_call_frame_layout * layout,
@@ -989,7 +1023,7 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 4 (Reverse): Generates the code to call the high-level C dispatcher function.
  * @details Emits code to load the dispatcher's arguments into the correct registers
@@ -1006,6 +1040,10 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
  *          3. `RDX` (Arg 3): The pointer to the `args_array` on the local stack.
  *          4. The address of the dispatcher function itself is loaded into a scratch
  *             register (`RAX`), which is then called.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
                                                               infix_reverse_call_frame_layout * layout,
@@ -1056,6 +1094,10 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
  * @details Retrieves the return value from the local buffer and places it into the
  *          correct return registers (RAX/RDX, XMM0/XMM1) or the x87 FPU stack. Then,
  *          it tears down the stack frame and returns to the native caller.
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param context The reverse context.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_reverse_call_frame_layout * layout,

@@ -176,19 +176,13 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
 }
 
 /** @internal @brief Appends a single byte to the code buffer. */
-void emit_byte(code_buffer * buf, uint8_t byte) {
-    code_buffer_append(buf, &byte, 1);
-}
+void emit_byte(code_buffer * buf, uint8_t byte) { code_buffer_append(buf, &byte, 1); }
 
 /** @internal @brief Appends a 32-bit integer (little-endian) to the code buffer. */
-void emit_int32(code_buffer * buf, int32_t value) {
-    code_buffer_append(buf, &value, 4);
-}
+void emit_int32(code_buffer * buf, int32_t value) { code_buffer_append(buf, &value, 4); }
 
 /** @internal @brief Appends a 64-bit integer (little-endian) to the code buffer. */
-void emit_int64(code_buffer * buf, int64_t value) {
-    code_buffer_append(buf, &value, 8);
-}
+void emit_int64(code_buffer * buf, int64_t value) { code_buffer_append(buf, &value, 8); }
 
 // Type Graph Validation
 
@@ -216,11 +210,9 @@ static bool _is_type_graph_resolved_recursive(const infix_type * type, visited_n
 
     // Cycle detection: if we've seen this node before, we can assume it's resolved
     // for the purpose of this check, as we'll validate it on the first visit.
-    for (visited_node_t * v = visited_head; v != NULL; v = v->next) {
-        if (v->type == type) {
+    for (visited_node_t * v = visited_head; v != NULL; v = v->next)
+        if (v->type == type)
             return true;
-        }
-    }
 
     visited_node_t current_visited_node = {.type = type, .next = visited_head};
 
@@ -233,18 +225,16 @@ static bool _is_type_graph_resolved_recursive(const infix_type * type, visited_n
         return _is_type_graph_resolved_recursive(type->meta.array_info.element_type, &current_visited_node);
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
-        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i)
             if (!_is_type_graph_resolved_recursive(type->meta.aggregate_info.members[i].type, &current_visited_node))
                 return false;
-        }
         return true;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
         if (!_is_type_graph_resolved_recursive(type->meta.func_ptr_info.return_type, &current_visited_node))
             return false;
-        for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
+        for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i)
             if (!_is_type_graph_resolved_recursive(type->meta.func_ptr_info.args[i].type, &current_visited_node))
                 return false;
-        }
         return true;
     default:
         return true;  // Primitives, void, etc., are always resolved.
@@ -255,8 +245,36 @@ static bool _is_type_graph_resolved_recursive(const infix_type * type, visited_n
  * @internal
  * @brief Public-internal wrapper for the recursive resolution check.
  */
-static bool _is_type_graph_resolved(const infix_type * type) {
-    return _is_type_graph_resolved_recursive(type, NULL);
+static bool _is_type_graph_resolved(const infix_type * type) { return _is_type_graph_resolved_recursive(type, NULL); }
+
+/**
+ * @internal
+ * @brief Estimates the memory required to store the type metadata for a function signature.
+ *
+ * This function iterates through the return and argument types, using the internal
+ * _infix_estimate_graph_size utility to sum the required bytes for a deep copy
+ * of all type information.
+ *
+ * @param temp_arena A temporary arena for the estimator's bookkeeping.
+ * @param return_type The function's return type.
+ * @param arg_types The array of argument types.
+ * @param num_args The number of arguments.
+ * @return The estimated size in bytes.
+ */
+static size_t _estimate_metadata_size(infix_arena_t * temp_arena,
+                                      infix_type * return_type,
+                                      infix_type ** arg_types,
+                                      size_t num_args) {
+    size_t total_size = 0;
+    total_size += _infix_estimate_graph_size(temp_arena, return_type);
+
+    if (arg_types != nullptr) {
+        // Add space for the arg_types pointer array itself.
+        total_size += sizeof(infix_type *) * num_args;
+        for (size_t i = 0; i < num_args; ++i)
+            total_size += _infix_estimate_graph_size(temp_arena, arg_types[i]);
+    }
+    return total_size;
 }
 
 // Forward Trampoline API Implementation
@@ -301,7 +319,7 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
                                                           size_t num_args,
                                                           size_t num_fixed_args,
                                                           void * target_fn) {
-    if (out_trampoline == nullptr || (arg_types == nullptr && num_args > 0)) {
+    if (out_trampoline == nullptr || return_type == nullptr || (arg_types == nullptr && num_args > 0)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
@@ -374,10 +392,13 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
         goto cleanup;
     }
 
-    // THIS IS THE HARDCODED WORKAROUND
-    size_t required_size = 65536;
+    // "Estimate" stage: Calculate the exact size needed for the handle's private arena.
+    size_t required_metadata_size = _estimate_metadata_size(temp_arena, return_type, arg_types, num_args);
 
-    handle->arena = infix_arena_create(required_size + INFIX_TRAMPOLINE_HEADROOM);
+    // Create the handle's private arena with the calculated size plus some headroom for safety.
+    handle->arena = infix_arena_create(required_metadata_size + INFIX_TRAMPOLINE_HEADROOM);
+
+
     if (handle->arena == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
@@ -552,7 +573,7 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
                                                    void * user_callback_fn,
                                                    void * user_data,
                                                    bool is_callback) {
-    if (out_context == nullptr || num_fixed_args > num_args) {
+    if (out_context == nullptr || return_type == nullptr || num_fixed_args > num_args) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
@@ -563,7 +584,7 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     if (arg_types == nullptr && num_args > 0) {
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     for (size_t i = 0; i < num_args; ++i) {
@@ -606,10 +627,12 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
     context = (infix_reverse_t *)prot.rw_ptr;
     infix_memset(context, 0, context_alloc_size);
 
-    // THIS IS THE HARDCODED WORKAROUND
-    size_t required_size = 65536;
+    // "Estimate" stage: Calculate the exact size needed for the context's private arena.
+    size_t required_metadata_size = _estimate_metadata_size(temp_arena, return_type, arg_types, num_args);
 
-    context->arena = infix_arena_create(required_size + INFIX_TRAMPOLINE_HEADROOM);
+    // Create the context's private arena with the calculated size plus some headroom for safety.
+    context->arena = infix_arena_create(required_metadata_size + INFIX_TRAMPOLINE_HEADROOM);
+
     if (context->arena == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
         goto cleanup;
@@ -702,9 +725,8 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
 cleanup:
     if (status != INFIX_SUCCESS) {
         // If allocation of the context itself failed, prot.rw_ptr will be null.
-        if (prot.rw_ptr != nullptr) {
+        if (prot.rw_ptr != nullptr)
             infix_reverse_destroy(context);
-        }
     }
     infix_arena_destroy(temp_arena);
     return status;

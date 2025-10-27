@@ -203,7 +203,7 @@ infix_struct_member infix_type_create_member(const char * name, infix_type * typ
  * @internal
  * @brief Common setup logic for creating aggregate types (structs and unions).
  *
- * This helper function reduces code duplication by handling the common tasks of:
+ * @details This helper function reduces code duplication by handling the common tasks of:
  * 1. Validating that member types are not null.
  * 2. Allocating the main `infix_type` object from the arena.
  * 3. Allocating a new array for the members within the arena and copying the
@@ -669,7 +669,7 @@ typedef struct recalc_visited_node_t {
  * @internal
  * @brief Recursively recalculates the size, alignment, and member offsets for a type graph.
  *
- * This function is the implementation of the **"Layout"** stage of the
+ * @details This function is the implementation of the **"Layout"** stage of the
  * "Parse -> Copy -> Resolve -> Layout" data pipeline. It is designed to be called
  * *after* a type graph has been fully resolved, ensuring that all
  * `INFIX_TYPE_NAMED_REFERENCE` nodes have been replaced with concrete types.
@@ -769,7 +769,7 @@ static void _infix_type_recalculate_layout_recursive(infix_arena_t * temp_arena,
  * @internal
  * @brief Public-internal wrapper for the recursive layout recalculation function.
  *
- * This function serves as the entry point for the "Layout" stage. It initializes
+ * @details This function serves as the entry point for the "Layout" stage. It initializes
  * the cycle detection mechanism and starts the recursive traversal of the type graph.
  *
  * @param[in,out] type The root of the type graph to recalculate. The graph is modified in-place.
@@ -804,7 +804,7 @@ typedef struct memo_node_t {
  * @internal
  * @brief Recursively performs a deep copy of a type graph into a destination arena.
  *
- * This function is the implementation of the **"Copy"** stage of the data pipeline.
+ * @details This function is the implementation of the **"Copy"** stage of the data pipeline.
  * It is essential for creating self-contained trampoline objects and for safely
  * managing type lifecycles. It uses a memoization table (`memo_head`) to correctly
  * handle cyclic graphs and shared type objects, ensuring that each source type
@@ -955,11 +955,119 @@ infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_t
     return _copy_type_graph_to_arena_recursive(dest_arena, src_type, &memo_head);
 }
 
-// Memory Estimation (currently unused in favor of hardcoded sizes)
+/**
+ * @internal
+ * @struct estimate_visited_node_t
+ * @brief A node for a "visited list" to prevent infinite recursion during size estimation.
+ */
+typedef struct estimate_visited_node_t {
+    const infix_type * type;               /**< The type object that has been visited. */
+    struct estimate_visited_node_t * next; /**< The next node in the visited list. */
+} estimate_visited_node_t;
+
+/**
+ * @internal
+ * @brief Recursively estimates the memory required to deep-copy a type graph.
+ * @details This function performs a depth-first traversal of the type graph, summing
+ *          the size of all arena-allocated objects that would be created by
+ *          `_copy_type_graph_to_arena`. It uses a visited list to correctly handle
+ *          cycles and shared subgraphs, preventing double-counting and infinite recursion.
+ * @param temp_arena A temporary arena used to allocate the visited list nodes.
+ * @param type The type graph to estimate.
+ * @param visited_head The head of the visited list for cycle detection.
+ * @return The estimated size in bytes.
+ */
+static size_t _estimate_graph_size_recursive(infix_arena_t * temp_arena,
+                                             const infix_type * type,
+                                             estimate_visited_node_t ** visited_head) {
+    if (!type || !type->is_arena_allocated)
+        return 0;
+
+    // Cycle detection: if we've seen this node, it's already accounted for.
+    for (estimate_visited_node_t * v = *visited_head; v != NULL; v = v->next) {
+        if (v->type == type)
+            return 0;
+    }
+
+    // Add this node to the visited list before recursing.
+    estimate_visited_node_t * visited_node =
+        infix_arena_alloc(temp_arena, sizeof(estimate_visited_node_t), _Alignof(estimate_visited_node_t));
+    if (!visited_node) {
+        // On allocation failure, we can't proceed with estimation. Return a large
+        // number to ensure the caller allocates a fallback-sized arena.
+        return 65536;
+    }
+    visited_node->type = type;
+    visited_node->next = *visited_head;
+    *visited_head = visited_node;
+
+    // The size includes the type object itself, plus a memoization node used by the copy algorithm.
+    size_t total_size = sizeof(infix_type) + sizeof(memo_node_t);
+
+    switch (type->category) {
+    case INFIX_TYPE_POINTER:
+        total_size += _estimate_graph_size_recursive(temp_arena, type->meta.pointer_info.pointee_type, visited_head);
+        break;
+    case INFIX_TYPE_ARRAY:
+        total_size += _estimate_graph_size_recursive(temp_arena, type->meta.array_info.element_type, visited_head);
+        break;
+    case INFIX_TYPE_STRUCT:
+    case INFIX_TYPE_UNION:
+        if (type->meta.aggregate_info.num_members > 0) {
+            total_size += sizeof(infix_struct_member) * type->meta.aggregate_info.num_members;
+            for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+                const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+                if (member->name)
+                    total_size += strlen(member->name) + 1;
+                total_size += _estimate_graph_size_recursive(temp_arena, member->type, visited_head);
+            }
+        }
+        break;
+    case INFIX_TYPE_NAMED_REFERENCE:
+        if (type->meta.named_reference.name)
+            total_size += strlen(type->meta.named_reference.name) + 1;
+        break;
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+        total_size += _estimate_graph_size_recursive(temp_arena, type->meta.func_ptr_info.return_type, visited_head);
+        if (type->meta.func_ptr_info.num_args > 0) {
+            total_size += sizeof(infix_function_argument) * type->meta.func_ptr_info.num_args;
+            for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i) {
+                const infix_function_argument * arg = &type->meta.func_ptr_info.args[i];
+                if (arg->name)
+                    total_size += strlen(arg->name) + 1;
+                total_size += _estimate_graph_size_recursive(temp_arena, arg->type, visited_head);
+            }
+        }
+        break;
+    case INFIX_TYPE_ENUM:
+        total_size += _estimate_graph_size_recursive(temp_arena, type->meta.enum_info.underlying_type, visited_head);
+        break;
+    case INFIX_TYPE_COMPLEX:
+        total_size += _estimate_graph_size_recursive(temp_arena, type->meta.complex_info.base_type, visited_head);
+        break;
+    case INFIX_TYPE_VECTOR:
+        total_size += _estimate_graph_size_recursive(temp_arena, type->meta.vector_info.element_type, visited_head);
+        break;
+    default:
+        break;
+    }
+
+    return total_size;
+}
+
+/**
+ * @internal
+ * @brief Public wrapper for the recursive size estimation function.
+ * @param temp_arena A temporary arena for the estimator's bookkeeping.
+ * @param type The root of the type graph to estimate.
+ * @return The estimated size in bytes.
+ */
 size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type * type) {
-    (void)temp_arena;
-    (void)type;
-    return 0;
+    if (!temp_arena || !type)
+        return 0;
+
+    estimate_visited_node_t * visited_head = NULL;
+    return _estimate_graph_size_recursive(temp_arena, type, &visited_head);
 }
 
 // Public API: Introspection Functions

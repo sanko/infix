@@ -225,7 +225,7 @@ TEST {
                                                     NUM_LARGE_ARGS,
                                                     NUM_LARGE_ARGS);
             ok(status == INFIX_SUCCESS, "Trampoline for large stack created");
-
+            diag("status: %d", status);
             double result = 0.0;
             if (trampoline) {
                 infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);

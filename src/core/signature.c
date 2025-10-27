@@ -91,10 +91,9 @@ static void skip_whitespace(parser_state * state) {
     while (true) {
         while (isspace((unsigned char)*state->p))
             state->p++;
-        if (*state->p == '#') {  // C-style line comments
+        if (*state->p == '#')  // C-style line comments
             while (*state->p != '\n' && *state->p != '\0')
                 state->p++;
-        }
         else
             break;
     }
@@ -235,10 +234,9 @@ static bool is_function_signature_ahead(const parser_state * state) {
         return false;  // Mismatched parentheses.
     // Skip any whitespace or comments after the ')'
     while (isspace((unsigned char)*p) || *p == '#') {
-        if (*p == '#') {
+        if (*p == '#')
             while (*p != '\n' && *p != '\0')
                 p++;
-        }
         else
             p++;
     }
@@ -452,9 +450,8 @@ static infix_type * parse_packed_struct(parser_state * state) {
     infix_status status =
         infix_type_create_packed_struct(state->arena, &packed_type, total_size, alignment, members, num_members);
 
-    if (status != INFIX_SUCCESS) {
+    if (status != INFIX_SUCCESS)
         return nullptr;
-    }
     return packed_type;
 }
 
@@ -529,6 +526,27 @@ static infix_type * parse_primitive(parser_state * state) {
         return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
     if (consume_keyword(state, "longdouble"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
+
+    // AVX convenience aliases
+    if (consume_keyword(state, "m256d")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 4);
+        if (status != INFIX_SUCCESS)
+            return nullptr;    // Propagate failure
+        type->alignment = 32;  // YMM registers require 32-byte alignment
+        return type;
+    }
+
+    if (consume_keyword(state, "m256")) {
+        infix_type * type = nullptr;
+        infix_status status =
+            infix_type_create_vector(state->arena, &type, infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT), 8);
+        if (status != INFIX_SUCCESS)
+            return nullptr;    // Propagate failure
+        type->alignment = 32;  // YMM registers require 32-byte alignment
+        return type;
+    }
 
     return nullptr;
 }
@@ -1049,9 +1067,8 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
     infix_type * raw_func_type = nullptr;
     infix_arena_t * parser_arena = nullptr;
     infix_status status = _infix_parse_type_internal(&raw_func_type, &parser_arena, signature);
-    if (status != INFIX_SUCCESS) {
+    if (status != INFIX_SUCCESS)
         return status;
-    }
 
     if (raw_func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE) {
         infix_arena_destroy(parser_arena);

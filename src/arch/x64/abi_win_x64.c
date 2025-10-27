@@ -111,11 +111,13 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_win_x64,
     .generate_reverse_epilogue = generate_reverse_epilogue_win_x64};
 
-/*
+/**
  * @internal
- * Determines if a type is returned by value in RAX or via a hidden pointer.
- * On Windows x64, aggregates are returned by value in RAX only if their size is
+ * @brief Determines if a type is returned by value in RAX or via a hidden pointer.
+ * @details On Windows x64, aggregates are returned by value in RAX only if their size is
  * 1, 2, 4, or 8 bytes. All other aggregates are returned by reference.
+ * @param type The type to check.
+ * @return `true` if the type is returned via a hidden pointer, `false` otherwise.
  */
 static bool return_value_is_by_reference(infix_type * type) {
     if (type->category == INFIX_TYPE_VECTOR) {
@@ -141,11 +143,13 @@ static bool return_value_is_by_reference(infix_type * type) {
     return false;
 }
 
-/*
+/**
  * @internal
- * Determines if a type must be passed by reference on the Windows x64 ABI.
- * The rule is that aggregates (and other non-primitive types) are passed by
+ * @brief Determines if a type must be passed by reference on the Windows x64 ABI.
+ * @details The rule is that aggregates (and other non-primitive types) are passed by
  * reference if their size is not a power of two (1, 2, 4, or 8 bytes).
+ * @param type The type to check.
+ * @return `true` if the type is passed by reference, `false` otherwise.
  */
 static bool is_passed_by_reference(infix_type * type) {
     if (type == nullptr)
@@ -153,11 +157,19 @@ static bool is_passed_by_reference(infix_type * type) {
     return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 1 (Forward): Analyzes a signature and creates a call frame layout for Windows x64.
  * @details Assigns each argument to a register "slot" or the stack. If the return value is
  *          passed by reference, it consumes the first slot (RCX).
+ * @param arena The temporary arena for allocations.
+ * @param out_layout Receives the created layout blueprint.
+ * @param ret_type The function's return type.
+ * @param arg_types Array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of non-variadic arguments.
+ * @param target_fn The target function address.
+ * @return `INFIX_SUCCESS` on success.
  */
 static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
                                                        infix_call_frame_layout ** out_layout,
@@ -176,6 +188,7 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
     }
     layout->is_variadic = num_args > num_fixed_args;
     layout->target_fn = target_fn;
+    INFIX_DEBUG_PRINTF("Allocating %zu bytes for arg_locations in temp_arena", num_args * sizeof(infix_arg_location));
     layout->arg_locations =
         infix_arena_calloc(arena, num_args, sizeof(infix_arg_location), _Alignof(infix_arg_location));
     if (layout->arg_locations == nullptr && num_args > 0) {
@@ -236,7 +249,7 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 2 (Forward): Generates the function prologue for the Windows x64 trampoline.
  * @details This function emits the standard machine code required at the beginning of a function.
@@ -282,7 +295,7 @@ static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_c
 
     return INFIX_SUCCESS;
 }
-/*
+/**
  * @internal
  * @brief Stage 3 (Forward): Generates code to move arguments into their native locations.
  * @details This function iterates through the layout blueprint and emits `mov` instructions
@@ -295,7 +308,11 @@ static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_c
  *          - **Stack Arguments:** Copies data to the stack, past the 32-byte shadow space.
  *          - **Variadic Floats:** Correctly passes float/double arguments in both the
  *            appropriate GPR and XMM register for variadic functions.
- *
+ * @param buf The code buffer.
+ * @param layout The layout blueprint.
+ * @param arg_types The array of argument types.
+ * @param num_args Total number of arguments.
+ * @param num_fixed_args Number of fixed arguments.
  * @return `INFIX_SUCCESS` on success.
  */
 static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
@@ -375,9 +392,12 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 3.5 (Forward): Generates the null-check and call instruction.
+ * @param buf The code buffer.
+ * @param layout The call frame layout.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_forward_call_instruction_win_x64(code_buffer * buf,
                                                               c23_maybe_unused infix_call_frame_layout * layout) {
@@ -395,7 +415,7 @@ static infix_status generate_forward_call_instruction_win_x64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 4 (Forward): Generates the function epilogue for the Windows x64 trampoline.
  * @details This function emits the code to handle the function's return value and
@@ -466,7 +486,7 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 1 (Reverse): Calculates the stack layout for a reverse trampoline stub.
  * @details This function determines the total stack space needed by the JIT-compiled stub.
@@ -474,6 +494,7 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
  * return value, the `args_array`, a data area for by-value arguments, and the
  * shadow space the stub must provide for the C dispatcher it calls.
  *
+ * @param arena The temporary arena for allocations.
  * @param[out] out_layout The resulting reverse call frame layout blueprint, populated with offsets.
  * @param context The reverse trampoline context with full signature information.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
@@ -529,7 +550,7 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 2 (Reverse): Generates the prologue for the reverse trampoline stub.
  * @details Emits the standard Windows x64 function entry code. This involves:
@@ -559,7 +580,7 @@ static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_r
 
     return INFIX_SUCCESS;
 }
-/*
+/**
  * @internal
  * @brief Stage 3 (Reverse): Generates code to marshal arguments into the generic `void**` array.
  * @details This function performs the "un-marshalling" of arguments from their native
@@ -652,7 +673,7 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
     }
     return INFIX_SUCCESS;
 }
-/*
+/**
  * @internal
  * @brief Stage 4 (Reverse): Generates the code to call the high-level C dispatcher function.
  * @details This function emits the instructions to load the three arguments for the C
@@ -670,6 +691,10 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
  *          3. `R8` (Arg 3): The pointer to the `args_array` on the local stack.
  *          4. The address of the dispatcher function itself is loaded into `R9`,
  *             which is then called.
+ * @param buf The code buffer.
+ * @param layout The blueprint containing stack offsets.
+ * @param context The context, containing the dispatcher's address.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
                                                              infix_reverse_call_frame_layout * layout,
@@ -697,7 +722,7 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
     return INFIX_SUCCESS;
 }
 
-/*
+/**
  * @internal
  * @brief Stage 5 (Reverse): Generates the epilogue for the reverse trampoline stub.
  * @details After the C dispatcher returns, this code is responsible for the final steps
@@ -718,6 +743,10 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
  *
  *          Finally, it emits the standard function epilogue to deallocate the stack frame,
  *          restore the caller's saved registers, and return control to the native caller.
+ * @param buf The code buffer.
+ * @param layout The blueprint containing stack offsets.
+ * @param context The context containing the return type information.
+ * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                                                       infix_reverse_call_frame_layout * layout,

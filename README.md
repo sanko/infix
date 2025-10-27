@@ -14,6 +14,34 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
 *   **[Porting Guide](docs/porting.md):** A guide for porting `infix` to new CPU architectures and ABIs.
 *   **[INSTALL.md](docs/INSTALL.md):** Detailed build and integration instructions.
 
+## How It Works: The Trampoline Concept
+
+At its core, `infix` generates a small piece of executable machine code called a **trampoline**. This code acts as an intelligent adapter that understands the specific calling convention (ABI) of your platform.
+
+#### Forward Call (e.g., from Python to C)
+
+When your application wants to call a C function, it doesn't call it directly. Instead, it calls the `infix` trampoline, which handles the complex process of placing arguments in the correct CPU registers and on the stack before making the final jump to the target C function.
+
+```mermaid
+graph LR
+  subgraph "Forward Call (e.g., Python to C)"
+    A["Your App<br/>(e.g., Python)"] -->|1. Call with generic `void**` arguments| B["infix Trampoline<br/>(JIT-compiled)"];
+    B -->|2. Sets up ABI, places args<br/>in registers & stack| C["Native C Function<br/>(e.g., puts())"];
+  end
+```
+
+#### Reverse Call (e.g., from C back to Python)
+
+`infix` generates a native C function pointer that a C library can call. When called, this JIT-compiled stub marshals the native arguments back into a generic format and invokes your high-level handler.
+
+```mermaid
+graph LR
+  subgraph "Reverse Call (e.g., C to Python)"
+    D["Native C Code<br/>(e.g., a GUI library)"] -->|1. Calls native function pointer<br/>with C arguments| E["infix Callback<br/>(JIT-compiled)"];
+    E -->|2. Marshals ABI arguments<br/>and invokes handler| F["Your App's Handler<br/>(e.g., Python function)"];
+  end
+```
+
 ## Who is this for?
 
 `infix` is designed for developers who need to bridge the gap between different codebases or language runtimes. You'll find it especially useful if you are:
@@ -22,6 +50,13 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
 *   **A Plugin System Architect:** Build a stable, ABI-agnostic plugin system. `infix` can provide the boundary layer, allowing you to load and call functions from shared libraries without tight coupling.
 *   **A C/C++ Developer:** Dynamically call functions from system libraries (`user32.dll`, `libc.so.6`, etc.) without needing to link against them at compile time, or create complex stateful callbacks for C APIs.
 *   **A Security Researcher:** `infix` provides a powerful, fuzz-tested toolkit for analyzing and interacting with native code.
+
+> **How does `infix` compare to alternatives like libffi and`dyncall?**
+>
+> `infix` shares a similar goal with these popular libraries but differs in its design philosophy.
+>
+> - Compared to libffi, `infix` prioritizes a modern, security-hardened architecture (W^X memory, guard pages), a more expressive and readable string-based API, and a powerful named type registry for managing complex data structures.
+> - Compared to dyncall, `infix` offers a declarative API via its signature strings. Where dyncall uses an imperative, programmatic sequence of calls (e.g., `dcArgInt(vm, 10); dcArgString(vm, "hi");`), `infix` defines the entire function prototype in a single, self-contained, and human-readable string. This makes signatures easy to log, store in configuration, and manage, especially for complex types.
 
 ## Key Features
 
@@ -38,7 +73,18 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
 -   **Arena-Based Memory:** Utilizes an efficient arena allocator for all type descriptions, ensuring fast performance and leak-free memory management.
 -   **Dynamic Library Tools**: A cross-platform API to load shared libraries (`.so`, `.dll`, `.dylib`), look up symbols, and read/write global variables using the same powerful signature system.
 
+## Performance
+
+`infix` is designed for high performance, balancing the flexibility of dynamic calls with the speed of compiled code.
+
+*   **Call Overhead:** The overhead of a call through a **bound** trampoline is extremely low, typically measuring in the single-digit nanoseconds on modern hardware. This makes it suitable for performance-critical loops. **Unbound** trampolines offer more flexibility at the cost of a small, additional overhead.
+*   **Generation Time:** Creating a new trampoline is fast, typically taking only a few microseconds. This allows for dynamic generation of callbacks and function calls in response to runtime events without noticeable latency.
+
+The library includes micro-benchmarks to track these metrics and prevent performance regressions.
+
 ## Getting Started
+
+Full build instructions for `xmake`, `cmake`, GNU `make`, and other systems are available in **[INSTALL.md](docs/INSTALL.md)**.
 
 ### Prerequisites
 
@@ -47,7 +93,7 @@ At its core, `infix` is a Just-in-Time (JIT) compiler that generates tiny, highl
 
 ### Building the Library
 
-While you can use the provided build scripts, the simplest way to build `infix` is to compile its single translation unit directly.
+While you can use the provided build scripts, the simplest way to build `infix` is to compile its single translation unit directly. Because `infix` uses a unity build, integration into an existing project is simple: add `src/infix.c` to your list of source files and add the `include/` directory to your include paths.
 
 ```bash
 # Build a static library on Linux/macOS
@@ -120,7 +166,7 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_registry_destroy()`: Frees a registry and all types defined within it.
 - `infix_register_types()`: Parses a string of definitions to populate a registry.
 
-### Registry Introspection API (`registry_introspection_api`)
+### Registry Introspection (`registry_introspection_api`)
 - `infix_registry_print()`: Serializes all defined types in a registry to a string.
 - `infix_registry_iterator_begin()`: Creates an iterator to traverse the types in a registry.
 - `infix_registry_iterator_next()`: Advances the iterator to the next type.
@@ -144,7 +190,7 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_read_global()`: Reads a global variable from a library using a signature.
 - `infix_write_global()`: Writes to a global variable in a library using a signature.
 
-### Manual API (`manual_api`)
+### Manual Trampoline API (`manual_api`)
 - `infix_forward_create_manual()`: Creates a bound forward trampoline from `infix_type` objects.
 - `infix_forward_create_unbound_manual()`: Creates an unbound forward trampoline from `infix_type` objects.
 - `infix_reverse_create_callback_manual()`: Creates a type-safe reverse trampoline from `infix_type` objects.
@@ -152,7 +198,7 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_forward_destroy()`: Frees a forward trampoline.
 - `infix_reverse_destroy()`: Frees a reverse trampoline.
 
-### Type System (`type_system`)
+### Manual Type Creation API (`type_system`)
 - `infix_type_create_primitive()`: Gets a static descriptor for a primitive C type.
 - `infix_type_create_pointer()`: Gets a static descriptor for `void*`.
 - `infix_type_create_pointer_to()`: Creates a pointer type with a specific pointee type.
@@ -164,8 +210,8 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_type_create_enum()`: Creates an enum type with an underlying integer type.
 - `infix_type_create_complex()`: Creates a `_Complex` number type.
 - `infix_type_create_vector()`: Creates a SIMD vector type.
-- `infix_type_create_named_reference()`: (Internal) Creates a placeholder for a named type.
-- `infix_type_create_member()`: A factory function for `infix_struct_member`.
+- `infix_type_create_named_reference()`: Creates a placeholder for a named type to be resolved by a registry.
+- `infix_type_create_member()`: A factory function to create an `infix_struct_member`.
 
 ### Memory Management (`memory_management`)
 - `infix_arena_create()`: Creates a new memory arena.
@@ -174,15 +220,28 @@ A brief overview of the complete public API, grouped by functionality.
 - `infix_arena_calloc()`: Allocates zero-initialized memory from an arena.
 
 ### Introspection API (`introspection_api`)
-- `infix_forward_get_code()`, `infix_forward_get_unbound_code()`
-- `infix_reverse_get_code()`, `infix_reverse_get_user_data()`
-- `infix_forward_get_num_args()`, `infix_reverse_get_num_args()`
-- `infix_forward_get_return_type()`, `infix_reverse_get_return_type()`
-- `infix_forward_get_arg_type()`, `infix_reverse_get_arg_type()`
-- `infix_type_get_category()`, `infix_type_get_size()`, `infix_type_get_alignment()`
-- `infix_type_get_member_count()`, `infix_type_get_member()`
-- `infix_type_get_arg_name()`, `infix_type_get_arg_type()`
-- `infix_type_print()`: Serializes an `infix_type` graph to a string.
+#### Trampoline & Callback Introspection
+- `infix_forward_get_code()`: Gets the callable function pointer from a bound trampoline.
+- `infix_forward_get_unbound_code()`: Gets the callable function pointer from an unbound trampoline.
+- `infix_reverse_get_code()`: Gets the native C function pointer from a reverse trampoline.
+- `infix_reverse_get_user_data()`: Gets the user-provided data from a closure.
+- `infix_forward_get_num_args()`: Gets the total number of arguments for a forward trampoline.
+- `infix_forward_get_num_fixed_args()`: Gets the number of fixed (non-variadic) arguments.
+- `infix_forward_get_return_type()`: Gets the return type for a forward trampoline.
+- `infix_forward_get_arg_type()`: Gets the type of a specific argument for a forward trampoline.
+- `infix_reverse_get_num_args()`: Gets the total number of arguments for a reverse trampoline.
+- `infix_reverse_get_num_fixed_args()`: Gets the number of fixed (non-variadic) arguments.
+- `infix_reverse_get_return_type()`: Gets the return type for a reverse trampoline.
+- `infix_reverse_get_arg_type()`: Gets the type of a specific argument for a reverse trampoline.
+#### Type Introspection & Serialization
+- `infix_type_get_category()`: Gets the fundamental category of a type (e.g., struct, pointer).
+- `infix_type_get_size()`: Gets the size of a type in bytes.
+- `infix_type_get_alignment()`: Gets the alignment of a type in bytes.
+- `infix_type_get_member_count()`: Gets the number of members in a struct or union.
+- `infix_type_get_member()`: Gets a specific member from a struct or union by index.
+- `infix_type_get_arg_name()`: Gets the name of an argument from a function type.
+- `infix_type_get_arg_type()`: Gets the type of an argument from a function type.
+- `infix_type_print()`: Serializes an `infix_type` graph back to a signature string.
 - `infix_function_print()`: Serializes a full function signature to a string.
 
 ### Error Handling API (`error_api`)

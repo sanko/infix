@@ -107,7 +107,7 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
  * @internal
  * @brief Inserts a new, empty entry into the registry's hash table.
  *
- * This function creates a new entry for a given name and adds it to the appropriate
+ * @details This function creates a new entry for a given name and adds it to the appropriate
  * hash bucket. The `type` field is initially `nullptr` and is populated later during
  * the parsing pass of `infix_register_types`. All allocations are made from the
  * registry's own arena.
@@ -202,7 +202,7 @@ void infix_registry_destroy(infix_registry_t * registry) {
  * @internal
  * @brief Recursively walks a type graph and resolves all named type references in-place.
  *
- * This function implements the **"Resolve"** stage of the data pipeline. It modifies
+ * @details This function implements the **"Resolve"** stage of the data pipeline. It modifies
  * the type graph by replacing `INFIX_TYPE_NAMED_REFERENCE` nodes with direct
  * pointers to the canonical types stored in the registry. It uses a "visited set"
  * (`memo_head`) to handle cycles correctly and avoid infinite recursion.
@@ -345,7 +345,11 @@ typedef struct {
     const char * start; /**< The start of the definition string for error reporting. */
 } _registry_parser_state_t;
 
-/** @internal Skips whitespace and C++-style line comments in a definition string. */
+/**
+ * @internal
+ * @brief Skips whitespace and C++-style line comments in a definition string.
+ * @param state The parser state to advance.
+ */
 static void _registry_parser_skip_whitespace(_registry_parser_state_t * state) {
     while (1) {
         while (isspace((unsigned char)*state->p))
@@ -359,7 +363,14 @@ static void _registry_parser_skip_whitespace(_registry_parser_state_t * state) {
     }
 }
 
-/** @internal Parses a type name (e.g., `MyType`, `NS::MyType`) from the definition string. */
+/**
+ * @internal
+ * @brief Parses a type name (e.g., `MyType`, `NS::MyType`) from the definition string.
+ * @param state The parser state to advance.
+ * @param buffer A buffer to store the parsed name.
+ * @param buf_size The size of the buffer.
+ * @return A pointer to the `buffer` on success, or `nullptr` if no valid identifier is found.
+ */
 static char * _registry_parser_parse_name(_registry_parser_state_t * state, char * buffer, size_t buf_size) {
     _registry_parser_skip_whitespace(state);
     const char * name_start = state->p;
@@ -381,7 +392,7 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
 /**
  * @brief Parses a string of type definitions and adds them to a registry.
  *
- * This function uses a robust **three-pass approach** to handle complex dependencies,
+ * @details This function uses a robust **three-pass approach** to handle complex dependencies,
  * including out-of-order and mutually recursive definitions.
  *
  * - **Pass 1 (Scan & Index):** The entire definition string is scanned. The parser
