@@ -187,5 +187,6 @@ typedef enum {
 // System
 #define A64_OP_SYSTEM (0b11010100U << 25)
 #define A64_OP_BRK (0b00000000001U << 16)
+#define A64_OP_SVC (0b00000000001U << 21)
 
 /** @} */  // end aarch64_opcodes

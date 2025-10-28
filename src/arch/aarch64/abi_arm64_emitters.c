@@ -556,3 +556,16 @@ void emit_arm64_b_reg(code_buffer * buf, arm64_gpr reg) {
     instr |= (uint32_t)(reg & 0x1F) << 5;
     emit_int32(buf, instr);
 }
+
+/**
+ * @internal
+ * @brief Emits `SVC #imm` (Supervisor Call) instruction.
+ * @details Opcode: 11010100_00_imm16_0001
+ */
+void emit_arm64_svc_imm(code_buffer * buf, uint16_t imm) {
+    if (buf->error)
+        return;
+    uint32_t instr = A64_OP_SYSTEM | A64_OP_SVC;
+    instr |= (uint32_t)(imm & 0xFFFF) << 5;
+    emit_int32(buf, instr);
+}

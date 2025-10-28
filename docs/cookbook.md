@@ -2197,14 +2197,13 @@ ffi_closure_free(closure);
 #include <infix/infix.h>
 
 // 1. The handler is a standard C function with the context as the first argument.
-int qsort_handler_infix(infix_context_t* ctx, const int* a, const int* b) {
-    (void)ctx;
-    return (*a - *b);
+int qsort_handler_infix(const void* a, const void* b) {
+    return (*(const int*)a - *(const int*)b);
 }
 
 // 2. Create the reverse trampoline from a signature.
 infix_reverse_t* context = NULL;
-infix_reverse_create_callback(&context, "(*void, *void)->int", (void*)qsort_handler_infix, NULL, NULL);
+infix_reverse_create_callback(&context, "(*void, *void)->int", (void*)qsort_handler_infix, NULL);
 
 // 3. Get the native function pointer and use it.
 typedef int (*compare_func_t)(const void*, const void*);

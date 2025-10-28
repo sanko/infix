@@ -357,7 +357,7 @@ struct infix_function_argument_t {
  * `void`.
  * @param args_array An array of pointers, where each element points to an argument's value.
  */
-typedef void (*infix_unbound_cif_func)(void * target_function, void * return_value_ptr, void ** args_array);
+typedef void (*infix_unbound_cif_func)(void *, void *, void **);
 
 /**
  * @brief A function pointer type for a bound forward trampoline.
@@ -367,7 +367,7 @@ typedef void (*infix_unbound_cif_func)(void * target_function, void * return_val
  * @param return_value_ptr A pointer to a buffer to receive the return value. Can be `nullptr` for `void` returns.
  * @param args_array An array of pointers, where each element points to an argument's value.
  */
-typedef void (*infix_cif_func)(void * return_value_ptr, void ** args_array);
+typedef void (*infix_cif_func)(void *, void **);
 
 /**
  * @brief A function pointer type for a generic closure handler.
@@ -380,7 +380,7 @@ typedef void (*infix_cif_func)(void * return_value_ptr, void ** args_array);
  * @param return_value_ptr A pointer to a buffer where the handler must write the function's return value.
  * @param args_array An array of pointers to the argument values passed by the native C caller.
  */
-typedef void (*infix_closure_handler_fn)(infix_context_t * context, void * return_value_ptr, void ** args_array);
+typedef void (*infix_closure_handler_fn)(infix_context_t *, void *, void **);
 
 /**
  * @brief Enumerates the possible status codes returned by `infix` API functions.

@@ -30,21 +30,25 @@
 
 // Native C types to use as a baseline for layout comparison
 
+/** @internal A test struct with standard internal padding. */
 typedef struct {
     char a;
     int b;
 } test_struct_padding;
 
+/** @internal A test struct with no internal padding required. */
 typedef struct {
     long long a;
     char b;
 } test_struct_no_padding;
 
+/** @internal A test struct containing another struct as a member. */
 typedef struct {
     char a;
     test_struct_padding b;
 } test_struct_nested;
 
+/** @internal A packed test struct with 1-byte alignment. */
 #pragma pack(1)
 typedef struct {
     char a;
@@ -52,6 +56,7 @@ typedef struct {
 } test_struct_packed;
 #pragma pack()
 
+/** @internal A test union with members of different sizes and alignments. */
 typedef union {
     long long a;
     double b;

@@ -27,16 +27,19 @@
 #include <stdint.h>
 
 // Native C types used as a baseline for comparison.
+/** @internal A test struct with standard padding requirements. */
 typedef struct {
     char c;
     int b;
 } TestStruct;
 
+/** @internal A test union to verify size and alignment calculation. */
 typedef union {
     int i;
     double d;
 } TestUnion;
 
+/** @internal A test array to verify size and alignment calculation. */
 typedef int64_t TestArray[10];
 
 TEST {
