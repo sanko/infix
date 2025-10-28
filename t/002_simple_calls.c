@@ -23,12 +23,16 @@
 
 // C Functions to be Called via FFI
 
+/** @internal @brief A simple C function for testing integer arguments and return values. */
 int add_ints(int a, int b) { return a + b; }
 
+/** @internal @brief A simple C function for testing float arguments and return values. */
 float multiply_floats(float a, float b) { return a * b; }
 
+/** @internal @brief A C function with no arguments or return value, for testing void calls. */
 void do_nothing() { pass("void(void) function was successfully called."); }
 
+/** @internal @brief A C function to test that integer arguments are correctly sign-extended by the ABI. */
 bool is_negative(int val) {
     note("is_negative() received value: %d", val);
     return val < 0;

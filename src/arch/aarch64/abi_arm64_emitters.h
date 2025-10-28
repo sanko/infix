@@ -101,3 +101,18 @@ void emit_arm64_brk(code_buffer * buf, uint16_t imm);
 
 /** @internal @brief Emits `BR <Xn>` to branch to an address in a register. */
 void emit_arm64_b_reg(code_buffer * buf, arm64_gpr reg);
+
+/** @internal @brief Emits `BRK #imm` to cause a software breakpoint exception. */
+void emit_arm64_brk(code_buffer * buf, uint16_t imm);
+
+/** @internal @brief Emits `BR <Xn>` to branch to an address in a register. */
+void emit_arm64_b_reg(code_buffer * buf, arm64_gpr reg);
+
+/**
+ * @internal
+ * @brief Emits `SVC #imm` to generate a supervisor call exception.
+ * @details This is the instruction used to make system calls on AArch64.
+ * @param buf The code buffer to append the instruction to.
+ * @param imm A 16-bit immediate value passed to the kernel. For syscalls, this is typically 0.
+ */
+void emit_arm64_svc_imm(code_buffer * buf, uint16_t imm);

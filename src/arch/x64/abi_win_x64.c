@@ -188,7 +188,8 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
     }
     layout->is_variadic = num_args > num_fixed_args;
     layout->target_fn = target_fn;
-    INFIX_DEBUG_PRINTF("Allocating %zu bytes for arg_locations in temp_arena", num_args * sizeof(infix_arg_location));
+    INFIX_DEBUG_PRINTF("Allocating %llu bytes for arg_locations in temp_arena",
+                       (unsigned long long)(num_args * sizeof(infix_arg_location)));
     layout->arg_locations =
         infix_arena_calloc(arena, num_args, sizeof(infix_arg_location), _Alignof(infix_arg_location));
     if (layout->arg_locations == nullptr && num_args > 0) {
