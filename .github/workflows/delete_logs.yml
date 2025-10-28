@@ -45,7 +45,7 @@ on:
         options:
           - "false"
           - "true"
-    check_branch_existence:
+      check_branch_existence:
         description: "Skip deletions linked to an existing branch"
         required: false
         default: "true"
