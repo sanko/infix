@@ -197,8 +197,15 @@ void recipe_out_parameters() {
     double score = 0.0;
     bool success;
 
-    // The args array contains pointers to our local variables.
-    void* args[] = { &user_id, &post_count, &score };
+    int * p_post_count = &post_count;
+    double * p_score = &score;
+
+    // The `args` array contains pointers to our arguments' values.
+    void * args[] = {
+        &user_id,
+        &p_post_count,
+        &p_score
+    };
 
     infix_forward_get_code(t)(&success, args);
 
