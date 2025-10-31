@@ -1472,32 +1472,51 @@ This pattern is the recommended approach. It keeps the core `infix` signature la
 
 **Problem**: You have a pointer to a C++ polymorphic base class object (e.g., `Shape*`) and you need to call a `virtual` function on it from C, achieving true dynamic dispatch.
 
-**Solution**: Emulate what the C++ compiler does: manually read the object's v-table pointer (`vptr`), find the function pointer at the correct index within the v-table, and use `infix` to call it.
+**Solution**: Emulate what the C++ compiler does: manually read the object's v-table pointer (`vptr`), find the function pointer at the correct index within the v-table, and use `infix` to call it. Seriously, we're just swapping one problem for a new set of problems but we'll explain those later.
 
 First, the C++ library (`shapes.cpp`):
 
 ```cpp
-// File: shapes.cpp (compile to libshapes.so/.dll)
 #include <cmath>
+
+// On Windows, M_PI is not always defined in <cmath>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 class Shape {
 public:
-    virtual double area() const = 0; // 1st virtual function (index 0)
-    virtual const char* name() const = 0; // 2nd virtual function (index 1)
-    virtual ~Shape() = default;
+    virtual double area() const = 0;        // 1st virtual function (index 0)
+    virtual const char * name() const = 0;  // 2nd virtual function (index 1)
+    virtual ~Shape() = default;             // 3rd virtual function (index 2)
 };
 
 class Rectangle : public Shape {
     double w, h;
+
 public:
     Rectangle(double width, double height) : w(width), h(height) {}
     double area() const override { return w * h; }
-    const char* name() const override { return "Rectangle"; }
+    const char * name() const override { return "Rectangle"; }
 };
 
-// extern "C" factory functions to create objects.
-extern "C" Shape* create_rectangle(double w, double h) { return new Rectangle(w, h); }
-extern "C" void destroy_shape(Shape* s) { delete s; }
+class Circle : public Shape {
+    double r;
+
+public:
+    Circle(double radius) : r(radius) {}
+    double area() const override { return M_PI * r * r; }
+    const char * name() const override { return "Circle"; }
+};
+
+// extern "C" factory functions to create C++ objects from C.
+extern "C" {
+    //  Keep the factory function as it's the only robust way to construct.
+    Shape * create_rectangle(double w, double h) { return new Rectangle(w, h); }
+    Shape * create_circle(double r) { return new Circle(r); }
+    // We can now REMOVE the destroy_shape wrapper *if* we call the destructor directly.
+    // void destroy_shape(Shape * s) { delete s; }
+}
 ```
 
 Now, the C code using `infix` to call the `virtual` methods:
@@ -1505,50 +1524,96 @@ Now, the C code using `infix` to call the `virtual` methods:
 ```c
 #include <infix/infix.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-void recipe_virtual_functions() {
-    infix_library_t* lib = infix_library_open("./libshapes.so");
-    if (!lib) return;
+#if defined(_WIN32)
+const char * LIB_NAME = "libshapes.dll";
+#else
+const char * LIB_NAME = "./libshapes.so";
+#endif
 
-    // 1. Get the factory functions.
-    void* (*create_rectangle)(double, double) = infix_library_get_symbol(lib, "create_rectangle");
-    void (*destroy_shape)(void*) = infix_library_get_symbol(lib, "destroy_shape");
+int main() {
+    printf("--- Cookbook Chapter 5, Recipe 4: Calling C++ Virtual Functions ---\n");
 
-    // 2. Create a C++ object and treat it as an opaque pointer.
-    void* rect_obj = create_rectangle(10.0, 5.0);
+    infix_library_t * lib = infix_library_open(LIB_NAME);
+    if (!lib) {
+        fprintf(stderr, "Failed to open library '%s'.\n", LIB_NAME);
+        return 1;
+    }
 
-    // 3. Manually read the v-table.
-    // The v-pointer is at the start of the object's memory.
-    void** vptr = (void**)rect_obj;
-    void** vtable = *vptr;
+    // 1. Get the extern "C" factory function (the correct way to construct).
+    void * (*create_rectangle)(double, double) = infix_library_get_symbol(lib, "create_rectangle");
 
-    // 4. Read the function pointers from the v-table.
-    // The order matches the declaration order in the class.
-    void* area_fn_ptr = vtable[0]; // pointer to Rectangle::area()
-    void* name_fn_ptr = vtable[1]; // pointer to Rectangle::name()
+    // 2. Create a C++ object via the factory.
+    void * rect_obj = create_rectangle(10.0, 5.0);
+    printf("Created C++ Rectangle object at address %p.\n", rect_obj);
+
+    // 3. Manually read the v-table pointer from the object.
+    void ** vptr = (void **)rect_obj;
+    void ** vtable = *vptr;
+    printf("Read v-table pointer: %p\n", (void *)vtable);
+
+    // 4. Read function pointers from their known indices in the v-table.
+    //    This is ABI-dependent and can be fragile.
+    void * area_fn_ptr = vtable[0];      // double area() const
+    void * name_fn_ptr = vtable[1];      // const char* name() const
+    void * dtor_fn_ptr = vtable[2];      // virtual ~Shape()
+    printf("Found `area()` function pointer at vtable[0]: %p\n", area_fn_ptr);
+    printf("Found `name()` function pointer at vtable[1]: %p\n", name_fn_ptr);
+    printf("Found `~Shape()` function pointer at vtable[2]: %p\n", dtor_fn_ptr);
 
     // 5. Create trampolines for the discovered function pointers.
-    // Signature for double area(const Shape* this): "(*void)->double"
-    // Signature for const char* name(const Shape* this): "(*void)->*char"
-    infix_forward_t *t_area, *t_name;
+    infix_forward_t *t_area, *t_name, *t_dtor;
     infix_forward_create(&t_area, "(*void)->double", area_fn_ptr, NULL);
     infix_forward_create(&t_name, "(*void)->*char", name_fn_ptr, NULL);
+    infix_forward_create(&t_dtor, "(*void)->void", dtor_fn_ptr, NULL);
 
-    // 6. Call the virtual functions, passing the object as the 'this' pointer.
+    // 6. Prepare the arguments array for the member function calls.
+    //    The only argument is the `this` pointer.
+    void* args[] = { &rect_obj };
+
+    // 7. Call the virtual functions.
     double rect_area;
-    const char* rect_name;
-    infix_forward_get_code(t_area)(&rect_area, &rect_obj);
-    infix_forward_get_code(t_name)(&rect_name, &rect_obj);
+    const char * rect_name;
+    infix_forward_get_code(t_area)(&rect_area, args);
+    infix_forward_get_code(t_name)((void*)&rect_name, args);
 
-    printf("Object '%s' has virtual area(): %f\n", rect_name, rect_area); // Expected: Rectangle, 50.0
+    printf("\nResults:\n");
+    printf("  Object's virtual name() returned: '%s'\n", rect_name);
+    printf("  Object's virtual area() returned: %f\n", rect_area);
 
-    // 7. Clean up.
-    destroy_shape(rect_obj);
+    // 8. Call the virtual destructor directly instead of an extern "C" wrapper.
+    printf("\nCalling virtual destructor at %p...\n", dtor_fn_ptr);
+    infix_forward_get_code(t_dtor)(NULL, args);
+    printf("Object destroyed.\n");
+
+    // 9. Clean up.
     infix_forward_destroy(t_area);
     infix_forward_destroy(t_name);
+    infix_forward_destroy(t_dtor);
     infix_library_close(lib);
+
+    return 0;
 }
 ```
+
+And now you have a new problem.
+
+**Problem with this Solution**: The `Shape` class correctly declares a `virtual` destructor. This is key because when a class has at least one virtual function, the compiler adds its virtual destructor to the v-table to ensure that the correct derived-class destructor is called durring polymorphic deletion (`Shape * s = new Rectangle(); delete s;`).
+
+This means we can find the destructor's address in the v-table, create a trampoline for it, and call it. This is fragile because the layout of the v-table is not ABI agnostic; each platform and compiler will have their own minor differences with how it's layed out. However, for simple, single-inheritance hierachies, the order of virtual functions in the v-table typically mirrors their declaration order in the base class.
+
+Unfortunatly, you cannot expect to find and call the correct constructor this way for several reasons:
+
+1.  **Constructors Aren't "Normal" Functions:** A constructor's job is not just to execute code but to **initialize a raw block of memory**. The C++ `new` operator is a two-step process:
+    *   **Allocation:** It first calls `operator new` (a global function, often wrapping `malloc`) to allocate enough memory for the object.
+    *   **Initialization:** It then calls the constructor, passing the address of this new memory block as the hidden `this` pointer. The constructor runs, initializes member variables, and crucially, **sets the v-table pointer (`vptr`)** at the beginning of the memory block.
+
+2.  **No Single Callable Symbol:** The expression `new Rectangle(10.0, 5.0)` is a high-level language feature. The compiler doesn't generate a single, standalone function named `Rectangle` that you can look up. Instead, it generates a block of code at the call site to handle the allocation-then-initialization sequence.
+
+3.  **Name Mangling and Calling Conventions:** Even if you could find the constructor's code, it would have a "mangled" name (e.g., `_ZN9RectangleC1Edd` on Linux) that is complex and compiler-specific. Furthermore, its calling convention is different from a normal function and is not something a general-purpose FFI library is designed to handle.
+
+This is why `extern "C"` factory functions like our `create_rectangle` are needed. Honestly, you should always use exported "C" wrapers for creating and destroying C++ objects from `infix`.
 
 ### Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas
 

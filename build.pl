@@ -16,7 +16,7 @@ $|++;
 
 # Argument Parsing
 my %opts;
-GetOptions( \%opts, 'cc|compiler=s', 'cflags=s', 'h|help', 'codecov=s', 'abi=s', 'verbose|v' );
+GetOptions( \%opts, 'cc|compiler=s', 'cflags=s', 'h|help', 'codecov=s', 'abi=s', 'verbose|v', 'examples' );
 show_help() if $opts{help};
 my $command    = lc( shift @ARGV || 'build' );
 my @test_names = @ARGV;
@@ -35,6 +35,7 @@ my %config            = (
         File::Spec->catdir( $FindBin::Bin, 't/include' )
     ],
     lib_dir      => 'build_lib',
+    bin_dir      => 'bin',
     lib_name     => 'infix',
     coverage_dir => 'coverage'
 );
@@ -107,49 +108,60 @@ if ( $is_fuzz_build && ( $config{compiler} ne 'clang' && $config{compiler} ne 'g
 my $obj_suffix = ( $config{compiler} eq 'msvc' ) ? '.obj' : '.o';
 if ( $config{compiler} eq 'msvc' ) {
     die 'Warning: MSVC environment not detected. Build may fail. Please run from a VS dev prompt.' unless $ENV{VCINSTALLDIR};
-    $config{cc} = 'cl';
+    $config{cc}  = 'cl';
+    $config{cxx} = 'cl';
     my @include_flags = map { '-I' . File::Spec->catfile($_) } @{ $config{include_dirs} };
-    $config{cflags}  = [ @base_cflags, '-std:c17', '-experimental:c11atomics', '-W3', '-GS', '-MD', @include_flags ];
-    $config{ldflags} = ['-link'];
+    $config{cflags}   = [ @base_cflags, '-std:c11',   '-experimental:c11atomics', '-W3', '-GS', '-MD', @include_flags ];
+    $config{cxxflags} = [ @base_cflags, '-std:c++11', '-EHsc',                    '-W3', '-GS', '-MD', @include_flags ];
+    $config{ldflags}  = ['-link'];
     if ( $is_coverage_build || $command eq 'test' ) {
-        push @{ $config{cflags} },  '-Zi';
-        push @{ $config{ldflags} }, '-DEBUG';
+        push @{ $config{cflags} },   '-Zi';
+        push @{ $config{cxxflags} }, '-Zi';
+        push @{ $config{ldflags} },  '-DEBUG';
     }
     if ( $command ne 'build' ) {
-        push @{ $config{cflags} }, '-O2';
+        push @{ $config{cflags} },   '-O2';
+        push @{ $config{cxxflags} }, '-O2';
     }
 }
 else {    # GCC or Clang
-    $config{cc} = $config{compiler};
+    $config{cc}  = $config{compiler};
+    $config{cxx} = ( $config{compiler} eq 'clang' ) ? 'clang++' : 'g++';
     my @include_flags = map { "-I" . File::Spec->catfile($_) } @{ $config{include_dirs} };
-    $config{cflags}  = [ @base_cflags, '-std=c17', '-Wall', '-Wextra', '-g', '-O2', '-pthread', @include_flags ];
-    $config{ldflags} = [];
+    $config{cflags}   = [ @base_cflags, '-std=c11',   '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
+    $config{cxxflags} = [ @base_cflags, '-std=c++11', '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
+    $config{ldflags}  = [];
     if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch_raw !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
         print "ARM64 cross-compilation detected for clang. Adding --target flag.\n";
         my $target_triple = $config{is_windows} ? 'aarch64-pc-windows-msvc' : 'aarch64-linux-gnu';
-        push @{ $config{cflags} },  "--target=$target_triple";
-        push @{ $config{ldflags} }, "--target=$target_triple";
+        push @{ $config{cflags} },   "--target=$target_triple";
+        push @{ $config{cxxflags} }, "--target=$target_triple";
+        push @{ $config{ldflags} },  "--target=$target_triple";
     }
     if ($is_coverage_build) {
         if ( $config{compiler} eq 'clang' ) {
-            push @{ $config{cflags} },  '-fprofile-instr-generate', '-fcoverage-mapping';
-            push @{ $config{ldflags} }, '-fprofile-instr-generate', '-fcoverage-mapping';
+            push @{ $config{cflags} },   '-fprofile-instr-generate', '-fcoverage-mapping';
+            push @{ $config{cxxflags} }, '-fprofile-instr-generate', '-fcoverage-mapping';
+            push @{ $config{ldflags} },  '-fprofile-instr-generate', '-fcoverage-mapping';
         }
         else {    # gcc
-            push @{ $config{cflags} },  '--coverage';
-            push @{ $config{ldflags} }, '--coverage';
+            push @{ $config{cflags} },   '--coverage';
+            push @{ $config{cxxflags} }, '--coverage';
+            push @{ $config{ldflags} },  '--coverage';
         }
     }
-    if ( !( $config{is_windows} && $config{compiler} eq 'clang' ) ) {
-        push @{ $config{ldflags} }, '-lm';
-    }
     if ( !$config{is_windows} ) {
-        push @{ $config{ldflags} }, '-pthread';
+        push @{ $config{cflags} },   '-pthread';
+        push @{ $config{cxxflags} }, '-pthread';
+        push @{ $config{ldflags} },  '-pthread';
         my $lrt_flag = check_for_lrt( \%config );
         push @{ $config{ldflags} }, $lrt_flag if $lrt_flag;
     }
     if ( $^O eq 'openbsd' ) {
         push @{ $config{ldflags} }, '-Wl,-w';
+    }
+    if ( !( $config{is_windows} && $config{compiler} eq 'clang' ) ) {
+        push @{ $config{ldflags} }, '-lm';
     }
 }
 push @{ $config{cflags} }, $opts{cflags} if $opts{cflags};
@@ -166,6 +178,13 @@ elsif ( $command eq 'build' ) {
     push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     my $lib_path = create_static_library( \%config, $obj_suffix );
     print "\nStatic library '$lib_path' built successfully.\n";
+    if ( $opts{examples} ) {
+        build_examples( \%config, $obj_suffix, $lib_path );
+    }
+}
+elsif ( $command eq 'examples' ) {
+    my $lib_path = create_static_library( \%config, $obj_suffix );
+    build_examples( \%config, $obj_suffix, $lib_path );
 }
 elsif ( $command eq 'test' || $command eq 'coverage' ) {
     push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
@@ -225,6 +244,7 @@ exit $final_status;
 sub clean {
     return;
     rmtree( $config{lib_dir},      { verbose => 0 } );
+    rmtree( $config{bin_dir},      { verbose => 0 } );
     rmtree( $config{coverage_dir}, { verbose => 0 } );
     rmtree( 'build_tools',         { verbose => 0 } );
     my @artifacts;
@@ -249,7 +269,8 @@ sub show_help {
     Usage: ./build.pl [command] [options] [test_names...]
 
     Commands:
-      build              Builds the core static library.
+      build              Builds the core static library. Use --examples to also build examples.
+      examples           Builds all cookbook examples.
       test               Builds and runs specified tests (or all) individually.
                          Test names are partial paths, e.g., '001_primitives'.
       coverage           Generates a unified code coverage report by running all tests.
@@ -267,6 +288,7 @@ sub show_help {
       --abi=<s>             Force a specific ABI for code generation. Overrides auto-detection.
                             Supported: windows_x64, sysv_x64, aapcs64
       --codecov=<s>         Specify a Codecov token to upload coverage results (or use CODECOV_TOKEN env var).
+      --examples            Build all cookbook examples (used with 'build' command).
       -v, --verbose         Enable verbose debug output from the library by compiling with -DINFIX_DEBUG_ENABLED=1.
       -h, --help            Show this help message.
     END_HELP
@@ -333,7 +355,7 @@ sub create_static_library_from_objects {
     my @cmd;
     if ($use_msvc_style_linker) {
         my $archiver = ( $config->{compiler} eq 'msvc' ) ? 'lib'   : 'llvm-lib';
-        my $out_flag = ( $archiver eq 'lib' )            ? '-OUT:' : '/OUT:';
+        my $out_flag = ( $archiver eq 'lib' )            ? '-OUT:' : '-OUT:';
         @cmd = ( $archiver, $out_flag . $lib_path, @$obj_files_ref );
     }
     else {
@@ -386,7 +408,7 @@ sub compile_and_run_tests {
             if ( $config{compiler} eq 'msvc' ) {
 
                 # For MSVC, /arch:AVX512 is the most inclusive flag.
-                push @local_cflags, '/arch:AVX512';
+                push @local_cflags, '-arch:AVX512';
             }
             else {
                 # For GCC/Clang, explicitly enable all vector extensions we want to test.
@@ -831,4 +853,76 @@ sub run_fuzz_test {
         print "  mkdir -p corpus\n\nThen run the harness:\n  ./$fuzz_exe -max_total_time=300 corpus\n\n";
     }
     return 0;
+}
+
+sub build_examples {
+    my ( $config, $obj_suffix, $lib_path ) = @_;
+    print "\nBuilding cookbook examples...\n";
+    make_path( $config->{bin_dir} );
+    my $eg_dir   = File::Spec->catdir( 'eg',    'cookbook' );
+    my $libs_dir = File::Spec->catdir( $eg_dir, 'libs' );
+
+    # Build Helper Shared Libraries
+    my %libs;
+    my $shared_lib_flags = $config->{is_windows} ? ( $config->{compiler} eq 'msvc' ? ['-LD'] : ['-shared'] ) : [ '-shared', '-fPIC' ];
+
+    # C++ libs
+    $libs{myclass} = compile_shared_lib( $config, 'myclass', File::Spec->catfile( $libs_dir, 'MyClass.cpp' ), $config->{cxx}, $shared_lib_flags );
+    $libs{box}     = compile_shared_lib( $config, 'box',     File::Spec->catfile( $libs_dir, 'Box.cpp' ),     $config->{cxx}, $shared_lib_flags );
+    $libs{shapes}  = compile_shared_lib( $config, 'shapes',  File::Spec->catfile( $libs_dir, 'shapes.cpp' ),  $config->{cxx}, $shared_lib_flags );
+    $libs{eventmanager}
+        = compile_shared_lib( $config, 'eventmanager', File::Spec->catfile( $libs_dir, 'EventManager.cpp' ), $config->{cxx}, $shared_lib_flags );
+
+    # C libs
+    $libs{globals} = compile_shared_lib( $config, 'globals', File::Spec->catfile( $libs_dir, 'libglobals.c' ), $config->{cc}, $shared_lib_flags );
+    $libs{libB}    = compile_shared_lib( $config, 'libB',    File::Spec->catfile( $libs_dir, 'libB.c' ),       $config->{cc}, $shared_lib_flags );
+    my @libA_deps = $config->{is_windows} ? ( "-L" . $config->{bin_dir}, "-lB" ) : ( $libs{libB} );
+    $libs{libA} = compile_shared_lib( $config, 'libA', File::Spec->catfile( $libs_dir, 'libA.c' ), $config->{cc}, $shared_lib_flags, \@libA_deps );
+
+    # Build Example Executables
+    opendir my $dh, $eg_dir or die "Can't open $eg_dir: $!";
+    while ( my $file = readdir $dh ) {
+        next unless $file =~ /\.(c|cpp)$/;
+        my $source_path = File::Spec->catfile( $eg_dir, $file );
+        my $exe_name    = basename($file);
+        $exe_name =~ s/\.(c|cpp)$//;
+        my $exe_path     = File::Spec->catfile( $config->{bin_dir}, $exe_name . ( $config->{is_windows} ? '.exe' : '' ) );
+        my $is_cpp       = ( $file =~ /\.cpp$/ );
+        my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+        push @local_cflags, "-I$libs_dir";
+        my @local_ldflags = @{ $config->{ldflags} };
+        my $compiler      = $is_cpp ? $config->{cxx} : $config->{cc};
+        my $base_name     = basename($file);
+        my $link_name     = $base_name;
+        $link_name =~ s/^Ch\d+_Rec\d+_//;
+        $link_name =~ s/\.c(pp)?$//;
+
+        if ( $link_name =~ /CppMangledNames|CppTemplates|VirtualFunctions|CppCallbacks|GlobalVariables|LibraryDependencies/ ) {
+            push @local_ldflags, "-L" . $config->{bin_dir};
+        }
+        if ( $link_name =~ /CppMangledNames/ )     { push @local_ldflags, "-lmyclass"; }
+        if ( $link_name =~ /CppTemplates/ )        { push @local_ldflags, "-lbox"; }
+        if ( $link_name =~ /GlobalVariables/ )     { push @local_ldflags, "-lglobals"; }
+        if ( $link_name =~ /LibraryDependencies/ ) { push @local_ldflags, "-llibA"; }
+        if ( $link_name =~ /VirtualFunctions/ )    { push @local_ldflags, "-lshapes"; }
+        if ( $link_name =~ /CppCallbacks/ )        { push @local_ldflags, "-leventmanager"; }
+        if ( $link_name =~ /SystemLibraries/ && $config->{is_windows} ) {
+            push @local_ldflags, '-luser32';
+        }
+        my @cmd = ( $compiler, @local_cflags, '-o', $exe_path, $source_path, $lib_path, @local_ldflags );
+        run_command(@cmd);
+    }
+    closedir $dh;
+}
+
+sub compile_shared_lib {
+    my ( $config, $name, $source, $compiler, $flags, $deps ) = @_;
+    my $is_cpp       = ( $source =~ /\.cpp$/ );
+    my $lib_prefix   = $config->{is_windows} ? '' : 'lib';
+    my $output_path  = $config->{bin_dir} . '/' . $lib_prefix . $name . '.' . $Config{so};
+    my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+    my @cmd          = ( $compiler, @local_cflags, @$flags, '-o', $output_path, $source );
+    push @cmd, @$deps if $deps;
+    run_command(@cmd);
+    return $output_path;
 }
