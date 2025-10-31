@@ -43,9 +43,9 @@ int main() {
 
     // 4. Read function pointers from their known indices in the v-table.
     //    This is ABI-dependent and can be fragile.
-    void * area_fn_ptr = vtable[0];      // double area() const
-    void * name_fn_ptr = vtable[1];      // const char* name() const
-    void * dtor_fn_ptr = vtable[2];      // virtual ~Shape()
+    void * area_fn_ptr = vtable[0];  // double area() const
+    void * name_fn_ptr = vtable[1];  // const char* name() const
+    void * dtor_fn_ptr = vtable[2];  // virtual ~Shape()
     printf("Found `area()` function pointer at vtable[0]: %p\n", area_fn_ptr);
     printf("Found `name()` function pointer at vtable[1]: %p\n", name_fn_ptr);
     printf("Found `~Shape()` function pointer at vtable[2]: %p\n", dtor_fn_ptr);
@@ -58,13 +58,13 @@ int main() {
 
     // 6. Prepare the arguments array for the member function calls.
     //    The only argument is the `this` pointer.
-    void* args[] = { &rect_obj };
+    void * args[] = {&rect_obj};
 
     // 7. Call the virtual functions.
     double rect_area;
     const char * rect_name;
     infix_forward_get_code(t_area)(&rect_area, args);
-    infix_forward_get_code(t_name)((void*)&rect_name, args);
+    infix_forward_get_code(t_name)((void *)&rect_name, args);
 
     printf("\n--- Results ---\n");
     printf("Object's virtual name() returned: '%s'\n", rect_name);

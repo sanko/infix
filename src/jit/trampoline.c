@@ -825,27 +825,78 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
                                                 const char * signature,
                                                 void * target_function,
                                                 infix_registry_t * registry) {
+    _infix_clear_error();
+    if (!signature) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
     infix_arena_t * arena = nullptr;
     infix_type * ret_type = nullptr;
     infix_function_argument * args = nullptr;
     size_t num_args = 0, num_fixed = 0;
-    // This is a high-level wrapper. It uses the parser to build the type info first.
-    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
-    if (status != INFIX_SUCCESS) {
-        infix_arena_destroy(arena);
-        return status;
-    }
-    // Extract the `infix_type*` array from the parsed `infix_function_argument` array.
-    infix_type ** arg_types =
-        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
-    if (num_args > 0 && !arg_types) {
-        infix_arena_destroy(arena);
-        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-        return INFIX_ERROR_ALLOCATION_FAILED;
-    }
-    for (size_t i = 0; i < num_args; ++i)
-        arg_types[i] = args[i].type;
+    infix_type ** arg_types = nullptr;
+    infix_status status;
+    if (signature[0] == '@') {
+        if (registry == nullptr) {
+            _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);  // Using @Name requires a registry
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        }
 
+        const infix_type * func_type = infix_registry_lookup_type(registry, &signature[1]);
+        if (func_type == NULL) {
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        }
+
+        if (func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE) {
+            // The user provided a name for a non-function type (e.g., "@Point")
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, 0);
+            return INFIX_ERROR_INVALID_ARGUMENT;
+        }
+
+        // We have a valid function type from the registry. Now, unpack its components.
+        ret_type = func_type->meta.func_ptr_info.return_type;
+        num_args = func_type->meta.func_ptr_info.num_args;
+        num_fixed = func_type->meta.func_ptr_info.num_fixed_args;
+        args = func_type->meta.func_ptr_info.args;
+
+        // The Manual API needs a temporary arena to hold the arg_types array.
+        infix_arena_t * temp_arena = infix_arena_create(sizeof(infix_type *) * num_args + 128);
+        if (!temp_arena) {
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+            return INFIX_ERROR_ALLOCATION_FAILED;
+        }
+
+        if (num_args > 0) {
+            arg_types = infix_arena_alloc(temp_arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+            if (!arg_types) {
+                infix_arena_destroy(temp_arena);
+                _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+                return INFIX_ERROR_ALLOCATION_FAILED;
+            }
+            for (size_t i = 0; i < num_args; ++i)
+                arg_types[i] = args[i].type;
+        }
+    }
+    else {
+        // This is a high-level wrapper. It uses the parser to build the type info first.
+        status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
+        if (status != INFIX_SUCCESS) {
+            infix_arena_destroy(arena);
+            return status;
+        }
+        // Extract the `infix_type*` array from the parsed `infix_function_argument` array.
+        arg_types = (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *))
+                                   : nullptr;
+        if (num_args > 0 && !arg_types) {
+            infix_arena_destroy(arena);
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+            return INFIX_ERROR_ALLOCATION_FAILED;
+        }
+        for (size_t i = 0; i < num_args; ++i)
+            arg_types[i] = args[i].type;
+    }
     // Call the core internal implementation with the parsed types.
     status = _infix_forward_create_internal(out_trampoline, ret_type, arg_types, num_args, num_fixed, target_function);
     infix_arena_destroy(arena);  // Clean up the temporary arena from parsing.

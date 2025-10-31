@@ -16,7 +16,8 @@ public:
     virtual ~Shape() = default;
 };
 
-class Rectangle : public Shape { public:
+class Rectangle : public Shape {
+public:
     double w, h;
 
 public:
@@ -37,7 +38,6 @@ public:
 // extern "C" factory functions to create C++ objects from C.
 extern "C" {
 Shape * create_rectangle(double w, double h) { return new Rectangle(w, h); }
-double fdfdsafdsa(Rectangle * shape){ return shape->w;}
 Shape * create_circle(double r) { return new Circle(r); }
 void destroy_shape(Shape * s) { delete s; }
 }
