@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 #if defined(_WIN32)
-const char * LIB_NAME = "libshapes.dll";
+const char * LIB_NAME = "shapes.dll";
 #else
 const char * LIB_NAME = "./libshapes.so";
 #endif
