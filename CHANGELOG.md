@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Here we go again...
+### Added
+
+Really sanding down the rough edges this time around.
+
+ - Add `size_t` and `ssize_t` signature keywords
+ - Add `char8_t`, `char16_t`, and `char32_t` aliases for integer types
 
 ## [0.1.0] - 2025-10-27
 
