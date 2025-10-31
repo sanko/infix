@@ -6,85 +6,94 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 ## Table of Contents
 
-   * [Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)
-      + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
-      + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
-      + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
-      + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
-   * [Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)
-      + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
-      + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
-      + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
-      + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
-      + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
-      + [Recipe: Working with Unions](#recipe-working-with-unions)
-      + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
-      + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive--forward-declared)
-      + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
-      + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
-      + [Recipe: Working with Enums](#recipe-working-with-enums)
-   * [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
-      + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-type-safe-callback-for-qsort)
-      + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
-   * [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
-      + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
-      + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
-      + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
-      + [Recipe: Handling `longdouble`](#recipe-handling-longdouble)
-      + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
-      + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
-   * [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
-      + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
-      + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
-      + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
-      + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
-         - [Rust](#rust)
-         - [Zig](#zig)
-         - [Go](#go)
-         - [Swift](#swift)
-         - [Dlang](#dlang)
-         - [Fortran](#fortran)
-         - [Assembly](#assembly)
-   * [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries--system-calls)
-      + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
-      + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
-         - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
-         - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
-      + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
-   * [Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)
-      + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
-      + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
-      + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
-   * [Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)
-      + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
-      + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
-      + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
-      + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
-      + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
-         - [How It Works & Why It's Better](#how-it-works--why-its-better)
-         - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
-   * [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
-      + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
-      + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
-      + [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
-      + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
-   * [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look-infix-vs-libffi-and-dyncall)
-      + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
-         - [The `dyncall` Approach](#the-dyncall-approach)
-         - [The `libffi` Approach](#the-libffi-approach)
-         - [The `infix` Approach](#the-infix-approach)
-      + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
-         - [The `dyncall` Approach](#the-dyncall-approach-1)
-         - [The `libffi` Approach](#the-libffi-approach-1)
-         - [The `infix` Approach](#the-infix-approach-1)
-      + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
-         - [The `dyncall` Approach](#the-dyncall-approach-2)
-         - [The `libffi` Approach](#the-libffi-approach-2)
-         - [The `infix` Approach](#the-infix-approach-2)
-      + [Analysis and Takeaways](#analysis-and-takeaways)
-   * [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
-      + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
-      + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
+* [Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)
+    + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
+    + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
+    + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
+    + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
+* [Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)
+    + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
+    + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
+    + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
+    + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
+    + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
+    + [Recipe: Working with Unions](#recipe-working-with-unions)
+    + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixedsize-arrays)
+    + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive-amp-forwarddeclared)
+    + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
+    + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
+        - [x86-64 (SSE, AVX, and AVX-512)](#x8664-sse-avx-and-avx512)
+        - [AArch64 (NEON)](#aarch64-neon)
+        - [AArch64 (Scalable Vector Extension - SVE)](#aarch64-scalable-vector-extension--sve)
+    + [Recipe: Working with Enums](#recipe-working-with-enums)
+* [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
+    + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-typesafe-callback-for--raw-qsort-endraw-)
+    + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
+* [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
+    + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like--raw-printf-endraw-)
+    + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
+    + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-vtable-emulation)
+    + [Recipe: Handling `longdouble`](#recipe-handling--raw-longdouble-endraw-)
+    + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
+    + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
+* [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
+    + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
+    + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
+    + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
+    + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
+        - [Rust](#rust)
+        - [Zig](#zig)
+        - [Go](#go)
+        - [Swift](#swift)
+        - [Dlang](#dlang)
+        - [Fortran](#fortran)
+        - [Assembly](#assembly)
+    + [Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)](#recipe-handling-strings-and-semantic-types--raw-wchart-endraw--etc)
+        - [Step 1: Define Semantic Aliases in a Registry](#step-1-define-semantic-aliases-in-a-registry)
+        - [Step 2: Use the Aliases in Your Signature](#step-2-use-the-aliases-in-your-signature)
+        - [Step 3: Introspect with Semantic Awareness](#step-3-introspect-with-semantic-awareness)
+    + [Recipe: Calling C++ Virtual Functions (V-Table Emulation)](#recipe-calling-c-virtual-functions-vtable-emulation)
+    + [Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas](#recipe-bridging-c-callbacks--raw-stdfunction-endraw--and-lambdas)
+* [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries-amp-system-calls)
+    + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
+    + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
+        - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
+        - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
+    + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
+* [Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)
+    + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
+    + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
+    + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
+* [Chapter 8: Performance & Memory Management](#chapter-8-performance-amp-memory-management)
+    + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
+    + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+    + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
+    + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
+    + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
+        - [How It Works & Why It's Better](#how-it-works-amp-why-its-better)
+        - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
+* [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls-amp-troubleshooting)
+    + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
+    + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in--raw-args-endraw-)
+    + [Mistake: `infix` Signature Mismatch](#mistake--raw-infix-endraw--signature-mismatch)
+    + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
+* [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look--raw-infix-endraw--vs--raw-libffi-endraw--and--raw-dyncall-endraw-)
+    + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
+        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach)
+        - [The `libffi` Approach](#the--raw-libffi-endraw--approach)
+        - [The `infix` Approach](#the--raw-infix-endraw--approach)
+    + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
+        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach-1)
+        - [The `libffi` Approach](#the--raw-libffi-endraw--approach-1)
+        - [The `infix` Approach](#the--raw-infix-endraw--approach-1)
+    + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
+        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach-2)
+        - [The `libffi` Approach](#the--raw-libffi-endraw--approach-2)
+        - [The `infix` Approach](#the--raw-infix-endraw--approach-2)
+    + [Analysis and Takeaways](#analysis-and-takeaways)
+* [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
+    + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
+    + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from--raw-dyncall-endraw--to--raw-infix-endraw-)
 
 ---
 
@@ -1123,6 +1132,8 @@ void recipe_thread_safety() {
 
 ## Chapter 5: Interoperability with Other Languages
 
+While `infix` can call any function with a C ABI, its true power shines when tackling complex interoperability challenges with more advanced languages like C++ and Rust. This chapter provides recipes for interfacing with other languages and with language features that don't have a direct C equivalent, such as virtual functions and stateful lambdas from C++.
+
 ### The Universal Principle: The C ABI
 
 `infix` can call any function that exposes a standard C ABI. Nearly every compiled language provides a mechanism to export a function using this standard (`extern "C"` in C++/Rust/Zig, `//export` in Go, `bind(C)` in Fortran).
@@ -1374,6 +1385,288 @@ asm_add:
 
 *Compile with: `nasm -f elf64 libasm_math.asm && gcc -shared -o libasm_math.so libasm_math.o`*
 
+### Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)
+
+**Problem**: You are building a language binding and need to introspect a signature to marshal strings correctly. A signature like `*uint16` is structurally correct for a Windows `wchar_t*`, but how does your code know it's a null-terminated string and not just a pointer to an integer?
+
+**Solution**: Use the `infix` type registry to create **semantic aliases**. The signature string itself can then document the *intent* of the type, which your wrapper can use to trigger the correct string-handling logic. This pattern provides the missing link between C's structural type system and the semantic needs of a high-level language.
+
+Let's model the Windows `MessageBoxW` function, which takes two UTF-16 strings.
+
+#### Step 1: Define Semantic Aliases in a Registry
+
+Create a registry that defines aliases whose names convey meaning. These aliases still map to the correct underlying C types, but their names provide the context needed for introspection.
+
+```c
+#include <infix/infix.h>
+
+void recipe_semantic_string_types() {
+    infix_registry_t* registry = infix_registry_create();
+
+    const char* string_types =
+        // Structural aliases for Windows types
+        "@HWND = *void;"
+        "@UINT = uint32;"
+
+        // Semantic aliases that describe intent, not just structure.
+        // We define them as structs so their names are preserved after resolution.
+        "@UTF16String = { data: *uint16 };" // Represents wchar_t* on Windows
+        "@UTF8String = { data: *char };"    // Represents const char*
+    ;
+    infix_register_types(registry, string_types);
+
+    // ... use the registry ...
+
+    infix_registry_destroy(registry);
+}
+```
+
+> **Note:** We define `UTF16String` as `{*uint16}` instead of a direct alias `*uint16`. This is a crucial technique. By wrapping the pointer in a struct, the name `@UTF16String` refers to the struct itself. After resolution, the `.name` field is preserved on the struct type, making introspection possible.
+
+#### Step 2: Use the Aliases in Your Signature
+
+The signature for `MessageBoxW` now becomes self-documenting and machine-readable.
+
+```c
+// Signature for: int MessageBoxW(HWND hwnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType);
+const char* signature = "(@HWND, @UTF16String, @UTF16String, @UINT) -> int";
+```
+
+#### Step 3: Introspect with Semantic Awareness
+
+Your language binding can now parse this signature and make intelligent decisions. The key is to check the **name of the resolved aggregate type**.
+
+**Conceptual Wrapper Introspection Logic:**
+
+```c
+// 1. Parse the function signature with the registry.
+infix_signature_parse(signature, &arena, &ret, &args, &num_args, &num_fixed, registry);
+
+// 2. Introspect the type of the second argument (index 1).
+const infix_type* arg_type = args[1].type;
+
+// 3. After resolution, `@UTF16String` is a STRUCT. Check its preserved name.
+if (arg_type->category == INFIX_TYPE_STRUCT && arg_type->meta.aggregate_info.name != NULL) {
+    const char* type_name = arg_type->meta.aggregate_info.name;
+
+    // 4. Check the semantic name.
+    if (strcmp(type_name, "UTF16String") == 0) {
+        // This is our cue! Marshal the user's string as UTF-16.
+
+        // We can further introspect the struct's members to confirm the underlying type.
+        const infix_struct_member* member = infix_type_get_member(arg_type, 0);
+        const infix_type* pointer_type = member->type;
+        const infix_type* pointee_type = pointer_type->meta.pointer_info.pointee_type;
+
+        // assert(pointee_type->size == 2); // It's a 16-bit character.
+    }
+    else if (strcmp(type_name, "UTF8String") == 0) {
+        // Marshal as UTF-8.
+    }
+}
+```
+
+This pattern is the recommended approach. It keeps the core `infix` signature language focused on describing the C ABI accurately, while leveraging the type registry to provide the rich semantic information that high-level language bindings need.
+
+### Recipe: Calling C++ Virtual Functions (V-Table Emulation)
+
+**Problem**: You have a pointer to a C++ polymorphic base class object (e.g., `Shape*`) and you need to call a `virtual` function on it from C, achieving true dynamic dispatch.
+
+**Solution**: Emulate what the C++ compiler does: manually read the object's v-table pointer (`vptr`), find the function pointer at the correct index within the v-table, and use `infix` to call it.
+
+First, the C++ library (`shapes.cpp`):
+
+```cpp
+// File: shapes.cpp (compile to libshapes.so/.dll)
+#include <cmath>
+
+class Shape {
+public:
+    virtual double area() const = 0; // 1st virtual function (index 0)
+    virtual const char* name() const = 0; // 2nd virtual function (index 1)
+    virtual ~Shape() = default;
+};
+
+class Rectangle : public Shape {
+    double w, h;
+public:
+    Rectangle(double width, double height) : w(width), h(height) {}
+    double area() const override { return w * h; }
+    const char* name() const override { return "Rectangle"; }
+};
+
+// extern "C" factory functions to create objects.
+extern "C" Shape* create_rectangle(double w, double h) { return new Rectangle(w, h); }
+extern "C" void destroy_shape(Shape* s) { delete s; }
+```
+
+Now, the C code using `infix` to call the `virtual` methods:
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+
+void recipe_virtual_functions() {
+    infix_library_t* lib = infix_library_open("./libshapes.so");
+    if (!lib) return;
+
+    // 1. Get the factory functions.
+    void* (*create_rectangle)(double, double) = infix_library_get_symbol(lib, "create_rectangle");
+    void (*destroy_shape)(void*) = infix_library_get_symbol(lib, "destroy_shape");
+
+    // 2. Create a C++ object and treat it as an opaque pointer.
+    void* rect_obj = create_rectangle(10.0, 5.0);
+
+    // 3. Manually read the v-table.
+    // The v-pointer is at the start of the object's memory.
+    void** vptr = (void**)rect_obj;
+    void** vtable = *vptr;
+
+    // 4. Read the function pointers from the v-table.
+    // The order matches the declaration order in the class.
+    void* area_fn_ptr = vtable[0]; // pointer to Rectangle::area()
+    void* name_fn_ptr = vtable[1]; // pointer to Rectangle::name()
+
+    // 5. Create trampolines for the discovered function pointers.
+    // Signature for double area(const Shape* this): "(*void)->double"
+    // Signature for const char* name(const Shape* this): "(*void)->*char"
+    infix_forward_t *t_area, *t_name;
+    infix_forward_create(&t_area, "(*void)->double", area_fn_ptr, NULL);
+    infix_forward_create(&t_name, "(*void)->*char", name_fn_ptr, NULL);
+
+    // 6. Call the virtual functions, passing the object as the 'this' pointer.
+    double rect_area;
+    const char* rect_name;
+    infix_forward_get_code(t_area)(&rect_area, &rect_obj);
+    infix_forward_get_code(t_name)(&rect_name, &rect_obj);
+
+    printf("Object '%s' has virtual area(): %f\n", rect_name, rect_area); // Expected: Rectangle, 50.0
+
+    // 7. Clean up.
+    destroy_shape(rect_obj);
+    infix_forward_destroy(t_area);
+    infix_forward_destroy(t_name);
+    infix_library_close(lib);
+}
+```
+
+### Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas
+
+**Problem**: You need to call a C++ method that accepts a callback (e.g., `std::function<void(int)>`), and provide a stateful handler from your C application.
+
+**Solution**: This is a powerful, two-way FFI interaction. You will create an `infix` closure to represent your C-side state, and then call a mangled C++ method to register that closure's components (its C function pointer and its state pointer) with the C++ object.
+
+First, the C++ library that takes a callback:
+
+```cpp
+// File: EventManager.cpp (compile to libeventmanager.so/.dll)
+#include <functional>
+#include <iostream>
+
+class EventManager {
+    // We store the C-style callback parts.
+    void (*handler_ptr)(int, void*);
+    void* user_data;
+public:
+    EventManager() : handler_ptr(nullptr), user_data(nullptr) {
+        std::cout << "C++ EventManager constructed.\n";
+    }
+    // A method to register a C-style callback.
+    void set_handler(void (*h)(int, void*), void* data) {
+        this->handler_ptr = h;
+        this->user_data = data;
+    }
+    // A method to trigger the stored callback.
+    void trigger(int value) {
+        if (handler_ptr) {
+            std::cout << "C++ is triggering the callback with value " << value << "...\n";
+            handler_ptr(value, user_data);
+        }
+    }
+};
+```
+
+Now, the C application that provides a stateful callback to the `EventManager` object:
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+// On GCC/Clang, find these with: nm -C libeventmanager.so | grep EventManager
+const char* MANGLED_CTOR = "_ZN12EventManagerC1Ev";
+const char* MANGLED_SET_HANDLER = "_ZN12EventManager10set_handlerEPFviPvES_";
+const char* MANGLED_TRIGGER = "_ZN12EventManager7triggerEi";
+
+// Our C application's state and the generic handler for our infix closure.
+typedef struct { int call_count; } C_AppState;
+
+void my_closure_handler(infix_context_t* context, void* ret, void** args) {
+    (void)ret;
+    C_AppState* state = (C_AppState*)infix_reverse_get_user_data(context);
+    state->call_count++;
+
+    int value_from_cpp = *(int*)args[0];
+    printf("C handler called (invocation #%d)! Received value: %d\n", state->call_count, value_from_cpp);
+}
+
+void recipe_cpp_callback() {
+    infix_library_t* lib = infix_library_get_symbol(lib, "libeventmanager.so");
+    if(!lib) return;
+
+    // 1. Get pointers to the mangled C++ methods.
+    void* p_ctor = infix_library_get_symbol(lib, MANGLED_CTOR);
+    void* p_set_handler = infix_library_get_symbol(lib, MANGLED_SET_HANDLER);
+    void* p_trigger = infix_library_get_symbol(lib, MANGLED_TRIGGER);
+
+    // 2. Create the C-side state and the infix closure.
+    C_AppState app_state = {0};
+    infix_reverse_t* closure = NULL;
+    infix_reverse_create_closure(&closure, "(int, *void)->void", my_closure_handler, &app_state, NULL);
+
+    // 3. Create an instance of the C++ EventManager object.
+    // Constructor signature: void EventManager(EventManager* this);
+    void* manager_obj = malloc(sizeof(void*)*2); // Allocate space for the object.
+    infix_forward_t* t_ctor;
+    infix_forward_create(&t_ctor, "(*void)->void", p_ctor, NULL);
+    infix_forward_get_code(t_ctor)(NULL, &manager_obj);
+
+    // 4. Call the set_handler method to register our closure.
+    // Signature: void set_handler(EventManager* this, void (*h)(int, void*), void* data);
+    // Becomes: "(*void, *(*(...)), *void) -> void"
+    infix_forward_t* t_set_handler;
+    infix_forward_create(&t_set_handler, "(*void, *((*void)->void), *void)->void", p_set_handler, NULL);
+
+    void* closure_c_func = infix_reverse_get_code(closure);
+    void* closure_user_data = infix_reverse_get_user_data(closure);
+    void* set_handler_args[] = { &manager_obj, &closure_c_func, &closure_user_data };
+    infix_forward_get_code(t_set_handler)(NULL, set_handler_args);
+
+    // 5. Call the trigger method to make the C++ object invoke our callback.
+    // Signature: void trigger(EventManager* this, int value);
+    infix_forward_t* t_trigger;
+    infix_forward_create(&t_trigger, "(*void, int)->void", p_trigger, NULL);
+
+    int value_to_send = 42;
+    void* trigger_args[] = { &manager_obj, &value_to_send };
+    infix_forward_get_code(t_trigger)(NULL, trigger_args); // First call
+
+    value_to_send = 99;
+    infix_forward_get_code(t_trigger)(NULL, trigger_args); // Second call
+
+    printf("Final C-side call count: %d\n", app_state.call_count); // Expected: 2
+
+    // 6. Clean up.
+    // Note: The destructor would need to be called here in a real application.
+    free(manager_obj);
+    infix_forward_destroy(t_ctor);
+    infix_forward_destroy(t_set_handler);
+    infix_forward_destroy(t_trigger);
+    infix_reverse_destroy(closure);
+    infix_library_close(lib);
+}
+```
+
 ## Chapter 6: Dynamic Libraries & System Calls
 
 ### Recipe: Calling Native System Libraries without Linking
@@ -1381,6 +1674,11 @@ asm_add:
 **Problem**: You need to call a function from a system library (e.g., `user32.dll`) without linking against its import library at compile time.
 
 **Solution**: Use `infix`'s cross-platform library loading API to get a handle to the library and the function pointer, then create a trampoline.
+
+> **Finding Mangled Names**
+> This recipe relies on finding the "mangled" or "decorated" names that the C++ compiler generates for functions. You can find these names using your platform's tools:
+> - Linux/macOS: `nm -C mylibrary.so` or `readelf -sW mylibrary.so`
+> - Windows: `dumpbin /SYMBOLS mylibrary.dll` or `nm -C mylibrary.dll`
 
 ```c
 #include <infix/infix.h>

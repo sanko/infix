@@ -33,7 +33,7 @@
 void dummy_func() {}
 
 TEST {
-    plan(5);
+    plan(6);
 
     subtest("Use-after-free of resolved named pointee type") {
         plan(5);
@@ -202,6 +202,62 @@ TEST {
 
         infix_forward_destroy(t_ret);
         infix_forward_destroy(t_nested);
+        infix_registry_destroy(registry);
+    }
+
+    subtest("Introspection of resolved named types") {
+        plan(11);
+        note("Verifies that the semantic name of a type is preserved after the full parse/copy/resolve pipeline.");
+
+        infix_registry_t * registry = infix_registry_create();
+        const char * defs =
+            "@Point = { x: double, y: double };"
+            "@Rect = { top_left: @Point, bottom_right: @Point };";
+        ok(infix_register_types(registry, defs) == INFIX_SUCCESS, "Setup: Registered @Point and @Rect");
+
+        // Test Case 1: A pointer to a named type
+        const char * sig1 = "(*@Point) -> void";
+        infix_forward_t * t1 = NULL;
+        ok(infix_forward_create(&t1, sig1, (void *)dummy_func, registry) == INFIX_SUCCESS,
+           "Trampoline for '(*@Point)->void' created");
+
+        if (t1) {
+            const infix_type * arg_type = infix_forward_get_arg_type(t1, 0);
+            ok(arg_type && arg_type->category == INFIX_TYPE_POINTER, "Arg is a pointer");
+
+            const infix_type * pointee_type = arg_type->meta.pointer_info.pointee_type;
+            ok(pointee_type && pointee_type->category == INFIX_TYPE_STRUCT, "Pointee is a struct (not a named ref)");
+            ok(pointee_type->meta.aggregate_info.name != NULL, "Pointee struct has a name field");
+            ok(strcmp(pointee_type->meta.aggregate_info.name, "Point") == 0, "Pointee struct's name is 'Point'");
+        }
+        else
+            skip(4, "Skipping introspection for *@Point");
+
+        infix_forward_destroy(t1);
+
+        // Test Case 2: A struct with nested named types
+        const char * sig2 = "(@Rect) -> void";
+        infix_forward_t * t2 = NULL;
+        ok(infix_forward_create(&t2, sig2, (void *)dummy_func, registry) == INFIX_SUCCESS,
+           "Trampoline for '(@Rect)->void' created");
+
+        if (t2) {
+            const infix_type * arg_type = infix_forward_get_arg_type(t2, 0);
+            ok(arg_type && arg_type->category == INFIX_TYPE_STRUCT, "Arg is a struct");
+            ok(arg_type->meta.aggregate_info.name != NULL && strcmp(arg_type->meta.aggregate_info.name, "Rect") == 0,
+               "Arg struct's name is 'Rect'");
+
+            const infix_struct_member * member = infix_type_get_member(arg_type, 0);
+            ok(member && member->type && member->type->category == INFIX_TYPE_STRUCT, "Nested member is a struct");
+            ok(member->type->meta.aggregate_info.name != NULL &&
+                   strcmp(member->type->meta.aggregate_info.name, "Point") == 0,
+               "Nested member struct's name is 'Point'");
+        }
+        else
+            skip(4, "Skipping introspection for @Rect");
+
+        infix_forward_destroy(t2);
+
         infix_registry_destroy(registry);
     }
 }
