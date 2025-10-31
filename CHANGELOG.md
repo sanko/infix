@@ -7,12 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
 Really sanding down the rough edges this time around.
 
- - Add `size_t` and `ssize_t` signature keywords
- - Add `char8_t`, `char16_t`, and `char32_t` aliases for integer types
+### Added
+
+- New Signature Keywords: Added keywords for common C and C++ types to improve signature readability and portability.
+  - Added `size_t` and `ssize_t` as platform-dependent abstract types.
+  - Added `char8_t`, `char16_t`, and `char32_t` as aliases for `uint8`, `uint16`, and `uint32` for better C++ interoperability.
+- Cookbook Examples: Extracted all recipes from the cookbook documentation into a comprehensive suite of standalone, compilable example programs located in the `eg/cookbook/` directory.
+- Advanced C++ Recipes: Added new, advanced cookbook recipes demonstrating direct, wrapper-free interoperability with core C++ features:
+  - Calling C++ virtual functions by emulating v-table dispatch.
+  - Bridging C-side stateful callbacks with C++ objects that expect `std::function` or similar callable objects.
+
+### Changed
+
+- Improved C++ Interoperability Recipes: Refined the C++ recipes to focus on direct interaction with C++ ABIs (mangled names, v-tables) rather than relying on C-style wrappers, showcasing more advanced use cases.
+- Improved `wchar_t` Guidance: Added a dedicated cookbook recipe explaining the best-practice for handling `wchar_t` and other semantic string types via the Type Registry, ensuring signatures are unambiguous and introspectable.
 
 ## [0.1.0] - 2025-10-27
 
