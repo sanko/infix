@@ -526,6 +526,17 @@ static infix_type * parse_primitive(parser_state * state) {
         return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
     if (consume_keyword(state, "longdouble"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
+    if (consume_keyword(state, "size_t"))
+        return infix_type_create_primitive(sizeof(size_t) == 8 ? INFIX_PRIMITIVE_UINT64 : INFIX_PRIMITIVE_UINT32);
+    if (consume_keyword(state, "ssize_t"))
+        return infix_type_create_primitive(sizeof(ssize_t) == 8 ? INFIX_PRIMITIVE_SINT64 : INFIX_PRIMITIVE_SINT32);
+    // uchar.h types
+    if (consume_keyword(state, "char8_t"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_UINT8);
+    if (consume_keyword(state, "char16_t"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_UINT16);
+    if (consume_keyword(state, "char32_t"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_UINT32);
 
     // AVX convenience aliases
     if (consume_keyword(state, "m256d")) {

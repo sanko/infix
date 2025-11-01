@@ -85,7 +85,7 @@
  */
 #define INFIX_MAJOR 0 /**< The major version number. Changes with incompatible API updates. */
 #define INFIX_MINOR 1 /**< The minor version number. Changes with new, backward-compatible features. */
-#define INFIX_PATCH 0 /**< The patch version number. Changes with backward-compatible bug fixes. */
+#define INFIX_PATCH 1 /**< The patch version number. Changes with backward-compatible bug fixes. */
 /** @} */
 
 // Define the POSIX source macro to ensure function declarations for shm_open,
@@ -802,9 +802,10 @@ c23_nodiscard void * infix_library_get_symbol(infix_library_t *, const char *);
  * @param[in] symbol_name The name of the global variable.
  * @param[in] type_signature The `infix` signature string describing the variable's type.
  * @param[out] buffer A pointer to the destination buffer to receive the data.
+ * @param[in] registry An optional registry for resolving named types in the signature.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-c23_nodiscard infix_status infix_read_global(infix_library_t *, const char *, const char *, void *);
+c23_nodiscard infix_status infix_read_global(infix_library_t *, const char *, const char *, void *, infix_registry_t *);
 
 /**
  * @brief Writes data from a buffer into a global variable in a library.
@@ -812,9 +813,11 @@ c23_nodiscard infix_status infix_read_global(infix_library_t *, const char *, co
  * @param[in] symbol_name The name of the global variable.
  * @param[in] type_signature The `infix` signature string describing the variable's type.
  * @param[in] buffer A pointer to the source buffer containing the data to write.
+ * @param[in] registry An optional registry for resolving named types in the signature.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-c23_nodiscard infix_status infix_write_global(infix_library_t *, const char *, const char *, void *);
+c23_nodiscard infix_status
+infix_write_global(infix_library_t *, const char *, const char *, void *, infix_registry_t *);
 
 /** @} */  // end of exports_api group
 

@@ -5,9 +5,37 @@ All notable changes to this project will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.1] - 2025-11-01
 
-### Here we go again...
+Really sanding down the rough edges this time around. This release includes significant ergonomic improvements to the high-level API.
+
+### Added
+
+- New Signature Keywords: Added keywords for common C and C++ types to improve signature readability and portability.
+  - Added `size_t` and `ssize_t` as platform-dependent abstract types.
+  - Added `char8_t`, `char16_t`, and `char32_t` as aliases for `uint8`, `uint16`, and `uint32` for better C++ interoperability.
+- Cookbook Examples: Extracted all recipes from the cookbook documentation into a comprehensive suite of standalone, compilable example programs located in the `eg/cookbook/` directory.
+- Advanced C++ Recipes: Added new, advanced cookbook recipes demonstrating direct, wrapper-free interoperability with core C++ features:
+  - Calling C++ virtual functions by emulating v-table dispatch.
+  - Bridging C-side stateful callbacks with C++ objects that expect `std::function` or similar callable objects.
+
+### Changed
+
+- Improved C++ Interoperability Recipes: Refined the C++ recipes to focus on direct interaction with C++ ABIs (mangled names, v-tables) rather than relying on C-style wrappers, showcasing more advanced use cases.
+- Improved `wchar_t` Guidance: Added a dedicated cookbook recipe explaining the best-practice for handling `wchar_t` and other semantic string types via the Type Registry, ensuring signatures are unambiguous and introspectable.
+- Enhanced High-Level API for Registered Types. The primary creation functions (`infix_forward_create`, `infix_forward_create_unbound`, `infix_reverse_create_callback`, and `infix_reverse_create_closure`) can now directly accept a registered named type as a signature.
+
+    ```c
+    // The high-level API now understands the "@Name" syntax directly.
+    // Assume the registry already has "@Adder_add_fn = (*{ val: int }, int) -> int;"
+    infix_reverse_create_callback(&ctx, "@Adder_add_fn", (void*)Adder_add, reg);
+    ```
+
+- The `infix_read_global` and `infix_write_global` functions now take an additional `infix_registry_t*` argument to support reading and writing global variables that are defined by a named type (e.g., `@MyStruct`).
+
+### Fixed
+
+- Fixed a critical parsing bug in `infix_register_types` that occurred when defining a function pointer type alias (e.g., `@MyFunc = (...) -> ...;`). The preliminary parser for finding definition boundaries would incorrectly interpret the `>` in the `->` token as a closing delimiter, corrupting its internal nesting level calculation. This resulted in an `INFIX_CODE_UNEXPECTED_TOKEN` error and prevented the registration of function pointer types. The parser is now context-aware and correctly handles the `->` token, allowing for the clean and correct registration of function pointer aliases as intended.
 
 ## [0.1.0] - 2025-10-27
 

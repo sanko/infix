@@ -477,7 +477,13 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             defs_found[num_defs_found].def_body_start = state.p;
             int nest_level = 0;
             const char * body_end = state.p;
-            while (*body_end != '\0' && !(*body_end == ';' && nest_level == 0)) {
+            while (*body_end != '\0' &&
+                   !(*body_end == ';' &&
+                     nest_level == 0)) {  // Explicitly check for and skip over the '->' token as a single unit.
+                if (*body_end == '-' && body_end[1] == '>') {
+                    body_end += 2;  // Advance the pointer past the entire token.
+                    continue;       // Continue to the next character in the loop.
+                }
                 if (*body_end == '{' || *body_end == '<' || *body_end == '(' || *body_end == '[')
                     nest_level++;
                 if (*body_end == '}' || *body_end == '>' || *body_end == ')' || *body_end == ']')

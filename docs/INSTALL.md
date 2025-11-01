@@ -1,238 +1,153 @@
-# Building and Integrating infix
+# Building and Integrating `infix`
 
-This guide provides detailed instructions for building the `infix` library from source and integrating it into your own projects. `infix` is designed to be easy to compile and supports several popular build systems.
+This guide shows you how to build the `infix` library and add it to your C projects.
 
 ## Prerequisites
 
-To build `infix`, you will need:
+You will need a C17-compatible compiler:
+*   GCC 8+
+*   Clang 7+
+*   Visual Studio 2019+
 
-*   A **C17-compatible compiler**, such as:
-    *   GCC (version 8 or newer)
-    *   Clang (version 7 or newer)
-    *   Microsoft Visual C++ (Visual Studio 2019 or newer)
-*   One of the following **build systems** (optional, but recommended):
-    *   [CMake](https://cmake.org/download/) (version 3.12 or newer)
-    *   [xmake](https://xmake.io/#/guide/installation)
-    *   GNU Make (for Linux/macOS) or NMake (for Windows)
-    *   Perl v5.40+ (includes support for the fuzzers and other advanced developer stuff)
+For convenience, a build system is recommended:
+*   [perl](https://perl.org) (Recommended)
+*   [xmake](https://xmake.io)
+*   [CMake](https://cmake.org/download/) 3.12+
+*   Make (GNU or NMake)
 
 ---
 
-## 1. Building `infix` from Source
+## 1. The Easiest Way: Add `infix` Directly to Your Project
 
-Choose the build system that best fits your environment.
+The simplest way to use `infix` is to compile it directly into your project. This "unity build" approach requires no separate build steps and allows for better compiler optimizations.
 
-### Using xmake (Recommended)
+1.  Copy the `src/` and `include/` directories from the `infix` repository into your project (e.g., into a `third_party/infix` subdirectory).
+2.  Add `third_party/infix/src/infix.c` to your list of source files to be compiled.
+3.  Add the path to the `include` directory to your compiler's include search paths (e.g., `-Ithird_party/infix/include`).
 
-xmake is the recommended build system for most platforms as it provides a simple, cross-platform build experience.
+> That's it. Your project will now build with the `infix` library compiled directly in.
 
-1.  **Build:**
+---
 
-    ```bash
-    xmake
-    ```
+## 2. Building `infix` as a Standalone Library (Optional)
 
-2.  **Run Tests:**
+If you prefer to build `infix` as a separate static library (`.a` or `.lib`) for system-wide installation or use with tools like `pkg-config`, follow the instructions for your preferred build system.
 
-    ```bash
-    xmake test
-    ```
+### Using perl (Recommended)
 
-Now, you can simply include the header (`#include <infix.h>`) in your source files and build your project with `xmake`.
-
-### Using Perl
-
-This is what I use to develop `infix` itself but it might be great for just building the lib without installing cmake or xmake. Perl is everywhere!*
+I personally use the perl based build script to develop, test, and fuzz `infix`. From the root of the `infix` project:
 
 ```bash
-# Run the advanced perl based builder
-perl build.pl help
+# Build the library
+perl build.pl
 
-# Build and run valgrind tests
-perl build.pl --verbose memtest:fault
+# Run tests
+perl build.pl test
+```
 
-# Build infix for another ABI than the current machine's
-# Great for fuzzing
-perl build.pl --abi=sysv_x64 build
+### Using xmake
+
+xmake provides an equally simple, cross-platform build experience. From the root of the `infix` project:
+
+```bash
+# Build the library
+xmake
+
+# Run tests
+xmake test
 ```
 
 ### Using CMake
 
-CMake can generate native build files for your environment (e.g., Makefiles on Linux, Visual Studio solutions on Windows).
-
-**Standard Build & Install:**
-
-1.  **Configure:** From the root of the `infix` project, run CMake to generate the build files in a `build` directory.
-
-    ```bash
-    # Creates a 'build' directory and prepares it for compilation
-    cmake -B build
-    ```
-
-2.  **Build:** Compile the library using the generated files.
-
-    ```bash
-    # Compiles libinfix.a (or infix.lib on Windows) inside the 'build' directory
-    cmake --build build
-    ```
-
-3. **Test:** Run the compiled unit tests.
-
-    ```bash
-    # Verify
-    ctest --test-dir build
-    ```
-
-4.  **Install:** Install the library and headers to the location specified by `CMAKE_INSTALL_PREFIX`.
-
-    ```bash
-    # Installs headers to /usr/local/include, library to /usr/local/lib, etc.
-    # On Linux/macOS, you may need sudo.
-    cmake --install build
-    ```
-
-**Custom Install Location:**
-
-To install `infix` to a custom directory (e.g., inside your project), use the `CMAKE_INSTALL_PREFIX` option during the configure step.
+CMake can generate native build files for your environment (e.g., Makefiles, Visual Studio solutions).
 
 ```bash
-# Configure to install into a 'local_install' directory within the project
-cmake -B build -DCMAKE_INSTALL_PREFIX=./local_install
+# Configure the project in a 'build' directory
+cmake -B build
 
-# Build and install as before
+# Compile the library
 cmake --build build
+
+# Run tests
+ctest --test-dir build
+
+# Install the library and headers (may require sudo)
 cmake --install build
 ```
 
+To install to a custom location, use `-DCMAKE_INSTALL_PREFIX=/path/to/install` during the configure step.
+
 ### Using Makefiles
 
-#### GNU Make (Linux, macOS, BSDs)
-
-A standard Makefile is provided for POSIX-like systems.
-
-1.  **Build:**
-
-    ```bash
-    make
-    ```
-
-2.  **Run Tests:**
-
-    ```bash
-    make test
-    ```
-
-3.  **Install:**
-
-    ```bash
-    # This usually requires root privileges
-    sudo make install
-    ```
-
-#### NMake (Windows with MSVC)
-
-If you are using Microsoft Visual C++, open a **Developer Command Prompt for VS** and use `nmake`.
-
-1.  **Build:**
-
-    ```bash
-    nmake /f Makefile.win
-    ```
-
-### Manual Compilation (Advanced)
-
-Since `infix` uses a unity build, you can compile it into a static library with a single command. This is useful for minimal environments or for embedding directly into another build system.
-
-**On Linux/macOS (GCC/Clang):**
-
+**GNU Make (Linux, macOS):**
 ```bash
-# 1. Compile the unity build source file into an object file
-gcc -c -std=c17 -Iinclude -o infix.o src/infix.c
-
-# 2. Archive the object file into a static library
-ar rcs libinfix.a infix.o
+make
+make test
+sudo make install
 ```
 
-**On Windows (MSVC):**
-
+**NMake (Windows with MSVC):**
+Open a Developer Command Prompt and run:
 ```bash
-# 1. Compile the unity build source file
-cl /c /Iinclude src/infix.c /Foinfix.obj
-
-# 2. Archive into a static library
-lib infix.obj /OUT:infix.lib
+nmake /f Makefile.win
 ```
+
+### Advanced Methods
+
+For minimal environments or direct embedding, you can compile the library manually. The Perl-based builder is also available for advanced development tasks. For details, see the original `INSTALL.md`.
 
 ---
 
-## 2. Integrating `infix` into Your Project
+## 3. Linking Against a Pre-Built Library
 
-After building and installing `infix`, you can link it into your application.
+Once `infix` is built and installed, you can link it into your application.
 
 ### Using CMake with `find_package`
 
-If you installed `infix` to a standard location, you can use `find_package` in your project's `CMakeLists.txt`.
+If you installed `infix` to a standard or custom location, you can use `find_package` in your `CMakeLists.txt`:
 
 ```cmake
-# Your project's CMakeLists.txt
-cmake_minimum_required(VERSION 3.12)
-project(my_app C)
-
-# Find the installed infix library and its dependencies.
-# If you installed to a custom path, add it to CMAKE_PREFIX_PATH.
-# e.g., cmake -DCMAKE_PREFIX_PATH=/path/to/your/install ..
+# Find the installed infix library.
+# If installed to a custom path, run cmake with:
+# cmake -DCMAKE_PREFIX_PATH=/path/to/your/install ..
 find_package(infix REQUIRED)
 
-add_executable(my_app main.c)
-
-# Link your application against the imported infix::infix target.
+# Link your application against the imported target.
 target_link_libraries(my_app PRIVATE infix::infix)
 ```
 
 ### Using pkg-config
 
-If you installed `infix`, a `infix.pc` file will be available for `pkg-config`. This is useful in Makefiles or for autotools-based projects.
-
-**Example Makefile:**
+A `infix.pc` file is generated for use with `pkg-config`, which is useful in Makefiles or autotools projects.
 
 ```makefile
-CFLAGS = -std=c17 `pkg-config --cflags infix`
+CFLAGS = `pkg-config --cflags infix`
 LIBS = `pkg-config --libs infix`
 
 my_app: main.c
-    $(CC) $(CFLAGS) -o my_app main.c $(LIBS)
+    $(CC) -o my_app main.c $(CFLAGS) $(LIBS)
 ```
 
 ### Using xmake
 
-Add `infix` as a dependency in your `xmake.lua`.
+If you are using xmake for your project, you can add `infix` as a dependency in your `xmake.lua`.
 
 ```lua
-    -- Your project's xmake.lua
-    set_project("my_awesome_app")
-    set_version("1.0.0")
-    set_languages("c17")
+-- Tell xmake where to find the infix project
+add_requires("infix", {git = "https://github.com/sanko/infix.git"})
 
-    -- 1. Tell xmake where to find the infix project
-    add_requires("infix", {git = "https://github.com/sanko/infix.git"})
-
-    -- Define your application's target
-    target("my_awesome_app")
-        set_kind("binary")
-        add_files("src/*.c")
-
-        -- 2. Link against the "infix" static library target
-        add_deps("infix")
+-- Link your application against the "infix" library
+target("my_app")
+    set_kind("binary")
+    add_files("src/*.c")
+    add_deps("infix")
 ```
 
-### Using in Visual Studio Code
+### Example: Visual Studio Code Configuration
 
-1.  Place the `infix` source code in a subdirectory of your project (e.g., `libs/infix`).
-2.  Build the `infix` static library (e.g., using CMake).
-3.  Create a `.vscode` directory in your project root with the following files:
+If you've added the `infix` source to a subdirectory (e.g., `libs/infix`), you can configure VS Code's IntelliSense and build tasks.
 
-**`c_cpp_properties.json`** (for IntelliSense)
-
+**`.vscode/c_cpp_properties.json`** (for IntelliSense)
 ```json
 {
     "configurations": [
@@ -240,17 +155,15 @@ Add `infix` as a dependency in your `xmake.lua`.
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/libs/infix/include" // <-- Path to infix include dir
+                "${workspaceFolder}/libs/infix/include" // <-- Path to infix headers
             ],
             "cStandard": "c17"
         }
-    ],
-    "version": 4
+    ]
 }
 ```
 
-**`tasks.json`** (for Building)
-
+**`.vscode/tasks.json`** (for Building)
 ```json
 {
     "version": "2.0.0",
@@ -262,69 +175,11 @@ Add `infix` as a dependency in your `xmake.lua`.
             "args": [
                 "-std=c17", "-g", "${file}",
                 "-I${workspaceFolder}/libs/infix/include",   // Find infix headers
-                "-L${workspaceFolder}/libs/infix/build/lib", // Find libinfix.a
+                "-L${workspaceFolder}/libs/infix/build",     // Find libinfix.a
                 "-linfix",                                  // Link the library
                 "-o", "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "group": { "kind": "build", "isDefault": true }
+            ]
         }
     ]
 }
-```
-
-#### Manual Integration into an Existing Project
-
-Because `infix` uses a "unity build," you do not need to build it as a separate static or shared library. You can compile it directly into your project. This is the simplest method and allows for better compiler optimizations.
-
-1.  Copy the `src/` and `include/` directories from the `infix` repository into your project's source tree (e.g., into a `third_party/infix` subdirectory).
-2.  Add the `infix` `include` path to your compiler's include search paths (e.g., `-Ithird_party/infix/include`).
-3.  Add the single `infix.c` file to your project's list of source files to be compiled.
-
-> To integrate `infix` into your project, you only need to add `src/infix.c` to your list of source files to compile and add the `include/` directory to your include paths.
-
-That's it. Your project will now build with the `infix` library compiled directly in.
-
----
-
-## 3. Packaging `infix` (For Maintainers)
-
-### Linux Distributions (DEB/RPM)
-
-The CMake install target is the standard way to integrate with packaging systems. The key is to use the `DESTDIR` environment variable during the install step.
-
-**Example for a Debian `rules` file:**
-
-```makefile
-# debian/rules (simplified)
-override_dh_auto_configure:
-    dh_auto_configure -- -DCMAKE_INSTALL_PREFIX=/usr
-
-override_dh_auto_build:
-    dh_auto_build
-
-override_dh_auto_install:
-    dh_auto_install --destdir=$(CURDIR)/debian/tmp
-```
-
-### xmake Repository
-
-To submit `infix` to the public `xmake-repo`, you would create a `packages/i/infix/xmake.lua` file in a fork of the repository.
-
-```lua
-package("infix")
-    set_homepage("https://github.com/sanko/infix")
-    set_description("A JIT-powered FFI library for C")
-
-    set_urls("https://github.com/sanko/infix/archive/refs/tags/v$(version).zip")
-
-    add_versions("1.0.0", "sha256_hash_of_the_zip_file")
-
-    on_install(function (package)
-        os.cp("include", package:installdir())
-        local configs = {}
-        if package:config("shared") then
-            configs.kind = "shared"
-        end
-        import("package.tools.xmake").install(package, configs)
-    end)
 ```

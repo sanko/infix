@@ -143,12 +143,14 @@ c23_nodiscard void * infix_library_get_symbol(infix_library_t * lib, const char 
  * `"{double,double}"`).
  * @param[out] buffer A pointer to the destination buffer to receive the data. This buffer must be large enough to hold
  * the type described by the signature.
+ * @param[in] registry An optional registry for resolving named types in the signature.
  * @return `INFIX_SUCCESS` on success, or an error code on failure (e.g., symbol not found, invalid signature).
  */
 c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
                                              const char * symbol_name,
                                              const char * type_signature,
-                                             void * buffer) {
+                                             void * buffer,
+                                             infix_registry_t * registry) {
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -161,7 +163,7 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
     // Parse the signature to get the type's size.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
-    infix_status status = infix_type_from_signature(&type, &arena, type_signature, nullptr);
+    infix_status status = infix_type_from_signature(&type, &arena, type_signature, registry);
     if (status != INFIX_SUCCESS)
         return status;
 
@@ -188,12 +190,14 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
  * @param[in] symbol_name The name of the global variable.
  * @param[in] type_signature The `infix` signature string describing the variable's type.
  * @param[in] buffer A pointer to the source buffer containing the data to write.
+ * @param[in] registry An optional registry for resolving named types in the signature.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
 c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
                                               const char * symbol_name,
                                               const char * type_signature,
-                                              void * buffer) {
+                                              void * buffer,
+                                              infix_registry_t * registry) {
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
@@ -205,7 +209,7 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
 
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
-    infix_status status = infix_type_from_signature(&type, &arena, type_signature, nullptr);
+    infix_status status = infix_type_from_signature(&type, &arena, type_signature, registry);
     if (status != INFIX_SUCCESS)
         return status;
 

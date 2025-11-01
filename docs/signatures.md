@@ -40,13 +40,15 @@ These keywords represent standard C types whose size can vary by platform. They 
 | `ushort`        | `unsigned short`     | 16 bits             | An unsigned integer of at least 16 bits.                                    |
 | `int`           | `int`                | 32 bits             | The platform's native signed integer, usually 32 bits.                      |
 | `uint`          | `unsigned int`       | 32 bits             | The platform's native unsigned integer.                                     |
-| `long`          | `long`               | **32 or 64 bits**   | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
-| `ulong`         | `unsigned long`      | **32 or 64 bits**   | The unsigned version of `long`.                                             |
+| `long`          | `long`               | 32 or 64 bits       | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
+| `ulong`         | `unsigned long`      | 32 or 64 bits       | The unsigned version of `long`.                                             |
 | `longlong`      | `long long`          | 64 bits             | A signed integer of at least 64 bits.                                       |
 | `ulonglong`     | `unsigned long long` | 64 bits             | An unsigned integer of at least 64 bits.                                    |
 | `float`         | `float`              | 32 bits             | A 32-bit single-precision floating-point number.                            |
 | `double`        | `double`             | 64 bits             | A 64-bit double-precision floating-point number.                            |
-| `longdouble`    | `long double`        | **Varies**          | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.  |
+| `longdouble`    | `long double`        | Varies              | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.  |
+| `size_t`        | `size_t`             | 32 or 64 bits       | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
+| `ssize_t`       | `ssize_t`            | 32 or 64 bits       | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
 
 #### Tier 2: Explicit Fixed-Width Types (Recommended)
 
@@ -61,6 +63,9 @@ For maximum portability and control, these keywords guarantee the size of the ty
 | `sint128`, `uint128`  | `__int128_t`          | 128 bits | 128-bit integers (GCC/Clang extension).           |
 | `float32`             | `float`               | 32 bits  | An explicit alias for a 32-bit float.             |
 | `float64`             | `double`              | 64 bits  | An explicit alias for a 64-bit float.             |
+| `char8_t`             | `char8_t`             | 8 bits   | An explicit alias for an 8-bit unsigned integer (UTF-8 character unit).  |
+| `char16_t`            | `char16_t`            | 16 bits  | An explicit alias for a 16-bit unsigned integer (UTF-16 character unit). |
+| `char32_t`            | `char32_t`            | 32 bits  | An explicit alias for a 32-bit unsigned integer (UTF-32 character unit). |
 
 #### Tier 3: SIMD Vector Aliases
 

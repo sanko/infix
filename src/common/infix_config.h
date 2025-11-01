@@ -58,6 +58,14 @@
 #if defined(_WIN32)
 #define INFIX_OS_WINDOWS
 #include <windows.h>  // Included early for common types like SYSTEM_INFO, HANDLE, etc.
+// Compatibility shim for POSIX types not present in Clang/MSVC headers.
+#if !defined(__CYGWIN__)  // Cygwin provides its own full POSIX environment
+#include <stddef.h>       // For ptrdiff_t
+#ifndef ssize_t
+// Define ssize_t as ptrdiff_t, the standard signed counterpart to size_t.
+typedef ptrdiff_t ssize_t;
+#endif
+#endif
 #if defined(__MSYS__)
 #define INFIX_ENV_MSYS 1
 #elif defined(__CYGWIN__)

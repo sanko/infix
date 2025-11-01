@@ -6,85 +6,94 @@ This guide provides practical, real-world examples to help you solve common FFI 
 
 ## Table of Contents
 
-   * [Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)
-      + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
-      + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
-      + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
-      + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
-   * [Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)
-      + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
-      + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
-      + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
-      + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
-      + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
-      + [Recipe: Working with Unions](#recipe-working-with-unions)
-      + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
-      + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive--forward-declared)
-      + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
-      + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
-      + [Recipe: Working with Enums](#recipe-working-with-enums)
-   * [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
-      + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-type-safe-callback-for-qsort)
-      + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
-   * [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
-      + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
-      + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
-      + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
-      + [Recipe: Handling `longdouble`](#recipe-handling-longdouble)
-      + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
-      + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
-   * [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
-      + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
-      + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
-      + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
-      + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
-         - [Rust](#rust)
-         - [Zig](#zig)
-         - [Go](#go)
-         - [Swift](#swift)
-         - [Dlang](#dlang)
-         - [Fortran](#fortran)
-         - [Assembly](#assembly)
-   * [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries--system-calls)
-      + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
-      + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
-         - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
-         - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
-      + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
-   * [Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)
-      + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
-      + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
-      + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
-   * [Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)
-      + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
-      + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
-      + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
-      + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
-      + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
-         - [How It Works & Why It's Better](#how-it-works--why-its-better)
-         - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
-   * [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
-      + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
-      + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
-      + [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
-      + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
-   * [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look-infix-vs-libffi-and-dyncall)
-      + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
-         - [The `dyncall` Approach](#the-dyncall-approach)
-         - [The `libffi` Approach](#the-libffi-approach)
-         - [The `infix` Approach](#the-infix-approach)
-      + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
-         - [The `dyncall` Approach](#the-dyncall-approach-1)
-         - [The `libffi` Approach](#the-libffi-approach-1)
-         - [The `infix` Approach](#the-infix-approach-1)
-      + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
-         - [The `dyncall` Approach](#the-dyncall-approach-2)
-         - [The `libffi` Approach](#the-libffi-approach-2)
-         - [The `infix` Approach](#the-infix-approach-2)
-      + [Analysis and Takeaways](#analysis-and-takeaways)
-   * [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
-      + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
-      + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
+* [Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)
+    + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
+    + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
+    + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
+    + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
+* [Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)
+    + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
+    + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
+    + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
+    + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
+    + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
+    + [Recipe: Working with Unions](#recipe-working-with-unions)
+    + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixedsize-arrays)
+    + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive-amp-forwarddeclared)
+    + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
+    + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
+        - [x86-64 (SSE, AVX, and AVX-512)](#x8664-sse-avx-and-avx512)
+        - [AArch64 (NEON)](#aarch64-neon)
+        - [AArch64 (Scalable Vector Extension - SVE)](#aarch64-scalable-vector-extension--sve)
+    + [Recipe: Working with Enums](#recipe-working-with-enums)
+* [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
+    + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-typesafe-callback-for--raw-qsort-endraw-)
+    + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
+* [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
+    + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like--raw-printf-endraw-)
+    + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
+    + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-vtable-emulation)
+    + [Recipe: Handling `longdouble`](#recipe-handling--raw-longdouble-endraw-)
+    + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
+    + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
+* [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
+    + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
+    + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
+    + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
+    + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
+        - [Rust](#rust)
+        - [Zig](#zig)
+        - [Go](#go)
+        - [Swift](#swift)
+        - [Dlang](#dlang)
+        - [Fortran](#fortran)
+        - [Assembly](#assembly)
+    + [Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)](#recipe-handling-strings-and-semantic-types--raw-wchart-endraw--etc)
+        - [Step 1: Define Semantic Aliases in a Registry](#step-1-define-semantic-aliases-in-a-registry)
+        - [Step 2: Use the Aliases in Your Signature](#step-2-use-the-aliases-in-your-signature)
+        - [Step 3: Introspect with Semantic Awareness](#step-3-introspect-with-semantic-awareness)
+    + [Recipe: Calling C++ Virtual Functions (V-Table Emulation)](#recipe-calling-c-virtual-functions-vtable-emulation)
+    + [Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas](#recipe-bridging-c-callbacks--raw-stdfunction-endraw--and-lambdas)
+* [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries-amp-system-calls)
+    + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
+    + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
+        - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
+        - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
+    + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
+* [Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)
+    + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
+    + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
+    + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
+* [Chapter 8: Performance & Memory Management](#chapter-8-performance-amp-memory-management)
+    + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
+    + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+    + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
+    + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
+    + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
+        - [How It Works & Why It's Better](#how-it-works-amp-why-its-better)
+        - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
+* [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls-amp-troubleshooting)
+    + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
+    + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in--raw-args-endraw-)
+    + [Mistake: `infix` Signature Mismatch](#mistake--raw-infix-endraw--signature-mismatch)
+    + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
+* [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look--raw-infix-endraw--vs--raw-libffi-endraw--and--raw-dyncall-endraw-)
+    + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
+        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach)
+        - [The `libffi` Approach](#the--raw-libffi-endraw--approach)
+        - [The `infix` Approach](#the--raw-infix-endraw--approach)
+    + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
+        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach-1)
+        - [The `libffi` Approach](#the--raw-libffi-endraw--approach-1)
+        - [The `infix` Approach](#the--raw-infix-endraw--approach-1)
+    + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
+        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach-2)
+        - [The `libffi` Approach](#the--raw-libffi-endraw--approach-2)
+        - [The `infix` Approach](#the--raw-infix-endraw--approach-2)
+    + [Analysis and Takeaways](#analysis-and-takeaways)
+* [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
+    + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
+    + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from--raw-dyncall-endraw--to--raw-infix-endraw-)
 
 ---
 
@@ -97,35 +106,21 @@ This guide provides practical, real-world examples to help you solve common FFI 
 **Solution**: Describe the function's signature, prepare pointers to your arguments, and invoke the function through a generated trampoline. An "unbound" trampoline is ideal when you want to call multiple functions that share the same signature.
 
 ```c
-#include <infix/infix.h>
-#include <math.h>
-#include <stdio.h>
+// 1. Describe the signature: double atan2(double y, double x);
+const char* signature = "(double, double) -> double";
 
-void recipe_simple_forward_call() {
-    // 1. Describe the signature: double atan2(double y, double x);
-    const char* signature = "(double, double) -> double";
+// 2. Create an unbound trampoline.
+infix_forward_t* trampoline = NULL;
+infix_forward_create_unbound(&trampoline, signature, NULL);
 
-    // 2. Create an unbound trampoline. The function to call is not specified yet.
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create_unbound(&trampoline, signature, NULL);
-
-    // 3. Get the callable function pointer.
-    infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-
-    // 4. Prepare arguments. The args array must hold *pointers* to the values.
-    double y = 1.0, x = 1.0;
-    void* args[] = { &y, &x };
-    double result;
-
-    // 5. Invoke the call, passing the target function `atan2` as the first argument.
-    cif((void*)atan2, &result, args);
-
-    printf("atan2(1.0, 1.0) = %f (PI/4)\n", result);
-
-    // 6. Clean up.
-    infix_forward_destroy(trampoline);
-}
+// 3. Prepare arguments and invoke the call.
+double y = 1.0, x = 1.0;
+void* args[] = { &y, &x };
+double result;
+infix_forward_get_unbound_code(trampoline)((void*)atan2, &result, args);
 ```
+
+> Full example available in [`Ch01_Rec01_SimpleCall.c`](/eg/cookbook/Ch01_Rec01_SimpleCall.c).
 
 ### Recipe: Passing and Receiving Pointers
 
@@ -134,30 +129,21 @@ void recipe_simple_forward_call() {
 **Solution**: Use the `*` prefix for pointer types. The value in the `args` array for a pointer argument is the address of your pointer variable.
 
 ```c
-#include <infix/infix.h>
-#include <string.h>
-#include <stdio.h>
+// Signature for: const char* strchr(const char* s, int c);
+const char* signature = "(*char, int) -> *char";
+infix_forward_t* trampoline = NULL;
+infix_forward_create(&trampoline, signature, (void*)strchr, NULL);
 
-void recipe_pointer_args_and_return() {
-    // Signature for: const char* strchr(const char* s, int c);
-    const char* signature = "(*char, int) -> *char";
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, signature, (void*)strchr, NULL);
-    infix_cif_func cif = infix_forward_get_code(trampoline);
+// Prepare arguments. The value for the pointer is the address of the char* variable.
+const char* haystack = "hello-world";
+int needle = '-';
+void* args[] = { &haystack, &needle };
+const char* result_ptr = NULL;
 
-    const char* haystack = "hello-world";
-    int needle = '-';
-    void* args[] = { &haystack, &needle };
-    const char* result_ptr = NULL;
-
-    cif(&result_ptr, args);
-
-    if (result_ptr) {
-        printf("strchr found: '%s'\n", result_ptr); // Expected: "-world"
-    }
-    infix_forward_destroy(trampoline);
-}
+infix_forward_get_code(trampoline)(&result_ptr, args);
 ```
+
+> Full example available in [`Ch01_Rec02_Pointers.c`](/eg/cookbook/Ch01_Rec02_Pointers.c).
 
 ### Recipe: Working with "Out" Parameters
 
@@ -166,40 +152,27 @@ void recipe_pointer_args_and_return() {
 **Solution**: The signature is straightforward. The "out" parameter is simply a pointer type (`*<type>`). In your calling code, you create a local variable and pass its address in the `args` array.
 
 ```c
-// Native C function to be called:
 // bool get_user_stats(int user_id, int* out_posts, double* out_score);
-bool get_user_stats(int user_id, int* out_posts, double* out_score) {
-    if (user_id == 123) {
-        if(out_posts) *out_posts = 50;
-        if(out_score) *out_score = 99.8;
-        return true;
-    }
-    return false;
-}
+const char* signature = "(int, *int, *double) -> bool";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)get_user_stats, NULL);
 
-void recipe_out_parameters() {
-    const char* signature = "(int, *int, *double) -> bool";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)get_user_stats, NULL);
+int user_id = 123;
+// These are our "out" variables.
+int post_count = 0;
+double score = 0.0;
+bool success;
 
-    int user_id = 123;
-    // These are our "out" variables. They will be modified by the C function.
-    int post_count = 0;
-    double score = 0.0;
-    bool success;
+// For "out" parameters, the args array contains pointers TO the pointer variables.
+int* p_post_count = &post_count;
+double* p_score = &score;
+void* args[] = { &user_id, &p_post_count, &p_score };
 
-    // The args array contains pointers to our local variables.
-    void* args[] = { &user_id, &post_count, &score };
-
-    infix_forward_get_code(t)(&success, args);
-
-    if (success) {
-        printf("User stats: Posts=%d, Score=%.1f\n", post_count, score); // Expected: 50, 99.8
-    }
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&success, args);
+// After the call, post_count and score are populated.
 ```
+
+> Full example available in [`Ch01_Rec03_OutParameters.c`](/eg/cookbook/Ch01_Rec03_OutParameters.c).
 
 ### Recipe: Working with Opaque Pointers (Incomplete Types)
 
@@ -208,40 +181,24 @@ void recipe_out_parameters() {
 **Solution**: Use the `*void` signature. This is the canonical representation for any generic handle. Using a registry to create a type alias like `@FileHandle = *void;` can make your signatures more readable.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
+// 1. Use a registry to create a readable alias for the opaque handle.
+infix_registry_t* reg = infix_registry_create();
+infix_register_types(reg, "@FileHandle = *void;");
 
-void recipe_opaque_pointers() {
-    infix_registry_t* reg = infix_registry_create();
-    infix_register_types(reg, "@FileHandle = *void;");
+// 2. Create trampolines using the alias.
+infix_forward_t *t_fopen, *t_fputs, *t_fclose;
+infix_forward_create(&t_fopen, "(*char, *char) -> @FileHandle", (void*)fopen, reg);
+infix_forward_create(&t_fputs, "(*char, @FileHandle) -> int", (void*)fputs, reg);
+infix_forward_create(&t_fclose, "(@FileHandle) -> int", (void*)fclose, reg);
 
-    infix_forward_t *t_fopen, *t_fputs, *t_fclose;
-    infix_forward_create(&t_fopen, "(*char, *char) -> @FileHandle", (void*)fopen, reg);
-    infix_forward_create(&t_fputs, "(*char, @FileHandle) -> int", (void*)fputs, reg);
-    infix_forward_create(&t_fclose, "(@FileHandle) -> int", (void*)fclose, reg);
-
-    void* file_handle = NULL; // This will hold our opaque FILE*
-    const char* filename = "test.txt";
-    const char* mode = "w";
-    void* fopen_args[] = { &filename, &mode };
-
-    infix_forward_get_code(t_fopen)(&file_handle, fopen_args);
-
-    if (file_handle) {
-        const char* content = "Written by infix!";
-        void* fputs_args[] = { &content, &file_handle };
-        int result;
-        infix_forward_get_code(t_fputs)(&result, fputs_args);
-        infix_forward_get_code(t_fclose)(&result, &file_handle);
-        printf("Successfully wrote to test.txt\n");
-    }
-
-    infix_forward_destroy(t_fopen);
-    infix_forward_destroy(t_fputs);
-    infix_forward_destroy(t_fclose);
-    infix_registry_destroy(reg);
-}
+// 3. Use the trampolines in sequence.
+void* file_handle = NULL; // This will hold our opaque FILE*
+const char* filename = "test.txt", *mode = "w";
+infix_forward_get_code(t_fopen)(&file_handle, (void*[]){ &filename, &mode });
+// ...
 ```
+
+> Full example available in [`Ch01_Rec04_OpaquePointers.c`](/eg/cookbook/Ch01_Rec04_OpaquePointers.c).
 
 ---
 
@@ -253,28 +210,25 @@ typedef struct { double x, y; } Point;
 ```
 
 ### Recipe: Small Structs Passed by Value
+
 **Problem**: You need to call a function that takes a small `struct` that the ABI passes in registers.
 **Solution**: Use the struct syntax `({...})`. `infix` will automatically determine the correct ABI passing convention for the target platform.
 
 ```c
-Point move_point(Point p, double dx) { p.x += dx; return p; }
+// Point move_point(Point p, double dx);
+const char* signature = "({double, double}, double) -> {double, double}";
+infix_forward_t* trampoline = NULL;
+infix_forward_create(&trampoline, signature, (void*)move_point, NULL);
 
-void recipe_pass_struct_by_value() {
-    const char* signature = "({double, double}, double) -> {double, double}";
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, signature, (void*)move_point, NULL);
+Point start = { 10.0, 20.0 };
+double delta_x = 5.5;
+void* args[] = { &start, &delta_x };
+Point end;
 
-    Point start = { 10.0, 20.0 };
-    double delta_x = 5.5;
-    void* args[] = { &start, &delta_x };
-    Point end;
-
-    infix_forward_get_code(trampoline)(&end, args);
-    printf("Moved point has x = %f\n", end.x); // Should be 15.5
-
-    infix_forward_destroy(trampoline);
-}
+infix_forward_get_code(trampoline)(&end, args);
 ```
+
+> Full example available in [`Ch02_Rec01_StructByValue.c`](/eg/cookbook/Ch02_Rec01_StructByValue.c).
 
 ### Recipe: Receiving a Struct from a Function
 
@@ -283,23 +237,19 @@ void recipe_pass_struct_by_value() {
 **Solution**: `infix` handles the ABI details, whether the struct is returned in registers or via a hidden pointer passed by the caller.
 
 ```c
-Point make_point(double x, double y) { return (Point){x, y}; }
+// Point make_point(double x, double y);
+const char* signature = "(double, double) -> {double, double}";
+infix_forward_t* trampoline = NULL;
+infix_forward_create(&trampoline, signature, (void*)make_point, NULL);
 
-void recipe_return_struct() {
-    const char* signature = "(double, double) -> {double, double}";
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, signature, (void*)make_point, NULL);
+double x = 100.0, y = 200.0;
+void* args[] = { &x, &y };
+Point result;
 
-    double x = 100.0, y = 200.0;
-    void* args[] = { &x, &y };
-    Point result;
-
-    infix_forward_get_code(trampoline)(&result, args);
-    printf("Received point: {x=%.1f, y=%.1f}\n", result.x, result.y);
-
-    infix_forward_destroy(trampoline);
-}
+infix_forward_get_code(trampoline)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec02_ReturnStruct.c`](/eg/cookbook/Ch02_Rec02_ReturnStruct.c).
 
 ### Recipe: Large Structs Passed by Reference
 
@@ -308,24 +258,19 @@ void recipe_return_struct() {
 **Solution**: The process is identical to the small struct example. `infix`'s ABI logic will detect that the struct is large and automatically pass it by reference (the standard C ABI rule).
 
 ```c
-typedef struct { int data[8]; } LargeStruct;
-int get_first_element(LargeStruct s) { return s.data[0]; }
+// int get_first_element(LargeStruct s); where LargeStruct is { int data[8]; }
+const char* signature = "({[8:int]}) -> int";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)get_first_element, NULL);
 
-void recipe_large_struct() {
-    const char* signature = "({[8:int]}) -> int";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)get_first_element, NULL);
+LargeStruct my_struct = { {123, -1, -1, -1, -1, -1, -1, -1} };
+void* args[] = { &my_struct };
+int result;
 
-    LargeStruct my_struct = { {123, -1, -1, -1, -1, -1, -1, -1} };
-    void* args[] = { &my_struct };
-    int result;
-
-    infix_forward_get_code(t)(&result, args);
-    printf("First element of large struct: %d\n", result); // Should be 123
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec03_LargeStruct.c`](/eg/cookbook/Ch02_Rec03_LargeStruct.c).
 
 ### Recipe: Working with Packed Structs
 
@@ -334,26 +279,19 @@ void recipe_large_struct() {
 **Solution**: Use the `!{...}` syntax for 1-byte alignment, or `!N:{...}` to specify a maximum alignment of `N` bytes.
 
 ```c
-#pragma pack(push, 1)
-typedef struct { char a; uint64_t b; } Packed; // Total size is 9 bytes
-#pragma pack(pop)
+// int process_packed(Packed p); where Packed is #pragma pack(1) { char a; uint64_t b; }
+const char* signature = "(!{char, uint64}) -> int";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)process_packed, NULL);
 
-int process_packed(Packed p) { return (p.a == 'X' && p.b == 0x1122334455667788ULL) ? 42 : -1; }
+Packed p = {'X', 0x1122334455667788ULL};
+int result = 0;
+void* args[] = {&p};
 
-void recipe_packed_struct() {
-    const char* signature = "(!{char, uint64}) -> int";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)process_packed, NULL);
-
-    Packed p = {'X', 0x1122334455667788ULL};
-    int result = 0;
-    void* args[] = {&p};
-
-    infix_forward_get_code(t)(&result, args);
-    printf("Packed struct result: %d\n", result);  // Expected: 42
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec04_PackedStructs.c`](/eg/cookbook/Ch02_Rec04_PackedStructs.c).
 
 ### Recipe: Working with Structs that Contain Bitfields
 
@@ -362,40 +300,25 @@ void recipe_packed_struct() {
 **Solution**: Treat the underlying integer that holds the bitfields as a single member in your signature. Then, use C's bitwise operators in your wrapper code to manually pack and unpack the values before and after the FFI call.
 
 ```c
-// The native C struct with bitfields.
-typedef struct {
-    uint32_t a : 4; // 4 bits
-    uint32_t b : 12;// 12 bits
-    uint32_t c : 16;// 16 bits
-} BitfieldStruct; // Total size is sizeof(uint32_t)
+// uint32_t process_bitfields(BitfieldStruct s);
+// 1. Describe the struct by its underlying integer storage.
+const char* signature = "({uint32}) -> uint32";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)process_bitfields, NULL);
 
-// The native function we want to call.
-uint32_t process_bitfields(BitfieldStruct s) {
-    return s.a + s.b + s.c;
-}
+// 2. Manually pack the data into a uint32_t.
+uint32_t packed_data = 0;
+packed_data |= (15 & 0xF) << 0;      // Field a = 15
+packed_data |= (1000 & 0xFFF) << 4;  // Field b = 1000
+packed_data |= (30000 & 0xFFFF) << 16; // Field c = 30000
 
-void recipe_bitfields() {
-    // 1. Describe the struct by its underlying integer storage.
-    const char* signature = "({uint32}) -> uint32";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)process_bitfields, NULL);
-
-    // 2. Manually pack the data into a uint32_t.
-    uint32_t packed_data = 0;
-    packed_data |= (15 & 0xF) << 0;  // Field a = 15
-    packed_data |= (1000 & 0xFFF) << 4; // Field b = 1000
-    packed_data |= (30000 & 0xFFFF) << 16; // Field c = 30000
-
-    // 3. The FFI call sees a simple struct { uint32_t; }.
-    void* args[] = { &packed_data };
-    uint32_t result;
-
-    infix_forward_get_code(t)(&result, args);
-    printf("Bitfield sum: %u\n", result); // Expected: 31015
-
-    infix_forward_destroy(t);
-}
+// 3. The FFI call sees a simple struct { uint32_t; }.
+void* args[] = { &packed_data };
+uint32_t result;
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec05_Bitfields.c`](/eg/cookbook/Ch02_Rec05_Bitfields.c).
 
 ### Recipe: Working with Unions
 
@@ -404,25 +327,20 @@ void recipe_bitfields() {
 **Solution**: Use the `<...>` syntax to describe the union's members.
 
 ```c
-typedef union { int i; float f; } Number;
-int process_number_as_int(Number n) { return n.i * 2; }
+// int process_number_as_int(Number n); where Number is union { int i; float f; }
+const char* signature = "(<int, float>) -> int";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)process_number_as_int, NULL);
 
-void recipe_union() {
-    const char* signature = "(<int, float>) -> int";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)process_number_as_int, NULL);
+Number num_val;
+num_val.i = 21;
+int result = 0;
+void* args[] = {&num_val};
 
-    Number num_val;
-    num_val.i = 21;
-    int result = 0;
-    void* args[] = {&num_val};
-
-    infix_forward_get_code(t)(&result, args);
-    printf("Result: %d\n", result);  // Expected: 42
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec06_Unions.c`](/eg/cookbook/Ch02_Rec06_Unions.c).
 
 ### Recipe: Working with Fixed-Size Arrays
 
@@ -431,30 +349,22 @@ void recipe_union() {
 **Solution**: In C, an array argument "decays" to a pointer to its first element. The signature must reflect this. To describe the array *itself* (e.g., inside a struct), use the `[N:type]` syntax.
 
 ```c
-// In C, a function parameter `arr[4]` is treated as a pointer `arr*`.
-int64_t sum_array_elements(const int64_t* arr, size_t count) {
-    int64_t sum = 0;
-    for(size_t i = 0; i < count; ++i) sum += arr[i];
-    return sum;
-}
+// int64_t sum_array_elements(const int64_t* arr, size_t count);
+// Note: Even if the C prototype was `arr[4]`, it decays to a pointer.
+const char* signature = "(*sint64, size_t) -> sint64";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)sum_array_elements, NULL);
 
-void recipe_array_decay() {
-    const char* signature = "(*sint64, sint64) -> sint64";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)sum_array_elements, NULL);
+int64_t my_array[] = {10, 20, 30, 40};
+const int64_t* ptr_to_array = my_array;
+size_t count = 4;
+void* args[] = {&ptr_to_array, &count};
+int64_t result = 0;
 
-    int64_t my_array[] = {10, 20, 30, 40};
-    const int64_t* ptr_to_array = my_array;
-    int64_t count = 4; // Using int64_t for sint64 signature
-    void* args[] = {&ptr_to_array, &count};
-    int64_t result = 0;
-
-    infix_forward_get_code(t)(&result, args);
-    printf("Sum of array is: %lld\n", (long long)result);  // Expected: 100
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec07_ArrayDecay.c`](/eg/cookbook/Ch02_Rec07_ArrayDecay.c).
 
 ### Recipe: Advanced Named Types (Recursive & Forward-Declared)
 
@@ -463,59 +373,31 @@ void recipe_array_decay() {
 **Solution**: The `infix` registry fully supports recursive definitions and forward declarations, allowing you to model these patterns cleanly.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
+infix_registry_t* registry = infix_registry_create();
 
-// C equivalent of the types we will define:
-typedef struct Employee Employee;
-typedef struct Manager {
-    const char* name;
-    Employee* reports[10]; // A manager has direct reports
-} Manager;
+// 1. Define types using forward declarations for mutual recursion.
+const char* definitions =
+    "@Employee; @Manager;" // Forward declarations
+    "@Manager = { name:*char, reports:[10:*@Employee] };"
+    "@Employee = { name:*char, manager:*@Manager };"
+;
+infix_register_types(registry, definitions);
 
-struct Employee {
-    const char* name;
-    Manager* manager; // An employee has a manager
-};
+// 2. Create a trampoline using the named types.
+infix_forward_t* trampoline = NULL;
+infix_forward_create(&trampoline, "(*@Employee) -> *char", (void*)get_manager_name, registry);
 
-// A simple function to demonstrate usage
-const char* get_manager_name(Employee* e) {
-    return e->manager ? e->manager->name : "None";
-}
+// 3. Set up the C data and call.
+Manager boss = { "Sanko", { NULL } };
+Employee worker = { "Robinson", &boss };
+Employee* p_worker = &worker;
+const char* manager_name = NULL;
+void* args[] = { &p_worker };
 
-void recipe_advanced_registry() {
-    infix_registry_t* registry = infix_registry_create();
-
-    // 1. Define the types. Note the forward declarations with a single ';'.
-    //    This is necessary because Manager refers to Employee, and Employee
-    //    refers to Manager.
-    const char* definitions =
-        "@Employee; @Manager;" // Forward declarations
-        "@Manager = { name:*char, reports:[10:*@Employee] };"
-        "@Employee = { name:*char, manager:*@Manager };"
-    ;
-    infix_register_types(registry, definitions);
-
-    // 2. Create a trampoline using the named types.
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "(*@Employee) -> *char", (void*)get_manager_name, registry);
-
-    // 3. Set up the C data and call.
-    Manager boss = { "Sanko", { NULL } };
-    Employee worker = { "Robinson", &boss };
-    Employee* p_worker = &worker;
-    const char* manager_name = NULL;
-    void* args[] = { &p_worker };
-
-    infix_forward_get_code(trampoline)(&manager_name, args);
-
-    printf("The manager of %s is %s.\n", worker.name, manager_name); // Expected: Sanko
-
-    // 4. Clean up.
-    infix_forward_destroy(trampoline);
-    infix_registry_destroy(registry);
-}
+infix_forward_get_code(trampoline)(&manager_name, args);
 ```
+
+> Full example available in [`Ch02_Rec08_AdvancedRegistry.c`](/eg/cookbook/Ch02_Rec08_AdvancedRegistry.c).
 
 ### Recipe: Working with Complex Numbers
 
@@ -524,24 +406,19 @@ void recipe_advanced_registry() {
 **Solution**: Use the `c[<base_type>]` constructor in the signature string.
 
 ```c
-#include <complex.h>
-double complex c_square(double complex z) { return z * z; }
+// double complex c_square(double complex z);
+const char* signature = "(c[double]) -> c[double]";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)c_square, NULL);
 
-void recipe_complex() {
-    const char* signature = "(c[double]) -> c[double]";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)c_square, NULL);
+double complex input = 3.0 + 4.0 * I;
+double complex result;
+void* args[] = {&input};
 
-    double complex input = 3.0 + 4.0 * I;
-    double complex result;
-    void* args[] = {&input};
-
-    infix_forward_get_code(t)(&result, args);
-    printf("The square of (3.0 + 4.0i) is (%.1f + %.1fi)\n", creal(result), cimag(result));
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec09_ComplexNumbers.c`](/eg/cookbook/Ch02_Rec09_ComplexNumbers.c).
 
 ### Recipe: Working with SIMD Vectors
 
@@ -558,38 +435,22 @@ This recipe is broken down by architecture, as the C types and intrinsic functio
 This example calls a function that uses AVX-512's 512-bit `__m512d` type to add two vectors of eight `double`s each. The same principle applies to 128-bit SSE (`__m128d`) and 256-bit AVX (`__m256d`) types by simply adjusting the signature.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <immintrin.h> // For AVX-512 intrinsics
+// __m512d vector_add_512(__m512d a, __m512d b);
+// The signature "m512d" is a convenient alias for "v[8:double]".
+const char* signature = "(m512d, m512d) -> m512d";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)vector_add_512, NULL);
 
-// Native C function using AVX-512 vectors
-__m512d vector_add_512(__m512d a, __m512d b) { return _mm512_add_pd(a, b); }
+// Prepare arguments using AVX-512 intrinsics.
+__m512d a = _mm512_set_pd(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
+__m512d b = _mm512_set_pd(34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0);
+void* args[] = {&a, &b};
+__m512d result;
 
-void recipe_simd_avx512() {
-    // The signature "m512d" is a convenient alias for "v[8:double]".
-    const char* signature = "(m512d, m512d) -> m512d";
-    infix_forward_t* t = NULL;
-    // Note: This test must be compiled with AVX-512 support (e.g., -mavx512f)
-    // and run on a CPU that supports it to avoid a crash.
-    infix_forward_create(&t, signature, (void*)vector_add_512, NULL);
-
-    // Prepare arguments using AVX-512 intrinsics.
-    // _mm512_set_pd sets values from right-to-left in memory.
-    __m512d a = _mm512_set_pd(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
-    __m512d b = _mm512_set_pd(34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0);
-    void* args[] = {&a, &b};
-    __m512d result;
-
-    infix_forward_get_code(t)(&result, args);
-
-    // Unpack the result for verification.
-    double* d = (double*)&result;
-    printf("AVX-512 vector result: [%.1f, %.1f, ..., %.1f, %.1f]\n", d[0], d[1], d[6], d[7]);
-    // Expected: {1+41, 2+40, ..., 8+34} -> {42.0, 42.0, ..., 42.0, 42.0}
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec10_SIMD_AVX.c`](/eg/cookbook/Ch02_Rec10_SIMD_AVX.c).
 
 ---
 
@@ -598,34 +459,22 @@ void recipe_simd_avx512() {
 This example calls a function that uses ARM NEON's `float32x4_t` type, which is a 128-bit vector of four `float`s.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <arm_neon.h> // For NEON intrinsics
+// float neon_horizontal_sum(float32x4_t vec);
+// The signature v[4:float] directly maps to float32x4_t.
+const char* signature = "(v[4:float]) -> float";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)neon_horizontal_sum, NULL);
 
-// Native C function that performs a horizontal add on a NEON vector.
-float neon_horizontal_sum(float32x4_t vec) {
-    return vaddvq_f32(vec); // Adds all four elements in the vector together.
-}
+// Prepare the NEON vector argument.
+float data[] = {10.0f, 20.0f, 5.5f, 6.5f};
+float32x4_t input_vec = vld1q_f32(data); // Load data into a vector register.
+void* args[] = {&input_vec};
+float result;
 
-void recipe_simd_neon() {
-    // The signature v[4:float] directly maps to float32x4_t.
-    const char* signature = "(v[4:float]) -> float";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)neon_horizontal_sum, NULL);
-
-    // Prepare the NEON vector argument.
-    float data[] = {10.0f, 20.0f, 5.5f, 6.5f};
-    float32x4_t input_vec = vld1q_f32(data); // Load data into a vector register.
-    void* args[] = {&input_vec};
-    float result;
-
-    infix_forward_get_code(t)(&result, args);
-
-    printf("NEON horizontal sum result: %.1f\n", result); // Expected: 42.0
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch02_Rec10_SIMD_NEON.c`](/eg/cookbook/Ch02_Rec10_SIMD_NEON.c).
 
 ---
 
@@ -636,83 +485,28 @@ void recipe_simd_neon() {
 **Solution**: This requires a dynamic, multi-step approach. You must first perform a runtime check for SVE support, then query the CPU's vector length, and finally build the `infix` signature string dynamically before creating the trampoline.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <stdbool.h>
+// double sve_horizontal_add(svfloat64_t vec);
 
-#if defined(__ARM_FEATURE_SVE)
-#include <arm_sve.h>
-// Platform-specific headers for runtime detection
-#if defined(__linux__)
-#include <sys/auxv.h>
-#ifndef HWCAP_SVE
-#define HWCAP_SVE (1 << 22)
-#endif
-#elif defined(__APPLE__)
-#include <sys/sysctl.h>
-#endif
+// 1. Query the vector length at runtime. svcntd() gets the count of doubles.
+size_t num_doubles = svcntd();
 
-// Helper function to check for SVE support at runtime.
-static bool is_sve_supported(void) {
-#if defined(__linux__)
-    return (getauxval(AT_HWCAP) & HWCAP_SVE) != 0;
-#elif defined(__APPLE__)
-    int sve_present = 0; size_t size = sizeof(sve_present);
-    if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0)
-        return sve_present == 1;
-    return false;
-#else // Windows, etc. would have their own checks.
-    return false;
-#endif
-}
+// 2. Build the signature string dynamically.
+char signature[64];
+snprintf(signature, sizeof(signature), "(v[%zu:double]) -> double", num_doubles);
 
-// Native C function using SVE for a horizontal add.
-double sve_horizontal_add(svfloat64_t vec) { return svaddv_f64(svptrue_b64(), vec); }
+// 3. Create the trampoline with the dynamic signature.
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)sve_horizontal_add, NULL);
 
-void recipe_simd_sve() {
-    if (!is_sve_supported()) {
-        printf("SVE not supported on this CPU, skipping recipe.\n");
-        return;
-    }
-
-    // 1. Query the vector length at runtime. svcntd() gets the count of doubles.
-    size_t num_doubles = svcntd();
-    printf("Detected SVE vector length: %zu doubles (%zu bits)\n", num_doubles, num_doubles * 64);
-
-    // 2. Build the signature string dynamically.
-    char signature[64];
-    snprintf(signature, sizeof(signature), "(v[%zu:double]) -> double", num_doubles);
-    printf("Generated signature: %s\n", signature);
-
-    // 3. Create the trampoline with the dynamic signature.
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)sve_horizontal_add, NULL);
-
-    // 4. Prepare arguments and call.
-    double* data = (double*)malloc(sizeof(double) * num_doubles);
-    for (size_t i = 0; i < num_doubles; ++i)
-        data[i] = (i == 0) ? 42.0 : 0.0; // Put 42 in the first lane.
-
-    svbool_t pg = svptrue_b64();
-    svfloat64_t input_vec = svld1_f64(pg, data);
-    void* args[] = {&input_vec};
-    double result;
-
-    infix_forward_get_code(t)(&result, args);
-
-    printf("SVE horizontal sum result: %.1f\n", result); // Expected: 42.0
-
-    // 5. Clean up.
-    free(data);
-    infix_forward_destroy(t);
-}
-
-#else // If not compiled with SVE support
-void recipe_simd_sve() {
-    printf("SVE recipe skipped: not compiled with SVE support (e.g., -march=armv8-a+sve).\n");
-}
-#endif
+// 4. Prepare arguments and call.
+double* data = (double*)malloc(sizeof(double) * num_doubles);
+// ... populate data ...
+svfloat64_t input_vec = svld1_f64(svptrue_b64(), data);
+double result;
+infix_forward_get_code(t)(&result, (void*[]){&input_vec});
 ```
+
+> Full example available in [`Ch02_Rec10_SIMD_SVE.c`](/eg/cookbook/Ch02_Rec10_SIMD_SVE.c).
 
 ### Recipe: Working with Enums
 
@@ -721,35 +515,21 @@ void recipe_simd_sve() {
 **Solution**: Use the `e:<type>` syntax in the signature string. `infix` treats the enum identically to its underlying integer type for the FFI call, which is the correct behavior.
 
 ```c
-// Native C enum and function
-typedef enum { STATUS_OK = 0, STATUS_WARN = 1, STATUS_ERR = -1 } StatusCode;
-const char* status_to_string(StatusCode code) {
-    switch (code) {
-        case STATUS_OK:   return "OK";
-        case STATUS_WARN: return "Warning";
-        case STATUS_ERR:  return "Error";
-        default:          return "Unknown";
-    }
-}
+// const char* status_to_string(StatusCode code);
+// The C `enum` is based on `int`, so we describe it as `e:int`.
+const char* signature = "(e:int) -> *char";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)status_to_string, NULL);
 
-void recipe_enums() {
-    // The C `enum` is based on `int`, so we describe it as `e:int`.
-    const char* signature = "(e:int) -> *char";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)status_to_string, NULL);
+// Pass the enum value as its underlying integer type.
+int code = STATUS_ERR;
+const char* result_str = NULL;
+void* args[] = { &code };
 
-    // Pass the enum value as its underlying integer type.
-    int code = STATUS_ERR;
-    const char* result_str = NULL;
-    void* args[] = { &code };
-
-    infix_forward_get_code(t)(&result_str, args);
-
-    printf("Status for code %d is '%s'\n", code, result_str); // Expected: 'Error'
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result_str, args);
 ```
+
+> Full example available in [`Ch02_Rec11_Enums.c`](/eg/cookbook/Ch02_Rec11_Enums.c).
 
 ---
 
@@ -762,37 +542,25 @@ void recipe_enums() {
 **Solution**: Use `infix_reverse_create_callback`. The handler is a normal, clean C function whose signature exactly matches what `qsort` expects.
 
 ```c
-#include <stdlib.h>
-
-// 1. The handler function has a standard C signature. No context pointer is needed.
+// 1. The handler function has a standard C signature.
 int compare_integers_handler(const void* a, const void* b) {
     return (*(const int*)a - *(const int*)b);
 }
 
-void recipe_qsort_callback() {
-    // 2. Create the reverse trampoline.
-    infix_reverse_t* context = NULL;
-    const char* cmp_sig = "(*void, *void) -> int";
-    infix_reverse_create_callback(&context, cmp_sig, (void*)compare_integers_handler, NULL);
+// 2. Create the reverse trampoline.
+const char* cmp_sig = "(*void, *void) -> int";
+infix_reverse_t* context = NULL;
+infix_reverse_create_callback(&context, cmp_sig, (void*)compare_integers_handler, NULL);
 
-    // 3. Get the native function pointer.
-    typedef int (*compare_func_t)(const void*, const void*);
-    compare_func_t my_comparator = (compare_func_t)infix_reverse_get_code(context);
+// 3. Get the native function pointer and pass it to qsort.
+typedef int (*compare_func_t)(const void*, const void*);
+compare_func_t my_comparator = (compare_func_t)infix_reverse_get_code(context);
 
-    // 4. Use the generated callback with the C library function.
-    int numbers[] = { 5, 1, 4, 2, 3 };
-    size_t num_count = sizeof(numbers) / sizeof(numbers[0]);
-    qsort(numbers, num_count, sizeof(int), my_comparator);
-
-    printf("Sorted numbers:");
-    for(size_t i = 0; i < num_count; ++i) {
-        printf(" %d", numbers[i]);
-    }
-    printf("\n");
-
-    infix_reverse_destroy(context);
-}
+int numbers[] = { 5, 1, 4, 2, 3 };
+qsort(numbers, 5, sizeof(int), my_comparator);
 ```
+
+> Full example available in [`Ch03_Rec01_QsortCallback.c`](/eg/cookbook/Ch03_Rec01_QsortCallback.c).
 
 ### Recipe: Creating a Stateful Callback
 
@@ -801,44 +569,25 @@ void recipe_qsort_callback() {
 **Solution**: Use `infix_reverse_create_closure`. This API is specifically designed for stateful callbacks. You provide a generic handler and a `void* user_data` pointer to your state. Inside the handler, you can retrieve this pointer from the `context`.
 
 ```c
-typedef struct { const char * name; int sum; } AppContext;
-
-// 1. The handler for a closure has a generic signature.
+// 1. The generic handler retrieves state from the context's user_data field.
 void my_stateful_handler(infix_context_t* context, void* ret, void** args) {
-    (void)ret; // This handler doesn't return a value.
-
-    // 2. Retrieve your state from the context's user_data field.
     AppContext* ctx = (AppContext*)infix_reverse_get_user_data(context);
-
-    // 3. Manually unbox the arguments from the void** array.
     int item_value = *(int*)args[0];
-
     ctx->sum += item_value;
 }
 
-// A C library function that takes a callback but no user_data.
-typedef void (*item_processor_t)(int);
-void process_list(const int* items, int count, item_processor_t process_func) {
-    for (int i = 0; i < count; ++i) process_func(items[i]);
-}
+// 2. Prepare your state and create the closure, passing a pointer to the state.
+AppContext ctx = {"My List", 0};
+infix_reverse_t* rt = NULL;
+infix_reverse_create_closure(&rt, "(int) -> void", my_stateful_handler, &ctx, NULL);
 
-void recipe_stateful_callback() {
-    // a. Prepare your state.
-    AppContext ctx = {"My List", 0};
-
-    // b. Create the closure, passing a pointer to your state as user_data.
-    infix_reverse_t* rt = NULL;
-    infix_reverse_create_closure(&rt, "(int) -> void", my_stateful_handler, &ctx, NULL);
-
-    // c. Use the generated callback.
-    item_processor_t processor_ptr = (item_processor_t)infix_reverse_get_code(rt);
-    int list[] = {10, 20, 30};
-    process_list(list, 3, processor_ptr);
-    printf("Final sum for '%s': %d\n", ctx.name, ctx.sum);  // Expected: 60
-
-    infix_reverse_destroy(rt);
-}
+// 3. Use the generated callback with a C library function.
+item_processor_t processor_ptr = (item_processor_t)infix_reverse_get_code(rt);
+int list[] = {10, 20, 30};
+process_list(list, 3, processor_ptr);
 ```
+
+> Full example available in [`Ch03_Rec02_StatefulCallback.c`](/eg/cookbook/Ch03_Rec02_StatefulCallback.c).
 
 ---
 
@@ -851,21 +600,21 @@ void recipe_stateful_callback() {
 **Solution**: Use the `;` token to separate fixed and variadic arguments. The signature must exactly match the types you are passing in a *specific call*.
 
 ```c
-void recipe_variadic_printf() {
-    const char* signature = "(*char; int, double) -> int";
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, signature, (void*)printf, NULL);
+// Signature for: printf(const char* format, int arg1, double arg2);
+const char* signature = "(*char; int, double) -> int";
+infix_forward_t* trampoline = NULL;
+infix_forward_create(&trampoline, signature, (void*)printf, NULL);
 
-    const char* fmt = "Count: %d, Value: %.2f\n";
-    int count = 42;
-    double value = 123.45;
-    void* args[] = { &fmt, &count, &value };
-    int result;
+const char* fmt = "Count: %d, Value: %.2f\n";
+int count = 42;
+double value = 123.45;
+void* args[] = { &fmt, &count, &value };
+int result;
 
-    infix_forward_get_code(trampoline)(&result, args);
-    infix_forward_destroy(trampoline);
-}
+infix_forward_get_code(trampoline)(&result, args);
 ```
+
+> Full example available in [`Ch04_Rec01_VariadicPrintf.c`](/eg/cookbook/Ch04_Rec01_VariadicPrintf.c).
 
 ### Recipe: Receiving and Calling a Function Pointer
 
@@ -874,28 +623,27 @@ void recipe_variadic_printf() {
 **Solution**: The signature for a function pointer is `*((...) -> ...)`. Generate your callback, get its native pointer, and pass that pointer as an argument.
 
 ```c
+// 1. Create the inner callback.
 int multiply_handler(int x) { return x * 10; }
-int harness_func(int (*worker_func)(int), int base_val) { return worker_func(base_val); }
+infix_reverse_t* inner_cb_ctx = NULL;
+infix_reverse_create_callback(&inner_cb_ctx, "(int)->int", (void*)multiply_handler, NULL);
 
-void recipe_callback_as_arg() {
-    infix_reverse_t* inner_cb_ctx = NULL;
-    infix_reverse_create_callback(&inner_cb_ctx, "(int)->int", (void*)multiply_handler, NULL);
+// 2. Create the outer trampoline for the function that *takes* the callback.
+//    Signature for: int harness_func( int(*)(int), int );
+const char* harness_sig = "(*((int)->int), int) -> int";
+infix_forward_t* harness_trampoline = NULL;
+infix_forward_create(&harness_trampoline, harness_sig, (void*)harness_func, NULL);
 
-    infix_forward_t* harness_trampoline = NULL;
-    infix_forward_create(&harness_trampoline, "(*((int)->int), int) -> int", (void*)harness_func, NULL);
+// 3. Get the native pointer from the callback and pass it as an argument.
+void* inner_cb_ptr = infix_reverse_get_code(inner_cb_ctx);
+int value = 7;
+void* harness_args[] = { &inner_cb_ptr, &value };
+int result;
 
-    void* inner_cb_ptr = infix_reverse_get_code(inner_cb_ctx);
-    int value = 7;
-    void* harness_args[] = { &inner_cb_ptr, &value };
-    int result;
-
-    infix_forward_get_code(harness_trampoline)(&result, harness_args);
-    printf("Result from nested callback: %d\n", result); // Should be 70
-
-    infix_forward_destroy(harness_trampoline);
-    infix_reverse_destroy(inner_cb_ctx);
-}
+infix_forward_get_code(harness_trampoline)(&result, harness_args);
 ```
+
+> Full example available in [`Ch04_Rec02_CallbackAsArg.c`](/eg/cookbook/Ch04_Rec02_CallbackAsArg.c).
 
 ### Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)
 
@@ -904,52 +652,31 @@ void recipe_callback_as_arg() {
 **Solution**: This is a two-step FFI process. First, read the function pointer value from the struct. Second, create a new trampoline for that function pointer's signature and call it. The Type Registry is perfect for making this clean.
 
 ```c
-// C equivalent of a simple "object" with a v-table.
-typedef struct { int val; } Adder;
-int vtable_add(Adder* self, int amount) { return self->val + amount; }
-void vtable_destroy(Adder* self) { free(self); }
+// 1. Define types for the object, function pointers, and v-table.
+infix_registry_t* reg = infix_registry_create();
+infix_register_types(reg,
+    "@Adder = { val: int };"
+    "@Adder_add_fn = (*@Adder, int) -> int;"
+    "@AdderVTable = { add: *@Adder_add_fn };"
+);
 
-typedef struct {
-    int (*add)(Adder* self, int amount);
-    void (*destroy)(Adder* self);
-} AdderVTable;
+// 2. Create an object and get a pointer to its v-table.
+Adder* my_adder = create_adder(100);
+const AdderVTable* vtable = &VTABLE;
 
-const AdderVTable VTABLE = { vtable_add, vtable_destroy };
-Adder* create_adder(int base) {
-    Adder* a = malloc(sizeof(Adder));
-    if (a) a->val = base;
-    return a;
-}
+// 3. Read the function pointer from the v-table.
+void* add_func_ptr = (void*)vtable->add;
 
-void recipe_vtable_call() {
-    infix_registry_t* reg = infix_registry_create();
-    infix_register_types(reg,
-        "@Adder = { val: int };"
-        "@Adder_add_fn = (*@Adder, int) -> int;"
-        "@AdderVTable = { add: *@Adder_add_fn };" // Only need to describe the one we're calling
-    );
+// 4. Create a trampoline for the specific function pointer and call it.
+infix_forward_t* t_add = NULL;
+infix_forward_create(&t_add, "@Adder_add_fn", add_func_ptr, reg);
 
-    Adder* my_adder = create_adder(100);
-    const AdderVTable* vtable = &VTABLE;
-
-    void* add_func_ptr = (void*)vtable->add;
-
-    infix_forward_t* t_add = NULL;
-    // Note: The signature here must match the member we are calling.
-    infix_forward_create(&t_add, "(*@Adder, int) -> int", add_func_ptr, reg);
-
-    int amount_to_add = 23;
-    int result;
-    void* add_args[] = { &my_adder, &amount_to_add };
-    infix_forward_get_code(t_add)(&result, add_args);
-
-    printf("Result from v-table call: %d\n", result); // Expected: 123
-
-    infix_forward_destroy(t_add);
-    infix_registry_destroy(reg);
-    free(my_adder);
-}
+int amount_to_add = 23, result;
+void* add_args[] = { &my_adder, &amount_to_add };
+infix_forward_get_code(t_add)(&result, add_args);
 ```
+
+> Full example available in [`Ch04_Rec03_VTableCStyle.c`](/eg/cookbook/Ch04_Rec03_VTableCStyle.c).
 
 ### Recipe: Handling `longdouble`
 
@@ -958,33 +685,20 @@ void recipe_vtable_call() {
 **Solution**: Use the `longdouble` keyword in your signature. `infix`'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal `double`.
 
 ```c
-#include <math.h>
+// long double native_sqrtl(long double x);
+const char* signature = "(longdouble) -> longdouble";
 
-// A simple function using long double.
-long double native_sqrtl(long double x) {
-    return sqrtl(x);
-}
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)native_sqrtl, NULL);
 
-void recipe_long_double() {
-    // On platforms where long double is distinct (like Linux), this will
-    // trigger special ABI handling. On platforms where it's an alias for
-    // double (like Windows), infix will treat it as a double.
-    const char* signature = "(longdouble) -> longdouble";
+long double input = 144.0L;
+long double result = 0.0L;
+void* args[] = { &input };
 
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, signature, (void*)native_sqrtl, NULL);
-
-    long double input = 144.0L;
-    long double result = 0.0L;
-    void* args[] = { &input };
-
-    infix_forward_get_code(t)(&result, args);
-
-    printf("sqrtl(144.0L) = %Lf\n", result); // Expected: 12.0
-
-    infix_forward_destroy(t);
-}
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch04_Rec04_LongDouble.c`](/eg/cookbook/Ch04_Rec04_LongDouble.c).
 
 ### Recipe: Proving Reentrancy with Nested FFI Calls
 
@@ -993,63 +707,29 @@ void recipe_long_double() {
 **Solution**: `infix` is designed to be fully reentrant. The library uses no global mutable state, and all error information is stored in thread-local storage. This recipe demonstrates a forward call that invokes a reverse callback, which in turn makes another forward call.
 
 ```c
-#include <string.h> // For memcpy
+// 1. Create the innermost forward trampoline (for `multiply`).
+infix_forward_t* fwd_multiply = NULL;
+infix_forward_create(&fwd_multiply, "(int, int)->int", (void*)multiply, NULL);
 
-// Innermost target function
-int multiply(int a, int b) { return a * b; }
+// 2. Create the reverse closure, passing the forward trampoline as user_data.
+//    The handler will use this trampoline to make the nested call.
+infix_reverse_t* rev_nested = NULL;
+infix_reverse_create_closure(&rev_nested, "(int)->int", nested_call_handler, fwd_multiply, NULL);
 
-// Because this handler needs state (the forward trampoline), we MUST use a closure.
-void nested_call_handler(infix_context_t* ctx, void* ret, void** args) {
-    // 1. Retrieve the forward trampoline from user_data.
-    infix_forward_t* fwd_trampoline = (infix_forward_t*)infix_reverse_get_user_data(ctx);
+// 3. Create the outermost forward trampoline (for `harness`).
+infix_forward_t* fwd_harness = NULL;
+const char* harness_sig = "(*((int)->int), int)->int";
+infix_forward_create(&fwd_harness, harness_sig, (void*)harness, NULL);
 
-    // 2. Unbox the argument.
-    int val = *(int*)args[0];
-    int multiplier = 5;
-    void* mult_args[] = { &val, &multiplier };
-
-    // 3. Make the nested forward call.
-    int result;
-    infix_forward_get_code(fwd_trampoline)(&result, mult_args);
-
-    // 4. Write the result to the return buffer.
-    memcpy(ret, &result, sizeof(int));
-}
-
-// The outer C function that takes our generated callback
-int harness(int (*func)(int), int input) {
-    return func(input);
-}
-
-void recipe_reentrancy() {
-    // 1. Create the innermost forward trampoline (for `multiply`)
-    infix_forward_t* fwd_multiply = NULL;
-    infix_forward_create(&fwd_multiply, "(int, int)->int", (void*)multiply, NULL);
-
-    // 2. Create the reverse closure, passing the forward trampoline as user_data
-    infix_reverse_t* rev_nested = NULL;
-    infix_reverse_create_closure(&rev_nested, "(int)->int", nested_call_handler, fwd_multiply, NULL);
-
-    // 3. Create the outermost forward trampoline (for `harness`)
-    infix_forward_t* fwd_harness = NULL;
-    const char* harness_sig = "(*((int)->int), int)->int";
-    infix_forward_create(&fwd_harness, harness_sig, (void*)harness, NULL);
-
-    // 4. Execute the call chain
-    void* callback_ptr = infix_reverse_get_code(rev_nested);
-    int base_val = 8;
-    void* harness_args[] = { &callback_ptr, &base_val };
-    int final_result;
-
-    infix_forward_get_code(fwd_harness)(&final_result, harness_args);
-    printf("Nested/reentrant call result: %d\n", final_result); // Expected: 8 * 5 = 40
-
-    // 5. Clean up all three trampolines
-    infix_forward_destroy(fwd_harness);
-    infix_reverse_destroy(rev_nested);
-    infix_forward_destroy(fwd_multiply);
-}
+// 4. Execute the call chain.
+void* callback_ptr = infix_reverse_get_code(rev_nested);
+int base_val = 8;
+void* harness_args[] = { &callback_ptr, &base_val };
+int final_result;
+infix_forward_get_code(fwd_harness)(&final_result, harness_args);
 ```
+
+> Full example available in [`Ch04_Rec05_Reentrancy.c`](/eg/cookbook/Ch04_Rec05_Reentrancy.c).
 
 ### Recipe: Proving Thread Safety
 
@@ -1058,66 +738,25 @@ void recipe_reentrancy() {
 **Solution**: `infix` trampoline handles (`infix_forward_t*` and `infix_reverse_t*`) are immutable after creation and are safe to share between threads. All error state is kept in thread-local storage, so calls from different threads will not interfere with each other.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#if defined(_WIN32)
-#include <windows.h>
-#else
-#include <pthread.h>
-#endif
+// Main thread: Create the trampoline.
+infix_forward_t* trampoline = NULL;
+infix_forward_create(&trampoline, "(int, int)->int", (void*)add, NULL);
 
-// A simple function to be the FFI target.
-int add(int a, int b) { return a + b; }
+// Main thread: Prepare data for the worker thread, including the callable pointer.
+thread_data_t data = { infix_forward_get_code(trampoline), 0 };
 
-// A struct to pass data to our worker thread.
-typedef struct {
-    infix_cif_func cif; // The callable trampoline function pointer.
-    int result;
-} thread_data_t;
+// Main thread: Spawn a worker thread.
+pthread_t thread_id;
+pthread_create(&thread_id, NULL, worker_thread_func, &data);
 
-// The function our worker thread will execute.
-#if defined(_WIN32)
-DWORD WINAPI worker_thread_func(LPVOID arg) {
-#else
-void* worker_thread_func(void* arg) {
-#endif
-    thread_data_t* data = (thread_data_t*)arg;
-    int a = 20, b = 22;
-    void* args[] = { &a, &b };
-    // Call the trampoline function pointer that was created on the main thread.
-    data->cif(&data->result, args);
-#if defined(_WIN32)
-    return 0;
-#else
-    return NULL;
-#endif
-}
-
-void recipe_thread_safety() {
-    // Main thread: Create the trampoline.
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create(&trampoline, "(int, int)->int", (void*)add, NULL);
-
-    thread_data_t data = { infix_forward_get_code(trampoline), 0 };
-
-    // Main thread: Spawn a worker thread, passing it the callable pointer.
-#if defined(_WIN32)
-    HANDLE thread_handle = CreateThread(NULL, 0, worker_thread_func, &data, 0, NULL);
-    WaitForSingleObject(thread_handle, INFINITE);
-    CloseHandle(thread_handle);
-#else
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, worker_thread_func, &data);
-    pthread_join(thread_id, NULL);
-#endif
-
-    // Main thread: Check the result computed by the worker thread.
-    printf("Result from worker thread: %d\n", data.result); // Expected: 42
-
-    // Main thread: Clean up the trampoline.
-    infix_forward_destroy(trampoline);
-}
+// Worker thread (`worker_thread_func`):
+// ...
+//   data->cif(&data->result, args); // <-- FFI call happens here
+// ...
+pthread_join(thread_id, NULL);
 ```
+
+> Full example available in [`Ch04_Rec06_ThreadSafety.c`](/eg/cookbook/Ch04_Rec06_ThreadSafety.c).
 
 ---
 
@@ -1133,78 +772,28 @@ void recipe_thread_safety() {
 
 **Solution**: Find the compiler-mangled names for the constructor, destructor, and methods. Use `infix` to call them directly, manually passing the `this` pointer as the first argument to methods.
 
-```cpp
-// File: MyClass.cpp (compile to libmyclass.so/.dll)
-#include <iostream>
-class MyClass {
-    int value;
-public:
-    MyClass(int val) : value(val) { std::cout << "C++ Constructor called.\n"; }
-    ~MyClass() { std::cout << "C++ Destructor called.\n"; }
-    int add(int x) { return this->value + x; }
-};
-extern "C" size_t get_myclass_size() { return sizeof(MyClass); }
-```
-
 ```c
-// File: main.c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <stdlib.h>
+// Mangled names depend on the compiler. This example gets them from a helper.
+const char* mangled_ctor = get_mangled_constructor();
+const char* mangled_getvalue = get_mangled_getvalue();
 
-// Mangled names depend on the compiler. Find them with `nm` or `dumpbin`.
-#if defined(__GNUC__) || defined(__clang__) // Itanium ABI
-const char* MANGLED_CONSTRUCTOR = "_ZN7MyClassC1Ei"; // MyClass::MyClass(int)
-const char* MANGLED_DESTRUCTOR = "_ZN7MyClassD1Ev";  // MyClass::~MyClass()
-const char* MANGLED_ADD = "_ZN7MyClass3addEi";      // MyClass::add(int)
-#elif defined(_MSC_VER) // MSVC ABI
-const char* MANGLED_CONSTRUCTOR = "??0MyClass@@QEAA@H@Z";
-const char* MANGLED_DESTRUCTOR = "??1MyClass@@QEAA@XZ";
-const char* MANGLED_ADD = "?add@MyClass@@QEAAHH@Z";
-#endif
+// Constructor is: void MyClass(MyClass* this, int val);
+infix_forward_create(&t_ctor, "(*void, int)->void", p_ctor, NULL);
 
-void recipe_cpp_mangled() {
-    infix_library_t* lib = infix_library_open("libmyclass.so"); // or .dll
-    if (!lib) return;
+// Method is: int getValue(const MyClass* this);
+infix_forward_create(&t_getval, "(*void)->int", p_getval, NULL);
 
-    void* p_ctor = infix_library_get_symbol(lib, MANGLED_CONSTRUCTOR);
-    void* p_dtor = infix_library_get_symbol(lib, MANGLED_DESTRUCTOR);
-    void* p_add = infix_library_get_symbol(lib, MANGLED_ADD);
-    size_t (*p_size)() = infix_library_get_symbol(lib, "get_myclass_size");
-    if (!p_ctor || !p_dtor || !p_add || !p_size) {
-        printf("Failed to find one or more symbols.\n");
-        infix_library_close(lib);
-        return;
-    }
+// --- Simulate `MyClass* obj = new MyClass(100);` ---
+void* obj = malloc(obj_size);
+int initial_val = 100;
+infix_forward_get_code(t_ctor)(NULL, (void*[]){ &obj, &initial_val });
 
-    infix_forward_t *t_ctor, *t_dtor, *t_add;
-    // Constructor is effectively: void __thiscall(void* this, int val)
-    infix_forward_create(&t_ctor, "(*void, int)->void", p_ctor, NULL);
-    // Destructor is: void __thiscall(void* this)
-    infix_forward_create(&t_dtor, "(*void)->void", p_dtor, NULL);
-    // Method is: int __thiscall(void* this, int x)
-    infix_forward_create(&t_add, "(*void, int)->int", p_add, NULL);
-
-    // --- Simulate `MyClass* obj = new MyClass(100);` ---
-    void* obj = malloc(p_size());
-    int initial_val = 100;
-    infix_forward_get_code(t_ctor)(NULL, (void*[]){ &obj, &initial_val });
-
-    // --- Simulate `int result = obj->add(23);` ---
-    int add_val = 23, result;
-    infix_forward_get_code(t_add)(&result, (void*[]){ &obj, &add_val });
-    printf("C++ mangled method returned: %d\n", result); // Should be 123
-
-    // --- Simulate `delete obj;` ---
-    infix_forward_get_code(t_dtor)(NULL, (void*[]){ &obj });
-    free(obj);
-
-    infix_library_close(lib);
-    infix_forward_destroy(t_ctor);
-    infix_forward_destroy(t_dtor);
-    infix_forward_destroy(t_add);
-}
+// --- Simulate `int result = obj->getValue();` ---
+int result;
+infix_forward_get_code(t_getval)(&result, (void*[]){ &obj });
 ```
+
+> Full example available in [`Ch05_Rec01_CppMangledNames.c`](/eg/cookbook/Ch05_Rec01_CppMangledNames.c) and library source in [`libs/MyClass.cpp`](/eg/cookbook/libs/MyClass.cpp).
 
 ### Recipe: Interfacing with C++ Templates
 
@@ -1212,63 +801,27 @@ void recipe_cpp_mangled() {
 
 **Solution**: You can't call the template itself, but you can call a *specific instantiation* of it. The compiler generates a normal function for each concrete type used with the template, and this function has a predictable mangled name that you can look up and call.
 
-```cpp
-// File: Box.cpp (compile to libbox.so/.dll)
-#include <iostream>
-template <typename T>
-class Box {
-    T value;
-public:
-    Box(T val) : value(val) {}
-    T get_value() { return this->value; }
-};
-
-// We need to explicitly instantiate the templates we want to use
-// so the compiler generates code for them.
-template class Box<int>;
-template class Box<double>;
-```
-
 ```c
-// File: main.c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 // Mangled name for `Box<double>::get_value()` on GCC/Clang
 const char* MANGLED_GET_DBL = "_ZNK3BoxIdE9get_valueEv";
 
-void recipe_cpp_template() {
-    infix_library_t* lib = infix_library_open("libbox.so");
-    if (!lib) return;
+// In a real scenario, you would call the mangled constructor.
+// For simplicity here, we manually create the object layout.
+double val = 3.14;
+void* my_box = malloc(sizeof(double));
+memcpy(my_box, &val, sizeof(double));
 
-    // Manually create a Box<double> for this example.
-    double val = 3.14;
-    void* my_box = malloc(sizeof(double));
-    memcpy(my_box, &val, sizeof(double));
+void* p_get_value = infix_library_get_symbol(lib, MANGLED_GET_DBL);
 
-    void* p_get_value = infix_library_get_symbol(lib, MANGLED_GET_DBL);
-    if (!p_get_value) {
-        printf("Failed to find mangled template function.\n");
-        free(my_box);
-        infix_library_close(lib);
-        return;
-    }
+// Signature: double get_value(const Box<double>* this)
+infix_forward_t* t_get = NULL;
+infix_forward_create(&t_get, "(*void) -> double", p_get_value, NULL);
 
-    infix_forward_t* t_get = NULL;
-    // Signature: double get_value(Box<double>* this)
-    infix_forward_create(&t_get, "(*void) -> double", p_get_value, NULL);
-
-    double result;
-    infix_forward_get_code(t_get)(&result, (void*[]){ &my_box });
-
-    printf("Value from C++ template object: %f\n", result); // Should be 3.14
-
-    free(my_box);
-    infix_forward_destroy(t_get);
-    infix_library_close(lib);
-}
+double result;
+infix_forward_get_code(t_get)(&result, (void*[]){ &my_box });
 ```
+
+> Full example available in [`Ch05_Rec02_CppTemplates.c`](/eg/cookbook/Ch05_Rec02_CppTemplates.c) and library source in [`libs/Box.cpp`](/eg/cookbook/libs/Box.cpp).
 
 ### The Pattern for Other Compiled Languages
 
@@ -1374,6 +927,120 @@ asm_add:
 
 *Compile with: `nasm -f elf64 libasm_math.asm && gcc -shared -o libasm_math.so libasm_math.o`*
 
+### Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)
+
+**Problem**: You are building a language binding and need to introspect a signature to marshal strings correctly. A signature like `*uint16` is structurally correct for a Windows `wchar_t*`, but how does your code know it's a null-terminated string and not just a pointer to an integer?
+
+**Solution**: Use the `infix` type registry to create **semantic aliases**. The signature string itself can then document the *intent* of the type, which your wrapper can use to trigger the correct string-handling logic. This pattern provides the missing link between C's structural type system and the semantic needs of a high-level language.
+
+Let's model the Windows `MessageBoxW` function, which takes two UTF-16 strings.
+
+#### Step 1: Define Semantic Aliases in a Registry
+
+```c
+infix_registry_t* registry = infix_registry_create();
+
+const char* string_types =
+    // Structural aliases for Windows types
+    "@HWND = *void;"
+    "@UINT = uint32;"
+
+    // Semantic aliases that describe intent, not just structure.
+    "@UTF16String = { data: *uint16 };" // Represents wchar_t*
+    "@UTF8String = { data: *char };"    // Represents const char*
+;
+infix_register_types(registry, string_types);
+```
+
+> **Note:** We define `UTF16String` as `{*uint16}` instead of a direct alias `*uint16`. This is a crucial technique. By wrapping the pointer in a struct, the name `@UTF16String` refers to the struct itself, making it inspectable.
+
+#### Step 2: Use the Aliases in Your Signature
+
+```c
+// Signature for: int MessageBoxW(HWND hwnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType);
+const char* signature = "(@HWND, @UTF16String, @UTF16String, @UINT) -> int";
+```
+
+#### Step 3: Introspect with Semantic Awareness
+
+```c
+// 1. Parse the function signature to get its components.
+infix_signature_parse(signature, &arena, &ret, &args, &num_args, &num_fixed, registry);
+
+// 2. Introspect the type of an argument.
+const infix_type* arg_type = args[1].type; // Second argument
+
+// 3. After resolution, `@UTF16String` is a STRUCT. Check its preserved name.
+if (arg_type->category == INFIX_TYPE_STRUCT && arg_type->meta.aggregate_info.name) {
+    if (strcmp(arg_type->meta.aggregate_info.name, "UTF16String") == 0) {
+        // This is our cue! Marshal the user's string as UTF-16.
+    }
+}
+```
+
+> Full example available in [`Ch05_Rec03_SemanticStrings.c`](/eg/cookbook/Ch05_Rec03_SemanticStrings.c).
+
+### Recipe: Calling C++ Virtual Functions (V-Table Emulation)
+
+**Problem**: You have a pointer to a C++ polymorphic base class object (e.g., `Shape*`) and you need to call a `virtual` function on it from C, achieving true dynamic dispatch.
+
+**Solution**: Emulate what the C++ compiler does: manually read the object's v-table pointer (`vptr`), find the function pointer at the correct index within the v-table, and use `infix` to call it.
+
+```c
+// 1. Create a C++ object via a factory function.
+void* rect_obj = create_rectangle(10.0, 5.0);
+
+// 2. Manually read the v-table pointer from the object's memory.
+void** vptr = (void**)rect_obj;
+void** vtable = *vptr;
+
+// 3. Read function pointers from their known indices in the v-table.
+void* area_fn_ptr = vtable[0]; // double area() const -> index 0
+void* name_fn_ptr = vtable[1]; // const char* name() const -> index 1
+
+// 4. Create trampolines for the discovered function pointers.
+infix_forward_create(&t_area, "(*void)->double", area_fn_ptr, NULL);
+infix_forward_create(&t_name, "(*void)->*char", name_fn_ptr, NULL);
+
+// 5. Call the virtual functions, passing the object as the `this` pointer.
+double rect_area;
+infix_forward_get_code(t_area)(&rect_area, (void*[]){ &rect_obj });
+```
+
+> Full example available in [`Ch05_Rec04_CppVirtualFunctions.c`](/eg/cookbook/Ch05_Rec04_CppVirtualFunctions.c) and library source in [`libs/shapes.cpp`](/eg/cookbook/libs/shapes.cpp).
+
+### Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas
+
+**Problem**: You need to call a C++ method that accepts a callback (e.g., `std::function<void(int)>`), and provide a stateful handler from your C application.
+
+**Solution**: This is a powerful, two-way FFI interaction. You will create an `infix` closure to represent your C-side state, and then call a mangled C++ method to register that closure's components (its C function pointer and its state pointer) with the C++ object.
+
+```c
+// 1. Create the C-side state and the infix closure.
+C_AppState app_state = {0};
+infix_reverse_t* closure = NULL;
+infix_reverse_create_closure(&closure, "(int, *void)->void", my_closure_handler, &app_state, NULL);
+
+// 2. Create an instance of the C++ EventManager object.
+void* manager_obj = malloc(get_size());
+infix_forward_create(&t_ctor, "(*void)->void", p_ctor, NULL);
+infix_forward_get_code(t_ctor)(NULL, &manager_obj);
+
+// 3. Call the C++ `set_handler` method to register our closure's components.
+const char* sig = "(*void, *((int, *void)->void), *void)->void";
+infix_forward_create(&t_set_handler, sig, p_set_handler, NULL);
+void* closure_c_func = infix_reverse_get_code(closure);
+void* closure_user_data = infix_reverse_get_user_data(closure);
+void* set_handler_args[] = { &manager_obj, &closure_c_func, &closure_user_data };
+infix_forward_get_code(t_set_handler)(NULL, set_handler_args);
+
+// 4. Call the C++ `trigger` method to make it invoke our C callback.
+infix_forward_create(&t_trigger, "(*void, int)->void", p_trigger, NULL);
+// ...
+```
+
+> Full example available in [`Ch05_Rec05_CppCallbacks.cpp`](/eg/cookbook/Ch05_Rec05_CppCallbacks.cpp) and library source in [`libs/EventManager.cpp`](/eg/cookbook/libs/EventManager.cpp).
+
 ## Chapter 6: Dynamic Libraries & System Calls
 
 ### Recipe: Calling Native System Libraries without Linking
@@ -1383,50 +1050,27 @@ asm_add:
 **Solution**: Use `infix`'s cross-platform library loading API to get a handle to the library and the function pointer, then create a trampoline.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
+// 1. Open the system library by name.
+infix_library_t* user32 = infix_library_open("user32.dll");
 
-#if defined(_WIN32)
-#include <windows.h> // For UINT
-void recipe_system_call() {
-    infix_library_t* user32 = infix_library_open("user32.dll");
-    if (!user32) {
-        printf("Failed to open user32.dll\n");
-        return;
-    }
+// 2. Look up the address of the `MessageBoxA` function.
+void* pMessageBoxA = infix_library_get_symbol(user32, "MessageBoxA");
 
-    void* pMessageBoxA = infix_library_get_symbol(user32, "MessageBoxA");
-    if (!pMessageBoxA) {
-        printf("Failed to find MessageBoxA\n");
-        infix_library_close(user32);
-        return;
-    }
+// 3. Define the signature and create the trampoline.
+//    int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
+const char* sig = "(*void, *char, *char, uint32) -> int";
+infix_forward_t* t = NULL;
+infix_forward_create(&t, sig, pMessageBoxA, NULL);
 
-    // int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
-    // Note: HWND is a pointer, LPCSTR is *char, UINT is uint32.
-    const char* sig = "(*void, *char, *char, uint32) -> int";
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, sig, pMessageBoxA, NULL);
-
-    void* hwnd = NULL;
-    const char* text = "Hello from a dynamically loaded function!";
-    const char* caption = "infix FFI";
-    uint32_t type = 0; // MB_OK
-    void* args[] = { &hwnd, &text, &caption, &type };
-    int result;
-
-    infix_forward_get_code(t)(&result, args);
-
-    infix_forward_destroy(t);
-    infix_library_close(user32);
-}
-#else
-// Dummy implementation for non-Windows platforms to allow compilation.
-void recipe_system_call() {
-    printf("This recipe is for Windows only.\n");
-}
-#endif
+// 4. Prepare arguments and call the function.
+void* hwnd = NULL;
+const char* text = "Hello from a dynamically loaded function!";
+// ...
+int result;
+infix_forward_get_code(t)(&result, args);
 ```
+
+> Full example available in [`Ch06_Rec01_SystemLibraries.c`](/eg/cookbook/Ch06_Rec01_SystemLibraries.c).
 
 ### Recipe: Reading and Writing Global Variables
 
@@ -1436,98 +1080,37 @@ void recipe_system_call() {
 
 #### Example 1: Simple Integer Variable
 
-First, create a simple shared library (`libglobals.c`) that exports a counter:
-
 ```c
-// libglobals.c - Compile to a shared library
-#if defined(_WIN32)
-#define EXPORT __declspec(dllexport)
-#else
-#define EXPORT
-#endif
+infix_library_t* lib = infix_library_open("./libglobals.so");
 
-EXPORT int global_counter = 42;
-```
+int counter_val = 0;
+// 1. Read the initial value. The signature is simply the type of the variable.
+infix_read_global(lib, "global_counter", "int", &counter_val, NULL);
 
-Now, the C code to interact with it:
+// 2. Write a new value to the global variable.
+int new_val = 100;
+infix_write_global(lib, "global_counter", "int", &new_val, NULL);
 
-```c
-#include <infix/infix.h>
-#include <stdio.h>
-
-void recipe_global_int() {
-    infix_library_t* lib = infix_library_open("./libglobals.so"); // or "libglobals.dll"
-    if (!lib) return;
-
-    int counter_val = 0;
-
-    // 1. Read the initial value. The signature is simply the type of the variable.
-    infix_read_global(lib, "global_counter", "int", &counter_val);
-    printf("Initial value of global_counter: %d\n", counter_val); // Expected: 42
-
-    // 2. Write a new value to the global variable.
-    int new_val = 100;
-    infix_write_global(lib, "global_counter", "int", &new_val);
-
-    // 3. Read the value again to confirm it was changed.
-    counter_val = 0; // Reset our local variable
-    infix_read_global(lib, "global_counter", "int", &counter_val);
-    printf("New value of global_counter: %d\n", counter_val); // Expected: 100
-
-    infix_library_close(lib);
-}
+// 3. Read it back to confirm.
+infix_read_global(lib, "global_counter", "int", &counter_val, NULL);
 ```
 
 #### Example 2: Aggregate (Struct) Variable
 
-Let's expand `libglobals.c` to export a configuration struct:
-
 ```c
-// Add to libglobals.c
-typedef struct {
-    const char* name;
-    int version;
-} Config;
+infix_registry_t* reg = infix_registry_create();
+infix_register_types(reg, "@Config = {*char, int};");
 
-EXPORT Config g_config = { "default", 1 };
+Config local_config;
+// 1. Read the global struct into our local variable.
+infix_read_global(lib, "g_config", "@Config", &local_config, reg);
+
+// 2. Modify and write the struct back to the library.
+Config new_config = { "updated", 2 };
+infix_write_global(lib, "g_config", "@Config", &new_config, reg);
 ```
 
-Now, the C code to read and write this struct:
-
-```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <string.h>
-
-typedef struct { const char* name; int version; } Config;
-
-void recipe_global_struct() {
-    infix_library_t* lib = infix_library_open("./libglobals.so");
-    if (!lib) return;
-
-    // It's good practice to use the registry for structs.
-    infix_registry_t* reg = infix_registry_create();
-    infix_register_types(reg, "@Config = {*char, int};");
-
-    Config local_config;
-
-    // 1. Read the global struct into our local variable.
-    infix_read_global(lib, "g_config", "@Config", &local_config);
-    printf("Initial config: name='%s', version=%d\n", local_config.name, local_config.version);
-
-    // 2. Modify and write the struct back to the library.
-    Config new_config = { "updated", 2 };
-    infix_write_global(lib, "g_config", "@Config", &new_config);
-
-    // 3. Read it back to verify the change.
-    memset(&local_config, 0, sizeof(Config));
-    infix_read_global(lib, "g_config", "@Config", &local_config);
-    printf("Updated config: name='%s', version=%d\n", local_config.name, local_config.version);
-
-    infix_registry_destroy(reg);
-    infix_library_close(lib);
-}
-```
+> Full example available in [`Ch06_Rec02_GlobalVariables.c`](/eg/cookbook/Ch06_Rec02_GlobalVariables.c) and library source in [`libs/libglobals.c`](/eg/cookbook/libs/libglobals.c).
 
 ### Recipe: Handling Library Dependencies
 
@@ -1536,35 +1119,18 @@ void recipe_global_struct() {
 **Solution:** You don't have to do anything special. On all modern operating systems, the dynamic linker will automatically find, load, and link `libB` when you load `libA`.
 
 ```c
-// libB.c -> provides a helper function
-int helper_from_lib_b() { return 100; }
+// We only need to open libA. The OS will handle loading libB.
+infix_library_t* lib = infix_library_open("./libA.so");
 
-// libA.c -> depends on libB
-int helper_from_lib_b();
-int entry_point_a() { return 200 + helper_from_lib_b(); }
+void* p_entry = infix_library_get_symbol(lib, "entry_point_a");
+infix_forward_t* t = NULL;
+infix_forward_create(&t, "()->int", p_entry, NULL);
 
-// How to compile:
-// gcc -shared -fPIC -o libB.so libB.c
-// gcc -shared -fPIC -o libA.so libA.c -L. -lB // Link libA against libB
-
-void recipe_library_dependencies() {
-    // We only need to open libA. The OS will handle loading libB.
-    infix_library_t* lib = infix_library_open("./libA.so");
-    if (!lib) return;
-
-    void* p_entry = infix_library_get_symbol(lib, "entry_point_a");
-    infix_forward_t* t = NULL;
-    infix_forward_create(&t, "()->int", p_entry, NULL);
-
-    int result;
-    infix_forward_get_code(t)(&result, NULL);
-
-    printf("Result from chained libraries: %d\n", result); // Should be 300
-
-    infix_forward_destroy(t);
-    infix_library_close(lib);
-}
+int result;
+infix_forward_get_code(t)(&result, NULL);
 ```
+
+> Full example available in [`Ch06_Rec03_LibraryDependencies.c`](/eg/cookbook/Ch06_Rec03_LibraryDependencies.c) and library sources in [`libs/libA.c`](/eg/cookbook/libs/libA.c) and [`libs/libB.c`](/eg/cookbook/libs/libB.c).
 
 ---
 
@@ -1577,39 +1143,23 @@ void recipe_library_dependencies() {
 **Solution**: Use `infix_type_from_signature` to parse a signature into a detailed `infix_type` graph. This graph contains all the `size`, `alignment`, and member `offset` information needed to correctly write data into a C-compatible memory buffer.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-
-typedef struct { int32_t user_id; double score; const char* name; } UserProfile;
-
 void marshal_ordered_data(void* dest, const char* sig, void** src) {
+    // 1. Parse the signature to get the struct's layout information.
     infix_type* type = NULL;
     infix_arena_t* arena = NULL;
-    if (infix_type_from_signature(&type, &arena, sig, NULL) != INFIX_SUCCESS) return;
+    infix_type_from_signature(&type, &arena, sig, NULL);
 
+    // 2. Iterate through the struct's members.
     for (size_t i = 0; i < infix_type_get_member_count(type); ++i) {
         const infix_struct_member* member = infix_type_get_member(type, i);
+        // 3. Use the offset and size to copy data into the correct location.
         memcpy((char*)dest + member->offset, src[i], infix_type_get_size(member->type));
     }
     infix_arena_destroy(arena);
 }
-
-void recipe_dynamic_packing() {
-    int32_t id = 123;
-    double score = 98.6;
-    const char* name = "Sanko";
-    void* my_data[] = { &id, &score, &name };
-
-    const char* profile_sig = "{id:int32, score:double, name:*char}";
-    UserProfile profile_buffer = {0};
-
-    marshal_ordered_data(&profile_buffer, profile_sig, my_data);
-    printf("Resulting C struct: id=%d, score=%.1f, name=%s\n",
-           profile_buffer.user_id, profile_buffer.score, profile_buffer.name);
-}
 ```
+
+> Full example available in [`Ch07_Rec01_DynamicMarshalling.c`](/eg/cookbook/Ch07_Rec01_DynamicMarshalling.c).
 
 ### Recipe: Building a Signature String at Runtime
 
@@ -1622,37 +1172,22 @@ void recipe_dynamic_packing() {
 const char* user_defined_fields[] = { "int", "int", "double" };
 int num_fields = 3;
 
-void recipe_dynamic_signature() {
-    char signature_buffer = "{";
-    char* current = signature_buffer + 1;
-    size_t remaining = sizeof(signature_buffer) - 1;
-
-    // 1. Build the signature string dynamically.
-    for (int i = 0; i < num_fields; ++i) {
-        int written = snprintf(current, remaining, "%s%s", user_defined_fields[i], (i == num_fields - 1) ? "" : ",");
-        if (written < 0 || (size_t)written >= remaining) {
-            printf("Error: Signature buffer too small.\n");
-            return;
-        }
-        current += written;
-        remaining -= written;
-    }
-    strcat(signature_buffer, "}"); // Final string is "{int,int,double}"
-
-    printf("Dynamically generated signature: %s\n", signature_buffer);
-
-    // 2. Use the dynamic signature to get layout information.
-    infix_type* dynamic_type = NULL;
-    infix_arena_t* arena = NULL;
-    infix_type_from_signature(&dynamic_type, &arena, signature_buffer, NULL);
-
-    if (dynamic_type) {
-        printf("Dynamic struct size: %zu bytes\n", infix_type_get_size(dynamic_type));
-    }
-
-    infix_arena_destroy(arena);
+char signature_buffer[256] = "{";
+// 1. Build the signature string dynamically.
+for (int i = 0; i < num_fields; ++i) {
+    strcat(signature_buffer, user_defined_fields[i]);
+    if (i < num_fields - 1) strcat(signature_buffer, ",");
 }
+strcat(signature_buffer, "}"); // Final string is "{int,int,double}"
+
+// 2. Use the dynamic signature to get layout information.
+infix_type* dynamic_type = NULL;
+infix_arena_t* arena = NULL;
+infix_type_from_signature(&dynamic_type, &arena, signature_buffer, NULL);
+// ...
 ```
+
+> Full example available in [`Ch07_Rec02_DynamicSignatures.c`](/eg/cookbook/Ch07_Rec02_DynamicSignatures.c).
 
 ### Recipe: Introspecting a Trampoline for a Wrapper
 
@@ -1662,15 +1197,22 @@ void recipe_dynamic_signature() {
 
 ```c
 void dynamic_wrapper(infix_forward_t* trampoline, void* target_func, void** args, size_t num_provided_args) {
-    if (num_provided_args != infix_forward_get_num_args(trampoline)) {
-        fprintf(stderr, "Error: Incorrect number of arguments. Expected %zu, got %zu.\n",
-                infix_forward_get_num_args(trampoline), num_provided_args);
+    // 1. Introspect the trampoline to get expected argument count.
+    size_t num_expected_args = infix_forward_get_num_args(trampoline);
+
+    if (num_provided_args != num_expected_args) {
+        fprintf(stderr, "Error: Incorrect number of arguments...\n");
         return;
     }
     // A real binding would also check the types using infix_forward_get_arg_type().
-    ((infix_unbound_cif_func)infix_forward_get_unbound_code(trampoline))(target_func, NULL, args);
+
+    // 2. Make the call.
+    infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
+    cif(target_func, NULL, args);
 }
 ```
+
+> Full example available in [`Ch07_Rec03_IntrospectWrapper.c`](/eg/cookbook/Ch07_Rec03_IntrospectWrapper.c).
 
 ---
 
@@ -1719,50 +1261,26 @@ void recipe_custom_arena() {
 **Solution**: Use an arena to build your `infix_type` objects and then pass them directly to the `_manual` variant of the creation functions.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <stddef.h> // For offsetof
+// 1. Create an arena to hold all our type definitions.
+infix_arena_t* arena = infix_arena_create(4096);
 
-// The C types and function we want to call
-typedef struct { double x, y; } Point;
-Point move_point(Point p, double dx) { p.x += dx; return p; }
+// 2. Manually define the 'Point' struct type.
+infix_struct_member point_members[] = {
+    infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
+    infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))
+};
+infix_type* point_type = NULL;
+infix_type_create_struct(arena, &point_type, point_members, 2);
 
-void recipe_full_manual_api() {
-    // 1. Create an arena to hold all our type definitions.
-    infix_arena_t* arena = infix_arena_create(4096);
+// 3. Define the argument types for the function.
+infix_type* arg_types[] = { point_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE) };
 
-    // 2. Manually define the 'Point' struct type.
-    infix_struct_member point_members[] = {
-        infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
-        infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))
-    };
-    infix_type* point_type = NULL;
-    infix_type_create_struct(arena, &point_type, point_members, 2);
-
-    // 3. Define the argument types for the function `Point move_point(Point, double)`.
-    infix_type* arg_types[] = {
-        point_type,
-        infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE)
-    };
-
-    // 4. Create the trampoline using the manually created types.
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create_manual(&trampoline, point_type, arg_types, 2, 2, (void*)move_point);
-
-    // 5. Call the function.
-    Point start = { 10.0, 20.0 };
-    double delta_x = 5.5;
-    void* args[] = { &start, &delta_x };
-    Point end;
-
-    infix_forward_get_code(trampoline)(&end, args);
-    printf("Manual API result: Moved point has x = %f\n", end.x); // Should be 15.5
-
-    // 6. Clean up.
-    infix_forward_destroy(trampoline);
-    infix_arena_destroy(arena); // Frees the 'point_type' as well.
-}
+// 4. Create the trampoline using the manually created types.
+infix_forward_t* trampoline = NULL;
+infix_forward_create_manual(&trampoline, point_type, arg_types, 2, 2, (void*)move_point);
 ```
+
+> Full example available in [`Ch08_Rec02_ManualAPI.c`](/eg/cookbook/Ch08_Rec02_ManualAPI.c).
 
 ### Recipe: Using Custom Memory Allocators
 
@@ -1771,41 +1289,21 @@ void recipe_full_manual_api() {
 **Solution**: `infix` provides override macros (`infix_malloc`, `infix_free`, etc.). Define these macros *before* you include `infix.h` to redirect all of its internal memory operations.
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-
 // 1. Define your custom memory management functions.
-static size_t g_total_allocated = 0;
-void* tracking_malloc(size_t size) {
-    g_total_allocated += size;
-    printf(">> Custom Malloc: Allocating %zu bytes (Total: %zu)\n", size, g_total_allocated);
-    return malloc(size);
-}
-
-void tracking_free(void* ptr) {
-    printf(">> Custom Free\n");
-    free(ptr);
-}
+static void* tracking_malloc(size_t size) { /* ... */ }
+static void tracking_free(void* ptr) { /* ... */ }
 
 // 2. Define the infix override macros BEFORE including infix.h
 #define infix_malloc(size) tracking_malloc(size)
 #define infix_free(ptr)    tracking_free(ptr)
-// You can also override infix_calloc and infix_realloc if needed.
 
 #include <infix/infix.h>
 
-void recipe_custom_allocators() {
-    printf("Creating trampoline with custom allocators\n");
-    infix_forward_t* trampoline = NULL;
-    // All internal allocations for the trampoline will now use tracking_malloc.
-    infix_forward_create(&trampoline, "()->void", (void*)recipe_custom_allocators, NULL);
-
-    printf("Destroying trampoline\n");
-    // The free operations will now use tracking_free.
-    infix_forward_destroy(trampoline);
-    printf("Done\n");
-}
+// Now, all calls like infix_forward_create will use your allocators.
+infix_forward_create(&trampoline, "()->void", (void*)dummy_func, NULL);
 ```
+
+> Full example available in [`Ch08_Rec01_CustomAllocators.c`](/eg/cookbook/Ch08_Rec01_CustomAllocators.c).
 
 ### Recipe: Building a Dynamic Call Frame with an Arena
 
@@ -1814,76 +1312,29 @@ void recipe_custom_allocators() {
 **Solution**: Use an `infix` arena to allocate memory for both the unboxed C values *and* the `void**` array that points to them. This makes the entire call frame a single, contiguous block of memory that can be allocated and freed with extreme efficiency.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-#include <stdarg.h> // For va_list
-#include <string.h> // For memcpy
-
-// A sample C function we want to call dynamically.
-void process_user_data(int id, double score, const char* name) {
-    printf("C Function Received: ID=%d, Score=%.2f, Name='%s'\n", id, score, name);
-}
-
-// This function simulates the core logic of a language binding's generic "call" function.
-// It takes a va_list to represent dynamic arguments coming from a script.
-void dynamic_ffi_call(infix_forward_t* trampoline, void* target_func, int arg_count, ...) {
+void dynamic_ffi_call(infix_forward_t* trampoline, ...) {
     // 1. Create a temporary arena for this call's entire data frame.
     infix_arena_t* call_arena = infix_arena_create(4096);
-    if (!call_arena) {
-        fprintf(stderr, "Error: Could not create call arena.\n");
-        return;
-    }
 
     // 2. Allocate the void** array itself from the arena.
     void** args = infix_arena_alloc(call_arena, sizeof(void*) * arg_count, _Alignof(void*));
 
-    va_list va;
-    va_start(va, arg_count);
-
-    // 3. For each argument, allocate space for its C value in the arena,
-    //    copy the value, and store the pointer in the `args` array.
+    // 3. For each argument, allocate space for its C value in the arena and set the pointer.
     for (int i = 0; i < arg_count; ++i) {
-        // In a real binding, you would inspect the trampoline's arg types here.
-        // For this example, we'll assume the order int, double, const char*.
-        if (i == 0) { // int
-            int* val_ptr = infix_arena_alloc(call_arena, sizeof(int), _Alignof(int));
-            *val_ptr = va_arg(va, int);
-            args[i] = val_ptr;
-        }
-        else if (i == 1) { // double
-            double* val_ptr = infix_arena_alloc(call_arena, sizeof(double), _Alignof(double));
-            *val_ptr = va_arg(va, double);
-            args[i] = val_ptr;
-        }
-        else if (i == 2) { // const char*
-            const char** val_ptr = infix_arena_alloc(call_arena, sizeof(const char*), _Alignof(const char*));
-            *val_ptr = va_arg(va, const char*);
-            args[i] = val_ptr;
-        }
+        int* val_ptr = infix_arena_alloc(call_arena, sizeof(int), _Alignof(int));
+        *val_ptr = va_arg(va, int); // Get value from dynamic source
+        args[i] = val_ptr;
     }
-    va_end(va);
 
-    // 4. Make the FFI call using the arena-managed data.
-    infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-    cif(target_func, NULL, args);
+    // 4. Make the FFI call.
+    infix_forward_get_unbound_code(trampoline)(target_func, NULL, args);
 
     // 5. A single free cleans up the void** array AND all the argument values.
     infix_arena_destroy(call_arena);
 }
-
-void recipe_arena_call_frame() {
-    // Setup the trampoline once and cache it (as a real binding would).
-    const char* signature = "(int, double, *char) -> void";
-    infix_forward_t* trampoline = NULL;
-    infix_forward_create_unbound(&trampoline, signature, NULL);
-
-    printf("Making dynamic FFI call\n");
-    dynamic_ffi_call(trampoline, (void*)process_user_data, 3,
-                     123, 99.8, "test user");
-
-    infix_forward_destroy(trampoline);
-}
 ```
+
+> Full example available in [`Ch08_Rec03_ArenaCallFrame.c`](/eg/cookbook/Ch08_Rec03_ArenaCallFrame.c).
 
 #### How It Works & Why It's Better
 
@@ -1925,9 +1376,6 @@ infix_arena_destroy(loop_arena);
 **Solution**: After a parsing function fails, call `infix_get_last_error()` and use the `position`, `code`, and `message` fields to generate a detailed diagnostic.
 
 ```c
-#include <infix/infix.h>
-#include <stdio.h>
-
 void report_parse_error(const char* signature) {
     infix_type* type = NULL;
     infix_arena_t* arena = NULL;
@@ -1942,25 +1390,14 @@ void report_parse_error(const char* signature) {
         fprintf(stderr, "Error: %s (code: %d, position: %zu)\n",
                 err.message, err.code, err.position);
     }
-    else
-        printf("Successfully parsed signature: %s\n", signature);
-
     infix_arena_destroy(arena);
 }
 
-void recipe_error_reporting() {
-    // This signature has an invalid character '^' instead of a comma.
-    report_parse_error("{int, double, ^*char}");
-}
-
-/*
-Expected output:
-Failed to parse signature:
-  {int, double, ^*char}
-               ^
-Error Code: 200 at position 15
-*/
+// This signature has an invalid character '^' instead of a comma.
+report_parse_error("{int, double, ^*char}");
 ```
+
+> Full example available in [`Ch09_Rec01_ErrorReporting.c`](/eg/cookbook/Ch09_Rec01_ErrorReporting.c).
 
 ### Mistake: Passing a Value Instead of a Pointer in `args[]`
 
