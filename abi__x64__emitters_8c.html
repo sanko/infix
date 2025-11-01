@@ -224,6 +224,8 @@ Functions</h2></td></tr>
 <tr class="separator:a792c75d3780343d6ab4fc818bf1f4c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7993e38c8ddf6aa07a7928e2c98b72f" id="r_aa7993e38c8ddf6aa07a7928e2c98b72f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aa7993e38c8ddf6aa07a7928e2c98b72f">emit_ud2</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf)</td></tr>
 <tr class="separator:aa7993e38c8ddf6aa07a7928e2c98b72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1475310986600cb55e855252cd8a8aa" id="r_ae1475310986600cb55e855252cd8a8aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#ae1475310986600cb55e855252cd8a8aa">emit_syscall</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf)</td></tr>
+<tr class="separator:ae1475310986600cb55e855252cd8a8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements internal helper functions for emitting x86-64 machine code. </p>
@@ -615,7 +617,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Emits a <code>jmp r64</code> instruction. This instruction performs an indirect jump to the address contained in the specified 64-bit register. Opcode format: [REX.B] FF /4 </p>
 
 </div>
 </div>
@@ -1725,6 +1726,24 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1475310986600cb55e855252cd8a8aa" name="ae1475310986600cb55e855252cd8a8aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1475310986600cb55e855252cd8a8aa">&#9670;&#160;</a></span>emit_syscall()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_syscall </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -180,7 +180,7 @@ Variables</h2></td></tr>
 <li><b>Large Structs:</b> A <code><a class="el" href="structLargeStruct.html" title="A struct larger than 16 bytes, guaranteed to be passed by reference on most ABIs.">LargeStruct</a></code>, which is passed/returned by reference via a hidden pointer, testing the stub's ability to handle this ABI rule.</li>
 <li><b>Structs with Arrays:</b> A <code><a class="el" href="structVector4.html" title="A struct containing an array, often used to test HFA (Homogeneous Floating-point Aggregate) rules.">Vector4</a></code> struct, which may be an HFA on some platforms.</li>
 <li><b>Unions:</b> A <code><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a></code> union, testing the handling of this aggregate type.</li>
-<li><b>Packed Structs:</b> A <code><a class="el" href="structPackedStruct.html" title="A packed struct with an unusual size (9 bytes) and alignment (1).">PackedStruct</a></code> with non-natural alignment, testing that the raw bytes are correctly marshalled regardless of internal layout. </li>
+<li><b><a class="el" href="structPacked.html">Packed</a> Structs:</b> A <code><a class="el" href="structPackedStruct.html" title="A packed struct with an unusual size (9 bytes) and alignment (1).">PackedStruct</a></code> with non-natural alignment, testing that the raw bytes are correctly marshalled regardless of internal layout. </li>
 </ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>

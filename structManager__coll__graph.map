@@ -1,0 +1,6 @@
+<map id="Manager" name="Manager">
+<area shape="rect" id="Node000001" title=" " alt="" coords="19,5,98,31"/>
+<area shape="rect" id="Node000002" href="$structEmployee.html" title=" " alt="" coords="15,93,102,119"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="24,40,10,56,9,66,13,75,34,91,31,95,9,78,3,66,5,54,20,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,80,74,67,73,55,64,32,69,30,78,54,79,68,75,81"/>
+</map>

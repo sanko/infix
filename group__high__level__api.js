@@ -8,9 +8,9 @@ var group__high__level__api =
     [ "Manual API", "group__manual__api.html", "group__manual__api" ],
     [ "Introspection API", "group__introspection__api.html", "group__introspection__api" ],
     [ "Error Handling API", "group__error__api.html", "group__error__api" ],
-    [ "infix_cif_func", "group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a", null ],
-    [ "infix_closure_handler_fn", "group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c", null ],
-    [ "infix_unbound_cif_func", "group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d", null ],
+    [ "infix_cif_func", "group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a", null ],
+    [ "infix_closure_handler_fn", "group__high__level__api.html#gaf57081fce7395162ee2db56b6d507a20", null ],
+    [ "infix_unbound_cif_func", "group__high__level__api.html#ga48f7ee868576f525269902fc953887bd", null ],
     [ "infix_status", "group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7", [
       [ "INFIX_SUCCESS", "group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da", null ],
       [ "INFIX_ERROR_ALLOCATION_FAILED", "group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7a059ba15d1ac5d065ab33d039aba51da1", null ],

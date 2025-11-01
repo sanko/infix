@@ -42,6 +42,7 @@ var abi__x64__emitters_8c =
     [ "emit_ret", "abi__x64__emitters_8c.html#a14f744b31cf31174641929bae08a7c19", null ],
     [ "emit_rex_prefix", "abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e", null ],
     [ "emit_sub_reg_imm32", "abi__x64__emitters_8c.html#a5b7a73b6eab83dabc633d96bf6692dbb", null ],
+    [ "emit_syscall", "abi__x64__emitters_8c.html#ae1475310986600cb55e855252cd8a8aa", null ],
     [ "emit_test_reg_reg", "abi__x64__emitters_8c.html#ab6aacadbb4e1fc842c1d455dae197a18", null ],
     [ "emit_ud2", "abi__x64__emitters_8c.html#aa7993e38c8ddf6aa07a7928e2c98b72f", null ],
     [ "emit_vex_prefix", "abi__x64__emitters_8c.html#aa1c841bad414f9b05db64740d1fcd551", null ],

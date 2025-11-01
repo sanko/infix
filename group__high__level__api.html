@@ -150,15 +150,15 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga842dcfab1785e1b4bf1b22390955d31d" id="r_ga842dcfab1785e1b4bf1b22390955d31d"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a>) (void *target_function, void *return_value_ptr, void **args_array)</td></tr>
-<tr class="memdesc:ga842dcfab1785e1b4bf1b22390955d31d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for an unbound forward trampoline.  <br /></td></tr>
-<tr class="separator:ga842dcfab1785e1b4bf1b22390955d31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6f23c028781b7cc258c83b5bdf4c141a" id="r_ga6f23c028781b7cc258c83b5bdf4c141a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a>) (void *return_value_ptr, void **args_array)</td></tr>
-<tr class="memdesc:ga6f23c028781b7cc258c83b5bdf4c141a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for a bound forward trampoline.  <br /></td></tr>
-<tr class="separator:ga6f23c028781b7cc258c83b5bdf4c141a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9392f67966f6e2a2e7600e7c0b87a42c" id="r_ga9392f67966f6e2a2e7600e7c0b87a42c"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value_ptr, void **args_array)</td></tr>
-<tr class="memdesc:ga9392f67966f6e2a2e7600e7c0b87a42c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for a generic closure handler.  <br /></td></tr>
-<tr class="separator:ga9392f67966f6e2a2e7600e7c0b87a42c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48f7ee868576f525269902fc953887bd" id="r_ga48f7ee868576f525269902fc953887bd"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a>) (void *, void *, void **)</td></tr>
+<tr class="memdesc:ga48f7ee868576f525269902fc953887bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for an unbound forward trampoline.  <br /></td></tr>
+<tr class="separator:ga48f7ee868576f525269902fc953887bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3042690c20cccd4137f134154bd62e1a" id="r_ga3042690c20cccd4137f134154bd62e1a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a>) (void *, void **)</td></tr>
+<tr class="memdesc:ga3042690c20cccd4137f134154bd62e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for a bound forward trampoline.  <br /></td></tr>
+<tr class="separator:ga3042690c20cccd4137f134154bd62e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf57081fce7395162ee2db56b6d507a20" id="r_gaf57081fce7395162ee2db56b6d507a20"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gaf57081fce7395162ee2db56b6d507a20">infix_closure_handler_fn</a>) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *, void *, void **)</td></tr>
+<tr class="memdesc:gaf57081fce7395162ee2db56b6d507a20"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function pointer type for a generic closure handler.  <br /></td></tr>
+<tr class="separator:gaf57081fce7395162ee2db56b6d507a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -187,7 +187,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga010d41376c47f1100903d427776033ab" id="r_ga010d41376c47f1100903d427776033ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
 <tr class="memdesc:ga010d41376c47f1100903d427776033ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a type-safe reverse trampoline (callback).  <br /></td></tr>
 <tr class="separator:ga010d41376c47f1100903d427776033ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, <a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memitem:ga6d1281b61d196d1d06153aa1265fb971" id="r_ga6d1281b61d196d1d06153aa1265fb971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> **, const char *, <a class="el" href="group__high__level__api.html#gaf57081fce7395162ee2db56b6d507a20">infix_closure_handler_fn</a>, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
 <tr class="memdesc:ga6d1281b61d196d1d06153aa1265fb971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a generic reverse trampoline (closure) for stateful callbacks.  <br /></td></tr>
 <tr class="separator:ga6d1281b61d196d1d06153aa1265fb971"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabc24d2667f9cac5f45bd9a71efe66cf7" id="r_gabc24d2667f9cac5f45bd9a71efe66cf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7">infix_signature_parse</a> (const char *, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4">infix_function_argument</a> **, size_t *, size_t *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
@@ -419,14 +419,14 @@ Variables</h2></td></tr>
 <p>The primary, recommended API for creating trampolines from human-readable strings. </p>
 <p>This API provides the simplest and most powerful way to interact with <code>infix</code>. All functions in this group take a signature string and an optional type registry to parse and generate the required FFI trampolines. </p>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga6f23c028781b7cc258c83b5bdf4c141a" name="ga6f23c028781b7cc258c83b5bdf4c141a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6f23c028781b7cc258c83b5bdf4c141a">&#9670;&#160;</a></span>infix_cif_func</h2>
+<a id="ga3042690c20cccd4137f134154bd62e1a" name="ga3042690c20cccd4137f134154bd62e1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3042690c20cccd4137f134154bd62e1a">&#9670;&#160;</a></span>infix_cif_func</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* infix_cif_func) (void *return_value_ptr, void **args_array)</td>
+          <td class="memname">typedef void(* infix_cif_func) (void *, void **)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -443,14 +443,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ga9392f67966f6e2a2e7600e7c0b87a42c" name="ga9392f67966f6e2a2e7600e7c0b87a42c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9392f67966f6e2a2e7600e7c0b87a42c">&#9670;&#160;</a></span>infix_closure_handler_fn</h2>
+<a id="gaf57081fce7395162ee2db56b6d507a20" name="gaf57081fce7395162ee2db56b6d507a20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf57081fce7395162ee2db56b6d507a20">&#9670;&#160;</a></span>infix_closure_handler_fn</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* infix_closure_handler_fn) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *context, void *return_value_ptr, void **args_array)</td>
+          <td class="memname">typedef void(* infix_closure_handler_fn) (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *, void *, void **)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -468,14 +468,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ga842dcfab1785e1b4bf1b22390955d31d" name="ga842dcfab1785e1b4bf1b22390955d31d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga842dcfab1785e1b4bf1b22390955d31d">&#9670;&#160;</a></span>infix_unbound_cif_func</h2>
+<a id="ga48f7ee868576f525269902fc953887bd" name="ga48f7ee868576f525269902fc953887bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga48f7ee868576f525269902fc953887bd">&#9670;&#160;</a></span>infix_unbound_cif_func</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* infix_unbound_cif_func) (void *target_function, void *return_value_ptr, void **args_array)</td>
+          <td class="memname">typedef void(* infix_unbound_cif_func) (void *, void *, void **)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -580,19 +580,19 @@ Variables</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or an <code>INFIX_ERROR_...</code> code on failure. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_forward_destroy</code>.</dd></dl>
 <div class="fragment"><div class="line"><span class="comment">// C function to call</span></div>
-<div class="line"><span class="keywordtype">int</span> add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
+<div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a>(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
 <div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(int, int) -&gt; int&quot;</span>;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Create a trampoline bound to the `add` function.</span></div>
-<div class="line"><a class="code hl_enumeration" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> <a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, signature, (<span class="keywordtype">void</span>*)add, NULL);</div>
+<div class="line"><a class="code hl_enumeration" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> <a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, signature, (<span class="keywordtype">void</span>*)<a class="code hl_function" href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a>, NULL);</div>
 <div class="line"><span class="keywordflow">if</span> (<a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> != <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {</div>
 <div class="line">    <span class="comment">// Handle error...</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Get the callable JIT-compiled function pointer.</span></div>
-<div class="line"><a class="code hl_typedef" href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline);</div>
+<div class="line"><a class="code hl_typedef" href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Prepare arguments and return buffer.</span></div>
 <div class="line"><span class="keywordtype">int</span> a = 10, b = 32;</div>
@@ -605,8 +605,9 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
 <div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:66</div></div>
 <div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:64</div></div>
+<div class="ttc" id="aCh04__Rec06__ThreadSafety_8c_html_a876d849a2f1867b8b2be9881f4a191d5"><div class="ttname"><a href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a></div><div class="ttdeci">static int add(int a, int b)</div><div class="ttdef"><b>Definition</b> Ch04_Rec06_ThreadSafety.c:25</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:370</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:824</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga6f23c028781b7cc258c83b5bdf4c141a"><div class="ttname"><a href="group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *return_value_ptr, void **args_array)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:370</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">Enumerates the possible status codes returned by infix API functions.</div><div class="ttdef"><b>Definition</b> infix.h:388</div></div>
 <div class="ttc" id="agroup__high__level__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdef"><b>Definition</b> infix.h:389</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:288</div></div>
@@ -660,7 +661,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_forward_destroy</code>.</dd></dl>
-<div class="fragment"><div class="line"><span class="keywordtype">int</span> add(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a>(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
 <div class="line"><span class="keywordtype">int</span> subtract(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a - b; }</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
@@ -669,21 +670,21 @@ Variables</h2></td></tr>
 <div class="line"><span class="comment">// Create one unbound trampoline for the signature.</span></div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a>(&amp;trampoline, signature, NULL);</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_typedef" href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(trampoline);</div>
+<div class="line"><a class="code hl_typedef" href="group__high__level__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a>(trampoline);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> a = 10, b = 5;</div>
 <div class="line"><span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;a, &amp;b };</div>
 <div class="line"><span class="keywordtype">int</span> result;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Call `add` by passing its address at call time.</span></div>
-<div class="line">cif((<span class="keywordtype">void</span>*)add, &amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is 15</span></div>
+<div class="line">cif((<span class="keywordtype">void</span>*)<a class="code hl_function" href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a>, &amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is 15</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Reuse the same trampoline to call `subtract`.</span></div>
 <div class="line">cif((<span class="keywordtype">void</span>*)subtract, &amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is 5</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga524a8ccebd24c9232d30cb2f79aee5a5"><div class="ttname"><a href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Creates an &quot;unbound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:855</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga842dcfab1785e1b4bf1b22390955d31d"><div class="ttname"><a href="group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *target_function, void *return_value_ptr, void **args_array)</div><div class="ttdoc">A function pointer type for an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:360</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga48f7ee868576f525269902fc953887bd"><div class="ttname"><a href="group__high__level__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *, void *, void **)</div><div class="ttdoc">A function pointer type for an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:360</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga524a8ccebd24c9232d30cb2f79aee5a5"><div class="ttname"><a href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5">infix_forward_create_unbound</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Creates an &quot;unbound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:906</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga5f3559908e6a7bcc72103c52937d67ad"><div class="ttname"><a href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad">infix_forward_get_unbound_code</a></div><div class="ttdeci">c23_nodiscard infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:282</div></div>
 </div><!-- fragment --> 
 </div>
@@ -759,7 +760,7 @@ Variables</h2></td></tr>
 <div class="line"><span class="comment">// and will return 50.</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(ctx);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:861</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:912</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga3b75e8481ac13d11faa15046fc4adb66"><div class="ttname"><a href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:805</div></div>
 <div class="ttc" id="agroup__manual__api_html_ga00b101025663c423a28433e139be5d4e"><div class="ttname"><a href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a></div><div class="ttdeci">void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:786</div></div>
 <div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:119</div></div>
@@ -787,7 +788,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c">infix_closure_handler_fn</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__high__level__api.html#gaf57081fce7395162ee2db56b6d507a20">infix_closure_handler_fn</a>&#160;</td>
           <td class="paramname"><em>user_callback_fn</em>, </td>
         </tr>
         <tr>
@@ -858,7 +859,7 @@ Variables</h2></td></tr>
 <div class="line"><span class="keywordtype">int</span> result2 = func_ptr(2, 3);  <span class="comment">// result2 is (2+3)*2 = 10</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(ctx);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga6d1281b61d196d1d06153aa1265fb971"><div class="ttname"><a href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_closure(infix_reverse_t **, const char *, infix_closure_handler_fn, void *, infix_registry_t *)</div><div class="ttdoc">Creates a generic reverse trampoline (closure) for stateful callbacks.</div><div class="ttdef"><b>Definition</b> trampoline.c:891</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga6d1281b61d196d1d06153aa1265fb971"><div class="ttname"><a href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971">infix_reverse_create_closure</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_closure(infix_reverse_t **, const char *, infix_closure_handler_fn, void *, infix_registry_t *)</div><div class="ttdoc">Creates a generic reverse trampoline (closure) for stateful callbacks.</div><div class="ttdef"><b>Definition</b> trampoline.c:942</div></div>
 <div class="ttc" id="agroup__introspection__api_html_gab41c717a6e4e4198c62284e526e5d9b3"><div class="ttname"><a href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3">infix_reverse_get_user_data</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Gets the user-provided data pointer from a closure context.</div><div class="ttdef"><b>Definition</b> trampoline.c:816</div></div>
 </div><!-- fragment --> 
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['nonpoweroftwostruct_0',['NonPowerOfTwoStruct',['../structNonPowerOfTwoStruct.html',1,'']]],
-  ['number_1',['Number',['../unionNumber.html',1,'']]]
+  ['largedata_0',['LargeData',['../structLargeData.html',1,'']]],
+  ['largestruct_1',['LargeStruct',['../structLargeStruct.html',1,'']]]
 ];

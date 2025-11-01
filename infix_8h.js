@@ -12,8 +12,8 @@ var infix_8h =
     [ "INFIX_PATCH", "group__version__info.html#ga47d1a3d7d801e3ecd110e3457154eb80", null ],
     [ "infix_realloc", "group__memory__management.html#ga84d15b7c77d469bf3e41faaa8a74b629", null ],
     [ "infix_arena_t", "group__type__system.html#ga7ae858c5c8d9fc138d31c0be4421dcdb", null ],
-    [ "infix_cif_func", "group__high__level__api.html#ga6f23c028781b7cc258c83b5bdf4c141a", null ],
-    [ "infix_closure_handler_fn", "group__high__level__api.html#ga9392f67966f6e2a2e7600e7c0b87a42c", null ],
+    [ "infix_cif_func", "group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a", null ],
+    [ "infix_closure_handler_fn", "group__high__level__api.html#gaf57081fce7395162ee2db56b6d507a20", null ],
     [ "infix_context_t", "group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f", null ],
     [ "infix_forward_t", "group__type__system.html#gab8831eba6ed46e82a731acea84e8e90d", null ],
     [ "infix_function_argument", "group__type__system.html#ga72f59e8e9a0afd58599c6c0448668bd4", null ],
@@ -23,7 +23,7 @@ var infix_8h =
     [ "infix_reverse_t", "group__type__system.html#gabb2d689506b701634f6adfd5ca965888", null ],
     [ "infix_struct_member", "group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8", null ],
     [ "infix_type", "group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029", null ],
-    [ "infix_unbound_cif_func", "group__high__level__api.html#ga842dcfab1785e1b4bf1b22390955d31d", null ],
+    [ "infix_unbound_cif_func", "group__high__level__api.html#ga48f7ee868576f525269902fc953887bd", null ],
     [ "infix_aggregate_category_t", "group__type__system.html#gaad7a91cc786d4cec1dbbddb5d7b165b7", [
       [ "INFIX_AGGREGATE_STRUCT", "group__type__system.html#ggaad7a91cc786d4cec1dbbddb5d7b165b7a192c803c42b18a1e8f76a0faf02fd5c6", null ],
       [ "INFIX_AGGREGATE_UNION", "group__type__system.html#ggaad7a91cc786d4cec1dbbddb5d7b165b7afaf03a2445d106854eb1a4a751ce48db", null ]
@@ -120,7 +120,7 @@ var infix_8h =
     [ "infix_library_close", "group__exports__api.html#ga1a55403ddf64eaed05f2fcb013412003", null ],
     [ "infix_library_get_symbol", "group__exports__api.html#ga227480098fa596f3c372837461a6b805", null ],
     [ "infix_library_open", "group__exports__api.html#gabfd1bb148a39b758e57e772c09b9ea84", null ],
-    [ "infix_read_global", "group__exports__api.html#gac7f277b537378a53e4554e43a17d0039", null ],
+    [ "infix_read_global", "group__exports__api.html#gaec836cea65f5c0ff31780b26f5315796", null ],
     [ "infix_register_types", "group__registry__api.html#ga4ece2363948c40fe528826bf65dac280", null ],
     [ "infix_registry_create", "group__registry__api.html#gac808273483db7a9db2bc275c41b13296", null ],
     [ "infix_registry_destroy", "group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61", null ],
@@ -165,5 +165,5 @@ var infix_8h =
     [ "infix_type_get_member_count", "group__type__system.html#ga678390feeed80a43111725c4e73c0dda", null ],
     [ "infix_type_get_size", "group__type__system.html#ga0e49d4bdbfe42b661bf7bcb597793e9a", null ],
     [ "infix_type_print", "group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e", null ],
-    [ "infix_write_global", "group__exports__api.html#ga0ff78ba25aec569971f85df6c233406c", null ]
+    [ "infix_write_global", "group__exports__api.html#ga02212862110c752548fbdc0b3ba65bec", null ]
 ];

@@ -105,8 +105,8 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
   <div class="headertitle"><div class="title">Project Roadmap: infix FFI</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md218"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
-<h1><a class="anchor" id="autotoc_md219"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md228"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
+<h1><a class="anchor" id="autotoc_md229"></a>
 High Priority: Foundation &amp; Stability</h1>
 <p><em>These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.</em></p>
 <ul>
@@ -196,7 +196,7 @@ High Priority: Foundation &amp; Stability</h1>
 </b></b></li>
 </ul>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md220"></a>
+<h1><a class="anchor" id="autotoc_md230"></a>
 Medium Priority: Expansion &amp; Optimization</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.</em></b></b></p>
@@ -227,7 +227,7 @@ Medium Priority: Expansion &amp; Optimization</h1>
 <li><b>Possible Roadblocks:</b> Profiling JIT'd code can be complex, as symbols may not be easily visible in standard profilers.</li>
 </ul>
 </li>
-<li>[x] <b>Implement Packed Argument Trampolines</b><ul>
+<li>[x] <b>Implement <a class="el" href="structPacked.html">Packed</a> Argument Trampolines</b><ul>
 <li><b>Context:</b> The current <code>void** args</code> API requires pointer indirection. A "packed" API would improve cache performance by passing arguments in a single contiguous block of memory.</li>
 <li><b>Idea:</b> Implement <code>infix_forward_create_packed</code>, where the JIT'd code reads arguments from offsets relative to a single pointer.</li>
 <li><b>Goal:</b> A benchmark demonstrates a significant performance improvement for calls with many arguments compared to the standard trampoline.</li>
@@ -240,7 +240,7 @@ Medium Priority: Expansion &amp; Optimization</h1>
 </ul>
 <p></b></b></p>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md221"></a>
+<h1><a class="anchor" id="autotoc_md231"></a>
 Low Priority: Advanced Features &amp; Polish</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>These items are valuable but less critical. They can be addressed over time to round out the library's feature set.</em></b></b></p>

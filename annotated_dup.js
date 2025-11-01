@@ -1,8 +1,16 @@
 var annotated_dup =
 [
+    [ "__m256d", "struct____m256d.html", "struct____m256d" ],
+    [ "__m512d", "struct____m512d.html", "struct____m512d" ],
     [ "_infix_registry_entry_t", "struct__infix__registry__entry__t.html", "struct__infix__registry__entry__t" ],
     [ "_registry_parser_state_t", "struct__registry__parser__state__t.html", "struct__registry__parser__state__t" ],
+    [ "Adder", "structAdder.html", "structAdder" ],
+    [ "AdderVTable_t", "structAdderVTable__t.html", "structAdderVTable__t" ],
+    [ "AppContext", "structAppContext.html", "structAppContext" ],
+    [ "BitfieldStruct", "structBitfieldStruct.html", "structBitfieldStruct" ],
     [ "code_buffer", "structcode__buffer.html", "structcode__buffer" ],
+    [ "Config", "structConfig.html", "structConfig" ],
+    [ "Employee", "structEmployee.html", "structEmployee" ],
     [ "estimate_visited_node_t", "structestimate__visited__node__t.html", "structestimate__visited__node__t" ],
     [ "fuzzer_input", "structfuzzer__input.html", "structfuzzer__input" ],
     [ "infix_arena_t", "structinfix__arena__t.html", "structinfix__arena__t" ],
@@ -24,10 +32,12 @@ var annotated_dup =
     [ "infix_type_t", "structinfix__type__t.html", "structinfix__type__t" ],
     [ "LargeData", "structLargeData.html", "structLargeData" ],
     [ "LargeStruct", "structLargeStruct.html", "structLargeStruct" ],
+    [ "Manager", "structManager.html", "structManager" ],
     [ "memo_node_t", "structmemo__node__t.html", "structmemo__node__t" ],
     [ "MixedIntDouble", "structMixedIntDouble.html", "structMixedIntDouble" ],
     [ "NonPowerOfTwoStruct", "structNonPowerOfTwoStruct.html", "structNonPowerOfTwoStruct" ],
     [ "Number", "unionNumber.html", "unionNumber" ],
+    [ "Packed", "structPacked.html", "structPacked" ],
     [ "PackedStruct", "structPackedStruct.html", "structPackedStruct" ],
     [ "parser_state", "structparser__state.html", "structparser__state" ],
     [ "Point", "structPoint.html", "structPoint" ],
@@ -45,6 +55,8 @@ var annotated_dup =
     [ "test_union", "uniontest__union.html", "uniontest__union" ],
     [ "TestStruct", "structTestStruct.html", "structTestStruct" ],
     [ "TestUnion", "unionTestUnion.html", "unionTestUnion" ],
+    [ "thread_data_t", "structthread__data__t.html", "structthread__data__t" ],
+    [ "UserProfile", "structUserProfile.html", "structUserProfile" ],
     [ "Vector4", "structVector4.html", "structVector4" ],
     [ "visited_node_t", "structvisited__node__t.html", "structvisited__node__t" ]
 ];

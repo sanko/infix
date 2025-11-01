@@ -14,6 +14,7 @@ var abi__arm64__common_8h =
     [ "A64_OP_LOAD_STORE_PAIR_BASE", "abi__arm64__common_8h.html#a17b5930f755acd53cda28a20163acf3f", null ],
     [ "A64_OP_LOGICAL_REG", "abi__arm64__common_8h.html#a1a804a261c22318a78552ce20a670ae3", null ],
     [ "A64_OP_MOVE_WIDE_IMM", "abi__arm64__common_8h.html#aaf1819a84c09cc12f1d08b4e0d43f692", null ],
+    [ "A64_OP_SVC", "abi__arm64__common_8h.html#aec651c308d7441ed77fb2678268cab72", null ],
     [ "A64_OP_SYSTEM", "abi__arm64__common_8h.html#ad4567c2809fc2a40b43a9566993ba8c5", null ],
     [ "A64_OPC_ADD", "abi__arm64__common_8h.html#af3a25f3dad16bb94dc9b2b9a7d7b1d0f", null ],
     [ "A64_OPC_ADDS", "abi__arm64__common_8h.html#ad7202562292114b0a52a4311d263b99b", null ],

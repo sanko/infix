@@ -1,0 +1,19 @@
+<map id="eg/cookbook/Ch04_Rec06_ThreadSafety.c" name="eg/cookbook/Ch04_Rec06_ThreadSafety.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 4, Recipe 6: Proving Thread Safety." alt="" coords="184,5,373,45"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="126,93,221,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="255,48,202,87,199,83,252,43"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="245,93,312,119"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="281,46,281,79,276,79,276,46"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="337,93,421,119"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="305,43,355,82,351,87,301,48"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="23,167,198,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="165,121,132,158,128,154,161,117"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="12,240,95,265"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="126,113,96,119,65,129,36,145,13,168,8,183,11,198,33,229,28,232,7,201,3,183,8,165,33,141,63,124,95,114,125,108"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="129,240,204,265"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="187,118,209,150,215,171,213,193,203,214,190,231,186,228,199,211,208,191,210,172,204,153,182,121"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="274,167,345,192"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="196,116,276,158,274,163,194,121"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,194,73,231,69,227,99,191"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="122,191,151,228,147,231,118,194"/>
+</map>

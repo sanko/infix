@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['packedstruct_0',['PackedStruct',['../structPackedStruct.html',1,'']]],
-  ['parser_5fstate_1',['parser_state',['../structparser__state.html',1,'']]],
-  ['point_2',['Point',['../structPoint.html',1,'']]],
-  ['pointerstruct_3',['PointerStruct',['../structPointerStruct.html',1,'']]],
-  ['printer_5fstate_4',['printer_state',['../structprinter__state.html',1,'']]]
+  ['manager_0',['Manager',['../structManager.html',1,'']]],
+  ['memo_5fnode_5ft_1',['memo_node_t',['../structmemo__node__t.html',1,'']]],
+  ['mixedintdouble_2',['MixedIntDouble',['../structMixedIntDouble.html',1,'']]]
 ];

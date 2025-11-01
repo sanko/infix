@@ -1,0 +1,18 @@
+<map id="eg/cookbook/Ch08_Rec02_ManualAPI.c" name="eg/cookbook/Ch08_Rec02_ManualAPI.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 8, Recipe 2: The Full Manual API Lifecycle." alt="" coords="289,5,478,45"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="190,93,284,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="350,48,272,89,269,84,347,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="200,240,274,265"/>
+<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="389,45,390,76,388,115,379,156,360,194,345,210,327,223,289,241,286,236,325,218,342,206,356,190,374,154,383,114,385,76,383,46"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="421,93,488,119"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="403,44,437,81,433,85,399,47"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,167,199,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,121,145,162,143,157,215,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="8,240,90,265"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="190,116,87,135,41,150,25,159,14,168,8,182,11,197,29,228,25,231,6,199,3,182,9,165,21,154,39,145,86,130,189,110"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="240,119,240,226,234,226,234,119"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="275,167,346,192"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="251,117,290,155,287,159,247,121"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,194,70,231,66,228,99,191"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="133,190,206,231,203,235,130,194"/>
+</map>

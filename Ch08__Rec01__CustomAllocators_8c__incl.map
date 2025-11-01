@@ -1,0 +1,19 @@
+<map id="eg/cookbook/Ch08_Rec01_CustomAllocators.c" name="eg/cookbook/Ch08_Rec01_CustomAllocators.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 8, Recipe 1: Using Custom Memory Allocators." alt="" coords="37,5,227,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,72,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,48,65,86,62,82,108,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="97,93,167,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,46,135,79,129,79,129,46"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="191,93,286,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,43,213,83,210,87,156,48"/>
+<area shape="rect" id="Node000005" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="89,167,263,192"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="230,121,197,158,193,154,226,117"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="77,240,160,265"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="192,121,123,142,95,155,78,168,73,183,77,198,98,229,93,232,72,201,68,183,74,165,92,150,122,137,190,116"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="195,240,269,265"/>
+<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="252,118,274,150,280,171,279,193,268,214,255,231,251,228,264,211,273,191,275,172,269,153,248,121"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="339,167,410,192"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="262,116,342,158,339,163,259,121"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="169,194,139,231,135,227,164,191"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="187,191,217,228,212,231,183,194"/>
+</map>
