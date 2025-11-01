@@ -920,7 +920,7 @@ sub compile_shared_lib {
     my $is_cpp       = ( $source =~ /\.cpp$/ );
     my $lib_prefix   = $config->{is_windows} ? '' : 'lib';
     my $output_path  = $config->{bin_dir} . '/' . $lib_prefix . $name . '.' . $Config{so};
-    my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+    my @local_cflags = grep { $_ ne '-O2' } $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
     my @cmd          = ( $compiler, @local_cflags, @$flags, '-o', $output_path, $source );
     push @cmd, @$deps if $deps;
     run_command(@cmd);
