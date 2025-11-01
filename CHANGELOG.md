@@ -31,9 +31,11 @@ Really sanding down the rough edges this time around. This release includes sign
     infix_reverse_create_callback(&ctx, "@Adder_add_fn", (void*)Adder_add, reg);
     ```
 
+- The `infix_read_global` and `infix_write_global` functions now take an additional `infix_registry_t*` argument to support reading and writing global variables that are defined by a named type (e.g., `@MyStruct`).
+
 ### Fixed
 
--   Fixed a critical parsing bug in `infix_register_types` that occurred when defining a function pointer type alias (e.g., `@MyFunc = (...) -> ...;`). The preliminary parser for finding definition boundaries would incorrectly interpret the `>` in the `->` token as a closing delimiter, corrupting its internal nesting level calculation. This resulted in an `INFIX_CODE_UNEXPECTED_TOKEN` error and prevented the registration of function pointer types. The parser is now context-aware and correctly handles the `->` token, allowing for the clean and correct registration of function pointer aliases as intended.
+- Fixed a critical parsing bug in `infix_register_types` that occurred when defining a function pointer type alias (e.g., `@MyFunc = (...) -> ...;`). The preliminary parser for finding definition boundaries would incorrectly interpret the `>` in the `->` token as a closing delimiter, corrupting its internal nesting level calculation. This resulted in an `INFIX_CODE_UNEXPECTED_TOKEN` error and prevented the registration of function pointer types. The parser is now context-aware and correctly handles the `->` token, allowing for the clean and correct registration of function pointer aliases as intended.
 
 ## [0.1.0] - 2025-10-27
 
