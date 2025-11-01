@@ -104,5 +104,6 @@ Everything. It's brand new.
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
-[unreleased]: https://github.com/sanko/infix/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/sanko/infix/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/sanko/infix/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/sanko/infix/releases/tag/v0.1.0
