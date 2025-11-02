@@ -306,6 +306,7 @@ c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t * trampoline
  * 7. Allocates executable memory, copies the generated code, and makes it executable.
  *
  * @param out_trampoline Receives the created trampoline handle.
+ * @param target_arena The arena to eventually store the trampoline in.
  * @param return_type The fully resolved return type.
  * @param arg_types An array of fully resolved argument types.
  * @param num_args Total number of arguments.
@@ -313,12 +314,13 @@ c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t * trampoline
  * @param target_fn The target function pointer, or `nullptr` for an unbound trampoline.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out_trampoline,
-                                                          infix_type * return_type,
-                                                          infix_type ** arg_types,
-                                                          size_t num_args,
-                                                          size_t num_fixed_args,
-                                                          void * target_fn) {
+c23_nodiscard infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline,
+                                                      infix_arena_t * target_arena,
+                                                      infix_type * return_type,
+                                                      infix_type ** arg_types,
+                                                      size_t num_args,
+                                                      size_t num_fixed_args,
+                                                      void * target_fn) {
     if (out_trampoline == nullptr || return_type == nullptr || (arg_types == nullptr && num_args > 0)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -395,9 +397,14 @@ c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out
     // "Estimate" stage: Calculate the exact size needed for the handle's private arena.
     size_t required_metadata_size = _estimate_metadata_size(temp_arena, return_type, arg_types, num_args);
 
-    // Create the handle's private arena with the calculated size plus some headroom for safety.
-    handle->arena = infix_arena_create(required_metadata_size + INFIX_TRAMPOLINE_HEADROOM);
-
+    if (target_arena) {
+        handle->arena = target_arena;
+        handle->is_external_arena = true;
+    }
+    else {
+        handle->arena = infix_arena_create(required_metadata_size + INFIX_TRAMPOLINE_HEADROOM);
+        handle->is_external_arena = false;
+    }
 
     if (handle->arena == nullptr) {
         status = INFIX_ERROR_ALLOCATION_FAILED;
@@ -479,8 +486,8 @@ c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t ** out_tr
     // without involving the signature parser. `source_arena` is null because the
     // types are assumed to be managed by the user.
     _infix_clear_error();
-    return _infix_forward_create_internal(
-        out_trampoline, return_type, arg_types, num_args, num_fixed_args, target_function);
+    return _infix_forward_create_impl(
+        out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, target_function);
 }
 
 /**
@@ -502,7 +509,8 @@ c23_nodiscard infix_status infix_forward_create_unbound_manual(infix_forward_t *
                                                                size_t num_args,
                                                                size_t num_fixed_args) {
     _infix_clear_error();
-    return _infix_forward_create_internal(out_trampoline, return_type, arg_types, num_args, num_fixed_args, nullptr);
+    return _infix_forward_create_impl(
+        out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, nullptr);
 }
 
 /**
@@ -516,7 +524,7 @@ void infix_forward_destroy(infix_forward_t * trampoline) {
     if (trampoline == nullptr)
         return;
     // Destroying the private arena frees all deep-copied type metadata.
-    if (trampoline->arena)
+    if (trampoline->arena && !trampoline->is_external_arena)
         infix_arena_destroy(trampoline->arena);
     // Free the JIT-compiled executable code.
     infix_executable_free(trampoline->exec);
@@ -821,10 +829,11 @@ c23_nodiscard void * infix_reverse_get_user_data(const infix_reverse_t * reverse
 
 // High-Level Signature API Wrappers
 
-c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampoline,
-                                                const char * signature,
-                                                void * target_function,
-                                                infix_registry_t * registry) {
+c23_nodiscard infix_status infix_forward_create_in_arena(infix_forward_t ** out_trampoline,
+                                                         infix_arena_t * target_arena,
+                                                         const char * signature,
+                                                         void * target_function,
+                                                         infix_registry_t * registry) {
     _infix_clear_error();
     if (!signature) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
@@ -878,6 +887,7 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
             for (size_t i = 0; i < num_args; ++i)
                 arg_types[i] = args[i].type;
         }
+        arena = temp_arena;
     }
     else {
         // This is a high-level wrapper. It uses the parser to build the type info first.
@@ -898,15 +908,25 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampolin
             arg_types[i] = args[i].type;
     }
     // Call the core internal implementation with the parsed types.
-    status = _infix_forward_create_internal(out_trampoline, ret_type, arg_types, num_args, num_fixed, target_function);
-    infix_arena_destroy(arena);  // Clean up the temporary arena from parsing.
+
+    status = _infix_forward_create_impl(
+        out_trampoline, target_arena, ret_type, arg_types, num_args, num_fixed, target_function);
+
+    infix_arena_destroy(arena);
     return status;
+}
+
+c23_nodiscard infix_status infix_forward_create(infix_forward_t ** out_trampoline,
+                                                const char * signature,
+                                                void * target_function,
+                                                infix_registry_t * registry) {
+    return infix_forward_create_in_arena(out_trampoline, NULL, signature, target_function, registry);
 }
 
 c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t ** out_trampoline,
                                                         const char * signature,
                                                         infix_registry_t * registry) {
-    return infix_forward_create(out_trampoline, signature, nullptr, registry);
+    return infix_forward_create_in_arena(out_trampoline, NULL, signature, NULL, registry);
 }
 
 c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t ** out_context,

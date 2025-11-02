@@ -62,6 +62,7 @@
      .size = sizeof(T),                \
      .alignment = _Alignof(T),         \
      .is_arena_allocated = false,      \
+     .arena = nullptr,                 \
      .meta.primitive_id = id}
 
 /**
@@ -70,8 +71,7 @@
  * @brief Static singleton descriptor for the `void` type.
  */
 static infix_type _infix_type_void = {
-    .category = INFIX_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .meta = {0}};
-
+    .category = INFIX_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .arena = nullptr, .meta = {0}};
 /**
  * @internal
  * @var _infix_type_pointer
@@ -81,6 +81,7 @@ static infix_type _infix_type_pointer = {.category = INFIX_TYPE_POINTER,
                                          .size = sizeof(void *),
                                          .alignment = _Alignof(void *),
                                          .is_arena_allocated = false,
+                                         .arena = nullptr,
                                          .meta.pointer_info = {.pointee_type = &_infix_type_void}};
 
 /** @internal Static singleton for the `bool` primitive type. */
@@ -816,6 +817,11 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
     if (src_type == nullptr)
         return nullptr;
 
+    // If the source type lives in the same arena as our destination, we can safely share the pointer instead of
+    // performing a deep copy.
+    if (src_type->arena == dest_arena)
+        return (infix_type *)src_type;
+
     // Base case: Static types don't need to be copied; return the singleton pointer.
     if (!src_type->is_arena_allocated)
         return (infix_type *)src_type;
@@ -844,6 +850,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
     // Perform a shallow copy of the main struct, then recurse to deep copy child pointers.
     *dest_type = *src_type;
     dest_type->is_arena_allocated = true;
+    dest_type->arena = dest_arena;  // The new type now belongs to the destination arena.
 
     switch (src_type->category) {
     case INFIX_TYPE_POINTER:

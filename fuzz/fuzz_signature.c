@@ -19,30 +19,25 @@
  *
  * @internal
  * This file defines a fuzz target that focuses on the public-facing signature
- * parsing functions: `infix_signature_parse` and `infix_type_from_signature`.
- * It is designed to be compiled with a fuzzing engine like libFuzzer or AFL.
+ * parsing functions: `infix_signature_parse`, `infix_type_from_signature`, and
+ * the now-growable `infix_register_types`.
  *
  * @section fuzz_strategy Fuzzing Strategy
  *
- * The strategy is straightforward but effective:
- * 1.  Take the raw, unmodified input data from the fuzzer.
- * 2.  Treat this data as a null-terminated C string.
- * 3.  Feed this string directly into `infix_signature_parse` and
- *     `infix_type_from_signature`.
+ * The strategy has two parts for each input:
+ * 1.  **Direct Parsing:** The raw fuzzer input is treated as a C string and fed
+ *     directly into `infix_signature_parse` and `infix_type_from_signature`. This
+ *     is a "dumb" fuzzing approach that is excellent at finding parser crashes,
+ *     hangs, and memory errors from malformed syntax.
  *
- * The goal is to discover security vulnerabilities and stability issues within the
- * entire "Parse -> Copy -> Resolve -> Layout" pipeline that these high-level
- * functions orchestrate. This includes:
- * - **Parser Crashes:** Invalid syntax causing segmentation faults or other crashes.
- * - **Memory Errors:** Buffer overflows, use-after-free, or memory leaks detected by ASan.
- * - **Hangs/Timeouts:** Pathological inputs that cause excessive recursion or looping
- *   in any stage of the pipeline.
- * - **Incorrect Error Handling:** Situations where the library fails to return an
- *   error status for a clearly invalid signature.
+ * 2.  **Growable Arena Stress Test:** The fuzzer input is used to construct a very
+ *     long, repetitive, but syntactically valid string of type definitions. This
+ *     string is then fed to `infix_register_types`. The goal of this test is to
+ *     force the registry's internal arena to grow multiple times, stress-testing
+ *     the new block-chaining logic to find bugs in the resizing mechanism.
  *
- * This fuzzer complements the other targets by testing the full, integrated system
- * from the user's perspective, whereas other fuzzers might focus on specific internal
- * components like the ABI classifier or the type generator in isolation.
+ * The goal is to discover vulnerabilities in the entire "Parse -> Copy -> Resolve -> Layout"
+ * pipeline, including parser bugs, memory leaks (via ASan), and hangs from pathological inputs.
  * @endinternal
  */
 
@@ -73,7 +68,7 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     // create a valid C string.
     char * signature = malloc(size + 1);
     if (!signature)
-        goto cleanup;
+        return 0;  // Cannot proceed without memory
 
     memcpy(signature, data, size);
     signature[size] = '\0';
@@ -87,23 +82,47 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
     // Call the high-level API that handles the full "Parse->Copy->Resolve->Layout" pipeline.
     infix_status status =
         infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed_args, nullptr);
-
     // If parsing succeeds, we must clean up the resources that were allocated.
     // If it fails, the function is responsible for its own cleanup.
-    if (status == INFIX_SUCCESS) {
+    if (status == INFIX_SUCCESS)
         infix_arena_destroy(arena);
 
-        // Target 2: Single Type Signature Parsing
-        infix_arena_t * type_arena = NULL;
-        infix_type * type_only = NULL;
-        status = infix_type_from_signature(&type_only, &type_arena, signature, nullptr);
+    infix_arena_t * type_arena = NULL;
+    infix_type * type_only = NULL;
+    status = infix_type_from_signature(&type_only, &type_arena, signature, nullptr);
+    if (status == INFIX_SUCCESS)
+        infix_arena_destroy(type_arena);
 
-        if (status == INFIX_SUCCESS)
-            infix_arena_destroy(type_arena);
+    // Target 2: Stress test the growable registry arena
+    if (size > 10) {
+        infix_registry_t * registry = infix_registry_create();
+        if (registry) {
+            // Create a very large definition string to force the arena to resize.
+            // Use the fuzzer input to add some variability.
+            size_t num_defs = 200 + (data[0] % 200);  // 200-399 definitions
+            size_t required_size = num_defs * 64;     // Approximate size
+            char * large_def_string = malloc(required_size);
+            if (large_def_string) {
+                char * p = large_def_string;
+                for (size_t i = 0; i < num_defs; ++i) {
+                    p += sprintf(p,
+                                 "@FuzzType%zu = { a:%c, b:%c, c:%c, d:%c };",
+                                 i,
+                                 (data[i % size] % 26) + 'a',
+                                 (data[(i + 1) % size] % 26) + 'a',
+                                 (data[(i + 2) % size] % 26) + 'a',
+                                 (data[(i + 3) % size] % 26) + 'a');
+                }
+                // This call should not crash, even if it runs out of system memory.
+                // It stresses the block-chaining logic of the arena.
+                (void)infix_register_types(registry, large_def_string);
+                free(large_def_string);
+            }
+            infix_registry_destroy(registry);
+        }
     }
-cleanup:
     // We only allocated the signature string, so that's all we need to free.
-    free(signature);
 
+    free(signature);
     return 0;
 }

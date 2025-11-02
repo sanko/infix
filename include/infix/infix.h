@@ -212,7 +212,8 @@ struct infix_type_t {
     infix_type_category category; /**< The fundamental category of the type. */
     size_t size;                  /**< The size of the type in bytes. */
     size_t alignment;             /**< The alignment requirement of the type in bytes. */
-    bool is_arena_allocated;      /**< @internal Internal flag for memory management. */
+    bool is_arena_allocated;      /**< True if this type object lives in an arena and must be freed with it. */
+    infix_arena_t * arena;        /**< A pointer to the arena that owns this type object, or nullptr if static. */
 
     /** @brief A union containing metadata specific to the type's category. */
     union {
@@ -528,6 +529,20 @@ c23_nodiscard bool infix_registry_is_defined(const infix_registry_t *, const cha
  */
 c23_nodiscard const infix_type * infix_registry_lookup_type(const infix_registry_t *, const char *);
 
+/**
+ * @brief Creates a new named type registry that allocates from a user-provided arena.
+ *
+ * This advanced function allows multiple registries and trampolines to share a single
+ * memory arena, enabling pointer sharing and reducing memory overhead. The user
+ * is responsible for managing the lifetime of the provided arena.
+ *
+ * @param[in] arena The user-managed arena to use for all internal allocations.
+ * @return A pointer to the new registry, or `nullptr` on allocation failure.
+ * @note The registry should still be destroyed with `infix_registry_destroy`, but
+ *       this will not free the user-provided arena itself.
+ */
+c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * arena);
+
 /** @} */  // end of registry_introspection_api group
 
 /**
@@ -624,6 +639,22 @@ c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *
  * @endcode
  */
 c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *);
+
+/**
+ * @brief Creates a "bound" forward trampoline within a user-provided arena.
+ *
+ * When the `target_arena` is the same as the registry's arena, this function
+ * will share pointers to named types instead of deep-copying them, saving memory.
+ *
+ * @param[out] out_trampoline Receives the created trampoline handle.
+ * @param[in] target_arena The arena to use for the trampoline's internal metadata.
+ * @param[in] signature The signature string of the target function.
+ * @param[in] target_function The address of the C function to be called.
+ * @param[in] registry An optional type registry.
+ * @return `INFIX_SUCCESS` on success.
+ */
+c23_nodiscard infix_status
+infix_forward_create_in_arena(infix_forward_t **, infix_arena_t *, const char *, void *, infix_registry_t *);
 
 /**
  * @brief Creates a type-safe reverse trampoline (callback).

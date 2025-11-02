@@ -160,17 +160,56 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-    registry->arena = infix_arena_create(16384);
+    registry->arena = infix_arena_create(16384);  // Default initial size
     if (!registry->arena) {
         infix_free(registry);
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
+    registry->is_external_arena = false;  // Mark that this arena is owned by the registry.
     registry->num_buckets = INITIAL_REGISTRY_BUCKETS;
     registry->buckets = infix_arena_calloc(
         registry->arena, registry->num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
     if (!registry->buckets) {
         infix_arena_destroy(registry->arena);
+        infix_free(registry);
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return nullptr;
+    }
+    registry->num_items = 0;
+    return registry;
+}
+
+/**
+ * @brief Creates a new, empty named type registry that allocates from a user-provided arena.
+ *
+ * A registry acts as a dictionary for `infix` types, allowing you to define complex
+ * structs, unions, or aliases once and refer to them by name (e.g., `@MyStruct`)
+ * in any signature string. This is essential for managing complex, recursive, or
+ * mutually-dependent types.
+ *
+ * @param[in] arena The arena to allocate from.
+ * @return A pointer to the new registry, or `nullptr` on allocation failure. The returned
+ *         handle must be freed with `infix_registry_destroy`.
+ */
+
+c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * arena) {
+    _infix_clear_error();
+    if (!arena) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        return nullptr;
+    }
+    infix_registry_t * registry = infix_malloc(sizeof(infix_registry_t));
+    if (!registry) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return nullptr;
+    }
+    registry->arena = arena;
+    registry->is_external_arena = true;  // Mark the arena as user-owned
+    registry->num_buckets = INITIAL_REGISTRY_BUCKETS;
+    registry->buckets = infix_arena_calloc(
+        registry->arena, registry->num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
+    if (!registry->buckets) {
         infix_free(registry);
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
@@ -191,7 +230,10 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
 void infix_registry_destroy(infix_registry_t * registry) {
     if (!registry)
         return;
-    infix_arena_destroy(registry->arena);
+    // Only destroy the arena if it was created internally by `infix_registry_create`.
+    if (!registry->is_external_arena)
+        infix_arena_destroy(registry->arena);
+    // Always free the registry struct itself.
     infix_free(registry);
 }
 
@@ -431,8 +473,15 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         const char * def_body_start;
         size_t def_body_len;
     };
-    struct def_info defs_found[256];  // Max 256 definitions in a single call.
+
+    size_t defs_capacity = 64;  // Start with an initial capacity.
+    struct def_info * defs_found = infix_malloc(sizeof(struct def_info) * defs_capacity);
+    if (!defs_found) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
     size_t num_defs_found = 0;
+    infix_status final_status = INFIX_SUCCESS;
 
     // Pass 1: Scan & Index all names and their definition bodies.
     while (*state.p != '\0') {
@@ -442,14 +491,16 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
 
         if (*state.p != '@') {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
         state.p++;
 
         char name_buffer[256];
         if (!_registry_parser_parse_name(&state, name_buffer, sizeof(name_buffer))) {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
         _infix_registry_entry_t * entry = _registry_lookup(registry, name_buffer);
         _registry_parser_skip_whitespace(&state);
@@ -460,16 +511,26 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             // It's an error to redefine a type that wasn't a forward declaration.
             if (entry && !entry->is_forward_declaration) {
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-                return INFIX_ERROR_INVALID_ARGUMENT;
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                goto cleanup;
             }
             if (!entry) {  // If it doesn't exist, create it.
                 entry = _registry_insert(registry, name_buffer);
-                if (!entry)
-                    return INFIX_ERROR_ALLOCATION_FAILED;
+                if (!entry) {
+                    final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                    goto cleanup;
+                }
             }
-            if (num_defs_found >= 256) {
-                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_RECURSION_DEPTH_EXCEEDED, state.p - state.start);
-                return INFIX_ERROR_INVALID_ARGUMENT;
+            if (num_defs_found >= defs_capacity) {
+                size_t new_capacity = defs_capacity * 2;
+                struct def_info * new_defs = infix_realloc(defs_found, sizeof(struct def_info) * new_capacity);
+                if (!new_defs) {
+                    _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, state.p - state.start);
+                    final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                    goto cleanup;
+                }
+                defs_found = new_defs;
+                defs_capacity = new_capacity;
             }
 
             // Find the end of the type definition body (the next top-level ';').
@@ -497,16 +558,20 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         else if (*state.p == ';') {  // This is a forward declaration.
             if (entry) {             // Cannot forward-declare an already-defined type.
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-                return INFIX_ERROR_INVALID_ARGUMENT;
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                goto cleanup;
             }
             entry = _registry_insert(registry, name_buffer);
-            if (!entry)
-                return INFIX_ERROR_ALLOCATION_FAILED;
+            if (!entry) {
+                final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                goto cleanup;
+            }
             entry->is_forward_declaration = true;
         }
         else {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
 
         if (*state.p == ';')
@@ -520,7 +585,8 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
         if (!body_copy) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-            return INFIX_ERROR_ALLOCATION_FAILED;
+            final_status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
         }
         infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
         body_copy[defs_found[i].def_body_len] = '\0';
@@ -534,15 +600,16 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             // Adjust the error position to be relative to the full definition string.
             infix_error_details_t err = infix_get_last_error();
             _infix_set_error(err.category, err.code, (defs_found[i].def_body_start - definitions) + err.position);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
-
         // "Copy" step: copy from temp arena to the registry's permanent arena.
         entry->type = _copy_type_graph_to_arena(registry->arena, raw_type);
         infix_arena_destroy(parser_arena);
         if (!entry->type) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-            return INFIX_ERROR_ALLOCATION_FAILED;
+            final_status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
         }
 
         // Annotate the type with its own name for printing and introspection.
@@ -556,12 +623,17 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         _infix_registry_entry_t * entry = defs_found[i].entry;
         if (entry->type) {
             // "Resolve" and "Layout" steps.
-            if (_infix_resolve_type_graph_inplace(&entry->type, registry) != INFIX_SUCCESS)
-                return INFIX_ERROR_INVALID_ARGUMENT;
+            if (_infix_resolve_type_graph_inplace(&entry->type, registry) != INFIX_SUCCESS) {
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                goto cleanup;
+            }
             _infix_type_recalculate_layout(entry->type);
         }
     }
-    return INFIX_SUCCESS;
+
+cleanup:
+    infix_free(defs_found);
+    return final_status;
 }
 
 // Registry Introspection API Implementation

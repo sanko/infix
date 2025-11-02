@@ -65,9 +65,9 @@ TEST {
         }
         ok(is_zeroed, "infix_arena_calloc returns zero-initialized memory");
 
-        void * p_fail = infix_arena_alloc(arena, 2048, 1);
-        ok(p_fail == nullptr, "infix_arena_alloc returns nullptr when out of memory");
-        ok(arena->error == true, "Arena error flag is set on allocation failure");
+        void * p_grow = infix_arena_alloc(arena, 2048, 1);
+        ok(p_grow != nullptr, "Arena grows and returns a valid pointer when initial capacity is exceeded");
+        ok(arena->error == false, "Arena error flag is not set after successful growth");
 
         infix_arena_destroy(arena);
     }
