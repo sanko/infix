@@ -69,6 +69,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
     + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
     + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
     + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
+    + [Recipe: Optimizing Memory with a Shared Arena](#recipe-optimizing-memory-with-a-shared-arena)
     + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
         - [How It Works & Why It's Better](#how-it-works-amp-why-its-better)
         - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
@@ -1304,6 +1305,57 @@ infix_forward_create(&trampoline, "()->void", (void*)dummy_func, NULL);
 ```
 
 > Full example available in [`Ch08_Rec01_CustomAllocators.c`](/eg/cookbook/Ch08_Rec01_CustomAllocators.c).
+
+### Recipe: Optimizing Memory with a Shared Arena
+
+**Problem**: Your application creates a large number of trampolines that all reference the same set of complex, named types (e.g., `@Point`, `@User`). By default, `infix` deep-copies the metadata for these types into each trampoline's private memory, leading to high memory consumption and slower creation times.
+
+**Solution**: Use the **shared arena** pattern. By creating the type registry and all related trampolines within a single, user-managed arena, you instruct `infix` to share pointers to the canonical named types instead of copying them. This drastically reduces memory usage and speeds up trampoline creation, but it requires you to manage the lifetime of the shared arena carefully.
+
+**When to use it:** This is an advanced pattern ideal for language runtimes, plugin systems, or long-running applications that create many FFI interfaces referencing a common set of C headers.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stdint.h>
+
+// Dummy C types and functions to interact with
+typedef struct { double x; double y; } Point;
+typedef struct { uint64_t id; const char* name; } User;
+void handle_point(const Point* p) { /* ... */ }
+void handle_user(const User* u) { /* ... */ }
+
+void shared_arena_example() {
+    // Create a single, long-lived arena to hold everything.
+    infix_arena_t* shared_arena = infix_arena_create(65536);
+
+    // Create the type registry *within* the shared arena.
+    infix_registry_t* registry = infix_registry_create_in_arena(shared_arena);
+
+    const char* my_types =
+        "@Point = { x: double, y: double };"
+        "@User  = { id: uint64, name: *char };";
+    infix_register_types(registry, my_types);
+
+    // Create multiple trampolines, also telling them to use the shared arena.
+    // Because they share an arena with the registry, the metadata for @Point and
+    // @User will be shared via pointers, not deep-copied.
+    infix_forward_t *t_point = NULL, *t_user = NULL;
+    infix_forward_create_in_arena(&t_point, shared_arena, "(*@Point)->void", (void*)handle_point, registry);
+    infix_forward_create_in_arena(&t_user, shared_arena, "(*@User)->void", (void*)handle_user, registry);
+
+    // ... use the trampolines ...
+
+    // The user is responsible for the lifetime of all objects. Destroying the
+    // handles and registry first is good practice before freeing the master arena.
+    infix_forward_destroy(t_point);
+    infix_forward_destroy(t_user);
+    infix_registry_destroy(registry);
+    infix_arena_destroy(shared_arena);
+}
+```
+
+> Full, runnable example available in [`Ch08_Rec04_SharedArena.c`](/eg/cookbook/Ch08_Rec04_SharedArena.c).
 
 ### Recipe: Building a Dynamic Call Frame with an Arena
 
