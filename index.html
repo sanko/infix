@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>infix: infix: A JIT-Powered FFI Library for C</title>
+<title>infix: &lt;tt&gt;infix&lt;/tt&gt;: A JIT-powered FFI library for C</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -102,138 +102,60 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">infix: A JIT-Powered FFI Library for C </div></div>
+  <div class="headertitle"><div class="title"><code>infix</code>: A JIT-powered FFI library for C </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/sanko/infix/actions/workflows/ci.yml"><img src="https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> (Matrix)</p>
-<p><code>infix</code> is a modern, security-conscious, and dependency-free Foreign Function Interface (FFI) library for C. It solves the complex problem of calling native functions across language boundaries, replacing brittle, hand-written binding code with a simple, human-readable signature string like <code>({int, *double}, *char) -&gt; int</code>.</p>
-<p>At its core, <code>infix</code> is a Just-in-Time (JIT) compiler that generates tiny, highly-optimized machine code "trampolines" at runtime. These trampolines correctly handle the low-level Application Binary Interface (ABI) for the target platform, ensuring seamless and performant interoperability.</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> <code>infix</code> is a modern, lightweight C library that lets you call any C function or create C callbacks at runtime, using simple, human-readable strings to describe the function's signature.</p>
+<p>It's designed to be the simplest way to add a dynamic Foreign Function Interface (FFI) to your project, whether you're building a language runtime, a plugin system, or just need to call functions from a dynamically loaded library.</p>
+<p>![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Documentation</h1>
-<ul>
-<li><b><a class="el" href="md_docs_2cookbook.html">Cookbook</a>:</b> The best place to start. A comprehensive guide with practical, copy-pasteable recipes for common FFI tasks.</li>
-<li><b><a class="el" href="md_docs_2signatures.html">Signature Reference</a>:</b> The complete guide for the <code>infix</code> signature mini-language spec.</li>
-<li><b><a class="el" href="md_docs_2internals.html">Internals</a>:</b> A deep dive into the library's architecture for maintainers and contributors.</li>
-<li><b><a class="el" href="md_docs_2porting.html">Porting Guide</a>:</b> A guide for porting <code>infix</code> to new CPU architectures and ABIs.</li>
-<li><b><a class="el" href="md_docs_2INSTALL.html">INSTALL.md</a>:</b> Detailed build and integration instructions.</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
-How It Works: The Trampoline Concept</h1>
-<p>At its core, <code>infix</code> generates a small piece of executable machine code called a <b>trampoline</b>. This code acts as an intelligent adapter that understands the specific calling convention (ABI) of your platform.</p>
-<h3><a class="anchor" id="autotoc_md3"></a>
-Forward Call (e.g., from Python to C)</h3>
-<p>When your application wants to call a C function, it doesn't call it directly. Instead, it calls the <code>infix</code> trampoline, which handles the complex process of placing arguments in the correct CPU registers and on the stack before making the final jump to the target C function.</p>
-<div class="fragment"><div class="line">graph LR</div>
-<div class="line">  subgraph &quot;Forward Call (e.g., Python to C)&quot;</div>
-<div class="line">    A[&quot;Your App&lt;br/&gt;(e.g., Python)&quot;] --&gt;|1. Call with generic `void**` arguments| B[&quot;infix Trampoline&lt;br/&gt;(JIT-compiled)&quot;];</div>
-<div class="line">    B --&gt;|2. Sets up ABI, places args&lt;br/&gt;in registers &amp; stack| C[&quot;Native C Function&lt;br/&gt;(e.g., puts())&quot;];</div>
-<div class="line">  end</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
-Reverse Call (e.g., from C back to Python)</h3>
-<p><code>infix</code> generates a native C function pointer that a C library can call. When called, this JIT-compiled stub marshals the native arguments back into a generic format and invokes your high-level handler.</p>
-<div class="fragment"><div class="line">graph LR</div>
-<div class="line">  subgraph &quot;Reverse Call (e.g., C to Python)&quot;</div>
-<div class="line">    D[&quot;Native C Code&lt;br/&gt;(e.g., a GUI library)&quot;] --&gt;|1. Calls native function pointer&lt;br/&gt;with C arguments| E[&quot;infix Callback&lt;br/&gt;(JIT-compiled)&quot;];</div>
-<div class="line">    E --&gt;|2. Marshals ABI arguments&lt;br/&gt;and invokes handler| F[&quot;Your App&#39;s Handler&lt;br/&gt;(e.g., Python function)&quot;];</div>
-<div class="line">  end</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
-Who is this for?</h1>
-<p><code>infix</code> is designed for developers who need to bridge the gap between different codebases or language runtimes. You'll find it especially useful if you are:</p>
-<ul>
-<li><b>A Language Binding Author:</b> <code>infix</code> is the ideal engine for allowing a high-level language like Python, Ruby, Perl, or Lua to call C libraries. The introspectable type system simplifies the complex task of data marshalling.</li>
-<li><b>A Plugin System Architect:</b> Build a stable, ABI-agnostic plugin system. <code>infix</code> can provide the boundary layer, allowing you to load and call functions from shared libraries without tight coupling.</li>
-<li><b>A C/C++ Developer:</b> Dynamically call functions from system libraries (<code>user32.dll</code>, <code>libc.so.6</code>, etc.) without needing to link against them at compile time, or create complex stateful callbacks for C APIs.</li>
-<li><b>A Security Researcher:</b> <code>infix</code> provides a powerful, fuzz-tested toolkit for analyzing and interacting with native code.</li>
-</ul>
-<blockquote class="doxtable">
-<p>&zwj;**How does <code>infix</code> compare to alternatives like libffi and`dyncall?**</p>
-<p><code>infix</code> shares a similar goal with these popular libraries but differs in its design philosophy.</p>
-<ul>
-<li>Compared to libffi, <code>infix</code> prioritizes a modern, security-hardened architecture (W^X memory, guard pages), a more expressive and readable string-based API, and a powerful named type registry for managing complex data structures.</li>
-<li>Compared to dyncall, <code>infix</code> offers a declarative API via its signature strings. Where dyncall uses an imperative, programmatic sequence of calls (e.g., <code>dcArgInt(vm, 10); dcArgString(vm, "hi");</code>), <code>infix</code> defines the entire function prototype in a single, self-contained, and human-readable string. This makes signatures easy to log, store in configuration, and manage, especially for complex types. </li>
-</ul>
-</blockquote>
-<h1><a class="anchor" id="autotoc_md6"></a>
 Key Features</h1>
 <ul>
-<li><b>Zero Dependencies &amp; Simple Integration:</b> <code>infix</code> uses a unity build, making integration into any C/C++ project trivial by simply compiling <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code>.</li>
-<li><b>Simple, Powerful APIs:</b> Use the high-level <b>Signature API</b> to create trampolines from a single string, or drop down to the memory-safe <b>Manual API</b> for dynamic, performance-critical use cases.</li>
-<li><b>Advanced Type System:</b> Full support for primitives, pointers, structs, unions, arrays, enums, <code>_Complex</code> numbers, and architecture-specific SIMD vectors (<b>SSE, AVX, AVX-512, NEON, and SVE</b>).</li>
-<li><b>Named Type Registry:</b> Define complex types like structs and unions once, and reuse them by name (<code>@Name</code>) across all your signatures for unparalleled readability and maintainability.</li>
-<li><b>Stateful Callbacks Made Easy:</b> The reverse-call API is designed to make stateful callbacks simple and safe, even when the C library you're calling doesn't provide a <code>user_data</code> parameter. It offers both high-level, type-safe handlers for C/C++ and low-level, generic handlers for language bindings.</li>
-<li><b>Secure by Design:</b> <code>infix</code> is hardened against vulnerabilities and validated through extensive fuzz testing:<ul>
-<li><b>W^X Memory Protection:</b> JIT-compiled code is never writable and executable at the same time.</li>
-<li><b>Guard Pages:</b> Freed trampolines are made inaccessible to prevent <b>use-after-free</b> bugs.</li>
-<li><b>Read-Only Contexts:</b> Callback context data is made read-only to guard against runtime <b>memory corruption</b>.</li>
+<li><b>Human-Readable Signatures:</b> Describe complex C functions with an intuitive string format (e.g., <code>"({double, double}, int) -&gt; *char"</code>).</li>
+<li><b>Forward &amp; Reverse Calls:</b> Call C functions ("forward") and create C function pointers that call back into your code ("reverse").</li>
+<li><b>Simple Integration:</b> Add a single C file and a header directory to your project to get started. No complex dependencies.</li>
+<li><b>Type Registry:</b> Define, reuse, and link complex, recursive, and mutually-dependent structs by name.</li>
+<li><b>Security-First Design:</b> Hardened against vulnerabilities with Write XOR Execute (W^X) memory, guard pages, and fuzz testing.</li>
+<li><b>High Performance:</b> A Just-in-Time (JIT) compiler generates optimized machine code trampolines, making calls nearly as fast as a direct C call after the initial setup.</li>
 </ul>
-</li>
-<li><b>Cross-Platform and Cross-Architecture:</b> Designed for portability, with initial support for <b>x86-64</b> (System V and Windows x64) and <b>AArch64</b> (AAPCS64).</li>
-<li><b>Arena-Based Memory:</b> Utilizes an efficient arena allocator for all type descriptions, ensuring fast performance and leak-free memory management.</li>
-<li><b>Dynamic Library Tools</b>: A cross-platform API to load shared libraries (<code>.so</code>, <code>.dll</code>, <code>.dylib</code>), look up symbols, and read/write global variables using the same powerful signature system.</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md7"></a>
-Performance</h1>
-<p><code>infix</code> is designed for high performance, balancing the flexibility of dynamic calls with the speed of compiled code.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Full Documentation</h1>
 <ul>
-<li><b>Call Overhead:</b> The overhead of a call through a <b>bound</b> trampoline is extremely low, typically measuring in the single-digit nanoseconds on modern hardware. This makes it suitable for performance-critical loops. <b>Unbound</b> trampolines offer more flexibility at the cost of a small, additional overhead.</li>
-<li><b>Generation Time:</b> Creating a new trampoline is fast, typically taking only a few microseconds. This allows for dynamic generation of callbacks and function calls in response to runtime events without noticeable latency.</li>
+<li><a class="el" href="md_docs_2INSTALL.html">Installation Guide</a>: How to build and integrate <code>infix</code>.</li>
+<li><a class="el" href="md_docs_2API.html">API Quick Reference</a>: A complete reference for the public API.</li>
+<li><a class="el" href="md_docs_2cookbook.html">The FFI Cookbook</a>: Practical, real-world examples and recipes.</li>
+<li><a class="el" href="md_docs_2signatures.html">Signature Language Reference</a>: A deep dive into the signature string format.</li>
+<li><a class="el" href="md_docs_2porting.html">Porting Guide</a>: Instructions for adding support for a new CPU architecture or ABI.</li>
+<li>Contributing Guide: How to contribute to the project.</li>
 </ul>
-<p>The library includes micro-benchmarks to track these metrics and prevent performance regressions.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
-Getting Started</h1>
-<p>Full build instructions for <code>xmake</code>, <code>cmake</code>, GNU <code>make</code>, and other systems are available in <b><a class="el" href="md_docs_2INSTALL.html">INSTALL.md</a></b>.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
-Prerequisites</h2>
-<ul>
-<li>A C11-compatible compiler (GCC, Clang, or MSVC).</li>
-<li>(Optional) A build tool like <code>cmake</code>, <code>xmake</code>, <code>make</code>, etc.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
-Building the Library</h2>
-<p>While you can use the provided build scripts, the simplest way to build <code>infix</code> is to compile its single translation unit directly. Because <code>infix</code> uses a unity build, integration into an existing project is simple: add <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> to your list of source files and add the <code>include/</code> directory to your include paths.</p>
-<div class="fragment"><div class="line"># Build a static library on Linux/macOS</div>
-<div class="line">gcc -c -std=c11 -O2 -I/path/to/infix/include src/infix.c -o infix.o</div>
-<div class="line">ar rcs libinfix.a infix.o</div>
+<hr  />
+<h1><a class="anchor" id="autotoc_md4"></a>
+How It Works: A Quick Example</h1>
+<p>The heart of <code>infix</code> is its signature string. Here’s how you would call a simple C function:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"> </div>
-<div class="line"># Build a static library with MSVC</div>
-<div class="line">cl.exe /c /I C:\path\to\infix\include /O2 src\infix.c /Foinfix.obj</div>
-<div class="line">lib.exe /OUT:infix.lib infix.obj</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
-Integrating into Your Project</h2>
-<ol type="1">
-<li><p class="startli"><b>Include the Header:</b></p>
-<p class="startli"><code>c #include &lt;<a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix/infix.h</a>&gt; </code></p>
-</li>
-<li><p class="startli"><b>Link the Library:</b> When compiling your application, link against the <code>libinfix.a</code> (or <code>infix.lib</code>) library.</p>
-<p class="startli"><code>bash gcc my_app.c -I/path/to/infix/include -L/path/to/build/dir -linfix -o my_app </code></p>
-</li>
-</ol>
-<h2><a class="anchor" id="autotoc_md12"></a>
-Quick Start: A 60-Second Example</h2>
-<p>Here is a complete, runnable example that calls the standard C library function <code>puts</code>.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
+<div class="line"><span class="comment">// The C function we want to call.</span></div>
+<div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a>(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; }</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a>() {</div>
-<div class="line">    <span class="comment">// 1. Describe the function signature: int puts(const char*);</span></div>
-<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(*char) -&gt; int32&quot;</span>;</div>
+<div class="line">    <span class="comment">// 1. Describe the function&#39;s signature as a string.</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* signature = <span class="stringliteral">&quot;(int, int) -&gt; int&quot;</span>;</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// 2. Create a &quot;bound&quot; trampoline, hardcoding the address of `puts`.</span></div>
-<div class="line">    <span class="comment">//    Pass nullptr for the registry as we are not using named types.</span></div>
+<div class="line">    <span class="comment">// 2. Create a &quot;trampoline&quot;—a JIT-compiled function wrapper.</span></div>
 <div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline = NULL;</div>
-<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, signature, (<span class="keywordtype">void</span>*)puts, NULL);</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// 3. Get the callable function pointer.</span></div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a>(&amp;trampoline, signature, (<span class="keywordtype">void</span>*)<a class="code hl_function" href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a>, NULL);</div>
 <div class="line">    <a class="code hl_typedef" href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a> cif = <a class="code hl_function" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a>(trampoline);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// 4. Prepare arguments and call.</span></div>
-<div class="line">    <span class="comment">//    The `args` array must contain *pointers* to your argument values.</span></div>
-<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* my_string = <span class="stringliteral">&quot;Hello from infix!&quot;</span>;</div>
-<div class="line">    <span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;my_string };</div>
-<div class="line">    <span class="keywordtype">int</span> return_value;</div>
-<div class="line">    cif(&amp;return_value, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// A non-negative value is returned on success.</span></div>
+<div class="line">    <span class="comment">// 3. Prepare an array of *pointers* to the arguments.</span></div>
+<div class="line">    <span class="keywordtype">int</span> a = 10, b = 32;</div>
+<div class="line">    <span class="keywordtype">void</span>* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { &amp;a, &amp;b };</div>
+<div class="line">    <span class="keywordtype">int</span> result;</div>
 <div class="line"> </div>
-<div class="line">    printf(<span class="stringliteral">&quot;puts returned: %d\n&quot;</span>, return_value);</div>
+<div class="line">    <span class="comment">// 4. Call the function through the trampoline.</span></div>
+<div class="line">    cif(&amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line"> </div>
+<div class="line">    printf(<span class="stringliteral">&quot;Result: %d\n&quot;</span>, result); <span class="comment">// Output: Result: 42</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// 5. Clean up.</span></div>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a>(trampoline);</div>
@@ -241,140 +163,67 @@ Quick Start: A 60-Second Example</h2>
 <div class="line">}</div>
 <div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:64</div></div>
 <div class="ttc" id="a821__threading__bare_8c_html_a840291bc02cba5474a4cb46a9b9566fe"><div class="ttname"><a href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a></div><div class="ttdeci">int main(void)</div><div class="ttdef"><b>Definition</b> 821_threading_bare.c:81</div></div>
+<div class="ttc" id="aCh04__Rec06__ThreadSafety_8c_html_a876d849a2f1867b8b2be9881f4a191d5"><div class="ttname"><a href="Ch04__Rec06__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a></div><div class="ttdeci">static int add(int a, int b)</div><div class="ttdef"><b>Definition</b> Ch04_Rec06_ThreadSafety.c:25</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:370</div></div>
 <div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:824</div></div>
 <div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:288</div></div>
 <div class="ttc" id="agroup__manual__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Destroys a forward trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:515</div></div>
 <div class="ttc" id="ainfix_8h_html"><div class="ttname"><a href="infix_8h.html">infix.h</a></div><div class="ttdoc">The public interface for the infix FFI library.</div></div>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:94</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
-API Reference</h1>
-<p>A brief overview of the complete public API, grouped by functionality.</p>
-<details >
-<summary >
-<b>Click to expand Full API Reference</b></summary>
-<p></p>
-<p></p>
-</details>
-<h2><a class="anchor" id="autotoc_md14"></a>
-Named Type Registry (&lt;tt&gt;registry_api&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296" title="Creates a new, empty named type registry.">infix_registry_create()</a></code>: Creates a new, empty type registry.</li>
-<li><code><a class="el" href="group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61" title="Destroys a type registry and frees all associated memory.">infix_registry_destroy()</a></code>: Frees a registry and all types defined within it.</li>
-<li><code><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280" title="Parses a string of type definitions and adds them to a registry.">infix_register_types()</a></code>: Parses a string of definitions to populate a registry.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
-Registry Introspection (&lt;tt&gt;registry_introspection_api&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__registry__introspection__api.html#ga722db5aa0d69f7be25b026a2d6a333a8" title="Serializes all defined types within a registry into a single, human-readable string.">infix_registry_print()</a></code>: Serializes all defined types in a registry to a string.</li>
-<li><code><a class="el" href="group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780" title="Initializes an iterator for traversing the types in a registry.">infix_registry_iterator_begin()</a></code>: Creates an iterator to traverse the types in a registry.</li>
-<li><code><a class="el" href="group__registry__introspection__api.html#ga84444c174ba84274c0e033b66648f1f0" title="Advances the iterator to the next defined type in the registry.">infix_registry_iterator_next()</a></code>: Advances the iterator to the next type.</li>
-<li><code><a class="el" href="group__registry__introspection__api.html#ga8daf0bbf75db96eb0859ab59d33a35fb" title="Gets the name of the type at the iterator&#39;s current position.">infix_registry_iterator_get_name()</a></code>: Gets the name of the type at the current iterator position.</li>
-<li><code><a class="el" href="group__registry__introspection__api.html#ga530939c6ddc67de89ae87b8126f2bec1" title="Gets the infix_type object of the type at the iterator&#39;s current position.">infix_registry_iterator_get_type()</a></code>: Gets the <code>infix_type</code> at the current iterator position.</li>
-<li><code><a class="el" href="group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657" title="Checks if a type with the given name is fully defined in the registry.">infix_registry_is_defined()</a></code>: Checks if a type name is fully defined in the registry.</li>
-<li><code><a class="el" href="group__registry__introspection__api.html#ga0f79cbbbe50468b6569593e5a7d43fb6" title="Retrieves the canonical infix_type object for a given name from the registry.">infix_registry_lookup_type()</a></code>: Retrieves a canonical <code>infix_type</code> from the registry by name.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md16"></a>
-High-Level Signature API (&lt;tt&gt;high_level_api&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36" title="Creates a &quot;bound&quot; forward trampoline from a signature string.">infix_forward_create()</a></code>: Creates a bound forward trampoline from a signature.</li>
-<li><code><a class="el" href="group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5" title="Creates an &quot;unbound&quot; forward trampoline from a signature string.">infix_forward_create_unbound()</a></code>: Creates an unbound forward trampoline from a signature.</li>
-<li><code><a class="el" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab" title="Creates a type-safe reverse trampoline (callback).">infix_reverse_create_callback()</a></code>: Creates a type-safe reverse trampoline (for C/C++ developers).</li>
-<li><code><a class="el" href="group__high__level__api.html#ga6d1281b61d196d1d06153aa1265fb971" title="Creates a generic reverse trampoline (closure) for stateful callbacks.">infix_reverse_create_closure()</a></code>: Creates a generic reverse trampoline (for language bindings).</li>
-<li><code><a class="el" href="group__high__level__api.html#gabc24d2667f9cac5f45bd9a71efe66cf7" title="Parses a full function signature string into its constituent parts.">infix_signature_parse()</a></code>: Parses a full function signature into its <code>infix_type</code> components.</li>
-<li><code><a class="el" href="group__high__level__api.html#ga3632147d55b80e520987d37722ddcf61" title="Parses a signature string representing a single data type.">infix_type_from_signature()</a></code>: Parses a string representing a single data type.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md17"></a>
-Dynamic Library &amp; Globals API (&lt;tt&gt;exports_api&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__exports__api.html#gabfd1bb148a39b758e57e772c09b9ea84" title="Opens a dynamic library and returns a handle to it.">infix_library_open()</a></code>: Opens a dynamic library (<code>.so</code>, <code>.dll</code>).</li>
-<li><code><a class="el" href="group__exports__api.html#ga1a55403ddf64eaed05f2fcb013412003" title="Closes a dynamic library handle.">infix_library_close()</a></code>: Closes a dynamic library handle.</li>
-<li><code><a class="el" href="group__exports__api.html#ga227480098fa596f3c372837461a6b805" title="Retrieves the address of a symbol (function or variable) from a loaded library.">infix_library_get_symbol()</a></code>: Retrieves a function or variable address from a library.</li>
-<li><code><a class="el" href="group__exports__api.html#gaec836cea65f5c0ff31780b26f5315796" title="Reads the value of a global variable from a library into a buffer.">infix_read_global()</a></code>: Reads a global variable from a library using a signature.</li>
-<li><code><a class="el" href="group__exports__api.html#ga02212862110c752548fbdc0b3ba65bec" title="Writes data from a buffer into a global variable in a library.">infix_write_global()</a></code>: Writes to a global variable in a library using a signature.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md18"></a>
-Manual Trampoline API (&lt;tt&gt;manual_api&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0" title="Creates a bound forward trampoline from infix_type objects.">infix_forward_create_manual()</a></code>: Creates a bound forward trampoline from <code>infix_type</code> objects.</li>
-<li><code><a class="el" href="group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a" title="Creates an unbound forward trampoline from infix_type objects.">infix_forward_create_unbound_manual()</a></code>: Creates an unbound forward trampoline from <code>infix_type</code> objects.</li>
-<li><code><a class="el" href="group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb" title="Creates a type-safe reverse trampoline (callback) from infix_type objects.">infix_reverse_create_callback_manual()</a></code>: Creates a type-safe reverse trampoline from <code>infix_type</code> objects.</li>
-<li><code><a class="el" href="group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a" title="Creates a generic reverse trampoline (closure) from infix_type objects.">infix_reverse_create_closure_manual()</a></code>: Creates a generic reverse trampoline from <code>infix_type</code> objects.</li>
-<li><code><a class="el" href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032" title="Destroys a forward trampoline and frees all associated memory.">infix_forward_destroy()</a></code>: Frees a forward trampoline.</li>
-<li><code><a class="el" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e" title="Destroys a reverse trampoline and frees all associated memory.">infix_reverse_destroy()</a></code>: Frees a reverse trampoline.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md19"></a>
-Manual Type Creation API (&lt;tt&gt;type_system&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8" title="Creates a static descriptor for a primitive C type.">infix_type_create_primitive()</a></code>: Gets a static descriptor for a primitive C type.</li>
-<li><code><a class="el" href="group__type__system.html#ga58f759e56e12c39603c391886dd6857f" title="Creates a static descriptor for a generic pointer (void*).">infix_type_create_pointer()</a></code>: Gets a static descriptor for <code>void*</code>.</li>
-<li><code><a class="el" href="group__type__system.html#gaa186076fa232503f1f781fb3cd2e9cc7" title="Creates a new pointer type that points to a specific type.">infix_type_create_pointer_to()</a></code>: Creates a pointer type with a specific pointee type.</li>
-<li><code><a class="el" href="group__type__system.html#ga1eb812d62636fa21936521630a7d1be2" title="Creates a static descriptor for the void type.">infix_type_create_void()</a></code>: Gets the static descriptor for the <code>void</code> type.</li>
-<li><code><a class="el" href="group__type__system.html#gac80d3ec096ade5b991048b61fecfe7b2" title="Creates a new struct type from an array of members, calculating layout automatically.">infix_type_create_struct()</a></code>: Creates a struct type from an array of members.</li>
-<li><code><a class="el" href="group__type__system.html#ga013ec0163fd36e611251d1a0897f773e" title="Creates a new packed struct type with a user-specified layout.">infix_type_create_packed_struct()</a></code>: Creates a struct with non-standard packing.</li>
-<li><code><a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90" title="Creates a new union type from an array of members.">infix_type_create_union()</a></code>: Creates a union type from an array of members.</li>
-<li><code><a class="el" href="group__type__system.html#ga9f0d8a41015262d2dcffc97cf5f87772" title="Creates a new fixed-size array type.">infix_type_create_array()</a></code>: Creates a fixed-size array type.</li>
-<li><code><a class="el" href="group__type__system.html#ga44df1ec1de746a0be838b55567d07cae" title="Creates a new enum type with a specified underlying integer type.">infix_type_create_enum()</a></code>: Creates an enum type with an underlying integer type.</li>
-<li><code><a class="el" href="group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf" title="Creates a new _Complex number type.">infix_type_create_complex()</a></code>: Creates a <code>_Complex</code> number type.</li>
-<li><code><a class="el" href="group__type__system.html#ga4781802742cdd8472f6db7d039ab1fde" title="Creates a new SIMD vector type.">infix_type_create_vector()</a></code>: Creates a SIMD vector type.</li>
-<li><code><a class="el" href="group__type__system.html#gad83c177871541f45a24c9df3e780d341" title="Creates a placeholder for a named type to be resolved by a registry.">infix_type_create_named_reference()</a></code>: Creates a placeholder for a named type to be resolved by a registry.</li>
-<li><code><a class="el" href="group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9" title="A factory function to create an infix_struct_member.">infix_type_create_member()</a></code>: A factory function to create an <code>infix_struct_member</code>.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md20"></a>
-Memory Management (&lt;tt&gt;memory_management&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733" title="Creates a new memory arena.">infix_arena_create()</a></code>: Creates a new memory arena.</li>
-<li><code><a class="el" href="group__memory__management.html#ga50b7219c58789fc03898690254f0280e" title="Destroys an arena and frees all memory allocated from it.">infix_arena_destroy()</a></code>: Frees an arena and all memory allocated from it.</li>
-<li><code><a class="el" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40" title="Allocates a block of memory from an arena.">infix_arena_alloc()</a></code>: Allocates aligned memory from an arena.</li>
-<li><code><a class="el" href="group__memory__management.html#ga624819bf3bc628f63575001ed9c6ffd5" title="Allocates and zero-initializes a block of memory from an arena.">infix_arena_calloc()</a></code>: Allocates zero-initialized memory from an arena.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md21"></a>
-Introspection API (&lt;tt&gt;introspection_api&lt;/tt&gt;)</h2>
-<h3><a class="anchor" id="autotoc_md22"></a>
-Trampoline &amp; Callback Introspection</h3>
-<ul>
-<li><code><a class="el" href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8" title="Gets the callable function pointer from a bound forward trampoline.">infix_forward_get_code()</a></code>: Gets the callable function pointer from a bound trampoline.</li>
-<li><code><a class="el" href="group__introspection__api.html#ga5f3559908e6a7bcc72103c52937d67ad" title="Gets the callable function pointer from an unbound forward trampoline.">infix_forward_get_unbound_code()</a></code>: Gets the callable function pointer from an unbound trampoline.</li>
-<li><code><a class="el" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66" title="Gets the native, callable C function pointer from a reverse trampoline.">infix_reverse_get_code()</a></code>: Gets the native C function pointer from a reverse trampoline.</li>
-<li><code><a class="el" href="group__introspection__api.html#gab41c717a6e4e4198c62284e526e5d9b3" title="Gets the user-provided data pointer from a closure context.">infix_reverse_get_user_data()</a></code>: Gets the user-provided data from a closure.</li>
-<li><code><a class="el" href="group__introspection__api.html#ga7b7e73aa032acb4185433f40720ec126" title="Gets the total number of arguments for a forward trampoline.">infix_forward_get_num_args()</a></code>: Gets the total number of arguments for a forward trampoline.</li>
-<li><code><a class="el" href="group__type__system.html#ga218ac4c8f7f2b30d125d8a733d8ee8dc" title="Gets the number of fixed (non-variadic) arguments for a forward trampoline.">infix_forward_get_num_fixed_args()</a></code>: Gets the number of fixed (non-variadic) arguments.</li>
-<li><code><a class="el" href="group__type__system.html#ga25901aeda151af1e91692dbe6776b162" title="Gets the return type for a forward trampoline.">infix_forward_get_return_type()</a></code>: Gets the return type for a forward trampoline.</li>
-<li><code><a class="el" href="group__type__system.html#ga3c1734cc40973646abcbf439a047021a" title="Gets the type of a specific argument for a forward trampoline.">infix_forward_get_arg_type()</a></code>: Gets the type of a specific argument for a forward trampoline.</li>
-<li><code><a class="el" href="group__type__system.html#ga65883b662c2625a8b54a79a6d52923da" title="Gets the total number of arguments for a reverse trampoline.">infix_reverse_get_num_args()</a></code>: Gets the total number of arguments for a reverse trampoline.</li>
-<li><code><a class="el" href="group__type__system.html#gae266bb4c63346afa5c4e0e1111bb7345" title="Gets the number of fixed (non-variadic) arguments for a reverse trampoline.">infix_reverse_get_num_fixed_args()</a></code>: Gets the number of fixed (non-variadic) arguments.</li>
-<li><code><a class="el" href="group__type__system.html#ga50a6028388baf020c5bdbf0dd5bbd3f1" title="Gets the return type for a reverse trampoline.">infix_reverse_get_return_type()</a></code>: Gets the return type for a reverse trampoline.</li>
-<li><code><a class="el" href="group__type__system.html#gae00f0a3ebc8b0e4035382589dac25730" title="Gets the type of a specific argument for a reverse trampoline.">infix_reverse_get_arg_type()</a></code>: Gets the type of a specific argument for a reverse trampoline. </li>
-</ul>
-<h3><a class="anchor" id="autotoc_md23"></a>
-Type Introspection &amp; Serialization</h3>
-<ul>
-<li><code><a class="el" href="group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3" title="Gets the fundamental category of a type.">infix_type_get_category()</a></code>: Gets the fundamental category of a type (e.g., struct, pointer).</li>
-<li><code><a class="el" href="group__type__system.html#ga0e49d4bdbfe42b661bf7bcb597793e9a" title="Gets the size of a type in bytes.">infix_type_get_size()</a></code>: Gets the size of a type in bytes.</li>
-<li><code><a class="el" href="group__type__system.html#ga1ed0ae5410046578126032b844f81fc1" title="Gets the alignment requirement of a type in bytes.">infix_type_get_alignment()</a></code>: Gets the alignment of a type in bytes.</li>
-<li><code><a class="el" href="group__type__system.html#ga678390feeed80a43111725c4e73c0dda" title="Gets the number of members in a struct or union type.">infix_type_get_member_count()</a></code>: Gets the number of members in a struct or union.</li>
-<li><code><a class="el" href="group__type__system.html#gafc256d548bfd78ff90ee38a1cc0ae8b9" title="Gets a specific member from a struct or union type.">infix_type_get_member()</a></code>: Gets a specific member from a struct or union by index.</li>
-<li><code><a class="el" href="group__type__system.html#ga797871621d591d441be67d42be2d1efa" title="Gets the name of a specific argument from a function type.">infix_type_get_arg_name()</a></code>: Gets the name of an argument from a function type.</li>
-<li><code><a class="el" href="group__type__system.html#ga184bcb5102d6315b8ff8d6defe1387f9" title="Gets the type of a specific argument from a function type.">infix_type_get_arg_type()</a></code>: Gets the type of an argument from a function type.</li>
-<li><code><a class="el" href="group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e" title="Serializes an infix_type object graph back into a signature string.">infix_type_print()</a></code>: Serializes an <code>infix_type</code> graph back to a signature string.</li>
-<li><code><a class="el" href="group__introspection__api.html#gab498bd07df9d321ec54056c519899b53" title="Serializes a function signature&#39;s components into a string.">infix_function_print()</a></code>: Serializes a full function signature to a string.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md24"></a>
-Error Handling API (&lt;tt&gt;error_api&lt;/tt&gt;)</h2>
-<ul>
-<li><code><a class="el" href="group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b" title="Retrieves detailed information about the last error that occurred on the current thread.">infix_get_last_error()</a></code>: Retrieves detailed information about the last error on the current thread.</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md25"></a>
-Building and Integrating</h1>
-<p>Full build instructions for <code>xmake</code>, <code>cmake</code>, GNU <code>make</code>, and other systems are available in <b><a class="el" href="md_docs_2INSTALL.html">INSTALL.md</a></b>.</p>
-<p>Because <code>infix</code> uses a unity build, integration into an existing project is simple: add <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> to your list of source files and add the <code>include/</code> directory to your include paths.</p>
-<h1><a class="anchor" id="autotoc_md26"></a>
-Supported Platforms</h1>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+Creating Callbacks</h1>
+<p><code>infix</code> can also generate native C function pointers that call back into your code. This is perfect for interfacing with C libraries that expect callbacks, like <code>qsort</code>.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="infix_8h.html">infix/infix.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// The C handler function for our callback.</span></div>
+<div class="line"><span class="keywordtype">int</span> compare_integers(<span class="keyword">const</span> <span class="keywordtype">void</span>* a, <span class="keyword">const</span> <span class="keywordtype">void</span>* b) {</div>
+<div class="line">    <span class="keywordflow">return</span> (*(<span class="keyword">const</span> <span class="keywordtype">int</span>*)a - *(<span class="keyword">const</span> <span class="keywordtype">int</span>*)b);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> run_qsort_example() {</div>
+<div class="line">    <span class="comment">// 1. Describe the callback&#39;s signature.</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* cmp_sig = <span class="stringliteral">&quot;(*void, *void) -&gt; int&quot;</span>;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 2. Create a reverse trampoline.</span></div>
+<div class="line">    <a class="code hl_struct" href="structinfix__reverse__t.html">infix_reverse_t</a>* context = NULL;</div>
+<div class="line">    <a class="code hl_function" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a>(&amp;context, cmp_sig, (<span class="keywordtype">void</span>*)compare_integers, NULL);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 3. Get the JIT-compiled C function pointer.</span></div>
+<div class="line">    int (*my_comparator)(<span class="keyword">const</span> <span class="keywordtype">void</span>*, <span class="keyword">const</span> <span class="keywordtype">void</span>*) = <a class="code hl_function" href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a>(context);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 4. Use the generated callback with the C library function.</span></div>
+<div class="line">    <span class="keywordtype">int</span> numbers[] = { 5, 1, 4, 2, 3 };</div>
+<div class="line">    qsort(numbers, 5, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>), my_comparator);</div>
+<div class="line">    <span class="comment">// `numbers` is now sorted: [1, 2, 3, 4, 5]</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(context);</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:912</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga3b75e8481ac13d11faa15046fc4adb66"><div class="ttname"><a href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:805</div></div>
+<div class="ttc" id="agroup__manual__api_html_ga00b101025663c423a28433e139be5d4e"><div class="ttname"><a href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a></div><div class="ttdeci">void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:786</div></div>
+<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:119</div></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
+Getting Started</h1>
+<p>The easiest way to use <code>infix</code> is to add its source directly to your project.</p>
+<ol type="1">
+<li>Copy the <code>src/</code> and <code>include/</code> directories into your project.</li>
+<li>Add <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">src/infix.c</a></code> to your build system's list of source files.</li>
+<li>Add the <code>include/</code> directory to your include paths.</li>
+<li><code>#include &lt;<a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix/infix.h</a>&gt;</code> in your code.</li>
+</ol>
+<p>For more advanced build options, including building as a standalone library with CMake or xmake, see the <a class="el" href="md_docs_2INSTALL.html">Building and Integration Guide</a>.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
+Project Philosophy</h1>
+<p><code>infix</code> is built on three core principles:</p>
+<ol type="1">
+<li><b>Security First:</b> An FFI library with a JIT is a prime target for vulnerabilities. We defend against these with a multi-layered approach, including strict W^X memory, hardened integer arithmetic, and continuous fuzz testing.</li>
+<li><b>Performance by Design:</b> FFI overhead should be minimal. <code>infix</code> separates the one-time <b>generation cost</b> from the near-zero <b>call-time cost</b>, making it exceptionally fast in high-performance applications when trampolines are cached.</li>
+<li><b>Simplicity and Portability:</b> Platform- and ABI-specific logic is strictly isolated, making the library easy to maintain, simple to integrate, and straightforward to port to new architectures.</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md8"></a>
+Platform Support</h1>
 <p><code>infix</code> is rigorously tested on a wide array of operating systems, compilers, and architectures with every commit.</p>
-<details >
-<summary >
-<b>Click to expand Full Platform CI Results</b></summary>
-<p></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">OS   </th><th class="markdownTableHeadLeft">Version   </th><th class="markdownTableHeadLeft">Architecture   </th><th class="markdownTableHeadLeft">Compiler   </th><th class="markdownTableHeadLeft">Status    </th></tr>
@@ -429,23 +278,11 @@ Supported Platforms</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">Server 2025   </td><td class="markdownTableBodyLeft">x86-64   </td><td class="markdownTableBodyLeft">MSVC   </td><td class="markdownTableBodyLeft"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&amp;style=for-the-badge&amp;label=%20&amp;query=windows-x86_64-msvc" alt="windows/x64/msvc    " class="inline"/>   </td></tr>
 </table>
-<p></p>
-</details>
 <p>In addition to the CI platforms tested here on Github, I can verify infix builds and passes unit tests on Android/Termux.</p>
-<h1><a class="anchor" id="autotoc_md27"></a>
-Contributing</h1>
-<p>Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs, feature requests, or documentation improvements.</p>
-<h1><a class="anchor" id="autotoc_md28"></a>
-License &amp; Legal</h1>
-<p><code>infix</code> is provided under multiple licenses to maximize its usability for all.</p>
-<h2><a class="anchor" id="autotoc_md29"></a>
-Code License</h2>
-<p>Source code, including header files (<code>.h</code>) and implementation files (<code>.c</code>), is dual-licensed under the <b>Artistic License 2.0</b> or the <b>MIT License</b>. You may choose to use the code under the terms of either license.</p>
-<p>See the [LICENSE-A2](LICENSE-A2) and/or [LICENSE-MIT](LICENSE-MIT) for the full text of both licenses.</p>
-<h2><a class="anchor" id="autotoc_md30"></a>
-Documentation License</h2>
-<p>At your discretion, all standalone documentation (<code>.md</code>), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the <b>Creative Commons Attribution 4.0 International License (CC BY 4.0)</b>. We encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit.</p>
-<p>See the [LICENSE-CC](LICENSE-CC) for details. </p>
+<h1><a class="anchor" id="autotoc_md9"></a>
+Licenses</h1>
+<p>To maximize usability for all, <code>infix</code> is dual-licensed under the [Artistic License 2.0](LICENSE-A2) and the [MIT License](LICENSE-MIT). You may choose to use the code under the terms of either license.</p>
+<p>At your discretion, all standalone documentation (<code>.md</code>), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](LICENSE-CC). I encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
