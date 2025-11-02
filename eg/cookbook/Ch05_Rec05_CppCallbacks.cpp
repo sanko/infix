@@ -12,6 +12,7 @@
  * 4. The C side then calls the C++ `trigger` method, which causes the C++ object
  *    to invoke the C callback, correctly passing back the state pointer.
  */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -84,14 +85,14 @@ int main() {
     // 1. Create the C-side state and the infix closure to manage it.
     C_AppState app_state = {0};
     infix_reverse_t * closure = NULL;
-    infix_reverse_create_closure(&closure, "(int, *void)->void", my_closure_handler, &app_state, NULL);
+    (void)infix_reverse_create_closure(&closure, "(int, *void)->void", my_closure_handler, &app_state, NULL);
 
     // 2. Create an instance of the C++ EventManager object by calling its constructor.
     printf("Allocating %zu bytes for C++ object.\n", get_size());
     void * manager_obj = malloc(get_size());
 
     infix_forward_t * t_ctor;
-    infix_forward_create(&t_ctor, "(*void)->void", p_ctor, NULL);
+    (void)infix_forward_create(&t_ctor, "(*void)->void", p_ctor, NULL);
 
     // The constructor's only argument is the `this` pointer. Its value is the
     // address stored in `manager_obj`. The args array must contain a pointer
@@ -102,7 +103,7 @@ int main() {
     // 3. Call the C++ `set_handler` method to register our closure's components.
     infix_forward_t * t_set_handler;
     const char * sig = "(*void, @CallbackFn, *void)->void";
-    infix_forward_create(&t_set_handler, sig, p_set_handler, reg);
+    (void)infix_forward_create(&t_set_handler, sig, p_set_handler, reg);
 
     void * closure_c_func = infix_reverse_get_code(closure);
     void * set_handler_args[] = {&manager_obj, &closure_c_func, &closure};
@@ -110,7 +111,7 @@ int main() {
 
     // 4. Call the C++ `trigger` method to make it invoke our C callback.
     infix_forward_t * t_trigger;
-    infix_forward_create(&t_trigger, "(*void, int)->void", p_trigger, NULL);
+    (void)infix_forward_create(&t_trigger, "(*void, int)->void", p_trigger, NULL);
 
     int value_to_send = 42;
     void * trigger_args[] = {&manager_obj, &value_to_send};

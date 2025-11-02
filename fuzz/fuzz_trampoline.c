@@ -164,9 +164,9 @@ static void FuzzTest(fuzzer_input in) {
             for (size_t i = 0; i < num_args; ++i)
                 arg_types[i] = final_type_pool[i % final_type_count];
 
-            _infix_resolve_type_graph_inplace(&return_type, registry);
+            (void)_infix_resolve_type_graph_inplace(&return_type, registry);
             for (size_t i = 0; i < num_args; ++i)
-                _infix_resolve_type_graph_inplace(&arg_types[i], registry);
+                (void)_infix_resolve_type_graph_inplace(&arg_types[i], registry);
 
             // 4. Exercise all trampoline creation functions.
             infix_forward_t * t1 = NULL;

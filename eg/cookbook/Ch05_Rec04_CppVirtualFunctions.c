@@ -52,9 +52,9 @@ int main() {
 
     // 5. Create trampolines for the discovered function pointers.
     infix_forward_t *t_area, *t_name, *t_dtor;
-    infix_forward_create(&t_area, "(*void)->double", area_fn_ptr, NULL);
-    infix_forward_create(&t_name, "(*void)->*char", name_fn_ptr, NULL);
-    infix_forward_create(&t_dtor, "(*void)->void", dtor_fn_ptr, NULL);
+    (void)infix_forward_create(&t_area, "(*void)->double", area_fn_ptr, NULL);
+    (void)infix_forward_create(&t_name, "(*void)->*char", name_fn_ptr, NULL);
+    (void)infix_forward_create(&t_dtor, "(*void)->void", dtor_fn_ptr, NULL);
 
     // 6. Prepare the arguments array for the member function calls.
     //    The only argument is the `this` pointer.

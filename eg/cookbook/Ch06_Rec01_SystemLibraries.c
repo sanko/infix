@@ -39,7 +39,7 @@ int main() {
     //    Note: HWND is a pointer type, LPCSTR is *char, and UINT is uint32.
     const char * sig = "(*void, *char, *char, uint32) -> int";
     infix_forward_t * t = NULL;
-    infix_forward_create(&t, sig, pMessageBoxA, NULL);
+    (void)infix_forward_create(&t, sig, pMessageBoxA, NULL);
     if (!t) {
         fprintf(stderr, "Failed to create trampoline.\n");
         infix_library_close(user32);

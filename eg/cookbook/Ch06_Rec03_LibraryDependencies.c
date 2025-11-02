@@ -44,7 +44,7 @@ int main() {
 
     // 3. Create a trampoline and call the function.
     infix_forward_t * t = NULL;
-    infix_forward_create(&t, "()->int", p_entry, NULL);
+    (void)infix_forward_create(&t, "()->int", p_entry, NULL);
 
     int result;
     infix_forward_get_code(t)(&result, NULL);

@@ -12,6 +12,8 @@
  * purpose is to call the template methods we need. This creates a dependency
  * chain that forces the linker to keep the code for those methods.
  */
+
+// Note that the `cout` calls won't work without the main executable being linked with the correct C++ runtime
 #include <iostream>
 #include <string>
 
@@ -34,15 +36,15 @@ private:
 
 public:
     Box(T initial_value) : m_value(initial_value) {
-        std::cout << "  -> C++ Box<T>::Box() called. Storing value." << std::endl;
+        // std::cout << "  -> C++ Box<T>::Box() called. Storing value." << std::endl;
     }
     T get_value() const {
-        std::cout << "  -> C++ Box<T>::get_value() called. Returning value." << std::endl;
+        // std::cout << "  -> C++ Box<T>::get_value() called. Returning value." << std::endl;
         return m_value;
     }
     void set_value(T new_value) {
         m_value = new_value;
-        std::cout << "  -> C++ Box<T>::set_value() called. New value stored." << std::endl;
+        // std::cout << "  -> C++ Box<T>::set_value() called. New value stored." << std::endl;
     }
     ~Box() { std::cout << "  -> C++ Box<T>::~Box() called." << std::endl; }
 };

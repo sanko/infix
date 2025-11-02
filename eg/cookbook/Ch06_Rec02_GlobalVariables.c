@@ -38,39 +38,39 @@ int main() {
     int counter_val = 0;
 
     // 1. Read the initial value of the integer global.
-    infix_read_global(lib, "global_counter", "int", &counter_val, NULL);
+    (void)infix_read_global(lib, "global_counter", "int", &counter_val, NULL);
     printf("Initial value of global_counter: %d (Expected: 42)\n", counter_val);
 
     // 2. Write a new value to the global variable.
     int new_val = 100;
     printf("Writing new value (100) to global_counter...\n");
-    infix_write_global(lib, "global_counter", "int", &new_val, NULL);
+    (void)infix_write_global(lib, "global_counter", "int", &new_val, NULL);
 
     // 3. Read the value again to confirm the change.
     counter_val = 0;  // Reset local variable to be sure.
-    infix_read_global(lib, "global_counter", "int", &counter_val, NULL);
+    (void)infix_read_global(lib, "global_counter", "int", &counter_val, NULL);
     printf("New value of global_counter: %d (Expected: 100)\n", counter_val);
 
     // Example 2: Aggregate (Struct) Variable
     printf("\n-- Interacting with 'g_config' (struct) --\n");
     infix_registry_t * reg = infix_registry_create();
-    infix_register_types(reg, "@Config = {*char, int};");
+    (void)infix_register_types(reg, "@Config = {*char, int};");
 
     Config local_config;
     memset(&local_config, 0, sizeof(Config));
 
     // 1. Read the global struct into our local variable.
-    infix_read_global(lib, "g_config", "@Config", &local_config, reg);
+    (void)infix_read_global(lib, "g_config", "@Config", &local_config, reg);
     printf("Initial config: name='%s', version=%d (Expected: 'default', 1)\n", local_config.name, local_config.version);
 
     // 2. Modify and write the struct back to the library.
     Config new_config = {"updated", 2};
     printf("Writing new config ('updated', 2) to g_config...\n");
-    infix_write_global(lib, "g_config", "@Config", &new_config, reg);
+    (void)infix_write_global(lib, "g_config", "@Config", &new_config, reg);
 
     // 3. Read it back to verify.
     memset(&local_config, 0, sizeof(Config));
-    infix_read_global(lib, "g_config", "@Config", &local_config, reg);
+    (void)infix_read_global(lib, "g_config", "@Config", &local_config, reg);
     printf("Updated config: name='%s', version=%d (Expected: 'updated', 2)\n", local_config.name, local_config.version);
 
     // Clean up

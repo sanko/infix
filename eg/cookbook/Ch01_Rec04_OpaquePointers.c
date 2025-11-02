@@ -59,7 +59,7 @@ int main() {
         // The argument to fclose is the value of file_handle.
         // The FFI needs a pointer TO that value, wrapped in an array.
         void * fclose_args[] = {&file_handle};
-        infix_forward_get_code(t_fclose)(&fclose_result, (void *[]){&file_handle});  // Use the new args array
+        infix_forward_get_code(t_fclose)(&fclose_result, fclose_args);  // Use the new args array
         printf("Closed file. fclose returned: %d\n", fclose_result);
 
         // Clean up the created file.

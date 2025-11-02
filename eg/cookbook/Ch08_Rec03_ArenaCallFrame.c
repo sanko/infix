@@ -81,7 +81,7 @@ int main() {
     // Setup the trampoline once and cache it (as a real binding would).
     const char * signature = "(int, double, *char) -> void";
     infix_forward_t * trampoline = NULL;
-    infix_forward_create_unbound(&trampoline, signature, NULL);
+    (void)infix_forward_create_unbound(&trampoline, signature, NULL);
 
     dynamic_ffi_call(trampoline, (void *)process_user_data, 3, 123, 99.8, "test user");
 

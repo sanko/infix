@@ -69,7 +69,7 @@ int main() {
         return 1;
     }
     infix_forward_t * t_ctor;
-    infix_forward_create(&t_ctor, "(*void, int)->void", ctor_ptr, NULL);
+    (void)infix_forward_create(&t_ctor, "(*void, int)->void", ctor_ptr, NULL);
 
     int initial_val = 100;
     void * ctor_args[] = {&obj_memory, &initial_val};
@@ -89,7 +89,7 @@ int main() {
         return 1;
     }
     infix_forward_t * t_getval;
-    infix_forward_create(&t_getval, "(*void)->int", getval_ptr, NULL);
+    (void)infix_forward_create(&t_getval, "(*void)->int", getval_ptr, NULL);
 
     int result;
     void * getval_args[] = {&obj_memory};
@@ -105,7 +105,7 @@ int main() {
     //      Signature: void ~MyClass(MyClass* this) -> "(*void)->void"
     void * dtor_ptr = infix_library_get_symbol(lib, mangled_dtor);
     infix_forward_t * t_dtor;
-    infix_forward_create(&t_dtor, "(*void)->void", dtor_ptr, NULL);
+    (void)infix_forward_create(&t_dtor, "(*void)->void", dtor_ptr, NULL);
 
     void * dtor_args[] = {&obj_memory};
     printf("Step 1: Calling destructor...\n");

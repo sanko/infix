@@ -17,13 +17,15 @@
 // 1. Define your custom memory management functions.
 //    These simple wrappers just print a message and track the total allocated memory.
 static size_t g_total_allocated = 0;
-static void * tracking_malloc(size_t size) {
+void * tracking_malloc(size_t size) {
     g_total_allocated += size;
-    printf(">> Custom Malloc: Allocating %zu bytes (Total outstanding: %zu)\n", size, g_total_allocated);
+    printf(">> Custom Malloc: Allocating %llu bytes (Total outstanding: %llu)\n",
+           (unsigned long long)size,
+           (unsigned long long)g_total_allocated);
     return malloc(size);
 }
 
-static void tracking_free(void * ptr) {
+void tracking_free(void * ptr) {
     // A real tracking allocator would need to know the size of the block being freed.
     // For this example, we just log the call.
     printf(">> Custom Free: Deallocating block at %p\n", ptr);
@@ -46,7 +48,7 @@ int main() {
     infix_forward_t * trampoline = NULL;
 
     // All internal allocations for the trampoline will now use `tracking_malloc`.
-    infix_forward_create(&trampoline, "()->void", (void *)dummy_func, NULL);
+    (void)infix_forward_create(&trampoline, "()->void", (void *)dummy_func, NULL);
 
     printf("\nDestroying trampoline...\n");
     // All free operations will now use `tracking_free`.

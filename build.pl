@@ -868,8 +868,9 @@ sub build_examples {
 
     # C++ libs
     $libs{myclass} = compile_shared_lib( $config, 'myclass', File::Spec->catfile( $libs_dir, 'MyClass.cpp' ), $config->{cxx}, $shared_lib_flags );
-    $libs{box}     = compile_shared_lib( $config, 'box',     File::Spec->catfile( $libs_dir, 'Box.cpp' ),     $config->{cxx}, $shared_lib_flags );
-    $libs{shapes}  = compile_shared_lib( $config, 'shapes',  File::Spec->catfile( $libs_dir, 'shapes.cpp' ),  $config->{cxx}, $shared_lib_flags );
+    $libs{box}     = compile_shared_lib( $config, 'box', File::Spec->catfile( $libs_dir, 'Box.cpp' ),
+        $config->{cxx}, [ @$shared_lib_flags, File::Spec->catfile( $libs_dir, 'Box.def' ) ] );
+    $libs{shapes} = compile_shared_lib( $config, 'shapes', File::Spec->catfile( $libs_dir, 'shapes.cpp' ), $config->{cxx}, $shared_lib_flags );
     $libs{eventmanager}
         = compile_shared_lib( $config, 'eventmanager', File::Spec->catfile( $libs_dir, 'EventManager.cpp' ), $config->{cxx}, $shared_lib_flags );
 

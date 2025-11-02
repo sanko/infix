@@ -48,7 +48,7 @@ int main() {
 
     // Signature: double get_value(const Box<double>* this) -> "(*void) -> double"
     infix_forward_t * t_get = NULL;
-    infix_forward_create(&t_get, "(*void) -> double", p_get_value, NULL);
+    (void)infix_forward_create(&t_get, "(*void) -> double", p_get_value, NULL);
 
     double result;
     infix_forward_get_code(t_get)(&result, (void *[]){&my_box});

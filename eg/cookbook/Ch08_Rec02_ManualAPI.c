@@ -42,7 +42,7 @@ int main() {
         infix_type_create_member("x", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, x)),
         infix_type_create_member("y", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(Point, y))};
     infix_type * point_type = NULL;
-    infix_type_create_struct(arena, &point_type, point_members, 2);
+    (void)infix_type_create_struct(arena, &point_type, point_members, 2);
     printf("Manually created 'Point' type description.\n");
 
     // 3. Define the argument types for the function `Point move_point(Point, double)`.
