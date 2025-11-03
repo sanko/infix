@@ -11,8 +11,11 @@ We'll find out where I go from here.
 
 ### Added
 
-- Growable Arena: The internal arena for the type registry is no longer fixed-size. Now, it transparently allocates new memory blocks as needed, removing the risk of allocation failures when registering and/or copying large number of interconnected types.
 - Shared Arena Optimization API: Introduced a new set of advanced API functions (`infix_registry_create_in_arena`, `infix_forward_create_in_arena`, etc.) that allow the type registry and trampolines to be created within a user-provided, shared memory arena. When objects share an arena, the library avoids deep-copying named type metadata and instead shares pointers to the canonical types, significantly reducing memory consumption and improving trampoline creation performance for applications with many FFI calls referencing a common set of types.
+
+### Changed
+
+- Growable Arena: The internal arena for the type registry is no longer fixed-size. Now, it transparently allocates new memory blocks as needed, removing the risk of allocation failures when registering and/or copying a large number of interconnected types.
 
 ## [0.1.1] - 2025-11-01
 
