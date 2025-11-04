@@ -58,7 +58,8 @@
  *    algorithm, which stops recursing when it encounters a non-arena-allocated type.
  */
 #define INFIX_TYPE_INIT(id, T)         \
-    {.category = INFIX_TYPE_PRIMITIVE, \
+    {.name = nullptr,                  \
+     .category = INFIX_TYPE_PRIMITIVE, \
      .size = sizeof(T),                \
      .alignment = _Alignof(T),         \
      .is_arena_allocated = false,      \
@@ -70,14 +71,20 @@
  * @var _infix_type_void
  * @brief Static singleton descriptor for the `void` type.
  */
-static infix_type _infix_type_void = {
-    .category = INFIX_TYPE_VOID, .size = 0, .alignment = 0, .is_arena_allocated = false, .arena = nullptr, .meta = {0}};
+static infix_type _infix_type_void = {.name = nullptr,
+                                      .category = INFIX_TYPE_VOID,
+                                      .size = 0,
+                                      .alignment = 0,
+                                      .is_arena_allocated = false,
+                                      .arena = nullptr,
+                                      .meta = {0}};
 /**
  * @internal
  * @var _infix_type_pointer
  * @brief Static singleton descriptor for a generic pointer (`void*`).
  */
-static infix_type _infix_type_pointer = {.category = INFIX_TYPE_POINTER,
+static infix_type _infix_type_pointer = {.name = nullptr,
+                                         .category = INFIX_TYPE_POINTER,
                                          .size = sizeof(void *),
                                          .alignment = _Alignof(void *),
                                          .is_arena_allocated = false,
@@ -852,6 +859,16 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
     dest_type->is_arena_allocated = true;
     dest_type->arena = dest_arena;  // The new type now belongs to the destination arena.
 
+    // Deep copy the semantic name string, if it exists.
+    if (src_type->name) {
+        size_t name_len = strlen(src_type->name) + 1;
+        char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
+        if (!dest_name)
+            return nullptr;  // Allocation failed
+        infix_memcpy((void *)dest_name, src_type->name, name_len);
+        dest_type->name = dest_name;
+    }
+
     switch (src_type->category) {
     case INFIX_TYPE_POINTER:
         dest_type->meta.pointer_info.pointee_type =
@@ -881,7 +898,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
                     char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
                     if (!dest_name)
                         return nullptr;
-                    infix_memcpy(dest_name, src_name, name_len);
+                    infix_memcpy((void *)dest_name, src_name, name_len);
                     dest_type->meta.aggregate_info.members[i].name = dest_name;
                 }
             }
@@ -895,7 +912,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
                 char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
                 if (!dest_name)
                     return nullptr;
-                infix_memcpy(dest_name, src_name, name_len);
+                infix_memcpy((void *)dest_name, src_name, name_len);
                 dest_type->meta.named_reference.name = dest_name;
             }
             break;
@@ -919,7 +936,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
                     char * dest_name = infix_arena_alloc(dest_arena, name_len, 1);
                     if (!dest_name)
                         return nullptr;
-                    infix_memcpy(dest_name, src_name, name_len);
+                    infix_memcpy((void *)dest_name, src_name, name_len);
                     dest_type->meta.func_ptr_info.args[i].name = dest_name;
                 }
             }
@@ -1001,8 +1018,10 @@ static size_t _estimate_graph_size_recursive(infix_arena_t * temp_arena,
     visited_node->next = *visited_head;
     *visited_head = visited_node;
 
-    // The size includes the type object itself, plus a memoization node used by the copy algorithm.
+    // The size includes the type object itself, a memoization node, and the name string if it exists.
     size_t total_size = sizeof(infix_type) + sizeof(memo_node_t);
+    if (type->name)
+        total_size += strlen(type->name) + 1;
 
     switch (type->category) {
     case INFIX_TYPE_POINTER:
@@ -1071,6 +1090,18 @@ size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type *
 }
 
 // Public API: Introspection Functions
+
+/**
+ * @brief Gets the semantic alias of a type, if one exists.
+ * @param[in] type The type object to inspect.
+ * @return The name of the type if it was created from a registry alias (e.g., "MyInt"), or `nullptr` if the type is
+ * anonymous.
+ */
+c23_nodiscard const char * infix_type_get_name(const infix_type * type) {
+    if (type == nullptr)
+        return nullptr;
+    return type->name;
+}
 
 /**
  * @brief Gets the fundamental category of a type.

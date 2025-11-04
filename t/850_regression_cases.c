@@ -35,6 +35,10 @@ typedef struct {
 } regression_test_case_t;
 
 static const regression_test_case_t regression_tests[] = {
+    {.name = "Use-after-free in fuzzer due to registry arena reallocation",
+     .b64_input = "PAlakABf",
+     .target = TARGET_TRAMPOLINE_GENERATOR,
+     .expected_status = INFIX_ERROR_INVALID_ARGUMENT},
     {.name = "Timeout in SysV ABI Classifier (Wide Structs)",
      .b64_input = "T09PT09OT/////8I//////////9sbARsbGwAbGxsbGxPT09PT09PT09PT+8=",
      .target = TARGET_TYPE_GENERATOR,

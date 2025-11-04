@@ -209,6 +209,7 @@ typedef enum { INFIX_AGGREGATE_STRUCT, INFIX_AGGREGATE_UNION } infix_aggregate_c
  * `infix_type_create_primitive`, `infix_type_from_signature`).
  */
 struct infix_type_t {
+    const char * name;            /**< The semantic alias of the type (e.g., "MyInt"), or `nullptr` if anonymous. */
     infix_type_category category; /**< The fundamental category of the type. */
     size_t size;                  /**< The size of the type in bytes. */
     size_t alignment;             /**< The alignment requirement of the type in bytes. */
@@ -227,7 +228,6 @@ struct infix_type_t {
 
         /** @brief Metadata for `INFIX_TYPE_STRUCT` and `INFIX_TYPE_UNION`. */
         struct {
-            const char * name;             /**< The registered name of the aggregate, or `nullptr`. */
             infix_struct_member * members; /**< An array of the aggregate's members. */
             size_t num_members;            /**< The number of members in the array. */
         } aggregate_info;
@@ -1237,6 +1237,14 @@ c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t *);
  * @return A pointer to the `infix_type`, or `nullptr` if the index is out of bounds.
  */
 c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t *, size_t);
+
+/**
+ * @brief Gets the semantic alias of a type, if one exists.
+ * @param[in] type The type object to inspect.
+ * @return The name of the type if it was created from a registry alias (e.g., "MyInt"), or `nullptr` if the type is
+ * anonymous.
+ */
+c23_nodiscard const char * infix_type_get_name(const infix_type *);
 
 /**
  * @brief Gets the fundamental category of a type.

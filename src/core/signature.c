@@ -147,7 +147,7 @@ static const char * parse_identifier(parser_state * state) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, (size_t)(state->p - state->start));
         return nullptr;
     }
-    infix_memcpy(name, start, len);
+    infix_memcpy((void *)name, start, len);
     name[len] = '\0';
     return name;
 }
@@ -1151,7 +1151,6 @@ c23_nodiscard infix_status infix_signature_parse(const char * signature,
 
     return INFIX_SUCCESS;
 }
-
 // Type Printing Logic
 
 /**
@@ -1189,9 +1188,18 @@ static void _print(printer_state * state, const char * fmt, ...) {
     }
 }
 
+// Forward declaration for mutual recursion in printers.
+static void _infix_type_print_signature_recursive(printer_state * state, const infix_type * type);
+
 /**
  * @internal
- * @brief Recursively walks a type graph and prints its signature representation.
+ * @brief The internal implementation of the type-to-string printer.
+ *
+ * This function recursively walks a type graph and prints its signature representation.
+ * The key feature is the initial check for `type->name`. If a semantic alias exists,
+ * it is always preferred, ensuring that introspection and serialization produce
+ * canonical, readable output (e.g., printing "@MyHandle" instead of "*void").
+ *
  * @param[in,out] state The printer state, which is updated as the string is built.
  * @param[in] type The `infix_type` to print.
  */
@@ -1201,11 +1209,19 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
     }
+
+    // CRITICAL: If the type has a semantic name, always prefer printing it.
+    if (type->name) {
+        _print(state, "@%s", type->name);
+        return;
+    }
+
     switch (type->category) {
     case INFIX_TYPE_VOID:
         _print(state, "void");
         break;
     case INFIX_TYPE_NAMED_REFERENCE:
+        // This case should ideally not be hit with a fully resolved type, but we handle it for robustness.
         _print(state, "@%s", type->meta.named_reference.name);
         break;
     case INFIX_TYPE_POINTER:
@@ -1223,38 +1239,28 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "]");
         break;
     case INFIX_TYPE_STRUCT:
-        // If a struct was created from a registry, it will have a name. Print the name
-        // instead of the full body for a canonical representation.
-        if (type->meta.aggregate_info.name)
-            _print(state, "@%s", type->meta.aggregate_info.name);
-        else {
-            _print(state, "{");
-            for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-                if (i > 0)
-                    _print(state, ",");
-                const infix_struct_member * member = &type->meta.aggregate_info.members[i];
-                if (member->name)
-                    _print(state, "%s:", member->name);
-                _infix_type_print_signature_recursive(state, member->type);
-            }
-            _print(state, "}");
+        _print(state, "{");
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            if (i > 0)
+                _print(state, ",");
+            const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+            if (member->name)
+                _print(state, "%s:", member->name);
+            _infix_type_print_signature_recursive(state, member->type);
         }
+        _print(state, "}");
         break;
     case INFIX_TYPE_UNION:
-        if (type->meta.aggregate_info.name)
-            _print(state, "@%s", type->meta.aggregate_info.name);
-        else {
-            _print(state, "<");
-            for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-                if (i > 0)
-                    _print(state, ",");
-                const infix_struct_member * member = &type->meta.aggregate_info.members[i];
-                if (member->name)
-                    _print(state, "%s:", member->name);
-                _infix_type_print_signature_recursive(state, member->type);
-            }
-            _print(state, ">");
+        _print(state, "<");
+        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+            if (i > 0)
+                _print(state, ",");
+            const infix_struct_member * member = &type->meta.aggregate_info.members[i];
+            if (member->name)
+                _print(state, "%s:", member->name);
+            _infix_type_print_signature_recursive(state, member->type);
         }
+        _print(state, ">");
         break;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:
         _print(state, "(");
@@ -1379,92 +1385,137 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
 
 /**
  * @internal
- * @struct registry_printer_state
- * @brief A state object for the recursive registry-to-string printer.
+ * @brief Serializes an `infix_type`'s structural body, ignoring its top-level semantic name.
+ *
+ * This function is a special-purpose printer used by `infix_registry_print`. Its job
+ * is to produce the right-hand side of a type definition. It *always* prints the
+ * full structural definition, ignoring the top-level `name` field to prevent
+ * self-referential output like `@MyInt = @MyInt;`.
+ *
+ * @param state The printer state.
+ * @param type The type whose body to print.
  */
-typedef struct {
-    char * p;            /**< Current write position in the output buffer. */
-    size_t remaining;    /**< Bytes remaining in the buffer. */
-    infix_status status; /**< Current status, set to an error on buffer overflow. */
-} registry_printer_state;
-
-/**
- * @internal
- * @brief A safe `vsnprintf` wrapper for building the registry string.
- */
-static void _registry_print(registry_printer_state * state, const char * fmt, ...) {
-    if (state->status != INFIX_SUCCESS)
-        return;
-    va_list args;
-    va_start(args, fmt);
-    int written = vsnprintf(state->p, state->remaining, fmt, args);
-    va_end(args);
-    if (written < 0 || (size_t)written >= state->remaining)
-        state->status = INFIX_ERROR_INVALID_ARGUMENT;
-    else {
-        state->p += written;
-        state->remaining -= written;
-    }
-}
-
-/**
- * @internal
- * @brief Recursively prints a type's body, ignoring any registered name.
- */
-static void _infix_type_print_body_only_recursive(registry_printer_state * state, const infix_type * type) {
+static void _infix_type_print_body_only_recursive(printer_state * state, const infix_type * type) {
     if (state->status != INFIX_SUCCESS || !type) {
         if (state->status == INFIX_SUCCESS)
             state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
     }
 
-    // For structs and unions, always print the body, ignoring the name.
-    // This is the key difference from the standard recursive printer.
-    if (type->category == INFIX_TYPE_STRUCT) {
-        _registry_print(state, "{");
+    // This is the key difference from the main printer: we skip the `if (type->name)` check
+    // and immediately print the underlying structure of the type.
+    switch (type->category) {
+    case INFIX_TYPE_STRUCT:
+        _print(state, "{");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
-                _registry_print(state, ",");
+                _print(state, ",");
             const infix_struct_member * member = &type->meta.aggregate_info.members[i];
             if (member->name)
-                _registry_print(state, "%s:", member->name);
-            // For nested members, revert to the standard printer which can use @Name shorthand.
-            char temp_buffer[256];
-            if (infix_type_print(temp_buffer, sizeof(temp_buffer), member->type, INFIX_DIALECT_SIGNATURE) !=
-                INFIX_SUCCESS) {
-                state->status = INFIX_ERROR_INVALID_ARGUMENT;
-                return;
-            }
-            _registry_print(state, "%s", temp_buffer);
+                _print(state, "%s:", member->name);
+            // For nested members, we can use the standard printer, which IS allowed
+            // to use the `@Name` shorthand for brevity.
+            _infix_type_print_signature_recursive(state, member->type);
         }
-        _registry_print(state, "}");
-    }
-    else if (type->category == INFIX_TYPE_UNION) {
-        _registry_print(state, "<");
+        _print(state, "}");
+        break;
+    case INFIX_TYPE_UNION:
+        _print(state, "<");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
-                _registry_print(state, ",");
+                _print(state, ",");
             const infix_struct_member * member = &type->meta.aggregate_info.members[i];
             if (member->name)
-                _registry_print(state, "%s:", member->name);
-            char temp_buffer[256];
-            if (infix_type_print(temp_buffer, sizeof(temp_buffer), member->type, INFIX_DIALECT_SIGNATURE) !=
-                INFIX_SUCCESS) {
-                state->status = INFIX_ERROR_INVALID_ARGUMENT;
-                return;
-            }
-            _registry_print(state, "%s", temp_buffer);
+                _print(state, "%s:", member->name);
+            _infix_type_print_signature_recursive(state, member->type);
         }
-        _registry_print(state, ">");
-    }
-    else {
-        // For all other types, the standard print logic is fine.
-        char temp_buffer[256];
-        if (infix_type_print(temp_buffer, sizeof(temp_buffer), type, INFIX_DIALECT_SIGNATURE) != INFIX_SUCCESS) {
-            state->status = INFIX_ERROR_INVALID_ARGUMENT;
-            return;
+        _print(state, ">");
+        break;
+
+    // For all other types, we replicate the printing logic from the main printer
+    // to ensure we print the structure, not a potential top-level alias name.
+    case INFIX_TYPE_VOID:
+        _print(state, "void");
+        break;
+    case INFIX_TYPE_POINTER:
+        _print(state, "*");
+        if (type->meta.pointer_info.pointee_type == type || type->meta.pointer_info.pointee_type == nullptr ||
+            type->meta.pointer_info.pointee_type->category == INFIX_TYPE_VOID)
+            _print(state, "void");
+        else
+            _infix_type_print_signature_recursive(state, type->meta.pointer_info.pointee_type);
+        break;
+    case INFIX_TYPE_ARRAY:
+        _print(state, "[%zu:", type->meta.array_info.num_elements);
+        _infix_type_print_signature_recursive(state, type->meta.array_info.element_type);
+        _print(state, "]");
+        break;
+    case INFIX_TYPE_ENUM:
+        _print(state, "e:");
+        _infix_type_print_signature_recursive(state, type->meta.enum_info.underlying_type);
+        break;
+    case INFIX_TYPE_COMPLEX:
+        _print(state, "c[");
+        _infix_type_print_signature_recursive(state, type->meta.complex_info.base_type);
+        _print(state, "]");
+        break;
+    case INFIX_TYPE_PRIMITIVE:
+        // This block is now a full copy from the main printer.
+        switch (type->meta.primitive_id) {
+        case INFIX_PRIMITIVE_BOOL:
+            _print(state, "bool");
+            break;
+        case INFIX_PRIMITIVE_SINT8:
+            _print(state, "sint8");
+            break;
+        case INFIX_PRIMITIVE_UINT8:
+            _print(state, "uint8");
+            break;
+        case INFIX_PRIMITIVE_SINT16:
+            _print(state, "sint16");
+            break;
+        case INFIX_PRIMITIVE_UINT16:
+            _print(state, "uint16");
+            break;
+        case INFIX_PRIMITIVE_SINT32:
+            _print(state, "sint32");
+            break;
+        case INFIX_PRIMITIVE_UINT32:
+            _print(state, "uint32");
+            break;
+        case INFIX_PRIMITIVE_SINT64:
+            _print(state, "sint64");
+            break;
+        case INFIX_PRIMITIVE_UINT64:
+            _print(state, "uint64");
+            break;
+        case INFIX_PRIMITIVE_SINT128:
+            _print(state, "sint128");
+            break;
+        case INFIX_PRIMITIVE_UINT128:
+            _print(state, "uint128");
+            break;
+        case INFIX_PRIMITIVE_FLOAT:
+            _print(state, "float");
+            break;
+        case INFIX_PRIMITIVE_DOUBLE:
+            _print(state, "double");
+            break;
+        case INFIX_PRIMITIVE_LONG_DOUBLE:
+            _print(state, "longdouble");
+            break;
         }
-        _registry_print(state, "%s", temp_buffer);
+        break;
+    // We can safely delegate the remaining complex cases to the main printer, as they
+    // do not have a top-level `name` field themselves.
+    case INFIX_TYPE_NAMED_REFERENCE:
+    case INFIX_TYPE_REVERSE_TRAMPOLINE:
+    case INFIX_TYPE_VECTOR:
+        _infix_type_print_signature_recursive(state, type);
+        break;
+    default:
+        state->status = INFIX_ERROR_INVALID_ARGUMENT;
+        break;
     }
 }
 
@@ -1479,7 +1530,7 @@ c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
     if (!buffer || buffer_size == 0 || !type || dialect != INFIX_DIALECT_SIGNATURE)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    registry_printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
     *buffer = '\0';
 
     _infix_type_print_body_only_recursive(&state, type);
@@ -1605,11 +1656,25 @@ c23_nodiscard infix_status infix_function_print(char * buffer,
     return state.status;
 }
 
+/**
+ * @brief Serializes all defined types within a registry into a single, human-readable string.
+ *
+ * @details The output format is a sequence of definitions (e.g., `@Name = { ... };`) separated
+ * by newlines, suitable for logging, debugging, or saving to a file. This function
+ * will not print forward declarations that have not been fully defined. The order of
+ * definitions in the output string is not guaranteed.
+ *
+ * @param[out] buffer The output buffer to write the string into.
+ * @param[in] buffer_size The size of the output buffer.
+ * @param[in] registry The registry to serialize.
+ * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_INVALID_ARGUMENT` if the buffer is too small
+ *         or another error occurs.
+ */
 c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_size, const infix_registry_t * registry) {
     if (!buffer || buffer_size == 0 || !registry)
         return INFIX_ERROR_INVALID_ARGUMENT;
 
-    registry_printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
     *state.p = '\0';
 
     // Iterate through all buckets and their chains.
@@ -1626,7 +1691,7 @@ c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_siz
                     goto end_print_loop;
                 }
 
-                _registry_print(&state, "@%s = %s;\n", entry->name, type_body_buffer);
+                _print(&state, "@%s = %s;\n", entry->name, type_body_buffer);
                 if (state.status != INFIX_SUCCESS)
                     goto end_print_loop;
             }
