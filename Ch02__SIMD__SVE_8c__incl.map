@@ -1,0 +1,20 @@
+<map id="eg/cookbook/Ch02_SIMD_SVE.c" name="eg/cookbook/Ch02_SIMD_SVE.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with SIMD Vectors (AArch64 SVE)" alt="" coords="326,5,508,45"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="211,93,306,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="380,48,295,90,293,85,378,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="290,240,373,265"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="412,46,343,228,339,226,407,44"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="420,93,486,119"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="428,44,444,79,439,82,423,47"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="511,93,582,119"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="450,43,517,84,514,88,447,48"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,167,199,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,121,149,163,147,158,234,116"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="272,117,291,139,309,165,321,196,330,226,324,227,316,198,304,168,287,142,268,121"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="12,240,86,265"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="211,114,97,133,45,149,26,158,14,168,8,182,11,198,30,228,25,231,6,199,3,182,10,165,23,154,43,144,96,128,211,109"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="223,167,294,192"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="261,119,261,153,256,153,256,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="148,189,284,233,283,238,146,195"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="103,194,70,231,66,228,99,191"/>
+</map>

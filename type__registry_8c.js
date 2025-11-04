@@ -13,6 +13,7 @@ var type__registry_8c =
     [ "_resolve_type_graph_inplace_recursive", "type__registry_8c.html#ab3539e7a6f3626d8a4dae8f86b491ef0", null ],
     [ "infix_register_types", "group__registry__api.html#ga4ece2363948c40fe528826bf65dac280", null ],
     [ "infix_registry_create", "group__registry__api.html#gac808273483db7a9db2bc275c41b13296", null ],
+    [ "infix_registry_create_in_arena", "group__registry__introspection__api.html#ga0fb1ddc11973612e45aed3e23ba98eaf", null ],
     [ "infix_registry_destroy", "group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61", null ],
     [ "infix_registry_is_defined", "group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657", null ],
     [ "infix_registry_iterator_begin", "group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780", null ],

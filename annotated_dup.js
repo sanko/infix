@@ -44,7 +44,6 @@ var annotated_dup =
     [ "PointerStruct", "structPointerStruct.html", "structPointerStruct" ],
     [ "printer_state", "structprinter__state.html", "structprinter__state" ],
     [ "recalc_visited_node_t", "structrecalc__visited__node__t.html", "structrecalc__visited__node__t" ],
-    [ "registry_printer_state", "structregistry__printer__state.html", "structregistry__printer__state" ],
     [ "regression_test_case_t", "structregression__test__case__t.html", "structregression__test__case__t" ],
     [ "resolve_memo_node_t", "structresolve__memo__node__t.html", "structresolve__memo__node__t" ],
     [ "StressObject", "structStressObject.html", "structStressObject" ],
@@ -56,6 +55,7 @@ var annotated_dup =
     [ "TestStruct", "structTestStruct.html", "structTestStruct" ],
     [ "TestUnion", "unionTestUnion.html", "unionTestUnion" ],
     [ "thread_data_t", "structthread__data__t.html", "structthread__data__t" ],
+    [ "User", "structUser.html", "structUser" ],
     [ "UserProfile", "structUserProfile.html", "structUserProfile" ],
     [ "Vector4", "structVector4.html", "structVector4" ],
     [ "visited_node_t", "structvisited__node__t.html", "structvisited__node__t" ]

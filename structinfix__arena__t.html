@@ -113,6 +113,11 @@ $(document).ready(function(){initNavTree('structinfix__arena__t.html',''); initR
  <a href="structinfix__arena__t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for infix_arena_t:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structinfix__arena__t__coll__graph.svg" width="218" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -124,11 +129,30 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac06321238d0579d5b548c58a68eaf036"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35df9e6f27e3c9aeb2248585d9c164ae" id="r_a35df9e6f27e3c9aeb2248585d9c164ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#a35df9e6f27e3c9aeb2248585d9c164ae">error</a></td></tr>
 <tr class="separator:a35df9e6f27e3c9aeb2248585d9c164ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af582c86c05c0c14f42dbdcf0a34962bf" id="r_af582c86c05c0c14f42dbdcf0a34962bf"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#af582c86c05c0c14f42dbdcf0a34962bf">next_block</a></td></tr>
+<tr class="separator:af582c86c05c0c14f42dbdcf0a34962bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ea01f82489e1c51e744ed4e40333acc" id="r_a6ea01f82489e1c51e744ed4e40333acc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arena__t.html#a6ea01f82489e1c51e744ed4e40333acc">block_size</a></td></tr>
+<tr class="separator:a6ea01f82489e1c51e744ed4e40333acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Internal definition of a memory arena. </p>
 <p>An arena is a fast, region-based allocator. It pre-allocates a single block of memory and serves subsequent small allocation requests by simply "bumping" a pointer. All memory allocated from an arena is freed at once by destroying the arena itself, eliminating the need to track individual allocations. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a6ea01f82489e1c51e744ed4e40333acc" name="a6ea01f82489e1c51e744ed4e40333acc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ea01f82489e1c51e744ed4e40333acc">&#9670;&#160;</a></span>block_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t infix_arena_t::block_size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The size of this specific block's buffer, for chained arenas. </p>
+
+</div>
+</div>
 <a id="a2bafad85c37fba52aaa3dd3311fec20d" name="a2bafad85c37fba52aaa3dd3311fec20d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2bafad85c37fba52aaa3dd3311fec20d">&#9670;&#160;</a></span>buffer</h2>
 
@@ -186,6 +210,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>A flag set if any allocation fails, preventing subsequent allocations. </p>
+
+</div>
+</div>
+<a id="af582c86c05c0c14f42dbdcf0a34962bf" name="af582c86c05c0c14f42dbdcf0a34962bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af582c86c05c0c14f42dbdcf0a34962bf">&#9670;&#160;</a></span>next_block</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structinfix__arena__t.html">infix_arena_t</a>* infix_arena_t::next_block</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A pointer to the next block in the chain, if this one is full. </p>
 
 </div>
 </div>

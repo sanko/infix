@@ -1,6 +1,7 @@
 var group__registry__introspection__api =
 [
     [ "infix_registry_iterator_t", "group__registry__introspection__api.html#ga91b7a63dec93eb0762442285be3d965e", null ],
+    [ "infix_registry_create_in_arena", "group__registry__introspection__api.html#ga0fb1ddc11973612e45aed3e23ba98eaf", null ],
     [ "infix_registry_is_defined", "group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657", null ],
     [ "infix_registry_iterator_begin", "group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780", null ],
     [ "infix_registry_iterator_get_name", "group__registry__introspection__api.html#ga8daf0bbf75db96eb0859ab59d33a35fb", null ],

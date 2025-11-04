@@ -146,6 +146,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga0f79cbbbe50468b6569593e5a7d43fb6" id="r_ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga0f79cbbbe50468b6569593e5a7d43fb6">infix_registry_lookup_type</a> (const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *, const char *)</td></tr>
 <tr class="memdesc:ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the canonical <code>infix_type</code> object for a given name from the registry.  <br /></td></tr>
 <tr class="separator:ga0f79cbbbe50468b6569593e5a7d43fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0fb1ddc11973612e45aed3e23ba98eaf" id="r_ga0fb1ddc11973612e45aed3e23ba98eaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__registry__introspection__api.html#ga0fb1ddc11973612e45aed3e23ba98eaf">infix_registry_create_in_arena</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>)</td></tr>
+<tr class="memdesc:ga0fb1ddc11973612e45aed3e23ba98eaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new named type registry that allocates from a user-provided arena.  <br /></td></tr>
+<tr class="separator:ga0fb1ddc11973612e45aed3e23ba98eaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>APIs for inspecting and serializing the contents of a named type registry. </p>
@@ -167,6 +170,44 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga0fb1ddc11973612e45aed3e23ba98eaf" name="ga0fb1ddc11973612e45aed3e23ba98eaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0fb1ddc11973612e45aed3e23ba98eaf">&#9670;&#160;</a></span>infix_registry_create_in_arena()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> * infix_registry_create_in_arena </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>arena</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new named type registry that allocates from a user-provided arena. </p>
+<p>This advanced function allows multiple registries and trampolines to share a single memory arena, enabling pointer sharing and reducing memory overhead. The user is responsible for managing the lifetime of the provided arena.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arena</td><td>The user-managed arena to use for all internal allocations. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the new registry, or <code>nullptr</code> on allocation failure. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The registry should still be destroyed with <code>infix_registry_destroy</code>, but this will not free the user-provided arena itself.</dd></dl>
+<p>Creates a new named type registry that allocates from a user-provided arena.</p>
+<p>A registry acts as a dictionary for <code>infix</code> types, allowing you to define complex structs, unions, or aliases once and refer to them by name (e.g., <code>@MyStruct</code>) in any signature string. This is essential for managing complex, recursive, or mutually-dependent types.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arena</td><td>The arena to allocate from. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the new registry, or <code>nullptr</code> on allocation failure. The returned handle must be freed with <code>infix_registry_destroy</code>. </dd></dl>
+
+</div>
+</div>
 <a id="gaabc09998582eb655aa592d341e302657" name="gaabc09998582eb655aa592d341e302657"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaabc09998582eb655aa592d341e302657">&#9670;&#160;</a></span>infix_registry_is_defined()</h2>
 
@@ -202,6 +243,15 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if a complete definition for the name exists, <code>false</code> otherwise.</dd></dl>
+<p>This function will return <code>false</code> for names that are only forward-declared (e.g., via <code>@Name;</code>) but have not been given a complete definition.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to search. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>The name of the type to check (e.g., "MyStruct"). </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if a complete definition for the name exists, <code>false</code> otherwise. </dd></dl>
 
 </div>
@@ -229,7 +279,28 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An initialized iterator. If the registry is empty, the first call to <code>infix_registry_iterator_next</code> on this iterator will return <code>false</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An initialized iterator. If the registry is empty, the first call to <code>infix_registry_iterator_next</code> on this iterator will return <code>false</code>.</dd></dl>
+<p>This function creates an iterator that can be used with <code>infix_registry_iterator_next</code> to loop through all fully-defined types in a registry. The order of traversal is not guaranteed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to iterate over. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An initialized iterator. If the registry is empty, the first call to <code>infix_registry_iterator_next</code> on this iterator will return <code>false</code>. <div class="fragment"><div class="line"><a class="code hl_struct" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a> it = <a class="code hl_function" href="group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780">infix_registry_iterator_begin</a>(<a class="code hl_variable" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>);</div>
+<div class="line"><span class="keywordflow">while</span> (<a class="code hl_function" href="group__registry__introspection__api.html#ga84444c174ba84274c0e033b66648f1f0">infix_registry_iterator_next</a>(&amp;it)) {</div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* name = <a class="code hl_function" href="group__registry__introspection__api.html#ga8daf0bbf75db96eb0859ab59d33a35fb">infix_registry_iterator_get_name</a>(&amp;it);</div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a>* type = <a class="code hl_function" href="group__registry__introspection__api.html#ga530939c6ddc67de89ae87b8126f2bec1">infix_registry_iterator_get_type</a>(&amp;it);</div>
+<div class="line">    printf(<span class="stringliteral">&quot;Found type: %s\n&quot;</span>, name);</div>
+<div class="line">}</div>
+<div class="ttc" id="a008__registry__introspection_8c_html_aa7e646c2771eaee632371488e9b195fa"><div class="ttname"><a href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a></div><div class="ttdeci">infix_registry_t * registry</div><div class="ttdef"><b>Definition</b> 008_registry_introspection.c:35</div></div>
+<div class="ttc" id="agroup__registry__introspection__api_html_ga530939c6ddc67de89ae87b8126f2bec1"><div class="ttname"><a href="group__registry__introspection__api.html#ga530939c6ddc67de89ae87b8126f2bec1">infix_registry_iterator_get_type</a></div><div class="ttdeci">c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_registry_iterator_t *)</div><div class="ttdoc">Gets the infix_type object of the type at the iterator's current position.</div><div class="ttdef"><b>Definition</b> type_registry.c:769</div></div>
+<div class="ttc" id="agroup__registry__introspection__api_html_ga82e78887d2b9b756c839980e08f1f780"><div class="ttname"><a href="group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780">infix_registry_iterator_begin</a></div><div class="ttdeci">c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t *)</div><div class="ttdoc">Initializes an iterator for traversing the types in a registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:695</div></div>
+<div class="ttc" id="agroup__registry__introspection__api_html_ga84444c174ba84274c0e033b66648f1f0"><div class="ttname"><a href="group__registry__introspection__api.html#ga84444c174ba84274c0e033b66648f1f0">infix_registry_iterator_next</a></div><div class="ttdeci">c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t *)</div><div class="ttdoc">Advances the iterator to the next defined type in the registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:708</div></div>
+<div class="ttc" id="agroup__registry__introspection__api_html_ga8daf0bbf75db96eb0859ab59d33a35fb"><div class="ttname"><a href="group__registry__introspection__api.html#ga8daf0bbf75db96eb0859ab59d33a35fb">infix_registry_iterator_get_name</a></div><div class="ttdeci">c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry_iterator_t *)</div><div class="ttdoc">Gets the name of the type at the iterator's current position.</div><div class="ttdef"><b>Definition</b> type_registry.c:755</div></div>
+<div class="ttc" id="astructinfix__registry__iterator__t_html"><div class="ttname"><a href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a></div><div class="ttdoc">Internal definition of a registry iterator.</div><div class="ttdef"><b>Definition</b> infix_internals.h:190</div></div>
+<div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">A semi-opaque structure that describes a C type.</div><div class="ttdef"><b>Definition</b> infix.h:211</div></div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
@@ -256,7 +327,14 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The name of the type (e.g., "MyStruct"), or <code>nullptr</code> if the iterator is invalid or at the end. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The name of the type (e.g., "MyStruct"), or <code>nullptr</code> if the iterator is invalid or at the end.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">iterator</td><td>The iterator, which must have been successfully advanced by <code>infix_registry_iterator_next</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name of the type (e.g., "Point"), or <code>nullptr</code> if the iterator is invalid or has reached the end of the collection. </dd></dl>
 
 </div>
 </div>
@@ -283,7 +361,14 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the canonical <code>infix_type</code> object, or <code>nullptr</code> if the iterator is invalid or at the end. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the canonical <code>infix_type</code> object, or <code>nullptr</code> if the iterator is invalid or at the end.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">iterator</td><td>The iterator, which must have been successfully advanced by <code>infix_registry_iterator_next</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the canonical <code>infix_type</code> object, or <code>nullptr</code> if the iterator is invalid or has reached the end of the collection. </dd></dl>
 
 </div>
 </div>
@@ -310,7 +395,14 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the iterator was advanced to a valid type, or <code>false</code> if there are no more types. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the iterator was advanced to a valid type, or <code>false</code> if there are no more types.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">iterator</td><td>The iterator to advance. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the iterator was advanced to a valid type, or <code>false</code> if there are no more types to visit. </dd></dl>
 
 </div>
 </div>
@@ -345,6 +437,14 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to search. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>The name of the type to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the canonical <code>infix_type</code> object if found and fully defined. Returns <code>nullptr</code> if the name is not found or is only a forward declaration. The returned pointer is owned by the registry and is valid for its lifetime.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to search. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>The name of the type to retrieve (e.g., "Point"). </td></tr>
   </table>
   </dd>
 </dl>
@@ -394,7 +494,17 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or <code>INFIX_ERROR_INVALID_ARGUMENT</code> if the buffer is too small. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or <code>INFIX_ERROR_INVALID_ARGUMENT</code> if the buffer is too small.</dd></dl>
+<p>The output format is a sequence of definitions (e.g., <code>@Name = { ... };</code>) separated by newlines, suitable for logging, debugging, or saving to a file. This function will not print forward declarations that have not been fully defined. The order of definitions in the output string is not guaranteed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>The output buffer to write the string into. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer_size</td><td>The size of the output buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>The registry to serialize. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success, or <code>INFIX_ERROR_INVALID_ARGUMENT</code> if the buffer is too small or another error occurs. </dd></dl>
 
 </div>
 </div>

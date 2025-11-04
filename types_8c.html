@@ -214,6 +214,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a5c625d2f656fb0050bc9495a32c586e5" id="r_a5c625d2f656fb0050bc9495a32c586e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="types_8c.html#a5c625d2f656fb0050bc9495a32c586e5">_infix_estimate_graph_size</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="memdesc:a5c625d2f656fb0050bc9495a32c586e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates the total memory required to deep-copy a complete type graph.  <br /></td></tr>
 <tr class="separator:a5c625d2f656fb0050bc9495a32c586e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga234b98ee42c1323821fa47f1eb130742" id="r_ga234b98ee42c1323821fa47f1eb130742"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#ga234b98ee42c1323821fa47f1eb130742">infix_type_get_name</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="memdesc:ga234b98ee42c1323821fa47f1eb130742"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the semantic alias of a type, if one exists.  <br /></td></tr>
+<tr class="separator:ga234b98ee42c1323821fa47f1eb130742"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d8374030d014a748fd0d2b26e5415e3" id="r_ga9d8374030d014a748fd0d2b26e5415e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__type__system.html#ga909e562b00e504aeceac698bd272f0ca">infix_type_category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3">infix_type_get_category</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="memdesc:ga9d8374030d014a748fd0d2b26e5415e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fundamental category of a type.  <br /></td></tr>
 <tr class="separator:ga9d8374030d014a748fd0d2b26e5415e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -337,10 +340,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    {.category = <a class="code hl_enumvalue" href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb">INFIX_TYPE_PRIMITIVE</a>, \</div>
+<b>Value:</b><div class="fragment"><div class="line">    {.name = <span class="keyword">nullptr</span>,                  \</div>
+<div class="line">     .category = <a class="code hl_enumvalue" href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb">INFIX_TYPE_PRIMITIVE</a>, \</div>
 <div class="line">     .size = <span class="keyword">sizeof</span>(T),                \</div>
 <div class="line">     .alignment = _Alignof(T),         \</div>
 <div class="line">     .is_arena_allocated = <span class="keyword">false</span>,      \</div>
+<div class="line">     .arena = <span class="keyword">nullptr</span>,                 \</div>
 <div class="line">     .meta.primitive_id = <span class="keywordtype">id</span>}</div>
 <div class="ttc" id="agroup__type__system_html_gga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb"><div class="ttname"><a href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa0ef6a2b072ab906b92ee311fd4a31acb">INFIX_TYPE_PRIMITIVE</a></div><div class="ttdeci">@ INFIX_TYPE_PRIMITIVE</div><div class="ttdef"><b>Definition</b> infix.h:163</div></div>
 </div><!-- fragment -->
@@ -780,13 +785,15 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {.category = <a class="code hl_enumvalue" href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c">INFIX_TYPE_POINTER</a>,</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {.name = <span class="keyword">nullptr</span>,</div>
+<div class="line">                                         .category = <a class="code hl_enumvalue" href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c">INFIX_TYPE_POINTER</a>,</div>
 <div class="line">                                         .size = <span class="keyword">sizeof</span>(<span class="keywordtype">void</span> *),</div>
 <div class="line">                                         .alignment = _Alignof(<span class="keywordtype">void</span> *),</div>
 <div class="line">                                         .is_arena_allocated = <span class="keyword">false</span>,</div>
+<div class="line">                                         .arena = <span class="keyword">nullptr</span>,</div>
 <div class="line">                                         .meta.pointer_info = {.pointee_type = &amp;<a class="code hl_variable" href="types_8c.html#a8e2ba3202bdb619dfccf0b9057bf784d">_infix_type_void</a>}}</div>
 <div class="ttc" id="agroup__type__system_html_gga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c"><div class="ttname"><a href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa826394cdd5b2e278275cf1e0fcfeae2c">INFIX_TYPE_POINTER</a></div><div class="ttdeci">@ INFIX_TYPE_POINTER</div><div class="ttdef"><b>Definition</b> infix.h:164</div></div>
-<div class="ttc" id="atypes_8c_html_a8e2ba3202bdb619dfccf0b9057bf784d"><div class="ttname"><a href="types_8c.html#a8e2ba3202bdb619dfccf0b9057bf784d">_infix_type_void</a></div><div class="ttdeci">static infix_type _infix_type_void</div><div class="ttdef"><b>Definition</b> types.c:72</div></div>
+<div class="ttc" id="atypes_8c_html_a8e2ba3202bdb619dfccf0b9057bf784d"><div class="ttname"><a href="types_8c.html#a8e2ba3202bdb619dfccf0b9057bf784d">_infix_type_void</a></div><div class="ttdeci">static infix_type _infix_type_void</div><div class="ttdef"><b>Definition</b> types.c:74</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1029,8 +1036,13 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    .category = <a class="code hl_enumvalue" href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441">INFIX_TYPE_VOID</a>, .size = 0, .alignment = 0, .is_arena_allocated = <span class="keyword">false</span>, .meta = {0}}</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {.name = <span class="keyword">nullptr</span>,</div>
+<div class="line">                                      .category = <a class="code hl_enumvalue" href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441">INFIX_TYPE_VOID</a>,</div>
+<div class="line">                                      .size = 0,</div>
+<div class="line">                                      .alignment = 0,</div>
+<div class="line">                                      .is_arena_allocated = <span class="keyword">false</span>,</div>
+<div class="line">                                      .arena = <span class="keyword">nullptr</span>,</div>
+<div class="line">                                      .meta = {0}}</div>
 <div class="ttc" id="agroup__type__system_html_gga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441"><div class="ttname"><a href="group__type__system.html#gga909e562b00e504aeceac698bd272f0caa6dbff8f5ca6a5a4d67f44bfda8264441">INFIX_TYPE_VOID</a></div><div class="ttdeci">@ INFIX_TYPE_VOID</div><div class="ttdef"><b>Definition</b> infix.h:173</div></div>
 </div><!-- fragment -->
 </div>

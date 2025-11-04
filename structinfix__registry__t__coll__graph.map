@@ -1,17 +1,19 @@
 <map id="infix_registry_t" name="infix_registry_t">
-<area shape="rect" id="Node000001" title="Internal definition of a named type registry." alt="" coords="35,229,154,255"/>
-<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="5,141,112,167"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,179,92,228,87,230,66,181"/>
-<area shape="rect" id="Node000003" href="$struct__infix__registry__entry__t.html" title="A single entry in the registry&#39;s hash table." alt="" coords="137,141,303,167"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,177,113,231,110,227,190,172"/>
-<area shape="poly" id="edge9_Node000003_Node000003" title=" " alt="" coords="319,146,330,154,322,161,304,164,303,159,320,156,325,154,316,151"/>
-<area shape="rect" id="Node000004" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="463,29,561,55"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="469,62,251,144,249,139,468,57"/>
-<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="576,29,584,34,588,42,580,53,562,57,561,52,577,49,583,42,581,38,574,34"/>
-<area shape="rect" id="Node000005" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="385,141,553,167"/>
-<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="482,65,463,82,448,104,446,113,448,122,460,140,455,143,444,124,441,113,443,102,459,79,479,61"/>
-<area shape="rect" id="Node000006" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="577,141,769,167"/>
-<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="537,61,607,115,650,139,647,144,604,120,533,66"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="476,127,505,54,510,56,481,129"/>
-<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="661,130,642,105,599,76,553,57,555,52,601,71,646,101,665,127"/>
+<area shape="rect" id="Node000001" title="Internal definition of a named type registry." alt="" coords="5,317,124,343"/>
+<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="11,5,118,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,44,67,317,62,317,62,44"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="133,9,145,18,136,26,119,29,118,23,134,21,139,18,130,14"/>
+<area shape="rect" id="Node000004" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="338,117,437,143"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="112,33,355,115,353,120,111,38"/>
+<area shape="rect" id="Node000003" href="$struct__infix__registry__entry__t.html" title="A single entry in the registry&#39;s hash table." alt="" coords="81,229,248,255"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="142,266,80,319,77,315,139,262"/>
+<area shape="poly" id="edge11_Node000003_Node000003" title=" " alt="" coords="263,234,275,242,266,249,249,252,248,247,264,244,269,242,261,239"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="353,151,189,232,187,227,351,146"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="452,117,460,122,463,130,455,141,437,145,436,140,452,137,458,130,456,126,449,122"/>
+<area shape="rect" id="Node000005" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="330,229,498,255"/>
+<area shape="poly" id="edge8_Node000005_Node000004" title=" " alt="" coords="374,156,364,180,364,192,367,204,377,217,390,227,387,231,373,221,362,207,358,193,359,179,369,154"/>
+<area shape="rect" id="Node000006" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="522,229,714,255"/>
+<area shape="poly" id="edge10_Node000006_Node000004" title=" " alt="" coords="423,147,539,203,593,227,590,232,537,208,421,151"/>
+<area shape="poly" id="edge7_Node000004_Node000005" title=" " alt="" coords="405,216,388,144,393,142,411,215"/>
+<area shape="poly" id="edge9_Node000004_Node000006" title=" " alt="" coords="602,220,575,193,541,174,505,160,436,141,438,136,507,154,544,169,578,189,605,216"/>
 </map>

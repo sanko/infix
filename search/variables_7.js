@@ -7,7 +7,7 @@ var searchData=
   ['g_5finfix_5flast_5fsignature_5fcontext_4',['g_infix_last_signature_context',['../type__registry_8c.html#aebc75fad28db1e2a75eca6df7305c4e1',1,'g_infix_last_signature_context:&#160;error.c'],['../signature_8c.html#aebc75fad28db1e2a75eca6df7305c4e1',1,'g_infix_last_signature_context:&#160;error.c'],['../error_8c.html#a44c599cd6e6faa957c56632cad650466',1,'g_infix_last_signature_context:&#160;error.c']]],
   ['g_5fsysv_5fx64_5fforward_5fspec_5',['g_sysv_x64_forward_spec',['../abi__sysv__x64_8c.html#ae0b297d249f204883fbeb6d155b20b70',1,'abi_sysv_x64.c']]],
   ['g_5fsysv_5fx64_5freverse_5fspec_6',['g_sysv_x64_reverse_spec',['../abi__sysv__x64_8c.html#a713379357c03a1d1c1a87d956d12b866',1,'abi_sysv_x64.c']]],
-  ['g_5ftotal_5fallocated_7',['g_total_allocated',['../Ch08__Rec01__CustomAllocators_8c.html#a1764285fe22256b5dbcb6304ccb81fae',1,'Ch08_Rec01_CustomAllocators.c']]],
+  ['g_5ftotal_5fallocated_7',['g_total_allocated',['../Ch08__CustomAllocators_8c.html#a1764285fe22256b5dbcb6304ccb81fae',1,'Ch08_CustomAllocators.c']]],
   ['g_5fwin_5fx64_5fforward_5fspec_8',['g_win_x64_forward_spec',['../abi__win__x64_8c.html#a99e66d16faae249a82106ddc979627bd',1,'abi_win_x64.c']]],
   ['g_5fwin_5fx64_5freverse_5fspec_9',['g_win_x64_reverse_spec',['../abi__win__x64_8c.html#a9157b431e54a010a042164329c95e614',1,'abi_win_x64.c']]],
   ['generate_5fforward_5fargument_5fmoves_10',['generate_forward_argument_moves',['../structinfix__forward__abi__spec.html#a759dbe27253a023d9ebf26780fe277f8',1,'infix_forward_abi_spec']]],

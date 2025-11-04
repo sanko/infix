@@ -105,6 +105,7 @@ var infix_8h =
     [ "infix_arena_create", "group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733", null ],
     [ "infix_arena_destroy", "group__memory__management.html#ga50b7219c58789fc03898690254f0280e", null ],
     [ "infix_forward_create", "group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36", null ],
+    [ "infix_forward_create_in_arena", "group__high__level__api.html#ga61c8e06d0e4c0fb6b6831a73cedc7887", null ],
     [ "infix_forward_create_manual", "group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0", null ],
     [ "infix_forward_create_unbound", "group__high__level__api.html#ga524a8ccebd24c9232d30cb2f79aee5a5", null ],
     [ "infix_forward_create_unbound_manual", "group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a", null ],
@@ -123,6 +124,7 @@ var infix_8h =
     [ "infix_read_global", "group__exports__api.html#gaec836cea65f5c0ff31780b26f5315796", null ],
     [ "infix_register_types", "group__registry__api.html#ga4ece2363948c40fe528826bf65dac280", null ],
     [ "infix_registry_create", "group__registry__api.html#gac808273483db7a9db2bc275c41b13296", null ],
+    [ "infix_registry_create_in_arena", "group__registry__introspection__api.html#ga0fb1ddc11973612e45aed3e23ba98eaf", null ],
     [ "infix_registry_destroy", "group__registry__api.html#ga48f8efad0f6e1d14d5adacf466116b61", null ],
     [ "infix_registry_is_defined", "group__registry__introspection__api.html#gaabc09998582eb655aa592d341e302657", null ],
     [ "infix_registry_iterator_begin", "group__registry__introspection__api.html#ga82e78887d2b9b756c839980e08f1f780", null ],
@@ -163,6 +165,7 @@ var infix_8h =
     [ "infix_type_get_category", "group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3", null ],
     [ "infix_type_get_member", "group__type__system.html#gafc256d548bfd78ff90ee38a1cc0ae8b9", null ],
     [ "infix_type_get_member_count", "group__type__system.html#ga678390feeed80a43111725c4e73c0dda", null ],
+    [ "infix_type_get_name", "group__type__system.html#ga234b98ee42c1323821fa47f1eb130742", null ],
     [ "infix_type_get_size", "group__type__system.html#ga0e49d4bdbfe42b661bf7bcb597793e9a", null ],
     [ "infix_type_print", "group__introspection__api.html#ga4c701c9fe631b5e6d715eb2df9c3581e", null ],
     [ "infix_write_global", "group__exports__api.html#ga02212862110c752548fbdc0b3ba65bec", null ]

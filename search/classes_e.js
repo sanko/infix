@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['userprofile_0',['UserProfile',['../structUserProfile.html',1,'']]]
+  ['user_0',['User',['../structUser.html',1,'']]],
+  ['userprofile_1',['UserProfile',['../structUserProfile.html',1,'']]]
 ];

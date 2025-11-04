@@ -7,5 +7,5 @@ var searchData=
   ['vector_5finfo_4',['vector_info',['../group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c',1,'infix_type_t::vector_info'],['../group__high__level__api.html#gaac16a3039475a6fdce57b6599014b2da',1,'infix_type_t::@0::vector_info']]],
   ['version_5',['version',['../structConfig.html#ab26013fdb6245b0dc6c7549678f82a36',1,'Config']]],
   ['vpr_5fargs_6',['VPR_ARGS',['../abi__arm64_8c.html#a17f5f5d04e9e9fae4874e77698d83d31',1,'abi_arm64.c']]],
-  ['vtable_7',['VTABLE',['../Ch04__Rec03__VTableCStyle_8c.html#a6401f2de2c1875f6ae56fef455b830ca',1,'Ch04_Rec03_VTableCStyle.c']]]
+  ['vtable_7',['VTABLE',['../Ch04__VTableCStyle_8c.html#a6401f2de2c1875f6ae56fef455b830ca',1,'Ch04_VTableCStyle.c']]]
 ];

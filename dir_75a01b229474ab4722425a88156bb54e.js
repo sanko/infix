@@ -24,6 +24,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "403_special_types.c", "403__special__types_8c.html", "403__special__types_8c" ],
     [ "810_memory_stress.c", "810__memory__stress_8c.html", "810__memory__stress_8c" ],
     [ "811_fault_injection.c", "811__fault__injection_8c.html", "811__fault__injection_8c" ],
+    [ "812_shared_arena.c", "812__shared__arena_8c.html", "812__shared__arena_8c" ],
     [ "820_threading_helgrind.c", "820__threading__helgrind_8c.html", "820__threading__helgrind_8c" ],
     [ "821_threading_bare.c", "821__threading__bare_8c.html", "821__threading__bare_8c" ],
     [ "830_security.c", "830__security_8c.html", "830__security_8c" ],

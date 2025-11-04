@@ -1,0 +1,18 @@
+<map id="eg/cookbook/Ch02_PackedStructs.c" name="eg/cookbook/Ch02_PackedStructs.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with Packed Structs." alt="" coords="185,5,435,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="177,79,272,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="298,33,251,72,247,68,294,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="275,152,345,177"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="313,31,313,138,307,138,307,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="347,79,414,104"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="323,29,361,67,358,71,320,33"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,152,199,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,106,143,147,140,142,205,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="13,225,95,251"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="178,102,81,122,39,136,13,154,8,168,11,183,33,214,28,217,6,185,3,168,9,150,36,131,80,116,177,97"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="130,225,205,251"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="227,104,223,138,212,178,189,216,184,213,207,176,218,137,222,104"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="240,102,287,141,284,145,237,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,179,74,216,70,213,100,176"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="123,176,152,213,148,216,118,179"/>
+</map>

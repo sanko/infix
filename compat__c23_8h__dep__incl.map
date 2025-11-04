@@ -1,105 +1,105 @@
 <map id="src/common/compat_c23.h" name="src/common/compat_c23.h">
-<area shape="rect" id="Node000001" title="Provides forward compatibility macros for C23 features." alt="" coords="7047,5,7244,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="4934,79,5079,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="7033,26,5080,90,5080,85,7033,20"/>
-<area shape="rect" id="Node000098" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="7058,79,7233,104"/>
-<area shape="poly" id="edge51_Node000001_Node000098" title=" " alt="" coords="7148,44,7148,79,7143,79,7143,44"/>
-<area shape="rect" id="Node000100" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="7257,79,7412,104"/>
-<area shape="poly" id="edge53_Node000001_Node000100" title=" " alt="" coords="7189,33,7305,76,7303,81,7188,38"/>
-<area shape="rect" id="Node000003" href="$Ch01__Rec01__SimpleCall_8c.html" title="Cookbook Chapter 1, Recipe 1: Calling a Simple C Function." alt="" coords="7912,152,8101,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="5093,90,5628,92,6439,101,7277,118,7628,132,7894,149,7912,151,7911,157,7893,155,7628,137,7277,124,6439,106,5628,98,5093,95"/>
-<area shape="rect" id="Node000004" href="$Ch01__Rec02__Pointers_8c.html" title="Cookbook Chapter 1, Recipe 2: Passing and Receiving Pointers." alt="" coords="8467,152,8656,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="5093,91,6833,109,7855,127,8232,138,8455,149,8467,151,8466,156,8454,155,8232,143,7855,132,6833,115,5093,96"/>
-<area shape="rect" id="Node000005" href="$Ch01__Rec03__OutParameters_8c.html" title="Cookbook Chapter 1, Recipe 3: Working with &quot;Out&quot; Parameters." alt="" coords="8731,152,8920,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="5093,91,6959,109,8064,127,8472,137,8712,149,8731,151,8730,157,8712,155,8471,143,8064,132,6959,114,5093,96"/>
-<area shape="rect" id="Node000006" href="$Ch01__Rec04__OpaquePointers_8c.html" title="Cookbook Chapter 1, Recipe 4: Working with Opaque Pointers." alt="" coords="5,152,195,192"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="4920,96,3996,99,2518,109,1063,127,524,139,333,147,207,155,195,156,194,151,206,149,333,141,524,134,1063,121,2518,103,3996,94,4920,90"/>
-<area shape="rect" id="Node000007" href="$Ch02__Rec01__StructByValue_8c.html" title="Cookbook Chapter 2, Recipe 1: Small Structs Passed by Value." alt="" coords="219,152,408,192"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="4920,96,4033,100,2622,110,1236,127,722,140,420,155,408,156,408,151,420,149,722,134,1236,122,2622,104,4033,94,4920,90"/>
-<area shape="rect" id="Node000008" href="$Ch02__Rec02__ReturnStruct_8c.html" title="Cookbook Chapter 2, Recipe 2: Receiving a Struct from a Function." alt="" coords="432,152,621,192"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="4920,96,4070,100,2727,111,1408,128,921,140,634,155,622,156,621,151,633,149,920,135,1408,123,2727,105,4070,95,4920,90"/>
-<area shape="rect" id="Node000009" href="$Ch02__Rec03__LargeStruct_8c.html" title="Cookbook Chapter 2, Recipe 3: Large Structs Passed by Reference." alt="" coords="645,152,835,192"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="4920,96,4107,101,2831,111,1581,129,1119,141,847,155,835,156,834,151,846,149,1119,136,1581,124,2831,106,4107,95,4920,90"/>
-<area shape="rect" id="Node000010" href="$Ch02__Rec04__PackedStructs_8c.html" title="Cookbook Chapter 2, Recipe 4: Working with Packed Structs." alt="" coords="859,152,1048,192"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="4920,96,2936,112,1754,130,1317,142,1060,155,1048,156,1048,151,1060,149,1317,136,1754,125,2935,107,4920,90"/>
-<area shape="rect" id="Node000011" href="$Ch02__Rec05__Bitfields_8c.html" title="Cookbook Chapter 2, Recipe 5: Working with Structs that Contain Bitfields." alt="" coords="1072,152,1261,192"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="4921,96,3040,113,1927,131,1516,142,1274,155,1262,156,1261,151,1273,149,1516,137,1927,126,3040,108,4921,91"/>
-<area shape="rect" id="Node000012" href="$Ch02__Rec06__Unions_8c.html" title="Cookbook Chapter 2, Recipe 6: Working with Unions." alt="" coords="1285,152,1475,192"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="4920,95,4283,94,3288,99,2755,106,2251,117,1815,133,1487,155,1475,156,1474,151,1486,149,1815,128,2251,112,2755,101,3288,94,4283,89,4920,90"/>
-<area shape="rect" id="Node000013" href="$Ch02__Rec07__ArrayDecay_8c.html" title="Cookbook Chapter 2, Recipe 7: Working with Fixed&#45;Size Arrays." alt="" coords="1499,152,1688,192"/>
-<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="4920,95,4317,95,3384,101,2885,108,2414,119,2007,134,1700,155,1688,156,1688,151,1700,149,2007,129,2414,114,2885,103,3384,96,4317,90,4920,90"/>
-<area shape="rect" id="Node000014" href="$Ch02__Rec08__AdvancedRegistry_8c.html" title="Cookbook Chapter 2, Recipe 8: Advanced Named Types (Recursive &amp; Forward&#45;Declared)" alt="" coords="1712,152,1901,192"/>
-<area shape="poly" id="edge13_Node000002_Node000014" title=" " alt="" coords="4920,95,4352,96,3481,103,3016,110,2578,121,2199,135,1914,155,1902,156,1901,151,1913,149,2199,130,2578,115,3016,105,3481,97,4352,91,4920,90"/>
-<area shape="rect" id="Node000015" href="$Ch02__Rec09__ComplexNumbers_8c.html" title="Cookbook Chapter 2, Recipe 9: Working with Complex Numbers." alt="" coords="1925,152,2115,192"/>
-<area shape="poly" id="edge14_Node000002_Node000015" title=" " alt="" coords="4920,95,4386,97,3577,105,3147,112,2742,122,2391,136,2127,155,2115,156,2114,151,2126,149,2391,131,2741,117,3147,107,3577,99,4386,92,4920,90"/>
-<area shape="rect" id="Node000016" href="$Ch02__Rec10__SIMD__AVX_8c.html" title="Cookbook Chapter 2, Recipe 10: Working with SIMD Vectors (x86&#45;64)" alt="" coords="2139,152,2328,192"/>
-<area shape="poly" id="edge15_Node000002_Node000016" title=" " alt="" coords="4920,96,4422,98,3675,106,2906,124,2583,138,2340,155,2328,156,2328,151,2340,149,2583,132,2905,119,3675,101,4421,93,4920,90"/>
-<area shape="rect" id="Node000017" href="$Ch02__Rec10__SIMD__NEON_8c.html" title="Cookbook Chapter 2, Recipe 10: Working with SIMD Vectors (AArch64 NEON)" alt="" coords="2352,152,2541,192"/>
-<area shape="poly" id="edge16_Node000002_Node000017" title=" " alt="" coords="4920,96,4457,99,3772,108,3070,126,2776,139,2554,155,2542,156,2541,151,2553,149,2775,133,3070,121,3772,103,4457,94,4920,90"/>
-<area shape="rect" id="Node000018" href="$Ch02__Rec10__SIMD__SVE_8c.html" title="Cookbook Chapter 2, Recipe 10: Working with SIMD Vectors (AArch64 SVE)" alt="" coords="2565,152,2755,192"/>
-<area shape="poly" id="edge17_Node000002_Node000018" title=" " alt="" coords="4920,96,4492,100,3870,110,3234,128,2968,140,2767,155,2755,156,2754,151,2766,149,2967,135,3234,122,3870,105,4492,95,4920,91"/>
-<area shape="rect" id="Node000019" href="$Ch02__Rec11__Enums_8c.html" title="Cookbook Chapter 2, Recipe 11: Working with Enums." alt="" coords="2779,152,2968,192"/>
-<area shape="poly" id="edge18_Node000002_Node000019" title=" " alt="" coords="4920,96,3969,112,3399,130,3160,141,2980,155,2968,156,2968,151,2980,149,3160,136,3398,124,3969,107,4920,91"/>
-<area shape="rect" id="Node000020" href="$Ch03__Rec01__QsortCallback_8c.html" title="Cookbook Chapter 3, Recipe 1: Creating a Type&#45;Safe Callback for qsort" alt="" coords="2992,152,3181,192"/>
-<area shape="poly" id="edge19_Node000002_Node000020" title=" " alt="" coords="4920,97,4067,114,3563,131,3353,142,3194,155,3182,156,3181,151,3193,149,3352,137,3563,126,4067,109,4920,91"/>
-<area shape="rect" id="Node000021" href="$Ch03__Rec02__StatefulCallback_8c.html" title="Cookbook Chapter 3, Recipe 2: Creating a Stateful Callback." alt="" coords="3205,152,3395,192"/>
-<area shape="poly" id="edge20_Node000002_Node000021" title=" " alt="" coords="4920,94,4663,95,4289,101,3852,119,3627,135,3407,155,3395,156,3394,151,3406,149,3627,129,3852,114,4289,96,4663,89,4920,89"/>
-<area shape="rect" id="Node000022" href="$Ch04__Rec01__VariadicPrintf_8c.html" title="Cookbook Chapter 4, Recipe 1: Calling Variadic Functions like printf" alt="" coords="3419,152,3608,192"/>
-<area shape="poly" id="edge21_Node000002_Node000022" title=" " alt="" coords="4920,95,4694,97,4372,105,3999,123,3808,137,3620,155,3608,156,3608,151,3620,149,3807,132,3999,118,4372,100,4693,92,4920,90"/>
-<area shape="rect" id="Node000023" href="$Ch04__Rec02__CallbackAsArg_8c.html" title="Cookbook Chapter 4, Recipe 2: Receiving and Calling a Function Pointer." alt="" coords="3632,152,3821,192"/>
-<area shape="poly" id="edge22_Node000002_Node000023" title=" " alt="" coords="4921,96,4726,100,4456,109,4147,127,3834,155,3822,156,3821,151,3833,149,4147,121,4456,104,4725,95,4920,91"/>
-<area shape="rect" id="Node000024" href="$Ch04__Rec03__VTableCStyle_8c.html" title="Cookbook Chapter 4, Recipe 3: Calling a Function Pointer from a Struct." alt="" coords="3845,152,4035,192"/>
-<area shape="poly" id="edge23_Node000002_Node000024" title=" " alt="" coords="4920,97,4540,114,4295,130,4047,155,4035,156,4034,151,4046,149,4294,125,4540,108,4920,92"/>
-<area shape="rect" id="Node000025" href="$Ch04__Rec04__LongDouble_8c.html" title="Cookbook Chapter 4, Recipe 4: Handling long double" alt="" coords="4059,152,4248,192"/>
-<area shape="poly" id="edge24_Node000002_Node000025" title=" " alt="" coords="4921,100,4627,119,4444,134,4260,155,4248,156,4248,151,4260,149,4444,129,4627,113,4920,94"/>
-<area shape="rect" id="Node000026" href="$Ch04__Rec05__Reentrancy_8c.html" title="Cookbook Chapter 4, Recipe 5: Proving Reentrancy with Nested FFI Calls." alt="" coords="4272,152,4461,192"/>
-<area shape="poly" id="edge25_Node000002_Node000026" title=" " alt="" coords="4920,103,4716,124,4474,155,4462,156,4461,151,4473,149,4715,119,4920,98"/>
-<area shape="rect" id="Node000027" href="$Ch04__Rec06__ThreadSafety_8c.html" title="Cookbook Chapter 4, Recipe 6: Proving Thread Safety." alt="" coords="4485,152,4675,192"/>
-<area shape="poly" id="edge26_Node000002_Node000027" title=" " alt="" coords="4932,109,4675,156,4674,151,4931,104"/>
-<area shape="rect" id="Node000028" href="$Ch05__Rec01__CppMangledNames_8c.html" title="Cookbook Chapter 5, Recipe 1: Calling C++ Mangled Names." alt="" coords="4699,152,4888,192"/>
-<area shape="poly" id="edge27_Node000002_Node000028" title=" " alt="" coords="4964,111,4846,154,4844,149,4962,106"/>
-<area shape="rect" id="Node000029" href="$Ch05__Rec02__CppTemplates_8c.html" title="Cookbook Chapter 5, Recipe 2: Interfacing with C++ Templates." alt="" coords="4912,152,5101,192"/>
-<area shape="poly" id="edge28_Node000002_Node000029" title=" " alt="" coords="5009,118,5009,152,5004,152,5004,118"/>
-<area shape="rect" id="Node000030" href="$Ch05__Rec03__SemanticStrings_8c.html" title="Cookbook Chapter 5, Recipe 3: Handling Strings and Semantic Types." alt="" coords="5125,152,5315,192"/>
-<area shape="poly" id="edge29_Node000002_Node000030" title=" " alt="" coords="5051,106,5170,149,5168,154,5050,111"/>
-<area shape="rect" id="Node000031" href="$Ch05__Rec04__CppVirtualFunctions_8c.html" title="Cookbook Chapter 5, Recipe 4: Calling C++ Virtual Functions." alt="" coords="5339,152,5528,192"/>
-<area shape="poly" id="edge30_Node000002_Node000031" title=" " alt="" coords="5083,104,5339,151,5338,156,5082,109"/>
-<area shape="rect" id="Node000032" href="$Ch06__Rec01__SystemLibraries_8c.html" title="Cookbook Chapter 6, Recipe 1: Calling Native System Libraries." alt="" coords="5552,152,5741,192"/>
-<area shape="poly" id="edge31_Node000002_Node000032" title=" " alt="" coords="5094,98,5298,119,5540,149,5552,151,5552,156,5540,155,5297,124,5093,103"/>
-<area shape="rect" id="Node000033" href="$Ch06__Rec02__GlobalVariables_8c.html" title="Cookbook Chapter 6, Recipe 2: Reading and Writing Global Variables." alt="" coords="5765,152,5955,192"/>
-<area shape="poly" id="edge32_Node000002_Node000033" title=" " alt="" coords="5093,94,5386,113,5570,129,5754,149,5766,151,5765,156,5753,155,5569,134,5386,119,5093,100"/>
-<area shape="rect" id="Node000034" href="$Ch06__Rec03__LibraryDependencies_8c.html" title="Cookbook Chapter 6, Recipe 3: Handling Library Dependencies." alt="" coords="5979,152,6168,192"/>
-<area shape="poly" id="edge33_Node000002_Node000034" title=" " alt="" coords="5094,92,5473,108,5719,125,5967,149,5979,151,5978,156,5966,155,5718,130,5473,114,5093,97"/>
-<area shape="rect" id="Node000035" href="$Ch07__Rec01__DynamicMarshalling_8c.html" title="Cookbook Chapter 7, Recipe 1: Dynamic Struct Marshalling." alt="" coords="6192,152,6381,192"/>
-<area shape="poly" id="edge34_Node000002_Node000035" title=" " alt="" coords="5093,91,5288,95,5558,104,5867,121,6180,149,6192,151,6192,156,6180,155,5866,127,5557,109,5288,100,5093,96"/>
-<area shape="rect" id="Node000036" href="$Ch07__Rec02__DynamicSignatures_8c.html" title="Cookbook Chapter 7, Recipe 2: Building a Signature String at Runtime." alt="" coords="6405,152,6595,192"/>
-<area shape="poly" id="edge35_Node000002_Node000036" title=" " alt="" coords="5093,90,5320,92,5642,100,6015,118,6206,132,6394,149,6406,151,6405,156,6393,155,6206,137,6014,123,5642,105,5320,97,5093,95"/>
-<area shape="rect" id="Node000037" href="$Ch07__Rec03__IntrospectWrapper_8c.html" title="Cookbook Chapter 7, Recipe 3: Introspecting a Trampoline for a Wrapper." alt="" coords="6619,152,6808,192"/>
-<area shape="poly" id="edge36_Node000002_Node000037" title=" " alt="" coords="5093,89,5350,89,5724,96,6161,114,6386,129,6607,149,6619,151,6618,156,6606,155,6386,135,6161,119,5724,101,5350,95,5093,94"/>
-<area shape="rect" id="Node000038" href="$Ch08__Rec01__CustomAllocators_8c.html" title="Cookbook Chapter 8, Recipe 1: Using Custom Memory Allocators." alt="" coords="6832,152,7021,192"/>
-<area shape="poly" id="edge37_Node000002_Node000038" title=" " alt="" coords="5093,91,5946,109,6450,126,6661,137,6820,149,6832,151,6832,156,6820,155,6661,142,6450,131,5946,114,5093,97"/>
-<area shape="rect" id="Node000039" href="$Ch08__Rec02__ManualAPI_8c.html" title="Cookbook Chapter 8, Recipe 2: The Full Manual API Lifecycle." alt="" coords="7045,152,7235,192"/>
-<area shape="poly" id="edge38_Node000002_Node000039" title=" " alt="" coords="5093,91,6045,107,6615,124,6853,136,7034,149,7046,151,7045,156,7033,155,6853,141,6615,130,6045,112,5093,96"/>
-<area shape="rect" id="Node000040" href="$Ch08__Rec03__ArenaCallFrame_8c.html" title="Cookbook Chapter 8, Recipe 3: Building a Dynamic Call Frame with an Arena." alt="" coords="7259,152,7448,192"/>
-<area shape="poly" id="edge39_Node000002_Node000040" title=" " alt="" coords="5094,91,5521,95,6144,105,6780,122,7046,135,7247,149,7259,151,7258,156,7246,155,7046,140,6780,128,6144,110,5521,100,5094,96"/>
-<area shape="rect" id="Node000041" href="$Ch09__Rec01__ErrorReporting_8c.html" title="Cookbook Chapter 9, Recipe 1: Advanced Error Reporting for the Parser." alt="" coords="7472,152,7661,192"/>
-<area shape="poly" id="edge40_Node000002_Node000041" title=" " alt="" coords="5093,90,5556,94,6241,103,6944,121,7238,133,7460,149,7472,151,7472,156,7460,155,7238,139,6944,126,6241,108,5556,99,5093,96"/>
-<area shape="rect" id="Node000042" href="$win32__msgbox_8c.html" title=" " alt="" coords="7686,159,7837,185"/>
-<area shape="poly" id="edge41_Node000002_Node000042" title=" " alt="" coords="5093,90,5592,90,6339,97,6735,104,7108,115,7431,130,7674,149,7716,157,7715,162,7673,155,7430,135,7108,120,6735,109,6339,102,5592,96,5093,95"/>
-<area shape="rect" id="Node000043" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="8620,240,8767,265"/>
-<area shape="poly" id="edge42_Node000002_Node000043" title=" " alt="" coords="5093,91,7073,111,8172,129,8527,139,8628,144,8669,150,8686,170,8694,195,8697,240,8692,240,8689,196,8681,173,8667,154,8628,149,8526,144,8171,134,7073,116,5093,96"/>
-<area shape="rect" id="Node000046" href="$fuzz__signature_8c.html" title="Fuzzer target for the high&#45;level signature parsing API." alt="" coords="8205,313,8363,339"/>
-<area shape="poly" id="edge44_Node000002_Node000046" title=" " alt="" coords="5093,90,5700,94,6594,103,7040,111,7426,121,7711,133,7801,141,7849,149,7866,158,7877,169,7887,179,7901,190,7991,232,8083,266,8236,311,8234,316,8081,271,7989,237,7899,194,7883,183,7873,172,7863,163,7847,155,7800,146,7710,139,7426,126,7040,116,6594,108,5699,99,5093,96"/>
-<area shape="rect" id="Node000050" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="8995,159,9205,185"/>
-<area shape="poly" id="edge45_Node000002_Node000050" title=" " alt="" coords="5093,91,7089,109,8278,127,8717,138,8976,149,9036,157,9036,162,8976,155,8717,143,8277,132,7089,114,5093,96"/>
-<area shape="rect" id="Node000060" href="$error_8c.html" title="Implements the thread&#45;local error reporting system." alt="" coords="8969,240,9087,265"/>
-<area shape="poly" id="edge48_Node000002_Node000060" title=" " alt="" coords="5093,90,5921,95,7192,106,8374,124,8764,136,8880,142,8933,150,8954,164,8978,189,9021,238,9017,242,8974,192,8950,168,8931,154,8880,148,8764,141,8374,129,7192,111,5921,101,5093,96"/>
-<area shape="rect" id="Node000071" href="$001__primitives_8c.html" title="Unit test for creating trampolines for functions with primitive C types." alt="" coords="8125,159,8264,185"/>
-<area shape="poly" id="edge49_Node000002_Node000071" title=" " alt="" coords="5093,91,6664,107,7578,125,7915,136,8114,149,8153,157,8152,162,8113,155,7915,141,7578,130,6664,112,5093,96"/>
-<area shape="rect" id="Node000072" href="$002__simple__calls_8c.html" title="Unit test for basic forward trampoline calls with simple function signatures." alt="" coords="8288,159,8443,185"/>
-<area shape="poly" id="edge50_Node000002_Node000072" title=" " alt="" coords="5093,91,6745,108,7710,125,8066,136,8276,149,8320,157,8319,162,8276,155,8066,142,7710,131,6745,113,5093,96"/>
-<area shape="poly" id="edge43_Node000043_Node000046" title=" " alt="" coords="8615,270,8350,316,8349,311,8614,265"/>
-<area shape="poly" id="edge46_Node000050_Node000043" title=" " alt="" coords="9028,190,8753,243,8752,237,9027,185"/>
-<area shape="poly" id="edge47_Node000050_Node000060" title=" " alt="" coords="9082,197,9041,242,9037,238,9078,193"/>
-<area shape="poly" id="edge52_Node000098_Node000050" title=" " alt="" coords="7247,101,7511,116,7734,122,8114,120,8297,118,8492,121,8715,130,8976,149,9035,157,9034,162,8976,155,8714,135,8492,126,8297,124,8114,125,7734,127,7510,121,7247,107"/>
+<area shape="rect" id="Node000001" title="Provides forward compatibility macros for C23 features." alt="" coords="8181,5,8378,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="5649,79,5795,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="8167,25,5795,91,5795,85,8167,20"/>
+<area shape="rect" id="Node000101" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="8192,79,8367,104"/>
+<area shape="poly" id="edge51_Node000001_Node000101" title=" " alt="" coords="8282,44,8282,79,8277,79,8277,44"/>
+<area shape="rect" id="Node000103" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="8391,79,8546,104"/>
+<area shape="poly" id="edge53_Node000001_Node000103" title=" " alt="" coords="8323,33,8439,76,8437,81,8322,38"/>
+<area shape="rect" id="Node000003" href="$Ch01__OpaquePointers_8c.html" title="Cookbook Chapter 1: Working with Opaque Pointers." alt="" coords="9641,159,9904,185"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="5808,90,6506,92,7611,100,8768,117,9255,131,9622,149,9695,157,9694,162,9622,155,9255,137,8768,123,7611,105,6506,97,5808,95"/>
+<area shape="rect" id="Node000004" href="$Ch01__OutParameters_8c.html" title="Cookbook Chapter 1: Working with &quot;Out&quot; Parameters." alt="" coords="9928,159,10185,185"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="5809,91,7914,110,9174,128,9641,138,9916,149,9983,157,9983,162,9915,155,9641,143,9174,133,7914,115,5809,96"/>
+<area shape="rect" id="Node000005" href="$Ch01__Pointers_8c.html" title="Cookbook Chapter 1: Passing and Receiving Pointers." alt="" coords="10261,159,10474,185"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="5809,90,8074,107,9439,125,9945,136,10242,149,10303,157,10302,162,10242,155,9944,142,9439,130,8074,113,5809,96"/>
+<area shape="rect" id="Node000006" href="$Ch01__SimpleCall_8c.html" title="Cookbook Chapter 1: Calling a Simple C Function." alt="" coords="5,159,236,185"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="5636,96,4596,99,2906,109,1234,127,614,140,249,155,187,162,187,157,248,149,614,134,1234,122,2906,104,4596,94,5636,90"/>
+<area shape="rect" id="Node000007" href="$Ch02__AdvancedRegistry_8c.html" title="Cookbook Chapter 2: Advanced Named Types (Recursive &amp; Forward&#45;Declared)" alt="" coords="261,152,474,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="5636,96,4636,99,3021,109,1426,127,834,139,486,155,475,156,474,150,486,149,834,134,1426,121,3021,104,4636,94,5635,90"/>
+<area shape="rect" id="Node000008" href="$Ch02__ArrayDecay_8c.html" title="Cookbook Chapter 2: Working with Fixed&#45;Size Arrays." alt="" coords="498,159,733,185"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="5635,96,4680,100,3147,111,1635,129,1075,141,745,155,683,162,682,157,744,149,1074,136,1635,124,3147,106,4680,95,5635,90"/>
+<area shape="rect" id="Node000009" href="$Ch02__Bitfields_8c.html" title="Cookbook Chapter 2: Working with Structs that Contain Bitfields." alt="" coords="757,159,970,185"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="5635,96,4721,100,3262,111,1827,129,1295,141,982,155,925,162,924,157,982,149,1295,135,1827,123,3262,106,4721,95,5635,90"/>
+<area shape="rect" id="Node000010" href="$Ch02__ComplexNumbers_8c.html" title="Cookbook Chapter 2: Working with Complex Numbers." alt="" coords="995,152,1201,192"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="5635,96,4761,100,3375,111,2014,129,1510,141,1213,155,1202,156,1201,150,1212,149,1509,135,2013,124,3375,106,4761,95,5635,90"/>
+<area shape="rect" id="Node000011" href="$Ch02__Enums_8c.html" title="Cookbook Chapter 2: Working with Enums." alt="" coords="1225,159,1429,185"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="5635,96,3487,112,2199,130,1723,141,1442,155,1387,162,1386,157,1442,149,1723,136,2199,125,3487,107,5635,90"/>
+<area shape="rect" id="Node000012" href="$Ch02__LargeStruct_8c.html" title="Cookbook Chapter 2: Large Structs Passed by Reference." alt="" coords="1454,159,1689,185"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="5636,95,4919,95,3779,101,3165,108,2583,118,2080,134,1701,155,1639,162,1638,157,1700,149,2079,128,2583,113,3164,102,3779,95,4919,90,5636,90"/>
+<area shape="rect" id="Node000013" href="$Ch02__PackedStructs_8c.html" title="Cookbook Chapter 2: Working with Packed Structs." alt="" coords="1713,159,1963,185"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="5636,95,4962,97,3902,104,3332,111,2793,122,2327,136,1976,155,1910,162,1909,157,1975,149,2326,131,2793,116,3332,106,3902,99,4962,91,5636,90"/>
+<area shape="rect" id="Node000014" href="$Ch02__ReturnStruct_8c.html" title="Cookbook Chapter 2: Receiving a Struct from a Function." alt="" coords="1988,159,2229,185"/>
+<area shape="poly" id="edge13_Node000002_Node000014" title=" " alt="" coords="5635,95,5004,97,4021,105,2996,122,2565,137,2241,155,2178,162,2177,157,2240,149,2565,131,2996,117,4021,99,5004,92,5635,90"/>
+<area shape="rect" id="Node000015" href="$Ch02__SIMD__AVX_8c.html" title="Cookbook Chapter 2: Working with SIMD Vectors (x86&#45;64)" alt="" coords="2253,152,2436,192"/>
+<area shape="poly" id="edge14_Node000002_Node000015" title=" " alt="" coords="5636,95,5038,95,4114,100,3620,107,3154,118,2751,134,2448,155,2437,156,2436,151,2447,149,2751,128,3154,113,3620,102,4114,95,5038,89,5636,90"/>
+<area shape="rect" id="Node000016" href="$Ch02__SIMD__NEON_8c.html" title="Cookbook Chapter 2: Working with SIMD Vectors (AArch64 NEON)" alt="" coords="2460,152,2643,192"/>
+<area shape="poly" id="edge15_Node000002_Node000016" title=" " alt="" coords="5635,95,5071,96,4207,102,3747,109,3313,120,2937,135,2654,155,2643,156,2643,151,2654,149,2937,129,3312,115,3747,104,4207,97,5071,90,5635,90"/>
+<area shape="rect" id="Node000017" href="$Ch02__SIMD__SVE_8c.html" title="Cookbook Chapter 2: Working with SIMD Vectors (AArch64 SVE)" alt="" coords="2667,152,2849,192"/>
+<area shape="poly" id="edge16_Node000002_Node000017" title=" " alt="" coords="5635,95,5104,97,4301,104,3874,111,3471,122,3123,136,2861,155,2850,156,2849,151,2860,149,3123,131,3471,116,3874,106,4301,99,5104,91,5635,90"/>
+<area shape="rect" id="Node000018" href="$Ch02__StructByValue_8c.html" title="Cookbook Chapter 2: Small Structs Passed by Value." alt="" coords="2873,152,3077,192"/>
+<area shape="poly" id="edge17_Node000002_Node000018" title=" " alt="" coords="5635,96,5142,99,4406,108,3648,126,3330,139,3090,155,3078,156,3077,151,3090,149,3330,133,3647,120,4406,103,5142,94,5635,90"/>
+<area shape="rect" id="Node000019" href="$Ch02__Unions_8c.html" title="Cookbook Chapter 2: Working with Unions." alt="" coords="3102,159,3307,185"/>
+<area shape="poly" id="edge18_Node000002_Node000019" title=" " alt="" coords="5636,96,5181,100,4511,110,3824,128,3537,140,3320,155,3265,162,3264,157,3319,149,3536,135,3824,122,4511,105,5181,95,5636,91"/>
+<area shape="rect" id="Node000020" href="$Ch03__QsortCallback_8c.html" title="Cookbook Chapter 3: Creating a Type&#45;Safe Callback for qsort" alt="" coords="3331,159,3582,185"/>
+<area shape="poly" id="edge19_Node000002_Node000020" title=" " alt="" coords="5635,97,4637,115,4036,132,3784,143,3594,155,3530,162,3529,157,3594,149,3784,138,4036,127,4637,110,5635,91"/>
+<area shape="rect" id="Node000021" href="$Ch03__StatefulCallback_8c.html" title="Cookbook Chapter 3: Creating a Stateful Callback." alt="" coords="3606,152,3806,192"/>
+<area shape="poly" id="edge20_Node000002_Node000021" title=" " alt="" coords="5636,96,4741,114,4209,131,3986,142,3818,155,3806,156,3806,151,3818,149,3986,137,4208,126,4741,109,5636,91"/>
+<area shape="rect" id="Node000022" href="$Ch04__CallbackAsArg_8c.html" title="Cookbook Chapter 4: Receiving and Calling a Function Pointer." alt="" coords="3830,152,4035,192"/>
+<area shape="poly" id="edge21_Node000002_Node000022" title=" " alt="" coords="5636,95,5368,95,4976,102,4516,120,4280,135,4048,155,4036,156,4035,151,4047,149,4279,130,4516,115,4976,96,5368,90,5636,89"/>
+<area shape="rect" id="Node000023" href="$Ch04__LongDouble_8c.html" title="Cookbook Chapter 4: Handling long double" alt="" coords="4059,159,4297,185"/>
+<area shape="poly" id="edge22_Node000002_Node000023" title=" " alt="" coords="5636,96,5406,100,5077,109,4697,126,4309,155,4249,162,4248,157,4308,149,4696,121,5077,103,5405,94,5636,91"/>
+<area shape="rect" id="Node000024" href="$Ch04__Reentrancy_8c.html" title="Cookbook Chapter 4: Proving Reentrancy with Nested FFI Calls." alt="" coords="4321,159,4553,185"/>
+<area shape="poly" id="edge23_Node000002_Node000024" title=" " alt="" coords="5636,97,5178,113,4873,130,4565,155,4507,162,4506,157,4564,149,4873,124,5177,107,5636,92"/>
+<area shape="rect" id="Node000025" href="$Ch04__ThreadSafety_8c.html" title="Cookbook Chapter 4: Proving Thread Safety." alt="" coords="4577,159,4822,185"/>
+<area shape="poly" id="edge24_Node000002_Node000025" title=" " alt="" coords="5635,99,5285,118,5061,134,4834,155,4775,162,4774,157,4834,149,5060,129,5285,113,5635,94"/>
+<area shape="rect" id="Node000026" href="$Ch04__VTableCStyle_8c.html" title="Cookbook Chapter 4: Calling a Function Pointer from a Struct." alt="" coords="4846,159,5091,185"/>
+<area shape="poly" id="edge25_Node000002_Node000026" title=" " alt="" coords="5636,102,5396,124,5104,155,5047,162,5046,157,5103,149,5395,119,5635,97"/>
+<area shape="rect" id="Node000027" href="$Ch04__VariadicPrintf_8c.html" title="Cookbook Chapter 4: Calling Variadic Functions like printf" alt="" coords="5116,152,5317,192"/>
+<area shape="poly" id="edge26_Node000002_Node000027" title=" " alt="" coords="5636,108,5329,155,5318,156,5317,151,5328,149,5635,103"/>
+<area shape="rect" id="Node000028" href="$Ch05__CppMangledNames_8c.html" title="Cookbook Chapter 5: Calling C++ Mangled Names." alt="" coords="5341,152,5572,192"/>
+<area shape="poly" id="edge27_Node000002_Node000028" title=" " alt="" coords="5671,110,5521,154,5520,149,5669,105"/>
+<area shape="rect" id="Node000029" href="$Ch05__CppTemplates_8c.html" title="Cookbook Chapter 5: Interfacing with C++ Templates." alt="" coords="5596,159,5848,185"/>
+<area shape="poly" id="edge28_Node000002_Node000029" title=" " alt="" coords="5725,118,5725,159,5719,159,5719,118"/>
+<area shape="rect" id="Node000030" href="$Ch05__CppVirtualFunctions_8c.html" title="Cookbook Chapter 5: Calling C++ Virtual Functions." alt="" coords="5872,152,6089,192"/>
+<area shape="poly" id="edge29_Node000002_Node000030" title=" " alt="" coords="5773,105,5919,149,5918,154,5772,110"/>
+<area shape="rect" id="Node000031" href="$Ch05__SemanticStrings_8c.html" title="Cookbook Chapter 5: Handling Strings and Semantic Types." alt="" coords="6114,152,6325,192"/>
+<area shape="poly" id="edge30_Node000002_Node000031" title=" " alt="" coords="5808,103,6101,149,6114,151,6113,157,6100,155,5808,109"/>
+<area shape="rect" id="Node000032" href="$Ch06__GlobalVariables_8c.html" title="Cookbook Chapter 6: Reading and Writing Global Variables." alt="" coords="6349,159,6612,185"/>
+<area shape="poly" id="edge31_Node000002_Node000032" title=" " alt="" coords="5808,97,6047,119,6337,149,6397,157,6396,162,6336,155,6046,125,5808,103"/>
+<area shape="rect" id="Node000033" href="$Ch06__LibraryDependencies_8c.html" title="Cookbook Chapter 6: Handling Library Dependencies." alt="" coords="6637,152,6831,192"/>
+<area shape="poly" id="edge32_Node000002_Node000033" title=" " alt="" coords="5809,93,6165,110,6393,127,6624,149,6637,151,6636,156,6623,155,6393,132,6165,116,5809,98"/>
+<area shape="rect" id="Node000034" href="$Ch06__SystemLibraries_8c.html" title="Cookbook Chapter 6: Calling Native System Libraries." alt="" coords="6856,159,7121,185"/>
+<area shape="poly" id="edge33_Node000002_Node000034" title=" " alt="" coords="5809,92,6252,110,6546,127,6844,149,6909,157,6909,162,6843,155,6546,132,6252,115,5808,98"/>
+<area shape="rect" id="Node000035" href="$Ch07__DynamicMarshalling_8c.html" title="Cookbook Chapter 7: Dynamic Struct Marshalling." alt="" coords="7145,152,7352,192"/>
+<area shape="poly" id="edge34_Node000002_Node000035" title=" " alt="" coords="5808,90,6038,93,6366,101,6746,119,6942,132,7133,149,7145,151,7145,156,7132,155,6941,138,6746,124,6366,106,6038,98,5808,95"/>
+<area shape="rect" id="Node000036" href="$Ch07__DynamicSignatures_8c.html" title="Cookbook Chapter 7: Building a Signature String at Runtime." alt="" coords="7376,152,7583,192"/>
+<area shape="poly" id="edge35_Node000002_Node000036" title=" " alt="" coords="5808,89,6071,90,6455,97,6905,115,7137,130,7364,149,7376,151,7375,156,7363,155,7136,135,6905,121,6455,103,6071,95,5808,95"/>
+<area shape="rect" id="Node000037" href="$Ch07__IntrospectWrapper_8c.html" title="Cookbook Chapter 7: Introspecting a Trampoline for a Wrapper." alt="" coords="7607,152,7821,192"/>
+<area shape="poly" id="edge36_Node000002_Node000037" title=" " alt="" coords="5809,91,6689,110,7211,127,7429,138,7594,149,7606,151,7606,156,7594,155,7429,143,7211,132,6688,115,5808,97"/>
+<area shape="rect" id="Node000038" href="$Ch07__SemanticAliases_8c.html" title=" " alt="" coords="7846,152,8057,192"/>
+<area shape="poly" id="edge37_Node000002_Node000038" title=" " alt="" coords="5809,91,6799,108,7395,125,7644,136,7833,149,7846,151,7846,156,7832,155,7644,142,7395,130,6799,113,5809,96"/>
+<area shape="rect" id="Node000039" href="$Ch08__ArenaCallFrame_8c.html" title="Cookbook Chapter 8: Building a Dynamic Call Frame with an Arena." alt="" coords="8080,152,8292,192"/>
+<area shape="poly" id="edge38_Node000002_Node000039" title=" " alt="" coords="5809,91,6254,95,6908,106,7577,123,7857,135,8069,149,8080,150,8080,156,8068,155,7857,140,7577,128,6908,111,6254,101,5809,96"/>
+<area shape="rect" id="Node000040" href="$Ch08__CustomAllocators_8c.html" title="Cookbook Chapter 8: Using Custom Memory Allocators." alt="" coords="8317,159,8591,185"/>
+<area shape="poly" id="edge39_Node000002_Node000040" title=" " alt="" coords="5808,91,7014,108,7757,125,8068,136,8304,149,8375,157,8374,162,8303,155,8068,142,7757,131,7014,113,5808,96"/>
+<area shape="rect" id="Node000041" href="$Ch08__ManualAPI_8c.html" title="Cookbook Chapter 8: The Full Manual API Lifecycle." alt="" coords="8615,159,8845,185"/>
+<area shape="poly" id="edge40_Node000002_Node000041" title=" " alt="" coords="5809,90,6342,94,7152,103,7988,120,8339,133,8604,149,8664,157,8663,162,8603,155,8339,139,7988,126,7152,108,6342,99,5809,96"/>
+<area shape="rect" id="Node000042" href="$Ch08__SharedArena_8c.html" title="An example demonstrating the &quot;shared arena&quot; memory optimization." alt="" coords="8869,159,9111,185"/>
+<area shape="poly" id="edge41_Node000002_Node000042" title=" " alt="" coords="5809,90,6384,93,7266,102,8182,120,8567,133,8857,149,8921,157,8920,162,8856,155,8567,138,8182,125,7266,107,6384,99,5809,96"/>
+<area shape="rect" id="Node000043" href="$Ch09__ErrorReporting_8c.html" title="Cookbook Chapter 9: Advanced Error Reporting for the Parser." alt="" coords="9136,159,9391,185"/>
+<area shape="poly" id="edge42_Node000002_Node000043" title=" " alt="" coords="5808,90,6427,93,7387,101,8387,119,8807,132,9124,149,9190,157,9190,162,9123,155,8807,138,8386,124,7387,107,6427,98,5808,95"/>
+<area shape="rect" id="Node000044" href="$win32__msgbox_8c.html" title=" " alt="" coords="9415,159,9565,185"/>
+<area shape="poly" id="edge43_Node000002_Node000044" title=" " alt="" coords="5809,90,6538,95,7663,105,8759,123,9164,135,9402,149,9445,157,9444,162,9402,155,9163,140,8759,128,7663,111,6538,100,5809,96"/>
+<area shape="rect" id="Node000045" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="10150,240,10297,265"/>
+<area shape="poly" id="edge44_Node000002_Node000045" title=" " alt="" coords="5808,90,8217,108,9579,126,10021,137,10147,143,10198,150,10215,170,10224,195,10227,240,10222,240,10218,196,10210,173,10195,154,10147,148,10020,142,9579,131,8217,113,5808,96"/>
+<area shape="rect" id="Node000048" href="$fuzz__signature_8c.html" title="Fuzzer target for the high&#45;level signature parsing API." alt="" coords="9833,313,9992,339"/>
+<area shape="poly" id="edge46_Node000002_Node000048" title=" " alt="" coords="5809,91,7869,109,9028,127,9412,138,9526,143,9577,149,9594,158,9605,168,9630,190,9699,228,9770,263,9884,311,9882,316,9768,267,9697,233,9627,194,9602,172,9591,162,9576,155,9525,149,9411,143,9028,132,7869,115,5808,96"/>
+<area shape="rect" id="Node000052" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="10549,159,10759,185"/>
+<area shape="poly" id="edge47_Node000002_Node000052" title=" " alt="" coords="5809,90,6734,95,8215,106,9672,124,10212,136,10530,149,10590,157,10590,162,10530,155,10212,141,9672,129,8215,111,6734,100,5808,96"/>
+<area shape="rect" id="Node000062" href="$error_8c.html" title="Implements the thread&#45;local error reporting system." alt="" coords="10523,240,10641,265"/>
+<area shape="poly" id="edge50_Node000002_Node000062" title=" " alt="" coords="5809,91,8367,113,9822,131,10295,140,10431,145,10487,149,10508,164,10532,189,10575,238,10571,242,10528,192,10504,168,10485,155,10431,150,10295,145,9822,136,8367,118,5809,96"/>
+<area shape="poly" id="edge45_Node000045_Node000048" title=" " alt="" coords="10161,271,9964,316,9962,311,10160,266"/>
+<area shape="poly" id="edge48_Node000052_Node000045" title=" " alt="" coords="10578,190,10287,243,10286,237,10577,184"/>
+<area shape="poly" id="edge49_Node000052_Node000062" title=" " alt="" coords="10636,197,10595,242,10591,238,10632,193"/>
+<area shape="poly" id="edge52_Node000101_Node000052" title=" " alt="" coords="8381,101,8708,118,8986,124,9230,123,9458,119,9685,115,9928,116,10205,126,10530,149,10590,157,10589,162,10530,155,10204,132,9928,122,9685,120,9458,124,9230,128,8986,130,8708,124,8380,107"/>
 </map>

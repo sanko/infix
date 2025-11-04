@@ -271,6 +271,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gae00f0a3ebc8b0e4035382589dac25730" id="r_gae00f0a3ebc8b0e4035382589dac25730"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#gae00f0a3ebc8b0e4035382589dac25730">infix_reverse_get_arg_type</a> (const <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *, size_t)</td></tr>
 <tr class="memdesc:gae00f0a3ebc8b0e4035382589dac25730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the type of a specific argument for a reverse trampoline.  <br /></td></tr>
 <tr class="separator:gae00f0a3ebc8b0e4035382589dac25730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga234b98ee42c1323821fa47f1eb130742" id="r_ga234b98ee42c1323821fa47f1eb130742"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#ga234b98ee42c1323821fa47f1eb130742">infix_type_get_name</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:ga234b98ee42c1323821fa47f1eb130742"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the semantic alias of a type, if one exists.  <br /></td></tr>
+<tr class="separator:ga234b98ee42c1323821fa47f1eb130742"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d8374030d014a748fd0d2b26e5415e3" id="r_ga9d8374030d014a748fd0d2b26e5415e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__type__system.html#ga909e562b00e504aeceac698bd272f0ca">infix_type_category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3">infix_type_get_category</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
 <tr class="memdesc:ga9d8374030d014a748fd0d2b26e5415e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the fundamental category of a type.  <br /></td></tr>
 <tr class="separator:ga9d8374030d014a748fd0d2b26e5415e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1671,6 +1674,33 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of members, or 0 if the type is not a struct or union. </dd></dl>
+
+</div>
+</div>
+<a id="ga234b98ee42c1323821fa47f1eb130742" name="ga234b98ee42c1323821fa47f1eb130742"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga234b98ee42c1323821fa47f1eb130742">&#9670;&#160;</a></span>infix_type_get_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> const char * infix_type_get_name </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the semantic alias of a type, if one exists. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The type object to inspect. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name of the type if it was created from a registry alias (e.g., "MyInt"), or <code>nullptr</code> if the type is anonymous. </dd></dl>
 
 </div>
 </div>

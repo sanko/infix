@@ -139,8 +139,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structprinter__state.html">printer_state</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -188,10 +186,8 @@ Functions</h2></td></tr>
 <tr class="separator:a0188b3a9e1088b2e82af548e7e8037a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae14dc307e72c05042cfa259c92fb09ce" id="r_ae14dc307e72c05042cfa259c92fb09ce"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ae14dc307e72c05042cfa259c92fb09ce">_infix_type_print_signature_recursive</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:ae14dc307e72c05042cfa259c92fb09ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1bad774d01989f84e0b86bee6a489d7" id="r_ad1bad774d01989f84e0b86bee6a489d7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ad1bad774d01989f84e0b86bee6a489d7">_registry_print</a> (<a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *state, const char *fmt,...)</td></tr>
-<tr class="separator:ad1bad774d01989f84e0b86bee6a489d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace1f774be61302f1c50c3b4d033ae3b0" id="r_ace1f774be61302f1c50c3b4d033ae3b0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ace1f774be61302f1c50c3b4d033ae3b0">_infix_type_print_body_only_recursive</a> (<a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
-<tr class="separator:ace1f774be61302f1c50c3b4d033ae3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5af7bab951a6f564a809ba05609783" id="r_a2e5af7bab951a6f564a809ba05609783"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a2e5af7bab951a6f564a809ba05609783">_infix_type_print_body_only_recursive</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="separator:a2e5af7bab951a6f564a809ba05609783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a318cbbcc66e97bc549fea21d23a9ac4d" id="r_a318cbbcc66e97bc549fea21d23a9ac4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a318cbbcc66e97bc549fea21d23a9ac4d">_infix_type_print_body_only</a> (char *buffer, size_t buffer_size, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
 <tr class="memdesc:a318cbbcc66e97bc549fea21d23a9ac4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">An internal-only function to serialize a type's body without its registered name.  <br /></td></tr>
 <tr class="separator:a318cbbcc66e97bc549fea21d23a9ac4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -337,8 +333,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ace1f774be61302f1c50c3b4d033ae3b0" name="ace1f774be61302f1c50c3b4d033ae3b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace1f774be61302f1c50c3b4d033ae3b0">&#9670;&#160;</a></span>_infix_type_print_body_only_recursive()</h2>
+<a id="a2e5af7bab951a6f564a809ba05609783" name="a2e5af7bab951a6f564a809ba05609783"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e5af7bab951a6f564a809ba05609783">&#9670;&#160;</a></span>_infix_type_print_body_only_recursive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -349,7 +345,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void _infix_type_print_body_only_recursive </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structprinter__state.html">printer_state</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
@@ -422,48 +418,6 @@ Variables</h2></td></tr>
           <td class="memname">static void _print </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structprinter__state.html">printer_state</a> *&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad1bad774d01989f84e0b86bee6a489d7" name="ad1bad774d01989f84e0b86bee6a489d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1bad774d01989f84e0b86bee6a489d7">&#9670;&#160;</a></span>_registry_print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void _registry_print </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structregistry__printer__state.html">registry_printer_state</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>

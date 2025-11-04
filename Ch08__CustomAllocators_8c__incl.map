@@ -1,0 +1,19 @@
+<map id="eg/cookbook/Ch08_CustomAllocators.c" name="eg/cookbook/Ch08_CustomAllocators.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 8: Using Custom Memory Allocators." alt="" coords="5,5,280,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="16,79,83,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,33,77,72,74,68,126,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="107,79,178,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,31,145,65,140,65,140,31"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="202,79,297,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="161,28,222,69,219,73,158,33"/>
+<area shape="rect" id="Node000005" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="99,152,274,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="241,106,208,143,204,140,237,103"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="88,225,171,251"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="202,106,134,127,106,140,89,154,84,168,87,184,109,214,104,217,82,186,79,168,84,150,103,136,132,122,201,101"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="205,225,280,251"/>
+<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="263,103,285,136,291,157,289,178,279,199,266,217,262,214,275,196,284,177,286,157,280,138,258,106"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="350,152,421,177"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="272,102,352,143,350,148,270,106"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="179,179,149,216,145,213,175,176"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="198,176,227,213,223,216,194,179"/>
+</map>

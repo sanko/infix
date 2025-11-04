@@ -31,121 +31,120 @@ var NAVTREE =
       [ "1. High-Level Signature API", "md_docs_2API.html#autotoc_md13", [
         [ "Forward Trampolines (Calling C)", "md_docs_2API.html#autotoc_md14", [
           [ "<tt>infix_forward_create</tt>", "md_docs_2API.html#autotoc_md15", null ],
-          [ "<tt>infix_forward_create_unbound</tt>", "md_docs_2API.html#autotoc_md16", null ]
+          [ "<tt>infix_forward_create_unbound</tt>", "md_docs_2API.html#autotoc_md16", null ],
+          [ "<tt>infix_forward_create_in_arena</tt> (Advanced)", "md_docs_2API.html#autotoc_md17", null ]
         ] ],
-        [ "Reverse Trampolines (Callbacks & Closures)", "md_docs_2API.html#autotoc_md17", [
-          [ "<tt>infix_reverse_create_callback</tt>", "md_docs_2API.html#autotoc_md18", null ],
-          [ "<tt>infix_reverse_create_closure</tt>", "md_docs_2API.html#autotoc_md19", null ]
+        [ "Reverse Trampolines (Callbacks & Closures)", "md_docs_2API.html#autotoc_md18", [
+          [ "<tt>infix_reverse_create_callback</tt>", "md_docs_2API.html#autotoc_md19", null ],
+          [ "<tt>infix_reverse_create_closure</tt>", "md_docs_2API.html#autotoc_md20", null ]
         ] ]
       ] ],
-      [ "2. Error Handling API", "md_docs_2API.html#autotoc_md21", [
-        [ "The Error Handling Pattern", "md_docs_2API.html#autotoc_md22", null ],
-        [ "Common Error Categories", "md_docs_2API.html#autotoc_md23", [
-          [ "Parser Errors (<tt>INFIX_CATEGORY_PARSER</tt>)", "md_docs_2API.html#autotoc_md24", null ],
-          [ "Allocation Errors (<tt>INFIX_CATEGORY_ALLOCATION</tt>)", "md_docs_2API.html#autotoc_md25", null ],
-          [ "ABI & Layout Errors (<tt>INFIX_CATEGORY_ABI</tt>)", "md_docs_2API.html#autotoc_md26", null ],
-          [ "General & Library Errors", "md_docs_2API.html#autotoc_md27", null ]
+      [ "2. Error Handling API", "md_docs_2API.html#autotoc_md22", [
+        [ "The Error Handling Pattern", "md_docs_2API.html#autotoc_md23", null ],
+        [ "Common Error Categories", "md_docs_2API.html#autotoc_md24", [
+          [ "Parser Errors (<tt>INFIX_CATEGORY_PARSER</tt>)", "md_docs_2API.html#autotoc_md25", null ],
+          [ "Allocation Errors (<tt>INFIX_CATEGORY_ALLOCATION</tt>)", "md_docs_2API.html#autotoc_md26", null ],
+          [ "ABI & Layout Errors (<tt>INFIX_CATEGORY_ABI</tt>)", "md_docs_2API.html#autotoc_md27", null ],
+          [ "General & Library Errors", "md_docs_2API.html#autotoc_md28", null ]
         ] ]
       ] ],
-      [ "3. Introspection API", "md_docs_2API.html#autotoc_md29", [
-        [ "Getting Callable Code", "md_docs_2API.html#autotoc_md30", null ],
-        [ "Inspecting Trampoline Properties", "md_docs_2API.html#autotoc_md31", null ],
-        [ "Inspecting Type Properties", "md_docs_2API.html#autotoc_md32", null ]
+      [ "3. Introspection API", "md_docs_2API.html#autotoc_md30", [
+        [ "Getting Callable Code", "md_docs_2API.html#autotoc_md31", null ],
+        [ "Inspecting Trampoline Properties", "md_docs_2API.html#autotoc_md32", null ],
+        [ "Inspecting Type Properties", "md_docs_2API.html#autotoc_md33", null ]
       ] ],
-      [ "4. Named Type Registry API", "md_docs_2API.html#autotoc_md34", [
-        [ "Creation and Population", "md_docs_2API.html#autotoc_md35", null ],
-        [ "Registry Introspection & Iteration", "md_docs_2API.html#autotoc_md36", null ]
+      [ "4. Named Type Registry API", "md_docs_2API.html#autotoc_md35", [
+        [ "Creation and Population", "md_docs_2API.html#autotoc_md36", null ],
+        [ "Registry Introspection & Iteration", "md_docs_2API.html#autotoc_md37", null ]
       ] ],
-      [ "5. Dynamic Library & Globals API", "md_docs_2API.html#autotoc_md38", null ],
-      [ "6. Manual API (Advanced)", "md_docs_2API.html#autotoc_md40", [
-        [ "Manual Trampoline Creation", "md_docs_2API.html#autotoc_md41", null ],
-        [ "Manual Type Creation", "md_docs_2API.html#autotoc_md42", null ]
+      [ "5. Dynamic Library & Globals API", "md_docs_2API.html#autotoc_md39", null ],
+      [ "6. Manual API (Advanced)", "md_docs_2API.html#autotoc_md41", [
+        [ "Manual Trampoline Creation", "md_docs_2API.html#autotoc_md42", null ],
+        [ "Manual Type Creation", "md_docs_2API.html#autotoc_md43", null ]
       ] ],
-      [ "7. Memory Management (Arenas)", "md_docs_2API.html#autotoc_md44", null ]
+      [ "7. Memory Management (Arenas)", "md_docs_2API.html#autotoc_md45", null ]
     ] ],
     [ "The infix FFI Cookbook", "md_docs_2cookbook.html", [
-      [ "Table of Contents", "md_docs_2cookbook.html#autotoc_md46", null ],
-      [ "Chapter 1: The Basics (Forward Calls)", "md_docs_2cookbook.html#autotoc_md48", [
-        [ "Recipe: Calling a Simple C Function", "md_docs_2cookbook.html#autotoc_md49", null ],
-        [ "Recipe: Passing and Receiving Pointers", "md_docs_2cookbook.html#autotoc_md50", null ],
-        [ "Recipe: Working with \"Out\" Parameters", "md_docs_2cookbook.html#autotoc_md51", null ],
-        [ "Recipe: Working with Opaque Pointers (Incomplete Types)", "md_docs_2cookbook.html#autotoc_md52", null ]
+      [ "Table of Contents", "md_docs_2cookbook.html#autotoc_md47", null ],
+      [ "Chapter 1: The Basics (Forward Calls)", "md_docs_2cookbook.html#autotoc_md49", [
+        [ "Recipe: Calling a Simple C Function", "md_docs_2cookbook.html#autotoc_md50", null ],
+        [ "Recipe: Passing and Receiving Pointers", "md_docs_2cookbook.html#autotoc_md51", null ],
+        [ "Recipe: Working with \"Out\" Parameters", "md_docs_2cookbook.html#autotoc_md52", null ],
+        [ "Recipe: Working with Opaque Pointers (Incomplete Types)", "md_docs_2cookbook.html#autotoc_md53", null ]
       ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md53", null ],
-      [ "Chapter 2: Handling Complex Data Structures", "md_docs_2cookbook.html#autotoc_md54", [
-        [ "Recipe: Small Structs Passed by Value", "md_docs_2cookbook.html#autotoc_md55", null ],
-        [ "Recipe: Receiving a Struct from a Function", "md_docs_2cookbook.html#autotoc_md56", null ],
-        [ "Recipe: Large Structs Passed by Reference", "md_docs_2cookbook.html#autotoc_md57", null ],
-        [ "Recipe: Working with Packed Structs", "md_docs_2cookbook.html#autotoc_md58", null ],
-        [ "Recipe: Working with Structs that Contain Bitfields", "md_docs_2cookbook.html#autotoc_md59", null ],
-        [ "Recipe: Working with Unions", "md_docs_2cookbook.html#autotoc_md60", null ],
-        [ "Recipe: Working with Fixed-Size Arrays", "md_docs_2cookbook.html#autotoc_md61", null ],
-        [ "Recipe: Advanced Named Types (Recursive & Forward-Declared)", "md_docs_2cookbook.html#autotoc_md62", null ],
-        [ "Recipe: Working with Complex Numbers", "md_docs_2cookbook.html#autotoc_md63", null ],
-        [ "Recipe: Working with SIMD Vectors", "md_docs_2cookbook.html#autotoc_md64", [
-          [ "x86-64 (SSE, AVX, and AVX-512)", "md_docs_2cookbook.html#autotoc_md66", null ]
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md54", null ],
+      [ "Chapter 2: Handling Complex Data Structures", "md_docs_2cookbook.html#autotoc_md55", [
+        [ "Recipe: Small Structs Passed by Value", "md_docs_2cookbook.html#autotoc_md56", null ],
+        [ "Recipe: Receiving a Struct from a Function", "md_docs_2cookbook.html#autotoc_md57", null ],
+        [ "Recipe: Large Structs Passed by Reference", "md_docs_2cookbook.html#autotoc_md58", null ],
+        [ "Recipe: Working with Packed Structs", "md_docs_2cookbook.html#autotoc_md59", null ],
+        [ "Recipe: Working with Structs that Contain Bitfields", "md_docs_2cookbook.html#autotoc_md60", null ],
+        [ "Recipe: Working with Unions", "md_docs_2cookbook.html#autotoc_md61", null ],
+        [ "Recipe: Working with Fixed-Size Arrays", "md_docs_2cookbook.html#autotoc_md62", null ],
+        [ "Recipe: Advanced Named Types (Recursive & Forward-Declared)", "md_docs_2cookbook.html#autotoc_md63", null ],
+        [ "Recipe: Working with Complex Numbers", "md_docs_2cookbook.html#autotoc_md64", null ],
+        [ "Recipe: Working with SIMD Vectors", "md_docs_2cookbook.html#autotoc_md65", [
+          [ "x86-64 (SSE, AVX, and AVX-512)", "md_docs_2cookbook.html#autotoc_md67", null ]
         ] ]
       ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md67", null ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md69", [
-        [ "Recipe: Working with Enums", "md_docs_2cookbook.html#autotoc_md71", null ]
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md68", null ],
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md70", [
+        [ "Recipe: Working with Enums", "md_docs_2cookbook.html#autotoc_md72", null ]
       ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md72", null ],
-      [ "Chapter 3: The Power of Callbacks (Reverse Calls)", "md_docs_2cookbook.html#autotoc_md73", [
-        [ "Recipe: Creating a Type-Safe Callback for <tt>qsort</tt>", "md_docs_2cookbook.html#autotoc_md74", null ],
-        [ "Recipe: Creating a Stateful Callback", "md_docs_2cookbook.html#autotoc_md75", null ]
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md73", null ],
+      [ "Chapter 3: The Power of Callbacks (Reverse Calls)", "md_docs_2cookbook.html#autotoc_md74", [
+        [ "Recipe: Creating a Type-Safe Callback for <tt>qsort</tt>", "md_docs_2cookbook.html#autotoc_md75", null ],
+        [ "Recipe: Creating a Stateful Callback", "md_docs_2cookbook.html#autotoc_md76", null ]
       ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md76", null ],
-      [ "Chapter 4: Advanced Techniques", "md_docs_2cookbook.html#autotoc_md77", [
-        [ "Recipe: Calling Variadic Functions like <tt>printf</tt>", "md_docs_2cookbook.html#autotoc_md78", null ],
-        [ "Recipe: Receiving and Calling a Function Pointer", "md_docs_2cookbook.html#autotoc_md79", null ],
-        [ "Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)", "md_docs_2cookbook.html#autotoc_md80", null ],
-        [ "Recipe: Handling <tt>longdouble</tt>", "md_docs_2cookbook.html#autotoc_md81", null ],
-        [ "Recipe: Proving Reentrancy with Nested FFI Calls", "md_docs_2cookbook.html#autotoc_md82", null ],
-        [ "Recipe: Proving Thread Safety", "md_docs_2cookbook.html#autotoc_md83", null ]
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md77", null ],
+      [ "Chapter 4: Advanced Techniques", "md_docs_2cookbook.html#autotoc_md78", [
+        [ "Recipe: Calling Variadic Functions like <tt>printf</tt>", "md_docs_2cookbook.html#autotoc_md79", null ],
+        [ "Recipe: Receiving and Calling a Function Pointer", "md_docs_2cookbook.html#autotoc_md80", null ],
+        [ "Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)", "md_docs_2cookbook.html#autotoc_md81", null ],
+        [ "Recipe: Handling <tt>long double</tt>", "md_docs_2cookbook.html#autotoc_md82", null ],
+        [ "Recipe: Proving Reentrancy with Nested FFI Calls", "md_docs_2cookbook.html#autotoc_md83", null ],
+        [ "Recipe: Proving Thread Safety", "md_docs_2cookbook.html#autotoc_md84", null ]
       ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md84", null ],
-      [ "Chapter 5: Interoperability with Other Languages", "md_docs_2cookbook.html#autotoc_md85", [
-        [ "The Universal Principle: The C ABI", "md_docs_2cookbook.html#autotoc_md86", null ],
-        [ "Recipe: Interfacing with a C++ Class (Directly)", "md_docs_2cookbook.html#autotoc_md87", null ],
-        [ "Recipe: Interfacing with C++ Templates", "md_docs_2cookbook.html#autotoc_md88", null ],
-        [ "The Pattern for Other Compiled Languages", "md_docs_2cookbook.html#autotoc_md89", [
-          [ "Rust", "md_docs_2cookbook.html#autotoc_md90", null ],
-          [ "Zig", "md_docs_2cookbook.html#autotoc_md91", null ],
-          [ "Go", "md_docs_2cookbook.html#autotoc_md92", null ],
-          [ "Swift", "md_docs_2cookbook.html#autotoc_md93", null ],
-          [ "Dlang", "md_docs_2cookbook.html#autotoc_md94", null ],
-          [ "Fortran", "md_docs_2cookbook.html#autotoc_md95", null ],
-          [ "Assembly", "md_docs_2cookbook.html#autotoc_md96", null ]
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md85", null ],
+      [ "Chapter 5: Interoperability with Other Languages", "md_docs_2cookbook.html#autotoc_md86", [
+        [ "The Universal Principle: The C ABI", "md_docs_2cookbook.html#autotoc_md87", null ],
+        [ "Recipe: Interfacing with a C++ Class (Directly)", "md_docs_2cookbook.html#autotoc_md88", null ],
+        [ "Recipe: Interfacing with C++ Templates", "md_docs_2cookbook.html#autotoc_md89", null ],
+        [ "The Pattern for Other Compiled Languages", "md_docs_2cookbook.html#autotoc_md90", [
+          [ "Rust", "md_docs_2cookbook.html#autotoc_md91", null ],
+          [ "Zig", "md_docs_2cookbook.html#autotoc_md92", null ],
+          [ "Go", "md_docs_2cookbook.html#autotoc_md93", null ],
+          [ "Swift", "md_docs_2cookbook.html#autotoc_md94", null ],
+          [ "Dlang", "md_docs_2cookbook.html#autotoc_md95", null ],
+          [ "Fortran", "md_docs_2cookbook.html#autotoc_md96", null ],
+          [ "Assembly", "md_docs_2cookbook.html#autotoc_md97", null ]
         ] ],
-        [ "Recipe: Handling Strings and Semantic Types (<tt>wchar_t</tt>, etc.)", "md_docs_2cookbook.html#autotoc_md97", [
-          [ "Step 1: Define Semantic Aliases in a Registry", "md_docs_2cookbook.html#autotoc_md98", null ],
-          [ "Step 2: Use the Aliases in Your Signature", "md_docs_2cookbook.html#autotoc_md99", null ],
-          [ "Step 3: Introspect with Semantic Awareness", "md_docs_2cookbook.html#autotoc_md100", null ]
+        [ "Recipe: Handling Strings and Semantic Types (<tt>wchar_t</tt>, etc.)", "md_docs_2cookbook.html#autotoc_md98", null ],
+        [ "Recipe: Calling C++ Virtual Functions (V-Table Emulation)", "md_docs_2cookbook.html#autotoc_md99", null ],
+        [ "Recipe: Bridging C++ Callbacks (<tt>std::function</tt>) and Lambdas", "md_docs_2cookbook.html#autotoc_md100", null ]
+      ] ],
+      [ "Chapter 6: Dynamic Libraries & System Calls", "md_docs_2cookbook.html#autotoc_md101", [
+        [ "Recipe: Calling Native System Libraries without Linking", "md_docs_2cookbook.html#autotoc_md102", null ],
+        [ "Recipe: Reading and Writing Global Variables", "md_docs_2cookbook.html#autotoc_md103", [
+          [ "Example 1: Simple Integer Variable", "md_docs_2cookbook.html#autotoc_md104", null ],
+          [ "Example 2: Aggregate (Struct) Variable", "md_docs_2cookbook.html#autotoc_md105", null ]
         ] ],
-        [ "Recipe: Calling C++ Virtual Functions (V-Table Emulation)", "md_docs_2cookbook.html#autotoc_md101", null ],
-        [ "Recipe: Bridging C++ Callbacks (<tt>std::function</tt>) and Lambdas", "md_docs_2cookbook.html#autotoc_md102", null ]
+        [ "Recipe: Handling Library Dependencies", "md_docs_2cookbook.html#autotoc_md106", null ]
       ] ],
-      [ "Chapter 6: Dynamic Libraries & System Calls", "md_docs_2cookbook.html#autotoc_md103", [
-        [ "Recipe: Calling Native System Libraries without Linking", "md_docs_2cookbook.html#autotoc_md104", null ],
-        [ "Recipe: Reading and Writing Global Variables", "md_docs_2cookbook.html#autotoc_md105", [
-          [ "Example 1: Simple Integer Variable", "md_docs_2cookbook.html#autotoc_md106", null ],
-          [ "Example 2: Aggregate (Struct) Variable", "md_docs_2cookbook.html#autotoc_md107", null ]
-        ] ],
-        [ "Recipe: Handling Library Dependencies", "md_docs_2cookbook.html#autotoc_md108", null ]
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md107", null ],
+      [ "Chapter 7: Introspection for Data Marshalling", "md_docs_2cookbook.html#autotoc_md108", [
+        [ "Recipe: Creating and Introspecting Semantic Aliases", "md_docs_2cookbook.html#autotoc_md109", null ],
+        [ "Recipe: Dynamic Struct Marshalling with the Signature Parser", "md_docs_2cookbook.html#autotoc_md110", null ],
+        [ "Recipe: Building a Signature String at Runtime", "md_docs_2cookbook.html#autotoc_md111", null ],
+        [ "Recipe: Introspecting a Trampoline for a Wrapper", "md_docs_2cookbook.html#autotoc_md112", null ]
       ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md109", null ],
-      [ "Chapter 7: Introspection for Data Marshalling", "md_docs_2cookbook.html#autotoc_md110", [
-        [ "Recipe: Dynamic Struct Marshalling with the Signature Parser", "md_docs_2cookbook.html#autotoc_md111", null ],
-        [ "Recipe: Building a Signature String at Runtime", "md_docs_2cookbook.html#autotoc_md112", null ],
-        [ "Recipe: Introspecting a Trampoline for a Wrapper", "md_docs_2cookbook.html#autotoc_md113", null ]
-      ] ],
-      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md114", null ],
-      [ "Chapter 8: Performance & Memory Management", "md_docs_2cookbook.html#autotoc_md115", [
-        [ "Best Practice: Caching Trampolines", "md_docs_2cookbook.html#autotoc_md116", null ],
-        [ "Recipe: Using a Custom Arena for a Group of Types", "md_docs_2cookbook.html#autotoc_md117", null ],
-        [ "Recipe: The Full Manual API Lifecycle (Types to Trampoline)", "md_docs_2cookbook.html#autotoc_md118", null ],
-        [ "Recipe: Using Custom Memory Allocators", "md_docs_2cookbook.html#autotoc_md119", null ],
+      [ "</blockquote>", "md_docs_2cookbook.html#autotoc_md113", null ],
+      [ "Chapter 8: Performance & Memory Management", "md_docs_2cookbook.html#autotoc_md114", [
+        [ "Best Practice: Caching Trampolines", "md_docs_2cookbook.html#autotoc_md115", null ],
+        [ "Recipe: Using a Custom Arena for a Group of Types", "md_docs_2cookbook.html#autotoc_md116", null ],
+        [ "Recipe: The Full Manual API Lifecycle (Types to Trampoline)", "md_docs_2cookbook.html#autotoc_md117", null ],
+        [ "Recipe: Using Custom Memory Allocators", "md_docs_2cookbook.html#autotoc_md118", null ],
+        [ "Recipe: Optimizing Memory with a Shared Arena", "md_docs_2cookbook.html#autotoc_md119", null ],
         [ "Recipe: Building a Dynamic Call Frame with an Arena", "md_docs_2cookbook.html#autotoc_md120", [
           [ "How It Works & Why It's Better", "md_docs_2cookbook.html#autotoc_md121", null ],
           [ "Advanced Optimization: Arena Resetting for Hot Loops", "md_docs_2cookbook.html#autotoc_md122", null ]
@@ -258,35 +257,39 @@ var NAVTREE =
       [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md216", null ]
     ] ],
     [ "Changelog", "md_CHANGELOG.html", [
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...HEAD\" >0.1.1</a> - 2025-11-01", "md_CHANGELOG.html#autotoc_md222", [
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.1...HEAD\"", "md_CHANGELOG.html#autotoc_md222", [
         [ "Added", "md_CHANGELOG.html#autotoc_md223", null ],
-        [ "Changed", "md_CHANGELOG.html#autotoc_md224", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md225", null ]
+        [ "Changed", "md_CHANGELOG.html#autotoc_md224", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/releases/tag/v0.1.0\" >0.1.0</a> - 2025-10-27", "md_CHANGELOG.html#autotoc_md226", [
-        [ "Initial Public Release", "md_CHANGELOG.html#autotoc_md227", null ],
-        [ "Added", "md_CHANGELOG.html#autotoc_md228", [
-          [ "Security & Hardening", "md_CHANGELOG.html#autotoc_md229", null ],
-          [ "Performance & Memory Management", "md_CHANGELOG.html#autotoc_md230", null ],
-          [ "Platform Support", "md_CHANGELOG.html#autotoc_md231", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...v0.1.1\" >0.1.1</a> - 2025-11-01", "md_CHANGELOG.html#autotoc_md225", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md226", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md227", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md228", null ]
+      ] ],
+      [ "<a href=\"https://github.com/sanko/infix/releases/tag/v0.1.0\" >0.1.0</a> - 2025-10-27", "md_CHANGELOG.html#autotoc_md229", [
+        [ "Initial Public Release", "md_CHANGELOG.html#autotoc_md230", null ],
+        [ "Added", "md_CHANGELOG.html#autotoc_md231", [
+          [ "Security & Hardening", "md_CHANGELOG.html#autotoc_md232", null ],
+          [ "Performance & Memory Management", "md_CHANGELOG.html#autotoc_md233", null ],
+          [ "Platform Support", "md_CHANGELOG.html#autotoc_md234", null ]
         ] ]
       ] ]
     ] ],
     [ "Project Roadmap: infix FFI", "md_TODO.html", [
-      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md233", null ],
-      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md234", null ],
-      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md235", null ]
+      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md236", null ],
+      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md237", null ],
+      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md238", null ]
     ] ],
     [ "Security Policy", "md_SECURITY.html", [
-      [ "Supported Versions", "md_SECURITY.html#autotoc_md237", null ],
-      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md238", null ],
-      [ "Security Model", "md_SECURITY.html#autotoc_md239", [
-        [ "Mitigations", "md_SECURITY.html#autotoc_md240", [
-          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md241", null ],
-          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md242", null ],
-          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md243", null ],
-          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md244", null ],
-          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md245", null ]
+      [ "Supported Versions", "md_SECURITY.html#autotoc_md240", null ],
+      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md241", null ],
+      [ "Security Model", "md_SECURITY.html#autotoc_md242", [
+        [ "Mitigations", "md_SECURITY.html#autotoc_md243", [
+          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md244", null ],
+          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md245", null ],
+          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md246", null ],
+          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md247", null ],
+          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md248", null ]
         ] ]
       ] ]
     ] ],
@@ -317,14 +320,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "001__primitives_8c.html",
-"304__reverse__call__types_8c.html#a2f303d7c7dc0e9919104b83d9af8c9db",
-"Ch04__Rec03__VTableCStyle_8c.html#a204fd2a6866501ac1cd3d7bb85634832",
-"abi__sysv__x64_8c.html#a85f7abdfc580bdbd531c2a8a84490629",
-"executor_8c_source.html",
-"group__high__level__api.html#gaefbba96a3cadf0e38ba54f1ff7cb93b1",
-"group__type__system.html#gga909e562b00e504aeceac698bd272f0caa1f6e7b58d6fa04a5885655155ef73c8a",
-"md_docs_2cookbook.html#autotoc_md61",
-"structinfix__registry__t.html#a0a1fcb9091044bd29cd4e5ca1cd7117d"
+"304__reverse__call__types_8c.html#a231b550372790873ba594962b74cde24",
+"Ch03__StatefulCallback_8c.html#afb7eeae19b5cd5c588ac3bfd544371d4",
+"abi__sysv__x64_8c.html",
+"error_8c.html#a67026feedb9cc35134aca1ecc41cfab6",
+"group__high__level__api.html#gab7190b72fd83d0a0384148f7606139dd",
+"group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044ac0cac12ac35aa37df6a5d3e5221cbfc2",
+"md_docs_2cookbook.html#autotoc_md137",
+"structinfix__forward__abi__spec.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

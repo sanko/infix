@@ -1,5 +1,5 @@
 <map id="fuzz/fuzz_trampoline.c" name="fuzz/fuzz_trampoline.c">
-<area shape="rect" id="Node000001" title="Fuzzer target for the trampoline generation functions." alt="" coords="581,5,751,31"/>
+<area shape="rect" id="Node000001" title="Fuzzer target for the trampoline generation functions, including shared arena logic." alt="" coords="581,5,751,31"/>
 <area shape="rect" id="Node000002" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="608,79,724,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="669,31,669,65,663,65,663,31"/>
 <area shape="rect" id="Node000003" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="93,152,279,177"/>

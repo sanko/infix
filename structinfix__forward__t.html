@@ -116,13 +116,15 @@ $(document).ready(function(){initNavTree('structinfix__forward__t.html',''); ini
 <div class="dynheader">
 Collaboration diagram for infix_forward_t:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structinfix__forward__t__coll__graph.svg" width="100%" height="440"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structinfix__forward__t__coll__graph.svg" width="636" height="275"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:acf87f9e48e9727e7c5432869aa9672b7" id="r_acf87f9e48e9727e7c5432869aa9672b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#acf87f9e48e9727e7c5432869aa9672b7">arena</a></td></tr>
 <tr class="separator:acf87f9e48e9727e7c5432869aa9672b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54897fd7923b9f9aed8d1eb58cad8a40" id="r_a54897fd7923b9f9aed8d1eb58cad8a40"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#a54897fd7923b9f9aed8d1eb58cad8a40">is_external_arena</a></td></tr>
+<tr class="separator:a54897fd7923b9f9aed8d1eb58cad8a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2acff8531f53fd864fcb68aa3a5db6e1" id="r_a2acff8531f53fd864fcb68aa3a5db6e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#a2acff8531f53fd864fcb68aa3a5db6e1">exec</a></td></tr>
 <tr class="separator:a2acff8531f53fd864fcb68aa3a5db6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96a63bb1f08d8a6c33f26453f9d55c28" id="r_a96a63bb1f08d8a6c33f26453f9d55c28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#a96a63bb1f08d8a6c33f26453f9d55c28">return_type</a></td></tr>
@@ -151,7 +153,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A private arena holding all type metadata for this trampoline. </p>
+<p>Private or shared arena holding all type metadata for this trampoline. </p>
 
 </div>
 </div>
@@ -182,6 +184,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>The executable memory containing the JIT-compiled code. </p>
+
+</div>
+</div>
+<a id="a54897fd7923b9f9aed8d1eb58cad8a40" name="a54897fd7923b9f9aed8d1eb58cad8a40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54897fd7923b9f9aed8d1eb58cad8a40">&#9670;&#160;</a></span>is_external_arena</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool infix_forward_t::is_external_arena</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>True if the arena is user-provided and should not be freed by <code>infix_forward_destroy</code>. </p>
 
 </div>
 </div>

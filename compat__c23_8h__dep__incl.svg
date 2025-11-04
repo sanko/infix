@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 6908;
+var viewWidth = 8074;
 var viewHeight = 258;
 var sectionId = 'dynsection-1';
 </script>
@@ -58,8 +58,8 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Provides forward compatibility macros for C23 features.">
-<polygon fill="#999999" stroke="#666666" points="5429,-250 5281,-250 5281,-231 5429,-231 5429,-250"/>
-<text text-anchor="middle" x="5355" y="-238" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/compat_c23.h</text>
+<polygon fill="#999999" stroke="#666666" points="6279.5,-250 6131.5,-250 6131.5,-231 6279.5,-231 6279.5,-250"/>
+<text text-anchor="middle" x="6205.5" y="-238" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/compat_c23.h</text>
 </a>
 </g>
 </g>
@@ -67,8 +67,8 @@ var sectionId = 'dynsection-1';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="infix_8h.html" target="_top" xlink:title="The public interface for the infix FFI library.">
-<polygon fill="#fff0f0" stroke="red" points="3805.5,-195 3696.5,-195 3696.5,-176 3805.5,-176 3805.5,-195"/>
-<text text-anchor="middle" x="3751" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">include/infix/infix.h</text>
+<polygon fill="#fff0f0" stroke="red" points="4342,-195 4233,-195 4233,-176 4342,-176 4342,-195"/>
+<text text-anchor="middle" x="4287.5" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">include/infix/infix.h</text>
 </a>
 </g>
 </g>
@@ -76,54 +76,53 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M5270.47,-236.71C4982.27,-227.18 4043,-196.15 3805.8,-188.31"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="5270.74,-240.22 5280.85,-237.05 5270.97,-233.22 5270.74,-240.22"/>
+<path fill="none" stroke="#63b8ff" d="M6121.12,-237.17C5793.68,-228.12 4611.87,-195.46 4342.44,-188.02"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="6121.39,-240.68 6131.49,-237.45 6121.59,-233.68 6121.39,-240.68"/>
 </a>
 </g>
 </g>
-<!-- Node98 -->
-<g id="Node000098" class="node">
-<title>Node98</title>
-<g id="a_Node000098"><a xlink:href="platform_8h.html" target="_top" xlink:title="Declares internal, runtime CPU/OS feature detection functions.">
-<polygon fill="#fff0f0" stroke="red" points="5420.5,-195 5289.5,-195 5289.5,-176 5420.5,-176 5420.5,-195"/>
-<text text-anchor="middle" x="5355" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/platform.h</text>
+<!-- Node101 -->
+<g id="Node000101" class="node">
+<title>Node101</title>
+<g id="a_Node000101"><a xlink:href="platform_8h.html" target="_top" xlink:title="Declares internal, runtime CPU/OS feature detection functions.">
+<polygon fill="#fff0f0" stroke="red" points="6271,-195 6140,-195 6140,-176 6271,-176 6271,-195"/>
+<text text-anchor="middle" x="6205.5" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/platform.h</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node98 -->
-<g id="edge51_Node000001_Node000098" class="edge">
-<title>Node1&#45;&gt;Node98</title>
-<g id="a_edge51_Node000001_Node000098"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M5355,-220.66C5355,-211.93 5355,-201.99 5355,-195.09"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="5351.5,-220.75 5355,-230.75 5358.5,-220.75 5351.5,-220.75"/>
+<!-- Node1&#45;&gt;Node101 -->
+<g id="edge51_Node000001_Node000101" class="edge">
+<title>Node1&#45;&gt;Node101</title>
+<g id="a_edge51_Node000001_Node000101"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M6205.5,-220.66C6205.5,-211.93 6205.5,-201.99 6205.5,-195.09"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="6202,-220.75 6205.5,-230.75 6209,-220.75 6202,-220.75"/>
 </a>
 </g>
 </g>
-<!-- Node100 -->
-<g id="Node000100" class="node">
-<title>Node100</title>
-<g id="a_Node000100"><a xlink:href="utility_8h.html" target="_top" xlink:title="A header for conditionally compiled debugging utilities.">
-<polygon fill="#fff0f0" stroke="red" points="5555,-195 5439,-195 5439,-176 5555,-176 5555,-195"/>
-<text text-anchor="middle" x="5497" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/utility.h</text>
+<!-- Node103 -->
+<g id="Node000103" class="node">
+<title>Node103</title>
+<g id="a_Node000103"><a xlink:href="utility_8h.html" target="_top" xlink:title="A header for conditionally compiled debugging utilities.">
+<polygon fill="#fff0f0" stroke="red" points="6405.5,-195 6289.5,-195 6289.5,-176 6405.5,-176 6405.5,-195"/>
+<text text-anchor="middle" x="6347.5" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/utility.h</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node100 -->
-<g id="edge53_Node000001_Node000100" class="edge">
-<title>Node1&#45;&gt;Node100</title>
-<g id="a_edge53_Node000001_Node000100"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M5387.36,-227.42C5413.71,-217.59 5450.26,-203.95 5473.77,-195.17"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="5385.96,-224.21 5377.81,-230.98 5388.41,-230.77 5385.96,-224.21"/>
+<!-- Node1&#45;&gt;Node103 -->
+<g id="edge53_Node000001_Node000103" class="edge">
+<title>Node1&#45;&gt;Node103</title>
+<g id="a_edge53_Node000001_Node000103"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M6237.86,-227.42C6264.21,-217.59 6300.76,-203.95 6324.27,-195.17"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="6236.46,-224.21 6228.31,-230.98 6238.91,-230.77 6236.46,-224.21"/>
 </a>
 </g>
 </g>
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="Ch01__Rec01__SimpleCall_8c.html" target="_top" xlink:title="Cookbook Chapter 1, Recipe 1: Calling a Simple C Function.">
-<polygon fill="white" stroke="#666666" points="6072,-140 5930,-140 5930,-110 6072,-110 6072,-140"/>
-<text text-anchor="start" x="5938" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_Rec01</text>
-<text text-anchor="middle" x="6001" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SimpleCall.c</text>
+<g id="a_Node000003"><a xlink:href="Ch01__OpaquePointers_8c.html" target="_top" xlink:title="Cookbook Chapter 1: Working with Opaque Pointers.">
+<polygon fill="white" stroke="#666666" points="7424,-134.5 7227,-134.5 7227,-115.5 7424,-115.5 7424,-134.5"/>
+<text text-anchor="middle" x="7325.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_OpaquePointers.c</text>
 </a>
 </g>
 </g>
@@ -131,18 +130,17 @@ var sectionId = 'dynsection-1';
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node2&#45;&gt;Node3</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3816.07,-184.42C4130.34,-183.82 5493.1,-178.97 5916,-140 5920.47,-139.59 5925.06,-139.08 5929.67,-138.51"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.77,-180.92 3805.77,-184.43 3815.78,-187.92 3815.77,-180.92"/>
+<path fill="none" stroke="#63b8ff" d="M4352.17,-184.47C4727.46,-184.14 6628.98,-180.47 7212.5,-140 7230.15,-138.78 7249.27,-136.7 7266.68,-134.51"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.03,-180.97 4342.03,-184.48 4352.03,-187.97 4352.03,-180.97"/>
 </a>
 </g>
 </g>
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="Ch01__Rec02__Pointers_8c.html" target="_top" xlink:title="Cookbook Chapter 1, Recipe 2: Passing and Receiving Pointers.">
-<polygon fill="white" stroke="#666666" points="6488,-140 6346,-140 6346,-110 6488,-110 6488,-140"/>
-<text text-anchor="start" x="6354" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_Rec02</text>
-<text text-anchor="middle" x="6417" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_Pointers.c</text>
+<g id="a_Node000004"><a xlink:href="Ch01__OutParameters_8c.html" target="_top" xlink:title="Cookbook Chapter 1: Working with &quot;Out&quot; Parameters.">
+<polygon fill="white" stroke="#666666" points="7635,-134.5 7442,-134.5 7442,-115.5 7635,-115.5 7635,-134.5"/>
+<text text-anchor="middle" x="7538.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_OutParameters.c</text>
 </a>
 </g>
 </g>
@@ -150,18 +148,17 @@ var sectionId = 'dynsection-1';
 <g id="edge3_Node000002_Node000004" class="edge">
 <title>Node2&#45;&gt;Node4</title>
 <g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.66,-183.99C4190.77,-180.96 6079.53,-164.59 6337,-140 6339.95,-139.72 6342.95,-139.39 6345.98,-139.02"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.49,-180.49 3805.52,-184.07 3815.55,-187.49 3815.49,-180.49"/>
+<path fill="none" stroke="#63b8ff" d="M4352.49,-184.04C4774.22,-180.99 7115.53,-163.09 7432.5,-140 7449.07,-138.79 7467.01,-136.72 7483.34,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.28,-180.54 4342.31,-184.11 4352.33,-187.54 4352.28,-180.54"/>
 </a>
 </g>
 </g>
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="Ch01__Rec03__OutParameters_8c.html" target="_top" xlink:title="Cookbook Chapter 1, Recipe 3: Working with &quot;Out&quot; Parameters.">
-<polygon fill="white" stroke="#666666" points="6686,-140 6544,-140 6544,-110 6686,-110 6686,-140"/>
-<text text-anchor="start" x="6552" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_Rec03</text>
-<text text-anchor="middle" x="6615" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_OutParameters.c</text>
+<g id="a_Node000005"><a xlink:href="Ch01__Pointers_8c.html" target="_top" xlink:title="Cookbook Chapter 1: Passing and Receiving Pointers.">
+<polygon fill="white" stroke="#666666" points="7851.5,-134.5 7691.5,-134.5 7691.5,-115.5 7851.5,-115.5 7851.5,-134.5"/>
+<text text-anchor="middle" x="7771.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_Pointers.c</text>
 </a>
 </g>
 </g>
@@ -169,18 +166,17 @@ var sectionId = 'dynsection-1';
 <g id="edge4_Node000002_Node000005" class="edge">
 <title>Node2&#45;&gt;Node5</title>
 <g id="a_edge4_Node000002_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.74,-184.04C4207.34,-181.15 6252.07,-164.98 6530,-140 6534.47,-139.6 6539.06,-139.1 6543.68,-138.53"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.69,-180.54 3805.71,-184.11 3815.74,-187.54 3815.69,-180.54"/>
+<path fill="none" stroke="#63b8ff" d="M4352.59,-184.17C4793.43,-181.9 7334.78,-167.64 7677.5,-140 7692.3,-138.81 7708.31,-136.72 7722.86,-134.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.24,-180.68 4342.26,-184.23 4352.28,-187.68 4352.24,-180.68"/>
 </a>
 </g>
 </g>
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="Ch01__Rec04__OpaquePointers_8c.html" target="_top" xlink:title="Cookbook Chapter 1, Recipe 4: Working with Opaque Pointers.">
-<polygon fill="white" stroke="#666666" points="142,-140 0,-140 0,-110 142,-110 142,-140"/>
-<text text-anchor="start" x="8" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_Rec04</text>
-<text text-anchor="middle" x="71" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_OpaquePointers.c</text>
+<g id="a_Node000006"><a xlink:href="Ch01__SimpleCall_8c.html" target="_top" xlink:title="Cookbook Chapter 1: Calling a Simple C Function.">
+<polygon fill="white" stroke="#666666" points="173,-134.5 0,-134.5 0,-115.5 173,-115.5 173,-134.5"/>
+<text text-anchor="middle" x="86.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_SimpleCall.c</text>
 </a>
 </g>
 </g>
@@ -188,18 +184,18 @@ var sectionId = 'dynsection-1';
 <g id="edge5_Node000002_Node000006" class="edge">
 <title>Node2&#45;&gt;Node6</title>
 <g id="a_edge5_Node000002_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.23,-184.33C3230.67,-183.04 515.7,-173.94 151,-140 148.05,-139.73 145.05,-139.4 142.02,-139.04"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.24,-187.83 3696.25,-184.36 3686.26,-180.83 3686.24,-187.83"/>
+<path fill="none" stroke="#63b8ff" d="M4222.8,-184.32C3731.83,-182.91 601.41,-172.67 182.5,-140 167.39,-138.82 151.04,-136.74 136.18,-134.54"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.89,-187.82 4232.9,-184.35 4222.91,-180.82 4222.89,-187.82"/>
 </a>
 </g>
 </g>
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="Ch02__Rec01__StructByValue_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 1: Small Structs Passed by Value.">
-<polygon fill="white" stroke="#666666" points="302,-140 160,-140 160,-110 302,-110 302,-140"/>
-<text text-anchor="start" x="168" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec01</text>
-<text text-anchor="middle" x="231" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_StructByValue.c</text>
+<g id="a_Node000007"><a xlink:href="Ch02__AdvancedRegistry_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Advanced Named Types (Recursive &amp; Forward&#45;Declared)">
+<polygon fill="white" stroke="#666666" points="351.5,-140 191.5,-140 191.5,-110 351.5,-110 351.5,-140"/>
+<text text-anchor="start" x="199.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Advanced</text>
+<text text-anchor="middle" x="271.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Registry.c</text>
 </a>
 </g>
 </g>
@@ -207,18 +203,17 @@ var sectionId = 'dynsection-1';
 <g id="edge6_Node000002_Node000007" class="edge">
 <title>Node2&#45;&gt;Node7</title>
 <g id="a_edge6_Node000002_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.34,-184.29C3242.92,-182.75 658.75,-172.47 311,-140 308.05,-139.72 305.05,-139.4 302.02,-139.04"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.4,-187.79 3696.41,-184.32 3686.42,-180.79 3686.4,-187.79"/>
+<path fill="none" stroke="#63b8ff" d="M4222.62,-184.33C3743.41,-183.02 760.22,-173.53 360.5,-140 357.69,-139.76 354.84,-139.49 351.97,-139.19"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.81,-187.83 4232.82,-184.36 4222.83,-180.83 4222.81,-187.83"/>
 </a>
 </g>
 </g>
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="Ch02__Rec02__ReturnStruct_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 2: Receiving a Struct from a Function.">
-<polygon fill="white" stroke="#666666" points="462,-140 320,-140 320,-110 462,-110 462,-140"/>
-<text text-anchor="start" x="328" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec02</text>
-<text text-anchor="middle" x="391" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ReturnStruct.c</text>
+<g id="a_Node000008"><a xlink:href="Ch02__ArrayDecay_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with Fixed&#45;Size Arrays.">
+<polygon fill="white" stroke="#666666" points="545.5,-134.5 369.5,-134.5 369.5,-115.5 545.5,-115.5 545.5,-134.5"/>
+<text text-anchor="middle" x="457.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_ArrayDecay.c</text>
 </a>
 </g>
 </g>
@@ -226,18 +221,17 @@ var sectionId = 'dynsection-1';
 <g id="edge7_Node000002_Node000008" class="edge">
 <title>Node2&#45;&gt;Node8</title>
 <g id="a_edge7_Node000002_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.31,-184.24C3254.9,-182.46 801.79,-170.99 471,-140 468.05,-139.72 465.05,-139.4 462.02,-139.03"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.4,-187.74 3696.42,-184.29 3686.43,-180.74 3686.4,-187.74"/>
+<path fill="none" stroke="#63b8ff" d="M4222.58,-184.24C3756.97,-182.32 933.77,-169.5 554.5,-140 539.23,-138.81 522.71,-136.73 507.7,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.8,-187.74 4232.82,-184.28 4222.83,-180.74 4222.8,-187.74"/>
 </a>
 </g>
 </g>
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="Ch02__Rec03__LargeStruct_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 3: Large Structs Passed by Reference.">
-<polygon fill="white" stroke="#666666" points="622,-140 480,-140 480,-110 622,-110 622,-140"/>
-<text text-anchor="start" x="488" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec03</text>
-<text text-anchor="middle" x="551" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_LargeStruct.c</text>
+<g id="a_Node000009"><a xlink:href="Ch02__Bitfields_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with Structs that Contain Bitfields.">
+<polygon fill="white" stroke="#666666" points="723.5,-134.5 563.5,-134.5 563.5,-115.5 723.5,-115.5 723.5,-134.5"/>
+<text text-anchor="middle" x="643.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Bitfields.c</text>
 </a>
 </g>
 </g>
@@ -245,18 +239,18 @@ var sectionId = 'dynsection-1';
 <g id="edge8_Node000002_Node000009" class="edge">
 <title>Node2&#45;&gt;Node9</title>
 <g id="a_edge8_Node000002_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.18,-184.2C3266.81,-182.14 944.82,-169.51 631,-140 628.05,-139.72 625.05,-139.4 622.02,-139.03"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.29,-187.7 3696.31,-184.24 3686.32,-180.7 3686.29,-187.7"/>
+<path fill="none" stroke="#63b8ff" d="M4222.49,-184.25C3769.57,-182.43 1092.64,-170.42 732.5,-140 718.47,-138.82 703.31,-136.73 689.54,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.76,-187.75 4232.78,-184.29 4222.79,-180.75 4222.76,-187.75"/>
 </a>
 </g>
 </g>
 <!-- Node10 -->
 <g id="Node000010" class="node">
 <title>Node10</title>
-<g id="a_Node000010"><a xlink:href="Ch02__Rec04__PackedStructs_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 4: Working with Packed Structs.">
-<polygon fill="white" stroke="#666666" points="782,-140 640,-140 640,-110 782,-110 782,-140"/>
-<text text-anchor="start" x="648" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec04</text>
-<text text-anchor="middle" x="711" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_PackedStructs.c</text>
+<g id="a_Node000010"><a xlink:href="Ch02__ComplexNumbers_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with Complex Numbers.">
+<polygon fill="white" stroke="#666666" points="897,-140 742,-140 742,-110 897,-110 897,-140"/>
+<text text-anchor="start" x="750" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Complex</text>
+<text text-anchor="middle" x="819.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Numbers.c</text>
 </a>
 </g>
 </g>
@@ -264,18 +258,17 @@ var sectionId = 'dynsection-1';
 <g id="edge9_Node000002_Node000010" class="edge">
 <title>Node2&#45;&gt;Node10</title>
 <g id="a_edge9_Node000002_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.31,-184.14C3280.01,-181.82 1087.93,-168.04 791,-140 788.05,-139.72 785.05,-139.39 782.02,-139.03"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.4,-187.64 3696.42,-184.2 3686.44,-180.64 3686.4,-187.64"/>
+<path fill="none" stroke="#63b8ff" d="M4222.56,-184.23C3782.73,-182.29 1247.22,-169.9 905.5,-140 902.79,-139.76 900.03,-139.49 897.25,-139.19"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.85,-187.73 4232.86,-184.27 4222.88,-180.73 4222.85,-187.73"/>
 </a>
 </g>
 </g>
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="Ch02__Rec05__Bitfields_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 5: Working with Structs that Contain Bitfields.">
-<polygon fill="white" stroke="#666666" points="942,-140 800,-140 800,-110 942,-110 942,-140"/>
-<text text-anchor="start" x="808" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec05</text>
-<text text-anchor="middle" x="871" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_Bitfields.c</text>
+<g id="a_Node000011"><a xlink:href="Ch02__Enums_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with Enums.">
+<polygon fill="white" stroke="#666666" points="1068,-134.5 915,-134.5 915,-115.5 1068,-115.5 1068,-134.5"/>
+<text text-anchor="middle" x="991.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Enums.c</text>
 </a>
 </g>
 </g>
@@ -283,18 +276,17 @@ var sectionId = 'dynsection-1';
 <g id="edge10_Node000002_Node000011" class="edge">
 <title>Node2&#45;&gt;Node11</title>
 <g id="a_edge10_Node000002_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.4,-184.08C3293.39,-181.47 1231.05,-166.56 951,-140 948.05,-139.72 945.05,-139.39 942.02,-139.03"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.44,-187.58 3696.46,-184.15 3686.49,-180.58 3686.44,-187.58"/>
+<path fill="none" stroke="#63b8ff" d="M4222.53,-184.18C3795.74,-181.97 1400.98,-168.42 1077.5,-140 1063.94,-138.81 1049.28,-136.72 1035.98,-134.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.81,-187.68 4232.83,-184.23 4222.85,-180.68 4222.81,-187.68"/>
 </a>
 </g>
 </g>
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="Ch02__Rec06__Unions_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 6: Working with Unions.">
-<polygon fill="white" stroke="#666666" points="1102,-140 960,-140 960,-110 1102,-110 1102,-140"/>
-<text text-anchor="start" x="968" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec06</text>
-<text text-anchor="middle" x="1031" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_Unions.c</text>
+<g id="a_Node000012"><a xlink:href="Ch02__LargeStruct_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Large Structs Passed by Reference.">
+<polygon fill="white" stroke="#666666" points="1262.5,-134.5 1086.5,-134.5 1086.5,-115.5 1262.5,-115.5 1262.5,-134.5"/>
+<text text-anchor="middle" x="1174.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_LargeStruct.c</text>
 </a>
 </g>
 </g>
@@ -302,18 +294,17 @@ var sectionId = 'dynsection-1';
 <g id="edge11_Node000002_Node000012" class="edge">
 <title>Node2&#45;&gt;Node12</title>
 <g id="a_edge11_Node000002_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.21,-184.78C3332.66,-186.12 1633.34,-189.8 1111,-140 1108.05,-139.72 1105.05,-139.39 1102.02,-139.02"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.28,-188.28 3696.27,-184.74 3686.26,-181.28 3686.28,-188.28"/>
+<path fill="none" stroke="#63b8ff" d="M4222.95,-184.68C3841.06,-185.57 1873.85,-187.71 1271.5,-140 1256.23,-138.79 1239.71,-136.7 1224.71,-134.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4223,-188.18 4233,-184.65 4222.99,-181.18 4223,-188.18"/>
 </a>
 </g>
 </g>
 <!-- Node13 -->
 <g id="Node000013" class="node">
 <title>Node13</title>
-<g id="a_Node000013"><a xlink:href="Ch02__Rec07__ArrayDecay_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 7: Working with Fixed&#45;Size Arrays.">
-<polygon fill="white" stroke="#666666" points="1262,-140 1120,-140 1120,-110 1262,-110 1262,-140"/>
-<text text-anchor="start" x="1128" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec07</text>
-<text text-anchor="middle" x="1191" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ArrayDecay.c</text>
+<g id="a_Node000013"><a xlink:href="Ch02__PackedStructs_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with Packed Structs.">
+<polygon fill="white" stroke="#666666" points="1468.5,-134.5 1280.5,-134.5 1280.5,-115.5 1468.5,-115.5 1468.5,-134.5"/>
+<text text-anchor="middle" x="1374.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_PackedStructs.c</text>
 </a>
 </g>
 </g>
@@ -321,18 +312,17 @@ var sectionId = 'dynsection-1';
 <g id="edge12_Node000002_Node000013" class="edge">
 <title>Node2&#45;&gt;Node13</title>
 <g id="a_edge12_Node000002_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.08,-184.7C3345.24,-185.55 1759.7,-186.86 1271,-140 1268.05,-139.72 1265.05,-139.39 1262.02,-139.02"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.28,-188.2 3696.27,-184.67 3686.26,-181.2 3686.28,-188.2"/>
+<path fill="none" stroke="#63b8ff" d="M4222.75,-184.53C3856.04,-184.51 2036.49,-182.26 1477.5,-140 1461.39,-138.78 1443.96,-136.7 1428.1,-134.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.92,-188.03 4232.92,-184.53 4222.92,-181.03 4222.92,-188.03"/>
 </a>
 </g>
 </g>
 <!-- Node14 -->
 <g id="Node000014" class="node">
 <title>Node14</title>
-<g id="a_Node000014"><a xlink:href="Ch02__Rec08__AdvancedRegistry_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 8: Advanced Named Types (Recursive &amp; Forward&#45;Declared)">
-<polygon fill="white" stroke="#666666" points="1422,-140 1280,-140 1280,-110 1422,-110 1422,-140"/>
-<text text-anchor="start" x="1288" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec08</text>
-<text text-anchor="middle" x="1351" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_AdvancedRegistry.c</text>
+<g id="a_Node000014"><a xlink:href="Ch02__ReturnStruct_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Receiving a Struct from a Function.">
+<polygon fill="white" stroke="#666666" points="1668,-134.5 1487,-134.5 1487,-115.5 1668,-115.5 1668,-134.5"/>
+<text text-anchor="middle" x="1577.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_ReturnStruct.c</text>
 </a>
 </g>
 </g>
@@ -340,18 +330,18 @@ var sectionId = 'dynsection-1';
 <g id="edge13_Node000002_Node000014" class="edge">
 <title>Node2&#45;&gt;Node14</title>
 <g id="a_edge13_Node000002_Node000014"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.1,-184.61C3358.71,-184.94 1886.19,-183.93 1431,-140 1428.05,-139.72 1425.05,-139.38 1422.02,-139.01"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.36,-188.11 3696.36,-184.6 3686.35,-181.11 3686.36,-188.11"/>
+<path fill="none" stroke="#63b8ff" d="M4222.62,-184.48C3871.27,-184.22 2193.43,-180.8 1676.5,-140 1661.01,-138.78 1644.25,-136.7 1629.01,-134.51"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.86,-187.98 4232.86,-184.49 4222.87,-180.98 4222.86,-187.98"/>
 </a>
 </g>
 </g>
 <!-- Node15 -->
 <g id="Node000015" class="node">
 <title>Node15</title>
-<g id="a_Node000015"><a xlink:href="Ch02__Rec09__ComplexNumbers_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 9: Working with Complex Numbers.">
-<polygon fill="white" stroke="#666666" points="1582,-140 1440,-140 1440,-110 1582,-110 1582,-140"/>
-<text text-anchor="start" x="1448" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec09</text>
-<text text-anchor="middle" x="1511" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ComplexNumbers.c</text>
+<g id="a_Node000015"><a xlink:href="Ch02__SIMD__AVX_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with SIMD Vectors (x86&#45;64)">
+<polygon fill="white" stroke="#666666" points="1823,-140 1686,-140 1686,-110 1823,-110 1823,-140"/>
+<text text-anchor="start" x="1694" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_SIMD</text>
+<text text-anchor="middle" x="1754.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_AVX.c</text>
 </a>
 </g>
 </g>
@@ -359,18 +349,18 @@ var sectionId = 'dynsection-1';
 <g id="edge14_Node000002_Node000015" class="edge">
 <title>Node2&#45;&gt;Node15</title>
 <g id="a_edge14_Node000002_Node000015"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.07,-184.5C3372.49,-184.29 2012.73,-181 1591,-140 1588.05,-139.71 1585.05,-139.38 1582.02,-139.01"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.34,-188 3696.34,-184.51 3686.35,-181 3686.34,-188"/>
+<path fill="none" stroke="#63b8ff" d="M4222.65,-184.75C3883.93,-185.81 2315.05,-188.02 1831.5,-140 1828.8,-139.73 1826.04,-139.42 1823.27,-139.07"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.79,-188.24 4232.78,-184.71 4222.77,-181.24 4222.79,-188.24"/>
 </a>
 </g>
 </g>
 <!-- Node16 -->
 <g id="Node000016" class="node">
 <title>Node16</title>
-<g id="a_Node000016"><a xlink:href="Ch02__Rec10__SIMD__AVX_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 10: Working with SIMD Vectors (x86&#45;64)">
-<polygon fill="white" stroke="#666666" points="1742,-140 1600,-140 1600,-110 1742,-110 1742,-140"/>
-<text text-anchor="start" x="1608" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec10</text>
-<text text-anchor="middle" x="1671" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SIMD_AVX.c</text>
+<g id="a_Node000016"><a xlink:href="Ch02__SIMD__NEON_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with SIMD Vectors (AArch64 NEON)">
+<polygon fill="white" stroke="#666666" points="1978,-140 1841,-140 1841,-110 1978,-110 1978,-140"/>
+<text text-anchor="start" x="1849" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_SIMD</text>
+<text text-anchor="middle" x="1909.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_NEON.c</text>
 </a>
 </g>
 </g>
@@ -378,18 +368,18 @@ var sectionId = 'dynsection-1';
 <g id="edge15_Node000002_Node000016" class="edge">
 <title>Node2&#45;&gt;Node16</title>
 <g id="a_edge15_Node000002_Node000016"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.08,-184.37C3386.91,-183.6 2139.36,-178.08 1751,-140 1748.05,-139.71 1745.05,-139.38 1742.02,-139"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.31,-187.88 3696.31,-184.4 3686.32,-180.88 3686.31,-187.88"/>
+<path fill="none" stroke="#63b8ff" d="M4222.6,-184.65C3896.8,-185.2 2437.57,-185.07 1986.5,-140 1983.8,-139.73 1981.04,-139.42 1978.27,-139.07"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.81,-188.15 4232.81,-184.63 4222.8,-181.15 4222.81,-188.15"/>
 </a>
 </g>
 </g>
 <!-- Node17 -->
 <g id="Node000017" class="node">
 <title>Node17</title>
-<g id="a_Node000017"><a xlink:href="Ch02__Rec10__SIMD__NEON_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 10: Working with SIMD Vectors (AArch64 NEON)">
-<polygon fill="white" stroke="#666666" points="1902,-140 1760,-140 1760,-110 1902,-110 1902,-140"/>
-<text text-anchor="start" x="1768" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec10</text>
-<text text-anchor="middle" x="1831" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SIMD_NEON.c</text>
+<g id="a_Node000017"><a xlink:href="Ch02__SIMD__SVE_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with SIMD Vectors (AArch64 SVE)">
+<polygon fill="white" stroke="#666666" points="2133,-140 1996,-140 1996,-110 2133,-110 2133,-140"/>
+<text text-anchor="start" x="2004" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_SIMD</text>
+<text text-anchor="middle" x="2064.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SVE.c</text>
 </a>
 </g>
 </g>
@@ -397,18 +387,18 @@ var sectionId = 'dynsection-1';
 <g id="edge16_Node000002_Node000017" class="edge">
 <title>Node2&#45;&gt;Node17</title>
 <g id="a_edge16_Node000002_Node000017"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.23,-184.23C3402.32,-182.84 2266.13,-175.17 1911,-140 1908.05,-139.71 1905.05,-139.37 1902.02,-139"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.35,-187.73 3696.36,-184.28 3686.38,-180.73 3686.35,-187.73"/>
+<path fill="none" stroke="#63b8ff" d="M4222.47,-184.55C3909.93,-184.56 2560.13,-182.13 2141.5,-140 2138.8,-139.73 2136.04,-139.41 2133.27,-139.06"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.72,-188.05 4232.72,-184.55 4222.72,-181.05 4222.72,-188.05"/>
 </a>
 </g>
 </g>
 <!-- Node18 -->
 <g id="Node000018" class="node">
 <title>Node18</title>
-<g id="a_Node000018"><a xlink:href="Ch02__Rec10__SIMD__SVE_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 10: Working with SIMD Vectors (AArch64 SVE)">
-<polygon fill="white" stroke="#666666" points="2062,-140 1920,-140 1920,-110 2062,-110 2062,-140"/>
-<text text-anchor="start" x="1928" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec10</text>
-<text text-anchor="middle" x="1991" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SIMD_SVE.c</text>
+<g id="a_Node000018"><a xlink:href="Ch02__StructByValue_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Small Structs Passed by Value.">
+<polygon fill="white" stroke="#666666" points="2304,-140 2151,-140 2151,-110 2304,-110 2304,-140"/>
+<text text-anchor="start" x="2159" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_StructBy</text>
+<text text-anchor="middle" x="2227.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Value.c</text>
 </a>
 </g>
 </g>
@@ -416,18 +406,17 @@ var sectionId = 'dynsection-1';
 <g id="edge17_Node000002_Node000018" class="edge">
 <title>Node2&#45;&gt;Node18</title>
 <g id="a_edge17_Node000002_Node000018"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3685.8,-184.05C3416.87,-182.01 2392.76,-172.24 2071,-140 2068.05,-139.7 2065.05,-139.36 2062.03,-138.99"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.15,-187.56 3696.17,-184.13 3686.2,-180.56 3686.15,-187.56"/>
+<path fill="none" stroke="#63b8ff" d="M4222.45,-184.25C3925.49,-182.92 2696.6,-175.33 2313.5,-140 2310.49,-139.72 2307.42,-139.4 2304.33,-139.05"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.6,-187.75 4232.62,-184.29 4222.63,-180.75 4222.6,-187.75"/>
 </a>
 </g>
 </g>
 <!-- Node19 -->
 <g id="Node000019" class="node">
 <title>Node19</title>
-<g id="a_Node000019"><a xlink:href="Ch02__Rec11__Enums_8c.html" target="_top" xlink:title="Cookbook Chapter 2, Recipe 11: Working with Enums.">
-<polygon fill="white" stroke="#666666" points="2222,-140 2080,-140 2080,-110 2222,-110 2222,-140"/>
-<text text-anchor="start" x="2088" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Rec11</text>
-<text text-anchor="middle" x="2151" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_Enums.c</text>
+<g id="a_Node000019"><a xlink:href="Ch02__Unions_8c.html" target="_top" xlink:title="Cookbook Chapter 2: Working with Unions.">
+<polygon fill="white" stroke="#666666" points="2476.5,-134.5 2322.5,-134.5 2322.5,-115.5 2476.5,-115.5 2476.5,-134.5"/>
+<text text-anchor="middle" x="2399.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch02_Unions.c</text>
 </a>
 </g>
 </g>
@@ -435,18 +424,17 @@ var sectionId = 'dynsection-1';
 <g id="edge18_Node000002_Node000019" class="edge">
 <title>Node2&#45;&gt;Node19</title>
 <g id="a_edge18_Node000002_Node000019"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.25,-183.85C3434.41,-181.12 2519.85,-169.35 2231,-140 2228.05,-139.7 2225.05,-139.36 2222.03,-138.98"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.3,-187.35 3696.34,-183.96 3686.38,-180.35 3686.3,-187.35"/>
+<path fill="none" stroke="#63b8ff" d="M4222.69,-184.09C3942.38,-182.12 2832.91,-172.41 2485.5,-140 2472.1,-138.75 2457.62,-136.68 2444.43,-134.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.67,-187.59 4232.7,-184.16 4222.72,-180.59 4222.67,-187.59"/>
 </a>
 </g>
 </g>
 <!-- Node20 -->
 <g id="Node000020" class="node">
 <title>Node20</title>
-<g id="a_Node000020"><a xlink:href="Ch03__Rec01__QsortCallback_8c.html" target="_top" xlink:title="Cookbook Chapter 3, Recipe 1: Creating a Type&#45;Safe Callback for qsort">
-<polygon fill="white" stroke="#666666" points="2382,-140 2240,-140 2240,-110 2382,-110 2382,-140"/>
-<text text-anchor="start" x="2248" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch03_Rec01</text>
-<text text-anchor="middle" x="2311" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_QsortCallback.c</text>
+<g id="a_Node000020"><a xlink:href="Ch03__QsortCallback_8c.html" target="_top" xlink:title="Cookbook Chapter 3: Creating a Type&#45;Safe Callback for qsort">
+<polygon fill="white" stroke="#666666" points="2682.5,-134.5 2494.5,-134.5 2494.5,-115.5 2682.5,-115.5 2682.5,-134.5"/>
+<text text-anchor="middle" x="2588.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch03_QsortCallback.c</text>
 </a>
 </g>
 </g>
@@ -454,18 +442,18 @@ var sectionId = 'dynsection-1';
 <g id="edge19_Node000002_Node000020" class="edge">
 <title>Node2&#45;&gt;Node20</title>
 <g id="a_edge19_Node000002_Node000020"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.16,-183.59C3451.5,-180.1 2646.86,-166.44 2391,-140 2388.05,-139.7 2385.05,-139.35 2382.03,-138.96"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.2,-187.09 3696.25,-183.74 3686.3,-180.09 3686.2,-187.09"/>
+<path fill="none" stroke="#63b8ff" d="M4222.57,-183.62C3962.65,-179.95 2996.5,-164.91 2691.5,-140 2675.67,-138.71 2658.55,-136.65 2642.9,-134.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.56,-187.12 4232.61,-183.76 4222.66,-180.12 4222.56,-187.12"/>
 </a>
 </g>
 </g>
 <!-- Node21 -->
 <g id="Node000021" class="node">
 <title>Node21</title>
-<g id="a_Node000021"><a xlink:href="Ch03__Rec02__StatefulCallback_8c.html" target="_top" xlink:title="Cookbook Chapter 3, Recipe 2: Creating a Stateful Callback.">
-<polygon fill="white" stroke="#666666" points="2542,-140 2400,-140 2400,-110 2542,-110 2542,-140"/>
-<text text-anchor="start" x="2408" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch03_Rec02</text>
-<text text-anchor="middle" x="2471" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_StatefulCallback.c</text>
+<g id="a_Node000021"><a xlink:href="Ch03__StatefulCallback_8c.html" target="_top" xlink:title="Cookbook Chapter 3: Creating a Stateful Callback.">
+<polygon fill="white" stroke="#666666" points="2850.5,-140 2700.5,-140 2700.5,-110 2850.5,-110 2850.5,-140"/>
+<text text-anchor="start" x="2708.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch03_Stateful</text>
+<text text-anchor="middle" x="2775.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Callback.c</text>
 </a>
 </g>
 </g>
@@ -473,18 +461,18 @@ var sectionId = 'dynsection-1';
 <g id="edge20_Node000002_Node000021" class="edge">
 <title>Node2&#45;&gt;Node21</title>
 <g id="a_edge20_Node000002_Node000021"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.28,-185.19C3505.95,-186.45 2982.67,-185.56 2551,-140 2548.06,-139.69 2545.06,-139.34 2542.03,-138.95"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.42,-188.69 3696.39,-185.11 3686.37,-181.69 3686.42,-188.69"/>
+<path fill="none" stroke="#63b8ff" d="M4222.69,-183.64C3980.6,-180.23 3129.46,-166.58 2859.5,-140 2856.56,-139.71 2853.56,-139.38 2850.54,-139.02"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.69,-187.14 4232.74,-183.78 4222.79,-180.14 4222.69,-187.14"/>
 </a>
 </g>
 </g>
 <!-- Node22 -->
 <g id="Node000022" class="node">
 <title>Node22</title>
-<g id="a_Node000022"><a xlink:href="Ch04__Rec01__VariadicPrintf_8c.html" target="_top" xlink:title="Cookbook Chapter 4, Recipe 1: Calling Variadic Functions like printf">
-<polygon fill="white" stroke="#666666" points="2702,-140 2560,-140 2560,-110 2702,-110 2702,-140"/>
-<text text-anchor="start" x="2568" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Rec01</text>
-<text text-anchor="middle" x="2631" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_VariadicPrintf.c</text>
+<g id="a_Node000022"><a xlink:href="Ch04__CallbackAsArg_8c.html" target="_top" xlink:title="Cookbook Chapter 4: Receiving and Calling a Function Pointer.">
+<polygon fill="white" stroke="#666666" points="3022.5,-140 2868.5,-140 2868.5,-110 3022.5,-110 3022.5,-140"/>
+<text text-anchor="start" x="2876.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Callback</text>
+<text text-anchor="middle" x="2945.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">AsArg.c</text>
 </a>
 </g>
 </g>
@@ -492,18 +480,17 @@ var sectionId = 'dynsection-1';
 <g id="edge21_Node000002_Node000022" class="edge">
 <title>Node2&#45;&gt;Node22</title>
 <g id="a_edge21_Node000002_Node000022"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.01,-184.66C3521.99,-184.42 3078.22,-179.82 2711,-140 2708.06,-139.68 2705.06,-139.32 2702.03,-138.93"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.4,-188.16 3696.4,-184.67 3686.4,-181.16 3686.4,-188.16"/>
+<path fill="none" stroke="#63b8ff" d="M4222.71,-185.08C4036.83,-186.11 3485.95,-184.86 3031.5,-140 3028.64,-139.72 3025.73,-139.4 3022.79,-139.05"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.88,-188.58 4232.86,-185.02 4222.84,-181.58 4222.88,-188.58"/>
 </a>
 </g>
 </g>
 <!-- Node23 -->
 <g id="Node000023" class="node">
 <title>Node23</title>
-<g id="a_Node000023"><a xlink:href="Ch04__Rec02__CallbackAsArg_8c.html" target="_top" xlink:title="Cookbook Chapter 4, Recipe 2: Receiving and Calling a Function Pointer.">
-<polygon fill="white" stroke="#666666" points="2862,-140 2720,-140 2720,-110 2862,-110 2862,-140"/>
-<text text-anchor="start" x="2728" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Rec02</text>
-<text text-anchor="middle" x="2791" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_CallbackAsArg.c</text>
+<g id="a_Node000023"><a xlink:href="Ch04__LongDouble_8c.html" target="_top" xlink:title="Cookbook Chapter 4: Handling long double">
+<polygon fill="white" stroke="#666666" points="3218.5,-134.5 3040.5,-134.5 3040.5,-115.5 3218.5,-115.5 3218.5,-134.5"/>
+<text text-anchor="middle" x="3129.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_LongDouble.c</text>
 </a>
 </g>
 </g>
@@ -511,18 +498,17 @@ var sectionId = 'dynsection-1';
 <g id="edge22_Node000002_Node000023" class="edge">
 <title>Node2&#45;&gt;Node23</title>
 <g id="a_edge22_Node000002_Node000023"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.37,-183.94C3540.5,-182.09 3174.77,-174.13 2871,-140 2868.06,-139.67 2865.06,-139.3 2862.03,-138.9"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.44,-187.44 3696.49,-184.07 3686.53,-180.44 3686.44,-187.44"/>
+<path fill="none" stroke="#63b8ff" d="M4222.72,-184.03C4056.85,-182.34 3603.42,-174.65 3227.5,-140 3212.78,-138.64 3196.89,-136.62 3182.28,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.72,-187.53 4232.76,-184.13 4222.79,-180.53 4222.72,-187.53"/>
 </a>
 </g>
 </g>
 <!-- Node24 -->
 <g id="Node000024" class="node">
 <title>Node24</title>
-<g id="a_Node000024"><a xlink:href="Ch04__Rec03__VTableCStyle_8c.html" target="_top" xlink:title="Cookbook Chapter 4, Recipe 3: Calling a Function Pointer from a Struct.">
-<polygon fill="white" stroke="#666666" points="3022,-140 2880,-140 2880,-110 3022,-110 3022,-140"/>
-<text text-anchor="start" x="2888" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Rec03</text>
-<text text-anchor="middle" x="2951" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_VTableCStyle.c</text>
+<g id="a_Node000024"><a xlink:href="Ch04__Reentrancy_8c.html" target="_top" xlink:title="Cookbook Chapter 4: Proving Reentrancy with Nested FFI Calls.">
+<polygon fill="white" stroke="#666666" points="3410.5,-134.5 3236.5,-134.5 3236.5,-115.5 3410.5,-115.5 3410.5,-134.5"/>
+<text text-anchor="middle" x="3323.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Reentrancy.c</text>
 </a>
 </g>
 </g>
@@ -530,18 +516,17 @@ var sectionId = 'dynsection-1';
 <g id="edge23_Node000002_Node000024" class="edge">
 <title>Node2&#45;&gt;Node24</title>
 <g id="a_edge23_Node000002_Node000024"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3685.88,-182.91C3559.32,-179.27 3271.44,-168.38 3031,-140 3028.06,-139.65 3025.06,-139.27 3022.04,-138.86"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.07,-186.41 3696.17,-183.2 3686.27,-179.42 3686.07,-186.41"/>
+<path fill="none" stroke="#63b8ff" d="M4222.75,-183.25C4078.3,-180.01 3718.85,-169.44 3419.5,-140 3405.25,-138.6 3389.88,-136.58 3375.71,-134.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.71,-186.75 4232.78,-183.47 4222.86,-179.75 4222.71,-186.75"/>
 </a>
 </g>
 </g>
 <!-- Node25 -->
 <g id="Node000025" class="node">
 <title>Node25</title>
-<g id="a_Node000025"><a xlink:href="Ch04__Rec04__LongDouble_8c.html" target="_top" xlink:title="Cookbook Chapter 4, Recipe 4: Handling long double">
-<polygon fill="white" stroke="#666666" points="3182,-140 3040,-140 3040,-110 3182,-110 3182,-140"/>
-<text text-anchor="start" x="3048" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Rec04</text>
-<text text-anchor="middle" x="3111" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_LongDouble.c</text>
+<g id="a_Node000025"><a xlink:href="Ch04__ThreadSafety_8c.html" target="_top" xlink:title="Cookbook Chapter 4: Proving Thread Safety.">
+<polygon fill="white" stroke="#666666" points="3612.5,-134.5 3428.5,-134.5 3428.5,-115.5 3612.5,-115.5 3612.5,-134.5"/>
+<text text-anchor="middle" x="3520.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_ThreadSafety.c</text>
 </a>
 </g>
 </g>
@@ -549,18 +534,17 @@ var sectionId = 'dynsection-1';
 <g id="edge24_Node000002_Node000025" class="edge">
 <title>Node2&#45;&gt;Node25</title>
 <g id="a_edge24_Node000002_Node000025"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3686.3,-181.34C3581.82,-175.79 3369.61,-162.67 3191,-140 3188.06,-139.63 3185.07,-139.22 3182.05,-138.79"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3686.2,-184.84 3696.37,-181.87 3686.57,-177.85 3686.2,-184.84"/>
+<path fill="none" stroke="#63b8ff" d="M4222.5,-181.69C4103.2,-176.2 3841.33,-162.55 3621.5,-140 3606.97,-138.51 3591.32,-136.53 3576.77,-134.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.42,-185.19 4232.57,-182.15 4222.74,-178.2 4222.42,-185.19"/>
 </a>
 </g>
 </g>
 <!-- Node26 -->
 <g id="Node000026" class="node">
 <title>Node26</title>
-<g id="a_Node000026"><a xlink:href="Ch04__Rec05__Reentrancy_8c.html" target="_top" xlink:title="Cookbook Chapter 4, Recipe 5: Proving Reentrancy with Nested FFI Calls.">
-<polygon fill="white" stroke="#666666" points="3342,-140 3200,-140 3200,-110 3342,-110 3342,-140"/>
-<text text-anchor="start" x="3208" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Rec05</text>
-<text text-anchor="middle" x="3271" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_Reentrancy.c</text>
+<g id="a_Node000026"><a xlink:href="Ch04__VTableCStyle_8c.html" target="_top" xlink:title="Cookbook Chapter 4: Calling a Function Pointer from a Struct.">
+<polygon fill="white" stroke="#666666" points="3814.5,-134.5 3630.5,-134.5 3630.5,-115.5 3814.5,-115.5 3814.5,-134.5"/>
+<text text-anchor="middle" x="3722.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_VTableCStyle.c</text>
 </a>
 </g>
 </g>
@@ -568,18 +552,18 @@ var sectionId = 'dynsection-1';
 <g id="edge25_Node000002_Node000026" class="edge">
 <title>Node2&#45;&gt;Node26</title>
 <g id="a_edge25_Node000002_Node000026"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3685.87,-178.52C3606.58,-170.94 3468.67,-156.82 3351,-140 3348.07,-139.58 3345.08,-139.14 3342.06,-138.67"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3685.91,-182.03 3696.19,-179.5 3686.57,-175.07 3685.91,-182.03"/>
+<path fill="none" stroke="#63b8ff" d="M4222.75,-179.16C4132.98,-171.55 3965.71,-156.67 3823.5,-140 3809.7,-138.38 3794.86,-136.44 3780.93,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.52,-182.65 4232.78,-180 4223.11,-175.67 4222.52,-182.65"/>
 </a>
 </g>
 </g>
 <!-- Node27 -->
 <g id="Node000027" class="node">
 <title>Node27</title>
-<g id="a_Node000027"><a xlink:href="Ch04__Rec06__ThreadSafety_8c.html" target="_top" xlink:title="Cookbook Chapter 4, Recipe 6: Proving Thread Safety.">
-<polygon fill="white" stroke="#666666" points="3502,-140 3360,-140 3360,-110 3502,-110 3502,-140"/>
-<text text-anchor="start" x="3368" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Rec06</text>
-<text text-anchor="middle" x="3431" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ThreadSafety.c</text>
+<g id="a_Node000027"><a xlink:href="Ch04__VariadicPrintf_8c.html" target="_top" xlink:title="Cookbook Chapter 4: Calling Variadic Functions like printf">
+<polygon fill="white" stroke="#666666" points="3984,-140 3833,-140 3833,-110 3984,-110 3984,-140"/>
+<text text-anchor="start" x="3841" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch04_Variadic</text>
+<text text-anchor="middle" x="3908.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Printf.c</text>
 </a>
 </g>
 </g>
@@ -587,18 +571,18 @@ var sectionId = 'dynsection-1';
 <g id="edge26_Node000002_Node000027" class="edge">
 <title>Node2&#45;&gt;Node27</title>
 <g id="a_edge26_Node000002_Node000027"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3694.45,-174.16C3640.84,-164.36 3560.08,-149.6 3502.12,-139"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3694,-177.64 3704.47,-175.99 3695.26,-170.75 3694,-177.64"/>
+<path fill="none" stroke="#63b8ff" d="M4222.77,-175.03C4162.97,-166.21 4071.68,-152.57 3992.5,-140 3989.73,-139.56 3986.9,-139.11 3984.05,-138.65"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4222.42,-178.51 4232.82,-176.51 4223.44,-171.59 4222.42,-178.51"/>
 </a>
 </g>
 </g>
 <!-- Node28 -->
 <g id="Node000028" class="node">
 <title>Node28</title>
-<g id="a_Node000028"><a xlink:href="Ch05__Rec01__CppMangledNames_8c.html" target="_top" xlink:title="Cookbook Chapter 5, Recipe 1: Calling C++ Mangled Names.">
-<polygon fill="white" stroke="#666666" points="3662,-140 3520,-140 3520,-110 3662,-110 3662,-140"/>
-<text text-anchor="start" x="3528" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_Rec01</text>
-<text text-anchor="middle" x="3591" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_CppMangledNames.c</text>
+<g id="a_Node000028"><a xlink:href="Ch05__CppMangledNames_8c.html" target="_top" xlink:title="Cookbook Chapter 5: Calling C++ Mangled Names.">
+<polygon fill="white" stroke="#666666" points="4175,-140 4002,-140 4002,-110 4175,-110 4175,-140"/>
+<text text-anchor="start" x="4010" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_CppMangled</text>
+<text text-anchor="middle" x="4088.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Names.c</text>
 </a>
 </g>
 </g>
@@ -606,18 +590,17 @@ var sectionId = 'dynsection-1';
 <g id="edge27_Node000002_Node000028" class="edge">
 <title>Node2&#45;&gt;Node28</title>
 <g id="a_edge27_Node000002_Node000028"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3718.06,-172.46C3692.33,-163.05 3656.52,-149.95 3629.47,-140.06"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3717.14,-175.85 3727.73,-175.99 3719.54,-169.27 3717.14,-175.85"/>
+<path fill="none" stroke="#63b8ff" d="M4248.64,-173.08C4216.51,-163.63 4170.73,-150.17 4136.34,-140.06"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4247.98,-176.53 4258.56,-175.99 4249.96,-169.82 4247.98,-176.53"/>
 </a>
 </g>
 </g>
 <!-- Node29 -->
 <g id="Node000029" class="node">
 <title>Node29</title>
-<g id="a_Node000029"><a xlink:href="Ch05__Rec02__CppTemplates_8c.html" target="_top" xlink:title="Cookbook Chapter 5, Recipe 2: Interfacing with C++ Templates.">
-<polygon fill="white" stroke="#666666" points="3822,-140 3680,-140 3680,-110 3822,-110 3822,-140"/>
-<text text-anchor="start" x="3688" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_Rec02</text>
-<text text-anchor="middle" x="3751" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_CppTemplates.c</text>
+<g id="a_Node000029"><a xlink:href="Ch05__CppTemplates_8c.html" target="_top" xlink:title="Cookbook Chapter 5: Interfacing with C++ Templates.">
+<polygon fill="white" stroke="#666666" points="4382,-134.5 4193,-134.5 4193,-115.5 4382,-115.5 4382,-134.5"/>
+<text text-anchor="middle" x="4287.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_CppTemplates.c</text>
 </a>
 </g>
 </g>
@@ -625,18 +608,18 @@ var sectionId = 'dynsection-1';
 <g id="edge28_Node000002_Node000029" class="edge">
 <title>Node2&#45;&gt;Node29</title>
 <g id="a_edge28_Node000002_Node000029"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3751,-165.65C3751,-157.36 3751,-147.78 3751,-140.11"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3747.5,-165.87 3751,-175.87 3754.5,-165.87 3747.5,-165.87"/>
+<path fill="none" stroke="#63b8ff" d="M4287.5,-165.66C4287.5,-155.24 4287.5,-142.8 4287.5,-134.67"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4284,-165.87 4287.5,-175.87 4291,-165.87 4284,-165.87"/>
 </a>
 </g>
 </g>
 <!-- Node30 -->
 <g id="Node000030" class="node">
 <title>Node30</title>
-<g id="a_Node000030"><a xlink:href="Ch05__Rec03__SemanticStrings_8c.html" target="_top" xlink:title="Cookbook Chapter 5, Recipe 3: Handling Strings and Semantic Types.">
-<polygon fill="white" stroke="#666666" points="3982,-140 3840,-140 3840,-110 3982,-110 3982,-140"/>
-<text text-anchor="start" x="3848" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_Rec03</text>
-<text text-anchor="middle" x="3911" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SemanticStrings.c</text>
+<g id="a_Node000030"><a xlink:href="Ch05__CppVirtualFunctions_8c.html" target="_top" xlink:title="Cookbook Chapter 5: Calling C++ Virtual Functions.">
+<polygon fill="white" stroke="#666666" points="4563,-140 4400,-140 4400,-110 4563,-110 4563,-140"/>
+<text text-anchor="start" x="4408" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_CppVirtual</text>
+<text text-anchor="middle" x="4481.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Functions.c</text>
 </a>
 </g>
 </g>
@@ -644,18 +627,18 @@ var sectionId = 'dynsection-1';
 <g id="edge29_Node000002_Node000030" class="edge">
 <title>Node2&#45;&gt;Node30</title>
 <g id="a_edge29_Node000002_Node000030"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3783.94,-172.46C3809.67,-163.05 3845.48,-149.95 3872.53,-140.06"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3782.46,-169.27 3774.27,-175.99 3784.86,-175.85 3782.46,-169.27"/>
+<path fill="none" stroke="#63b8ff" d="M4325.38,-173.08C4356.71,-163.63 4401.34,-150.17 4434.86,-140.06"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4324.27,-169.76 4315.71,-175.99 4326.29,-176.46 4324.27,-169.76"/>
 </a>
 </g>
 </g>
 <!-- Node31 -->
 <g id="Node000031" class="node">
 <title>Node31</title>
-<g id="a_Node000031"><a xlink:href="Ch05__Rec04__CppVirtualFunctions_8c.html" target="_top" xlink:title="Cookbook Chapter 5, Recipe 4: Calling C++ Virtual Functions.">
-<polygon fill="white" stroke="#666666" points="4142,-140 4000,-140 4000,-110 4142,-110 4142,-140"/>
-<text text-anchor="start" x="4008" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_Rec04</text>
-<text text-anchor="middle" x="4071" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_CppVirtualFunctions.c</text>
+<g id="a_Node000031"><a xlink:href="Ch05__SemanticStrings_8c.html" target="_top" xlink:title="Cookbook Chapter 5: Handling Strings and Semantic Types.">
+<polygon fill="white" stroke="#666666" points="4739.5,-140 4581.5,-140 4581.5,-110 4739.5,-110 4739.5,-140"/>
+<text text-anchor="start" x="4589.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch05_Semantic</text>
+<text text-anchor="middle" x="4660.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Strings.c</text>
 </a>
 </g>
 </g>
@@ -663,18 +646,17 @@ var sectionId = 'dynsection-1';
 <g id="edge30_Node000002_Node000031" class="edge">
 <title>Node2&#45;&gt;Node31</title>
 <g id="a_edge30_Node000002_Node000031"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3807.55,-174.16C3861.16,-164.36 3941.92,-149.6 3999.88,-139"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3806.74,-170.75 3797.53,-175.99 3808,-177.64 3806.74,-170.75"/>
+<path fill="none" stroke="#63b8ff" d="M4351.99,-174.41C4409.56,-165.39 4496.15,-151.83 4571.5,-140 4574.74,-139.49 4578.06,-138.97 4581.4,-138.44"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4351.28,-170.97 4341.95,-175.98 4352.37,-177.89 4351.28,-170.97"/>
 </a>
 </g>
 </g>
 <!-- Node32 -->
 <g id="Node000032" class="node">
 <title>Node32</title>
-<g id="a_Node000032"><a xlink:href="Ch06__Rec01__SystemLibraries_8c.html" target="_top" xlink:title="Cookbook Chapter 6, Recipe 1: Calling Native System Libraries.">
-<polygon fill="white" stroke="#666666" points="4302,-140 4160,-140 4160,-110 4302,-110 4302,-140"/>
-<text text-anchor="start" x="4168" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch06_Rec01</text>
-<text text-anchor="middle" x="4231" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_SystemLibraries.c</text>
+<g id="a_Node000032"><a xlink:href="Ch06__GlobalVariables_8c.html" target="_top" xlink:title="Cookbook Chapter 6: Reading and Writing Global Variables.">
+<polygon fill="white" stroke="#666666" points="4955,-134.5 4758,-134.5 4758,-115.5 4955,-115.5 4955,-134.5"/>
+<text text-anchor="middle" x="4856.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch06_GlobalVariables.c</text>
 </a>
 </g>
 </g>
@@ -682,18 +664,18 @@ var sectionId = 'dynsection-1';
 <g id="edge31_Node000002_Node000032" class="edge">
 <title>Node2&#45;&gt;Node32</title>
 <g id="a_edge31_Node000002_Node000032"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3816.13,-178.52C3895.42,-170.94 4033.33,-156.82 4151,-140 4153.93,-139.58 4156.92,-139.14 4159.94,-138.67"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.43,-175.07 3805.81,-179.5 3816.09,-182.03 3815.43,-175.07"/>
+<path fill="none" stroke="#63b8ff" d="M4352.17,-178.93C4441.42,-171.09 4607.33,-155.96 4748.5,-140 4763.06,-138.35 4778.7,-136.42 4793.44,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4351.86,-175.44 4342.2,-179.8 4352.47,-182.42 4351.86,-175.44"/>
 </a>
 </g>
 </g>
 <!-- Node33 -->
 <g id="Node000033" class="node">
 <title>Node33</title>
-<g id="a_Node000033"><a xlink:href="Ch06__Rec02__GlobalVariables_8c.html" target="_top" xlink:title="Cookbook Chapter 6, Recipe 2: Reading and Writing Global Variables.">
-<polygon fill="white" stroke="#666666" points="4462,-140 4320,-140 4320,-110 4462,-110 4462,-140"/>
-<text text-anchor="start" x="4328" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch06_Rec02</text>
-<text text-anchor="middle" x="4391" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_GlobalVariables.c</text>
+<g id="a_Node000033"><a xlink:href="Ch06__LibraryDependencies_8c.html" target="_top" xlink:title="Cookbook Chapter 6: Handling Library Dependencies.">
+<polygon fill="white" stroke="#666666" points="5119.5,-140 4973.5,-140 4973.5,-110 5119.5,-110 5119.5,-140"/>
+<text text-anchor="start" x="4981.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch06_Library</text>
+<text text-anchor="middle" x="5046.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Dependencies.c</text>
 </a>
 </g>
 </g>
@@ -701,18 +683,17 @@ var sectionId = 'dynsection-1';
 <g id="edge32_Node000002_Node000033" class="edge">
 <title>Node2&#45;&gt;Node33</title>
 <g id="a_edge32_Node000002_Node000033"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.7,-181.34C3920.18,-175.79 4132.39,-162.67 4311,-140 4313.94,-139.63 4316.93,-139.22 4319.95,-138.79"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.43,-177.85 3805.63,-181.87 3815.8,-184.84 3815.43,-177.85"/>
+<path fill="none" stroke="#63b8ff" d="M4352.62,-182.41C4473.4,-178.04 4740.17,-166.12 4963.5,-140 4966.69,-139.63 4969.95,-139.21 4973.24,-138.77"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.31,-178.92 4342.44,-182.77 4352.55,-185.91 4352.31,-178.92"/>
 </a>
 </g>
 </g>
 <!-- Node34 -->
 <g id="Node000034" class="node">
 <title>Node34</title>
-<g id="a_Node000034"><a xlink:href="Ch06__Rec03__LibraryDependencies_8c.html" target="_top" xlink:title="Cookbook Chapter 6, Recipe 3: Handling Library Dependencies.">
-<polygon fill="white" stroke="#666666" points="4622,-140 4480,-140 4480,-110 4622,-110 4622,-140"/>
-<text text-anchor="start" x="4488" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch06_Rec03</text>
-<text text-anchor="middle" x="4551" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_LibraryDependencies.c</text>
+<g id="a_Node000034"><a xlink:href="Ch06__SystemLibraries_8c.html" target="_top" xlink:title="Cookbook Chapter 6: Calling Native System Libraries.">
+<polygon fill="white" stroke="#666666" points="5337,-134.5 5138,-134.5 5138,-115.5 5337,-115.5 5337,-134.5"/>
+<text text-anchor="middle" x="5237.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch06_SystemLibraries.c</text>
 </a>
 </g>
 </g>
@@ -720,18 +701,18 @@ var sectionId = 'dynsection-1';
 <g id="edge33_Node000002_Node000034" class="edge">
 <title>Node2&#45;&gt;Node34</title>
 <g id="a_edge33_Node000002_Node000034"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3816.12,-182.91C3942.68,-179.27 4230.56,-168.38 4471,-140 4473.94,-139.65 4476.94,-139.27 4479.96,-138.86"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.73,-179.42 3805.83,-183.2 3815.93,-186.41 3815.73,-179.42"/>
+<path fill="none" stroke="#63b8ff" d="M4352.43,-182.72C4493.76,-178.49 4839.76,-166.14 5128.5,-140 5144.46,-138.55 5161.68,-136.55 5177.62,-134.51"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.1,-179.23 4342.21,-183.02 4352.31,-186.23 4352.1,-179.23"/>
 </a>
 </g>
 </g>
 <!-- Node35 -->
 <g id="Node000035" class="node">
 <title>Node35</title>
-<g id="a_Node000035"><a xlink:href="Ch07__Rec01__DynamicMarshalling_8c.html" target="_top" xlink:title="Cookbook Chapter 7, Recipe 1: Dynamic Struct Marshalling.">
-<polygon fill="white" stroke="#666666" points="4782,-140 4640,-140 4640,-110 4782,-110 4782,-140"/>
-<text text-anchor="start" x="4648" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Rec01</text>
-<text text-anchor="middle" x="4711" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_DynamicMarshalling.c</text>
+<g id="a_Node000035"><a xlink:href="Ch07__DynamicMarshalling_8c.html" target="_top" xlink:title="Cookbook Chapter 7: Dynamic Struct Marshalling.">
+<polygon fill="white" stroke="#666666" points="5510,-140 5355,-140 5355,-110 5510,-110 5510,-140"/>
+<text text-anchor="start" x="5363" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Dynamic</text>
+<text text-anchor="middle" x="5432.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Marshalling.c</text>
 </a>
 </g>
 </g>
@@ -739,18 +720,18 @@ var sectionId = 'dynsection-1';
 <g id="edge34_Node000002_Node000035" class="edge">
 <title>Node2&#45;&gt;Node35</title>
 <g id="a_edge34_Node000002_Node000035"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.63,-183.94C3961.5,-182.09 4327.23,-174.13 4631,-140 4633.94,-139.67 4636.94,-139.3 4639.97,-138.9"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.47,-180.44 3805.51,-184.07 3815.56,-187.44 3815.47,-180.44"/>
+<path fill="none" stroke="#63b8ff" d="M4352.19,-184.42C4517.84,-183.64 4970.61,-177.92 5345.5,-140 5348.54,-139.69 5351.64,-139.35 5354.77,-138.97"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.16,-180.92 4342.17,-184.46 4352.19,-187.92 4352.16,-180.92"/>
 </a>
 </g>
 </g>
 <!-- Node36 -->
 <g id="Node000036" class="node">
 <title>Node36</title>
-<g id="a_Node000036"><a xlink:href="Ch07__Rec02__DynamicSignatures_8c.html" target="_top" xlink:title="Cookbook Chapter 7, Recipe 2: Building a Signature String at Runtime.">
-<polygon fill="white" stroke="#666666" points="4942,-140 4800,-140 4800,-110 4942,-110 4942,-140"/>
-<text text-anchor="start" x="4808" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Rec02</text>
-<text text-anchor="middle" x="4871" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_DynamicSignatures.c</text>
+<g id="a_Node000036"><a xlink:href="Ch07__DynamicSignatures_8c.html" target="_top" xlink:title="Cookbook Chapter 7: Building a Signature String at Runtime.">
+<polygon fill="white" stroke="#666666" points="5683,-140 5528,-140 5528,-110 5683,-110 5683,-140"/>
+<text text-anchor="start" x="5536" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Dynamic</text>
+<text text-anchor="middle" x="5605.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Signatures.c</text>
 </a>
 </g>
 </g>
@@ -758,18 +739,18 @@ var sectionId = 'dynsection-1';
 <g id="edge35_Node000002_Node000036" class="edge">
 <title>Node2&#45;&gt;Node36</title>
 <g id="a_edge35_Node000002_Node000036"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.99,-184.66C3980.01,-184.42 4423.78,-179.82 4791,-140 4793.94,-139.68 4796.94,-139.32 4799.97,-138.93"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.6,-181.16 3805.6,-184.67 3815.6,-188.16 3815.6,-181.16"/>
+<path fill="none" stroke="#63b8ff" d="M4352.28,-184.97C4535.7,-185.69 5074.1,-183.62 5518.5,-140 5521.55,-139.7 5524.65,-139.36 5527.77,-138.99"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.28,-181.47 4342.26,-184.92 4352.25,-188.47 4352.28,-181.47"/>
 </a>
 </g>
 </g>
 <!-- Node37 -->
 <g id="Node000037" class="node">
 <title>Node37</title>
-<g id="a_Node000037"><a xlink:href="Ch07__Rec03__IntrospectWrapper_8c.html" target="_top" xlink:title="Cookbook Chapter 7, Recipe 3: Introspecting a Trampoline for a Wrapper.">
-<polygon fill="white" stroke="#666666" points="5102,-140 4960,-140 4960,-110 5102,-110 5102,-140"/>
-<text text-anchor="start" x="4968" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Rec03</text>
-<text text-anchor="middle" x="5031" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_IntrospectWrapper.c</text>
+<g id="a_Node000037"><a xlink:href="Ch07__IntrospectWrapper_8c.html" target="_top" xlink:title="Cookbook Chapter 7: Introspecting a Trampoline for a Wrapper.">
+<polygon fill="white" stroke="#666666" points="5862,-140 5701,-140 5701,-110 5862,-110 5862,-140"/>
+<text text-anchor="start" x="5709" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Introspect</text>
+<text text-anchor="middle" x="5781.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Wrapper.c</text>
 </a>
 </g>
 </g>
@@ -777,18 +758,18 @@ var sectionId = 'dynsection-1';
 <g id="edge36_Node000002_Node000037" class="edge">
 <title>Node2&#45;&gt;Node37</title>
 <g id="a_edge36_Node000002_Node000037"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.72,-185.19C3996.05,-186.45 4519.33,-185.56 4951,-140 4953.94,-139.69 4956.94,-139.34 4959.97,-138.95"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.63,-181.69 3805.61,-185.11 3815.58,-188.69 3815.63,-181.69"/>
+<path fill="none" stroke="#63b8ff" d="M4352.38,-183.5C4591.91,-179.65 5426.37,-164.73 5691.5,-140 5694.49,-139.72 5697.53,-139.41 5700.61,-139.06"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.03,-180.01 4342.09,-183.67 4352.15,-187.01 4352.03,-180.01"/>
 </a>
 </g>
 </g>
 <!-- Node38 -->
 <g id="Node000038" class="node">
 <title>Node38</title>
-<g id="a_Node000038"><a xlink:href="Ch08__Rec01__CustomAllocators_8c.html" target="_top" xlink:title="Cookbook Chapter 8, Recipe 1: Using Custom Memory Allocators.">
-<polygon fill="white" stroke="#666666" points="5262,-140 5120,-140 5120,-110 5262,-110 5262,-140"/>
-<text text-anchor="start" x="5128" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_Rec01</text>
-<text text-anchor="middle" x="5191" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_CustomAllocators.c</text>
+<g id="a_Node000038"><a xlink:href="Ch07__SemanticAliases_8c.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="6038.5,-140 5880.5,-140 5880.5,-110 6038.5,-110 6038.5,-140"/>
+<text text-anchor="start" x="5888.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch07_Semantic</text>
+<text text-anchor="middle" x="5959.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Aliases.c</text>
 </a>
 </g>
 </g>
@@ -796,18 +777,18 @@ var sectionId = 'dynsection-1';
 <g id="edge37_Node000002_Node000038" class="edge">
 <title>Node2&#45;&gt;Node38</title>
 <g id="a_edge37_Node000002_Node000038"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.84,-183.59C4050.5,-180.1 4855.14,-166.44 5111,-140 5113.95,-139.7 5116.95,-139.35 5119.97,-138.96"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.7,-180.09 3805.75,-183.74 3815.8,-187.09 3815.7,-180.09"/>
+<path fill="none" stroke="#63b8ff" d="M4352.73,-183.78C4611.8,-180.75 5568.58,-167.88 5870.5,-140 5873.77,-139.7 5877.1,-139.35 5880.47,-138.97"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.32,-180.28 4342.36,-183.9 4352.4,-187.28 4352.32,-180.28"/>
 </a>
 </g>
 </g>
 <!-- Node39 -->
 <g id="Node000039" class="node">
 <title>Node39</title>
-<g id="a_Node000039"><a xlink:href="Ch08__Rec02__ManualAPI_8c.html" target="_top" xlink:title="Cookbook Chapter 8, Recipe 2: The Full Manual API Lifecycle.">
-<polygon fill="white" stroke="#666666" points="5422,-140 5280,-140 5280,-110 5422,-110 5422,-140"/>
-<text text-anchor="start" x="5288" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_Rec02</text>
-<text text-anchor="middle" x="5351" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ManualAPI.c</text>
+<g id="a_Node000039"><a xlink:href="Ch08__ArenaCallFrame_8c.html" target="_top" xlink:title="Cookbook Chapter 8: Building a Dynamic Call Frame with an Arena.">
+<polygon fill="white" stroke="#666666" points="6215,-140 6056,-140 6056,-110 6215,-110 6215,-140"/>
+<text text-anchor="start" x="6064" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_ArenaCall</text>
+<text text-anchor="middle" x="6135.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Frame.c</text>
 </a>
 </g>
 </g>
@@ -815,18 +796,17 @@ var sectionId = 'dynsection-1';
 <g id="edge38_Node000002_Node000039" class="edge">
 <title>Node2&#45;&gt;Node39</title>
 <g id="a_edge38_Node000002_Node000039"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.75,-183.85C4067.59,-181.12 4982.15,-169.35 5271,-140 5273.95,-139.7 5276.95,-139.36 5279.97,-138.98"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.62,-180.35 3805.66,-183.96 3815.7,-187.35 3815.62,-180.35"/>
+<path fill="none" stroke="#63b8ff" d="M4352.58,-184.01C4629.23,-181.75 5708.86,-171.08 6047.5,-140 6050.27,-139.75 6053.09,-139.46 6055.93,-139.14"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.28,-180.51 4342.31,-184.09 4352.34,-187.51 4352.28,-180.51"/>
 </a>
 </g>
 </g>
 <!-- Node40 -->
 <g id="Node000040" class="node">
 <title>Node40</title>
-<g id="a_Node000040"><a xlink:href="Ch08__Rec03__ArenaCallFrame_8c.html" target="_top" xlink:title="Cookbook Chapter 8, Recipe 3: Building a Dynamic Call Frame with an Arena.">
-<polygon fill="white" stroke="#666666" points="5582,-140 5440,-140 5440,-110 5582,-110 5582,-140"/>
-<text text-anchor="start" x="5448" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_Rec03</text>
-<text text-anchor="middle" x="5511" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ArenaCallFrame.c</text>
+<g id="a_Node000040"><a xlink:href="Ch08__CustomAllocators_8c.html" target="_top" xlink:title="Cookbook Chapter 8: Using Custom Memory Allocators.">
+<polygon fill="white" stroke="#666666" points="6439.5,-134.5 6233.5,-134.5 6233.5,-115.5 6439.5,-115.5 6439.5,-134.5"/>
+<text text-anchor="middle" x="6336.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_CustomAllocators.c</text>
 </a>
 </g>
 </g>
@@ -834,18 +814,17 @@ var sectionId = 'dynsection-1';
 <g id="edge39_Node000002_Node000040" class="edge">
 <title>Node2&#45;&gt;Node40</title>
 <g id="a_edge39_Node000002_Node000040"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3816.2,-184.05C4085.13,-182.01 5109.24,-172.24 5431,-140 5433.95,-139.7 5436.95,-139.36 5439.97,-138.99"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.8,-180.56 3805.83,-184.13 3815.85,-187.56 3815.8,-180.56"/>
+<path fill="none" stroke="#63b8ff" d="M4352.23,-183.89C4645.05,-180.97 5847.6,-167.54 6223.5,-140 6240.85,-138.73 6259.62,-136.68 6276.79,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.17,-180.39 4342.2,-183.99 4352.24,-187.39 4352.17,-180.39"/>
 </a>
 </g>
 </g>
 <!-- Node41 -->
 <g id="Node000041" class="node">
 <title>Node41</title>
-<g id="a_Node000041"><a xlink:href="Ch09__Rec01__ErrorReporting_8c.html" target="_top" xlink:title="Cookbook Chapter 9, Recipe 1: Advanced Error Reporting for the Parser.">
-<polygon fill="white" stroke="#666666" points="5742,-140 5600,-140 5600,-110 5742,-110 5742,-140"/>
-<text text-anchor="start" x="5608" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch09_Rec01</text>
-<text text-anchor="middle" x="5671" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">_ErrorReporting.c</text>
+<g id="a_Node000041"><a xlink:href="Ch08__ManualAPI_8c.html" target="_top" xlink:title="Cookbook Chapter 8: The Full Manual API Lifecycle.">
+<polygon fill="white" stroke="#666666" points="6629.5,-134.5 6457.5,-134.5 6457.5,-115.5 6629.5,-115.5 6629.5,-134.5"/>
+<text text-anchor="middle" x="6543.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_ManualAPI.c</text>
 </a>
 </g>
 </g>
@@ -853,17 +832,17 @@ var sectionId = 'dynsection-1';
 <g id="edge40_Node000002_Node000041" class="edge">
 <title>Node2&#45;&gt;Node41</title>
 <g id="a_edge40_Node000002_Node000041"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.77,-184.23C4099.68,-182.84 5235.87,-175.17 5591,-140 5593.95,-139.71 5596.95,-139.37 5599.98,-139"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.62,-180.73 3805.64,-184.28 3815.65,-187.73 3815.62,-180.73"/>
+<path fill="none" stroke="#63b8ff" d="M4352.44,-184.26C4666.07,-182.96 6026.06,-175.34 6448.5,-140 6463.29,-138.76 6479.27,-136.69 6493.84,-134.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.15,-180.77 4342.16,-184.31 4352.18,-187.77 4352.15,-180.77"/>
 </a>
 </g>
 </g>
 <!-- Node42 -->
 <g id="Node000042" class="node">
 <title>Node42</title>
-<g id="a_Node000042"><a xlink:href="win32__msgbox_8c.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="5873.5,-134.5 5760.5,-134.5 5760.5,-115.5 5873.5,-115.5 5873.5,-134.5"/>
-<text text-anchor="middle" x="5817" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/win32_msgbox.c</text>
+<g id="a_Node000042"><a xlink:href="Ch08__SharedArena_8c.html" target="_top" xlink:title="An example demonstrating the &quot;shared arena&quot; memory optimization.">
+<polygon fill="white" stroke="#666666" points="6829.5,-134.5 6647.5,-134.5 6647.5,-115.5 6829.5,-115.5 6829.5,-134.5"/>
+<text text-anchor="middle" x="6738.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch08_SharedArena.c</text>
 </a>
 </g>
 </g>
@@ -871,17 +850,17 @@ var sectionId = 'dynsection-1';
 <g id="edge41_Node000002_Node000042" class="edge">
 <title>Node2&#45;&gt;Node42</title>
 <g id="a_edge41_Node000002_Node000042"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.96,-184.69C4115.27,-185.29 5363.39,-185.02 5751,-140 5761.36,-138.8 5772.49,-136.74 5782.6,-134.56"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.72,-181.19 3805.71,-184.66 3815.71,-188.19 3815.72,-181.19"/>
+<path fill="none" stroke="#63b8ff" d="M4352.43,-184.33C4682.44,-183.29 6176.15,-176.61 6638.5,-140 6654.05,-138.77 6670.88,-136.7 6686.21,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.08,-180.83 4342.09,-184.36 4352.1,-187.83 4352.08,-180.83"/>
 </a>
 </g>
 </g>
 <!-- Node43 -->
 <g id="Node000043" class="node">
 <title>Node43</title>
-<g id="a_Node000043"><a xlink:href="fuzz__helpers_8h.html" target="_top" xlink:title="Common definitions, structures, and helpers for all fuzzer targets.">
-<polygon fill="#fff0f0" stroke="red" points="6571,-74 6461,-74 6461,-55 6571,-55 6571,-74"/>
-<text text-anchor="middle" x="6516" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_helpers.h</text>
+<g id="a_Node000043"><a xlink:href="Ch09__ErrorReporting_8c.html" target="_top" xlink:title="Cookbook Chapter 9: Advanced Error Reporting for the Parser.">
+<polygon fill="white" stroke="#666666" points="7039,-134.5 6848,-134.5 6848,-115.5 7039,-115.5 7039,-134.5"/>
+<text text-anchor="middle" x="6943.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch09_ErrorReporting.c</text>
 </a>
 </g>
 </g>
@@ -889,134 +868,134 @@ var sectionId = 'dynsection-1';
 <g id="edge42_Node000002_Node000043" class="edge">
 <title>Node2&#45;&gt;Node43</title>
 <g id="a_edge42_Node000002_Node000043"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.83,-183.98C4228.29,-180.64 6469.83,-161.47 6497,-140 6517.11,-124.11 6517.74,-90.15 6516.8,-74.16"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.55,-180.49 3805.58,-184.07 3815.61,-187.49 3815.55,-180.49"/>
+<path fill="none" stroke="#63b8ff" d="M4352.29,-184.38C4698.56,-183.6 6333.98,-177.91 6838.5,-140 6854.82,-138.77 6872.49,-136.71 6888.59,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.18,-180.88 4342.18,-184.4 4352.19,-187.88 4352.18,-180.88"/>
 </a>
 </g>
 </g>
-<!-- Node46 -->
-<g id="Node000046" class="node">
-<title>Node46</title>
-<g id="a_Node000046"><a xlink:href="fuzz__signature_8c.html" target="_top" xlink:title="Fuzzer target for the high&#45;level signature parsing API.">
-<polygon fill="white" stroke="#666666" points="6268.5,-19 6149.5,-19 6149.5,0 6268.5,0 6268.5,-19"/>
-<text text-anchor="middle" x="6209" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_signature.c</text>
+<!-- Node44 -->
+<g id="Node000044" class="node">
+<title>Node44</title>
+<g id="a_Node000044"><a xlink:href="win32__msgbox_8c.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="7170,-134.5 7057,-134.5 7057,-115.5 7170,-115.5 7170,-134.5"/>
+<text text-anchor="middle" x="7113.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">eg/win32_msgbox.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node46 -->
-<g id="edge44_Node000002_Node000046" class="edge">
-<title>Node2&#45;&gt;Node46</title>
-<g id="a_edge44_Node000002_Node000046"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.75,-184.29C4161.91,-182.99 5782.27,-175.09 5882,-140 5902.63,-132.74 5901.75,-120.37 5921,-110 6005.99,-64.21 6116.17,-33.14 6172.43,-19.07"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.63,-180.79 3805.64,-184.32 3815.65,-187.79 3815.63,-180.79"/>
+<!-- Node2&#45;&gt;Node44 -->
+<g id="edge43_Node000002_Node000044" class="edge">
+<title>Node2&#45;&gt;Node44</title>
+<g id="a_edge43_Node000002_Node000044"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M4352.41,-184.2C4742.93,-182.32 6772.25,-171.12 7047.5,-140 7057.98,-138.82 7069.24,-136.73 7079.45,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.13,-180.71 4342.14,-184.25 4352.16,-187.71 4352.13,-180.71"/>
 </a>
 </g>
 </g>
-<!-- Node50 -->
-<g id="Node000050" class="node">
-<title>Node50</title>
-<g id="a_Node000050"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Internal data structures, function prototypes, and constants.">
-<polygon fill="#fff0f0" stroke="red" points="6900,-134.5 6742,-134.5 6742,-115.5 6900,-115.5 6900,-134.5"/>
-<text text-anchor="middle" x="6821" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/infix_internals.h</text>
+<!-- Node45 -->
+<g id="Node000045" class="node">
+<title>Node45</title>
+<g id="a_Node000045"><a xlink:href="fuzz__helpers_8h.html" target="_top" xlink:title="Common definitions, structures, and helpers for all fuzzer targets.">
+<polygon fill="#fff0f0" stroke="red" points="7718.5,-74 7608.5,-74 7608.5,-55 7718.5,-55 7718.5,-74"/>
+<text text-anchor="middle" x="7663.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_helpers.h</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node50 -->
-<g id="edge45_Node000002_Node000050" class="edge">
-<title>Node2&#45;&gt;Node50</title>
-<g id="a_edge45_Node000002_Node000050"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.73,-184.06C4223.46,-181.19 6428.97,-164.63 6728,-140 6742.65,-138.79 6758.49,-136.71 6772.88,-134.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.56,-180.56 3805.59,-184.13 3815.61,-187.56 3815.56,-180.56"/>
+<!-- Node2&#45;&gt;Node45 -->
+<g id="edge44_Node000002_Node000045" class="edge">
+<title>Node2&#45;&gt;Node45</title>
+<g id="a_edge44_Node000002_Node000045"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M4352.2,-184.17C4815.4,-181.78 7609.75,-166.24 7643.5,-140 7663.8,-124.22 7664.9,-90.2 7664.18,-74.18"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352,-180.68 4342.02,-184.23 4352.03,-187.67 4352,-180.68"/>
 </a>
 </g>
 </g>
-<!-- Node60 -->
-<g id="Node000060" class="node">
-<title>Node60</title>
-<g id="a_Node000060"><a xlink:href="error_8c.html" target="_top" xlink:title="Implements the thread&#45;local error reporting system.">
-<polygon fill="#fff0f0" stroke="red" points="6811.5,-74 6722.5,-74 6722.5,-55 6811.5,-55 6811.5,-74"/>
-<text text-anchor="middle" x="6767" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/error.c</text>
+<!-- Node48 -->
+<g id="Node000048" class="node">
+<title>Node48</title>
+<g id="a_Node000048"><a xlink:href="fuzz__signature_8c.html" target="_top" xlink:title="Fuzzer target for the high&#45;level signature parsing API.">
+<polygon fill="white" stroke="#666666" points="7490,-19 7371,-19 7371,0 7490,0 7490,-19"/>
+<text text-anchor="middle" x="7430.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_signature.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node60 -->
-<g id="edge48_Node000002_Node000060" class="edge">
-<title>Node2&#45;&gt;Node60</title>
-<g id="a_edge48_Node000002_Node000060"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3816.1,-184.2C4242.95,-182.19 6626.68,-169.6 6695,-140 6711.34,-132.92 6745.47,-92.23 6760.1,-74.15"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.77,-180.71 3805.79,-184.25 3815.81,-187.71 3815.77,-180.71"/>
+<!-- Node2&#45;&gt;Node48 -->
+<g id="edge46_Node000002_Node000048" class="edge">
+<title>Node2&#45;&gt;Node48</title>
+<g id="a_edge46_Node000002_Node000048"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M4352.38,-184.06C4773.98,-181.17 7109.52,-164.06 7178.5,-140 7199.15,-132.8 7198.82,-121.36 7217.5,-110 7283.58,-69.81 7368.55,-34.6 7408.23,-19.02"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.18,-180.57 4342.2,-184.13 4352.22,-187.57 4352.18,-180.57"/>
 </a>
 </g>
 </g>
-<!-- Node71 -->
-<g id="Node000071" class="node">
-<title>Node71</title>
-<g id="a_Node000071"><a xlink:href="001__primitives_8c.html" target="_top" xlink:title="Unit test for creating trampolines for functions with primitive C types.">
-<polygon fill="white" stroke="#666666" points="6194,-134.5 6090,-134.5 6090,-115.5 6194,-115.5 6194,-134.5"/>
-<text text-anchor="middle" x="6142" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">t/001_primitives.c</text>
+<!-- Node52 -->
+<g id="Node000052" class="node">
+<title>Node52</title>
+<g id="a_Node000052"><a xlink:href="infix__internals_8h.html" target="_top" xlink:title="Internal data structures, function prototypes, and constants.">
+<polygon fill="#fff0f0" stroke="red" points="8065.5,-134.5 7907.5,-134.5 7907.5,-115.5 8065.5,-115.5 8065.5,-134.5"/>
+<text text-anchor="middle" x="7986.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">src/common/infix_internals.h</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node71 -->
-<g id="edge49_Node000002_Node000071" class="edge">
-<title>Node2&#45;&gt;Node71</title>
-<g id="a_edge49_Node000002_Node000071"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.65,-184.06C4168.19,-181.57 5851.11,-168.27 6081,-140 6090.71,-138.81 6101.13,-136.72 6110.56,-134.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.59,-180.56 3805.61,-184.13 3815.64,-187.56 3815.59,-180.56"/>
+<!-- Node2&#45;&gt;Node52 -->
+<g id="edge47_Node000002_Node000052" class="edge">
+<title>Node2&#45;&gt;Node52</title>
+<g id="a_edge47_Node000002_Node000052"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M4352.37,-184.24C4808.63,-182.31 7527.81,-169.64 7893.5,-140 7908.15,-138.81 7923.99,-136.73 7938.38,-134.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.32,-180.74 4342.33,-184.28 4352.35,-187.74 4352.32,-180.74"/>
 </a>
 </g>
 </g>
-<!-- Node72 -->
-<g id="Node000072" class="node">
-<title>Node72</title>
-<g id="a_Node000072"><a xlink:href="002__simple__calls_8c.html" target="_top" xlink:title="Unit test for basic forward trampoline calls with simple function signatures.">
-<polygon fill="white" stroke="#666666" points="6328,-134.5 6212,-134.5 6212,-115.5 6328,-115.5 6328,-134.5"/>
-<text text-anchor="middle" x="6270" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">t/002_simple_calls.c</text>
+<!-- Node62 -->
+<g id="Node000062" class="node">
+<title>Node62</title>
+<g id="a_Node000062"><a xlink:href="error_8c.html" target="_top" xlink:title="Implements the thread&#45;local error reporting system.">
+<polygon fill="#fff0f0" stroke="red" points="7977,-74 7888,-74 7888,-55 7977,-55 7977,-74"/>
+<text text-anchor="middle" x="7932.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/core/error.c</text>
 </a>
 </g>
 </g>
-<!-- Node2&#45;&gt;Node72 -->
-<g id="edge50_Node000002_Node000072" class="edge">
-<title>Node2&#45;&gt;Node72</title>
-<g id="a_edge50_Node000002_Node000072"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M3815.78,-184.05C4179.52,-181.44 5960.07,-167.34 6203,-140 6213.63,-138.8 6225.06,-136.72 6235.43,-134.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="3815.66,-180.55 3805.69,-184.12 3815.71,-187.55 3815.66,-180.55"/>
+<!-- Node2&#45;&gt;Node62 -->
+<g id="edge50_Node000002_Node000062" class="edge">
+<title>Node2&#45;&gt;Node62</title>
+<g id="a_edge50_Node000002_Node000062"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M4352.44,-184.03C4832.95,-180.53 7818.6,-158.08 7860.5,-140 7876.85,-132.94 7910.98,-92.24 7925.6,-74.15"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="4352.19,-180.53 4342.22,-184.11 4352.24,-187.53 4352.19,-180.53"/>
 </a>
 </g>
 </g>
-<!-- Node43&#45;&gt;Node46 -->
-<g id="edge43_Node000043_Node000046" class="edge">
-<title>Node43&#45;&gt;Node46</title>
-<g id="a_edge43_Node000043_Node000046"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M6456.62,-53.25C6398.97,-43.3 6312.47,-28.36 6258.46,-19.04"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="6456.23,-56.73 6466.68,-54.98 6457.42,-49.83 6456.23,-56.73"/>
+<!-- Node45&#45;&gt;Node48 -->
+<g id="edge45_Node000045_Node000048" class="edge">
+<title>Node45&#45;&gt;Node48</title>
+<g id="a_edge45_Node000045_Node000048"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M7616.25,-52.75C7572.59,-42.82 7508.56,-28.26 7468.23,-19.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="7615.54,-56.18 7626.06,-54.98 7617.09,-49.35 7615.54,-56.18"/>
 </a>
 </g>
 </g>
-<!-- Node50&#45;&gt;Node43 -->
-<g id="edge46_Node000050_Node000043" class="edge">
-<title>Node50&#45;&gt;Node43</title>
-<g id="a_edge46_Node000050_Node000043"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M6766.79,-113.6C6707.95,-102.32 6615.09,-84.51 6560.4,-74.02"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="6766.17,-117.05 6776.65,-115.49 6767.49,-110.17 6766.17,-117.05"/>
+<!-- Node52&#45;&gt;Node45 -->
+<g id="edge48_Node000052_Node000045" class="edge">
+<title>Node52&#45;&gt;Node45</title>
+<g id="a_edge48_Node000052_Node000045"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M7929.48,-113.67C7867.19,-102.39 7768.56,-84.53 7710.52,-74.02"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="7929.07,-117.16 7939.53,-115.49 7930.32,-110.27 7929.07,-117.16"/>
 </a>
 </g>
 </g>
-<!-- Node50&#45;&gt;Node60 -->
-<g id="edge47_Node000050_Node000060" class="edge">
-<title>Node50&#45;&gt;Node60</title>
-<g id="a_edge47_Node000050_Node000060"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M6806.02,-107.77C6795.98,-96.89 6783.15,-82.99 6775,-74.17"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="6803.68,-110.39 6813.03,-115.37 6808.82,-105.65 6803.68,-110.39"/>
+<!-- Node52&#45;&gt;Node62 -->
+<g id="edge49_Node000052_Node000062" class="edge">
+<title>Node52&#45;&gt;Node62</title>
+<g id="a_edge49_Node000052_Node000062"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M7971.52,-107.77C7961.48,-96.89 7948.65,-82.99 7940.5,-74.17"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="7969.18,-110.39 7978.53,-115.37 7974.32,-105.65 7969.18,-110.39"/>
 </a>
 </g>
 </g>
-<!-- Node98&#45;&gt;Node50 -->
-<g id="edge52_Node000098_Node000050" class="edge">
-<title>Node98&#45;&gt;Node50</title>
-<g id="a_edge52_Node000098_Node000050"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M5431.06,-176C6007.43,-136.12 6156.52,-190.75 6728,-140 6742.31,-138.73 6757.77,-136.68 6771.9,-134.53"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="5430.55,-172.53 5420.82,-176.72 5431.04,-179.51 5430.55,-172.53"/>
+<!-- Node101&#45;&gt;Node52 -->
+<g id="edge52_Node000101_Node000052" class="edge">
+<title>Node101&#45;&gt;Node52</title>
+<g id="a_edge52_Node000101_Node000052"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M6281.37,-176.02C6997.64,-128.26 7182.39,-201.21 7893.5,-140 7907.98,-138.75 7923.63,-136.68 7937.89,-134.51"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="6281.06,-172.54 6271.32,-176.7 6281.53,-179.52 6281.06,-172.54"/>
 </a>
 </g>
 </g>

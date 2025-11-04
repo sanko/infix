@@ -41,6 +41,7 @@ var types_8c =
     [ "infix_type_get_category", "group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3", null ],
     [ "infix_type_get_member", "group__type__system.html#gafc256d548bfd78ff90ee38a1cc0ae8b9", null ],
     [ "infix_type_get_member_count", "group__type__system.html#ga678390feeed80a43111725c4e73c0dda", null ],
+    [ "infix_type_get_name", "group__type__system.html#ga234b98ee42c1323821fa47f1eb130742", null ],
     [ "infix_type_get_size", "group__type__system.html#ga0e49d4bdbfe42b661bf7bcb597793e9a", null ],
     [ "_infix_type_bool", "types_8c.html#a3ec67f3e683aba1996915bd7ff1af8be", null ],
     [ "_infix_type_double", "types_8c.html#a30d11b17f5c5992179d02154d0e15f6d", null ],

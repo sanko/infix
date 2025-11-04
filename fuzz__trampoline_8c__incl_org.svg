@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Fuzzer target for the trampoline generation functions.">
+<g id="a_Node000001"><a xlink:title="Fuzzer target for the trampoline generation functions, including shared arena logic.">
 <polygon fill="#999999" stroke="#666666" points="559,-294 432,-294 432,-275 559,-275 559,-294"/>
 <text text-anchor="middle" x="495.5" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">fuzz/fuzz_trampoline.c</text>
 </a>

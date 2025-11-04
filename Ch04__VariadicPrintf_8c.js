@@ -1,0 +1,4 @@
+var Ch04__VariadicPrintf_8c =
+[
+    [ "main", "Ch04__VariadicPrintf_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4", null ]
+];

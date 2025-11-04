@@ -3,6 +3,7 @@ var structinfix__type__t =
     [ "aggregate_category", "group__high__level__api.html#ga820935723a98863101aa35b828fffe0b", null ],
     [ "aggregate_info", "group__high__level__api.html#ga9d7572a9e837b5a8cb21010a91983abb", null ],
     [ "alignment", "group__high__level__api.html#ga4dc08b6a109b67e1394e097c90d497d6", null ],
+    [ "arena", "group__high__level__api.html#ga4542aa2725c382255278bedecbc73db3", null ],
     [ "args", "group__high__level__api.html#ga7e98e476d66532fa296d00607d0851d1", null ],
     [ "array_info", "group__high__level__api.html#ga9dcdb7c1762f7142954113f4c4db4aaa", null ],
     [ "base_type", "group__high__level__api.html#gac70541d021d87d720c38b176fb39e4fc", null ],

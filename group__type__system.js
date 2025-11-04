@@ -4,6 +4,7 @@ var group__type__system =
       [ "aggregate_category", "group__high__level__api.html#ga820935723a98863101aa35b828fffe0b", null ],
       [ "aggregate_info", "group__high__level__api.html#ga9d7572a9e837b5a8cb21010a91983abb", null ],
       [ "alignment", "group__high__level__api.html#ga4dc08b6a109b67e1394e097c90d497d6", null ],
+      [ "arena", "group__high__level__api.html#ga4542aa2725c382255278bedecbc73db3", null ],
       [ "args", "group__high__level__api.html#ga7e98e476d66532fa296d00607d0851d1", null ],
       [ "array_info", "group__high__level__api.html#ga9dcdb7c1762f7142954113f4c4db4aaa", null ],
       [ "base_type", "group__high__level__api.html#gac70541d021d87d720c38b176fb39e4fc", null ],
@@ -106,5 +107,6 @@ var group__type__system =
     [ "infix_type_get_category", "group__type__system.html#ga9d8374030d014a748fd0d2b26e5415e3", null ],
     [ "infix_type_get_member", "group__type__system.html#gafc256d548bfd78ff90ee38a1cc0ae8b9", null ],
     [ "infix_type_get_member_count", "group__type__system.html#ga678390feeed80a43111725c4e73c0dda", null ],
+    [ "infix_type_get_name", "group__type__system.html#ga234b98ee42c1323821fa47f1eb130742", null ],
     [ "infix_type_get_size", "group__type__system.html#ga0e49d4bdbfe42b661bf7bcb597793e9a", null ]
 ];

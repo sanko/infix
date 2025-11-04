@@ -8,6 +8,6 @@ var searchData=
   ['test_5frealloc_5',['test_realloc',['../811__fault__injection_8c.html#a1115c312ffd398de912839e202b682e4',1,'811_fault_injection.c']]],
   ['test_5ftype_5ffail_6',['test_type_fail',['../004__signatures_8c.html#a042d2b7ff846c493446812236806bde0',1,'004_signatures.c']]],
   ['test_5ftype_5fok_7',['test_type_ok',['../004__signatures_8c.html#a0bd3e3e3ae6ba826363c8a0fa6a9e7ad',1,'004_signatures.c']]],
-  ['tracking_5ffree_8',['tracking_free',['../Ch08__Rec01__CustomAllocators_8c.html#a18190c05a9c59a758302be7ad6791e14',1,'Ch08_Rec01_CustomAllocators.c']]],
-  ['tracking_5fmalloc_9',['tracking_malloc',['../Ch08__Rec01__CustomAllocators_8c.html#a7f9778663fceaf2806c58dd775a7e5d4',1,'Ch08_Rec01_CustomAllocators.c']]]
+  ['tracking_5ffree_8',['tracking_free',['../Ch08__CustomAllocators_8c.html#a8f0e3b7e5b7b088cf9dfcedf40686459',1,'Ch08_CustomAllocators.c']]],
+  ['tracking_5fmalloc_9',['tracking_malloc',['../Ch08__CustomAllocators_8c.html#a093e7825ef669777d9a64760a3def5fd',1,'Ch08_CustomAllocators.c']]]
 ];

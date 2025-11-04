@@ -1,0 +1,18 @@
+<map id="eg/cookbook/Ch01_OutParameters.c" name="eg/cookbook/Ch01_OutParameters.c">
+<area shape="rect" id="Node000001" title="Cookbook Chapter 1: Working with &quot;Out&quot; Parameters." alt="" coords="254,5,511,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="211,79,306,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="364,33,292,74,289,69,361,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="290,225,373,251"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="382,32,340,212,335,211,377,30"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="420,79,486,104"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="396,29,434,67,430,71,392,33"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,152,199,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,106,149,148,147,144,234,102"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="272,103,291,124,309,151,321,182,330,211,324,212,316,183,304,153,287,127,268,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="12,225,86,251"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="211,100,97,118,45,134,26,143,14,154,8,168,11,183,30,214,25,217,6,185,3,167,10,150,23,139,43,129,96,113,211,95"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="223,152,294,177"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="261,104,261,138,256,138,256,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="148,175,284,219,283,224,146,180"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="103,179,70,217,66,213,99,176"/>
+</map>

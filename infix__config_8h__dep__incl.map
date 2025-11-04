@@ -56,7 +56,7 @@
 <area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="526,264,271,323,270,318,525,259"/>
 <area shape="rect" id="Node000006" href="$fuzz__signature_8c.html" title="Fuzzer target for the high&#45;level signature parsing API." alt="" coords="320,321,479,346"/>
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="551,266,426,323,424,318,549,261"/>
-<area shape="rect" id="Node000007" href="$fuzz__trampoline_8c.html" title="Fuzzer target for the trampoline generation functions." alt="" coords="503,321,672,346"/>
+<area shape="rect" id="Node000007" href="$fuzz__trampoline_8c.html" title="Fuzzer target for the trampoline generation functions, including shared arena logic." alt="" coords="503,321,672,346"/>
 <area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="590,272,590,320,585,320,585,272"/>
 <area shape="rect" id="Node000008" href="$fuzz__types_8c.html" title="Fuzzer target for the random type generation logic." alt="" coords="696,321,831,346"/>
 <area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="625,262,741,318,738,323,622,267"/>

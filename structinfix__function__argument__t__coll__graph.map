@@ -1,10 +1,13 @@
 <map id="infix_function_argument_t" name="infix_function_argument_t">
 <area shape="rect" id="Node000001" title="Describes a single argument to a C function." alt="" coords="5,5,197,31"/>
-<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="52,117,151,143"/>
-<area shape="poly" id="edge5_Node000002_Node000001" title=" " alt="" coords="77,41,68,55,68,69,80,95,94,116,90,119,75,97,63,70,63,54,73,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,103,101,55,100,31,105,31,107,55,106,103"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="166,117,174,122,177,130,169,141,151,145,150,140,166,137,172,130,170,126,163,122"/>
-<area shape="rect" id="Node000003" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="17,229,185,255"/>
-<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="86,155,68,191,68,205,76,217,87,227,83,231,72,220,63,206,63,190,81,153"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="101,215,101,205,100,143,105,143,107,205,106,216"/>
+<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="116,117,215,143"/>
+<area shape="poly" id="edge7_Node000002_Node000001" title=" " alt="" coords="97,44,100,68,120,95,146,115,143,119,116,99,95,70,92,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,105,147,81,134,56,113,32,117,29,138,53,151,78,161,103"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="230,117,238,122,241,130,233,141,215,145,214,140,230,137,236,130,234,126,227,122"/>
+<area shape="rect" id="Node000004" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="81,229,249,255"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="150,155,132,191,132,205,140,217,151,227,147,231,136,220,127,206,127,190,145,153"/>
+<area shape="rect" id="Node000003" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="221,5,328,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="255,42,179,119,175,115,252,39"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="343,9,355,18,346,26,329,29,328,23,344,21,349,18,340,14"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="165,215,165,205,164,143,169,143,171,205,170,216"/>
 </map>

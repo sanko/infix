@@ -108,9 +108,27 @@ $(document).ready(function(){initNavTree('md_CHANGELOG.html',''); initResizable(
 <div class="textblock"><p><a class="anchor" id="autotoc_md221"></a> All notable changes to this project will (I hope) be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h1><a class="anchor" id="autotoc_md222"></a>
-&lt;a href="https://github.com/sanko/infix/compare/v0.1.0...HEAD" &gt;0.1.1&lt;/a&gt; - 2025-11-01</h1>
-<p>Really sanding down the rough edges this time around. This release includes significant ergonomic improvements to the high-level API.</p>
+&lt;a href="https://github.com/sanko/infix/compare/v0.1.1...HEAD"</h1>
+<p>&gt;Unreleased</p>
+<p>We'll find out where I go from here.</p>
 <h2><a class="anchor" id="autotoc_md223"></a>
+Added</h2>
+<ul>
+<li>Shared Arena Optimization API: Introduced a new set of advanced API functions (<code>infix_registry_create_in_arena</code>, <code>infix_forward_create_in_arena</code>, etc.) that allow the type registry and trampolines to be created within a user-provided, shared memory arena. When objects share an arena, the library avoids deep-copying named type metadata and instead shares pointers to the canonical types, significantly reducing memory consumption and improving trampoline creation performance for applications with many FFI calls referencing a common set of types.</li>
+<li>Semantic Name Preservation for All Types: The type system can now preserve a semantic name for <em>any</em> type defined in a registry, not just structs and unions. An alias like <code>@MyInt = int32;</code> or <code>@MyHandle = *void;</code> will now produce a type that is structurally identical to its definition but carries the semantic name for introspection.</li>
+<li>New Introspection API: Added <code><a class="el" href="group__type__system.html#ga234b98ee42c1323821fa47f1eb130742" title="Gets the semantic alias of a type, if one exists.">infix_type_get_name(const infix_type* type)</a></code> to the public API. This function is now the canonical way to retrieve the semantic alias of any type object, if one exists.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md224"></a>
+Changed</h2>
+<ul>
+<li>Growable Arena: The internal arena for the type registry is no longer fixed-size. Now, it transparently allocates new memory blocks as needed, removing the risk of allocation failures when registering and/or copying a large number of interconnected types.</li>
+<li>Type Registry and Printing Logic: The internals of the type registry and the <code>infix_type_print</code> function have been updated to correctly create, copy, and serialize the new <code>name</code> field on <code>infix_type</code> objects, ensuring that semantic aliases are preserved through all API operations and can be correctly round-tripped to strings.</li>
+<li>Renamed all cookbook examples in <code>/eg/cookbook</code>. I can't expect to keep track of recipe numbers with every little idea I decide to throw into the cookbook so I'll just stop trying to count them.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md225"></a>
+&lt;a href="https://github.com/sanko/infix/compare/v0.1.0...v0.1.1" &gt;0.1.1&lt;/a&gt; - 2025-11-01</h1>
+<p>Really sanding down the rough edges this time around. This release includes significant ergonomic improvements to the high-level API.</p>
+<h2><a class="anchor" id="autotoc_md226"></a>
 Added</h2>
 <ul>
 <li>New Signature Keywords: Added keywords for common C and C++ types to improve signature readability and portability.<ul>
@@ -125,7 +143,7 @@ Added</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md224"></a>
+<h2><a class="anchor" id="autotoc_md227"></a>
 Changed</h2>
 <ul>
 <li>Improved C++ Interoperability Recipes: Refined the C++ recipes to focus on direct interaction with C++ ABIs (mangled names, v-tables) rather than relying on C-style wrappers, showcasing more advanced use cases.</li>
@@ -134,21 +152,21 @@ Changed</h2>
 <div class="fragment"><div class="line"><span class="comment">// The high-level API now understands the &quot;@Name&quot; syntax directly.</span></div>
 <div class="line"><span class="comment">// Assume the registry already has &quot;@Adder_add_fn = (*{ val: int }, int) -&gt; int;&quot;</span></div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a>(&amp;ctx, <span class="stringliteral">&quot;@Adder_add_fn&quot;</span>, (<span class="keywordtype">void</span>*)Adder_add, reg);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:912</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:932</div></div>
 </div><!-- fragment --></li>
 <li>The <code>infix_read_global</code> and <code>infix_write_global</code> functions now take an additional <code>infix_registry_t*</code> argument to support reading and writing global variables that are defined by a named type (e.g., <code>@MyStruct</code>).</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md225"></a>
+<h2><a class="anchor" id="autotoc_md228"></a>
 Fixed</h2>
 <ul>
 <li>Fixed a critical parsing bug in <code>infix_register_types</code> that occurred when defining a function pointer type alias (e.g., <code>@MyFunc = (...) -&gt; ...;</code>). The preliminary parser for finding definition boundaries would incorrectly interpret the <code>&gt;</code> in the <code>-&gt;</code> token as a closing delimiter, corrupting its internal nesting level calculation. This resulted in an <code>INFIX_CODE_UNEXPECTED_TOKEN</code> error and prevented the registration of function pointer types. The parser is now context-aware and correctly handles the <code>-&gt;</code> token, allowing for the clean and correct registration of function pointer aliases as intended.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md226"></a>
+<h1><a class="anchor" id="autotoc_md229"></a>
 &lt;a href="https://github.com/sanko/infix/releases/tag/v0.1.0" &gt;0.1.0&lt;/a&gt; - 2025-10-27</h1>
-<h2><a class="anchor" id="autotoc_md227"></a>
+<h2><a class="anchor" id="autotoc_md230"></a>
 Initial Public Release</h2>
 <p>This is the first tagged version of <code>infix</code>. It's all downhill from here.</p>
-<h2><a class="anchor" id="autotoc_md228"></a>
+<h2><a class="anchor" id="autotoc_md231"></a>
 Added</h2>
 <p>Everything. It's brand new.</p>
 <ul>
@@ -193,7 +211,7 @@ Added</h2>
 <li>Manual API: A programmatic, arena-based API (<code>infix_type_create_struct</code>, etc.) for building <code>infix_type</code> objects without the string parser.</li>
 <li>Introspection API: A comprehensive suite of getter functions to inspect the layout of any type at runtime, including its size, alignment, and the name/offset/type of every member. This is ideal for building dynamic language bindings and data marshallers.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md229"></a>
+<h3><a class="anchor" id="autotoc_md232"></a>
 Security &amp; Hardening</h3>
 <ul>
 <li>W^X Memory Protection: JIT-compiled code is never writable and executable at the same time, enforced with platform-native APIs (<code>VirtualProtect</code>, <code>mprotect</code>, <code>MAP_JIT</code>).</li>
@@ -203,7 +221,7 @@ Security &amp; Hardening</h3>
 <li>Comprehensive Test Suite: Over 30 unit and regression tests covering more than 300 assertions for ABI edge cases, memory lifecycle bugs, and security features.</li>
 <li>Fuzz Tested: The entire API surface, especially the signature parser and ABI classifiers, is continuously validated with <code>libFuzzer</code> and <code>AFL++</code> to find and fix potential crashes and hangs.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md230"></a>
+<h3><a class="anchor" id="autotoc_md233"></a>
 Performance &amp; Memory Management</h3>
 <ul>
 <li>High-Performance Design: The API separates the one-time JIT compilation cost from the near-native call-time overhead, making cached trampolines extremely fast.</li>
@@ -211,7 +229,7 @@ Performance &amp; Memory Management</h3>
 <li>Self-Contained Objects: Trampoline handles (<code><a class="el" href="structinfix__forward__t.html" title="Internal definition of a forward trampoline handle.">infix_forward_t</a></code>, <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code>) perform a deep copy of all necessary type information, making them fully self-contained and immune to use-after-free errors from other parts of the system.</li>
 <li>Zero Dependencies: The library is written in pure C11 and has no external library dependencies.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md231"></a>
+<h3><a class="anchor" id="autotoc_md234"></a>
 Platform Support</h3>
 <ul>
 <li>Architectures: x86-64 and AArch64 (ARM64).</li>
