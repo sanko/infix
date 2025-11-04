@@ -70,6 +70,8 @@ c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
     arena->capacity = initial_size;
     arena->current_offset = 0;
     arena->error = false;
+    arena->next_block = nullptr;
+    arena->block_size = initial_size;
 
     return arena;
 }
@@ -89,10 +91,15 @@ void infix_arena_destroy(infix_arena_t * arena) {
     if (arena == nullptr)
         return;
 
-    if (arena->buffer)
-        infix_free(arena->buffer);
-
-    infix_free(arena);
+    // Traverse the chain of blocks and free each one.
+    infix_arena_t * current = arena;
+    while (current != nullptr) {
+        infix_arena_t * next = current->next_block;
+        if (current->buffer)
+            infix_free(current->buffer);
+        infix_free(current);
+        current = next;
+    }
 }
 
 /**
@@ -117,42 +124,60 @@ void infix_arena_destroy(infix_arena_t * arena) {
  *         memory, has its error flag set, or an invalid alignment is requested.
  */
 c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
-    if (arena == nullptr || arena->error)
+    if (arena == nullptr)
         return nullptr;
 
     // Alignment must be a power of two for the bitwise alignment trick to work.
     if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         arena->error = true;
-        // This is a programmatic error. `INFIX_CODE_UNKNOWN` is the best fit from existing codes.
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);  // Programmatic error
         return nullptr;
     }
 
-    // A zero-size allocation simply returns the current aligned pointer without advancing it.
-    if (size == 0)
-        return (void *)(arena->buffer + arena->current_offset);
+    infix_arena_t * current_block = arena;
+    while (true) {  // Loop until allocation succeeds or fails definitively.
+        if (current_block->error)
+            return nullptr;
 
-    // Calculate the next offset that meets the alignment requirement.
-    size_t aligned_offset = _infix_align_up(arena->current_offset, alignment);
+        if (size == 0)
+            return (void *)(current_block->buffer + current_block->current_offset);
 
-    // Security: Check for integer overflow on the alignment calculation.
-    if (aligned_offset < arena->current_offset) {
-        arena->error = true;
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
-        return nullptr;
+        size_t aligned_offset = _infix_align_up(current_block->current_offset, alignment);
+
+        if (aligned_offset < current_block->current_offset) {
+            current_block->error = true;
+            _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
+            return nullptr;
+        }
+
+        // Attempt to allocate in the current block.
+        if (SIZE_MAX - size >= aligned_offset && aligned_offset + size <= current_block->capacity) {
+            void * ptr = current_block->buffer + aligned_offset;
+            current_block->current_offset = aligned_offset + size;
+            return ptr;  // Success: Allocation complete.
+        }
+
+        // If allocation failed, find or create the next block and let the loop retry.
+        if (current_block->next_block != nullptr) {
+            current_block = current_block->next_block;
+        }
+        else {
+            // Reached the end of the chain, so create a new block.
+            size_t next_size = current_block->block_size * 2;
+            if (next_size < size + alignment)
+                next_size = size + alignment;
+
+            current_block->next_block = infix_arena_create(next_size);
+            if (current_block->next_block == nullptr) {
+                current_block->error = true;  // Mark the last valid block as errored.
+                return nullptr;               // Growth failed.
+            }
+            current_block = current_block->next_block;
+        }
     }
 
-    // Security: Check for integer overflow on the final size calculation and for capacity.
-    if (SIZE_MAX - size < aligned_offset || aligned_offset + size > arena->capacity) {
-        arena->error = true;
-        // This is an out-of-memory condition for this specific arena.
-        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-        return nullptr;
-    }
-
-    void * ptr = arena->buffer + aligned_offset;
-    arena->current_offset = aligned_offset + size;
-    return ptr;
+    // This line should be unreachable if the logic is correct.
+    return nullptr;
 }
 
 /**

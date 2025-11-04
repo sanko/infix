@@ -1,0 +1,19 @@
+EXPORTS
+    _ZNK3BoxIdE9get_valueEv
+    _ZN3BoxIdEC1Ed
+    _ZN3BoxIdED1Ev
+    _ZN3BoxIdE9set_valueEd
+    _ZNK3BoxIiE9get_valueEv
+    _ZN3BoxIiEC1Ei
+    _ZN3BoxIiED1Ev
+    _ZN3BoxIiE9set_valueEi
+    create_box_double
+    create_box_int
+    destroy_box_double
+    destroy_box_int
+    get_mangled_box_double_getvalue
+    get_mangled_box_int_getvalue
+    get_sizeof_box_double
+    get_sizeof_box_int
+    _internal_force_export_all_methods_double
+    _internal_force_export_all_methods_int

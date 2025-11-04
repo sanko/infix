@@ -7,93 +7,92 @@ This guide provides practical, real-world examples to help you solve common FFI 
 ## Table of Contents
 
 * [Chapter 1: The Basics (Forward Calls)](#chapter-1-the-basics-forward-calls)
-    + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
-    + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
-    + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
-    + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
+   + [Recipe: Calling a Simple C Function](#recipe-calling-a-simple-c-function)
+   + [Recipe: Passing and Receiving Pointers](#recipe-passing-and-receiving-pointers)
+   + [Recipe: Working with "Out" Parameters](#recipe-working-with-out-parameters)
+   + [Recipe: Working with Opaque Pointers (Incomplete Types)](#recipe-working-with-opaque-pointers-incomplete-types)
 * [Chapter 2: Handling Complex Data Structures](#chapter-2-handling-complex-data-structures)
-    + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
-    + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
-    + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
-    + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
-    + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
-    + [Recipe: Working with Unions](#recipe-working-with-unions)
-    + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixedsize-arrays)
-    + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive-amp-forwarddeclared)
-    + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
-    + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
-        - [x86-64 (SSE, AVX, and AVX-512)](#x8664-sse-avx-and-avx512)
-        - [AArch64 (NEON)](#aarch64-neon)
-        - [AArch64 (Scalable Vector Extension - SVE)](#aarch64-scalable-vector-extension--sve)
-    + [Recipe: Working with Enums](#recipe-working-with-enums)
+   + [Recipe: Small Structs Passed by Value](#recipe-small-structs-passed-by-value)
+   + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
+   + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
+   + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
+   + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
+   + [Recipe: Working with Unions](#recipe-working-with-unions)
+   + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
+   + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive--forward-declared)
+   + [Recipe: Working with Complex Numbers](#recipe-working-with-complex-numbers)
+   + [Recipe: Working with SIMD Vectors](#recipe-working-with-simd-vectors)
+      - [x86-64 (SSE, AVX, and AVX-512)](#x86-64-sse-avx-and-avx-512)
+      - [AArch64 (NEON)](#aarch64-neon)
+      - [AArch64 (Scalable Vector Extension - SVE)](#aarch64-scalable-vector-extension---sve)
+   + [Recipe: Working with Enums](#recipe-working-with-enums)
 * [Chapter 3: The Power of Callbacks (Reverse Calls)](#chapter-3-the-power-of-callbacks-reverse-calls)
-    + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-typesafe-callback-for--raw-qsort-endraw-)
-    + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
+   + [Recipe: Creating a Type-Safe Callback for `qsort`](#recipe-creating-a-type-safe-callback-for-qsort)
+   + [Recipe: Creating a Stateful Callback](#recipe-creating-a-stateful-callback)
 * [Chapter 4: Advanced Techniques](#chapter-4-advanced-techniques)
-    + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like--raw-printf-endraw-)
-    + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
-    + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-vtable-emulation)
-    + [Recipe: Handling `longdouble`](#recipe-handling--raw-longdouble-endraw-)
-    + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
-    + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
+   + [Recipe: Calling Variadic Functions like `printf`](#recipe-calling-variadic-functions-like-printf)
+   + [Recipe: Receiving and Calling a Function Pointer](#recipe-receiving-and-calling-a-function-pointer)
+   + [Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)](#recipe-calling-a-function-pointer-from-a-struct-v-table-emulation)
+   + [Recipe: Handling `long double`](#recipe-handling-long-double)
+   + [Recipe: Proving Reentrancy with Nested FFI Calls](#recipe-proving-reentrancy-with-nested-ffi-calls)
+   + [Recipe: Proving Thread Safety](#recipe-proving-thread-safety)
 * [Chapter 5: Interoperability with Other Languages](#chapter-5-interoperability-with-other-languages)
-    + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
-    + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
-    + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
-    + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
-        - [Rust](#rust)
-        - [Zig](#zig)
-        - [Go](#go)
-        - [Swift](#swift)
-        - [Dlang](#dlang)
-        - [Fortran](#fortran)
-        - [Assembly](#assembly)
-    + [Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)](#recipe-handling-strings-and-semantic-types--raw-wchart-endraw--etc)
-        - [Step 1: Define Semantic Aliases in a Registry](#step-1-define-semantic-aliases-in-a-registry)
-        - [Step 2: Use the Aliases in Your Signature](#step-2-use-the-aliases-in-your-signature)
-        - [Step 3: Introspect with Semantic Awareness](#step-3-introspect-with-semantic-awareness)
-    + [Recipe: Calling C++ Virtual Functions (V-Table Emulation)](#recipe-calling-c-virtual-functions-vtable-emulation)
-    + [Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas](#recipe-bridging-c-callbacks--raw-stdfunction-endraw--and-lambdas)
-* [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries-amp-system-calls)
-    + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
-    + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
-        - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
-        - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
-    + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
+   + [The Universal Principle: The C ABI](#the-universal-principle-the-c-abi)
+   + [Recipe: Interfacing with a C++ Class (Directly)](#recipe-interfacing-with-a-c-class-directly)
+   + [Recipe: Interfacing with C++ Templates](#recipe-interfacing-with-c-templates)
+   + [The Pattern for Other Compiled Languages](#the-pattern-for-other-compiled-languages)
+      - [Rust](#rust)
+      - [Zig](#zig)
+      - [Go](#go)
+      - [Swift](#swift)
+      - [Dlang](#dlang)
+      - [Fortran](#fortran)
+      - [Assembly](#assembly)
+   + [Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)](#recipe-handling-strings-and-semantic-types-wchar_t-etc)
+   + [Recipe: Calling C++ Virtual Functions (V-Table Emulation)](#recipe-calling-c-virtual-functions-v-table-emulation)
+   + [Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas](#recipe-bridging-c-callbacks-stdfunction-and-lambdas)
+* [Chapter 6: Dynamic Libraries & System Calls](#chapter-6-dynamic-libraries--system-calls)
+   + [Recipe: Calling Native System Libraries without Linking](#recipe-calling-native-system-libraries-without-linking)
+   + [Recipe: Reading and Writing Global Variables](#recipe-reading-and-writing-global-variables)
+      - [Example 1: Simple Integer Variable](#example-1-simple-integer-variable)
+      - [Example 2: Aggregate (Struct) Variable](#example-2-aggregate-struct-variable)
+   + [Recipe: Handling Library Dependencies](#recipe-handling-library-dependencies)
 * [Chapter 7: Introspection for Data Marshalling](#chapter-7-introspection-for-data-marshalling)
-    + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
-    + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
-    + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
-* [Chapter 8: Performance & Memory Management](#chapter-8-performance-amp-memory-management)
-    + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
-    + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
-    + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
-    + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
-    + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
-        - [How It Works & Why It's Better](#how-it-works-amp-why-its-better)
-        - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
-* [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls-amp-troubleshooting)
-    + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
-    + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in--raw-args-endraw-)
-    + [Mistake: `infix` Signature Mismatch](#mistake--raw-infix-endraw--signature-mismatch)
-    + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
-* [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look--raw-infix-endraw--vs--raw-libffi-endraw--and--raw-dyncall-endraw-)
-    + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
-        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach)
-        - [The `libffi` Approach](#the--raw-libffi-endraw--approach)
-        - [The `infix` Approach](#the--raw-infix-endraw--approach)
-    + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
-        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach-1)
-        - [The `libffi` Approach](#the--raw-libffi-endraw--approach-1)
-        - [The `infix` Approach](#the--raw-infix-endraw--approach-1)
-    + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
-        - [The `dyncall` Approach](#the--raw-dyncall-endraw--approach-2)
-        - [The `libffi` Approach](#the--raw-libffi-endraw--approach-2)
-        - [The `infix` Approach](#the--raw-infix-endraw--approach-2)
-    + [Analysis and Takeaways](#analysis-and-takeaways)
+   + [Recipe: Creating and Introspecting Semantic Aliases](#recipe-creating-and-introspecting-semantic-aliases)
+   + [Recipe: Dynamic Struct Marshalling with the Signature Parser](#recipe-dynamic-struct-marshalling-with-the-signature-parser)
+   + [Recipe: Building a Signature String at Runtime](#recipe-building-a-signature-string-at-runtime)
+   + [Recipe: Introspecting a Trampoline for a Wrapper](#recipe-introspecting-a-trampoline-for-a-wrapper)
+* [Chapter 8: Performance & Memory Management](#chapter-8-performance--memory-management)
+   + [Best Practice: Caching Trampolines](#best-practice-caching-trampolines)
+   + [Recipe: Using a Custom Arena for a Group of Types](#recipe-using-a-custom-arena-for-a-group-of-types)
+   + [Recipe: The Full Manual API Lifecycle (Types to Trampoline)](#recipe-the-full-manual-api-lifecycle-types-to-trampoline)
+   + [Recipe: Using Custom Memory Allocators](#recipe-using-custom-memory-allocators)
+   + [Recipe: Optimizing Memory with a Shared Arena](#recipe-optimizing-memory-with-a-shared-arena)
+   + [Recipe: Building a Dynamic Call Frame with an Arena](#recipe-building-a-dynamic-call-frame-with-an-arena)
+      - [How It Works & Why It's Better](#how-it-works--why-its-better)
+      - [Advanced Optimization: Arena Resetting for Hot Loops](#advanced-optimization-arena-resetting-for-hot-loops)
+* [Chapter 9: Common Pitfalls & Troubleshooting](#chapter-9-common-pitfalls--troubleshooting)
+   + [Recipe: Advanced Error Reporting for the Parser](#recipe-advanced-error-reporting-for-the-parser)
+   + [Mistake: Passing a Value Instead of a Pointer in `args[]`](#mistake-passing-a-value-instead-of-a-pointer-in-args)
+   + [Mistake: `infix` Signature Mismatch](#mistake-infix-signature-mismatch)
+   + [Pitfall: Function Pointer Syntax](#pitfall-function-pointer-syntax)
+* [Chapter 10: A Comparative Look: `infix` vs. `libffi` and `dyncall`](#chapter-10-a-comparative-look-infix-vs-libffi-and-dyncall)
+   + [Scenario 1: Calling a Simple Function](#scenario-1-calling-a-simple-function)
+      - [The `dyncall` Approach](#the-dyncall-approach)
+      - [The `libffi` Approach](#the-libffi-approach)
+      - [The `infix` Approach](#the-infix-approach)
+   + [Scenario 2: Calling a Function with a Struct](#scenario-2-calling-a-function-with-a-struct)
+      - [The `dyncall` Approach](#the-dyncall-approach-1)
+      - [The `libffi` Approach](#the-libffi-approach-1)
+      - [The `infix` Approach](#the-infix-approach-1)
+   + [Scenario 3: Creating a Callback](#scenario-3-creating-a-callback)
+      - [The `dyncall` Approach](#the-dyncall-approach-2)
+      - [The `libffi` Approach](#the-libffi-approach-2)
+      - [The `infix` Approach](#the-infix-approach-2)
+   + [Analysis and Takeaways](#analysis-and-takeaways)
 * [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
-    + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
-    + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from--raw-dyncall-endraw--to--raw-infix-endraw-)
+   + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
+   + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
 
 ---
 
@@ -120,7 +119,7 @@ double result;
 infix_forward_get_unbound_code(trampoline)((void*)atan2, &result, args);
 ```
 
-> Full example available in [`Ch01_Rec01_SimpleCall.c`](/eg/cookbook/Ch01_Rec01_SimpleCall.c).
+> Full example available in [`Ch01_SimpleCall.c`](/eg/cookbook/Ch01_SimpleCall.c).
 
 ### Recipe: Passing and Receiving Pointers
 
@@ -143,7 +142,7 @@ const char* result_ptr = NULL;
 infix_forward_get_code(trampoline)(&result_ptr, args);
 ```
 
-> Full example available in [`Ch01_Rec02_Pointers.c`](/eg/cookbook/Ch01_Rec02_Pointers.c).
+> Full example available in [`Ch01_Pointers.c`](/eg/cookbook/Ch01_Pointers.c).
 
 ### Recipe: Working with "Out" Parameters
 
@@ -172,20 +171,20 @@ infix_forward_get_code(t)(&success, args);
 // After the call, post_count and score are populated.
 ```
 
-> Full example available in [`Ch01_Rec03_OutParameters.c`](/eg/cookbook/Ch01_Rec03_OutParameters.c).
+> Full example available in [`Ch01_OutParameters.c`](/eg/cookbook/Ch01_OutParameters.c).
 
 ### Recipe: Working with Opaque Pointers (Incomplete Types)
 
 **Problem**: You need to interact with a C library that uses opaque pointers or handles (e.g., `FILE*`, `sqlite3*`) where the internal structure is hidden.
 
-**Solution**: Use the `*void` signature. This is the canonical representation for any generic handle. Using a registry to create a type alias like `@FileHandle = *void;` can make your signatures more readable.
+**Solution**: Use the `*void` signature for the handle. For better readability and introspection, create a "semantic alias" for the handle type in a registry. This attaches a meaningful name to the `*void` type without changing how it's handled in the FFI call.
 
 ```c
-// 1. Use a registry to create a readable alias for the opaque handle.
+// 1. Use a registry to create a readable, semantic alias for the opaque handle.
 infix_registry_t* reg = infix_registry_create();
 infix_register_types(reg, "@FileHandle = *void;");
 
-// 2. Create trampolines using the alias.
+// 2. Create trampolines using the alias. The name @FileHandle is preserved for introspection.
 infix_forward_t *t_fopen, *t_fputs, *t_fclose;
 infix_forward_create(&t_fopen, "(*char, *char) -> @FileHandle", (void*)fopen, reg);
 infix_forward_create(&t_fputs, "(*char, @FileHandle) -> int", (void*)fputs, reg);
@@ -198,7 +197,7 @@ infix_forward_get_code(t_fopen)(&file_handle, (void*[]){ &filename, &mode });
 // ...
 ```
 
-> Full example available in [`Ch01_Rec04_OpaquePointers.c`](/eg/cookbook/Ch01_Rec04_OpaquePointers.c).
+> Full example available in [`Ch01_OpaquePointers.c`](/eg/cookbook/Ch01_OpaquePointers.c).
 
 ---
 
@@ -228,7 +227,7 @@ Point end;
 infix_forward_get_code(trampoline)(&end, args);
 ```
 
-> Full example available in [`Ch02_Rec01_StructByValue.c`](/eg/cookbook/Ch02_Rec01_StructByValue.c).
+> Full example available in [`Ch02_StructByValue.c`](/eg/cookbook/Ch02_StructByValue.c).
 
 ### Recipe: Receiving a Struct from a Function
 
@@ -249,7 +248,7 @@ Point result;
 infix_forward_get_code(trampoline)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec02_ReturnStruct.c`](/eg/cookbook/Ch02_Rec02_ReturnStruct.c).
+> Full example available in [`Ch02_ReturnStruct.c`](/eg/cookbook/Ch02_ReturnStruct.c).
 
 ### Recipe: Large Structs Passed by Reference
 
@@ -270,7 +269,7 @@ int result;
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec03_LargeStruct.c`](/eg/cookbook/Ch02_Rec03_LargeStruct.c).
+> Full example available in [`Ch02_LargeStruct.c`](/eg/cookbook/Ch02_LargeStruct.c).
 
 ### Recipe: Working with Packed Structs
 
@@ -291,7 +290,7 @@ void* args[] = {&p};
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec04_PackedStructs.c`](/eg/cookbook/Ch02_Rec04_PackedStructs.c).
+> Full example available in [`Ch02_PackedStructs.c`](/eg/cookbook/Ch02_PackedStructs.c).
 
 ### Recipe: Working with Structs that Contain Bitfields
 
@@ -318,7 +317,7 @@ uint32_t result;
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec05_Bitfields.c`](/eg/cookbook/Ch02_Rec05_Bitfields.c).
+> Full example available in [`Ch02_Bitfields.c`](/eg/cookbook/Ch02_Bitfields.c).
 
 ### Recipe: Working with Unions
 
@@ -340,7 +339,7 @@ void* args[] = {&num_val};
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec06_Unions.c`](/eg/cookbook/Ch02_Rec06_Unions.c).
+> Full example available in [`Ch02_Unions.c`](/eg/cookbook/Ch02_Unions.c).
 
 ### Recipe: Working with Fixed-Size Arrays
 
@@ -364,7 +363,7 @@ int64_t result = 0;
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec07_ArrayDecay.c`](/eg/cookbook/Ch02_Rec07_ArrayDecay.c).
+> Full example available in [`Ch02_ArrayDecay.c`](/eg/cookbook/Ch02_ArrayDecay.c).
 
 ### Recipe: Advanced Named Types (Recursive & Forward-Declared)
 
@@ -397,7 +396,7 @@ void* args[] = { &p_worker };
 infix_forward_get_code(trampoline)(&manager_name, args);
 ```
 
-> Full example available in [`Ch02_Rec08_AdvancedRegistry.c`](/eg/cookbook/Ch02_Rec08_AdvancedRegistry.c).
+> Full example available in [`Ch02_AdvancedRegistry.c`](/eg/cookbook/Ch02_AdvancedRegistry.c).
 
 ### Recipe: Working with Complex Numbers
 
@@ -418,7 +417,7 @@ void* args[] = {&input};
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec09_ComplexNumbers.c`](/eg/cookbook/Ch02_Rec09_ComplexNumbers.c).
+> Full example available in [`Ch02_ComplexNumbers.c`](/eg/cookbook/Ch02_ComplexNumbers.c).
 
 ### Recipe: Working with SIMD Vectors
 
@@ -450,7 +449,7 @@ __m512d result;
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec10_SIMD_AVX.c`](/eg/cookbook/Ch02_Rec10_SIMD_AVX.c).
+> Full example available in [`Ch02_SIMD_AVX.c`](/eg/cookbook/Ch02_SIMD_AVX.c).
 
 ---
 
@@ -474,7 +473,7 @@ float result;
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch02_Rec10_SIMD_NEON.c`](/eg/cookbook/Ch02_Rec10_SIMD_NEON.c).
+> Full example available in [`Ch02_SIMD_NEON.c`](/eg/cookbook/Ch02_SIMD_NEON.c).
 
 ---
 
@@ -506,7 +505,7 @@ double result;
 infix_forward_get_code(t)(&result, (void*[]){&input_vec});
 ```
 
-> Full example available in [`Ch02_Rec10_SIMD_SVE.c`](/eg/cookbook/Ch02_Rec10_SIMD_SVE.c).
+> Full example available in [`Ch02_SIMD_SVE.c`](/eg/cookbook/Ch02_SIMD_SVE.c).
 
 ### Recipe: Working with Enums
 
@@ -529,7 +528,7 @@ void* args[] = { &code };
 infix_forward_get_code(t)(&result_str, args);
 ```
 
-> Full example available in [`Ch02_Rec11_Enums.c`](/eg/cookbook/Ch02_Rec11_Enums.c).
+> Full example available in [`Ch02_Enums.c`](/eg/cookbook/Ch02_Enums.c).
 
 ---
 
@@ -560,7 +559,7 @@ int numbers[] = { 5, 1, 4, 2, 3 };
 qsort(numbers, 5, sizeof(int), my_comparator);
 ```
 
-> Full example available in [`Ch03_Rec01_QsortCallback.c`](/eg/cookbook/Ch03_Rec01_QsortCallback.c).
+> Full example available in [`Ch03_QsortCallback.c`](/eg/cookbook/Ch03_QsortCallback.c).
 
 ### Recipe: Creating a Stateful Callback
 
@@ -587,7 +586,7 @@ int list[] = {10, 20, 30};
 process_list(list, 3, processor_ptr);
 ```
 
-> Full example available in [`Ch03_Rec02_StatefulCallback.c`](/eg/cookbook/Ch03_Rec02_StatefulCallback.c).
+> Full example available in [`Ch03_StatefulCallback.c`](/eg/cookbook/Ch03_StatefulCallback.c).
 
 ---
 
@@ -614,7 +613,7 @@ int result;
 infix_forward_get_code(trampoline)(&result, args);
 ```
 
-> Full example available in [`Ch04_Rec01_VariadicPrintf.c`](/eg/cookbook/Ch04_Rec01_VariadicPrintf.c).
+> Full example available in [`Ch04_VariadicPrintf.c`](/eg/cookbook/Ch04_VariadicPrintf.c).
 
 ### Recipe: Receiving and Calling a Function Pointer
 
@@ -643,7 +642,7 @@ int result;
 infix_forward_get_code(harness_trampoline)(&result, harness_args);
 ```
 
-> Full example available in [`Ch04_Rec02_CallbackAsArg.c`](/eg/cookbook/Ch04_Rec02_CallbackAsArg.c).
+> Full example available in [`Ch04_CallbackAsArg.c`](/eg/cookbook/Ch04_CallbackAsArg.c).
 
 ### Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)
 
@@ -676,11 +675,11 @@ void* add_args[] = { &my_adder, &amount_to_add };
 infix_forward_get_code(t_add)(&result, add_args);
 ```
 
-> Full example available in [`Ch04_Rec03_VTableCStyle.c`](/eg/cookbook/Ch04_Rec03_VTableCStyle.c).
+> Full example available in [`Ch04_VTableCStyle.c`](/eg/cookbook/Ch04_VTableCStyle.c).
 
-### Recipe: Handling `longdouble`
+### Recipe: Handling `long double`
 
-**Problem**: You need to call a function that uses `longdouble`, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for `double` on MSVC/macOS).
+**Problem**: You need to call a function that uses `long double`, which has different sizes and ABI rules on different platforms (e.g., 80-bit on x86, 128-bit on AArch64, or just an alias for `double` on MSVC/macOS).
 
 **Solution**: Use the `longdouble` keyword in your signature. `infix`'s ABI logic contains the platform-specific rules to handle it correctly, whether it's passed on the x87 FPU stack (System V x64), in a 128-bit vector register (AArch64), or as a normal `double`.
 
@@ -698,7 +697,7 @@ void* args[] = { &input };
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch04_Rec04_LongDouble.c`](/eg/cookbook/Ch04_Rec04_LongDouble.c).
+> Full example available in [`Ch04_LongDouble.c`](/eg/cookbook/Ch04_LongDouble.c).
 
 ### Recipe: Proving Reentrancy with Nested FFI Calls
 
@@ -729,7 +728,7 @@ int final_result;
 infix_forward_get_code(fwd_harness)(&final_result, harness_args);
 ```
 
-> Full example available in [`Ch04_Rec05_Reentrancy.c`](/eg/cookbook/Ch04_Rec05_Reentrancy.c).
+> Full example available in [`Ch04_Reentrancy.c`](/eg/cookbook/Ch04_Reentrancy.c).
 
 ### Recipe: Proving Thread Safety
 
@@ -756,7 +755,7 @@ pthread_create(&thread_id, NULL, worker_thread_func, &data);
 pthread_join(thread_id, NULL);
 ```
 
-> Full example available in [`Ch04_Rec06_ThreadSafety.c`](/eg/cookbook/Ch04_Rec06_ThreadSafety.c).
+> Full example available in [`Ch04_ThreadSafety.c`](/eg/cookbook/Ch04_ThreadSafety.c).
 
 ---
 
@@ -793,7 +792,7 @@ int result;
 infix_forward_get_code(t_getval)(&result, (void*[]){ &obj });
 ```
 
-> Full example available in [`Ch05_Rec01_CppMangledNames.c`](/eg/cookbook/Ch05_Rec01_CppMangledNames.c) and library source in [`libs/MyClass.cpp`](/eg/cookbook/libs/MyClass.cpp).
+> Full example available in [`Ch05_CppMangledNames.c`](/eg/cookbook/Ch05_CppMangledNames.c) and library source in [`libs/MyClass.cpp`](/eg/cookbook/libs/MyClass.cpp).
 
 ### Recipe: Interfacing with C++ Templates
 
@@ -821,7 +820,7 @@ double result;
 infix_forward_get_code(t_get)(&result, (void*[]){ &my_box });
 ```
 
-> Full example available in [`Ch05_Rec02_CppTemplates.c`](/eg/cookbook/Ch05_Rec02_CppTemplates.c) and library source in [`libs/Box.cpp`](/eg/cookbook/libs/Box.cpp).
+> Full example available in [`Ch05_CppTemplates.c`](/eg/cookbook/Ch05_CppTemplates.c) and library source in [`libs/Box.cpp`](/eg/cookbook/libs/Box.cpp).
 
 ### The Pattern for Other Compiled Languages
 
@@ -929,56 +928,35 @@ asm_add:
 
 ### Recipe: Handling Strings and Semantic Types (`wchar_t`, etc.)
 
-**Problem**: You are building a language binding and need to introspect a signature to marshal strings correctly. A signature like `*uint16` is structurally correct for a Windows `wchar_t*`, but how does your code know it's a null-terminated string and not just a pointer to an integer?
+**Problem**: You are building a language binding and need to introspect a type to marshal data correctly. A signature like `*uint16` is structurally correct for a Windows `wchar_t*`, but how does your code know it's a null-terminated string and not just a pointer to an integer?
 
-**Solution**: Use the `infix` type registry to create **semantic aliases**. The signature string itself can then document the *intent* of the type, which your wrapper can use to trigger the correct string-handling logic. This pattern provides the missing link between C's structural type system and the semantic needs of a high-level language.
+**Solution**: Use the `infix` type registry to create **semantic aliases**. The new `infix_type_get_name()` API allows you to retrieve this semantic name at runtime, giving your wrapper the context it needs to perform the correct marshalling logic. This pattern provides the missing link between C's structural type system and the semantic needs of a high-level language.
 
 Let's model the Windows `MessageBoxW` function, which takes two UTF-16 strings.
 
-#### Step 1: Define Semantic Aliases in a Registry
-
 ```c
+// 1. Define semantic aliases in a registry.
 infix_registry_t* registry = infix_registry_create();
-
-const char* string_types =
-    // Structural aliases for Windows types
+const char* type_defs =
     "@HWND = *void;"
-    "@UINT = uint32;"
+    "@UTF16String = *uint16;" // Represents wchar_t* on Windows
+    "@UTF8String = *char;";   // Represents const char*
+infix_register_types(registry, type_defs);
 
-    // Semantic aliases that describe intent, not just structure.
-    "@UTF16String = { data: *uint16 };" // Represents wchar_t*
-    "@UTF8String = { data: *char };"    // Represents const char*
-;
-infix_register_types(registry, string_types);
-```
+// 2. Define function signatures using these aliases.
+const char* signature = "(@HWND, @UTF16String, @UTF16String, uint) -> int";
 
-> **Note:** We define `UTF16String` as `{*uint16}` instead of a direct alias `*uint16`. This is a crucial technique. By wrapping the pointer in a struct, the name `@UTF16String` refers to the struct itself, making it inspectable.
+// 3. In your binding, introspect the type to make marshalling decisions.
+infix_type_from_signature(&type, &arena, signature, registry);
+const infix_type* arg_type = infix_forward_get_arg_type(type, 1);
+const char* semantic_name = infix_type_get_name(arg_type); // Will be "UTF16String"
 
-#### Step 2: Use the Aliases in Your Signature
-
-```c
-// Signature for: int MessageBoxW(HWND hwnd, LPCWSTR lpText, LPCWSTR lpCaption, UINT uType);
-const char* signature = "(@HWND, @UTF16String, @UTF16String, @UINT) -> int";
-```
-
-#### Step 3: Introspect with Semantic Awareness
-
-```c
-// 1. Parse the function signature to get its components.
-infix_signature_parse(signature, &arena, &ret, &args, &num_args, &num_fixed, registry);
-
-// 2. Introspect the type of an argument.
-const infix_type* arg_type = args[1].type; // Second argument
-
-// 3. After resolution, `@UTF16String` is a STRUCT. Check its preserved name.
-if (arg_type->category == INFIX_TYPE_STRUCT && arg_type->meta.aggregate_info.name) {
-    if (strcmp(arg_type->meta.aggregate_info.name, "UTF16String") == 0) {
-        // This is our cue! Marshal the user's string as UTF-16.
-    }
+if (semantic_name && strcmp(semantic_name, "UTF16String") == 0) {
+    // This is our cue! Marshal the user's string as UTF-16.
 }
 ```
 
-> Full example available in [`Ch05_Rec03_SemanticStrings.c`](/eg/cookbook/Ch05_Rec03_SemanticStrings.c).
+> Full example available in [`Ch05_SemanticStrings.c`](/eg/cookbook/Ch05_SemanticStrings.c).
 
 ### Recipe: Calling C++ Virtual Functions (V-Table Emulation)
 
@@ -1007,7 +985,7 @@ double rect_area;
 infix_forward_get_code(t_area)(&rect_area, (void*[]){ &rect_obj });
 ```
 
-> Full example available in [`Ch05_Rec04_CppVirtualFunctions.c`](/eg/cookbook/Ch05_Rec04_CppVirtualFunctions.c) and library source in [`libs/shapes.cpp`](/eg/cookbook/libs/shapes.cpp).
+> Full example available in [`Ch05_CppVirtualFunctions.c`](/eg/cookbook/Ch05_CppVirtualFunctions.c) and library source in [`libs/shapes.cpp`](/eg/cookbook/libs/shapes.cpp).
 
 ### Recipe: Bridging C++ Callbacks (`std::function`) and Lambdas
 
@@ -1039,7 +1017,7 @@ infix_forward_create(&t_trigger, "(*void, int)->void", p_trigger, NULL);
 // ...
 ```
 
-> Full example available in [`Ch05_Rec05_CppCallbacks.cpp`](/eg/cookbook/Ch05_Rec05_CppCallbacks.cpp) and library source in [`libs/EventManager.cpp`](/eg/cookbook/libs/EventManager.cpp).
+> Full example available in [`Ch05_CppCallbacks.cpp`](/eg/cookbook/Ch05_CppCallbacks.cpp) and library source in [`libs/EventManager.cpp`](/eg/cookbook/libs/EventManager.cpp).
 
 ## Chapter 6: Dynamic Libraries & System Calls
 
@@ -1070,7 +1048,7 @@ int result;
 infix_forward_get_code(t)(&result, args);
 ```
 
-> Full example available in [`Ch06_Rec01_SystemLibraries.c`](/eg/cookbook/Ch06_Rec01_SystemLibraries.c).
+> Full example available in [`Ch06_SystemLibraries.c`](/eg/cookbook/Ch06_SystemLibraries.c).
 
 ### Recipe: Reading and Writing Global Variables
 
@@ -1110,7 +1088,7 @@ Config new_config = { "updated", 2 };
 infix_write_global(lib, "g_config", "@Config", &new_config, reg);
 ```
 
-> Full example available in [`Ch06_Rec02_GlobalVariables.c`](/eg/cookbook/Ch06_Rec02_GlobalVariables.c) and library source in [`libs/libglobals.c`](/eg/cookbook/libs/libglobals.c).
+> Full example available in [`Ch06_GlobalVariables.c`](/eg/cookbook/Ch06_GlobalVariables.c) and library source in [`libs/libglobals.c`](/eg/cookbook/libs/libglobals.c).
 
 ### Recipe: Handling Library Dependencies
 
@@ -1130,11 +1108,45 @@ int result;
 infix_forward_get_code(t)(&result, NULL);
 ```
 
-> Full example available in [`Ch06_Rec03_LibraryDependencies.c`](/eg/cookbook/Ch06_Rec03_LibraryDependencies.c) and library sources in [`libs/libA.c`](/eg/cookbook/libs/libA.c) and [`libs/libB.c`](/eg/cookbook/libs/libB.c).
+> Full example available in [`Ch06_LibraryDependencies.c`](/eg/cookbook/Ch06_LibraryDependencies.c) and library sources in [`libs/libA.c`](/eg/cookbook/libs/libA.c) and [`libs/libB.c`](/eg/cookbook/libs/libB.c).
 
 ---
 
 ## Chapter 7: Introspection for Data Marshalling
+
+### Recipe: Creating and Introspecting Semantic Aliases
+
+**Problem**: You need to distinguish between types that are structurally identical (like multiple kinds of `void*` handles) for your language binding's marshalling logic.
+
+**Solution**: Use the type registry to create semantic aliases. The `infix_type_get_name()` function allows you to retrieve these names at runtime, providing the context your code needs.
+
+```c
+// 1. Define semantic aliases for different handle types.
+infix_registry_t* registry = infix_registry_create();
+infix_register_types(registry,
+    "@DatabaseHandle = *void;"
+    "@IteratorHandle = *void;"
+    "@MyInt = int32;"
+);
+
+// 2. In your binding, parse a type and check its semantic name.
+infix_type* type = NULL;
+infix_arena_t* arena = NULL;
+infix_type_from_signature(&type, &arena, "@DatabaseHandle", registry);
+
+const char* name = infix_type_get_name(type); // name will be "DatabaseHandle"
+
+if (name && strcmp(name, "DatabaseHandle") == 0) {
+    // Correctly identified! Now perform database-specific marshalling.
+}
+
+// The underlying structural type is still fully accessible.
+if (infix_type_get_category(type) == INFIX_TYPE_POINTER) {
+    // ...
+}
+```
+
+> Full example available in [`Ch07_SemanticAliases.c`](/eg/cookbook/Ch07_SemanticAliases.c).
 
 ### Recipe: Dynamic Struct Marshalling with the Signature Parser
 
@@ -1159,7 +1171,7 @@ void marshal_ordered_data(void* dest, const char* sig, void** src) {
 }
 ```
 
-> Full example available in [`Ch07_Rec01_DynamicMarshalling.c`](/eg/cookbook/Ch07_Rec01_DynamicMarshalling.c).
+> Full example available in [`Ch07_DynamicMarshalling.c`](/eg/cookbook/Ch07_DynamicMarshalling.c).
 
 ### Recipe: Building a Signature String at Runtime
 
@@ -1172,7 +1184,7 @@ void marshal_ordered_data(void* dest, const char* sig, void** src) {
 const char* user_defined_fields[] = { "int", "int", "double" };
 int num_fields = 3;
 
-char signature_buffer[256] = "{";
+char signature_buffer = "{";
 // 1. Build the signature string dynamically.
 for (int i = 0; i < num_fields; ++i) {
     strcat(signature_buffer, user_defined_fields[i]);
@@ -1187,7 +1199,7 @@ infix_type_from_signature(&dynamic_type, &arena, signature_buffer, NULL);
 // ...
 ```
 
-> Full example available in [`Ch07_Rec02_DynamicSignatures.c`](/eg/cookbook/Ch07_Rec02_DynamicSignatures.c).
+> Full example available in [`Ch07_DynamicSignatures.c`](/eg/cookbook/Ch07_DynamicSignatures.c).
 
 ### Recipe: Introspecting a Trampoline for a Wrapper
 
@@ -1212,7 +1224,7 @@ void dynamic_wrapper(infix_forward_t* trampoline, void* target_func, void** args
 }
 ```
 
-> Full example available in [`Ch07_Rec03_IntrospectWrapper.c`](/eg/cookbook/Ch07_Rec03_IntrospectWrapper.c).
+> Full example available in [`Ch07_IntrospectWrapper.c`](/eg/cookbook/Ch07_IntrospectWrapper.c).
 
 ---
 
@@ -1280,7 +1292,7 @@ infix_forward_t* trampoline = NULL;
 infix_forward_create_manual(&trampoline, point_type, arg_types, 2, 2, (void*)move_point);
 ```
 
-> Full example available in [`Ch08_Rec02_ManualAPI.c`](/eg/cookbook/Ch08_Rec02_ManualAPI.c).
+> Full example available in [`Ch08_ManualAPI.c`](/eg/cookbook/Ch08_ManualAPI.c).
 
 ### Recipe: Using Custom Memory Allocators
 
@@ -1303,7 +1315,58 @@ static void tracking_free(void* ptr) { /* ... */ }
 infix_forward_create(&trampoline, "()->void", (void*)dummy_func, NULL);
 ```
 
-> Full example available in [`Ch08_Rec01_CustomAllocators.c`](/eg/cookbook/Ch08_Rec01_CustomAllocators.c).
+> Full example available in [`Ch08_CustomAllocators.c`](/eg/cookbook/Ch08_CustomAllocators.c).
+
+### Recipe: Optimizing Memory with a Shared Arena
+
+**Problem**: Your application creates a large number of trampolines that all reference the same set of complex, named types (e.g., `@Point`, `@User`). By default, `infix` deep-copies the metadata for these types into each trampoline's private memory, leading to high memory consumption and slower creation times.
+
+**Solution**: Use the **shared arena** pattern. By creating the type registry and all related trampolines within a single, user-managed arena, you instruct `infix` to share pointers to the canonical named types instead of copying them. This drastically reduces memory usage and speeds up trampoline creation, but it requires you to manage the lifetime of the shared arena carefully.
+
+**When to use it:** This is an advanced pattern ideal for language runtimes, plugin systems, or long-running applications that create many FFI interfaces referencing a common set of C headers.
+
+```c
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stdint.h>
+
+// Dummy C types and functions to interact with
+typedef struct { double x; double y; } Point;
+typedef struct { uint64_t id; const char* name; } User;
+void handle_point(const Point* p) { /* ... */ }
+void handle_user(const User* u) { /* ... */ }
+
+void shared_arena_example() {
+    // Create a single, long-lived arena to hold everything.
+    infix_arena_t* shared_arena = infix_arena_create(65536);
+
+    // Create the type registry *within* the shared arena.
+    infix_registry_t* registry = infix_registry_create_in_arena(shared_arena);
+
+    const char* my_types =
+        "@Point = { x: double, y: double };"
+        "@User  = { id: uint64, name: *char };";
+    infix_register_types(registry, my_types);
+
+    // Create multiple trampolines, also telling them to use the shared arena.
+    // Because they share an arena with the registry, the metadata for @Point and
+    // @User will be shared via pointers, not deep-copied.
+    infix_forward_t *t_point = NULL, *t_user = NULL;
+    infix_forward_create_in_arena(&t_point, shared_arena, "(*@Point)->void", (void*)handle_point, registry);
+    infix_forward_create_in_arena(&t_user, shared_arena, "(*@User)->void", (void*)handle_user, registry);
+
+    // ... use the trampolines ...
+
+    // The user is responsible for the lifetime of all objects. Destroying the
+    // handles and registry first is good practice before freeing the master arena.
+    infix_forward_destroy(t_point);
+    infix_forward_destroy(t_user);
+    infix_registry_destroy(registry);
+    infix_arena_destroy(shared_arena);
+}
+```
+
+> Full, runnable example available in [`Ch08_SharedArena.c`](/eg/cookbook/Ch08_SharedArena.c).
 
 ### Recipe: Building a Dynamic Call Frame with an Arena
 
@@ -1334,7 +1397,7 @@ void dynamic_ffi_call(infix_forward_t* trampoline, ...) {
 }
 ```
 
-> Full example available in [`Ch08_Rec03_ArenaCallFrame.c`](/eg/cookbook/Ch08_Rec03_ArenaCallFrame.c).
+> Full example available in [`Ch08_ArenaCallFrame.c`](/eg/cookbook/Ch08_ArenaCallFrame.c).
 
 #### How It Works & Why It's Better
 
@@ -1397,7 +1460,7 @@ void report_parse_error(const char* signature) {
 report_parse_error("{int, double, ^*char}");
 ```
 
-> Full example available in [`Ch09_Rec01_ErrorReporting.c`](/eg/cookbook/Ch09_Rec01_ErrorReporting.c).
+> Full example available in [`Ch09_ErrorReporting.c`](/eg/cookbook/Ch09_ErrorReporting.c).
 
 ### Mistake: Passing a Value Instead of a Pointer in `args[]`
 

@@ -14,41 +14,34 @@
 
 /**
  * @file fuzz_trampoline.c
- * @brief Fuzzer target for the trampoline generation functions.
+ * @brief Fuzzer target for the trampoline generation functions, including shared arena logic.
  * @ingroup internal_fuzz
  *
  * @internal
- * This file defines a fuzz target that focuses on the JIT code generation pipeline,
- * specifically the `infix_*_create_*_manual` functions. It is designed to be compiled
- * with a fuzzing engine like libFuzzer or AFL.
+ * This fuzzer targets the full JIT compilation pipeline, from type graph to executable
+ * code. It has been updated to specifically stress both the default memory model (deep-copying)
+ * and the new shared arena optimization (pointer-sharing).
  *
  * @section fuzz_strategy Fuzzing Strategy
  *
- * This fuzzer employs a structure-aware approach to thoroughly test the trampoline
- * creation process:
+ * The fuzzer uses a structure-aware and probabilistic approach:
+ * 1.  **Generate Base Types:** A pool of random base types is generated.
+ * 2.  **Create a Registry:** These base types are registered with names (e.g., `@FuzzType0`).
+ * 3.  **Generate Referencing Types:** A second pool of types is generated, which can
+ *     include references (`@FuzzTypeN`) to the types in the registry.
+ * 4.  **Probabilistic Path Selection:** A byte is consumed from the fuzzer input to
+ *     decide which memory model to test:
+ *     a. **Deep-Copy Path:** The registry and trampolines are created in *separate* arenas.
+ *        This forces the default, safe behavior where all named type metadata is deep-copied
+ *        into each trampoline.
+ *     b. **Pointer-Sharing Path:** The registry and trampolines are created in the *same*
+ *        shared arena. This forces the optimized behavior where trampolines share pointers
+ *        to the canonical named types, saving memory.
+ * 5.  **Exercise Trampoline Creation:** A random function signature is constructed using
+ *     the referencing types, and all four `infix_*_create_*` functions are called.
  *
- * 1.  **Generate Random Types:** It first consumes the fuzzer's input data to
- *     generate a pool of random `infix_type` objects using the `generate_random_type`
- *     helper. This creates a diverse set of valid, invalid, and complex aggregate
- *     types to serve as building blocks.
- *
- * 2.  **Construct a Random Signature:** It then consumes more data to construct a
- *     random function signature (return type, argument count, and argument types)
- *     by selecting types from the generated pool.
- *
- * 3.  **Exercise Trampoline Creation:** Finally, it passes this randomly generated
- *     signature to all four manual-API trampoline creation functions:
- *     - `infix_forward_create_unbound_manual`
- *     - `infix_forward_create_manual` (bound)
- *     - `infix_reverse_create_callback_manual`
- *     - `infix_reverse_create_closure_manual`
- *
- * The primary goal is to find bugs in the complete JIT pipeline, from ABI
- * classification through to the final machine code emission. By generating valid
- * `infix_type` objects first and then passing them to the manual API, this fuzzer
- * can create more complex and valid inputs for the JIT engine than a simple
- * string-based fuzzer might. This helps uncover deeper bugs in the code generation
- * and memory management logic that might not be triggered by parser errors.
+ * This strategy ensures that both memory management code paths are continuously fuzzed
+ * for crashes, memory leaks, use-after-free errors, and other vulnerabilities.
  * @endinternal
  */
 
@@ -75,84 +68,140 @@ void dummy_closure_handler(infix_context_t * ctx, void * ret, void ** args) {
  * @param in The fuzzer input data stream.
  */
 static void FuzzTest(fuzzer_input in) {
-    infix_type * type_pool[MAX_TYPES_IN_POOL] = {0};
-    int type_count = 0;
-
-    infix_arena_t * arena = infix_arena_create(65536);
-    if (!arena)
+    uint8_t path_selector;
+    if (!consume_uint8_t(&in, &path_selector))
         return;
 
-    // 1. Generate a pool of random types from the input data.
+    bool use_shared_arena = (path_selector % 2 == 0);
+
+    infix_arena_t * main_arena = infix_arena_create(65536);
+    if (!main_arena)
+        return;
+
+    infix_registry_t * registry = NULL;
+    infix_arena_t * trampoline_arena = NULL;
+    infix_arena_t * registry_arena = NULL;
+
+    if (use_shared_arena) {
+        // Path A: Test pointer-sharing. Registry and trampolines use the same arena.
+        registry = infix_registry_create_in_arena(main_arena);
+        trampoline_arena = main_arena;
+        registry_arena = main_arena;
+    }
+    else {
+        // Path B: Test deep-copying. Registry and trampolines use different arenas.
+        registry = infix_registry_create();
+        trampoline_arena = infix_arena_create(16384);
+        // We need the internal arena pointer to generate types into it.
+        if (registry)
+            registry_arena = registry->arena;
+    }
+
+    if (!registry || !trampoline_arena || !registry_arena)
+        goto cleanup;
+
+    // 1. Generate a pool of base types and register them.
+    infix_type * base_type_pool[MAX_TYPES_IN_POOL] = {0};
+    int base_type_count = 0;
+    char def_buffer[256];
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
         size_t total_fields = 0;
-        infix_type * new_type = generate_random_type(arena, &in, 0, &total_fields);
-        if (new_type)
-            type_pool[type_count++] = new_type;
+        base_type_pool[i] = generate_random_type(registry_arena, &in, 0, &total_fields);
+        if (base_type_pool[i]) {
+            base_type_count++;
+            char type_body_str[1024];
+            if (_infix_type_print_body_only(
+                    type_body_str, sizeof(type_body_str), base_type_pool[i], INFIX_DIALECT_SIGNATURE) ==
+                INFIX_SUCCESS) {
+                snprintf(def_buffer, sizeof(def_buffer), "@FuzzType%d = %s;", i, type_body_str);
+                (void)infix_register_types(registry, def_buffer);
+            }
+        }
         else
-            break;  // Stop if input data is exhausted or a generation limit is hit.
+            break;
     }
+    if (base_type_count == 0)
+        goto cleanup;
 
-    if (type_count == 0) {
-        infix_arena_destroy(arena);
-        return;
+    // 2. Generate a second pool of types that can reference the named types.
+    infix_type * final_type_pool[MAX_TYPES_IN_POOL] = {0};
+    int final_type_count = 0;
+    for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
+        size_t total_fields = 0;
+        uint8_t choice;
+        if (consume_uint8_t(&in, &choice) && (choice % 4 == 0)) {  // 25% chance of being a named ref
+            uint8_t name_idx;
+            if (consume_uint8_t(&in, &name_idx)) {
+                snprintf(def_buffer, sizeof(def_buffer), "@FuzzType%d", name_idx % base_type_count);
+                infix_type * raw_type = NULL;
+                infix_arena_t * temp_parser_arena = NULL;
+                // 1. Parse into a new temporary arena.
+                if (_infix_parse_type_internal(&raw_type, &temp_parser_arena, def_buffer) == INFIX_SUCCESS)
+                    // 2. Copy the result from the temporary arena into our main trampoline arena.
+                    final_type_pool[i] = _copy_type_graph_to_arena(trampoline_arena, raw_type);
+                // 3. Always destroy the temporary arena created by the parser.
+                infix_arena_destroy(temp_parser_arena);
+            }
+        }
+        else
+            final_type_pool[i] = generate_random_type(trampoline_arena, &in, 0, &total_fields);
+        if (final_type_pool[i])
+            final_type_count++;
+        else
+            break;
     }
+    if (final_type_count == 0)
+        goto cleanup;
 
-    // 2. Construct a random function signature using types from the pool.
+    // 3. Construct a random function signature.
     uint8_t arg_count_byte;
     if (consume_uint8_t(&in, &arg_count_byte)) {
         size_t num_args = arg_count_byte % MAX_ARGS_IN_SIGNATURE;
-
-        uint8_t fixed_arg_byte = 0;
-        consume_uint8_t(&in, &fixed_arg_byte);
-        size_t num_fixed_args = num_args > 0 ? (fixed_arg_byte % (num_args + 1)) : 0;
-
+        size_t num_fixed_args = num_args > 0 ? (arg_count_byte % (num_args + 1)) : 0;
         infix_type ** arg_types = (infix_type **)calloc(num_args, sizeof(infix_type *));
         if (arg_types) {
-            uint8_t idx_byte = 0;
-            consume_uint8_t(&in, &idx_byte);
-            infix_type * return_type = type_pool[idx_byte % type_count];
-
+            infix_type * return_type = final_type_pool[arg_count_byte % final_type_count];
             for (size_t i = 0; i < num_args; ++i)
-                arg_types[i] = type_pool[i % type_count];
+                arg_types[i] = final_type_pool[i % final_type_count];
 
-            // 3. Exercise all four manual trampoline creation APIs.
-            // We check the return status but are primarily interested in whether the
-            // calls crash, hang, or leak memory (as detected by sanitizers).
+            (void)_infix_resolve_type_graph_inplace(&return_type, registry);
+            for (size_t i = 0; i < num_args; ++i)
+                (void)_infix_resolve_type_graph_inplace(&arg_types[i], registry);
 
-            infix_forward_t * unbound_trampoline = NULL;
-            if (infix_forward_create_unbound_manual(
-                    &unbound_trampoline, return_type, arg_types, num_args, num_fixed_args) == INFIX_SUCCESS)
-                infix_forward_destroy(unbound_trampoline);
+            // 4. Exercise all trampoline creation functions.
+            infix_forward_t * t1 = NULL;
+            (void)infix_forward_create_unbound_manual(&t1, return_type, arg_types, num_args, num_fixed_args);
+            infix_forward_destroy(t1);
 
-            infix_forward_t * bound_trampoline = NULL;
-            if (infix_forward_create_manual(&bound_trampoline,
-                                            return_type,
-                                            arg_types,
-                                            num_args,
-                                            num_fixed_args,
-                                            (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
-                infix_forward_destroy(bound_trampoline);
+            infix_forward_t * t2 = NULL;
+            (void)infix_forward_create_manual(
+                &t2, return_type, arg_types, num_args, num_fixed_args, (void *)dummy_target_for_fuzzing);
+            infix_forward_destroy(t2);
 
-            infix_reverse_t * reverse_callback = NULL;
-            if (infix_reverse_create_callback_manual(&reverse_callback,
-                                                     return_type,
-                                                     arg_types,
-                                                     num_args,
-                                                     num_fixed_args,
-                                                     (void *)dummy_target_for_fuzzing) == INFIX_SUCCESS)
-                infix_reverse_destroy(reverse_callback);
+            infix_reverse_t * t3 = NULL;
+            (void)infix_reverse_create_callback_manual(
+                &t3, return_type, arg_types, num_args, num_fixed_args, (void *)dummy_target_for_fuzzing);
+            infix_reverse_destroy(t3);
 
-            infix_reverse_t * reverse_closure = NULL;
-            if (infix_reverse_create_closure_manual(
-                    &reverse_closure, return_type, arg_types, num_args, num_fixed_args, dummy_closure_handler, NULL) ==
-                INFIX_SUCCESS)
-                infix_reverse_destroy(reverse_closure);
+            infix_reverse_t * t4 = NULL;
+            (void)infix_reverse_create_closure_manual(
+                &t4, return_type, arg_types, num_args, num_fixed_args, dummy_closure_handler, NULL);
+            infix_reverse_destroy(t4);
 
             free(arg_types);
         }
     }
 
-    infix_arena_destroy(arena);
+cleanup:
+    infix_registry_destroy(registry);
+    if (use_shared_arena)  // In the shared path, main_arena is the only other arena to clean up.
+        infix_arena_destroy(main_arena);
+    else {
+        // In the deep-copy path, we must clean up both the unused main_arena
+        // and the separately allocated trampoline_arena.
+        infix_arena_destroy(trampoline_arena);
+        infix_arena_destroy(main_arena);  // This line fixes the leak.
+    }
 }
 
 #ifndef USE_AFL

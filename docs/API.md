@@ -34,7 +34,7 @@ These are the primary, recommended functions for creating trampolines from human
 ### Forward Trampolines (Calling C)
 
 #### `infix_forward_create`
-Creates a high-performance "bound" trampoline compiled for a *specific* C function. This is the fastest way to call the same function repeatedly.
+Creates a high-performance "bound" trampoline compiled for a *specific* C function. This is the fastest way to call the same function repeatedly. This function creates a private memory arena for the trampoline and performs a deep copy of all type metadata, ensuring it is a self-contained object.
 
 ```c
 infix_status infix_forward_create(
@@ -46,7 +46,7 @@ infix_status infix_forward_create(
 ```
 
 #### `infix_forward_create_unbound`
-Creates a more flexible "unbound" trampoline for a given signature. The target function is provided at call time, allowing you to reuse one trampoline for multiple functions with the same signature.
+Creates a more flexible "unbound" trampoline for a given signature. The target function is provided at call time, allowing you to reuse one trampoline for multiple functions with the same signature. Like `infix_forward_create`, this function creates a private arena for the trampoline.
 
 ```c
 infix_status infix_forward_create_unbound(
@@ -56,10 +56,23 @@ infix_status infix_forward_create_unbound(
 );
 ```
 
+#### `infix_forward_create_in_arena` (Advanced)
+Creates a "bound" forward trampoline that allocates its internal metadata from a user-provided arena. When the `target_arena` is the same one used by a registry, this function will share pointers to named types instead of deep-copying them, significantly saving memory and improving creation performance.
+
+```c
+infix_status infix_forward_create_in_arena(
+    infix_forward_t** out_trampoline,
+    infix_arena_t* target_arena,
+    const char* signature,
+    void* target_function,
+    infix_registry_t* registry
+);
+```
+
 ### Reverse Trampolines (Callbacks & Closures)
 
 #### `infix_reverse_create_callback`
-Creates a reverse trampoline for a type-safe C function. This is the easiest way to create a callback for a C library like `qsort`.
+Creates a reverse trampoline for a type-safe C function. This is the easiest way to create a callback for a C library like `qsort`. This function creates a private memory arena for the callback context.
 
 ```c
 infix_status infix_reverse_create_callback(
@@ -71,7 +84,7 @@ infix_status infix_reverse_create_callback(
 ```
 
 #### `infix_reverse_create_closure`
-Creates a reverse trampoline with a generic handler. This is the ideal choice for creating stateful callbacks or for language bindings, as it gives you low-level control and a `user_data` pointer to maintain state.
+Creates a reverse trampoline with a generic handler. This is the ideal choice for creating stateful callbacks or for language bindings, as it gives you low-level control and a `user_data` pointer to maintain state. This function creates a private memory arena for the closure context.
 
 ```c
 infix_status infix_reverse_create_closure(
@@ -167,6 +180,7 @@ These functions work for both `infix_forward_t*` and `infix_reverse_t*` handles.
 ### Inspecting Type Properties
 
 *   `infix_status infix_type_from_signature(...)`: Parses a signature string into a detailed `infix_type` graph.
+*   `const char* infix_type_get_name(const infix_type* type)`: Returns the semantic alias of a type (e.g., "MyInt"), or `NULL` if anonymous.
 *   `infix_type_category infix_type_get_category(const infix_type* type)`: Returns the fundamental category (e.g., `INFIX_TYPE_STRUCT`).
 *   `size_t infix_type_get_size(const infix_type* type)`: Returns the size of the type in bytes.
 *   `size_t infix_type_get_alignment(const infix_type* type)`: Returns the alignment requirement in bytes.
@@ -185,9 +199,10 @@ APIs for defining, storing, reusing, and inspecting complex types by name.
 
 ### Creation and Population
 
-*   `infix_registry_t* infix_registry_create(void)`: Creates a new, empty type registry.
-*   `void infix_registry_destroy(infix_registry_t* registry)`: Destroys a registry and all its contents.
-*   `infix_status infix_register_types(infix_registry_t* registry, const char* definitions)`: Parses a semicolon-separated string of type definitions and adds them to the registry.
+*   `infix_registry_t* infix_registry_create(void)`: Creates a new, empty type registry with an internal, automatically growing memory arena.
+*   `infix_registry_t* infix_registry_create_in_arena(infix_arena_t* arena)`: (Advanced) Creates a new registry that allocates from a user-provided arena. This is used for the shared arena optimization pattern.
+*   `void infix_registry_destroy(infix_registry_t* registry)`: Destroys a registry and all its contents. If the registry was created with an external arena (`infix_registry_create_in_arena`), the user-provided arena itself is **not** freed.
+*   `infix_status infix_register_types(infix_registry_t* registry, const char* definitions)`: Parses a semicolon-separated string of type definitions and adds them to the registry. The internal arena will grow automatically if needed.
 *   `const infix_type* infix_registry_lookup_type(const infix_registry_t* registry, const char* name)`: Retrieves a fully defined type object by its name.
 
 ### Registry Introspection & Iteration
@@ -247,7 +262,7 @@ These functions are the building blocks for creating `infix_type` objects progra
 
 ## 7. Memory Management (Arenas)
 
-APIs for the fast, region-based arena allocator used by the Manual API.
+APIs for the fast, region-based arena allocator used by the Manual API. The internal arena implementation supports chaining to grow as needed, so you do not need to worry about the initial size for most use cases.
 
 *   `infix_arena_t* infix_arena_create(size_t initial_size)`: Creates a new memory arena.
 *   `void infix_arena_destroy(infix_arena_t* arena)`: Destroys an arena and frees all memory allocated from it.

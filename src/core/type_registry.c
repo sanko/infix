@@ -129,7 +129,7 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-    infix_memcpy(name_copy, name, name_len);
+    infix_memcpy((void *)name_copy, name, name_len);
     new_entry->name = name_copy;
     new_entry->type = nullptr;
     new_entry->is_forward_declaration = false;
@@ -160,17 +160,56 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-    registry->arena = infix_arena_create(16384);
+    registry->arena = infix_arena_create(16384);  // Default initial size
     if (!registry->arena) {
         infix_free(registry);
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
+    registry->is_external_arena = false;  // Mark that this arena is owned by the registry.
     registry->num_buckets = INITIAL_REGISTRY_BUCKETS;
     registry->buckets = infix_arena_calloc(
         registry->arena, registry->num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
     if (!registry->buckets) {
         infix_arena_destroy(registry->arena);
+        infix_free(registry);
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return nullptr;
+    }
+    registry->num_items = 0;
+    return registry;
+}
+
+/**
+ * @brief Creates a new, empty named type registry that allocates from a user-provided arena.
+ *
+ * A registry acts as a dictionary for `infix` types, allowing you to define complex
+ * structs, unions, or aliases once and refer to them by name (e.g., `@MyStruct`)
+ * in any signature string. This is essential for managing complex, recursive, or
+ * mutually-dependent types.
+ *
+ * @param[in] arena The arena to allocate from.
+ * @return A pointer to the new registry, or `nullptr` on allocation failure. The returned
+ *         handle must be freed with `infix_registry_destroy`.
+ */
+
+c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * arena) {
+    _infix_clear_error();
+    if (!arena) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        return nullptr;
+    }
+    infix_registry_t * registry = infix_malloc(sizeof(infix_registry_t));
+    if (!registry) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return nullptr;
+    }
+    registry->arena = arena;
+    registry->is_external_arena = true;  // Mark the arena as user-owned
+    registry->num_buckets = INITIAL_REGISTRY_BUCKETS;
+    registry->buckets = infix_arena_calloc(
+        registry->arena, registry->num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
+    if (!registry->buckets) {
         infix_free(registry);
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
@@ -191,7 +230,10 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
 void infix_registry_destroy(infix_registry_t * registry) {
     if (!registry)
         return;
-    infix_arena_destroy(registry->arena);
+    // Only destroy the arena if it was created internally by `infix_registry_create`.
+    if (!registry->is_external_arena)
+        infix_arena_destroy(registry->arena);
+    // Always free the registry struct itself.
     infix_free(registry);
 }
 
@@ -431,8 +473,15 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         const char * def_body_start;
         size_t def_body_len;
     };
-    struct def_info defs_found[256];  // Max 256 definitions in a single call.
+
+    size_t defs_capacity = 64;  // Start with an initial capacity.
+    struct def_info * defs_found = infix_malloc(sizeof(struct def_info) * defs_capacity);
+    if (!defs_found) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
     size_t num_defs_found = 0;
+    infix_status final_status = INFIX_SUCCESS;
 
     // Pass 1: Scan & Index all names and their definition bodies.
     while (*state.p != '\0') {
@@ -442,14 +491,16 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
 
         if (*state.p != '@') {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
         state.p++;
 
         char name_buffer[256];
         if (!_registry_parser_parse_name(&state, name_buffer, sizeof(name_buffer))) {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
         _infix_registry_entry_t * entry = _registry_lookup(registry, name_buffer);
         _registry_parser_skip_whitespace(&state);
@@ -460,16 +511,26 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             // It's an error to redefine a type that wasn't a forward declaration.
             if (entry && !entry->is_forward_declaration) {
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-                return INFIX_ERROR_INVALID_ARGUMENT;
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                goto cleanup;
             }
             if (!entry) {  // If it doesn't exist, create it.
                 entry = _registry_insert(registry, name_buffer);
-                if (!entry)
-                    return INFIX_ERROR_ALLOCATION_FAILED;
+                if (!entry) {
+                    final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                    goto cleanup;
+                }
             }
-            if (num_defs_found >= 256) {
-                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_RECURSION_DEPTH_EXCEEDED, state.p - state.start);
-                return INFIX_ERROR_INVALID_ARGUMENT;
+            if (num_defs_found >= defs_capacity) {
+                size_t new_capacity = defs_capacity * 2;
+                struct def_info * new_defs = infix_realloc(defs_found, sizeof(struct def_info) * new_capacity);
+                if (!new_defs) {
+                    _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, state.p - state.start);
+                    final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                    goto cleanup;
+                }
+                defs_found = new_defs;
+                defs_capacity = new_capacity;
             }
 
             // Find the end of the type definition body (the next top-level ';').
@@ -497,16 +558,20 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         else if (*state.p == ';') {  // This is a forward declaration.
             if (entry) {             // Cannot forward-declare an already-defined type.
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-                return INFIX_ERROR_INVALID_ARGUMENT;
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                goto cleanup;
             }
             entry = _registry_insert(registry, name_buffer);
-            if (!entry)
-                return INFIX_ERROR_ALLOCATION_FAILED;
+            if (!entry) {
+                final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                goto cleanup;
+            }
             entry->is_forward_declaration = true;
         }
         else {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            goto cleanup;
         }
 
         if (*state.p == ';')
@@ -520,7 +585,8 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
         if (!body_copy) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-            return INFIX_ERROR_ALLOCATION_FAILED;
+            final_status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
         }
         infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
         body_copy[defs_found[i].def_body_len] = '\0';
@@ -534,20 +600,57 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             // Adjust the error position to be relative to the full definition string.
             infix_error_details_t err = infix_get_last_error();
             _infix_set_error(err.category, err.code, (defs_found[i].def_body_start - definitions) + err.position);
-            return INFIX_ERROR_INVALID_ARGUMENT;
+            final_status = INFIX_ERROR_INVALID_ARGUMENT;
+            infix_arena_destroy(parser_arena);
+            goto cleanup;
         }
 
-        // "Copy" step: copy from temp arena to the registry's permanent arena.
-        entry->type = _copy_type_graph_to_arena(registry->arena, raw_type);
-        infix_arena_destroy(parser_arena);
+        const infix_type * type_to_alias = raw_type;
+
+        // If the RHS is another named type (e.g., @MyAlias = @ExistingType),
+        // we need to resolve it first to get the actual type we're aliasing.
+        if (raw_type->category == INFIX_TYPE_NAMED_REFERENCE) {
+            _infix_registry_entry_t * existing_entry = _registry_lookup(registry, raw_type->meta.named_reference.name);
+            if (existing_entry && existing_entry->type)
+                type_to_alias = existing_entry->type;
+            else {
+                _infix_set_error(INFIX_CATEGORY_PARSER,
+                                 INFIX_CODE_UNRESOLVED_NAMED_TYPE,
+                                 (size_t)(defs_found[i].def_body_start - definitions));
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                infix_arena_destroy(parser_arena);
+                goto cleanup;
+            }
+        }
+
+        if (!type_to_alias->is_arena_allocated) {
+            // This is a static type (e.g., primitive). We MUST create a mutable
+            // copy in the registry's arena before we can attach a name to it.
+            // This prevents corrupting the global static singletons.
+            infix_type * prim_copy = infix_arena_alloc(registry->arena, sizeof(infix_type), _Alignof(infix_type));
+            if (!prim_copy) {
+                final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                infix_arena_destroy(parser_arena);
+                goto cleanup;
+            }
+            *prim_copy = *type_to_alias;
+            prim_copy->is_arena_allocated = true;
+            prim_copy->arena = registry->arena;
+            entry->type = prim_copy;
+        }
+        else
+            entry->type = _copy_type_graph_to_arena(registry->arena, type_to_alias);
+
+        infix_arena_destroy(parser_arena);  // The temporary raw_type is no longer needed.
+
         if (!entry->type) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-            return INFIX_ERROR_ALLOCATION_FAILED;
+            final_status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
         }
 
-        // Annotate the type with its own name for printing and introspection.
-        if (entry->type->category == INFIX_TYPE_STRUCT || entry->type->category == INFIX_TYPE_UNION)
-            entry->type->meta.aggregate_info.name = entry->name;
+        // Attach the new alias name to the copied type. This is the key to preserving semantic names.
+        entry->type->name = entry->name;
         entry->is_forward_declaration = false;
     }
 
@@ -556,26 +659,55 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         _infix_registry_entry_t * entry = defs_found[i].entry;
         if (entry->type) {
             // "Resolve" and "Layout" steps.
-            if (_infix_resolve_type_graph_inplace(&entry->type, registry) != INFIX_SUCCESS)
-                return INFIX_ERROR_INVALID_ARGUMENT;
+            if (_infix_resolve_type_graph_inplace(&entry->type, registry) != INFIX_SUCCESS) {
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                goto cleanup;
+            }
             _infix_type_recalculate_layout(entry->type);
         }
     }
-    return INFIX_SUCCESS;
+
+cleanup:
+    infix_free(defs_found);
+    return final_status;
 }
 
 // Registry Introspection API Implementation
-
+/**
+ * @brief Initializes an iterator for traversing the types in a registry.
+ *
+ * @details This function creates an iterator that can be used with `infix_registry_iterator_next`
+ * to loop through all fully-defined types in a registry. The order of traversal
+ * is not guaranteed.
+ *
+ * @param[in] registry The registry to iterate over.
+ * @return An initialized iterator. If the registry is empty, the first call to
+ *         `infix_registry_iterator_next` on this iterator will return `false`.
+ * @code
+ * infix_registry_iterator_t it = infix_registry_iterator_begin(registry);
+ * while (infix_registry_iterator_next(&it)) {
+ *     const char* name = infix_registry_iterator_get_name(&it);
+ *     const infix_type* type = infix_registry_iterator_get_type(&it);
+ *     printf("Found type: %s\n", name);
+ * }
+ * @endcode
+ */
 c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t * registry) {
     // Return an iterator positioned before the first element.
     // The first call to next() will advance it to the first valid element.
     return (infix_registry_iterator_t){registry, 0, nullptr};
 }
 
+/**
+ * @brief Advances the iterator to the next defined type in the registry.
+ *
+ * @param[in,out] iterator The iterator to advance.
+ * @return `true` if the iterator was advanced to a valid type, or `false` if there are
+ *         no more types to visit.
+ */
 c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter) {
     if (!iter || !iter->registry)
         return false;
-
 
     const _infix_registry_entry_t * entry = iter->current_entry;
 
@@ -611,18 +743,45 @@ c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter
         entry = iter->registry->buckets[iter->current_bucket];
     }
 }
+
+/**
+ * @brief Gets the name of the type at the iterator's current position.
+ *
+ * @param[in] iterator The iterator, which must have been successfully advanced by
+ *            `infix_registry_iterator_next`.
+ * @return The name of the type (e.g., "Point"), or `nullptr` if the iterator is invalid
+ *         or has reached the end of the collection.
+ */
 c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry_iterator_t * iter) {
     if (!iter || !iter->current_entry)
         return nullptr;
     return iter->current_entry->name;
 }
 
+/**
+ * @brief Gets the `infix_type` object of the type at the iterator's current position.
+ *
+ * @param[in] iterator The iterator, which must have been successfully advanced by
+ *            `infix_registry_iterator_next`.
+ * @return A pointer to the canonical `infix_type` object, or `nullptr` if the iterator
+ *         is invalid or has reached the end of the collection.
+ */
 c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_registry_iterator_t * iter) {
     if (!iter || !iter->current_entry)
         return nullptr;
     return iter->current_entry->type;
 }
 
+/**
+ * @brief Checks if a type with the given name is fully defined in the registry.
+ *
+ * @details This function will return `false` for names that are only forward-declared
+ * (e.g., via `@Name;`) but have not been given a complete definition.
+ *
+ * @param[in] registry The registry to search.
+ * @param[in] name The name of the type to check (e.g., "MyStruct").
+ * @return `true` if a complete definition for the name exists, `false` otherwise.
+ */
 c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, const char * name) {
     if (!registry || !name)
         return false;
@@ -631,6 +790,15 @@ c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, 
     return entry != nullptr && entry->type != nullptr && !entry->is_forward_declaration;
 }
 
+/**
+ * @brief Retrieves the canonical `infix_type` object for a given name from the registry.
+ *
+ * @param[in] registry The registry to search.
+ * @param[in] name The name of the type to retrieve (e.g., "Point").
+ * @return A pointer to the canonical `infix_type` object if found and fully defined.
+ *         Returns `nullptr` if the name is not found or is only a forward declaration.
+ *         The returned pointer is owned by the registry and is valid for its lifetime.
+ */
 c23_nodiscard const infix_type * infix_registry_lookup_type(const infix_registry_t * registry, const char * name) {
     if (!registry || !name)
         return nullptr;

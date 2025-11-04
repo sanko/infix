@@ -51,7 +51,7 @@ void execute_move_point_callback(Point (*func_ptr)(Point), Point p_in) {
 }
 
 TEST {
-    plan(5);
+    plan(6);
 
     subtest("Basic Registry Lifecycle and Simple Definitions") {
         plan(4);
@@ -142,9 +142,9 @@ TEST {
         infix_arena_t * temp_arena = nullptr;
         status = infix_type_from_signature(&node_ptr_type, &temp_arena, "*@Node", registry);
         if (ok(status == INFIX_SUCCESS, "Parsed `*@Node` using registry")) {
-            infix_type * node_type = node_ptr_type->meta.pointer_info.pointee_type;
-            infix_type * next_ptr_type = node_type->meta.aggregate_info.members[1].type;
-            infix_type * next_pointee_type = next_ptr_type->meta.pointer_info.pointee_type;
+            const infix_type * node_type = node_ptr_type->meta.pointer_info.pointee_type;
+            const infix_type * next_ptr_type = node_type->meta.aggregate_info.members[1].type;
+            const infix_type * next_pointee_type = next_ptr_type->meta.pointer_info.pointee_type;
             // The crucial check: does the `next` pointer's pointee type point back to the parent struct itself?
             ok(next_pointee_type == node_type, "Recursive pointer correctly points to the parent struct type");
         }
@@ -191,6 +191,55 @@ TEST {
         ok(status != INFIX_SUCCESS, "Creation fails when using '@' sigil with a NULL registry");
         infix_forward_destroy(trampoline);
 
+        infix_registry_destroy(registry);
+    }
+
+    subtest("Semantic Aliases for Non-Aggregate Types") {
+        plan(10);
+        note("Verifies that aliases for primitives and pointers preserve their name for introspection.");
+
+        infix_registry_t * registry = infix_registry_create();
+        const char * defs = "@MyInt = int32; @MyHandle = *void; @MyPoint = {double, double}; @MyPointAlias = @MyPoint;";
+        ok(infix_register_types(registry, defs) == INFIX_SUCCESS, "Registered aliases for various types");
+
+        // Test 1: Alias for a primitive
+        infix_type * my_int_type = NULL;
+        infix_arena_t * arena1 = NULL;
+        ok(infix_type_from_signature(&my_int_type, &arena1, "@MyInt", registry) == INFIX_SUCCESS, "Parsed @MyInt");
+        if (my_int_type) {
+            ok(infix_type_get_category(my_int_type) == INFIX_TYPE_PRIMITIVE, "Category is PRIMITIVE");
+            ok(strcmp(infix_type_get_name(my_int_type), "MyInt") == 0, "Name is 'MyInt'");
+        }
+        else
+            skip(2, "Introspection skipped");
+
+        // Test 2: Alias for a pointer
+        infix_type * my_handle_type = NULL;
+        infix_arena_t * arena2 = NULL;
+        ok(infix_type_from_signature(&my_handle_type, &arena2, "@MyHandle", registry) == INFIX_SUCCESS,
+           "Parsed @MyHandle");
+        if (my_handle_type) {
+            ok(infix_type_get_category(my_handle_type) == INFIX_TYPE_POINTER, "Category is POINTER");
+            ok(strcmp(infix_type_get_name(my_handle_type), "MyHandle") == 0, "Name is 'MyHandle'");
+        }
+        else
+            skip(2, "Introspection skipped");
+
+        // Test 3: Alias for another named type
+        infix_type * my_point_alias_type = NULL;
+        infix_arena_t * arena3 = NULL;
+        ok(infix_type_from_signature(&my_point_alias_type, &arena3, "@MyPointAlias", registry) == INFIX_SUCCESS,
+           "Parsed @MyPointAlias");
+        if (my_point_alias_type) {
+            ok(infix_type_get_category(my_point_alias_type) == INFIX_TYPE_STRUCT, "Category is STRUCT");
+            ok(strcmp(infix_type_get_name(my_point_alias_type), "MyPointAlias") == 0, "Name is 'MyPointAlias'");
+        }
+        else
+            skip(2, "Introspection skipped");
+
+        infix_arena_destroy(arena1);
+        infix_arena_destroy(arena2);
+        infix_arena_destroy(arena3);
         infix_registry_destroy(registry);
     }
 }

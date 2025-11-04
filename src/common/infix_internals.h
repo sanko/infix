@@ -92,8 +92,10 @@ typedef struct {
  * ensuring its lifetime is independent of the types used to create it.
  */
 struct infix_forward_t {
-    infix_arena_t * arena;    /**< A private arena holding all type metadata for this trampoline. */
-    infix_executable_t exec;  /**< The executable memory containing the JIT-compiled code. */
+    infix_arena_t * arena;   /**< Private or shared arena holding all type metadata for this trampoline. */
+    bool is_external_arena;  /**< True if the arena is user-provided and should not be freed by `infix_forward_destroy`.
+                              */
+    infix_executable_t exec; /**< The executable memory containing the JIT-compiled code. */
     infix_type * return_type; /**< A deep copy of the function's return type. */
     infix_type ** arg_types;  /**< A deep copy of the function's argument types. */
     size_t num_args;          /**< The total number of arguments. */
@@ -142,10 +144,12 @@ struct infix_reverse_t {
  * destroying the arena itself, eliminating the need to track individual allocations.
  */
 struct infix_arena_t {
-    char * buffer;         /**< The backing memory buffer for the arena. */
-    size_t capacity;       /**< The total size of the buffer. */
-    size_t current_offset; /**< The current high-water mark of allocation. */
-    bool error;            /**< A flag set if any allocation fails, preventing subsequent allocations. */
+    char * buffer;                     /**< The backing memory buffer for the arena. */
+    size_t capacity;                   /**< The total size of the buffer. */
+    size_t current_offset;             /**< The current high-water mark of allocation. */
+    bool error;                        /**< A flag set if any allocation fails, preventing subsequent allocations. */
+    struct infix_arena_t * next_block; /**< A pointer to the next block in the chain, if this one is full. */
+    size_t block_size;                 /**< The size of this specific block's buffer, for chained arenas. */
 };
 
 /**
@@ -170,6 +174,7 @@ typedef struct _infix_registry_entry_t {
  */
 struct infix_registry_t {
     infix_arena_t * arena;              /**< The arena that owns all type metadata and entry structs. */
+    bool is_external_arena;             /**< True if the arena is user-provided and should not be freed. */
     size_t num_buckets;                 /**< The number of buckets in the hash table. */
     size_t num_items;                   /**< The total number of items in the registry. */
     _infix_registry_entry_t ** buckets; /**< The array of hash table buckets (linked list heads). */
@@ -521,9 +526,7 @@ c23_nodiscard infix_status _infix_resolve_type_graph_inplace(infix_type ** type_
  * @param[in] signature The signature string to parse.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
-                                                      infix_arena_t ** out_arena,
-                                                      const char * signature);
+c23_nodiscard infix_status _infix_parse_type_internal(infix_type **, infix_arena_t **, const char *);
 
 /**
  * @brief An internal-only function to serialize a type's body without its registered name.
@@ -536,10 +539,7 @@ c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
  * @param[in] dialect The output format dialect.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
-                                                       size_t buffer_size,
-                                                       const infix_type * type,
-                                                       infix_print_dialect_t dialect);
+c23_nodiscard infix_status _infix_type_print_body_only(char *, size_t, const infix_type *, infix_print_dialect_t);
 
 /**
  * @brief Performs a deep copy of a type graph into a destination arena.
@@ -550,7 +550,7 @@ c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
  * @param[in] src_type The source type graph to copy.
  * @return A pointer to the newly created copy in `dest_arena`, or `nullptr` on failure.
  */
-infix_type * _copy_type_graph_to_arena(infix_arena_t * dest_arena, const infix_type * src_type);
+infix_type * _copy_type_graph_to_arena(infix_arena_t *, const infix_type *);
 
 /**
  * @brief Estimates the total memory required to deep-copy a complete type graph.
@@ -623,12 +623,8 @@ void emit_int64(code_buffer * buf, int64_t value);
  * and final handle creation.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status _infix_forward_create_internal(infix_forward_t ** out_trampoline,
-                                                          infix_type * return_type,
-                                                          infix_type ** arg_types,
-                                                          size_t num_args,
-                                                          size_t num_fixed_args,
-                                                          void * target_fn);
+c23_nodiscard infix_status
+_infix_forward_create_internal(infix_forward_t **, infix_type *, infix_type **, size_t, size_t, void *);
 
 /**
  * @brief Allocates a block of executable memory using the platform's W^X strategy.

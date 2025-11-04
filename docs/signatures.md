@@ -139,9 +139,10 @@ You populate a registry by passing a string of semicolon-separated definitions. 
 infix_registry_t* registry = infix_registry_create();
 
 const char* my_types =
-    // Create readable aliases for primitives.
+    // Create readable aliases for any type.
     "@UserID = uint64;"
     "@CallbackFunc = (int)->void;"
+    "@Handle = *void;"
 
     // Define a struct using an alias.
     "@User = { id: @UserID, name: *char };"
@@ -163,7 +164,7 @@ infix_status status = infix_register_types(registry, my_types);
 
 ### Using Named Types
 
-Once registered, you can use named types in any signature string by passing the registry handle to the FFI creation function.
+Once registered, you can use named types in any signature string by passing the registry handle to the FFI creation function. This works for simple aliases as well as complex structs.
 
 ```c
 // Using the registry from the example above:
@@ -172,6 +173,8 @@ const char* signature = "(*@User, @CallbackFunc) -> void";
 infix_forward_t* trampoline = NULL;
 infix_forward_create(&trampoline, signature, my_func, registry);
 ```
+
+When you inspect a type created from an alias (e.g., `@UserID`), you can retrieve its semantic name using `infix_type_get_name()` while still accessing its underlying structural properties (size, alignment, category).
 
 ---
 

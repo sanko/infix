@@ -5,6 +5,22 @@ All notable changes to this project will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+We'll find out where I go from here.
+
+### Added
+
+- Shared Arena Optimization API: Introduced a new set of advanced API functions (`infix_registry_create_in_arena`, `infix_forward_create_in_arena`, etc.) that allow the type registry and trampolines to be created within a user-provided, shared memory arena. When objects share an arena, the library avoids deep-copying named type metadata and instead shares pointers to the canonical types, significantly reducing memory consumption and improving trampoline creation performance for applications with many FFI calls referencing a common set of types.
+- Semantic Name Preservation for All Types: The type system can now preserve a semantic name for *any* type defined in a registry, not just structs and unions. An alias like `@MyInt = int32;` or `@MyHandle = *void;` will now produce a type that is structurally identical to its definition but carries the semantic name for introspection.
+- New Introspection API: Added `infix_type_get_name(const infix_type* type)` to the public API. This function is now the canonical way to retrieve the semantic alias of any type object, if one exists.
+
+### Changed
+
+- Growable Arena: The internal arena for the type registry is no longer fixed-size. Now, it transparently allocates new memory blocks as needed, removing the risk of allocation failures when registering and/or copying a large number of interconnected types.
+- Type Registry and Printing Logic: The internals of the type registry and the `infix_type_print` function have been updated to correctly create, copy, and serialize the new `name` field on `infix_type` objects, ensuring that semantic aliases are preserved through all API operations and can be correctly round-tripped to strings.
+- Renamed all cookbook examples in `/eg/cookbook`. I can't expect to keep track of recipe numbers with every little idea I decide to throw into the cookbook so I'll just stop trying to count them.
+
 ## [0.1.1] - 2025-11-01
 
 Really sanding down the rough edges this time around. This release includes significant ergonomic improvements to the high-level API.
@@ -105,5 +121,5 @@ Everything. It's brand new.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
 [unreleased]: https://github.com/sanko/infix/compare/v0.1.1...HEAD
-[0.1.1]: https://github.com/sanko/infix/compare/v0.1.0...HEAD
+[0.1.1]: https://github.com/sanko/infix/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/sanko/infix/releases/tag/v0.1.0

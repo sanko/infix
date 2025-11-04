@@ -12,17 +12,19 @@
  * 1.  **Use-After-Free of Pointee Types:** Ensures that when a signature like `*@Point`
  *     is parsed, the `Point` type object (resolved from the registry) remains valid
  *     and is not prematurely freed after the temporary parser arena is destroyed.
- *     This was the critical bug discovered previously.
  *
  * 2.  **Correct Printing of Copied Named Types:** Verifies that `infix_type_print` can
  *     correctly serialize a type graph that has been deep-copied into a trampoline's
  *     private arena, ensuring that pointers to type names remain valid after the copy.
  *
  * 3.  **Handling of Recursive Types:** Confirms that the deep-copy mechanism
- *     (`_copy_type_graph_to_arena`) correctly handles recursive type definitions
- *     (like a linked list node) without causing a stack overflow from infinite
- *     recursion, and that the resulting copied graph maintains its correct
- *     recursive structure.
+ *     correctly handles recursive type definitions (like a linked list node) without
+ *     causing a stack overflow from infinite recursion, and that the resulting
+ *     copied graph maintains its correct recursive structure.
+ *
+ * 4.  **Semantic Name Preservation:** Validates that the new `name` field is correctly
+ *     populated and preserved through the full parse/copy/resolve pipeline for all
+ *     named types, including aliases.
  */
 
 #define DBLTAP_IMPLEMENTATION
@@ -58,9 +60,8 @@ TEST {
             ok(pointee_type && pointee_type->category == INFIX_TYPE_STRUCT,
                "Pointee is a valid struct type, not garbage/NULL");
         }
-        else {
+        else
             skip(2, "Skipping introspection due to creation failure.");
-        }
 
         infix_forward_destroy(trampoline);
         infix_registry_destroy(registry);
@@ -86,9 +87,8 @@ TEST {
                "infix_type_print output is correct ('%s')",
                buffer);
         }
-        else {
+        else
             skip(1, "Skipping print test due to creation failure.");
-        }
 
         infix_forward_destroy(trampoline);
         infix_registry_destroy(registry);
@@ -118,9 +118,8 @@ TEST {
 
             ok(member && member->type && member->type->category == INFIX_TYPE_STRUCT, "Nested member type is valid");
         }
-        else {
+        else
             skip(2, "Skipping introspection checks");
-        }
 
         infix_forward_destroy(trampoline);
         infix_registry_destroy(registry);
@@ -154,9 +153,8 @@ TEST {
             const infix_type * next_pointee_type = next_member->type->meta.pointer_info.pointee_type;
             ok(next_pointee_type == node_type, "Recursive pointer correctly points back to parent struct");
         }
-        else {
+        else
             skip(4, "Skipping introspection due to creation failure.");
-        }
 
         infix_forward_destroy(trampoline);
         infix_registry_destroy(registry);
@@ -181,9 +179,8 @@ TEST {
                "Printing named return type is correct ('%s')",
                buffer);
         }
-        else {
+        else
             skip(1, "Skipping return type print test");
-        }
 
         infix_forward_t * t_nested = NULL;
         if (ok(infix_forward_create(&t_nested, "({sint32, r:@Rect})->void", (void *)dummy_func, registry) ==
@@ -196,9 +193,8 @@ TEST {
                "Printing nested named type is correct ('%s')",
                buffer);
         }
-        else {
+        else
             skip(1, "Skipping nested type print test");
-        }
 
         infix_forward_destroy(t_ret);
         infix_forward_destroy(t_nested);
@@ -227,8 +223,9 @@ TEST {
 
             const infix_type * pointee_type = arg_type->meta.pointer_info.pointee_type;
             ok(pointee_type && pointee_type->category == INFIX_TYPE_STRUCT, "Pointee is a struct (not a named ref)");
-            ok(pointee_type->meta.aggregate_info.name != NULL, "Pointee struct has a name field");
-            ok(strcmp(pointee_type->meta.aggregate_info.name, "Point") == 0, "Pointee struct's name is 'Point'");
+            const char * pointee_name = infix_type_get_name(pointee_type);
+            ok(pointee_name != NULL, "Pointee struct has a name field");
+            ok(strcmp(pointee_name, "Point") == 0, "Pointee struct's name is 'Point'");
         }
         else
             skip(4, "Skipping introspection for *@Point");
@@ -244,14 +241,11 @@ TEST {
         if (t2) {
             const infix_type * arg_type = infix_forward_get_arg_type(t2, 0);
             ok(arg_type && arg_type->category == INFIX_TYPE_STRUCT, "Arg is a struct");
-            ok(arg_type->meta.aggregate_info.name != NULL && strcmp(arg_type->meta.aggregate_info.name, "Rect") == 0,
-               "Arg struct's name is 'Rect'");
+            ok(strcmp(infix_type_get_name(arg_type), "Rect") == 0, "Arg struct's name is 'Rect'");
 
             const infix_struct_member * member = infix_type_get_member(arg_type, 0);
             ok(member && member->type && member->type->category == INFIX_TYPE_STRUCT, "Nested member is a struct");
-            ok(member->type->meta.aggregate_info.name != NULL &&
-                   strcmp(member->type->meta.aggregate_info.name, "Point") == 0,
-               "Nested member struct's name is 'Point'");
+            ok(strcmp(infix_type_get_name(member->type), "Point") == 0, "Nested member struct's name is 'Point'");
         }
         else
             skip(4, "Skipping introspection for @Rect");
