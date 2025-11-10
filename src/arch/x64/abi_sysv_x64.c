@@ -376,7 +376,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
     // Exception: 256/512-bit vectors are returned in YMM0/ZMM0.
     layout->return_value_in_memory =
-        (ret_is_aggregate && ret_type->size > 16) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size > 64);
+        (ret_is_aggregate && ret_type->category != INFIX_TYPE_VECTOR && ret_type->size > 16);
 
 
     // Rule 2: Small aggregates (<= 16 bytes) must also be returned via hidden pointer

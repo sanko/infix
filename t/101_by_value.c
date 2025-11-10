@@ -99,8 +99,26 @@ svfloat64_t native_sve_vector_add(svfloat64_t a, svfloat64_t b) {
 }
 #endif
 
+// A struct with a 20-byte payload. According to the SysV ABI, this MUST
+// be passed on the stack (in memory), not in registers.
+typedef struct {
+    char data[20];
+} Char20Struct;
+
+/**
+ * @brief A C function that receives the 20-byte struct.
+ * @details It checks if the received data matches the expected pattern.
+ * A correct call will result in a return value of 1, while a call where
+ * the argument was corrupted (e.g., by being partially passed in registers)
+ * will fail the check and return 0.
+ */
+int process_char20_struct(Char20Struct s) {
+    if (s.data[0] == 'A' && s.data[19] == 'Z')
+        return 1;  // Success
+    return 0;      // Failure
+}
 TEST {
-    plan(8);
+    plan(9);
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(7);
@@ -564,4 +582,56 @@ TEST {
         skip(1, "No AVX-512 support: compile with e.g., -mavx512f to enable this test.");
 #endif
     }
+
+    subtest("SysV ABI: Passing a 20-byte aggregate") {
+        plan(3);
+#if defined(INFIX_ABI_SYSV_X64)
+        diag("SysV");
+#else
+        diag("No idea...");
+#endif
+
+#if defined(INFIX_ABI_SYSV_X64)
+        note("Verifying that a 20-byte struct is correctly passed on the stack on SysV x64.");
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_type * char_array_type = NULL;
+        infix_status status =
+            infix_type_create_array(arena, &char_array_type, infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 20);
+        ok(status == INFIX_SUCCESS, "Created infix_type for char[20]");
+
+        infix_struct_member members[] = {{"data", char_array_type, 0}};
+        infix_type * struct_type = NULL;
+        status = infix_type_create_struct(arena, &struct_type, members, 1);
+        ok(status == INFIX_SUCCESS && struct_type->size >= 20,
+           "Created infix_type for 20-byte struct (size: %zu)",
+           struct_type ? struct_type->size : 0);
+
+        infix_forward_t * trampoline = NULL;
+        if (infix_forward_create_manual(&trampoline,
+                                        infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                        &struct_type,
+                                        1,
+                                        1,
+                                        (void *)process_char20_struct) != INFIX_SUCCESS)
+            fail("Failed to create trampoline.");
+        else {
+
+            Char20Struct arg_struct;
+            memset(arg_struct.data, 'X', 20);
+            arg_struct.data[0] = 'A';
+            arg_struct.data[19] = 'Z';
+            void * args[] = {&arg_struct};
+            int result = 0;
+
+            infix_cif_func cif = infix_forward_get_code(trampoline);
+            cif(&result, args);
+            ok(result == 1, "20-byte struct passed correctly to C function.");
+
+            infix_forward_destroy(trampoline);
+        }
+        infix_arena_destroy(arena);
+#else
+        skip(3, "This test is specific to the System V x64 ABI.");
+#endif
+    };
 }
