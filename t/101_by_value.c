@@ -117,8 +117,20 @@ int process_char20_struct(Char20Struct s) {
         return 1;  // Success
     return 0;      // Failure
 }
+
+/**
+ * @brief A C function that receives a char array parameter.
+ * @details The ABI will treat `s` as `char*`. This function verifies
+ * that the pointer is valid and the data it points to is correct.
+ */
+int process_char_array_param(char s[20]) {
+    if (s[0] == 'A' && s[19] == 'Z')
+        return 1;  // Success
+    return 0;      // Failure
+}
+
 TEST {
-    plan(9);
+    plan(10);
 
     subtest("Simple struct (Point) passed and returned by value") {
         plan(7);
@@ -586,12 +598,6 @@ TEST {
     subtest("SysV ABI: Passing a 20-byte aggregate") {
         plan(3);
 #if defined(INFIX_ABI_SYSV_X64)
-        diag("SysV");
-#else
-        diag("No idea...");
-#endif
-
-#if defined(INFIX_ABI_SYSV_X64)
         note("Verifying that a 20-byte struct is correctly passed on the stack on SysV x64.");
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * char_array_type = NULL;
@@ -634,4 +640,47 @@ TEST {
         skip(3, "This test is specific to the System V x64 ABI.");
 #endif
     };
+
+    subtest("SysV ABI: Passing an array parameter (decays to pointer)") {
+        plan(2);
+#if defined(INFIX_ABI_SYSV_X64)
+        note("Verifying that a char[20] parameter is correctly passed as a pointer on SysV x64.");
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // Create the signature for a function taking `char[20]`.
+        infix_type * array_type = NULL;
+        infix_status status =
+            infix_type_create_array(arena, &array_type, infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 20);
+
+        infix_forward_t * trampoline = NULL;
+        status = infix_forward_create_manual(&trampoline,
+                                             infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
+                                             &array_type,
+                                             1,
+                                             1,
+                                             (void *)process_char_array_param);
+
+        if (!ok(status == INFIX_SUCCESS, "Trampoline created for function with array parameter"))
+            skip(1, "Cannot proceed with call test.");
+        else {
+            // Prepare the argument data.
+            char arg_data[20];
+            memset(arg_data, 'X', 20);
+            arg_data[0] = 'A';
+            arg_data[19] = 'Z';
+            void * args[] = {&arg_data};
+            int result = 0;
+
+            // Execute the call.
+            infix_cif_func cif = infix_forward_get_code(trampoline);
+            cif(&result, args);
+            ok(result == 1, "Array parameter was passed correctly as a pointer.");
+        }
+
+        infix_forward_destroy(trampoline);
+        infix_arena_destroy(arena);
+#else
+        skip(2, "This test is specific to the System V x64 ABI.");
+#endif
+    }
 }

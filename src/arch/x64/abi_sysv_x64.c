@@ -410,7 +410,23 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             *out_layout = nullptr;
             return INFIX_ERROR_LAYOUT_FAILED;
         }
-
+        // An array passed as a function parameter decays to a pointer.
+        // We must treat it as a pointer (INTEGER class) for classification,
+        // bypassing the aggregate classification logic which would incorrectly
+        // treat it as a by-value struct.
+        if (type->category == INFIX_TYPE_ARRAY) {
+            if (gpr_count < NUM_GPR_ARGS) {
+                layout->arg_locations[i].type = ARG_LOCATION_GPR;
+                layout->arg_locations[i].reg_index = gpr_count++;
+            }
+            else {
+                layout->arg_locations[i].type = ARG_LOCATION_STACK;
+                layout->arg_locations[i].stack_offset = current_stack_offset;
+                current_stack_offset += 8;  // Pointers are 8 bytes on the stack
+                layout->num_stack_args++;
+            }
+            continue;  // Argument classified, skip the rest of the loop.
+        }
         // Step 1: Classify the argument type
         // Special case: `long double` is always passed on the stack.
         if (is_long_double(type)) {
@@ -618,6 +634,15 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
         case ARG_LOCATION_GPR:
             {
                 infix_type * current_type = arg_types[i];
+
+                // An array parameter decays to a pointer. The `args` array for it
+                // contains a pointer TO the array data. We must pass this pointer itself,
+                // not the data it points to. R15 already holds this pointer.
+                if (current_type->category == INFIX_TYPE_ARRAY) {
+                    emit_mov_reg_reg(buf, GPR_ARGS[loc->reg_index], R15_REG);
+                    break;  // This case is now handled.
+                }
+
                 bool is_signed = current_type->category == INFIX_TYPE_PRIMITIVE &&
                     (current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
                      current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
