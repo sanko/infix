@@ -23,8 +23,8 @@ We'll find out where I go from here.
 
 ### Fixed
 
-- Fixed a bug in the System V x64 ABI classifier where aggregates larger than 16 bytes (e.g., a 20-byte array) were being incorrectly classified for register passing instead of being passed on the stack. This could lead to argument corruption or crashes on Linux, macOS, and other System V platforms.
 - Fixed a series of low-level instruction encoding errors in the AVX and AVX-512 instructions leading to `SIGILL` errors when calling functions with `__m256d` or `__m512d` vector types.
+- Fixed a critical ABI classification bug on SysV where function parameters of an array type (e.g., `void func(char s[20])`) were incorrectly treated as by-value aggregates. The faulty classification caused `infix` to generate code that passed the array's content on the stack instead of a pointer, leading to stack corruption, crashes, and incorrect argument marshalling.
 
 ## [0.1.1] - 2025-11-01
 

@@ -39,7 +39,7 @@ TEST {
 
         char * p = large_def;
         for (size_t i = 0; i < num_defs; ++i)
-            p += sprintf(p, "@Type%llu = { a: int, b: int, c: int, d: int };", i);
+            p += sprintf(p, "@Type%zu = { a: int, b: int, c: int, d: int };", i);
 
         // This call should now succeed because the arena can grow.
         infix_status status = infix_register_types(registry, large_def);
