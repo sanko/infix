@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"abi__arm64__emitters_8h.html#afc81f93b66c7f0f90c8908d84bc02ae2":[12,0,4,0,0,3,13],
+"abi__arm64__emitters_8h_source.html":[12,0,4,0,0,3],
 "abi__sysv__x64_8c.html":[12,0,4,0,1,0],
 "abi__sysv__x64_8c.html#a08313eff19c7dcf365697a7b15e6e10d":[12,0,4,0,1,0,0],
 "abi__sysv__x64_8c.html#a1a2a1975739db78fe2217834511a7261":[12,0,4,0,1,0,18],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "double__tap_8h.html#ae67140f57c292866c53eef6c962bc30d":[12,0,4,1,1,0],
 "double__tap_8h_source.html":[12,0,4,1,1],
 "error_8c.html":[12,0,4,2,1],
-"error_8c.html#a264e26dcd6ced2c9f9e0d0acd683c482":[12,0,4,2,1,2],
-"error_8c.html#a2f7cc75767456985e072ee240664c50d":[12,0,4,2,1,4],
-"error_8c.html#a44c599cd6e6faa957c56632cad650466":[12,0,4,2,1,8]
+"error_8c.html#a264e26dcd6ced2c9f9e0d0acd683c482":[12,0,4,2,1,2]
 };

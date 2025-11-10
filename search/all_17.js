@@ -43,5 +43,5 @@ var searchData=
   ['long_20double_20tt_40',['Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md82',1,'']]],
   ['look_3a_20tt_20infix_20tt_20vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_41',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md130',1,'']]],
   ['loops_42',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md122',1,'']]],
-  ['low_20priority_3a_20advanced_20features_20polish_43',['Low Priority: Advanced Features &amp; Polish',['../md_TODO.html#autotoc_md238',1,'']]]
+  ['low_20priority_3a_20advanced_20features_20polish_43',['Low Priority: Advanced Features &amp; Polish',['../md_TODO.html#autotoc_md239',1,'']]]
 ];

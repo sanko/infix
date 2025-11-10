@@ -2,7 +2,7 @@ var searchData=
 [
   ['table_20emulation_0',['table emulation',['../md_docs_2cookbook.html#autotoc_md81',1,'Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)'],['../md_docs_2cookbook.html#autotoc_md99',1,'Recipe: Calling C++ Virtual Functions (V-Table Emulation)']]],
   ['table_20of_20contents_1',['table of contents',['../md_docs_2cookbook.html#autotoc_md47',1,'Table of Contents'],['../md_docs_2API.html#autotoc_md11',1,'Table of Contents']]],
-  ['tag_20v0_201_200_200_201_200_20a_202025_2010_2027_2',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot; &gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md229',1,'']]],
+  ['tag_20v0_201_200_200_201_200_20a_202025_2010_2027_2',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot; &gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md230',1,'']]],
   ['takeaways_3',['Analysis and Takeaways',['../md_docs_2cookbook.html#autotoc_md143',1,'']]],
   ['target_4',['target',['../structregression__test__case__t.html#af90a3e3c9b148c3d159737f30829fb7b',1,'regression_test_case_t']]],
   ['target_5ffn_5',['target_fn',['../structinfix__call__frame__layout.html#a5eaab27cc161e119694a4508341acf20',1,'infix_call_frame_layout::target_fn'],['../structinfix__forward__t.html#a3af1080ceceea1dc05bee200422c60d8',1,'infix_forward_t::target_fn']]],

@@ -12,7 +12,7 @@ var searchData=
   ['unity_20build_9',['The Unity Build',['../md_docs_2internals.html#autotoc_md169',1,'']]],
   ['universal_20principle_3a_20the_20c_20abi_10',['The Universal Principle: The C ABI',['../md_docs_2cookbook.html#autotoc_md87',1,'']]],
   ['usage_11',['Basic Usage',['..//home/runner/work/infix/infix/include/infix/infix.h#usage_sec',1,'']]],
-  ['use_20after_20free_20prevention_20guard_20pages_12',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md245',1,'']]],
+  ['use_20after_20free_20prevention_20guard_20pages_12',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md246',1,'']]],
   ['useful_20tools_13',['Useful Tools',['../md_docs_2internals.html#autotoc_md191',1,'']]],
   ['user_14',['User',['../structUser.html',1,'']]],
   ['user_5fcallback_5ffn_15',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],

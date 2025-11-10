@@ -2,8 +2,8 @@ var searchData=
 [
   ['v_0',['v',['../structVector4.html#ac9727ff9cc4250d8604d067f700d4085',1,'Vector4']]],
   ['v_20table_20emulation_1',['v table emulation',['../md_docs_2cookbook.html#autotoc_md81',1,'Recipe: Calling a Function Pointer from a Struct (V-Table Emulation)'],['../md_docs_2cookbook.html#autotoc_md99',1,'Recipe: Calling C++ Virtual Functions (V-Table Emulation)']]],
-  ['v0_201_200_200_201_200_20a_202025_2010_2027_2',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot; &gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md229',1,'']]],
-  ['v0_201_200_20v0_201_201_200_201_201_20a_202025_2011_2001_3',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.0...v0.1.1&quot; &gt;0.1.1&lt;/a&gt; - 2025-11-01',['../md_CHANGELOG.html#autotoc_md225',1,'']]],
+  ['v0_201_200_200_201_200_20a_202025_2010_2027_2',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot; &gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md230',1,'']]],
+  ['v0_201_200_20v0_201_201_200_201_201_20a_202025_2011_2001_3',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.0...v0.1.1&quot; &gt;0.1.1&lt;/a&gt; - 2025-11-01',['../md_CHANGELOG.html#autotoc_md226',1,'']]],
   ['v0_201_201_20head_4',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.1...HEAD&quot;',['../md_CHANGELOG.html#autotoc_md222',1,'']]],
   ['v0_5freg_5',['V0_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea3896c5caf6ec171184d53081ca1c2a29',1,'abi_arm64_common.h']]],
   ['v10_5freg_6',['V10_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea15800d9e3003c71ca9e1021d0b2426b1',1,'abi_arm64_common.h']]],
@@ -39,7 +39,7 @@ var searchData=
   ['v9_5freg_36',['V9_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea39d2e514751460f40a35b1215d0c0ef3',1,'abi_arm64_common.h']]],
   ['val_37',['val',['../structAdder.html#ab7adbd8bb4bcf74e266cab0d9e8f93e9',1,'Adder']]],
   ['val_5fptr_38',['val_ptr',['../structPointerStruct.html#a4789cc4e1b4ce10fef29c968f466e20f',1,'PointerStruct']]],
-  ['validation_20fuzzing_39',['5. Continuous Security Validation (Fuzzing)',['../md_SECURITY.html#autotoc_md248',1,'']]],
+  ['validation_20fuzzing_39',['5. Continuous Security Validation (Fuzzing)',['../md_SECURITY.html#autotoc_md249',1,'']]],
   ['value_40',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md56',1,'']]],
   ['value_20instead_20of_20a_20pointer_20in_20tt_20args_20tt_41',['Mistake: Passing a Value Instead of a Pointer in &lt;tt&gt;args[]&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md126',1,'']]],
   ['value_5fto_5fpoint_5fto_42',['value_to_point_to',['../202__in__structs_8c.html#a967834f8c66312326ad73ac499258454',1,'202_in_structs.c']]],
@@ -55,7 +55,7 @@ var searchData=
   ['vectors_52',['Recipe: Working with SIMD Vectors',['../md_docs_2cookbook.html#autotoc_md65',1,'']]],
   ['version_53',['version',['../structConfig.html#ab26013fdb6245b0dc6c7549678f82a36',1,'Config']]],
   ['version_20information_54',['Version Information',['../group__version__info.html',1,'']]],
-  ['versions_55',['Supported Versions',['../md_SECURITY.html#autotoc_md240',1,'']]],
+  ['versions_55',['Supported Versions',['../md_SECURITY.html#autotoc_md241',1,'']]],
   ['virtual_20functions_20v_20table_20emulation_56',['Recipe: Calling C++ Virtual Functions (V-Table Emulation)',['../md_docs_2cookbook.html#autotoc_md99',1,'']]],
   ['visited_5fnode_5ft_57',['visited_node_t',['../trampoline_8c.html#a06320c0ecea4184c99fba3760dbd67db',1,'visited_node_t:&#160;trampoline.c'],['../structvisited__node__t.html',1,'visited_node_t']]],
   ['visual_20studio_20code_20configuration_58',['Example: Visual Studio Code Configuration',['../md_docs_2INSTALL.html#autotoc_md164',1,'']]],
@@ -66,5 +66,5 @@ var searchData=
   ['vtable_63',['VTABLE',['../Ch04__VTableCStyle_8c.html#a6401f2de2c1875f6ae56fef455b830ca',1,'Ch04_VTableCStyle.c']]],
   ['vtable_5fadd_64',['vtable_add',['../Ch04__VTableCStyle_8c.html#a204fd2a6866501ac1cd3d7bb85634832',1,'Ch04_VTableCStyle.c']]],
   ['vtable_5fdestroy_65',['vtable_destroy',['../Ch04__VTableCStyle_8c.html#aa4e588153875db3be4a4259ea87fc8d9',1,'Ch04_VTableCStyle.c']]],
-  ['vulnerability_66',['Reporting a Vulnerability',['../md_SECURITY.html#autotoc_md241',1,'']]]
+  ['vulnerability_66',['Reporting a Vulnerability',['../md_SECURITY.html#autotoc_md242',1,'']]]
 ];

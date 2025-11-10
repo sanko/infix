@@ -8,6 +8,7 @@ var annotated_dup =
     [ "AdderVTable_t", "structAdderVTable__t.html", "structAdderVTable__t" ],
     [ "AppContext", "structAppContext.html", "structAppContext" ],
     [ "BitfieldStruct", "structBitfieldStruct.html", "structBitfieldStruct" ],
+    [ "Char20Struct", "structChar20Struct.html", "structChar20Struct" ],
     [ "code_buffer", "structcode__buffer.html", "structcode__buffer" ],
     [ "Config", "structConfig.html", "structConfig" ],
     [ "Employee", "structEmployee.html", "structEmployee" ],
