@@ -21,6 +21,11 @@ We'll find out where I go from here.
 - Type Registry and Printing Logic: The internals of the type registry and the `infix_type_print` function have been updated to correctly create, copy, and serialize the new `name` field on `infix_type` objects, ensuring that semantic aliases are preserved through all API operations and can be correctly round-tripped to strings.
 - Renamed all cookbook examples in `/eg/cookbook`. I can't expect to keep track of recipe numbers with every little idea I decide to throw into the cookbook so I'll just stop trying to count them.
 
+### Fixed
+
+- Fixed a bug in the System V x64 ABI classifier where aggregates larger than 16 bytes (e.g., a 20-byte array) were being incorrectly classified for register passing instead of being passed on the stack. This could lead to argument corruption or crashes on Linux, macOS, and other System V platforms.
+- Fixed a series of low-level instruction encoding errors in the AVX and AVX-512 instructions leading to `SIGILL` errors when calling functions with `__m256d` or `__m512d` vector types.
+
 ## [0.1.1] - 2025-11-01
 
 Really sanding down the rough edges this time around. This release includes significant ergonomic improvements to the high-level API.

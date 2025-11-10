@@ -533,7 +533,9 @@ void emit_movups_mem_xmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x
 static void emit_vex_prefix(
     code_buffer * buf, bool r, bool x, bool b, uint8_t m, bool w, uint8_t v, bool l, uint8_t p) {
     // VEX encoding inverts R, X, B bits.
-    if (!b && !x && m == 1 && w == 0) {
+    // The 2-byte VEX prefix cannot encode the L bit for 256-bit operations.
+    // The condition must ensure we only use it for 128-bit operations (l=0).
+    if (!b && !x && m == 1 && w == 0 && !l) {
         // Use 2-byte VEX prefix (C5) when possible.
         emit_byte(buf, 0xC5);
         uint8_t byte2 = ((!r) << 7) | ((~v & 0xF) << 3) | ((l & 1) << 2) | (p & 3);
@@ -570,13 +572,13 @@ static void emit_evex_prefix(code_buffer * buf,
 {
     emit_byte(buf, 0x62);
 
-    // Byte 2: P0
+    // Byte 2: P0 - R, X, B, R' bits are inverted. 0 means 1, 1 means 0.
     uint8_t p0 = 0;
-    p0 |= (map & 0b11) << 5;
-    p0 |= R_prime ? 0 : (1 << 4);  // R' is inverted
-    p0 |= B ? 0 : (1 << 5);        // B is inverted
-    p0 |= X ? 0 : (1 << 6);        // X is inverted
-    p0 |= R ? 0 : (1 << 7);        // R is inverted
+    p0 |= (R ? 0 : 1) << 7;        // Inverted R bit
+    p0 |= (X ? 0 : 1) << 6;        // Inverted X bit
+    p0 |= (B ? 0 : 1) << 5;        // Inverted B bit
+    p0 |= (R_prime ? 0 : 1) << 4;  // Inverted R' bit
+    p0 |= (map & 0x0F);            // Low 4 bits select the opcode map (0F, 0F38, 0F3A)
     emit_byte(buf, p0);
 
     // Byte 3: P1
@@ -594,8 +596,8 @@ static void emit_evex_prefix(code_buffer * buf,
     p2 |= L_prime ? (1 << 6) : 0;
     p2 |= L ? (1 << 5) : 0;
     p2 |= z ? (1 << 7) : 0;
-    // V' bit is part of vvvv, but needs to be encoded here.
-    p2 |= ((~(vvvv >> 4) & 1) << 3);
+    // V' bit is the high bit of the 5-bit vvvv register specifier and is NOT inverted.
+    p2 |= (((vvvv >> 4) & 1) << 3);
     emit_byte(buf, p2);
 }
 
@@ -606,8 +608,9 @@ static void emit_evex_prefix(code_buffer * buf,
  */
 void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset) {
     // VEX prefix fields for vmovupd ymm, m256:
-    // L=1 (256-bit), p=1 (from 66 prefix), m-mmmm=01 (from 0F map), vvvv must be 1111b
-    emit_vex_prefix(buf, dest >= XMM8_REG, 0, src_base >= R8_REG, 1, false, 0xF, true, 1);
+    // L=1 (256-bit), p=1 (from 66 prefix), m-mmmm=01 (from 0F map).
+    // The vvvv field is not used for a memory source and should be 0.
+    emit_vex_prefix(buf, dest >= XMM8_REG, 0, src_base >= R8_REG, 1, false, 0, true, 1);
     emit_byte(buf, 0x10);  // Opcode for MOVUPD
     uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
     if (offset == 0 && (src_base % 8) != RBP_REG)
@@ -627,7 +630,8 @@ void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int
  * @details Instruction format: VEX.256.66.0F.WIG 11 /r
  */
 void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src) {
-    emit_vex_prefix(buf, src >= XMM8_REG, 0, dest_base >= R8_REG, 1, false, 0xF, true, 1);
+    // For a store, the VEX.vvvv field is not used and should be 0.
+    emit_vex_prefix(buf, src >= XMM8_REG, 0, dest_base >= R8_REG, 1, false, 0, true, 1);
     emit_byte(buf, 0x11);  // Opcode for MOVUPD (store)
     uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
     if (offset == 0 && (dest_base % 8) != RBP_REG)
@@ -648,19 +652,20 @@ void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, 
  */
 void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset) {
     // For vmovupd zmm, m512:
-    // map=0F(1), pp=66(1), W=0, L'L=10 (512-bit), vvvv=1111 (not used)
-    // z=0, b=0, aaa=0 (no masking)
+    // vvvv field is unused and must be 0.
     emit_evex_prefix(buf,
                      1,
                      1,
-                     false,
+                     true,  // W=1 for double-precision
                      dest >= XMM8_REG,
                      false,
                      src_base >= R8_REG,
                      dest >= XMM16_REG,
-                     0xF,  // vvvv = 1111b
-                     true,
-                     false,  // L'L = 10 for 512-bit
+                     // Per Intel SDM: For mem source, EVEX.vvvv must be 1111b (inverted from 0)
+                     // and EVEX.V' must be 1. The value 16 (0b10000) encodes this.
+                     16,
+                     false,  // L=0 for 512-bit
+                     true,   // L'=1 for 512-bit
                      false,
                      false,
                      0);
@@ -683,23 +688,25 @@ void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int
  * @details Instruction format: EVEX.512.66.0F.W0 11 /r
  */
 void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src) {
-    // For vmovupd m512, zmm:
-    // map=0F(1), pp=66(1), W=0, L'L=10 (512-bit), vvvv is unused (must be 1111b).
+    // For a store, the source register is encoded in EVEX.reg_field (via ModRM)
+    // and the vvvv field is repurposed. Per Intel SDM, for a memory destination,
+    // V' must be 1. We encode this by passing a value with the 5th bit set (16)
+    // to the vvvv parameter of the prefix emitter.
     emit_evex_prefix(buf,
-                     1,
-                     1,
-                     false,
+                     1,     // map: 0F
+                     1,     // pp: 66
+                     true,  // W: 1 (double-precision)
                      src >= XMM8_REG,
                      false,
                      dest_base >= R8_REG,
                      src >= XMM16_REG,
-                     0xF,  // vvvv = 1111b
-                     true,
-                     false,  // L'L = 10 for 512-bit
-                     false,
-                     false,
-                     0);
-    emit_byte(buf, 0x11);  // Opcode for MOVUPD (store)
+                     16,     // vvvv field + V' bit encoding for memory destination
+                     false,  // L=0 for 512-bit
+                     true,   // L'=1 for 512-bit
+                     false,  // z=0
+                     false,  // b=0
+                     0);     // aaa=0
+    emit_byte(buf, 0x11);    // Opcode for MOVUPD (store)
     uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
     if (offset == 0 && (dest_base % 8) != RBP_REG)
         mod = 0x00;
