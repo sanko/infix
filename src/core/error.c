@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file error.c
  * @brief Implements the thread-local error reporting system.
@@ -37,13 +36,11 @@
  * 4.  The user can call the public `infix_get_last_error()` function at any time to
  *     retrieve a copy of the last error that occurred on their thread.
  */
-
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <stdarg.h>
 #include <stdio.h>  // For snprintf
 #include <string.h>
-
 // Use a portable mechanism for thread-local storage (TLS).
 // This series of #ifdefs selects the correct keyword for the current compiler.
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
@@ -57,7 +54,6 @@
 #warning "Compiler does not support thread-local storage; error handling will not be thread-safe."
 #define INFIX_TLS
 #endif
-
 // A portable macro for safe string copying to prevent buffer overflows.
 #if defined(_MSC_VER)
 #define _INFIX_SAFE_STRNCPY(dest, src, count) strncpy_s(dest, sizeof(dest), src, count)
@@ -68,7 +64,6 @@
         (dest)[(sizeof(dest)) - 1] = '\0';    \
     } while (0)
 #endif
-
 /**
  * @var g_infix_last_error
  * @brief The thread-local variable that stores the details of the last error.
@@ -77,7 +72,6 @@
  * initialized to a "no error" state.
  */
 static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE, INFIX_CODE_SUCCESS, 0, 0, {0}};
-
 /**
  * @var g_infix_last_signature_context
  * @brief A thread-local pointer to the full signature string being parsed.
@@ -87,7 +81,6 @@ static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE
  * context to generate a rich, contextual error message.
  */
 INFIX_TLS const char * g_infix_last_signature_context = nullptr;
-
 /**
  * @internal
  * @brief Maps an `infix_error_code_t` to its human-readable string representation.
@@ -138,7 +131,6 @@ static const char * _get_error_message_for_code(infix_error_code_t code) {
         return "An unknown or unspecified error occurred";
     }
 }
-
 /**
  * @internal
  * @brief Sets the last error details for the current thread.
@@ -157,23 +149,19 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
     g_infix_last_error.code = code;
     g_infix_last_error.position = position;
     g_infix_last_error.system_error_code = 0;
-
     // Check if we can generate a rich parser error message.
     if (category == INFIX_CATEGORY_PARSER && g_infix_last_signature_context != nullptr) {
         // Generate a rich, GCC-style error message for parser failures.
         const char * signature = g_infix_last_signature_context;
         size_t sig_len = strlen(signature);
         const size_t radius = 20;  // Number of characters to show around the error position.
-
         // Calculate the start and end of the snippet to display.
         size_t start = (position > radius) ? (position - radius) : 0;
         size_t end = (position + radius < sig_len) ? (position + radius) : sig_len;
-
         // Add indicators if the snippet is truncated.
         const char * start_indicator = (start > 0) ? "... " : "";
         const char * end_indicator = (end < sig_len) ? " ..." : "";
         size_t start_indicator_len = (start > 0) ? 4 : 0;
-
         // Create the code snippet line.
         char snippet[128];
         snprintf(snippet,
@@ -183,17 +171,14 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
                  (int)(end - start),
                  signature + start,
                  end_indicator);
-
         // Create the pointer line with a caret '^' under the error.
         char pointer[128];
         size_t caret_pos = position - start + start_indicator_len;
         snprintf(pointer, sizeof(pointer), "%*s^", (int)caret_pos, "");
-
         // Build the final multi-line message piece by piece to avoid buffer overflows.
         char * p = g_infix_last_error.message;
         size_t remaining = sizeof(g_infix_last_error.message);
         int written;
-
         // Write the snippet and pointer lines.
         written = snprintf(p, remaining, "\n\n  %s\n  %s", snippet, pointer);
         if (written < 0 || (size_t)written >= remaining) {
@@ -204,7 +189,6 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
         }
         p += written;
         remaining -= written;
-
         // Append the standard error description.
         snprintf(p, remaining, "\n\nError: %s", _get_error_message_for_code(code));
     }
@@ -214,7 +198,6 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
         _INFIX_SAFE_STRNCPY(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
     }
 }
-
 /**
  * @internal
  * @brief Sets a detailed system error with a platform-specific error code and message.
@@ -245,7 +228,6 @@ void _infix_set_system_error(infix_error_category_t category,
         _INFIX_SAFE_STRNCPY(g_infix_last_error.message, default_msg, sizeof(g_infix_last_error.message) - 1);
     }
 }
-
 /**
  * @internal
  * @brief Resets the error state for the current thread to "no error".
@@ -262,7 +244,6 @@ void _infix_clear_error(void) {
     g_infix_last_error.message[0] = '\0';
     g_infix_last_signature_context = nullptr;
 }
-
 /**
  * @brief Retrieves detailed information about the last error that occurred on the current thread.
  * @return A copy of the last error details structure. This function is thread-safe.

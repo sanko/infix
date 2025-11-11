@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file platform.h
  * @brief Declares internal, runtime CPU/OS feature detection functions.
@@ -24,20 +23,16 @@
  * capabilities of the hardware it is running on.
  * @endinternal
  */
-
 #pragma once
-
 #include "common/compat_c23.h"
 #include "common/infix_config.h"
 #include <stdbool.h>
-
 #if defined(INFIX_ARCH_X64)
 /** @internal @brief Checks if the CPU supports the AVX2 instruction set at runtime. */
 c23_nodiscard bool infix_cpu_has_avx2(void);
 /** @internal @brief Checks if the CPU supports the AVX-512F (Foundation) instruction set at runtime. */
 c23_nodiscard bool infix_cpu_has_avx512f(void);
 #endif
-
 #if defined(INFIX_ARCH_AARCH64)
 /** @internal @brief Checks if the CPU supports the SVE (Scalable Vector Extension) at runtime. */
 c23_nodiscard bool infix_cpu_has_sve(void);

@@ -49,7 +49,6 @@ public:
     ~Box() { std::cout << "  -> C++ Box<T>::~Box() called." << std::endl; }
 };
 
-
 // --- Extern "C" Helpers for C Interop ---
 // These are the "clean" factory functions and helpers that the C code will use.
 extern "C" {

@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file arena.c
  * @brief Implements a simple, fast arena (or region-based) allocator.
@@ -34,12 +33,10 @@
  * associated memory at once, preventing memory leaks and eliminating the need
  * for complex reference counting or garbage collection.
  */
-
 #include "common/infix_internals.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
 /**
  * @internal
  * @brief Creates a new memory arena with a specified initial size.
@@ -59,23 +56,19 @@ c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-
     arena->buffer = infix_calloc(1, initial_size);
     if (arena->buffer == nullptr && initial_size > 0) {
         infix_free(arena);
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-
     arena->capacity = initial_size;
     arena->current_offset = 0;
     arena->error = false;
     arena->next_block = nullptr;
     arena->block_size = initial_size;
-
     return arena;
 }
-
 /**
  * @internal
  * @brief Destroys an arena and frees all memory associated with it.
@@ -90,7 +83,6 @@ c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
 void infix_arena_destroy(infix_arena_t * arena) {
     if (arena == nullptr)
         return;
-
     // Traverse the chain of blocks and free each one.
     infix_arena_t * current = arena;
     while (current != nullptr) {
@@ -101,7 +93,6 @@ void infix_arena_destroy(infix_arena_t * arena) {
         current = next;
     }
 }
-
 /**
  * @internal
  * @brief Allocates a block of memory from an arena with a specified alignment.
@@ -126,37 +117,30 @@ void infix_arena_destroy(infix_arena_t * arena) {
 c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
     if (arena == nullptr)
         return nullptr;
-
     // Alignment must be a power of two for the bitwise alignment trick to work.
     if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         arena->error = true;
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);  // Programmatic error
         return nullptr;
     }
-
     infix_arena_t * current_block = arena;
     while (true) {  // Loop until allocation succeeds or fails definitively.
         if (current_block->error)
             return nullptr;
-
         if (size == 0)
             return (void *)(current_block->buffer + current_block->current_offset);
-
         size_t aligned_offset = _infix_align_up(current_block->current_offset, alignment);
-
         if (aligned_offset < current_block->current_offset) {
             current_block->error = true;
             _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
             return nullptr;
         }
-
         // Attempt to allocate in the current block.
         if (SIZE_MAX - size >= aligned_offset && aligned_offset + size <= current_block->capacity) {
             void * ptr = current_block->buffer + aligned_offset;
             current_block->current_offset = aligned_offset + size;
             return ptr;  // Success: Allocation complete.
         }
-
         // If allocation failed, find or create the next block and let the loop retry.
         if (current_block->next_block != nullptr) {
             current_block = current_block->next_block;
@@ -166,7 +150,6 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_
             size_t next_size = current_block->block_size * 2;
             if (next_size < size + alignment)
                 next_size = size + alignment;
-
             current_block->next_block = infix_arena_create(next_size);
             if (current_block->next_block == nullptr) {
                 current_block->error = true;  // Mark the last valid block as errored.
@@ -175,11 +158,9 @@ c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_
             current_block = current_block->next_block;
         }
     }
-
     // This line should be unreachable if the logic is correct.
     return nullptr;
 }
-
 /**
  * @internal
  * @brief Allocates and zero-initializes a block of memory from an arena.
@@ -203,12 +184,9 @@ c23_nodiscard void * infix_arena_calloc(infix_arena_t * arena, size_t num, size_
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return nullptr;
     }
-
     size_t total_size = num * size;
     void * ptr = infix_arena_alloc(arena, total_size, alignment);
-
     if (ptr != nullptr)
         memset(ptr, 0, total_size);
-
     return ptr;
 }

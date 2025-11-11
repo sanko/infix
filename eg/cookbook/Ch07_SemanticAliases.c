@@ -72,7 +72,6 @@ bool introspect_alias(const char * signature,
     return success;
 }
 
-
 int main() {
     printf("--- Cookbook Chapter 7: Creating and Introspecting Semantic Aliases ---\n");
 

@@ -33,14 +33,12 @@
  *       error status (`INFIX_ERROR_INVALID_ARGUMENT`), and do not proceed with
  *       a potentially dangerous allocation.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <limits.h>
 #include <stdlib.h>
-
 #if defined(_WIN32)
 #include <windows.h>
 #else
@@ -48,11 +46,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #endif
-
 // Dummy functions to provide valid pointers for trampoline creation.
 int dummy_target_func(int a) { return a * 10; }
 void dummy_handler_func(void) {}
-
 /**
  * @internal
  * @brief (Windows) Helper function to run a test that is expected to crash in a child process.
@@ -79,10 +75,8 @@ static bool run_crash_test_as_child(const char * test_name) {
     ZeroMemory(&pi, sizeof(pi));
     si.dwFlags |= STARTF_USESTDHANDLES;
     si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-
     si.hStdOutput = CreateFileA("NUL", GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     si.hStdError = si.hStdOutput;
-
     if (!CreateProcessA(exe_path, nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi)) {
         fail("CreateProcess() failed.");
         SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", nullptr);
@@ -101,7 +95,6 @@ static bool run_crash_test_as_child(const char * test_name) {
     return exit_code == EXCEPTION_ACCESS_VIOLATION;
 }
 #endif
-
 TEST {
 #if defined(_WIN32)
     const char * child_test_name = getenv("INFIX_CRASH_TEST_CHILD");
@@ -147,9 +140,7 @@ TEST {
         exit(1);
     }
 #endif
-
     plan(4);
-
     subtest("Guard pages prevent use-after-free") {
         plan(3);
         subtest("Calling a freed UNBOUND FORWARD trampoline causes a crash") {
@@ -244,7 +235,6 @@ TEST {
 #endif
         }
     }
-
     subtest("Writing to a hardened reverse trampoline context causes a crash") {
         plan(1);
 #if defined(INFIX_OS_MACOS)
@@ -275,19 +265,15 @@ TEST {
         skip(1, "Write protection test not supported on this platform.");
 #endif
     }
-
     subtest("API hardening against integer overflows") {
         plan(3);
-
         subtest("infix_type_create_struct overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
-
             infix_type malicious_type = {.size = SIZE_MAX / 2 + 10, .alignment = 8};
             infix_struct_member members[2];
             members[0] = infix_type_create_member("a", &malicious_type, 0);
             members[1] = infix_type_create_member("b", &malicious_type, 0);
-
             infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_struct(arena, &bad_type, members, 2);
             ok(status == INFIX_ERROR_INVALID_ARGUMENT,
@@ -309,7 +295,6 @@ TEST {
         subtest("infix_type_create_union overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
-
             infix_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
             infix_struct_member members[1];
             members[0] = infix_type_create_member("bad", &malicious_member_type, 0);
@@ -320,7 +305,6 @@ TEST {
             infix_arena_destroy(arena);
         }
     }
-
     subtest("POSIX hardened allocator (shm_open)") {
         plan(1);
 #if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_TERMUX) && \

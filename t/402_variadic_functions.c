@@ -29,7 +29,6 @@
  *   requires them to be passed in both GPRs and XMM registers) and passing structs
  *   on macOS on ARM (which has its own unique stack-passing rules).
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "common/infix_config.h"
@@ -39,24 +38,20 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-
 int forward_variadic_checker(char * buffer, size_t size, const char * format, ...) {
     (void)buffer;
     (void)size;
-
     va_list args;
     va_start(args, format);
     const char * str_arg = va_arg(args, const char *);
     int int_arg = va_arg(args, int);
     double dbl_arg = va_arg(args, double);
     va_end(args);
-
     note("forward_variadic_checker received:");
     note("  format = \"%s\"", format);
     note("  str_arg = \"%s\"", str_arg);
     note("  int_arg = %d", int_arg);
     note("  dbl_arg = %.2f", dbl_arg);
-
     subtest("Inside forward_variadic_checker") {
         plan(4);
         ok(strcmp(format, "format string") == 0, "Fixed arg 'format' is correct");
@@ -64,16 +59,12 @@ int forward_variadic_checker(char * buffer, size_t size, const char * format, ..
         ok(int_arg == 123, "Variadic arg 2 (int) is correct");
         ok(fabs(dbl_arg - 3.14) < 0.001, "Variadic arg 3 (double) is correct");
     }
-
     return 1;
 }
-
 int forward_variadic_aggregate_checker(int fixed_arg, ...) {
     va_list args;
     va_start(args, fixed_arg);
-
 #if defined(INFIX_ABI_WINDOWS_X64)
-
     NonPowerOfTwoStruct * s_ptr = va_arg(args, NonPowerOfTwoStruct *);
     note("Windows variadic checker received struct pointer: %p", (void *)s_ptr);
     if (s_ptr)
@@ -81,7 +72,6 @@ int forward_variadic_aggregate_checker(int fixed_arg, ...) {
     else
         fail("Received a null pointer for variadic struct on Windows x64");
 #else
-
     Point p = va_arg(args, Point);
     note("System V/AAPCS64 variadic checker received Point: {%.1f, %.1f}", p.x, p.y);
     ok(fabs(p.x - 10.5) < 1e-9 && fabs(p.y - 20.5) < 1e-9, "Variadic Point struct correct on SysV/AAPCS64");
@@ -89,7 +79,6 @@ int forward_variadic_aggregate_checker(int fixed_arg, ...) {
     va_end(args);
     return 1;
 }
-
 int variadic_reverse_handler(const char * topic, ...) {
     va_list args;
     va_start(args, topic);
@@ -97,7 +86,6 @@ int variadic_reverse_handler(const char * topic, ...) {
     double value = va_arg(args, double);
     const char * message = va_arg(args, const char *);
     va_end(args);
-
     subtest("Inside variadic_reverse_handler") {
         plan(4);
         ok(strcmp(topic, "LOG") == 0, "Fixed arg (topic) is correct");
@@ -107,14 +95,11 @@ int variadic_reverse_handler(const char * topic, ...) {
     }
     return count + (int)value;
 }
-
 #if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
-
 typedef struct {
     long a;
     long b;
 } MacTestStruct;
-
 int macos_variadic_checker(int fixed_arg, ...) {
     va_list args;
     va_start(args, fixed_arg);
@@ -129,9 +114,7 @@ int macos_variadic_checker(int fixed_arg, ...) {
     return fixed_arg + (int)var_double + (int)var_struct.a + (int)var_struct.b;
 }
 #endif
-
 #if defined(INFIX_ABI_WINDOWS_X64)
-
 double win_variadic_float_checker(int fixed_arg, ...) {
     va_list args;
     va_start(args, fixed_arg);
@@ -141,18 +124,14 @@ double win_variadic_float_checker(int fixed_arg, ...) {
     return var_double;
 }
 #endif
-
 TEST {
     plan(5);
-
     subtest("Forward variadic call") {
         plan(3);
         const char * signature = "(*char, uint64, *char; *char, int32, double) -> int32";
-
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic forward trampoline created");
-
         char buffer[1] = {0};
         size_t size = 1;
         const char * fmt = "format string";
@@ -161,15 +140,11 @@ TEST {
         double dbl_arg = 3.14;
         int result = 0;
         void * args[] = {&buffer, &size, &fmt, &str_arg, &int_arg, &dbl_arg};
-
         infix_unbound_cif_func cif_func = infix_forward_get_unbound_code(trampoline);
         cif_func((void *)forward_variadic_checker, &result, args);
-
         pass("Custom variadic checker function was called.");
-
         infix_forward_destroy(trampoline);
     }
-
     subtest("Forward variadic call (aggregates)") {
         plan(3);
 #if defined(INFIX_ABI_WINDOWS_X64)
@@ -184,27 +159,20 @@ TEST {
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic aggregate trampoline created");
-
         int fixed_arg = 1;
         void * args[] = {&fixed_arg, &s};
         int result = 0;
-
         infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         cif((void *)forward_variadic_aggregate_checker, &result, args);
-
         pass("Aggregate checker function was called.");
-
         infix_forward_destroy(trampoline);
     }
-
     subtest("Reverse variadic callback") {
         plan(3);
         const char * signature = "(*char; int, double, *char) -> int";
-
         infix_reverse_t * rt = nullptr;
         infix_status status = infix_reverse_create_callback(&rt, signature, (void *)variadic_reverse_handler, nullptr);
         ok(status == INFIX_SUCCESS, "Variadic reverse trampoline created");
-
         if (rt) {
             typedef int (*VariadicLogFunc)(const char *, ...);
             VariadicLogFunc func_ptr = (VariadicLogFunc)infix_reverse_get_code(rt);
@@ -213,10 +181,8 @@ TEST {
         }
         else
             skip(1, "Test skipped");
-
         infix_reverse_destroy(rt);
     }
-
     subtest("Platform ABI: macOS AArch64 variadic struct passing") {
         plan(2);
 #if defined(INFIX_OS_MACOS) && defined(INFIX_ARCH_AARCH64)
@@ -225,7 +191,6 @@ TEST {
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline for macOS variadic test created");
-
         infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         int fixed_val = 10;
         double dbl_val = 20.0;
@@ -234,23 +199,19 @@ TEST {
         int result = 0;
         cif((void *)macos_variadic_checker, &result, args);
         ok(result == 100, "macOS variadic arguments passed correctly (10+20+30+40)");
-
         infix_forward_destroy(trampoline);
 #else
         skip(2, "Test is only for macOS on AArch64");
 #endif
     }
-
     subtest("Platform ABI: Windows x64 variadic float/double passing") {
         plan(2);
 #if defined(INFIX_ABI_WINDOWS_X64)
         note("Testing if a variadic double is passed correctly on Windows x64");
-
         const char * signature = "(int32; double) -> double";
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_unbound(&trampoline, signature, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline for Windows variadic test created");
-
         infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         int fixed_val = 100;
         double dbl_val = 123.45;

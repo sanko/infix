@@ -22,24 +22,20 @@
  * correctly cleans up all memory it had allocated up to that point, preventing
  * memory leaks in error paths.
  */
-
 // Override standard memory functions with our fault-injecting versions.#define infix_malloc test_malloc
 #define infix_malloc test_malloc
 #define infix_calloc test_calloc
 #define infix_free test_free
 #define infix_realloc test_realloc
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
-
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
 #else
 #include <pthread.h>
 #endif
-
 static int allocation_countdown = -1;
 static int allocation_counter = 0;
 static bool fault_triggered = false;
@@ -61,7 +57,6 @@ static pthread_mutex_t allocator_mutex = PTHREAD_MUTEX_INITIALIZER;
 #define ALLOCATOR_UNLOCK() pthread_mutex_unlock(&allocator_mutex)
 #define ALLOCATOR_INIT() ((void)0)
 #endif
-
 void setup_fault_injector(int fail_after_n_allocs) {
     ALLOCATOR_LOCK();
     allocation_countdown = fail_after_n_allocs;
@@ -69,13 +64,11 @@ void setup_fault_injector(int fail_after_n_allocs) {
     fault_triggered = false;
     ALLOCATOR_UNLOCK();
 }
-
 void reset_fault_injector() {
     ALLOCATOR_LOCK();
     allocation_countdown = -1;
     ALLOCATOR_UNLOCK();
 }
-
 void * test_malloc(size_t size) {
     void * r = nullptr;
     ALLOCATOR_LOCK();
@@ -89,11 +82,9 @@ void * test_malloc(size_t size) {
     }
     else
         r = malloc(size);
-
     ALLOCATOR_UNLOCK();
     return r;
 }
-
 void * test_calloc(size_t num, size_t size) {
     void * r = nullptr;
     ALLOCATOR_LOCK();
@@ -110,9 +101,7 @@ void * test_calloc(size_t num, size_t size) {
     ALLOCATOR_UNLOCK();
     return r;
 }
-
 void test_free(void * ptr) { free(ptr); }
-
 void * test_realloc(void * ptr, size_t new_size) {
     void * r = nullptr;
     ALLOCATOR_LOCK();
@@ -126,25 +115,19 @@ void * test_realloc(void * ptr, size_t new_size) {
     }
     else
         r = realloc(ptr, new_size);
-
     ALLOCATOR_UNLOCK();
     return r;
 }
-
 void fault_injection_handler(void) {}
-
 TEST {
     plan(3);
-
     ALLOCATOR_INIT();
-
     subtest("Leak test for infix_forward_create failures") {
         const int MAX_FAILS_TO_TEST = 20;
         plan(MAX_FAILS_TO_TEST);
         note("Testing for leaks when infix_forward_create fails at every possible allocation.");
         const char * signature = "({*char, int}) -> void";
         bool success_was_reached = false;
-
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);
             infix_forward_t * trampoline = nullptr;
@@ -166,33 +149,26 @@ TEST {
             fail("Test loop finished without succeeding. Increase MAX_FAILS_TO_TEST.");
         reset_fault_injector();
     }
-
     subtest("Leak test for infix_reverse_create_callback failures") {
         const int MAX_FAILS_TO_TEST = 20;
         plan(MAX_FAILS_TO_TEST);
         note("Testing for leaks when infix_reverse_create_callback fails at every possible allocation.");
-
         const char * signature = "({*char,int})->void";
         bool success_was_reached = false;
-
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);
             infix_reverse_t * context = nullptr;
             infix_status status =
                 infix_reverse_create_callback(&context, signature, (void *)fault_injection_handler, nullptr);
-
             if (fault_triggered) {
                 ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
                 ok(context == nullptr, "Context handle is nullptr on failure");
             }
             else {
-
                 success_was_reached = true;
                 pass("Successfully created reverse trampoline with %d allocations.", i);
-
                 for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found, skipping further fault injections.");
-
                 infix_reverse_destroy(context);
                 break;
             }
@@ -201,25 +177,19 @@ TEST {
             fail(
                 "Test loop finished without ever succeeding, which may indicate an issue or need for a higher "
                 "MAX_FAILS_TO_TEST.");
-
         reset_fault_injector();
     }
-
     subtest("Leak test for infix_type_from_signature failures") {
         const int MAX_FAILS_TO_TEST = 10;
         plan(MAX_FAILS_TO_TEST);
         note("Testing for leaks when creating a complex type from signature fails.");
-
         const char * signature = "{int, double, [10:{*char, short}]}";
         bool success_was_reached = false;
-
         for (int i = 0; i < MAX_FAILS_TO_TEST; ++i) {
             setup_fault_injector(i);
             infix_type * final_type = nullptr;
             infix_arena_t * arena = nullptr;
-
             infix_status status = infix_type_from_signature(&final_type, &arena, signature, nullptr);
-
             if (fault_triggered) {
                 ok(status == INFIX_ERROR_ALLOCATION_FAILED, "Correctly failed on allocation #%d", i);
                 ok(arena == nullptr && final_type == nullptr, "Arena and type are nullptr on failure");
@@ -229,7 +199,6 @@ TEST {
                 pass("Successfully created complex type with %d allocations.", i);
                 for (int j = i + 1; j < MAX_FAILS_TO_TEST; ++j)
                     skip(1, "Success point found.");
-
                 infix_arena_destroy(arena);
                 break;
             }

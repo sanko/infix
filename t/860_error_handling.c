@@ -29,24 +29,19 @@
  *       `INFIX_CODE_INTEGER_OVERFLOW`. This confirms that security and stability
  *       checks are in place and are reported correctly.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
-
 TEST {
     plan(2);
-
     subtest("Signature Parser Error Reporting") {
         plan(15);
-
         infix_arena_t * arena = nullptr;
         infix_type * type = nullptr;
         infix_status status;
-
         // Test Case 1: An unexpected token in a function signature.
         const char * sig1 = "(int, ^) -> void";
         infix_type * ret_type = nullptr;
@@ -55,7 +50,6 @@ TEST {
         status = infix_signature_parse(sig1, &arena, &ret_type, &args, &num_args, &num_fixed, nullptr);
         infix_arena_destroy(arena);
         arena = nullptr;
-
         ok(status != INFIX_SUCCESS, "Parser fails on unexpected token '^'");
         if (status != INFIX_SUCCESS) {
             infix_error_details_t err = infix_get_last_error();
@@ -67,7 +61,6 @@ TEST {
         }
         else
             skip(4, "Error detail tests skipped on unexpected success");
-
         // Test Case 2: An unclosed aggregate (struct).
         const char * sig2 = "{int, double";
         status = infix_type_from_signature(&type, &arena, sig2, nullptr);
@@ -83,7 +76,6 @@ TEST {
         }
         else
             skip(4, "Error detail tests skipped on unexpected success");
-
         // Test Case 3: An invalid type keyword.
         const char * sig3 = "integer";
         status = infix_type_from_signature(&type, &arena, sig3, nullptr);
@@ -100,18 +92,15 @@ TEST {
         else
             skip(4, "Error detail tests skipped on unexpected success");
     }
-
     subtest("API Hardening Error Reporting") {
         plan(4);
         infix_arena_t * arena = nullptr;
         infix_type * type = nullptr;
         infix_status status;
-
         // Construct a signature for an array so large it will cause an integer overflow
         // when its total size is calculated (num_elements * sizeof(element)).
         char overflow_sig[128];
         snprintf(overflow_sig, sizeof(overflow_sig), "[%llu:short]", (unsigned long long)((SIZE_MAX / 2) + 1));
-
         status = infix_type_from_signature(&type, &arena, overflow_sig, nullptr);
         ok(status != INFIX_SUCCESS, "infix_type_from_signature fails on integer overflow");
         if (status != INFIX_SUCCESS) {
@@ -122,7 +111,6 @@ TEST {
         }
         else
             skip(3, "Error detail tests skipped on unexpected success");
-
         infix_arena_destroy(arena);
     }
 }

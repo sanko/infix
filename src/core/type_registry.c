@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file type_registry.c
  * @brief Implements the named type registry system.
@@ -36,14 +35,11 @@
  *     (`@MyType`) with direct pointers to the canonical type objects stored in the
  *     registry.
  */
-
 #include "common/infix_internals.h"
 #include <ctype.h>
 #include <string.h>
-
 /** @internal A thread-local pointer to the full signature string for rich error reporting. */
 extern INFIX_TLS const char * g_infix_last_signature_context;
-
 /**
  * @internal
  * @brief The initial number of buckets for the registry's internal hash table.
@@ -51,7 +47,6 @@ extern INFIX_TLS const char * g_infix_last_signature_context;
  *          reducing the likelihood of hash collisions.
  */
 #define INITIAL_REGISTRY_BUCKETS 61
-
 /**
  * @internal
  * @struct resolve_memo_node_t
@@ -66,9 +61,7 @@ typedef struct resolve_memo_node_t {
     infix_type * src;                  /**< The `infix_type` object that has been visited. */
     struct resolve_memo_node_t * next; /**< The next node in the visited list. */
 } resolve_memo_node_t;
-
 // Hash Table Implementation
-
 /**
  * @internal
  * @brief Computes a hash for a string using the djb2 algorithm.
@@ -83,7 +76,6 @@ static uint64_t _registry_hash_string(const char * str) {
         hash = ((hash << 5) + hash) + c;  // hash * 33 + c
     return hash;
 }
-
 /**
  * @internal
  * @brief Looks up an entry in the registry's hash table.
@@ -101,7 +93,6 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
             return current;
     return nullptr;
 }
-
 /**
  * @internal
  * @brief Inserts a new, empty entry into the registry's hash table.
@@ -139,9 +130,7 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
     registry->num_items++;
     return new_entry;
 }
-
 // Public API: Registry Lifecycle
-
 /**
  * @brief Creates a new, empty named type registry.
  *
@@ -179,7 +168,6 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
     registry->num_items = 0;
     return registry;
 }
-
 /**
  * @brief Creates a new, empty named type registry that allocates from a user-provided arena.
  *
@@ -192,7 +180,6 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
  * @return A pointer to the new registry, or `nullptr` on allocation failure. The returned
  *         handle must be freed with `infix_registry_destroy`.
  */
-
 c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * arena) {
     _infix_clear_error();
     if (!arena) {
@@ -217,7 +204,6 @@ c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * 
     registry->num_items = 0;
     return registry;
 }
-
 /**
  * @brief Destroys a type registry and frees all associated memory.
  *
@@ -236,9 +222,7 @@ void infix_registry_destroy(infix_registry_t * registry) {
     // Always free the registry struct itself.
     infix_free(registry);
 }
-
 // Internal Type Graph Resolution
-
 /**
  * @internal
  * @brief Recursively walks a type graph and resolves all named type references in-place.
@@ -263,15 +247,12 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_a
                                                           resolve_memo_node_t ** memo_head) {
     if (!type_ptr || !*type_ptr || !(*type_ptr)->is_arena_allocated)
         return INFIX_SUCCESS;
-
     infix_type * type = *type_ptr;
-
     // Cycle detection: If we've seen this node before, we're in a cycle.
     // Return success to break the loop.
     for (resolve_memo_node_t * node = *memo_head; node != nullptr; node = node->next)
         if (node->src == type)
             return INFIX_SUCCESS;
-
     // Allocate the memoization node from the stable temporary arena.
     resolve_memo_node_t * memo_node =
         infix_arena_alloc(temp_arena, sizeof(resolve_memo_node_t), _Alignof(resolve_memo_node_t));
@@ -282,7 +263,6 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_a
     memo_node->src = type;
     memo_node->next = *memo_head;
     *memo_head = memo_node;
-
     if (type->category == INFIX_TYPE_NAMED_REFERENCE) {
         if (!registry) {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
@@ -297,7 +277,6 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_a
         *type_ptr = entry->type;
         return INFIX_SUCCESS;
     }
-
     infix_status status = INFIX_SUCCESS;
     switch (type->category) {
     case INFIX_TYPE_POINTER:
@@ -344,10 +323,8 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_a
     default:
         break;
     }
-
     return status;
 }
-
 /**
  * @internal
  * @brief Public-internal wrapper for the recursive resolution function.
@@ -362,16 +339,12 @@ c23_nodiscard infix_status _infix_resolve_type_graph_inplace(infix_type ** type_
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
     resolve_memo_node_t * memo_head = nullptr;
     infix_status status = _resolve_type_graph_inplace_recursive(temp_arena, type_ptr, registry, &memo_head);
-
     infix_arena_destroy(temp_arena);
     return status;
 }
-
 // Public API: Type Registration
-
 /**
  * @internal
  * @struct _registry_parser_state_t
@@ -384,7 +357,6 @@ typedef struct {
     const char * p;     /**< The current position in the definition string. */
     const char * start; /**< The start of the definition string for error reporting. */
 } _registry_parser_state_t;
-
 /**
  * @internal
  * @brief Skips whitespace and C++-style line comments in a definition string.
@@ -401,7 +373,6 @@ static void _registry_parser_skip_whitespace(_registry_parser_state_t * state) {
             break;
     }
 }
-
 /**
  * @internal
  * @brief Parses a type name (e.g., `MyType`, `NS::MyType`) from the definition string.
@@ -427,7 +398,6 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
     buffer[len] = '\0';
     return buffer;
 }
-
 /**
  * @brief Parses a string of type definitions and adds them to a registry.
  *
@@ -463,17 +433,14 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
     _registry_parser_state_t state = {.p = definitions, .start = definitions};
     g_infix_last_signature_context = definitions;
-
     // A temporary structure to hold information about each definition found in Pass 1.
     struct def_info {
         _infix_registry_entry_t * entry;
         const char * def_body_start;
         size_t def_body_len;
     };
-
     size_t defs_capacity = 64;  // Start with an initial capacity.
     struct def_info * defs_found = infix_malloc(sizeof(struct def_info) * defs_capacity);
     if (!defs_found) {
@@ -482,20 +449,17 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
     }
     size_t num_defs_found = 0;
     infix_status final_status = INFIX_SUCCESS;
-
     // Pass 1: Scan & Index all names and their definition bodies.
     while (*state.p != '\0') {
         _registry_parser_skip_whitespace(&state);
         if (*state.p == '\0')
             break;
-
         if (*state.p != '@') {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
             final_status = INFIX_ERROR_INVALID_ARGUMENT;
             goto cleanup;
         }
         state.p++;
-
         char name_buffer[256];
         if (!_registry_parser_parse_name(&state, name_buffer, sizeof(name_buffer))) {
             _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
@@ -504,7 +468,6 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         }
         _infix_registry_entry_t * entry = _registry_lookup(registry, name_buffer);
         _registry_parser_skip_whitespace(&state);
-
         if (*state.p == '=') {  // This is a full definition.
             state.p++;
             _registry_parser_skip_whitespace(&state);
@@ -532,7 +495,6 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
                 defs_found = new_defs;
                 defs_capacity = new_capacity;
             }
-
             // Find the end of the type definition body (the next top-level ';').
             defs_found[num_defs_found].entry = entry;
             defs_found[num_defs_found].def_body_start = state.p;
@@ -573,11 +535,9 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             final_status = INFIX_ERROR_INVALID_ARGUMENT;
             goto cleanup;
         }
-
         if (*state.p == ';')
             state.p++;
     }
-
     // Pass 2: Parse the bodies of all found definitions into the registry.
     for (size_t i = 0; i < num_defs_found; ++i) {
         _infix_registry_entry_t * entry = defs_found[i].entry;
@@ -590,7 +550,6 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         }
         infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
         body_copy[defs_found[i].def_body_len] = '\0';
-
         // "Parse" step: parse into a temporary arena.
         infix_type * raw_type = nullptr;
         infix_arena_t * parser_arena = nullptr;
@@ -604,9 +563,7 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             infix_arena_destroy(parser_arena);
             goto cleanup;
         }
-
         const infix_type * type_to_alias = raw_type;
-
         // If the RHS is another named type (e.g., @MyAlias = @ExistingType),
         // we need to resolve it first to get the actual type we're aliasing.
         if (raw_type->category == INFIX_TYPE_NAMED_REFERENCE) {
@@ -622,7 +579,6 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
                 goto cleanup;
             }
         }
-
         if (!type_to_alias->is_arena_allocated) {
             // This is a static type (e.g., primitive). We MUST create a mutable
             // copy in the registry's arena before we can attach a name to it.
@@ -640,20 +596,16 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         }
         else
             entry->type = _copy_type_graph_to_arena(registry->arena, type_to_alias);
-
         infix_arena_destroy(parser_arena);  // The temporary raw_type is no longer needed.
-
         if (!entry->type) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             final_status = INFIX_ERROR_ALLOCATION_FAILED;
             goto cleanup;
         }
-
         // Attach the new alias name to the copied type. This is the key to preserving semantic names.
         entry->type->name = entry->name;
         entry->is_forward_declaration = false;
     }
-
     // Pass 3: Resolve and layout all the newly defined types.
     for (size_t i = 0; i < num_defs_found; ++i) {
         _infix_registry_entry_t * entry = defs_found[i].entry;
@@ -666,12 +618,10 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             _infix_type_recalculate_layout(entry->type);
         }
     }
-
 cleanup:
     infix_free(defs_found);
     return final_status;
 }
-
 // Registry Introspection API Implementation
 /**
  * @brief Initializes an iterator for traversing the types in a registry.
@@ -697,7 +647,6 @@ c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infi
     // The first call to next() will advance it to the first valid element.
     return (infix_registry_iterator_t){registry, 0, nullptr};
 }
-
 /**
  * @brief Advances the iterator to the next defined type in the registry.
  *
@@ -708,17 +657,13 @@ c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infi
 c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter) {
     if (!iter || !iter->registry)
         return false;
-
     const _infix_registry_entry_t * entry = iter->current_entry;
-
     // If we have a current entry, start from the next one in the chain.
     if (iter->current_entry)
         entry = entry->next;
-
     // Otherwise, if we are starting, begin with the head of the current bucket.
     else if (iter->current_bucket < iter->registry->num_buckets)
         entry = iter->registry->buckets[iter->current_bucket];
-
     while (true) {
         // Traverse the current chain looking for a valid entry.
         while (entry) {
@@ -729,21 +674,17 @@ c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter
             }
             entry = entry->next;
         }
-
         // If we're here, the current chain is exhausted. Move to the next bucket.
         iter->current_bucket++;
-
         // If there are no more buckets, we're done.
         if (iter->current_bucket >= iter->registry->num_buckets) {
             iter->current_entry = nullptr;
             return false;
         }
-
         // Start the search from the head of the new bucket.
         entry = iter->registry->buckets[iter->current_bucket];
     }
 }
-
 /**
  * @brief Gets the name of the type at the iterator's current position.
  *
@@ -757,7 +698,6 @@ c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry
         return nullptr;
     return iter->current_entry->name;
 }
-
 /**
  * @brief Gets the `infix_type` object of the type at the iterator's current position.
  *
@@ -771,7 +711,6 @@ c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_re
         return nullptr;
     return iter->current_entry->type;
 }
-
 /**
  * @brief Checks if a type with the given name is fully defined in the registry.
  *
@@ -789,7 +728,6 @@ c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, 
     // It's defined if an entry exists, it has a type, and it's not a lingering forward declaration.
     return entry != nullptr && entry->type != nullptr && !entry->is_forward_declaration;
 }
-
 /**
  * @brief Retrieves the canonical `infix_type` object for a given name from the registry.
  *

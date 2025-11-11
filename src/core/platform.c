@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file platform.c
  * @brief Implements runtime detection of CPU and OS features.
@@ -22,9 +21,7 @@
  * environment's capabilities, such as support for advanced CPU instruction sets.
  * @endinternal
  */
-
 #include "common/platform.h"
-
 #if defined(INFIX_ARCH_X64)
 #if defined(_MSC_VER)
 #include <intrin.h>
@@ -42,7 +39,6 @@
 #include <sys/sysctl.h>
 #endif
 #endif
-
 #if defined(INFIX_ARCH_X64)
 bool infix_cpu_has_avx2(void) {
 #if defined(_MSC_VER)
@@ -60,7 +56,6 @@ bool infix_cpu_has_avx2(void) {
     return false;
 #endif
 }
-
 bool infix_cpu_has_avx512f(void) {
 #if defined(_MSC_VER)
     int cpuInfo[4];
@@ -78,7 +73,6 @@ bool infix_cpu_has_avx512f(void) {
 #endif
 }
 #endif
-
 #if defined(INFIX_ARCH_AARCH64)
 bool infix_cpu_has_sve(void) {
 #if defined(__linux__) && defined(HWCAP_SVE)

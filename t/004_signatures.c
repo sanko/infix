@@ -28,13 +28,11 @@
  *   the output string matches the canonical representation of the input, ensuring that
  *   parsing and printing are inverse operations.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <ctype.h>
 #include <infix/infix.h>
 #include <string.h>
-
 /** @internal Helper to run a positive test case for `infix_type_from_signature`. */
 static void test_type_ok(const char * signature, infix_type_category expected_cat, const char * name) {
     subtest(name) {
@@ -42,7 +40,6 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
         infix_type * type = nullptr;
         infix_arena_t * arena = nullptr;
         infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
-
         ok(status == INFIX_SUCCESS, "Parsing should succeed for '%s'", signature);
         if (status == INFIX_SUCCESS && type)
             ok(type->category == expected_cat, "Type category should be %d (got %d)", expected_cat, type->category);
@@ -51,7 +48,6 @@ static void test_type_ok(const char * signature, infix_type_category expected_ca
         infix_arena_destroy(arena);
     }
 }
-
 /** @internal Helper to run a negative test case for `infix_type_from_signature`. */
 static void test_type_fail(const char * signature, const char * name) {
     subtest(name) {
@@ -63,10 +59,8 @@ static void test_type_fail(const char * signature, const char * name) {
         infix_arena_destroy(arena);
     }
 }
-
 /** @internal A dummy function for creating valid trampolines during tests. */
 void dummy_handler() {}
-
 /** @internal Helper to normalize a string by removing all whitespace. */
 static void normalize_string(char * s) {
     if (!s)
@@ -77,24 +71,20 @@ static void normalize_string(char * s) {
             s++;
     } while ((*d++ = *s++));
 }
-
 /** @internal Helper to test the parse -> print round trip. */
 static void test_print_roundtrip(const char * signature, const char * expected_output) {
     if (!expected_output)
         expected_output = signature;
-
     subtest(signature) {
         plan(1);
         infix_type * type = NULL;
         infix_arena_t * arena = NULL;
         infix_status status = infix_type_from_signature(&type, &arena, signature, nullptr);
-
         if (status != INFIX_SUCCESS) {
             fail("Parsing failed, cannot test printing.");
             infix_arena_destroy(arena);
             return;
         }
-
         char buffer[1024];
         status = infix_type_print(buffer, sizeof(buffer), type, INFIX_DIALECT_SIGNATURE);
         if (status != INFIX_SUCCESS)
@@ -107,7 +97,6 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
             snprintf(printed_normalized, sizeof(printed_normalized), "%s", buffer);
             normalize_string(expected_normalized);
             normalize_string(printed_normalized);
-
             ok(strcmp(expected_normalized, printed_normalized) == 0,
                "Printed string should match expected canonical signature");
             if (strcmp(expected_normalized, printed_normalized) != 0) {
@@ -119,10 +108,8 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
         infix_arena_destroy(arena);
     }
 }
-
 TEST {
     plan(7);
-
     subtest("Valid Single Types") {
         plan(15);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
@@ -141,7 +128,6 @@ TEST {
         test_type_ok("e:sint32", INFIX_TYPE_ENUM, "simple enum");
         test_type_ok("!{char, sint64}", INFIX_TYPE_STRUCT, "simple packed struct (pack 1)");
     }
-
     subtest("Valid Edge Cases (Whitespace, Nesting, Empty)") {
         plan(8);
         test_type_ok("  { #comment \n } ", INFIX_TYPE_STRUCT, "Struct with heavy whitespace and comments");
@@ -153,7 +139,6 @@ TEST {
         test_type_ok("() -> !{char,int}", INFIX_TYPE_REVERSE_TRAMPOLINE, "Function returning a packed struct");
         test_type_ok("({*char, e:int}) -> void", INFIX_TYPE_REVERSE_TRAMPOLINE, "Function taking an anonymous struct");
     }
-
     subtest("Valid Full Function Signatures") {
         plan(8);
         subtest("Simple function: (sint32, double) -> sint64") {
@@ -293,7 +278,6 @@ TEST {
             infix_arena_destroy(a);
         }
     }
-
     subtest("Invalid Syntax and Logic") {
         plan(21);
         test_type_fail("sint32 junk", "Junk after valid type");
@@ -318,36 +302,29 @@ TEST {
         test_type_fail("struct<Foo>{int}", "Old struct<Name> syntax is now invalid");
         test_type_fail("union<Bar><int>", "Old union<Name> syntax is now invalid");
     }
-
     subtest("Registry Type Introspection") {
         plan(6);
         infix_registry_t * registry = infix_registry_create();
         const char * defs = "@Node = { value: int, next: *@Node };";
         ok(infix_register_types(registry, defs) == INFIX_SUCCESS, "Setup: Registered recursive @Node type");
-
         infix_type * node_ptr_type = nullptr;
         infix_arena_t * temp_arena = nullptr;
         infix_status status = infix_type_from_signature(&node_ptr_type, &temp_arena, "*@Node", registry);
-
         if (ok(status == INFIX_SUCCESS, "Parsed `*@Node` using registry")) {
             ok(node_ptr_type->category == INFIX_TYPE_POINTER, "Top level is pointer");
             infix_type * node_type = node_ptr_type->meta.pointer_info.pointee_type;
             ok(node_type && node_type->category == INFIX_TYPE_STRUCT, "Points to a struct");
-
             const infix_struct_member * next_member = infix_type_get_member(node_type, 1);
             ok(next_member && next_member->type->category == INFIX_TYPE_POINTER, "Member 'next' is a pointer");
-
             // This is the crucial check for recursive type resolution.
             infix_type * next_pointee = next_member->type->meta.pointer_info.pointee_type;
             ok(next_pointee == node_type, "Recursive pointer correctly points to the parent struct type");
         }
         else
             skip(4, "Skipping detail checks due to parsing failure");
-
         infix_arena_destroy(temp_arena);
         infix_registry_destroy(registry);
     }
-
     subtest("Round trip") {
         plan(7);
         test_print_roundtrip("int", "sint32");
@@ -358,7 +335,6 @@ TEST {
         test_print_roundtrip("e:longlong", "e:sint64");
         test_print_roundtrip("v[4:float]", NULL);
     }
-
     subtest("Round trip with named fields") {
         plan(3);
         test_print_roundtrip("{id:sint32,score:double}", NULL);

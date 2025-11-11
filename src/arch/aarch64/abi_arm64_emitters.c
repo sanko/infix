@@ -27,13 +27,11 @@
  * applying the AAPCS64 ABI rules.
  * @endinternal
  */
-
 #include "arch/aarch64/abi_arm64_emitters.h"
 #include "common/utility.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-
 // GPR <-> Immediate Value Emitters
 /*
  * @internal
@@ -60,7 +58,6 @@ static void emit_arm64_mov_imm_chunk(
     if (!is_movz)
         // Change opcode from MOVZ to MOVK by setting the 'opc' field to '11'.
         instr = (instr & ~A64_OPC_MOVZ) | A64_OPC_MOVK;
-
     // 'hw' field encodes the shift: 00=LSL 0, 01=LSL 16, 10=LSL 32, 11=LSL 48.
     instr |= ((uint32_t)shift_count & 0x3) << 21;
     // 'imm16' field holds the 16-bit immediate.
@@ -69,7 +66,6 @@ static void emit_arm64_mov_imm_chunk(
     instr |= (dest_reg & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a sequence of instructions to load an arbitrary 64-bit immediate into a GPR.
@@ -84,7 +80,6 @@ static void emit_arm64_mov_imm_chunk(
 void emit_arm64_load_u64_immediate(code_buffer * buf, arm64_gpr dest, uint64_t value) {
     // Load the lowest 16 bits with MOVZ (zeros the rest of the register).
     emit_arm64_mov_imm_chunk(buf, true, dest, (value >> 0) & 0xFFFF, 0);
-
     // For each subsequent 16-bit chunk, use MOVK (Move Wide with Keep) only if
     // the chunk is not zero to avoid emitting redundant instructions.
     if ((value >> 16) & 0xFFFF)
@@ -94,7 +89,6 @@ void emit_arm64_load_u64_immediate(code_buffer * buf, arm64_gpr dest, uint64_t v
     if ((value >> 48) & 0xFFFF)
         emit_arm64_mov_imm_chunk(buf, false, dest, (value >> 48) & 0xFFFF, 3);
 }
-
 // GPR <-> GPR Move Emitters
 /*
  * @internal
@@ -125,7 +119,6 @@ void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
         emit_int32(buf, instr);
         return;
     }
-
     // Standard case: MOV is an alias for ORR Xd, XZR, Xn
     uint32_t instr = (is64 ? A64_SF_64BIT : A64_SF_32BIT) | A64_OP_LOGICAL_REG | A64_OPCODE_ORR;
     instr |= (uint32_t)(src & 0x1F) << 16;  // Rm (source register)
@@ -133,7 +126,6 @@ void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
     instr |= (uint32_t)(dest & 0x1F);       // Rd (destination register)
     emit_int32(buf, instr);
 }
-
 // Memory <-> GPR Load/Store Emitters
 /**
  * @internal
@@ -164,7 +156,6 @@ void emit_arm64_ldr_imm(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
     instr |= (uint32_t)(dest & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `LDRSW` (Load Register Signed Word) instruction.
@@ -191,7 +182,6 @@ void emit_arm64_ldrsw_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int
     instr |= (uint32_t)(dest & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `STR` (Store Register) instruction with an unsigned immediate offset.
@@ -221,7 +211,6 @@ void emit_arm64_str_imm(code_buffer * buf, bool is64, arm64_gpr src, arm64_gpr b
     instr |= (uint32_t)(src & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `STRB` (Store Register Byte) instruction.
@@ -248,7 +237,6 @@ void emit_arm64_strb_imm(code_buffer * buf, arm64_gpr src, arm64_gpr base, int32
     instr |= (uint32_t)(src & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `STRH` (Store Register Halfword) instruction.
@@ -271,7 +259,6 @@ void emit_arm64_strh_imm(code_buffer * buf, arm64_gpr src, arm64_gpr base, int32
     instr |= (uint32_t)(src & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits an `STP` (Store Pair) instruction with pre-indexing.
@@ -301,7 +288,6 @@ void emit_arm64_stp_pre_index(
     instr |= (uint32_t)(src1 & 0x1F);
     emit_int32(buf, instr);
 }
-
 /*
  * Implementation for emit_arm64_ldp_post_index (Load Pair).
  * Encodes `LDP <Xt1>, <Xt2>, [Xn|SP], #imm`.
@@ -320,7 +306,6 @@ void emit_arm64_ldp_post_index(
     instr |= (uint32_t)(dest1 & 0x1F);
     emit_int32(buf, instr);
 }
-
 // Memory <-> VPR (SIMD/FP) Emitters
 /*
  * Implementation for emit_arm64_ldr_vpr.
@@ -345,7 +330,6 @@ void emit_arm64_ldr_vpr(code_buffer * buf, bool is64, arm64_vpr dest, arm64_gpr 
     instr |= (uint32_t)(dest & 0x1F);
     emit_int32(buf, instr);
 }
-
 /*
  * Implementation for emit_arm64_str_vpr.
  * Encodes `STR <St|Dt>, [<Xn|SP>, #imm]`.
@@ -369,7 +353,6 @@ void emit_arm64_str_vpr(code_buffer * buf, bool is64, arm64_vpr src, arm64_gpr b
     instr |= (uint32_t)(src & 0x1F);
     emit_int32(buf, instr);
 }
-
 /*
  * Implementation for emit_arm64_ldr_q_imm.
  * Encodes `LDR <Qt>, [Xn, #imm]` for a 128-bit load into a full V-register.
@@ -389,7 +372,6 @@ void emit_arm64_ldr_q_imm(code_buffer * buf, arm64_vpr dest, arm64_gpr base, int
     instr |= (uint32_t)(dest & 0x1F);
     emit_int32(buf, instr);
 }
-
 /*
  * Implementation for emit_arm64_str_q_imm.
  * Encodes `STR <Qt>, [Xn, #imm]` for a 128-bit store from a full V-register.
@@ -409,9 +391,7 @@ void emit_arm64_str_q_imm(code_buffer * buf, arm64_vpr src, arm64_gpr base, int3
     instr |= (uint32_t)(src & 0x1F);
     emit_int32(buf, instr);
 }
-
 // Arithmetic Emitters
-
 /*
  * @internal
  * Generic helper for emitting ARM64 `ADD` or `SUB` with an immediate.
@@ -425,7 +405,6 @@ static void emit_arm64_arith_imm(
         instr |= (1u << 31);
     if (set_flags)
         instr |= (1u << 29);
-
     if (imm <= 0xFFF)  // Check for un-shifted 12-bit immediate.
         instr |= (imm & 0xFFF) << 10;
     else if ((imm & 0xFFF) == 0 && (imm >> 12) <= 0xFFF && (imm >> 12) > 0) {  // Check for shifted 12-bit immediate.
@@ -436,25 +415,21 @@ static void emit_arm64_arith_imm(
         // Immediate is too large. Load it into a scratch register (X15) and do a register-based operation.
         arm64_gpr scratch_reg = X15_REG;
         emit_arm64_load_u64_immediate(buf, scratch_reg, imm);
-
         uint32_t reg_instr = is_sub ? 0x4B000000 : 0x0B000000;
         if (is64)
             reg_instr |= (1u << 31);
         if (set_flags)
             reg_instr |= (1u << 29);
-
         reg_instr |= (uint32_t)(scratch_reg & 0x1F) << 16;
         reg_instr |= (uint32_t)(base & 0x1F) << 5;
         reg_instr |= (uint32_t)(dest & 0x1F);
         emit_int32(buf, reg_instr);
         return;
     }
-
     instr |= (uint32_t)(base & 0x1F) << 5;
     instr |= (uint32_t)(dest & 0x1F);
     emit_int32(buf, instr);
 }
-
 /*
  * Implementation for emit_arm64_add_imm.
  * Opcode (64-bit): 10_0_10001_... (0x91...)
@@ -463,7 +438,6 @@ static void emit_arm64_arith_imm(
 void emit_arm64_add_imm(code_buffer * buf, bool is64, bool set_flags, arm64_gpr dest, arm64_gpr base, uint32_t imm) {
     emit_arm64_arith_imm(buf, false, is64, set_flags, dest, base, imm);
 }
-
 /*
  * Implementation for emit_arm64_sub_imm.
  * Opcode (64-bit): 11_0_10001_... (0xD1...)
@@ -472,11 +446,7 @@ void emit_arm64_add_imm(code_buffer * buf, bool is64, bool set_flags, arm64_gpr 
 void emit_arm64_sub_imm(code_buffer * buf, bool is64, bool set_flags, arm64_gpr dest, arm64_gpr base, uint32_t imm) {
     emit_arm64_arith_imm(buf, true, is64, set_flags, dest, base, imm);
 }
-
-
 // Control Flow Emitters
-
-
 /*
  * Implementation for emit_arm64_blr_reg (Branch with Link to Register).
  * Opcode: 1101011000111111000000... (0xD63F0000)
@@ -486,7 +456,6 @@ void emit_arm64_blr_reg(code_buffer * buf, arm64_gpr reg) {
     instr |= (uint32_t)(reg & 0x1F) << 5;
     emit_int32(buf, instr);
 }
-
 /*
  * Implementation for emit_arm64_ret.
  * Opcode: 1101011001011111000000... (0xD65F0000)
@@ -497,7 +466,6 @@ void emit_arm64_ret(code_buffer * buf, arm64_gpr reg) {
     instr |= (uint32_t)(reg & 0x1F) << 5;
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `CBNZ` (Compare and Branch on Non-Zero) instruction.
@@ -521,7 +489,6 @@ void emit_arm64_cbnz(code_buffer * buf, bool is64, arm64_gpr reg, int32_t offset
     instr |= (uint32_t)(reg & 0x1F);
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `BRK` (Breakpoint) instruction.
@@ -537,7 +504,6 @@ void emit_arm64_brk(code_buffer * buf, uint16_t imm) {
     instr |= (uint32_t)(imm & 0xFFFF) << 5;
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits a `BR` (Branch to Register) instruction.
@@ -556,7 +522,6 @@ void emit_arm64_b_reg(code_buffer * buf, arm64_gpr reg) {
     instr |= (uint32_t)(reg & 0x1F) << 5;
     emit_int32(buf, instr);
 }
-
 /**
  * @internal
  * @brief Emits `SVC #imm` (Supervisor Call) instruction.

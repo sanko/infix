@@ -40,7 +40,6 @@ EXPORT_API size_t get_sizeof_myclass() { return sizeof(MyClass); }
  */
 EXPORT_API const char * get_mangled_constructor() {
 
-
 #if defined(_MSC_VER)
     // MSVC Mangled Name for: public: __cdecl MyClass::MyClass(int)
     return "??0MyClass@@QEAA@H@Z";

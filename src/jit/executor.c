@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file executor.c
  * @brief Implements platform-specific memory management for JIT code and execution.
@@ -35,14 +34,12 @@
  *     stubs. This function is the bridge between the low-level JIT code and the
  *     high-level user-provided C handlers.
  */
-
 #include "common/infix_internals.h"
 #include "common/utility.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 // Platform-Specific Includes
 #if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
@@ -53,21 +50,17 @@
 #include <sys/types.h>
 #include <unistd.h>
 #endif
-
 #if defined(INFIX_OS_MACOS)
 #include <dlfcn.h>
 #include <pthread.h>
 #endif
-
 // Polyfills for mmap flags for maximum POSIX compatibility.
 #if defined(INFIX_ENV_POSIX) && !defined(INFIX_OS_WINDOWS)
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
 #define MAP_ANON MAP_ANONYMOUS
 #endif
 #endif
-
 // macOS JIT Security Hardening Logic
-
 #if defined(INFIX_OS_MACOS)
 /**
  * @internal
@@ -88,7 +81,6 @@ typedef const void * CFTypeRef;
 typedef struct __SecTask * SecTaskRef;
 typedef struct __CFError * CFErrorRef;
 #define kCFStringEncodingUTF8 0x08000100
-
 // A struct to hold dynamically loaded function pointers from macOS frameworks.
 static struct {
     void (*CFRelease)(CFTypeRef);
@@ -98,7 +90,6 @@ static struct {
     SecTaskRef (*SecTaskCreateFromSelf)(CFTypeRef allocator);
     CFTypeRef (*SecTaskCopyValueForEntitlement)(SecTaskRef task, CFStringRef entitlement, CFErrorRef * error);
 } g_macos_apis;
-
 /**
  * @internal
  * @brief One-time initialization to dynamically load macOS framework functions.
@@ -110,32 +101,26 @@ static void initialize_macos_apis(void) {
     // We don't need to link against these frameworks, which makes building simpler.
     void * cf = dlopen("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", RTLD_LAZY);
     void * sec = dlopen("/System/Library/Frameworks/Security.framework/Security", RTLD_LAZY);
-
     if (!cf || !sec) {
         INFIX_DEBUG_PRINTF("Warning: Could not dlopen macOS frameworks. JIT security features will be degraded.");
         if (cf)
             dlclose(cf);
         if (sec)
             dlclose(sec);
-
         memset(&g_macos_apis, 0, sizeof(g_macos_apis));
         return;
     }
-
     g_macos_apis.CFRelease = dlsym(cf, "CFRelease");
     g_macos_apis.CFBooleanGetValue = dlsym(cf, "CFBooleanGetValue");
     g_macos_apis.CFStringCreateWithCString = dlsym(cf, "CFStringCreateWithCString");
     void ** pAlloc = (void **)dlsym(cf, "kCFAllocatorDefault");
     if (pAlloc)
         g_macos_apis.kCFAllocatorDefault = *pAlloc;
-
     g_macos_apis.SecTaskCreateFromSelf = dlsym(sec, "SecTaskCreateFromSelf");
     g_macos_apis.SecTaskCopyValueForEntitlement = dlsym(sec, "SecTaskCopyValueForEntitlement");
-
     dlclose(cf);
     dlclose(sec);
 }
-
 /**
  * @internal
  * @brief Checks if the current process has the `com.apple.security.cs.allow-jit` entitlement.
@@ -145,16 +130,12 @@ static bool has_jit_entitlement(void) {
     // Use pthread_once to ensure the dynamic loading happens exactly once, thread-safely.
     static pthread_once_t init_once = PTHREAD_ONCE_INIT;
     pthread_once(&init_once, initialize_macos_apis);
-
     if (!g_macos_apis.SecTaskCopyValueForEntitlement || !g_macos_apis.CFStringCreateWithCString)
         return false;
-
     bool result = false;
-
     SecTaskRef task = g_macos_apis.SecTaskCreateFromSelf(g_macos_apis.kCFAllocatorDefault);
     if (!task)
         return false;
-
     CFStringRef key = g_macos_apis.CFStringCreateWithCString(
         g_macos_apis.kCFAllocatorDefault, "com.apple.security.cs.allow-jit", kCFStringEncodingUTF8);
     CFTypeRef value = nullptr;
@@ -164,7 +145,6 @@ static bool has_jit_entitlement(void) {
         g_macos_apis.CFRelease(key);
     }
     g_macos_apis.CFRelease(task);
-
     if (value) {
         // The value of the entitlement is a CFBoolean, so we must extract its value.
         if (g_macos_apis.CFBooleanGetValue && g_macos_apis.CFBooleanGetValue(value))
@@ -174,9 +154,7 @@ static bool has_jit_entitlement(void) {
     return result;
 }
 #endif  // INFIX_OS_MACOS
-
 // Hardened POSIX Anonymous Shared Memory Allocator (for Dual-Mapping W^X)
-
 #if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_ANDROID) && !defined(INFIX_OS_OPENBSD)
 #include <fcntl.h>
 #include <stdint.h>
@@ -195,20 +173,16 @@ static bool has_jit_entitlement(void) {
 static int shm_open_anonymous() {
     char shm_name[64];
     uint64_t random_val = 0;
-
     // Generate a sufficiently random name to avoid collisions if multiple processes
     // are running this code simultaneously. Using /dev/urandom is a robust way to do this.
     int rand_fd = open("/dev/urandom", O_RDONLY);
     if (rand_fd < 0)
         return -1;
-
     ssize_t bytes_read = read(rand_fd, &random_val, sizeof(random_val));
     close(rand_fd);
     if (bytes_read != sizeof(random_val))
         return -1;
-
     snprintf(shm_name, sizeof(shm_name), "/infix-jit-%d-%llx", getpid(), (unsigned long long)random_val);
-
     // Create the shared memory object exclusively.
     int fd = shm_open(shm_name, O_RDWR | O_CREAT | O_EXCL, 0600);
     if (fd >= 0) {
@@ -217,13 +191,10 @@ static int shm_open_anonymous() {
         shm_unlink(shm_name);
         return fd;
     }
-
     return -1;
 }
 #endif
-
 // Public API: Executable Memory Management
-
 /**
  * @internal
  * @brief Allocates a block of memory suitable for holding JIT-compiled code,
@@ -237,10 +208,8 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
 #else
     infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
 #endif
-
     if (size == 0)
         return exec;
-
 #if defined(INFIX_OS_WINDOWS)
     // Windows: Single-mapping W^X. Allocate as RW, later change to RX via VirtualProtect.
     void * code = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
@@ -248,7 +217,6 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         return exec;
     exec.rw_ptr = code;
     exec.rx_ptr = code;
-
 #elif defined(INFIX_OS_MACOS) || defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     // Single-mapping POSIX platforms. Allocate as RW, later change to RX via mprotect.
     void * code = MAP_FAILED;
@@ -271,7 +239,6 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
 #endif  // INFIX_OS_MACOS
     code = mmap(nullptr, size, PROT_READ | PROT_WRITE, flags, -1, 0);
 #endif  // MAP_ANON
-
     if (code == MAP_FAILED) {  // Fallback for older systems without MAP_ANON
         int fd = open("/dev/zero", O_RDWR);
         if (fd != -1) {
@@ -283,7 +250,6 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         return exec;
     exec.rw_ptr = code;
     exec.rx_ptr = code;
-
 #else
     // Dual-mapping POSIX platforms (e.g., Linux, FreeBSD). Create two separate views of the same memory.
     exec.shm_fd = shm_open_anonymous();
@@ -297,7 +263,6 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     exec.rw_ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, exec.shm_fd, 0);
     // The RX mapping of the exact same physical memory.
     exec.rx_ptr = mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_SHARED, exec.shm_fd, 0);
-
     // If either mapping fails, clean up both and return an error.
     if (exec.rw_ptr == MAP_FAILED || exec.rx_ptr == MAP_FAILED) {
         if (exec.rw_ptr != MAP_FAILED)
@@ -308,12 +273,10 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         return (infix_executable_t){.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
     }
 #endif
-
     exec.size = size;
     INFIX_DEBUG_PRINTF("Allocated JIT memory. RW at %p, RX at %p", exec.rw_ptr, exec.rx_ptr);
     return exec;
 }
-
 /**
  * @internal
  * @brief Frees a block of executable memory with use-after-free hardening.
@@ -329,7 +292,6 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
 void infix_executable_free(infix_executable_t exec) {
     if (exec.size == 0)
         return;
-
 #if defined(INFIX_OS_WINDOWS)
     if (exec.rw_ptr) {
         // Change protection to NOACCESS to catch use-after-free bugs immediately.
@@ -369,7 +331,6 @@ void infix_executable_free(infix_executable_t exec) {
         close(exec.shm_fd);
 #endif
 }
-
 /**
  * @internal
  * @brief Makes a block of JIT memory executable and flushes instruction caches.
@@ -389,7 +350,6 @@ void infix_executable_free(infix_executable_t exec) {
 c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     if (exec.rw_ptr == nullptr || exec.size == 0)
         return false;
-
     // On AArch64 (and other RISC architectures), the instruction and data caches can be
     // separate. We must explicitly flush the D-cache (where the JIT wrote the code)
     // and invalidate the I-cache so the CPU fetches the new instructions.
@@ -402,7 +362,6 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     __builtin___clear_cache((char *)exec.rw_ptr, (char *)exec.rw_ptr + exec.size);
 #endif
 #endif
-
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
     // Finalize permissions to Read+Execute.
@@ -429,14 +388,11 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
     // On dual-mapping platforms, the RX mapping is already executable. This is a no-op.
     result = true;
 #endif
-
     if (result)
         INFIX_DEBUG_PRINTF("Memory at %p is now executable.", exec.rx_ptr);
     return result;
 }
-
 // Public API: Protected (Read-Only) Memory
-
 /**
  * @internal
  * @brief Allocates a block of standard read-write memory for a context object.
@@ -473,7 +429,6 @@ c23_nodiscard infix_protected_t infix_protected_alloc(size_t size) {
         prot.size = size;
     return prot;
 }
-
 /**
  * @internal
  * @brief Frees a block of protected memory.
@@ -488,7 +443,6 @@ void infix_protected_free(infix_protected_t prot) {
     munmap(prot.rw_ptr, prot.size);
 #endif
 }
-
 /**
  * @internal
  * @brief Makes a block of memory read-only for security hardening.
@@ -511,9 +465,7 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
 #endif
     return result;
 }
-
 // Universal Reverse Call Dispatcher
-
 /**
  * @internal
  * @brief The universal C entry point for all reverse call trampolines.
@@ -540,7 +492,6 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
 void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * return_value_ptr, void ** args_array) {
     INFIX_DEBUG_PRINTF(
         "Dispatching reverse call. Context: %p, User Fn: %p", (void *)context, context->user_callback_fn);
-
     if (context->user_callback_fn == nullptr) {
         // If no handler is set, do nothing. If the function has a return value,
         // it's good practice to zero it out to avoid returning garbage.
@@ -548,7 +499,6 @@ void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * 
             infix_memset(return_value_ptr, 0, context->return_type->size);
         return;
     }
-
     if (context->cached_forward_trampoline != nullptr) {
         // Path 1: Type-safe "callback". Use the pre-generated forward trampoline to
         // call the user's C function with the correct signature. This is efficient
@@ -563,6 +513,5 @@ void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * 
         infix_closure_handler_fn handler = (infix_closure_handler_fn)context->user_callback_fn;
         handler(context, return_value_ptr, args_array);
     }
-
     INFIX_DEBUG_PRINTF("Exiting reverse call dispatcher.");
 }

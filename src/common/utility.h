@@ -38,13 +38,10 @@
  *     out by the optimizer, resulting in zero overhead in release builds.
  * @endinternal
  */
-
 #include "common/compat_c23.h"
 #include <stddef.h>
-
 // Check if INFIX_DEBUG_ENABLED is defined and set to a non-zero value.
 #if defined(INFIX_DEBUG_ENABLED) && INFIX_DEBUG_ENABLED
-
 // The double_tap framework is only included if both debug mode AND the main
 // test harness toggle are enabled. This allows for debug builds of non-test executables.
 #if defined(DBLTAP_ENABLE)
@@ -78,7 +75,6 @@
         printf("\n");                          \
     } while (0)
 #endif  // DBLTAP_ENABLE
-
 /**
  * @internal
  * @brief Declares the function prototype for `infix_dump_hex` for use in debug builds.
@@ -92,9 +88,7 @@
  * @param title A descriptive title to print before and after the hex dump.
  */
 void infix_dump_hex(const void * data, size_t size, const char * title);
-
 #else  // INFIX_DEBUG_ENABLED is NOT defined or is zero (Release Mode)
-
 /**
  * @internal
  * @def INFIX_DEBUG_PRINTF(...)
@@ -104,7 +98,6 @@ void infix_dump_hex(const void * data, size_t size, const char * title);
  *          compiler will completely remove any calls to it, ensuring zero performance impact.
  */
 #define INFIX_DEBUG_PRINTF(...) ((void)0)
-
 /**
  * @internal
  * @brief A no-op version of `infix_dump_hex` for use in release builds.

@@ -20,18 +20,15 @@
  * - A `NonPowerOfTwoStruct` (12 bytes), which is also passed by reference on many
  *   ABIs (like Windows x64) that have strict size rules for register passing.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
-
 /** @brief A C function that takes a large struct, which the ABI will pass by reference. */
 int process_large_struct(LargeStruct s) {
     note("process_large_struct received s = { .a=%d, ..., .f=%d }", s.a, s.f);
     return s.a + s.f;
 }
-
 /** @brief A C function that returns a large struct, which the ABI will return by reference. */
 LargeStruct return_large_struct(int base_val) {
     return (LargeStruct){
@@ -43,16 +40,13 @@ LargeStruct return_large_struct(int base_val) {
         base_val + 5,
     };
 }
-
 /** @brief A C function that takes a struct whose size is not a power of two. */
 int process_npot_struct(NonPowerOfTwoStruct s) {
     note("process_npot_struct received s = { .a=%d, .b=%d, .c=%d }", s.a, s.b, s.c);
     return s.a + s.b + s.c;
 }
-
 TEST {
     plan(2);
-
     subtest("Large struct (>16 bytes) passed and returned by reference/stack") {
         plan(7);
         infix_arena_t * arena = infix_arena_create(4096);
@@ -67,7 +61,6 @@ TEST {
             infix_arena_destroy(arena);
             return;
         }
-
         // Test passing the struct as an argument.
         infix_forward_t *unbound_pass, *bound_pass;
         ok(infix_forward_create_unbound_manual(&unbound_pass, s32_type, &large_struct_type, 1, 1) == INFIX_SUCCESS,
@@ -83,7 +76,6 @@ TEST {
         infix_cif_func bound_pass_cif = infix_forward_get_code(bound_pass);
         bound_pass_cif(&bound_pass_res, pass_args);
         ok(unbound_pass_res == 70 && bound_pass_res == 70, "Pass arg correct");
-
         // Test returning the struct by value (which the ABI implements by reference).
         infix_forward_t *unbound_ret, *bound_ret;
         ok(infix_forward_create_unbound_manual(&unbound_ret, large_struct_type, &s32_type, 1, 1) == INFIX_SUCCESS,
@@ -100,14 +92,12 @@ TEST {
         bound_ret_cif(&bound_ret_res, ret_args);
         ok(unbound_ret_res.a == 100 && unbound_ret_res.f == 105 && bound_ret_res.a == 100 && bound_ret_res.f == 105,
            "Return val correct");
-
         infix_forward_destroy(unbound_pass);
         infix_forward_destroy(bound_pass);
         infix_forward_destroy(unbound_ret);
         infix_forward_destroy(bound_ret);
         infix_arena_destroy(arena);
     }
-
     subtest("Non-power-of-two sized struct") {
         plan(3);
         note("Testing 12-byte struct passed by reference.");
@@ -118,7 +108,6 @@ TEST {
         members[0] = infix_type_create_member("a", s32_type, offsetof(NonPowerOfTwoStruct, a));
         members[1] = infix_type_create_member("b", s32_type, offsetof(NonPowerOfTwoStruct, b));
         members[2] = infix_type_create_member("c", s32_type, offsetof(NonPowerOfTwoStruct, c));
-
         infix_type * npot_type = nullptr;
         infix_status status = infix_type_create_struct(arena, &npot_type, members, 3);
         if (!ok(status == INFIX_SUCCESS, "infix_type for NonPowerOfTwoStruct created")) {
@@ -126,19 +115,16 @@ TEST {
             infix_arena_destroy(arena);
             return;
         }
-
         infix_forward_t * trampoline = nullptr;
         status = infix_forward_create_unbound_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &npot_type, 1, 1);
         ok(status == INFIX_SUCCESS, "Trampoline for non-power-of-two struct created");
-
         infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
         NonPowerOfTwoStruct s_in = {10, 20, 30};
         int result = 0;
         void * args[] = {&s_in};
         cif((void *)process_npot_struct, &result, args);
         ok(result == 60, "Non-power-of-two struct passed by reference correctly");
-
         infix_forward_destroy(trampoline);
         infix_arena_destroy(arena);
     }

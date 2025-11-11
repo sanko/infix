@@ -81,7 +81,6 @@ int main() {
     if (infix_register_types(reg, defs) != INFIX_SUCCESS) /* ... */
         return 1;
 
-
     // 1. Create the C-side state and the infix closure to manage it.
     C_AppState app_state = {0};
     infix_reverse_t * closure = NULL;

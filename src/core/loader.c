@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file loader.c
  * @brief Implements cross-platform dynamic library loading.
@@ -27,15 +26,12 @@
  * loading capability with the `infix` type system to safely interact with global
  * variables of any type described by a signature string.
  */
-
 #include "common/infix_internals.h"
-
 #if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else
 #include <dlfcn.h>
 #endif
-
 /**
  * @brief Opens a dynamic library and returns a handle to it.
  *
@@ -125,14 +121,12 @@ void infix_library_close(infix_library_t * lib) {
 c23_nodiscard void * infix_library_get_symbol(infix_library_t * lib, const char * symbol_name) {
     if (lib == nullptr || lib->handle == nullptr || symbol_name == nullptr)
         return nullptr;
-
 #if defined(INFIX_OS_WINDOWS)
     return (void *)GetProcAddress((HMODULE)lib->handle, symbol_name);
 #else
     return dlsym(lib->handle, symbol_name);
 #endif
 }
-
 /**
  * @brief Reads the value of an exported global variable from a library into a buffer.
  *
@@ -157,27 +151,22 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
                                              infix_registry_t * registry) {
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
     if (symbol_addr == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
     // Parse the signature to get the type's size.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
     infix_status status = infix_type_from_signature(&type, &arena, type_signature, registry);
     if (status != INFIX_SUCCESS)
         return status;
-
     // Safely copy the data using the parsed size.
     infix_memcpy(buffer, symbol_addr, type->size);
-
     infix_arena_destroy(arena);
     return INFIX_SUCCESS;
 }
-
 /**
  * @brief Writes data from a buffer into an exported global variable in a library.
  *
@@ -204,23 +193,19 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
                                               infix_registry_t * registry) {
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
     if (symbol_addr == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
     infix_status status = infix_type_from_signature(&type, &arena, type_signature, registry);
     if (status != INFIX_SUCCESS)
         return status;
-
     // Note: This assumes the memory page containing the global is writable.
     // This is standard for data segments but could fail in unusual cases.
     infix_memcpy(symbol_addr, buffer, type->size);
-
     infix_arena_destroy(arena);
     return INFIX_SUCCESS;
 }
