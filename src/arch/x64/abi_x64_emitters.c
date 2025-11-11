@@ -962,3 +962,10 @@ void emit_ud2(code_buffer * buf) { EMIT_BYTES(buf, 0x0F, 0x0B); }
  * @details Opcode: 0F 05
  */
 void emit_syscall(code_buffer * buf) { EMIT_BYTES(buf, 0x0F, 0x05); }
+/**
+ * @internal
+ * @brief Emits the `leave` instruction to tear down a stack frame.
+ * @details This is equivalent to `mov rsp, rbp` followed by `pop rbp`.
+ *          Opcode: C9
+ */
+void emit_leave(code_buffer * buf) { emit_byte(buf, 0xC9); }

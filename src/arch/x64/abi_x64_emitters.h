@@ -171,11 +171,7 @@ void emit_modrm(code_buffer * buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm);
 
 /** @internal @brief Emits an x86-64 REX prefix byte for 64-bit operations and extended registers. */
 void emit_rex_prefix(code_buffer * buf, bool w, bool r, bool x, bool b);
-
-/**
- * @internal
- * @brief Emits the `syscall` instruction (0x0F 0x05) for x86-64.
- * @details This instruction is used to enter the kernel on modern Linux, macOS, and BSD systems.
- * @param buf The code buffer to append the instruction to.
- */
+/** @internal @brief Emits the `syscall` instruction (0x0F 0x05) for x86-64. */
 void emit_syscall(code_buffer * buf);
+/** @internal @brief Emits the `leave` instruction, equivalent to `mov rsp, rbp; pop rbp`. */
+void emit_leave(code_buffer * buf);
