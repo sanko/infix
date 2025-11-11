@@ -208,32 +208,32 @@ typedef struct {
     bool error;            /**< A flag set on allocation failure. */
     infix_arena_t * arena; /**< The temporary arena used for code generation. */
 } code_buffer;
-
 /**
  * @struct infix_library_t
  * @brief Internal definition of a dynamic library handle.
- * @details This is a simple wrapper around the platform's native library handle to
- * provide a consistent API.
+ * @details This is a simple wrapper around the platform's native library handle to provide a consistent API.
+ *
+ * On Windows, GetModuleHandle(NULL) returns a special handle to the main executable that must NOT be freed with
+ * FreeLibrary. This flag tracks that state to ensure infix_library_close behaves correctly.
  */
 struct infix_library_t {
     void * handle; /**< The platform-native library handle (`HMODULE` on Windows, `void*` on POSIX). */
+#if defined(INFIX_OS_WINDOWS)
+    bool is_pseudo_handle; /**< True if the handle is a "pseudo-handle" from GetModuleHandle. */
+#endif
 };
-
 // ABI Abstraction Layer
-
 /**
  * @def INFIX_MAX_STACK_ALLOC
  * @brief A safety limit (4MB) for the total stack space a trampoline can allocate.
  *        This prevents stack exhaustion from malformed or malicious type layouts.
  */
 #define INFIX_MAX_STACK_ALLOC (1024 * 1024 * 4)
-
 /**
  * @def INFIX_MAX_ARG_SIZE
  * @brief A safety limit (64KB) for the size of a single argument.
  */
 #define INFIX_MAX_ARG_SIZE (1024 * 64)
-
 /**
  * @enum infix_arg_location_type
  * @brief Describes the physical location where a function argument is passed according to the ABI.

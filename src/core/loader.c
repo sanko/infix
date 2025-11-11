@@ -48,25 +48,29 @@
  *         The returned handle must be freed with `infix_library_close`.
  */
 c23_nodiscard infix_library_t * infix_library_open(const char * path) {
-    if (path == nullptr)
-        return nullptr;
-
     infix_library_t * lib = infix_calloc(1, sizeof(infix_library_t));
     if (lib == nullptr) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-
 #if defined(INFIX_OS_WINDOWS)
-    lib->handle = LoadLibraryA(path);
+    // On Windows, passing NULL to GetModuleHandleA returns a handle to the main executable file of the current process.
+    if (path == nullptr) {
+        lib->handle = GetModuleHandleA(path);
+        lib->is_pseudo_handle = true;  // Mark this as a special, non-freeable handle.
+    }
+    else {
+        lib->handle = LoadLibraryA(path);
+        lib->is_pseudo_handle = false;  // This is a regular, ref-counted handle.
+    }
 #else
     // Use RTLD_LAZY for performance (resolve symbols only when they are first used).
     // Use RTLD_GLOBAL to make symbols from this library available for resolution
     // by other libraries that might be loaded later. This is important for complex
     // dependency chains.
+    // On POSIX, passing NULL to dlopen returns a handle to the main executable, allowing searching of global symbols.
     lib->handle = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
 #endif
-
     if (lib->handle == nullptr) {
 #if defined(INFIX_OS_WINDOWS)
         // On Windows, GetLastError() provides the specific error code.
@@ -80,7 +84,6 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
     }
     return lib;
 }
-
 /**
  * @brief Closes a dynamic library handle and frees associated resources.
  *
@@ -91,17 +94,18 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
 void infix_library_close(infix_library_t * lib) {
     if (lib == nullptr)
         return;
-
     if (lib->handle) {
 #if defined(INFIX_OS_WINDOWS)
-        FreeLibrary((HMODULE)lib->handle);
+        // Only call FreeLibrary on real handles obtained from LoadLibrary.
+        // Never call it on a pseudo-handle from GetModuleHandle.
+        if (!lib->is_pseudo_handle)
+            FreeLibrary((HMODULE)lib->handle);
 #else
         dlclose(lib->handle);
 #endif
     }
     infix_free(lib);
 }
-
 /**
  * @brief Retrieves the address of a symbol (function or variable) from a loaded library.
  *
