@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file compat_c23.h
  * @brief Provides forward compatibility macros for C23 features.
@@ -35,12 +34,9 @@
  *
  * @internal
  */
-
 #pragma once
-
 #include <stdbool.h>
 #include <stddef.h>
-
 /**
  * @def nullptr
  * @brief Defines `nullptr` as a standard C-style null pointer constant (`(void*)0`).
@@ -54,7 +50,6 @@
 #ifndef nullptr
 #define nullptr ((void *)0)
 #endif
-
 /**
  * @def static_assert
  * @brief Defines a `static_assert` macro that maps to the C11 `_Static_assert`.
@@ -70,7 +65,6 @@
 #define static_assert(cond, msg) _Static_assert(cond, msg)
 #endif
 #endif
-
 /**
  * @def COMPAT_HAS_C_ATTRIBUTE
  * @brief A utility macro to safely check for the existence of a C attribute.
@@ -88,7 +82,6 @@
 #else
 #define COMPAT_HAS_C_ATTRIBUTE(x) 0
 #endif
-
 /**
  * @def c23_nodiscard
  * @brief A compatibility macro for the C23 `[[nodiscard]]` attribute.
@@ -112,7 +105,6 @@
 #else
 #define c23_nodiscard
 #endif
-
 /**
  * @def c23_deprecated
  * @brief A compatibility macro for the C23 `[[deprecated]]` attribute.
@@ -136,7 +128,6 @@
 #else
 #define c23_deprecated
 #endif
-
 /**
  * @def c23_fallthrough
  * @brief A compatibility macro for the C23 `[[fallthrough]]` attribute.
@@ -158,7 +149,6 @@
 #else
 #define c23_fallthrough
 #endif
-
 /**
  * @def c23_maybe_unused
  * @brief A compatibility macro for the C23 `[[maybe_unused]]` attribute.
@@ -180,5 +170,4 @@
 #else
 #define c23_maybe_unused
 #endif
-
 /** @endinternal */

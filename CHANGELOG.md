@@ -20,6 +20,7 @@ We'll find out where I go from here.
 - Growable Arena: The internal arena for the type registry is no longer fixed-size. Now, it transparently allocates new memory blocks as needed, removing the risk of allocation failures when registering and/or copying a large number of interconnected types.
 - Type Registry and Printing Logic: The internals of the type registry and the `infix_type_print` function have been updated to correctly create, copy, and serialize the new `name` field on `infix_type` objects, ensuring that semantic aliases are preserved through all API operations and can be correctly round-tripped to strings.
 - Renamed all cookbook examples in `/eg/cookbook`. I can't expect to keep track of recipe numbers with every little idea I decide to throw into the cookbook so I'll just stop trying to count them.
+- Windows opens the current executable in `infix_library_open` when the path value is `NULL`.
 
 ### Fixed
 

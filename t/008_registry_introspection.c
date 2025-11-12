@@ -21,36 +21,29 @@
  *       for each type.
  *     - Ensures that the iterator correctly skips over undefined forward declarations.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <string.h>
-
 TEST {
     plan(3);
-
     // Setup: Create a registry with a mix of types.
     infix_registry_t * registry = infix_registry_create();
     if (!registry)
         bail_out("Failed to create registry for testing.");
-
     const char * definitions =
         "@MyInt = int64;"
         "@Point = { x: double, y: double };"
         "@FwdOnly;"  // An undefined forward declaration.
         "@Node = { value: int, next: *@Node };";
-
     if (infix_register_types(registry, definitions) != INFIX_SUCCESS) {
         infix_registry_destroy(registry);
         bail_out("Failed to register types for testing.");
     }
-
     subtest("`infix_registry_print` serialization") {
         plan(5);
         char buffer[1024];
-
         // Test happy path with a large enough buffer.
         infix_status status = infix_registry_print(buffer, sizeof(buffer), registry);
         ok(status == INFIX_SUCCESS, "infix_registry_print succeeds with adequate buffer");
@@ -66,21 +59,17 @@ TEST {
         else
             skip(4, "Skipping content checks due to print failure.");
     }
-
     subtest("Registry Iterator API") {
         plan(8);
         int found_mask = 0;
         int count = 0;
-
         // Iterate using the canonical while(next) pattern.
         infix_registry_iterator_t it = infix_registry_iterator_begin(registry);
         while (infix_registry_iterator_next(&it)) {
             count++;
             const char * name = infix_registry_iterator_get_name(&it);
             const infix_type * type = infix_registry_iterator_get_type(&it);
-
             ok(name != NULL && type != NULL, "Iterator returns valid name and type pointers for item %d", count);
-
             if (name) {
                 if (strcmp(name, "MyInt") == 0) {
                     found_mask |= 1;
@@ -98,23 +87,18 @@ TEST {
                     fail("Iterator should not have found @FwdOnly");
             }
         }
-
         ok(count == 3, "Iterator found the correct number of defined types (3)");
         ok(found_mask == 7, "All expected types (MyInt, Point, Node) were found by the iterator");
     }
-
     subtest("Lookup by Name API") {
         plan(5);
-
         ok(infix_registry_is_defined(registry, "Point"), "`is_defined` returns true for defined type");
         ok(!infix_registry_is_defined(registry, "FwdOnly"), "`is_defined` returns false for fwd-declaration");
         ok(!infix_registry_is_defined(registry, "DoesNotExist"), "`is_defined` returns false for missing type");
-
         const infix_type * point_type = infix_registry_lookup_type(registry, "Point");
         ok(point_type != NULL && point_type->category == INFIX_TYPE_STRUCT,
            "`lookup_type` returns correct type for @Point");
         ok(infix_registry_lookup_type(registry, "FwdOnly") == NULL, "`lookup_type` returns NULL for fwd-declaration");
     }
-
     infix_registry_destroy(registry);
 }

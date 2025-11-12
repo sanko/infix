@@ -22,15 +22,12 @@
  * 3.  **Passing `nullptr`:** Verifies that a `NULL` pointer can be correctly
  *     passed through the FFI boundary and is received as `NULL` by the callee.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <string.h>
-
 // Native C Functions for Testing
-
 /** @brief A C function that takes a string and a character, and returns a pointer into the string. */
 const char * find_char_in_string(const char * s, int c) {
     note("find_char_in_string received: s=\"%s\", c='%c'", s ? s : "(null)", (char)c);
@@ -38,7 +35,6 @@ const char * find_char_in_string(const char * s, int c) {
         return nullptr;
     return strchr(s, c);
 }
-
 /** @brief A C function that modifies the caller's data through pointers. */
 void modify_data_via_pointers(int * a, double * b) {
     note("modify_data_via_pointers received pointers: a=%p, b=%p", (void *)a, (void *)b);
@@ -47,13 +43,10 @@ void modify_data_via_pointers(int * a, double * b) {
     if (b)
         *b = 456.7;
 }
-
 /** @brief A simple helper to check if a received pointer is NULL. */
 bool check_if_null(void * ptr) { return ptr == nullptr; }
-
 TEST {
     plan(3);
-
     subtest("Passing and returning pointers") {
         plan(4);
         // Signature: "(*char, int) -> *char"
@@ -62,7 +55,6 @@ TEST {
         const char * str = "Hello, FFI World!";
         int char_to_find = 'F';
         void * args[] = {&str, &char_to_find};
-
         // Test Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
@@ -71,7 +63,6 @@ TEST {
         infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)find_char_in_string, &unbound_result, args);
         ok(unbound_result && strcmp(unbound_result, "FFI World!") == 0, "Unbound call correct");
-
         // Test Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)find_char_in_string) ==
@@ -81,11 +72,9 @@ TEST {
         infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result && strcmp(bound_result, "FFI World!") == 0, "Bound call correct");
-
         infix_forward_destroy(unbound_t);
         infix_forward_destroy(bound_t);
     }
-
     subtest("Modifying data via pointer arguments") {
         plan(4);
         // Signature: "(void*, void*) -> void"
@@ -96,7 +85,6 @@ TEST {
         int * ptr_a = &val_a;
         double * ptr_b = &val_b;
         void * args[] = {&ptr_a, &ptr_b};
-
         // Test Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
@@ -106,7 +94,6 @@ TEST {
         ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Unbound call correct");
         val_a = 1;
         val_b = 2.0;  // Reset for next test
-
         // Test Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)modify_data_via_pointers) ==
@@ -115,11 +102,9 @@ TEST {
         infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(nullptr, args);
         ok(val_a == 123 && fabs(val_b - 456.7) < 0.001, "Bound call correct");
-
         infix_forward_destroy(unbound_t);
         infix_forward_destroy(bound_t);
     }
-
     subtest("Passing nullptr pointers") {
         plan(6);
         // Signature: "(*void) -> bool"
@@ -131,7 +116,6 @@ TEST {
         void * args_null[] = {&null_ptr};
         void * args_valid[] = {&valid_ptr};
         bool res_null, res_valid;
-
         // Test Unbound
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 1, 1) == INFIX_SUCCESS,
@@ -141,7 +125,6 @@ TEST {
         ok(res_null == true, "Unbound nullptr correct");
         unbound_cif((void *)check_if_null, &res_valid, args_valid);
         ok(res_valid == false, "Unbound non-nullptr correct");
-
         // Test Bound
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 1, 1, (void *)check_if_null) == INFIX_SUCCESS,
@@ -151,7 +134,6 @@ TEST {
         ok(res_null == true, "Bound nullptr correct");
         bound_cif(&res_valid, args_valid);
         ok(res_valid == false, "Bound non-nullptr correct");
-
         infix_forward_destroy(unbound_t);
         infix_forward_destroy(bound_t);
     }

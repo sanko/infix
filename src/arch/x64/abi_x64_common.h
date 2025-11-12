@@ -28,9 +28,7 @@
  * universal. This header provides that common definition.
  * @endinternal
  */
-
 #include <stdint.h>
-
 /**
  * @internal
  * @enum x64_gpr
@@ -60,7 +58,6 @@ typedef enum {
     R14_REG,      ///< Callee-saved.
     R15_REG       ///< Callee-saved.
 } x64_gpr;
-
 /**
  * @internal
  * @enum x64_xmm

@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file infix_config.h
  * @brief Platform, architecture, and ABI detection macros.
@@ -30,9 +29,7 @@
  *
  * @internal
  */
-
 #pragma once
-
 // System Feature Test Macros
 /**
  * @details These macros are defined to ensure that standard POSIX and other
@@ -48,7 +45,6 @@
 #if (defined(__linux__) || defined(__gnu_linux__)) && !defined(_GNU_SOURCE)
 #define _GNU_SOURCE
 #endif
-
 // Operating System Detection
 /**
  * @details This section defines `INFIX_OS_*` macros based on compiler-provided
@@ -121,7 +117,6 @@ typedef ptrdiff_t ssize_t;
 #else
 #warning "Unsupported/unknown operating system"
 #endif
-
 // Compiler Detection
 /**
  * @details Defines `INFIX_COMPILER_*` macros. The order is important, as Clang
@@ -137,7 +132,6 @@ typedef ptrdiff_t ssize_t;
 #warning "Compiler: Unknown compiler detected."
 #define INFIX_COMPILER_NFI
 #endif
-
 // CPU Architecture Detection
 /**
  * @details Defines `INFIX_ARCH_*` for the two currently supported architectures.
@@ -151,7 +145,6 @@ typedef ptrdiff_t ssize_t;
 #else
 #error "Unsupported architecture. Only x86-64 and AArch64 are currently supported."
 #endif
-
 // Target ABI Logic Selection
 /**
  * @details This is the most critical section of the configuration. It determines
@@ -166,7 +159,6 @@ typedef ptrdiff_t ssize_t;
  * 2.  **Automatic Detection:** If no ABI is forced, it uses the `INFIX_ARCH_*` and
  *     `INFIX_OS_*` macros to deduce the correct ABI for the current build target.
  */
-
 #if defined(INFIX_FORCE_ABI_WINDOWS_X64)
 #define INFIX_ABI_WINDOWS_X64 1
 #define INFIX_ABI_FORCED 1
@@ -177,7 +169,6 @@ typedef ptrdiff_t ssize_t;
 #define INFIX_ABI_AAPCS64 1
 #define INFIX_ABI_FORCED 1
 #endif
-
 // Automatic ABI detection if not forced by the user.
 #ifndef INFIX_ABI_FORCED
 #if defined(INFIX_ARCH_AARCH64)
@@ -195,7 +186,6 @@ typedef ptrdiff_t ssize_t;
 #endif
 #endif
 #endif  // INFIX_ABI_FORCED
-
 // Miscellaneous Constants
 /**
  * @def INFIX_TRAMPOLINE_HEADROOM
@@ -209,5 +199,4 @@ typedef ptrdiff_t ssize_t;
  * headroom provides that extra space to prevent allocation failures during the copy.
  */
 #define INFIX_TRAMPOLINE_HEADROOM 128
-
 /** @endinternal */

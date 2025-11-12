@@ -22,28 +22,23 @@
  * pieces of the library (parser, type system, ABI classifier, JIT emitter) work
  * together correctly for a common and important use case.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
-
 // Native C Functions for Testing
-
 /** @brief A C function to be called via a forward trampoline. Takes and returns a struct. */
 Point move_point(Point p, double dx, double dy) {
     Point result = {p.x + dx, p.y + dy};
     note("Native C move_point called: (%f, %f) + (%f, %f) -> (%f, %f)", p.x, p.y, dx, dy, result.x, result.y);
     return result;
 }
-
 /** @brief A C handler to be invoked by a reverse trampoline. */
 Point point_callback_handler(Point p) {
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     return (Point){p.x * 2.0, p.y * 2.0};
 }
-
 /** @brief A C "harness" function that simulates a C library calling our JIT-compiled callback. */
 void execute_point_callback(Point (*func_ptr)(Point), Point p) {
     Point result = func_ptr(p);
@@ -51,10 +46,8 @@ void execute_point_callback(Point (*func_ptr)(Point), Point p) {
        "Callback returned correct Point struct by value");
     diag("Harness received Point {%.1f, %.1f}", result.x, result.y);
 }
-
 TEST {
     plan(2);
-
     subtest("Forward calls with aggregate types (structs)") {
         plan(1);
         subtest("Passing and returning a small struct by value") {
@@ -66,7 +59,6 @@ TEST {
             double offset_x = 5.5;
             double offset_y = -2.5;
             void * args[] = {&start_point, &offset_x, &offset_y};
-
             subtest("Unbound trampoline") {
                 plan(2);
                 infix_forward_t * unbound_t = nullptr;
@@ -81,10 +73,8 @@ TEST {
                 }
                 else
                     skip(1, "Skipping unbound call");
-
                 infix_forward_destroy(unbound_t);
             }
-
             subtest("Bound trampoline") {
                 plan(2);
                 infix_forward_t * bound_t = nullptr;
@@ -98,23 +88,19 @@ TEST {
                 }
                 else
                     skip(1, "Skipping bound call");
-
                 infix_forward_destroy(bound_t);
             }
         }
     }
-
     subtest("Reverse calls (callbacks) with aggregate types") {
         plan(1);
         subtest("Passing and returning a small struct by value") {
             plan(2);
             const char * signature = "({double, double}) -> {double, double}";
-
             infix_reverse_t * context = nullptr;
             infix_status status =
                 infix_reverse_create_callback(&context, signature, (void *)point_callback_handler, nullptr);
             ok(status == INFIX_SUCCESS, "Successfully created reverse trampoline for struct by value");
-
             if (status == INFIX_SUCCESS) {
                 typedef Point (*PointCallback)(Point);
                 PointCallback native_func_ptr = (PointCallback)infix_reverse_get_code(context);
@@ -124,7 +110,6 @@ TEST {
             }
             else
                 skip(1, "Skipping call check due to trampoline creation failure.");
-
             infix_reverse_destroy(context);
         }
     }

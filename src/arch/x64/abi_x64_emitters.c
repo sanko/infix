@@ -26,18 +26,15 @@
  * reference, see the Intel 64 and IA-32 Architectures Software Developer's Manuals.
  * @endinternal
  */
-
 #include "arch/x64/abi_x64_emitters.h"
 #include "common/utility.h"
 #include <assert.h>
 #include <string.h>
-
 // Helper defines for REX prefix bits, making the code more readable.
 #define REX_W (1 << 3)  // 64-bit operand size
 #define REX_R (1 << 2)  // Extends ModR/M 'reg' field
 #define REX_X (1 << 1)  // Extends SIB 'index' field
 #define REX_B (1 << 0)  // Extends ModR/M 'r/m' or SIB 'base' field
-
 // Instruction Encoding Helpers
 /*
  * @internal
@@ -58,7 +55,6 @@ void emit_rex_prefix(code_buffer * buf, bool w, bool r, bool x, bool b) {
         rex_byte |= REX_B;
     emit_byte(buf, rex_byte);
 }
-
 /*
  * @internal
  * @brief Emits an x86-64 ModR/M byte.
@@ -69,7 +65,6 @@ void emit_modrm(code_buffer * buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm) 
     uint8_t modrm_byte = (mod << 6) | (reg_opcode << 3) | rm;
     emit_byte(buf, modrm_byte);
 }
-
 // GPR <-> Immediate Value Emitters
 /**
  * @internal
@@ -82,7 +77,6 @@ void emit_mov_reg_imm64(code_buffer * buf, x64_gpr reg, uint64_t imm) {
     emit_byte(buf, 0xB8 + (reg % 8));
     emit_int64(buf, imm);
 }
-
 /**
  * @internal
  * @brief Emits `mov r/m64, imm32` (sign-extended) to load a 32-bit immediate into a register.
@@ -95,7 +89,6 @@ void emit_mov_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm) {
     emit_modrm(buf, 3, 0, reg % 8);  // mod=11 (register), reg=/0
     emit_int32(buf, imm);
 }
-
 // GPR <-> GPR Move Emitters
 /**
  * @internal
@@ -113,7 +106,6 @@ void emit_mov_reg_reg(code_buffer * buf, x64_gpr dest, x64_gpr src) {
     emit_byte(buf, 0x89);
     emit_modrm(buf, 3, src % 8, dest % 8);
 }
-
 // Memory -> GPR Load Emitters
 /**
  * @internal
@@ -135,7 +127,6 @@ void emit_mov_reg_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32_t
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `mov r32, r/m32` to load a 32-bit value (zero-extended to 64).
@@ -161,7 +152,6 @@ void emit_mov_reg32_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movsxd r64, r/m32` to load a 32-bit value and sign-extend to 64.
@@ -181,7 +171,6 @@ void emit_movsxd_reg_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int3
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movsx r64, r/m8` to load a signed 8-bit value and sign-extend to 64.
@@ -201,7 +190,6 @@ void emit_movsx_reg64_mem8(code_buffer * buf, x64_gpr dest, x64_gpr src_base, in
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movsx r64, r/m16` to load a signed 16-bit value and sign-extend to 64.
@@ -221,7 +209,6 @@ void emit_movsx_reg64_mem16(code_buffer * buf, x64_gpr dest, x64_gpr src_base, i
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movzx r64, r/m8` to load an unsigned 8-bit value and zero-extend to 64.
@@ -241,7 +228,6 @@ void emit_movzx_reg64_mem8(code_buffer * buf, x64_gpr dest, x64_gpr src_base, in
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movzx r64, r/m16` to load an unsigned 16-bit value and zero-extend to 64.
@@ -261,7 +247,6 @@ void emit_movzx_reg64_mem16(code_buffer * buf, x64_gpr dest, x64_gpr src_base, i
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 // GPR -> Memory Store Emitters
 /**
  * @internal
@@ -282,7 +267,6 @@ void emit_mov_mem_reg(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `mov [base + offset], r32` to store a 32-bit GPR to memory.
@@ -308,7 +292,6 @@ void emit_mov_mem_reg32(code_buffer * buf, x64_gpr dest_base, int32_t offset, x6
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `mov [base + offset], r16` to store a 16-bit GPR to memory.
@@ -335,7 +318,6 @@ void emit_mov_mem_reg16(code_buffer * buf, x64_gpr dest_base, int32_t offset, x6
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `mov [base + offset], r8` to store an 8-bit GPR to memory.
@@ -363,7 +345,6 @@ void emit_mov_mem_reg8(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 // Memory <-> XMM/YMM (SSE/AVX) Emitters
 /**
  * @internal
@@ -391,7 +372,6 @@ void emit_movss_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movss [base + offset], xmm` to store a 32-bit float to memory.
@@ -418,7 +398,6 @@ void emit_movss_mem_xmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x6
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movsd xmm, [base + offset]` to load a 64-bit double from memory.
@@ -445,7 +424,6 @@ void emit_movsd_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movsd [base + offset], xmm` to store a 64-bit double to memory.
@@ -472,7 +450,6 @@ void emit_movsd_mem_xmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x6
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movups xmm, [base + offset]` to load a 128-bit unaligned value from memory.
@@ -498,7 +475,6 @@ void emit_movups_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int3
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `movups [base + offset], xmm` to store a 128-bit unaligned value to memory.
@@ -524,7 +500,6 @@ void emit_movups_mem_xmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits a VEX prefix for an AVX instruction.
@@ -550,7 +525,6 @@ static void emit_vex_prefix(
         emit_byte(buf, byte3);
     }
 }
-
 /**
  * @internal
  * @brief Emits a 4-byte EVEX prefix for an AVX-512 instruction, following the Intel SDM.
@@ -571,7 +545,6 @@ static void emit_evex_prefix(code_buffer * buf,
                              uint8_t aaa)  // Masking/control bits
 {
     emit_byte(buf, 0x62);
-
     // Byte 2: P0 - R, X, B, R' bits are inverted. 0 means 1, 1 means 0.
     uint8_t p0 = 0;
     p0 |= (R ? 0 : 1) << 7;        // Inverted R bit
@@ -580,7 +553,6 @@ static void emit_evex_prefix(code_buffer * buf,
     p0 |= (R_prime ? 0 : 1) << 4;  // Inverted R' bit
     p0 |= (map & 0x0F);            // Low 4 bits select the opcode map (0F, 0F38, 0F3A)
     emit_byte(buf, p0);
-
     // Byte 3: P1
     uint8_t p1 = 0;
     p1 |= (pp & 0b11);
@@ -588,7 +560,6 @@ static void emit_evex_prefix(code_buffer * buf,
     p1 |= ((~vvvv & 0xF) << 3);  // vvvv field is inverted
     p1 |= W ? (1 << 7) : 0;
     emit_byte(buf, p1);
-
     // Byte 4: P2
     uint8_t p2 = 0;
     p2 |= (aaa & 0b111);
@@ -600,7 +571,6 @@ static void emit_evex_prefix(code_buffer * buf,
     p2 |= (((vvvv >> 4) & 1) << 3);
     emit_byte(buf, p2);
 }
-
 /**
  * @internal
  * @brief Emits `vmovupd ymm, [base + offset]` to load a 256-bit unaligned value (AVX).
@@ -623,7 +593,6 @@ void emit_vmovupd_ymm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `vmovupd [base + offset], ymm` to store a 256-bit unaligned value (AVX).
@@ -644,7 +613,6 @@ void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, 
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `vmovupd zmm, [base + offset]` to load a 512-bit unaligned value (AVX-512).
@@ -681,7 +649,6 @@ void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `vmovupd [base + offset], zmm` to store a 512-bit unaligned value (AVX-512).
@@ -718,7 +685,6 @@ void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, 
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 // GPR <-> XMM Move Emitters
 /**
  * @internal
@@ -731,7 +697,6 @@ void emit_movq_xmm_gpr(code_buffer * buf, x64_xmm dest, x64_gpr src) {
     EMIT_BYTES(buf, 0x0F, 0x6E);
     emit_modrm(buf, 3, dest % 8, src % 8);
 }
-
 /**
  * @internal
  * @brief Emits `movq r64, xmm` to move 64 bits from an XMM to a GPR.
@@ -743,7 +708,6 @@ void emit_movq_gpr_xmm(code_buffer * buf, x64_gpr dest, x64_xmm src) {
     EMIT_BYTES(buf, 0x0F, 0x7E);
     emit_modrm(buf, 3, src % 8, dest % 8);
 }
-
 // Memory <-> x87 FPU Emitters
 /**
  * @internal
@@ -768,7 +732,6 @@ void emit_fldt_mem(code_buffer * buf, x64_gpr base, int32_t offset) {
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `fstpt [base + offset]` to store and pop an 80-bit `long double`.
@@ -792,7 +755,6 @@ void emit_fstpt_mem(code_buffer * buf, x64_gpr base, int32_t offset) {
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 // Arithmetic & Logic Emitters
 /**
  * @internal
@@ -813,7 +775,6 @@ void emit_lea_reg_mem(code_buffer * buf, x64_gpr dest, x64_gpr src_base, int32_t
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
-
 /**
  * @internal
  * @brief Emits `add r64, imm32` to add a 32-bit immediate to a GPR.
@@ -825,7 +786,6 @@ void emit_add_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm) {
     emit_modrm(buf, 3, 0, reg % 8);  // mod=11, reg=/0 for ADD
     emit_int32(buf, imm);
 }
-
 /**
  * @internal
  * @brief Emits `sub r64, imm32` to subtract a 32-bit immediate from a GPR.
@@ -837,7 +797,6 @@ void emit_sub_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm) {
     emit_modrm(buf, 3, 5, reg % 8);  // mod=11, reg=/5 for SUB
     emit_int32(buf, imm);
 }
-
 /**
  * @internal
  * @brief Emits `add r/m64, imm8` (sign-extended) to a GPR.
@@ -849,7 +808,6 @@ void emit_add_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm) {
     emit_modrm(buf, 3, 0, (reg & 0x7));
     emit_byte(buf, imm);
 }
-
 /**
  * @internal
  * @brief Emits `dec r/m64` to decrement a 64-bit register by 1.
@@ -860,7 +818,6 @@ void emit_dec_reg(code_buffer * buf, x64_gpr reg) {
     emit_byte(buf, 0xFF);
     emit_modrm(buf, 3, 1, reg % 8);
 }
-
 // Stack & Control Flow Emitters
 /**
  * @internal
@@ -875,7 +832,6 @@ void emit_push_reg(code_buffer * buf, x64_gpr reg) {
         emit_byte(buf, 0x40 | rex);
     emit_byte(buf, 0x50 + (reg % 8));
 }
-
 /**
  * @internal
  * @brief Emits `pop r64` to pop a 64-bit value from the stack into a register.
@@ -889,7 +845,6 @@ void emit_pop_reg(code_buffer * buf, x64_gpr reg) {
         emit_byte(buf, 0x40 | rex);
     emit_byte(buf, 0x58 + (reg % 8));
 }
-
 /**
  * @internal
  * @brief Emits `call r64` to call a function pointer stored in a register.
@@ -903,18 +858,15 @@ void emit_call_reg(code_buffer * buf, x64_gpr reg) {
         emit_byte(buf, 0x40 | rex);  // REX is only needed for extended regs
     else if (rex == REX_W)
         emit_byte(buf, 0x48);
-
     emit_byte(buf, 0xFF);
     emit_modrm(buf, 3, 2, reg % 8);  // mod=11, reg=/2 for CALL
 }
-
 /**
  * @internal
  * @brief Emits `ret` to return from a function.
  * @details Opcode: C3
  */
 void emit_ret(code_buffer * buf) { emit_byte(buf, 0xC3); }
-
 /**
  * @internal
  * @brief Emits `test r64, r64` to test if a register is zero.
@@ -925,14 +877,12 @@ void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2) {
     emit_byte(buf, 0x85);
     emit_modrm(buf, 3, reg2 % 8, reg1 % 8);
 }
-
 /**
  * @internal
  * @brief Emits `jnz rel8` for a short conditional jump if not zero.
  * @details Opcode format: 75 rel8
  */
 void emit_jnz_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x75, (uint8_t)offset); }
-
 /**
  * @internal
  * @brief Emits a `jmp r64` instruction.
@@ -948,17 +898,22 @@ void emit_jmp_reg(code_buffer * buf, x64_gpr reg) {
     emit_byte(buf, 0xFF);
     emit_modrm(buf, 3, 4, reg % 8);  // mod=11 (register), reg=/4 for JMP
 }
-
 /**
  * @internal
  * @brief Emits `ud2`, an undefined instruction that causes an invalid opcode exception.
  * @details Opcode format: 0F 0B
  */
 void emit_ud2(code_buffer * buf) { EMIT_BYTES(buf, 0x0F, 0x0B); }
-
 /**
  * @internal
  * @brief Emits the two-byte `syscall` instruction.
  * @details Opcode: 0F 05
  */
 void emit_syscall(code_buffer * buf) { EMIT_BYTES(buf, 0x0F, 0x05); }
+/**
+ * @internal
+ * @brief Emits the `leave` instruction to tear down a stack frame.
+ * @details This is equivalent to `mov rsp, rbp` followed by `pop rbp`.
+ *          Opcode: C9
+ */
+void emit_leave(code_buffer * buf) { emit_byte(buf, 0xC9); }

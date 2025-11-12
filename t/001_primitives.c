@@ -19,13 +19,11 @@
  * that simply returns its argument, allowing for a straightforward check of
  * whether the value was transmitted correctly through the FFI boundary.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
 #include <inttypes.h>
-
 // A set of simple "passthrough" functions, one for each primitive type.
 // These functions simply return their input argument, making it easy to verify
 // that the FFI call correctly transmitted the value.
@@ -41,12 +39,10 @@ int64_t passthrough_sint64(int64_t v) { return v; }
 float passthrough_float(float v) { return v; }
 double passthrough_double(double v) { return v; }
 long double passthrough_long_double(long double v) { return v; }
-
 #if !defined(INFIX_COMPILER_MSVC)
 __uint128_t passthrough_uint128(__uint128_t v) { return v; }
 __int128_t passthrough_sint128(__int128_t v) { return v; }
 #endif
-
 /**
  * @def TEST_PRIMITIVE
  * @brief A macro to generate a complete subtest for a single primitive type.
@@ -67,12 +63,10 @@ __int128_t passthrough_sint128(__int128_t v) { return v; }
         infix_type * type = infix_type_create_primitive(infix_id);                                                 \
         c_type input = (input_val);                                                                                \
         void * args[] = {&input};                                                                                  \
-                                                                                                                   \
         /* Test the unbound trampoline */                                                                          \
         infix_forward_t * unbound_t = nullptr;                                                                     \
         infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);               \
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");                               \
-                                                                                                                   \
         c_type unbound_result = 0;                                                                                 \
         infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);                            \
         if (unbound_cif) {                                                                                         \
@@ -84,12 +78,10 @@ __int128_t passthrough_sint128(__int128_t v) { return v; }
         }                                                                                                          \
         else                                                                                                       \
             fail("Unbound trampoline code pointer was nullptr");                                                   \
-                                                                                                                   \
         /* Test the bound trampoline */                                                                            \
         infix_forward_t * bound_t = nullptr;                                                                       \
         infix_status bound_s = infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_func); \
         ok(bound_s == INFIX_SUCCESS, "Bound trampoline generated successfully");                                   \
-                                                                                                                   \
         c_type bound_result = 0;                                                                                   \
         infix_cif_func bound_cif = infix_forward_get_code(bound_t);                                                \
         if (bound_cif) {                                                                                           \
@@ -101,14 +93,11 @@ __int128_t passthrough_sint128(__int128_t v) { return v; }
         }                                                                                                          \
         else                                                                                                       \
             fail("Bound trampoline code pointer was nullptr");                                                     \
-                                                                                                                   \
         infix_forward_destroy(unbound_t);                                                                          \
         infix_forward_destroy(bound_t);                                                                            \
     }
-
 TEST {
     plan(14);  // One test for each primitive type subtest.
-
     // Test fundamental integer and boolean types.
     TEST_PRIMITIVE("bool", bool, INFIX_PRIMITIVE_BOOL, passthrough_bool, true, "%d");
     TEST_PRIMITIVE("uint8_t", uint8_t, INFIX_PRIMITIVE_UINT8, passthrough_uint8, 255, "%u");
@@ -120,11 +109,9 @@ TEST {
     TEST_PRIMITIVE("uint64_t", uint64_t, INFIX_PRIMITIVE_UINT64, passthrough_uint64, 0xFFFFFFFFFFFFFFFF, "%" PRIu64);
     TEST_PRIMITIVE(
         "int64_t", int64_t, INFIX_PRIMITIVE_SINT64, passthrough_sint64, -9223372036854775807LL - 1, "%" PRId64);
-
     // Test floating-point types.
     TEST_PRIMITIVE("float", float, INFIX_PRIMITIVE_FLOAT, passthrough_float, 3.14159f, "%f");
     TEST_PRIMITIVE("double", double, INFIX_PRIMITIVE_DOUBLE, passthrough_double, 2.718281828459045, "%f");
-
     // `long double` has a unique representation on some platforms (e.g., 80-bit on SysV x64),
     // so it gets a dedicated subtest instead of using the macro.
     subtest("long double") {
@@ -132,7 +119,6 @@ TEST {
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
         long double input = 1.234567890123456789L;
         void * args[] = {&input};
-
         infix_forward_t * unbound_t = nullptr;
         infix_status unbound_s = infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1);
         ok(unbound_s == INFIX_SUCCESS, "Unbound trampoline generated successfully");
@@ -140,7 +126,6 @@ TEST {
         infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)passthrough_long_double, &unbound_result, args);
         ok(unbound_result == input, "Unbound long double correct");
-
         infix_forward_t * bound_t = nullptr;
         infix_status bound_s =
             infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_long_double);
@@ -149,11 +134,9 @@ TEST {
         infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound long double correct");
-
         infix_forward_destroy(unbound_t);
         infix_forward_destroy(bound_t);
     }
-
 #if !defined(INFIX_COMPILER_MSVC)
     // 128-bit integers are a GCC/Clang extension and not supported on MSVC.
     subtest("__uint128_t") {
@@ -161,14 +144,12 @@ TEST {
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
         __uint128_t input = (((__uint128_t)0xFFFFFFFFFFFFFFFF) << 64) | 0xFFFFFFFFFFFFFFFF;
         void * args[] = {&input};
-
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
         __uint128_t unbound_result = 0;
         infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)passthrough_uint128, &unbound_result, args);
         ok(unbound_result == input, "Unbound correct");
-
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_uint128) == INFIX_SUCCESS,
            "Bound created");
@@ -176,24 +157,20 @@ TEST {
         infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound correct");
-
         infix_forward_destroy(unbound_t);
         infix_forward_destroy(bound_t);
     }
-
     subtest("__int128_t") {
         plan(4);
         infix_type * type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT128);
         __int128_t input = -(((__int128_t)0x7FFFFFFFFFFFFFFF) << 64) - 1;
         void * args[] = {&input};
-
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, type, &type, 1, 1) == INFIX_SUCCESS, "Unbound created");
         __int128_t unbound_result = 0;
         infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
         unbound_cif((void *)passthrough_sint128, &unbound_result, args);
         ok(unbound_result == input, "Unbound correct");
-
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, type, &type, 1, 1, (void *)passthrough_sint128) == INFIX_SUCCESS,
            "Bound created");
@@ -201,7 +178,6 @@ TEST {
         infix_cif_func bound_cif = infix_forward_get_code(bound_t);
         bound_cif(&bound_result, args);
         ok(bound_result == input, "Bound correct");
-
         infix_forward_destroy(unbound_t);
         infix_forward_destroy(bound_t);
     }

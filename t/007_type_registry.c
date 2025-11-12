@@ -25,15 +25,12 @@
  *   codes when using unregistered types, unresolved forward declarations, or when
  *   using the `@Name` syntax with a `NULL` registry.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
-
 // Native C Functions for Testing
-
 double get_point_x(Point p) {
     note("get_point_x received Point {x=%.1f, y=%.1f}", p.x, p.y);
     return p.x;
@@ -49,10 +46,8 @@ void execute_move_point_callback(Point (*func_ptr)(Point), Point p_in) {
     ok(fabs(p_out.x - (p_in.x + 100.0)) < 1e-9 && fabs(p_out.y - (p_in.y - 100.0)) < 1e-9,
        "Callback returned correctly modified Point");
 }
-
 TEST {
     plan(6);
-
     subtest("Basic Registry Lifecycle and Simple Definitions") {
         plan(4);
         infix_registry_t * registry = infix_registry_create();
@@ -64,7 +59,6 @@ TEST {
         const char * definitions = "@MyInt = int32; @Point = { x: double, y: double };";
         infix_status status = infix_register_types(registry, definitions);
         ok(status == INFIX_SUCCESS, "Registered simple alias and struct");
-
         // Test error case: redefining an existing type should fail.
         status = infix_register_types(registry, "@MyInt = int64;");
         ok(status != INFIX_SUCCESS, "Attempting to redefine a type correctly fails");
@@ -74,10 +68,8 @@ TEST {
         }
         else
             fail("Redefinition should have failed but didn't");
-
         infix_registry_destroy(registry);
     }
-
     subtest("Using Named Types in Forward Calls") {
         plan(3);
         infix_registry_t * registry = infix_registry_create();
@@ -97,11 +89,9 @@ TEST {
         }
         else
             skip(1, "Call test skipped");
-
         infix_forward_destroy(trampoline);
         infix_registry_destroy(registry);
     }
-
     subtest("Using Named Types in Reverse Calls") {
         plan(3);
         infix_registry_t * registry = infix_registry_create();
@@ -118,25 +108,20 @@ TEST {
         }
         else
             skip(1, "Callback execution skipped");
-
         infix_reverse_destroy(context);
         infix_registry_destroy(registry);
     }
-
     subtest("Advanced Definitions (Recursive & Forward Declared)") {
         plan(4);
         infix_registry_t * registry = infix_registry_create();
-
         // Test a simple recursive type (linked list node).
         const char * recursive_def = "@Node = { value: int, next: *@Node };";
         infix_status status = infix_register_types(registry, recursive_def);
         ok(status == INFIX_SUCCESS, "Successfully registered a recursive type");
-
         // Test mutually recursive types using forward declarations.
         const char * mutual_defs = "@A; @B; @A = { b_ptr: *@B }; @B = { a_ptr: *@A };";
         status = infix_register_types(registry, mutual_defs);
         ok(status == INFIX_SUCCESS, "Successfully registered mutually recursive types via forward declarations");
-
         // Introspect the recursive type to verify its structure.
         infix_type * node_ptr_type = nullptr;
         infix_arena_t * temp_arena = nullptr;
@@ -150,19 +135,15 @@ TEST {
         }
         else
             skip(1, "Introspection check skipped");
-
         infix_arena_destroy(temp_arena);
         infix_registry_destroy(registry);
     }
-
     subtest("Error Handling") {
         plan(7);
         infix_registry_t * registry = infix_registry_create();
-
         const char * bad_syntax = "@Bad = { int,, double};";
         infix_status status = infix_register_types(registry, bad_syntax);
         ok(status != INFIX_SUCCESS, "Registration fails on syntax error in definition");
-
         infix_forward_t * trampoline = nullptr;
         status = infix_forward_create(&trampoline, "(@DoesNotExist)->void", (void *)get_point_x, registry);
         ok(status != INFIX_SUCCESS, "Creation fails when using an unregistered named type");
@@ -172,9 +153,7 @@ TEST {
         }
         else
             skip(1, "Error detail check skipped");
-
         infix_forward_destroy(trampoline);
-
         ok(infix_register_types(registry, "@FwdOnly;") == INFIX_SUCCESS, "Setup: forward declare @FwdOnly");
         status = infix_forward_create(&trampoline, "(@FwdOnly)->void", (void *)get_point_x, registry);
         ok(status != INFIX_SUCCESS, "Creation fails when using an unresolved forward-declared type");
@@ -184,24 +163,18 @@ TEST {
         }
         else
             skip(1, "Error detail check skipped");
-
         infix_forward_destroy(trampoline);
-
         status = infix_forward_create(&trampoline, "(@SomeType)->void", (void *)get_point_x, nullptr);
         ok(status != INFIX_SUCCESS, "Creation fails when using '@' sigil with a NULL registry");
         infix_forward_destroy(trampoline);
-
         infix_registry_destroy(registry);
     }
-
     subtest("Semantic Aliases for Non-Aggregate Types") {
         plan(10);
         note("Verifies that aliases for primitives and pointers preserve their name for introspection.");
-
         infix_registry_t * registry = infix_registry_create();
         const char * defs = "@MyInt = int32; @MyHandle = *void; @MyPoint = {double, double}; @MyPointAlias = @MyPoint;";
         ok(infix_register_types(registry, defs) == INFIX_SUCCESS, "Registered aliases for various types");
-
         // Test 1: Alias for a primitive
         infix_type * my_int_type = NULL;
         infix_arena_t * arena1 = NULL;
@@ -212,7 +185,6 @@ TEST {
         }
         else
             skip(2, "Introspection skipped");
-
         // Test 2: Alias for a pointer
         infix_type * my_handle_type = NULL;
         infix_arena_t * arena2 = NULL;
@@ -224,7 +196,6 @@ TEST {
         }
         else
             skip(2, "Introspection skipped");
-
         // Test 3: Alias for another named type
         infix_type * my_point_alias_type = NULL;
         infix_arena_t * arena3 = NULL;
@@ -236,7 +207,6 @@ TEST {
         }
         else
             skip(2, "Introspection skipped");
-
         infix_arena_destroy(arena1);
         infix_arena_destroy(arena2);
         infix_arena_destroy(arena3);

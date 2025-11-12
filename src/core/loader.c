@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file loader.c
  * @brief Implements cross-platform dynamic library loading.
@@ -27,15 +26,12 @@
  * loading capability with the `infix` type system to safely interact with global
  * variables of any type described by a signature string.
  */
-
 #include "common/infix_internals.h"
-
 #if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else
 #include <dlfcn.h>
 #endif
-
 /**
  * @brief Opens a dynamic library and returns a handle to it.
  *
@@ -48,25 +44,29 @@
  *         The returned handle must be freed with `infix_library_close`.
  */
 c23_nodiscard infix_library_t * infix_library_open(const char * path) {
-    if (path == nullptr)
-        return nullptr;
-
     infix_library_t * lib = infix_calloc(1, sizeof(infix_library_t));
     if (lib == nullptr) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return nullptr;
     }
-
 #if defined(INFIX_OS_WINDOWS)
-    lib->handle = LoadLibraryA(path);
+    // On Windows, passing NULL to GetModuleHandleA returns a handle to the main executable file of the current process.
+    if (path == nullptr) {
+        lib->handle = GetModuleHandleA(path);
+        lib->is_pseudo_handle = true;  // Mark this as a special, non-freeable handle.
+    }
+    else {
+        lib->handle = LoadLibraryA(path);
+        lib->is_pseudo_handle = false;  // This is a regular, ref-counted handle.
+    }
 #else
     // Use RTLD_LAZY for performance (resolve symbols only when they are first used).
     // Use RTLD_GLOBAL to make symbols from this library available for resolution
     // by other libraries that might be loaded later. This is important for complex
     // dependency chains.
+    // On POSIX, passing NULL to dlopen returns a handle to the main executable, allowing searching of global symbols.
     lib->handle = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
 #endif
-
     if (lib->handle == nullptr) {
 #if defined(INFIX_OS_WINDOWS)
         // On Windows, GetLastError() provides the specific error code.
@@ -80,7 +80,6 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
     }
     return lib;
 }
-
 /**
  * @brief Closes a dynamic library handle and frees associated resources.
  *
@@ -91,17 +90,18 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
 void infix_library_close(infix_library_t * lib) {
     if (lib == nullptr)
         return;
-
     if (lib->handle) {
 #if defined(INFIX_OS_WINDOWS)
-        FreeLibrary((HMODULE)lib->handle);
+        // Only call FreeLibrary on real handles obtained from LoadLibrary.
+        // Never call it on a pseudo-handle from GetModuleHandle.
+        if (!lib->is_pseudo_handle)
+            FreeLibrary((HMODULE)lib->handle);
 #else
         dlclose(lib->handle);
 #endif
     }
     infix_free(lib);
 }
-
 /**
  * @brief Retrieves the address of a symbol (function or variable) from a loaded library.
  *
@@ -121,14 +121,12 @@ void infix_library_close(infix_library_t * lib) {
 c23_nodiscard void * infix_library_get_symbol(infix_library_t * lib, const char * symbol_name) {
     if (lib == nullptr || lib->handle == nullptr || symbol_name == nullptr)
         return nullptr;
-
 #if defined(INFIX_OS_WINDOWS)
     return (void *)GetProcAddress((HMODULE)lib->handle, symbol_name);
 #else
     return dlsym(lib->handle, symbol_name);
 #endif
 }
-
 /**
  * @brief Reads the value of an exported global variable from a library into a buffer.
  *
@@ -153,27 +151,22 @@ c23_nodiscard infix_status infix_read_global(infix_library_t * lib,
                                              infix_registry_t * registry) {
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
     if (symbol_addr == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
     // Parse the signature to get the type's size.
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
     infix_status status = infix_type_from_signature(&type, &arena, type_signature, registry);
     if (status != INFIX_SUCCESS)
         return status;
-
     // Safely copy the data using the parsed size.
     infix_memcpy(buffer, symbol_addr, type->size);
-
     infix_arena_destroy(arena);
     return INFIX_SUCCESS;
 }
-
 /**
  * @brief Writes data from a buffer into an exported global variable in a library.
  *
@@ -200,23 +193,19 @@ c23_nodiscard infix_status infix_write_global(infix_library_t * lib,
                                               infix_registry_t * registry) {
     if (buffer == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
     void * symbol_addr = infix_library_get_symbol(lib, symbol_name);
     if (symbol_addr == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_SYMBOL_NOT_FOUND, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-
     infix_type * type = nullptr;
     infix_arena_t * arena = nullptr;
     infix_status status = infix_type_from_signature(&type, &arena, type_signature, registry);
     if (status != INFIX_SUCCESS)
         return status;
-
     // Note: This assumes the memory page containing the global is writable.
     // This is standard for data segments but could fail in unusual cases.
     infix_memcpy(symbol_addr, buffer, type->size);
-
     infix_arena_destroy(arena);
     return INFIX_SUCCESS;
 }

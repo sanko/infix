@@ -11,7 +11,6 @@
  *
  * SPDX-License-Identifier: CC-BY-4.0
  */
-
 /**
  * @file utility.c
  * @brief Implements internal debugging utilities.
@@ -26,10 +25,8 @@
  * The corresponding function declarations in `utility.h` become empty inline
  * stubs, which are optimized away by the compiler.
  */
-
 // This file is only compiled if debugging is enabled.
 #if defined(INFIX_DEBUG_ENABLED) && INFIX_DEBUG_ENABLED
-
 // Use the double-tap test harness's `note` macro for debug printing if available.
 // This integrates the debug output seamlessly into the TAP test logs.
 #if defined(DBLTAP_ENABLE) && defined(DBLTAP_IMPLEMENTATION)
@@ -45,10 +42,8 @@
     } while (0)
 #endif
 #endif  // DBLTAP_ENABLE
-
 #include "common/utility.h"
 #include <inttypes.h>
-
 /**
  * @internal
  * @brief Dumps a block of memory to standard output in a standard hexadecimal format.
@@ -70,20 +65,16 @@ void infix_dump_hex(const void * data, size_t size, const char * title) {
     char * buf_ptr;
     size_t remaining_len;
     int written;
-
     note("%s (size: %llu bytes at %p)", title, (unsigned long long)size, data);
-
     for (size_t i = 0; i < size; i += 16) {
         buf_ptr = line_buf;
         remaining_len = sizeof(line_buf);
-
         // Print the address offset for the current line.
         written = snprintf(buf_ptr, remaining_len, "0x%04llx: ", (unsigned long long)i);
         if (written < 0 || (size_t)written >= remaining_len)
             goto print_line;
         buf_ptr += written;
         remaining_len -= written;
-
         // Print the hexadecimal representation of the bytes.
         for (size_t j = 0; j < 16; ++j) {
             if (i + j < size)
@@ -94,7 +85,6 @@ void infix_dump_hex(const void * data, size_t size, const char * title) {
                 goto print_line;
             buf_ptr += written;
             remaining_len -= written;
-
             if (j == 7) {  // Add an extra space in the middle for readability.
                 written = snprintf(buf_ptr, remaining_len, " ");
                 if (written < 0 || (size_t)written >= remaining_len)
@@ -103,13 +93,11 @@ void infix_dump_hex(const void * data, size_t size, const char * title) {
                 remaining_len -= written;
             }
         }
-
         written = snprintf(buf_ptr, remaining_len, "| ");
         if (written < 0 || (size_t)written >= remaining_len)
             goto print_line;
         buf_ptr += written;
         remaining_len -= written;
-
         // Print the ASCII representation of the bytes.
         for (size_t j = 0; j < 16; ++j) {
             if (i + j < size) {
@@ -128,5 +116,4 @@ print_line:
     }
     note("End of %s", title);
 }
-
 #endif  // INFIX_DEBUG_ENABLED

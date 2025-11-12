@@ -41,14 +41,12 @@
  *   must be set to the number of XMM registers used for arguments.
  * @endinternal
  */
-
 #include "arch/x64/abi_x64_common.h"
 #include "arch/x64/abi_x64_emitters.h"
 #include "common/infix_internals.h"
 #include "common/utility.h"
 #include <stdbool.h>
 #include <stdlib.h>
-
 /** An array of GPRs used for passing the first 6 integer/pointer arguments, in order. */
 static const x64_gpr GPR_ARGS[] = {RDI_REG, RSI_REG, RDX_REG, RCX_REG, R8_REG, R9_REG};
 /** An array of XMM registers used for passing the first 8 floating-point arguments, in order. */
@@ -61,7 +59,6 @@ static const x64_xmm XMM_ARGS[] = {XMM0_REG, XMM1_REG, XMM2_REG, XMM3_REG, XMM4_
 #define MAX_CLASSIFY_DEPTH 32
 /** A safe limit on the number of fields to classify to prevent DoS from exponential complexity. */
 #define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
-
 /**
  * @internal
  * @brief The System V classification for an "eightbyte" (a 64-bit chunk of a type).
@@ -72,7 +69,6 @@ typedef enum {
     SSE,       ///< This eightbyte should be passed in an SSE register (XMM).
     MEMORY     ///< The argument is too complex or large and must be passed on the stack.
 } arg_class_t;
-
 // Forward Declarations
 static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_call_frame_layout ** out_layout,
@@ -88,7 +84,6 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                                                              size_t num_args,
                                                              size_t num_fixed_args);
 static infix_status generate_forward_call_instruction_sysv_x64(code_buffer *, infix_call_frame_layout *);
-
 static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_call_frame_layout * layout,
                                                        infix_type * ret_type);
@@ -105,7 +100,6 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_reverse_call_frame_layout * layout,
                                                        infix_reverse_t * context);
-
 /** The v-table of System V x64 functions for generating forward trampolines. */
 const infix_forward_abi_spec g_sysv_x64_forward_spec = {
     .prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
@@ -120,7 +114,6 @@ const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_sysv_x64,
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_sysv_x64,
     .generate_reverse_epilogue = generate_reverse_epilogue_sysv_x64};
-
 /**
  * @internal
  * @brief Recursively classifies the eightbytes of an aggregate type.
@@ -146,7 +139,6 @@ static bool classify_recursive(
         classes[0] = MEMORY;
         return true;
     }
-
     // The ABI requires natural alignment. If a fuzzer creates a type with an unaligned
     // member, it must be passed in memory. A zero alignment would cause a crash.
     if (type->alignment != 0 && offset % type->alignment != 0) {
@@ -156,7 +148,6 @@ static bool classify_recursive(
     // If a struct is packed, its layout is explicit and should not be inferred
     // by recursive classification. Treat it as an opaque block of memory.
     // For classification purposes, this is equivalent to an integer array.
-
     if (type->category == INFIX_TYPE_PRIMITIVE) {
         (*field_count)++;
         // `long double` is a special case. It is passed in memory on the stack, not x87 registers.
@@ -164,7 +155,6 @@ static bool classify_recursive(
             classes[0] = MEMORY;
             return true;
         }
-
         // Consider all eightbytes that the primitive occupies, not just the starting offset.
         size_t start_offset = offset;
         // Check for overflow before calculating end_offset
@@ -175,12 +165,9 @@ static bool classify_recursive(
             return true;
         }
         size_t end_offset = start_offset + type->size - 1;
-
         size_t start_eightbyte = start_offset / 8;
         size_t end_eightbyte = end_offset / 8;
-
         arg_class_t new_class = (is_float(type) || is_double(type)) ? SSE : INTEGER;
-
         for (size_t index = start_eightbyte; index <= end_eightbyte && index < 2; ++index) {
             // Merge the new class with the existing class for this eightbyte.
             // The rule is: if an eightbyte contains both SSE and INTEGER parts, it is classified as INTEGER.
@@ -199,7 +186,6 @@ static bool classify_recursive(
     if (type->category == INFIX_TYPE_ARRAY) {
         if (type->meta.array_info.element_type == nullptr)
             return false;
-
         // If the array elements have no size, iterating over them is pointless
         // and can cause a timeout if num_elements is large, as the offset never advances.
         // We only need to classify the element type once at the starting offset.
@@ -209,7 +195,6 @@ static bool classify_recursive(
                 return classify_recursive(type->meta.array_info.element_type, offset, classes, depth + 1, field_count);
             return false;  // An empty array of zero-sized structs has no effect on classification.
         }
-
         for (size_t i = 0; i < type->meta.array_info.num_elements; ++i) {
             // Check count *before* each recursive call inside the loop.
             if (*field_count > MAX_AGGREGATE_FIELDS_TO_CLASSIFY) {
@@ -222,7 +207,6 @@ static bool classify_recursive(
             // the recursion tree for large arrays.
             if (element_offset >= 16)
                 break;
-
             if (classify_recursive(type->meta.array_info.element_type, element_offset, classes, depth + 1, field_count))
                 return true;  // Propagate unaligned discovery up the call stack
         }
@@ -257,9 +241,7 @@ static bool classify_recursive(
                 classes[0] = MEMORY;
                 return true;
             }
-
             infix_struct_member * member = &type->meta.aggregate_info.members[i];
-
             // A generated type can have a NULL member type.
             // This is invalid, and the aggregate must be passed in memory.
             if (member->type == nullptr) {
@@ -271,7 +253,6 @@ static bool classify_recursive(
             // it cannot influence register classification, so we can skip it.
             if (member_offset >= 16)
                 continue;
-
             if (classify_recursive(member->type, member_offset, classes, depth + 1, field_count))
                 return true;  // Propagate unaligned discovery
         }
@@ -279,7 +260,6 @@ static bool classify_recursive(
     }
     return false;
 }
-
 /**
  * @internal
  * @brief Classifies an aggregate type for argument passing according to the System V ABI.
@@ -296,14 +276,12 @@ static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], s
     classes[0] = NO_CLASS;
     classes[1] = NO_CLASS;
     *num_classes = 0;
-
     // If the size is greater than 16 bytes, it's passed in memory.
     if (type->size > 16) {
         classes[0] = MEMORY;
         *num_classes = 1;
         return;
     }
-
     // Run the recursive classification. If it returns true, an unaligned
     // field was found, and the class is already set to MEMORY. We can stop.
     size_t field_count = 0;                                       // Initialize the counter for this aggregate.
@@ -311,20 +289,17 @@ static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], s
         *num_classes = 1;
         return;
     }
-
     // Post-processing for alignment padding.
     if (type->size > 0 && classes[0] == NO_CLASS)
         classes[0] = INTEGER;
     if (type->size > 8 && classes[1] == NO_CLASS)
         classes[1] = INTEGER;
-
     // Count the number of valid, classified eightbytes.
     if (classes[0] != NO_CLASS)
         (*num_classes)++;
     if (classes[1] != NO_CLASS)
         (*num_classes)++;
 }
-
 /**
  * @internal
  * @brief Stage 1 (Forward): Analyzes a signature and creates a call frame layout for System V.
@@ -348,7 +323,6 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                                                         void * target_fn) {
     if (out_layout == nullptr)
         return INFIX_ERROR_INVALID_ARGUMENT;
-
     // Allocate the layout struct that will hold our results.
     infix_call_frame_layout * layout =
         infix_arena_calloc(arena, 1, sizeof(infix_call_frame_layout), _Alignof(infix_call_frame_layout));
@@ -364,21 +338,16 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
         *out_layout = nullptr;
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-
     // gpr_count and xmm_count track the next available GPR and XMM argument registers.
     // current_stack_offset tracks the next available stack slot for arguments.
     size_t gpr_count = 0, xmm_count = 0, current_stack_offset = 0;
-
     // Determine if the return value requires a hidden pointer argument passed in RDI.
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
                              ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-
     // Rule 1: Aggregates larger than 16 bytes are always returned via hidden pointer.
     // Exception: 256/512-bit vectors are returned in YMM0/ZMM0.
     layout->return_value_in_memory =
         (ret_is_aggregate && ret_type->category != INFIX_TYPE_VECTOR && ret_type->size > 16);
-
-
     // Rule 2: Small aggregates (<= 16 bytes) must also be returned via hidden pointer
     // if their classification is MEMORY. This is critical for types like packed structs
     // with unaligned members.
@@ -389,22 +358,17 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
         if (num_ret_classes > 0 && ret_classes[0] == MEMORY)
             layout->return_value_in_memory = true;
     }
-
     // Exception: `long double` is a special case and is always returned on the x87
     // FPU stack, never via a hidden pointer.
     if (is_long_double(ret_type))
         layout->return_value_in_memory = false;
-
     // If a hidden pointer is used, it consumes the first GPR (RDI).
     if (layout->return_value_in_memory)
         gpr_count++;
-
     layout->num_stack_args = 0;
-
     // Main Argument Classification Loop
     for (size_t i = 0; i < num_args; ++i) {
         infix_type * type = arg_types[i];
-
         // Security: Reject excessively large types before they reach the code generator.
         if (type->size > INFIX_MAX_ARG_SIZE) {
             *out_layout = nullptr;
@@ -436,13 +400,11 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             layout->num_stack_args++;
             continue;  // Go to next argument
         }
-
         bool is_aggregate = type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
             type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX;
         arg_class_t classes[2] = {NO_CLASS, NO_CLASS};
         size_t num_classes = 0;
         bool placed_in_register = false;
-
         if (is_aggregate)
             // Complex types need the full classification algorithm.
             classify_aggregate_sysv(type, classes, &num_classes);
@@ -467,7 +429,6 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                 }
             }
         }
-
         // If classification resulted in MEMORY, it must go on the stack.
         placed_in_register = false;
         if (num_classes > 0 && classes[0] != MEMORY) {
@@ -497,7 +458,6 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                 // Here, a combined check is correct, as we must have room for both parts.
                 size_t gpr_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
                 size_t xmm_needed = (classes[0] == SSE) + (classes[1] == SSE);
-
                 if (gpr_count + gpr_needed <= NUM_GPR_ARGS && xmm_count + xmm_needed <= NUM_XMM_ARGS) {
                     if (classes[0] == INTEGER && classes[1] == INTEGER) {
                         layout->arg_locations[i].type = ARG_LOCATION_GPR_PAIR;
@@ -527,7 +487,6 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                 }
             }
         }
-
         // Step 4: Fallback to stack
         if (!placed_in_register) {
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
@@ -536,23 +495,19 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             layout->num_stack_args++;
         }
     }
-
     // Finalize the layout properties.
     layout->num_gpr_args = gpr_count;
     layout->num_xmm_args = xmm_count;
     // The total stack space for arguments must be 16-byte aligned before the call.
     layout->total_stack_alloc = (current_stack_offset + 15) & ~15;
-
     // Safety check against excessive stack allocation.
     if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-
     *out_layout = layout;
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 2 (Forward): Generates the function prologue for the System V trampoline.
@@ -566,7 +521,6 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
     // Standard Function Prologue
     emit_push_reg(buf, RBP_REG);              // push rbp
     emit_mov_reg_reg(buf, RBP_REG, RSP_REG);  // mov rbp, rsp
-
     // Save Callee-Saved Registers
     // We will use these registers to store our context (target_fn, ret_ptr, args_ptr)
     // across the native function call, so we must save their original values first.
@@ -574,7 +528,6 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
     emit_push_reg(buf, R13_REG);  // push r13
     emit_push_reg(buf, R14_REG);  // push r14
     emit_push_reg(buf, R15_REG);  // push r15
-
     // Move Trampoline Arguments to Persistent Registers
     if (layout->target_fn == nullptr) {  // Unbound trampoline
         // The trampoline is called with (target_fn, ret_ptr, args_ptr) in RDI, RSI, RDX.
@@ -588,8 +541,6 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
         emit_mov_reg_reg(buf, R13_REG, RDI_REG);  // r13 = ret_ptr
         emit_mov_reg_reg(buf, R14_REG, RSI_REG);  // r14 = args_ptr
     }
-
-
     // Allocate Stack Space
     // If any arguments are passed on the stack, allocate space for them.
     // The ABI requires this space to be 16-byte aligned.
@@ -597,7 +548,6 @@ static infix_status generate_forward_prologue_sysv_x64(code_buffer * buf, infix_
         emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 3 (Forward): Generates code to move arguments from the `void**` array
@@ -617,24 +567,20 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
     // If returning a large struct, the hidden pointer (stored in r13) must be moved to RDI.
     if (layout->return_value_in_memory)
         emit_mov_reg_reg(buf, GPR_ARGS[0], R13_REG);  // mov rdi, r13
-
     // Marshall Register Arguments
     // Loop over all arguments that are passed in registers.
     for (size_t i = 0; i < num_args; ++i) {
         infix_arg_location * loc = &layout->arg_locations[i];
         if (loc->type == ARG_LOCATION_STACK)
             continue;  // Handle stack arguments in a separate pass.
-
         // Load the pointer to the argument's data into a scratch register (r15).
         // r14 holds the base of the `void** args_array`.
         // r15 = args_array[i]
         emit_mov_reg_mem(buf, R15_REG, R14_REG, i * sizeof(void *));
-
         switch (loc->type) {
         case ARG_LOCATION_GPR:
             {
                 infix_type * current_type = arg_types[i];
-
                 // An array parameter decays to a pointer. The `args` array for it
                 // contains a pointer TO the array data. We must pass this pointer itself,
                 // not the data it points to. R15 already holds this pointer.
@@ -642,7 +588,6 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                     emit_mov_reg_reg(buf, GPR_ARGS[loc->reg_index], R15_REG);
                     break;  // This case is now handled.
                 }
-
                 bool is_signed = current_type->category == INFIX_TYPE_PRIMITIVE &&
                     (current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
                      current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
@@ -704,16 +649,13 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             break;
         }
     }
-
     // Marshall Stack Arguments
     if (layout->num_stack_args > 0) {
         for (size_t i = 0; i < num_args; ++i) {
             if (layout->arg_locations[i].type != ARG_LOCATION_STACK)
                 continue;
-
             // Load pointer to argument data into r15.
             emit_mov_reg_mem(buf, R15_REG, R14_REG, i * sizeof(void *));  // r15 = args_array[i]
-
             size_t size = arg_types[i]->size;
             // Copy the argument data from the user-provided buffer to the stack, 8 bytes at a time.
             for (size_t offset = 0; offset < size; offset += 8) {
@@ -724,16 +666,13 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
             }
         }
     }
-
     // Handle Variadic Calls
     // The ABI requires that AL contains the number of XMM registers used for arguments.
     if (layout->is_variadic)
         // mov al, num_xmm_args (or mov eax, num_xmm_args)
         emit_mov_reg_imm32(buf, RAX_REG, (int32_t)layout->num_xmm_args);
-
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 3.5 (Forward): Generates the null-check and call instruction.
@@ -747,7 +686,6 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf
     // For an unbound trampoline, R12 was already loaded from RDI in the prologue.
     if (layout->target_fn)
         emit_mov_reg_imm64(buf, R12_REG, (uint64_t)layout->target_fn);
-
     // On SysV x64, the target function pointer is stored in R12.
     emit_test_reg_reg(buf, R12_REG, R12_REG);  // test r12, r12 ; check if function pointer is null
     emit_jnz_short(buf, 2);                    // jnz +2       ; if not null, skip the crash instruction
@@ -782,7 +720,6 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
             size_t num_classes = 0;
             bool is_aggregate = ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
                 ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX;
-
             if (is_aggregate)
                 classify_aggregate_sysv(ret_type, classes, &num_classes);
             else if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
@@ -797,7 +734,6 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                     num_classes = 2;
                 }
             }
-
             if (num_classes == 1) {  // Returned in a single register
                 if (classes[0] == SSE) {
                     if (is_float(ret_type))
@@ -859,11 +795,9 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
             }
         }
     }
-
     // Deallocate Stack
     if (layout->total_stack_alloc > 0)
         emit_add_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);
-
     // Restore Registers and Return
     emit_pop_reg(buf, R15_REG);
     emit_pop_reg(buf, R14_REG);
@@ -873,7 +807,6 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
     emit_ret(buf);
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 1 (Reverse): Calculates the stack layout for a reverse trampoline stub.
@@ -891,7 +824,6 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
         arena, 1, sizeof(infix_reverse_call_frame_layout), _Alignof(infix_reverse_call_frame_layout));
     if (!layout)
         return INFIX_ERROR_ALLOCATION_FAILED;
-
     // Calculate space for each component, ensuring 16-byte alignment for safety and simplicity.
     size_t return_size = (context->return_type->size + 15) & ~15;
     size_t args_array_size = (context->num_args * sizeof(void *) + 15) & ~15;
@@ -908,29 +840,22 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-
     size_t total_local_space = return_size + args_array_size + saved_args_data_size;
-
     // Safety check against allocating too much stack.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-
     // The total allocation for the stack frame must be 16-byte aligned.
     layout->total_stack_alloc = (total_local_space + 15) & ~15;
-
     // Local variables are accessed via negative offsets from the frame pointer (RBP).
     // The layout is [ return_buffer | args_array | saved_args_data ]
     layout->return_buffer_offset = -(int32_t)layout->total_stack_alloc;
     layout->args_array_offset = layout->return_buffer_offset + return_size;
     layout->saved_args_offset = layout->args_array_offset + args_array_size;
-
     *out_layout = layout;
     return INFIX_SUCCESS;
 }
-
-
 /**
  * @internal
  * @brief Stage 2 (Reverse): Generates the prologue for the reverse trampoline stub.
@@ -946,7 +871,6 @@ static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_
     emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);  // Allocate our calculated space.
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 3 (Reverse): Generates code to marshal arguments from their native
@@ -960,13 +884,11 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
                                                                    infix_reverse_call_frame_layout * layout,
                                                                    infix_reverse_t * context) {
     size_t gpr_idx = 0, xmm_idx = 0, current_saved_data_offset = 0;
-
     // Correctly determine if the return value uses a hidden pointer by performing a full ABI classification.
     bool return_in_memory = false;
     infix_type * ret_type = context->return_type;
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
                              ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-
     if (ret_is_aggregate) {
         if (ret_type->size > 16)
             return_in_memory = true;
@@ -981,24 +903,18 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     // The long double primitive is a special case that does not use the hidden pointer.
     if (is_long_double(ret_type))
         return_in_memory = false;
-
     // If the return value is passed by reference, save the pointer from RDI.
     if (return_in_memory)
         emit_mov_mem_reg(buf, RBP_REG, layout->return_buffer_offset, GPR_ARGS[gpr_idx++]);  // mov [rbp + offset], rdi
-
     // Stack arguments passed by the caller start at [rbp + 16].
     size_t stack_arg_offset = 16;
-
     for (size_t i = 0; i < context->num_args; i++) {
         int32_t arg_save_loc = layout->saved_args_offset + current_saved_data_offset;
         infix_type * current_type = context->arg_types[i];
-
         arg_class_t classes[2];
         size_t num_classes;
         classify_aggregate_sysv(current_type, classes, &num_classes);
-
         bool is_from_stack = false;
-
         // Determine if the argument is in registers or on the stack.
         if (classes[0] == MEMORY)
             is_from_stack = true;
@@ -1017,7 +933,6 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
         else if (num_classes == 2) {
             size_t gprs_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
             size_t xmms_needed = (classes[0] == SSE) + (classes[1] == SSE);
-
             if (gpr_idx + gprs_needed <= NUM_GPR_ARGS && xmm_idx + xmms_needed <= NUM_XMM_ARGS) {
                 if (classes[0] == SSE)
                     emit_movsd_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
@@ -1031,7 +946,6 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
             else
                 is_from_stack = true;
         }
-
         if (is_from_stack) {
             for (size_t offset = 0; offset < current_type->size; offset += 8) {
                 emit_mov_reg_mem(buf, RAX_REG, RBP_REG, stack_arg_offset + offset);
@@ -1039,15 +953,12 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
             }
             stack_arg_offset += (current_type->size + 7) & ~7;
         }
-
         emit_lea_reg_mem(buf, RAX_REG, RBP_REG, arg_save_loc);
         emit_mov_mem_reg(buf, RBP_REG, layout->args_array_offset + i * sizeof(void *), RAX_REG);
-
         current_saved_data_offset += (current_type->size + 15) & ~15;
     }
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 4 (Reverse): Generates the code to call the high-level C dispatcher function.
@@ -1075,7 +986,6 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
                                                               infix_reverse_t * context) {
     // Arg 1 (RDI): The infix_reverse_t context pointer.
     emit_mov_reg_imm64(buf, RDI_REG, (uint64_t)context);  // mov rdi, #context_addr
-
     // Arg 2 (RSI): Pointer to the return buffer.
     // Correctly determine if the hidden pointer was used for the return value.
     bool return_in_memory = false;
@@ -1095,24 +1005,19 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
     }
     if (is_long_double(ret_type))
         return_in_memory = false;
-
     if (return_in_memory)
         // The pointer was passed to us in RDI and saved. Load it back.
         emit_mov_reg_mem(buf, RSI_REG, RBP_REG, layout->return_buffer_offset);  // mov rsi, [rbp + return_buffer_offset]
     else
         // The return buffer is a local variable. Calculate its address.
         emit_lea_reg_mem(buf, RSI_REG, RBP_REG, layout->return_buffer_offset);  // lea rsi, [rbp + return_buffer_offset]
-
     // Arg 3 (RDX): Pointer to the args_array we just built.
     emit_lea_reg_mem(buf, RDX_REG, RBP_REG, layout->args_array_offset);  // lea rdx, [rbp + args_array_offset]
-
     // Load the dispatcher's address into a scratch register and call it.
     emit_mov_reg_imm64(buf, RAX_REG, (uint64_t)context->internal_dispatcher);  // mov rax, #dispatcher_addr
-
     emit_call_reg(buf, RAX_REG);
     return INFIX_SUCCESS;
 }
-
 /**
  * @internal
  * @brief Stage 5 (Reverse): Generates the epilogue for the reverse trampoline stub.
@@ -1133,7 +1038,6 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         infix_type * ret_type = context->return_type;
         bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
                                  ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
-
         if (ret_is_aggregate) {
             if (ret_type->size > 16)
                 return_in_memory = true;
@@ -1147,7 +1051,6 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         }
         if (is_long_double(ret_type))
             return_in_memory = false;
-
         // Now, handle the return value based on the correct classification.
         if (is_long_double(context->return_type))
             emit_fldt_mem(buf, RBP_REG, layout->return_buffer_offset);
@@ -1166,7 +1069,6 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
             }
             else
                 classify_aggregate_sysv(context->return_type, classes, &num_classes);
-
             if (num_classes >= 1) {  // First eightbyte
                 if (classes[0] == SSE) {
                     if (is_float(context->return_type))
@@ -1192,7 +1094,6 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
             }
         }
     }
-
     // Standard function epilogue: tear down stack frame and return.
     emit_mov_reg_reg(buf, RSP_REG, RBP_REG);
     emit_pop_reg(buf, RBP_REG);

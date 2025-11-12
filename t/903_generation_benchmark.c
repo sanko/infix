@@ -20,32 +20,25 @@
  * the entire JIT pipeline, including type creation, ABI classification, code
  * emission, and memory management.
  */
-
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <time.h>
-
 #define BENCHMARK_ITERATIONS 10000
-
 /** @brief A dummy handler function to provide a valid function pointer for creation. */
 void benchmark_handler(Point p) { (void)p; }
-
 TEST {
     plan(1);
-
     diag("Trampoline Generation Benchmark");
     diag("Iterations: %d", BENCHMARK_ITERATIONS);
     diag("Target: Full create/destroy cycle for a reverse callback with signature 'void(Point)'");
-
     clock_t start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
         // The work inside this loop is what is being benchmarked.
         infix_arena_t * arena = infix_arena_create(1024);
         if (!arena)
             bail_out("Arena creation failed mid-benchmark.");
-
         // Create a moderately complex type to make the test realistic.
         infix_struct_member * point_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
@@ -58,7 +51,6 @@ TEST {
             infix_arena_destroy(arena);
             bail_out("Failed to create infix_type for benchmark.");
         }
-
         // Create and destroy the trampoline.
         infix_reverse_t * rt = nullptr;
         infix_status status =
@@ -67,18 +59,14 @@ TEST {
             infix_arena_destroy(arena);
             bail_out("Trampoline generation failed mid-benchmark on iteration %d.", i);
         }
-
         infix_reverse_destroy(rt);
         infix_arena_destroy(arena);
     }
     clock_t end = clock();
-
     // Calculate and report the results.
     double total_time = ((double)(end - start)) / CLOCKS_PER_SEC;
     double time_per_generation_us = (total_time / BENCHMARK_ITERATIONS) * 1e6;
-
     diag("Total time: %.4f s", total_time);
     diag("Average generation time: %.2f us/op", time_per_generation_us);
-
     pass("Benchmark completed successfully.");
 }
