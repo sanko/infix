@@ -111,22 +111,19 @@ $(document).ready(function(){initNavTree('platform_8h_source.html',''); initResi
 </div><!--header-->
 <div class="contents">
 <a href="platform_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="compat__c23_8h.html">common/compat_c23.h</a>&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="infix__config_8h.html">common/infix_config.h</a>&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#if defined(INFIX_ARCH_X64)</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><a class="code hl_define" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <span class="keywordtype">bool</span> infix_cpu_has_avx2(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><a class="code hl_define" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <span class="keywordtype">bool</span> infix_cpu_has_avx512f(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="compat__c23_8h.html">common/compat_c23.h</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="infix__config_8h.html">common/infix_config.h</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#if defined(INFIX_ARCH_X64)</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><a class="code hl_define" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <span class="keywordtype">bool</span> infix_cpu_has_avx2(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><a class="code hl_define" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <span class="keywordtype">bool</span> infix_cpu_has_avx512f(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#if defined(INFIX_ARCH_AARCH64)</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><a class="code hl_define" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <span class="keywordtype">bool</span> infix_cpu_has_sve(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#if defined(INFIX_ARCH_AARCH64)</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><a class="code hl_define" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <span class="keywordtype">bool</span> infix_cpu_has_sve(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="acompat__c23_8h_html"><div class="ttname"><a href="compat__c23_8h.html">compat_c23.h</a></div><div class="ttdoc">Provides forward compatibility macros for C23 features.</div></div>
-<div class="ttc" id="acompat__c23_8h_html_a17f672198fb63e31ca0dba6aea752863"><div class="ttname"><a href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a></div><div class="ttdeci">#define c23_nodiscard</div><div class="ttdoc">A compatibility macro for the C23 [[nodiscard]] attribute.</div><div class="ttdef"><b>Definition</b> compat_c23.h:113</div></div>
+<div class="ttc" id="acompat__c23_8h_html_a17f672198fb63e31ca0dba6aea752863"><div class="ttname"><a href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a></div><div class="ttdeci">#define c23_nodiscard</div><div class="ttdoc">A compatibility macro for the C23 [[nodiscard]] attribute.</div><div class="ttdef"><b>Definition</b> compat_c23.h:106</div></div>
 <div class="ttc" id="ainfix__config_8h_html"><div class="ttname"><a href="infix__config_8h.html">infix_config.h</a></div><div class="ttdoc">Platform, architecture, and ABI detection macros.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

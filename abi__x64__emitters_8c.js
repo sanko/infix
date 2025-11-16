@@ -14,6 +14,7 @@ var abi__x64__emitters_8c =
     [ "emit_jmp_reg", "abi__x64__emitters_8c.html#a792c75d3780343d6ab4fc818bf1f4c18", null ],
     [ "emit_jnz_short", "abi__x64__emitters_8c.html#a30b75e0dbd849e9e8b8b6261effcda6b", null ],
     [ "emit_lea_reg_mem", "abi__x64__emitters_8c.html#aff7b7c503d16adf7c32cbda720c750ac", null ],
+    [ "emit_leave", "abi__x64__emitters_8c.html#a82fb0199ac09adb70037047ef98e4793", null ],
     [ "emit_modrm", "abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1", null ],
     [ "emit_mov_mem_reg", "abi__x64__emitters_8c.html#a06ffd6fdce75fb2fbc735db02f4facda", null ],
     [ "emit_mov_mem_reg16", "abi__x64__emitters_8c.html#a2bbf8af2809d4eac1dde19f9ed7f6cf9", null ],

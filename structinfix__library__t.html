@@ -121,7 +121,8 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Internal definition of a dynamic library handle. </p>
-<p>This is a simple wrapper around the platform's native library handle to provide a consistent API. </p>
+<p>This is a simple wrapper around the platform's native library handle to provide a consistent API.</p>
+<p>On Windows, GetModuleHandle(NULL) returns a special handle to the main executable that must NOT be freed with FreeLibrary. This flag tracks that state to ensure infix_library_close behaves correctly. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a3d2ae557db22eb7a00afe5e0f8e97ca6" name="a3d2ae557db22eb7a00afe5e0f8e97ca6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3d2ae557db22eb7a00afe5e0f8e97ca6">&#9670;&#160;</a></span>handle</h2>

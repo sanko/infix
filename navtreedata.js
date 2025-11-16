@@ -321,14 +321,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "001__primitives_8c.html",
-"304__reverse__call__types_8c.html",
-"Ch03__StatefulCallback_8c.html#ab80ec677438063b7dadb34d4cca3782a",
-"abi__arm64__emitters_8h.html#afc81f93b66c7f0f90c8908d84bc02ae2",
-"error_8c.html#a2f7cc75767456985e072ee240664c50d",
-"group__high__level__api.html#gaab386f4dc04faa543de51c13c86f79ff",
-"group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044abc105c0aa1ac8404a7b1e65542ef64e3",
-"md_docs_2cookbook.html#autotoc_md134",
-"structinfix__executable__t.html"
+"303__advanced_8c.html#a9a2f64c13439c472b82ebdfc23693be9",
+"Ch03__StatefulCallback_8c.html",
+"abi__arm64__emitters_8h.html#aebd252486ae56720ad58e4f9353c9297",
+"double__tap_8h.html#ae67140f57c292866c53eef6c962bc30d",
+"group__high__level__api.html#gaa1b3a38155abc3e22a9dae4826c9f9bf",
+"group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a8b4b3ec95d67ce45d16fc23f76a5b70c",
+"md_docs_2cookbook.html#autotoc_md130",
+"structinfix__call__frame__layout.html#aaed0abd0984cf01711d0ac17731dd97d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

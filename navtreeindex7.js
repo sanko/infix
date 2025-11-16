@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"md_docs_2cookbook.html#autotoc_md130":[2,18],
+"md_docs_2cookbook.html#autotoc_md131":[2,18,0],
+"md_docs_2cookbook.html#autotoc_md132":[2,18,0,0],
+"md_docs_2cookbook.html#autotoc_md133":[2,18,0,1],
 "md_docs_2cookbook.html#autotoc_md134":[2,18,0,2],
 "md_docs_2cookbook.html#autotoc_md135":[2,18,1],
 "md_docs_2cookbook.html#autotoc_md136":[2,18,1,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "structinfix__call__frame__layout.html#a5eaab27cc161e119694a4508341acf20":[11,0,16,7],
 "structinfix__call__frame__layout.html#a63c49b82af2aa93113974f96dc1f4cf9":[11,0,16,0],
 "structinfix__call__frame__layout.html#a743d543342256cf155458951d48c613e":[11,0,16,8],
-"structinfix__call__frame__layout.html#a9827a359fd40e8588fda34310bbd1d43":[11,0,16,3],
-"structinfix__call__frame__layout.html#aaed0abd0984cf01711d0ac17731dd97d":[11,0,16,6],
-"structinfix__call__frame__layout.html#ac54ff0be4865e88a0ba2ae9cb6b8920d":[11,0,16,2],
-"structinfix__call__frame__layout.html#acce402d73219c05665e49c695d9cf1d2":[11,0,16,5],
-"structinfix__error__details__t.html":[10,1,7,0]
+"structinfix__call__frame__layout.html#a9827a359fd40e8588fda34310bbd1d43":[11,0,16,3]
 };

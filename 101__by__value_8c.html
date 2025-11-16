@@ -148,6 +148,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad9cbd602bb911c0a54accbced245d15f" id="r_ad9cbd602bb911c0a54accbced245d15f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#ad9cbd602bb911c0a54accbced245d15f">process_char20_struct</a> (<a class="el" href="structChar20Struct.html">Char20Struct</a> s)</td></tr>
 <tr class="memdesc:ad9cbd602bb911c0a54accbced245d15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that receives the 20-byte struct.  <br /></td></tr>
 <tr class="separator:ad9cbd602bb911c0a54accbced245d15f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1e0119956fd778dccef1e895d402ec4" id="r_aa1e0119956fd778dccef1e895d402ec4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#aa1e0119956fd778dccef1e895d402ec4">process_char_array_param</a> (char s[20])</td></tr>
+<tr class="memdesc:aa1e0119956fd778dccef1e895d402ec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that receives a char array parameter.  <br /></td></tr>
+<tr class="separator:aa1e0119956fd778dccef1e895d402ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcb522a8c16222b5a7b655de5cac9e78" id="r_afcb522a8c16222b5a7b655de5cac9e78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#afcb522a8c16222b5a7b655de5cac9e78">subtest</a> (&quot;Simple struct (<a class="el" href="structPoint.html">Point</a>) passed and returned by value&quot;)</td></tr>
 <tr class="separator:afcb522a8c16222b5a7b655de5cac9e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad17e967090fc52ff46e3f39b56313de3" id="r_ad17e967090fc52ff46e3f39b56313de3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#ad17e967090fc52ff46e3f39b56313de3">subtest</a> (&quot;ABI Specific: System V x64 mixed-register struct&quot;)</td></tr>
@@ -166,6 +169,8 @@ Functions</h2></td></tr>
 <tr class="separator:a852b39e71064b3976817a0233a5bc60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc31d65572430f0cd7181a54cbdc8d7c" id="r_afc31d65572430f0cd7181a54cbdc8d7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#afc31d65572430f0cd7181a54cbdc8d7c">subtest</a> (&quot;SysV ABI: Passing a 20-byte aggregate&quot;)</td></tr>
 <tr class="separator:afc31d65572430f0cd7181a54cbdc8d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a796367fda88a075ad3b7162824f42c13" id="r_a796367fda88a075ad3b7162824f42c13"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a796367fda88a075ad3b7162824f42c13">subtest</a> (&quot;SysV ABI: Passing an array parameter (decays to pointer)&quot;)</td></tr>
+<tr class="separator:a796367fda88a075ad3b7162824f42c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -216,6 +221,27 @@ Variables</h2></td></tr>
 
 <p>A C function that receives the 20-byte struct. </p>
 <p>It checks if the received data matches the expected pattern. A correct call will result in a return value of 1, while a call where the argument was corrupted (e.g., by being partially passed in registers) will fail the check and return 0. </p>
+
+</div>
+</div>
+<a id="aa1e0119956fd778dccef1e895d402ec4" name="aa1e0119956fd778dccef1e895d402ec4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1e0119956fd778dccef1e895d402ec4">&#9670;&#160;</a></span>process_char_array_param()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int process_char_array_param </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>s</em>[20]</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A C function that receives a char array parameter. </p>
+<p>The ABI will treat <code>s</code> as <code>char*</code>. This function verifies that the pointer is valid and the data it points to is correct. </p>
 
 </div>
 </div>
@@ -274,7 +300,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a08da2b435f79e4bf893aa21c59ff8f3a" name="a08da2b435f79e4bf893aa21c59ff8f3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08da2b435f79e4bf893aa21c59ff8f3a">&#9670;&#160;</a></span>subtest() <span class="overload">[1/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a08da2b435f79e4bf893aa21c59ff8f3a">&#9670;&#160;</a></span>subtest() <span class="overload">[1/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +318,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aae7b96909c21fa422844ecc0b38d8c85" name="aae7b96909c21fa422844ecc0b38d8c85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae7b96909c21fa422844ecc0b38d8c85">&#9670;&#160;</a></span>subtest() <span class="overload">[2/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae7b96909c21fa422844ecc0b38d8c85">&#9670;&#160;</a></span>subtest() <span class="overload">[2/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,7 +336,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a852b39e71064b3976817a0233a5bc60e" name="a852b39e71064b3976817a0233a5bc60e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a852b39e71064b3976817a0233a5bc60e">&#9670;&#160;</a></span>subtest() <span class="overload">[3/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a852b39e71064b3976817a0233a5bc60e">&#9670;&#160;</a></span>subtest() <span class="overload">[3/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -328,7 +354,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a4d3a260d7f197c4637365c3f6b114e6b" name="a4d3a260d7f197c4637365c3f6b114e6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d3a260d7f197c4637365c3f6b114e6b">&#9670;&#160;</a></span>subtest() <span class="overload">[4/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d3a260d7f197c4637365c3f6b114e6b">&#9670;&#160;</a></span>subtest() <span class="overload">[4/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,7 +372,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a05247196fb186b7ae9d16efef3f21140" name="a05247196fb186b7ae9d16efef3f21140"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05247196fb186b7ae9d16efef3f21140">&#9670;&#160;</a></span>subtest() <span class="overload">[5/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a05247196fb186b7ae9d16efef3f21140">&#9670;&#160;</a></span>subtest() <span class="overload">[5/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -364,7 +390,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a81d065ae50ca5d9a3fec3100f280c6cc" name="a81d065ae50ca5d9a3fec3100f280c6cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81d065ae50ca5d9a3fec3100f280c6cc">&#9670;&#160;</a></span>subtest() <span class="overload">[6/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a81d065ae50ca5d9a3fec3100f280c6cc">&#9670;&#160;</a></span>subtest() <span class="overload">[6/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -382,7 +408,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ad17e967090fc52ff46e3f39b56313de3" name="ad17e967090fc52ff46e3f39b56313de3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad17e967090fc52ff46e3f39b56313de3">&#9670;&#160;</a></span>subtest() <span class="overload">[7/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad17e967090fc52ff46e3f39b56313de3">&#9670;&#160;</a></span>subtest() <span class="overload">[7/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -400,7 +426,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="afcb522a8c16222b5a7b655de5cac9e78" name="afcb522a8c16222b5a7b655de5cac9e78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcb522a8c16222b5a7b655de5cac9e78">&#9670;&#160;</a></span>subtest() <span class="overload">[8/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afcb522a8c16222b5a7b655de5cac9e78">&#9670;&#160;</a></span>subtest() <span class="overload">[8/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -418,7 +444,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="afc31d65572430f0cd7181a54cbdc8d7c" name="afc31d65572430f0cd7181a54cbdc8d7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc31d65572430f0cd7181a54cbdc8d7c">&#9670;&#160;</a></span>subtest() <span class="overload">[9/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afc31d65572430f0cd7181a54cbdc8d7c">&#9670;&#160;</a></span>subtest() <span class="overload">[9/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -427,6 +453,24 @@ Variables</h2></td></tr>
           <td class="memname">subtest </td>
           <td>(</td>
           <td class="paramtype">&quot;SysV ABI: Passing a 20-byte aggregate&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a796367fda88a075ad3b7162824f42c13" name="a796367fda88a075ad3b7162824f42c13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a796367fda88a075ad3b7162824f42c13">&#9670;&#160;</a></span>subtest() <span class="overload">[10/10]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subtest </td>
+          <td>(</td>
+          <td class="paramtype">&quot;SysV ABI: Passing an array parameter (decays to pointer)&quot;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -466,8 +510,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(9)</div>
-<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:163</div></div>
+<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(10)</div>
+<div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:135</div></div>
 </div><!-- fragment -->
 </div>
 </div>
