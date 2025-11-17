@@ -69,7 +69,8 @@ typedef enum {
     SSE,       ///< This eightbyte should be passed in an SSE register (XMM).
     MEMORY     ///< The argument is too complex or large and must be passed on the stack.
 } arg_class_t;
-// Forward Declarations
+
+/** The v-table of System V x64 functions for generating forward trampolines. */
 static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_call_frame_layout ** out_layout,
                                                         infix_type * ret_type,
@@ -87,6 +88,14 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer *, in
 static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_call_frame_layout * layout,
                                                        infix_type * ret_type);
+const infix_forward_abi_spec g_sysv_x64_forward_spec = {
+    .prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
+    .generate_forward_prologue = generate_forward_prologue_sysv_x64,
+    .generate_forward_argument_moves = generate_forward_argument_moves_sysv_x64,
+    .generate_forward_call_instruction = generate_forward_call_instruction_sysv_x64,
+    .generate_forward_epilogue = generate_forward_epilogue_sysv_x64};
+
+/** The v-table of System V x64 functions for generating reverse trampolines. */
 static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_reverse_call_frame_layout ** out_layout,
                                                         infix_reverse_t * context);
@@ -100,20 +109,37 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_reverse_call_frame_layout * layout,
                                                        infix_reverse_t * context);
-/** The v-table of System V x64 functions for generating forward trampolines. */
-const infix_forward_abi_spec g_sysv_x64_forward_spec = {
-    .prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
-    .generate_forward_prologue = generate_forward_prologue_sysv_x64,
-    .generate_forward_argument_moves = generate_forward_argument_moves_sysv_x64,
-    .generate_forward_call_instruction = generate_forward_call_instruction_sysv_x64,
-    .generate_forward_epilogue = generate_forward_epilogue_sysv_x64};
-/** The v-table of System V x64 functions for generating reverse trampolines. */
 const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_sysv_x64,
     .generate_reverse_prologue = generate_reverse_prologue_sysv_x64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_sysv_x64,
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_sysv_x64,
     .generate_reverse_epilogue = generate_reverse_epilogue_sysv_x64};
+
+/** The v-table for the new Direct Marshalling ABI. */
+static infix_status prepare_direct_forward_call_frame_sysv_x64(infix_arena_t * arena,
+                                                               infix_direct_call_frame_layout ** out_layout,
+                                                               infix_type * ret_type,
+                                                               infix_type ** arg_types,
+                                                               size_t num_args,
+                                                               infix_direct_arg_handler_t * handlers,
+                                                               void * target_fn);
+static infix_status generate_direct_forward_prologue_sysv_x64(code_buffer * buf,
+                                                              infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_argument_moves_sysv_x64(code_buffer * buf,
+                                                                    infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_call_instruction_sysv_x64(code_buffer * buf,
+                                                                      infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_epilogue_sysv_x64(code_buffer * buf,
+                                                              infix_direct_call_frame_layout * layout,
+                                                              infix_type * ret_type);
+const infix_direct_forward_abi_spec g_sysv_x64_direct_forward_spec = {
+    .prepare_direct_forward_call_frame = prepare_direct_forward_call_frame_sysv_x64,
+    .generate_direct_forward_prologue = generate_direct_forward_prologue_sysv_x64,
+    .generate_direct_forward_argument_moves = generate_direct_forward_argument_moves_sysv_x64,
+    .generate_direct_forward_call_instruction = generate_direct_forward_call_instruction_sysv_x64,
+    .generate_direct_forward_epilogue = generate_direct_forward_epilogue_sysv_x64};
+
 /**
  * @internal
  * @brief Recursively classifies the eightbytes of an aggregate type.
@@ -130,7 +156,7 @@ const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
  * @return `true` if a condition forcing MEMORY classification is found, `false` otherwise.
  */
 static bool classify_recursive(
-    infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
+    const infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
     // A recursive call can be made with a NULL type (e.g., from a malformed array from fuzzer).
     if (type == nullptr)
         return false;  // Terminate recusion path.
@@ -271,7 +297,7 @@ static bool classify_recursive(
  * @param[out] classes An array of two `arg_class_t` to be filled.
  * @param[out] num_classes The number of valid classes (1 or 2).
  */
-static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], size_t * num_classes) {
+static void classify_aggregate_sysv(const infix_type * type, arg_class_t classes[2], size_t * num_classes) {
     // Initialize to a clean state.
     classes[0] = NO_CLASS;
     classes[1] = NO_CLASS;

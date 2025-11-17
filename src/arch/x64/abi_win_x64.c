@@ -60,7 +60,7 @@ static const x64_xmm XMM_ARGS[] = {XMM0_REG, XMM1_REG, XMM2_REG, XMM3_REG};
 #define NUM_XMM_ARGS 4
 /** The size in bytes of the mandatory stack space reserved by the caller for the callee. */
 #define SHADOW_SPACE 32
-// Forward Declarations
+/** @brief The v-table of Windows x64 functions for generating forward trampolines. */
 static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
                                                        infix_call_frame_layout ** out_layout,
                                                        infix_type * ret_type,
@@ -78,6 +78,13 @@ static infix_status generate_forward_call_instruction_win_x64(code_buffer *, inf
 static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
                                                       infix_call_frame_layout * layout,
                                                       infix_type * ret_type);
+const infix_forward_abi_spec g_win_x64_forward_spec = {
+    .prepare_forward_call_frame = prepare_forward_call_frame_win_x64,
+    .generate_forward_prologue = generate_forward_prologue_win_x64,
+    .generate_forward_argument_moves = generate_forward_argument_moves_win_x64,
+    .generate_forward_call_instruction = generate_forward_call_instruction_win_x64,
+    .generate_forward_epilogue = generate_forward_epilogue_win_x64};
+/** @brief The v-table of Windows x64 functions for generating reverse trampolines. */
 static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
                                                        infix_reverse_call_frame_layout ** out_layout,
                                                        infix_reverse_t * context);
@@ -91,20 +98,37 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                                                       infix_reverse_call_frame_layout * layout,
                                                       infix_reverse_t * context);
-/** @brief The v-table of Windows x64 functions for generating forward trampolines. */
-const infix_forward_abi_spec g_win_x64_forward_spec = {
-    .prepare_forward_call_frame = prepare_forward_call_frame_win_x64,
-    .generate_forward_prologue = generate_forward_prologue_win_x64,
-    .generate_forward_argument_moves = generate_forward_argument_moves_win_x64,
-    .generate_forward_call_instruction = generate_forward_call_instruction_win_x64,
-    .generate_forward_epilogue = generate_forward_epilogue_win_x64};
-/** @brief The v-table of Windows x64 functions for generating reverse trampolines. */
 const infix_reverse_abi_spec g_win_x64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_win_x64,
     .generate_reverse_prologue = generate_reverse_prologue_win_x64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_win_x64,
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_win_x64,
     .generate_reverse_epilogue = generate_reverse_epilogue_win_x64};
+
+/** @brief The v-table for the new Direct Marshalling ABI. */
+static infix_status prepare_direct_forward_call_frame_win_x64(infix_arena_t * arena,
+                                                              infix_direct_call_frame_layout ** out_layout,
+                                                              infix_type * ret_type,
+                                                              infix_type ** arg_types,
+                                                              size_t num_args,
+                                                              infix_direct_arg_handler_t * handlers,
+                                                              void * target_fn);
+static infix_status generate_direct_forward_prologue_win_x64(code_buffer * buf,
+                                                             infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_argument_moves_win_x64(code_buffer * buf,
+                                                                   infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_call_instruction_win_x64(code_buffer * buf,
+                                                                     infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
+                                                             infix_direct_call_frame_layout * layout,
+                                                             infix_type * ret_type);
+const infix_direct_forward_abi_spec g_win_x64_direct_forward_spec = {
+    .prepare_direct_forward_call_frame = prepare_direct_forward_call_frame_win_x64,
+    .generate_direct_forward_prologue = generate_direct_forward_prologue_win_x64,
+    .generate_direct_forward_argument_moves = generate_direct_forward_argument_moves_win_x64,
+    .generate_direct_forward_call_instruction = generate_direct_forward_call_instruction_win_x64,
+    .generate_direct_forward_epilogue = generate_direct_forward_epilogue_win_x64};
+
 /**
  * @internal
  * @brief Determines if a type is returned by value in RAX or via a hidden pointer.
@@ -113,7 +137,7 @@ const infix_reverse_abi_spec g_win_x64_reverse_spec = {
  * @param type The type to check.
  * @return `true` if the type is returned via a hidden pointer, `false` otherwise.
  */
-static bool return_value_is_by_reference(infix_type * type) {
+static bool return_value_is_by_reference(const infix_type * type) {
     if (type->category == INFIX_TYPE_VECTOR) {
 #if defined(INFIX_COMPILER_GCC)
         // GCC on Windows returns vectors larger than 16 bytes by reference.
@@ -142,7 +166,7 @@ static bool return_value_is_by_reference(infix_type * type) {
  * @param type The type to check.
  * @return `true` if the type is passed by reference, `false` otherwise.
  */
-static bool is_passed_by_reference(infix_type * type) {
+static bool is_passed_by_reference(const infix_type * type) {
     if (type == nullptr)
         return false;
     return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
@@ -197,6 +221,7 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
         bool is_fp = is_float(current_type) || is_double(current_type) || current_type->category == INFIX_TYPE_VECTOR;
         bool is_ref = is_passed_by_reference(current_type);
         bool is_variadic_arg = (i >= num_fixed_args);
+
         if (arg_position < 4) {
             if (is_fp && !is_ref && !is_variadic_arg) {
                 layout->arg_locations[i].type = ARG_LOCATION_XMM;

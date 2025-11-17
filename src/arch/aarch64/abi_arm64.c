@@ -70,7 +70,11 @@ static const arm64_vpr VPR_ARGS[] = {V0_REG, V1_REG, V2_REG, V3_REG, V4_REG, V5_
 #define NUM_VPR_ARGS 8
 /** @internal A safe limit on the number of fields to classify to prevent DoS from exponential complexity. */
 #define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
-// Forward Declarations for the ABI v-table functions
+
+//
+static bool is_hfa(infix_type * type, infix_type ** base_type);
+
+/** @internal The v-table of AArch64 functions for generating forward trampolines. */
 static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
                                                      infix_call_frame_layout ** out_layout,
                                                      infix_type * ret_type,
@@ -88,7 +92,14 @@ static infix_status generate_forward_call_instruction_arm64(code_buffer *, infix
 static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
                                                     infix_call_frame_layout * layout,
                                                     infix_type * ret_type);
-static bool is_hfa(infix_type * type, infix_type ** base_type);
+const infix_forward_abi_spec g_arm64_forward_spec = {
+    .prepare_forward_call_frame = prepare_forward_call_frame_arm64,
+    .generate_forward_prologue = generate_forward_prologue_arm64,
+    .generate_forward_argument_moves = generate_forward_argument_moves_arm64,
+    .generate_forward_call_instruction = generate_forward_call_instruction_arm64,
+    .generate_forward_epilogue = generate_forward_epilogue_arm64};
+
+/** @internal The v-table of AArch64 functions for generating reverse trampolines. */
 static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
                                                      infix_reverse_call_frame_layout ** out_layout,
                                                      infix_reverse_t * context);
@@ -102,20 +113,36 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
                                                     infix_reverse_call_frame_layout * layout,
                                                     infix_reverse_t * context);
-/** @internal The v-table of AArch64 functions for generating forward trampolines. */
-const infix_forward_abi_spec g_arm64_forward_spec = {
-    .prepare_forward_call_frame = prepare_forward_call_frame_arm64,
-    .generate_forward_prologue = generate_forward_prologue_arm64,
-    .generate_forward_argument_moves = generate_forward_argument_moves_arm64,
-    .generate_forward_call_instruction = generate_forward_call_instruction_arm64,
-    .generate_forward_epilogue = generate_forward_epilogue_arm64};
-/** @internal The v-table of AArch64 functions for generating reverse trampolines. */
 const infix_reverse_abi_spec g_arm64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_arm64,
     .generate_reverse_prologue = generate_reverse_prologue_arm64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_arm64,
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_arm64,
     .generate_reverse_epilogue = generate_reverse_epilogue_arm64};
+
+/** @internal The v-table for the new Direct Marshalling ABI. */
+static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * arena,
+                                                            infix_direct_call_frame_layout ** out_layout,
+                                                            infix_type * ret_type,
+                                                            infix_type ** arg_types,
+                                                            size_t num_args,
+                                                            infix_direct_arg_handler_t * handlers,
+                                                            void * target_fn);
+static infix_status generate_direct_forward_prologue_arm64(code_buffer * buf, infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * buf,
+                                                                 infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_call_instruction_arm64(code_buffer * buf,
+                                                                   infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
+                                                           infix_direct_call_frame_layout * layout,
+                                                           infix_type * ret_type);
+const infix_direct_forward_abi_spec g_arm64_direct_forward_spec = {
+    .prepare_direct_forward_call_frame = prepare_direct_forward_call_frame_arm64,
+    .generate_direct_forward_prologue = generate_direct_forward_prologue_arm64,
+    .generate_direct_forward_argument_moves = generate_direct_forward_argument_moves_arm64,
+    .generate_direct_forward_call_instruction = generate_direct_forward_call_instruction_arm64,
+    .generate_direct_forward_epilogue = generate_direct_forward_epilogue_arm64};
+
 /**
  * @internal
  * @brief Recursively finds the first primitive floating-point type in a potential HFA.

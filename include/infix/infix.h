@@ -1354,5 +1354,12 @@ c23_nodiscard infix_status infix_forward_create_direct(infix_forward_t ** out_tr
                                                        void * target_function,
                                                        infix_direct_arg_handler_t * handlers,
                                                        infix_registry_t * registry);
-
+/**
+ * @brief Gets the callable function pointer from a direct marshalling trampoline.
+ *
+ * @param[in] trampoline The `infix_forward_t` handle created with `infix_forward_create_direct`.
+ * @return A callable `infix_direct_cif_func` pointer on success, or `nullptr` if the
+ *         trampoline is `nullptr` or is not a direct marshalling trampoline.
+ */
+c23_nodiscard infix_direct_cif_func infix_forward_get_direct_code(infix_forward_t * trampoline);
 /** @} */  // end of direct_marshalling_api group
