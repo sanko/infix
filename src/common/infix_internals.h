@@ -90,11 +90,12 @@ struct infix_forward_t {
     bool is_external_arena;  /**< True if the arena is user-provided and should not be freed by `infix_forward_destroy`.
                               */
     infix_executable_t exec; /**< The executable memory containing the JIT-compiled code. */
-    infix_type * return_type; /**< A deep copy of the function's return type. */
-    infix_type ** arg_types;  /**< A deep copy of the function's argument types. */
-    size_t num_args;          /**< The total number of arguments. */
-    size_t num_fixed_args;    /**< The number of non-variadic arguments. */
-    void * target_fn;         /**< The target C function pointer (for bound trampolines), or `nullptr` for unbound. */
+    infix_type * return_type;  /**< A deep copy of the function's return type. */
+    infix_type ** arg_types;   /**< A deep copy of the function's argument types. */
+    size_t num_args;           /**< The total number of arguments. */
+    size_t num_fixed_args;     /**< The number of non-variadic arguments. */
+    void * target_fn;          /**< The target C function pointer (for bound trampolines), or `nullptr` for unbound. */
+    bool is_direct_trampoline; /**< If true, this is a high-performance direct marshalling trampoline. */
 };
 /**
  * @brief A function pointer to the universal C dispatcher for reverse calls.
@@ -439,6 +440,64 @@ typedef struct {
                                               infix_reverse_call_frame_layout * layout,
                                               infix_reverse_t * context);
 } infix_reverse_abi_spec;
+
+/**
+ * @struct infix_direct_arg_layout
+ * @brief Internal layout information for a single argument in a direct marshalling trampoline.
+ *
+ * This struct combines the ABI location information with pointers to the type and
+ * handler information needed by the JIT emitters.
+ */
+typedef struct {
+    infix_arg_location location;                 ///< The physical location (register/stack) of the argument.
+    const infix_type * type;                     ///< The `infix_type` of this argument.
+    const infix_direct_arg_handler_t * handler;  ///< Pointer to the user-provided handler struct for this argument.
+} infix_direct_arg_layout;
+
+/**
+ * @struct infix_direct_call_frame_layout
+ * @brief A complete layout blueprint for a direct marshalling forward call frame.
+ *
+ * This structure serves as the plan for the JIT engine, detailing every register,
+ * stack slot, and marshaller/write-back call needed to execute a direct FFI call.
+ */
+typedef struct {
+    size_t total_stack_alloc;        ///< Total bytes to allocate on the stack for arguments and ABI-required space.
+    size_t num_args;                 ///< The total number of arguments.
+    void * target_fn;                ///< The target C function address.
+    bool return_value_in_memory;     ///< `true` if the return value uses a hidden pointer argument.
+    infix_direct_arg_layout * args;  ///< An array of layout info for each argument.
+} infix_direct_call_frame_layout;
+
+/**
+ * @brief Defines the ABI-specific implementation interface for direct marshalling forward trampolines.
+ *
+ * This v-table defines the contract for generating a high-performance, direct-marshalling
+ * trampoline. It is parallel to `infix_forward_abi_spec`.
+ */
+typedef struct {
+    /** @brief Analyzes a function signature to create a complete direct call frame layout.     */
+    infix_status (*prepare_direct_forward_call_frame)(infix_arena_t * arena,
+                                                      infix_direct_call_frame_layout ** out_layout,
+                                                      infix_type * ret_type,
+                                                      infix_type ** arg_types,
+                                                      size_t num_args,
+                                                      infix_direct_arg_handler_t * handlers,
+                                                      void * target_fn);
+    /** @brief Generates the function prologue (stack setup, saving registers).   */
+    infix_status (*generate_direct_forward_prologue)(code_buffer * buf, infix_direct_call_frame_layout * layout);
+    /** @brief Generates code to call marshallers and move arguments into their native locations.     */
+    infix_status (*generate_direct_forward_argument_moves)(code_buffer * buf, infix_direct_call_frame_layout * layout);
+    /** @brief Generates the `call` instruction to the target function. */
+    infix_status (*generate_direct_forward_call_instruction)(code_buffer * buf,
+                                                             infix_direct_call_frame_layout * layout);
+    /** @brief Generates the function epilogue (handling return value, calling write-back handlers, returning).   */
+    infix_status (*generate_direct_forward_epilogue)(code_buffer * buf,
+                                                     infix_direct_call_frame_layout * layout,
+                                                     infix_type * ret_type);
+
+} infix_direct_forward_abi_spec;
+
 // Internal Function Prototypes (Shared across modules)
 /**
  * @brief Sets the thread-local error state with detailed information.
@@ -547,6 +606,11 @@ const infix_forward_abi_spec * get_current_forward_abi_spec(void);
  * @return A pointer to the active `infix_reverse_abi_spec`.
  */
 const infix_reverse_abi_spec * get_current_reverse_abi_spec(void);
+/**
+ * @brief Gets the ABI v-table for direct marshalling forward calls for the current platform.
+ * @return A pointer to the active `infix_direct_forward_abi_spec`.
+ */
+const infix_direct_forward_abi_spec * get_current_direct_forward_abi_spec(void);
 /**
  * @brief Initializes a code buffer for JIT code generation.
  * @details See `src/jit/trampoline.c`. Associates the buffer with a temporary
