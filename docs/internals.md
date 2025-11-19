@@ -119,6 +119,36 @@ graph TD
     end
 ```
 
+### The Direct Marshalling Pipeline
+
+The Direct Marshalling API adds a specialized pipeline designed to minimize overhead for language bindings. Unlike the standard forward call, which expects pre-marshalled C arguments, the Direct trampoline incorporates the unboxing logic directly into the machine code.
+
+1.  **MARSHALL & SAVE Phase:** For each argument, the JIT emits code to call the user-provided `scalar_marshaller` or `aggregate_marshaller`. The result (a raw C value) is saved into a temporary scratch area (a register or stack slot).
+2.  **PLACE Phase:** The JIT emits code to move the marshalled data from the scratch area into the specific registers or stack slots required by the ABI for the target function.
+3.  **CALL & EPILOGUE:** The target is called. On return, the JIT may call `writeback_handler` functions to propagate changes (e.g., for pointers) back to the language objects before returning.
+
+```graph TD
+    subgraph "Direct Call - Setup Phase"
+        A[User defines Handlers] --> B["infix_forward_create_direct(...)"];
+        B --> C{prepare_direct_forward_call_frame};
+        C --> D[Generate JIT Code];
+        D --> E[Return Trampoline Handle];
+    end
+
+    subgraph "Direct Call - Call Phase"
+        F["cif(ret_buf, objects[])"] --> G(Prologue: Alloc Stack & Scratch);
+        G --> H(Phase 1: Marshall & Save);
+        H --> I["Call User Marshallers<br>(Object -> Scratch/Temp)"];
+        I --> J(Phase 2: Place);
+        J --> K["Move Data<br>(Scratch/Temp -> ABI Regs/Stack)"];
+        K --> L["call target_func"];
+        L --> M(Phase 3: Writeback);
+        M --> N["Call User Writebacks<br>(C Data -> Object)"];
+        N --> O(Epilogue: Return);
+    end
+```
+
+This separation allows the JIT to handle complex ABIs (like splitting structs across registers) without burdening the user-provided marshallers with ABI details. The marshaller simply returns a value; the JIT decides where to put it.
 
 ---
 

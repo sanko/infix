@@ -753,6 +753,333 @@ static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
     emit_ret(buf);
     return INFIX_SUCCESS;
 }
+/**
+ * @internal
+ * @brief Stage 1 (Direct): Analyzes a signature and creates a call frame layout for Windows x64.
+ * @details This function defines the on-stack layout for a direct marshalling trampoline.
+ * It allocates space for outgoing stack arguments, a scratch buffer for each aggregate
+ * marshaller, and a temporary save slot for each scalar marshaller.
+ */
+static infix_status prepare_direct_forward_call_frame_win_x64(infix_arena_t * arena,
+                                                              infix_direct_call_frame_layout ** out_layout,
+                                                              infix_type * ret_type,
+                                                              infix_type ** arg_types,
+                                                              size_t num_args,
+                                                              infix_direct_arg_handler_t * handlers,
+                                                              void * target_fn) {
+    infix_direct_call_frame_layout * layout =
+        infix_arena_calloc(arena, 1, sizeof(infix_direct_call_frame_layout), _Alignof(infix_direct_call_frame_layout));
+    if (!layout)
+        return INFIX_ERROR_ALLOCATION_FAILED;
+
+    layout->args =
+        infix_arena_calloc(arena, num_args, sizeof(infix_direct_arg_layout), _Alignof(infix_direct_arg_layout));
+    if (!layout->args && num_args > 0)
+        return INFIX_ERROR_ALLOCATION_FAILED;
+
+    layout->num_args = num_args;
+    layout->target_fn = target_fn;
+    layout->return_value_in_memory = return_value_is_by_reference(ret_type);
+
+    size_t arg_position = 0;
+    if (layout->return_value_in_memory)
+        arg_position++;
+
+    size_t outgoing_stack_offset = SHADOW_SPACE;
+    size_t temp_space_offset = 0;
+
+    // First pass: Classify ABI locations and calculate required temporary space.
+    for (size_t i = 0; i < num_args; ++i) {
+        const infix_type * type = arg_types[i];
+        layout->args[i].type = type;
+        layout->args[i].handler = &handlers[i];
+
+        // Allocate temporary space for this argument's marshalled result.
+        if (handlers[i].aggregate_marshaller) {
+            temp_space_offset = _infix_align_up(temp_space_offset, type->alignment);
+            layout->args[i].location.num_regs = (uint32_t)temp_space_offset;  // Store temp offset in num_regs
+            temp_space_offset += type->size;
+        }
+        else if (handlers[i].scalar_marshaller) {
+            temp_space_offset = _infix_align_up(temp_space_offset, 16);
+            layout->args[i].location.num_regs = (uint32_t)temp_space_offset;  // Temp save slot for scalar
+            temp_space_offset += 16;
+        }
+        else if (handlers[i].writeback_handler) {  // For out-only parameters
+            const infix_type * pointee =
+                (type->category == INFIX_TYPE_POINTER) ? type->meta.pointer_info.pointee_type : type;
+            temp_space_offset = _infix_align_up(temp_space_offset, pointee->alignment);
+            layout->args[i].location.num_regs = (uint32_t)temp_space_offset;
+            temp_space_offset += pointee->size;
+        }
+
+        // Determine final ABI location.
+        bool is_fp = is_float(type) || is_double(type);
+        bool by_ref =
+            is_passed_by_reference(type) || (type->category == INFIX_TYPE_POINTER && handlers[i].aggregate_marshaller);
+
+        if (arg_position < 4) {
+            if (is_fp && !by_ref) {
+                layout->args[i].location.type = ARG_LOCATION_XMM;
+                layout->args[i].location.reg_index = (uint8_t)arg_position++;
+            }
+            else {
+                layout->args[i].location.type = ARG_LOCATION_GPR;
+                layout->args[i].location.reg_index = (uint8_t)arg_position++;
+            }
+        }
+        else
+            layout->args[i].location.type = ARG_LOCATION_STACK;
+    }
+
+    // Second pass: Calculate final outgoing stack offsets and total allocation size.
+    for (size_t i = 0; i < num_args; ++i) {
+        if (layout->args[i].location.type == ARG_LOCATION_STACK) {
+            const infix_type * type = arg_types[i];
+            bool by_ref = is_passed_by_reference(type) ||
+                (type->category == INFIX_TYPE_POINTER && handlers[i].aggregate_marshaller);
+            // Overwrite the temp offset with the final outgoing offset.
+            layout->args[i].location.stack_offset = (uint32_t)outgoing_stack_offset;
+            size_t size_on_stack = by_ref ? 8 : ((type->size + 7) & ~7);
+            outgoing_stack_offset += size_on_stack;
+        }
+    }
+
+    size_t total_stack_arg_size = outgoing_stack_offset - SHADOW_SPACE;
+    size_t total_needed = total_stack_arg_size + temp_space_offset + SHADOW_SPACE;
+    layout->total_stack_alloc = (total_needed + 15) & ~15;
+
+    // Final pass: Adjust temp/scratch offsets to be relative to RSP after allocation.
+    size_t temp_base_offset = total_stack_arg_size + SHADOW_SPACE;
+    for (size_t i = 0; i < num_args; ++i) {
+        if (layout->args[i].handler->aggregate_marshaller || layout->args[i].handler->scalar_marshaller ||
+            layout->args[i].handler->writeback_handler) {
+            layout->args[i].location.num_regs += temp_base_offset;
+        }
+    }
+
+    if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
+        *out_layout = nullptr;
+        return INFIX_ERROR_LAYOUT_FAILED;
+    }
+    *out_layout = layout;
+    return INFIX_SUCCESS;
+}
+/**
+ * @internal
+ * @brief Stage 2 (Direct): Generates the function prologue.
+ * @details Establishes a stack frame, saves callee-saved registers (R12-R15) for context,
+ * moves the direct CIF arguments (`ret_ptr`, `lang_args`) into them, and allocates all
+ * stack space required for outgoing arguments, shadow space, and local marshalling buffers.
+ */
+static infix_status generate_direct_forward_prologue_win_x64(code_buffer * buf,
+                                                             infix_direct_call_frame_layout * layout) {
+    emit_push_reg(buf, RBP_REG);
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
+    // Save callee-saved registers we will use for our context.
+    emit_push_reg(buf, R12_REG);  // Will hold scratch data
+    emit_push_reg(buf, R13_REG);  // Will hold return value pointer
+    emit_push_reg(buf, R14_REG);  // Will hold language objects array pointer
+    emit_push_reg(buf, R15_REG);  // Will hold target function address
+
+    // The direct CIF is called with (ret_ptr, lang_args) in RCX, RDX.
+    emit_mov_reg_reg(buf, R13_REG, RCX_REG);  // r13 = ret_ptr
+    emit_mov_reg_reg(buf, R14_REG, RDX_REG);  // r14 = lang_objects array
+
+    // Allocate all stack space.
+    if (layout->total_stack_alloc > 0)
+        emit_sub_reg_imm32(buf, RSP_REG, (int32_t)layout->total_stack_alloc);
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
+ * @brief Stage 3 (Direct): Generates code to call marshallers and move arguments for Windows x64.
+ * @details This corrected implementation uses a two-phase approach for each argument:
+ * 1. MARSHALL: Call the user's handler to get the C value into a temporary location
+ *    (RAX/XMM0 for scalars, a local stack buffer for aggregates).
+ * 2. PLACE: Move the value from its temporary location to its final destination
+ *    (the register or stack slot required by the ABI for the target C call).
+ * This separation prevents register clobbering and ensures correctness.
+ */
+static infix_status generate_direct_forward_argument_moves_win_x64(code_buffer * buf,
+                                                                   infix_direct_call_frame_layout * layout) {
+    // PHASE 1: MARSHALL & SAVE
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg_layout = &layout->args[i];
+        int32_t temp_offset = (int32_t)arg_layout->location.num_regs;
+
+        if (arg_layout->handler->scalar_marshaller || arg_layout->handler->aggregate_marshaller) {
+
+            // Arg 1 (RCX) for marshaller: the language object pointer.
+            emit_mov_reg_mem(buf, RCX_REG, R14_REG, i * sizeof(void *));
+
+            if (arg_layout->handler->scalar_marshaller) {
+                emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
+                emit_call_reg(buf, R10_REG);  // Result is now in RAX or XMM0.
+
+                emit_mov_mem_reg(buf, RSP_REG, temp_offset, RAX_REG);
+            }
+            else if (arg_layout->handler->aggregate_marshaller) {
+                // Arg 2 (RDX): Pointer to our stack buffer for the aggregate.
+                emit_lea_reg_mem(buf, RDX_REG, RSP_REG, temp_offset);
+
+                // Arg 3 (R8): The infix_type*.
+                emit_mov_reg_imm64(buf, R8_REG, (uint64_t)arg_layout->type);
+                emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
+                emit_call_reg(buf, R10_REG);
+            }
+        }
+    }
+
+    // PHASE 2: PLACE
+    if (layout->return_value_in_memory)
+        emit_mov_reg_reg(buf, RCX_REG, R13_REG);
+
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg_layout = &layout->args[i];
+        int32_t temp_offset = (int32_t)arg_layout->location.num_regs;
+
+        bool is_ptr_to_marshalled_agg =
+            (arg_layout->type->category == INFIX_TYPE_POINTER && arg_layout->handler->aggregate_marshaller != NULL);
+        bool is_out_param =
+            (arg_layout->type->category == INFIX_TYPE_POINTER && arg_layout->handler->writeback_handler != NULL &&
+             arg_layout->handler->scalar_marshaller == NULL && arg_layout->handler->aggregate_marshaller == NULL);
+
+        switch (arg_layout->location.type) {
+        case ARG_LOCATION_GPR:
+            if (is_passed_by_reference(arg_layout->type) || is_ptr_to_marshalled_agg || is_out_param)
+                emit_lea_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            else
+                emit_mov_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            break;
+
+        case ARG_LOCATION_XMM:
+            {
+                // Load the marshalled double-precision value from our temp slot into a scratch register (XMM15).
+                emit_movsd_xmm_mem(buf, XMM15_REG, RSP_REG, temp_offset);
+
+                // If the target C type is actually a float, we must convert the double to a float.
+                if (is_float(arg_layout->type))
+                    // `cvtsd2ss xmm15, xmm15` : Convert Scalar Double to Scalar Single in place.
+                    emit_cvtsd2ss_xmm_xmm(buf, XMM15_REG, XMM15_REG);
+
+                // Now move the correctly-sized value from XMM15 to the final destination register.
+                emit_movaps_xmm_xmm(buf, XMM_ARGS[arg_layout->location.reg_index], XMM15_REG);
+            }
+            break;
+
+        case ARG_LOCATION_STACK:
+            {
+                int32_t out_stack_offset = (int32_t)arg_layout->location.stack_offset;
+                //~ if (is_passed_by_reference(arg_layout->type) || is_ptr_to_marshalled_agg || is_out_param) {
+                //~ emit_lea_reg_mem(buf, RAX_REG, RSP_REG, temp_offset);
+                //~ emit_mov_mem_reg(buf, RSP_REG, out_stack_offset, RAX_REG);
+                //~ }
+                //~ else if (is_float(arg_layout->type) || is_double(arg_layout->type)) {
+                //~ // Per Win x64 ABI, floats/doubles on stack occupy 8 bytes.
+                //~ // Use a non-argument register to avoid clobbering.
+                //~ emit_movsd_xmm_mem(buf, XMM8_REG, RSP_REG, temp_offset);
+                //~ emit_movsd_mem_xmm(buf, RSP_REG, out_stack_offset, XMM8_REG);
+                //~ }
+                //~ else {
+                //~ emit_mov_reg_mem(buf, RAX_REG, RSP_REG, temp_offset);
+                //~ emit_mov_mem_reg(buf, RSP_REG, out_stack_offset, RAX_REG);
+                //~ }
+                if (is_float(arg_layout->type)) {
+                    // Load the double from the temp slot, convert it, then store the single.
+                    emit_movsd_xmm_mem(buf, XMM15_REG, RSP_REG, temp_offset);
+                    emit_cvtsd2ss_xmm_xmm(buf, XMM15_REG, XMM15_REG);
+                    emit_movss_mem_xmm(buf, RSP_REG, out_stack_offset, XMM15_REG);
+                }
+                else if (!arg_layout->handler->scalar_marshaller && !arg_layout->handler->aggregate_marshaller) {
+                    emit_lea_reg_mem(buf, RAX_REG, RSP_REG, temp_offset);
+                    emit_mov_mem_reg(buf, RSP_REG, out_stack_offset, RAX_REG);
+                }
+                else {
+                    // All other stack arguments are passed by value (even large ones, by copying).
+                    for (size_t offset = 0; offset < arg_layout->type->size; offset += 8) {
+                        emit_mov_reg_mem(buf, RAX_REG, RSP_REG, temp_offset + offset);
+                        emit_mov_mem_reg(buf, RSP_REG, out_stack_offset + offset, RAX_REG);
+                    }
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    return INFIX_SUCCESS;
+}
+/**
+ * @internal
+ * @brief Stage 3.5 (Direct): Generates the call instruction.
+ */
+static infix_status generate_direct_forward_call_instruction_win_x64(code_buffer * buf,
+                                                                     infix_direct_call_frame_layout * layout) {
+    emit_mov_reg_imm64(buf, R15_REG, (uint64_t)layout->target_fn);  // Use R15 for target function
+    emit_test_reg_reg(buf, R15_REG, R15_REG);
+    emit_jnz_short(buf, 2);
+    emit_ud2(buf);
+    emit_call_reg(buf, R15_REG);
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
+ * @brief Stage 4 (Direct): Generates the epilogue, including write-back calls.
+ */
+static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
+                                                             infix_direct_call_frame_layout * layout,
+                                                             infix_type * ret_type) {
+    // 1. Handle C function's return value.
+    if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
+        if (is_float(ret_type))
+            emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+        else if (is_double(ret_type))
+            emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+        else
+            emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);
+    }
+
+    // 2. Call Write-Back Handlers
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg_layout = &layout->args[i];
+        if (arg_layout->handler->writeback_handler) {
+            emit_sub_reg_imm32(buf, RSP_REG, 48);
+            emit_mov_mem_reg(buf, RSP_REG, 32, RAX_REG);
+            emit_movsd_mem_xmm(buf, RSP_REG, 40, XMM0_REG);
+
+            emit_mov_reg_mem(buf, RCX_REG, R14_REG, i * sizeof(void *));
+
+            int32_t temp_offset = (int32_t)arg_layout->location.num_regs;
+            emit_lea_reg_mem(buf, RDX_REG, RSP_REG, temp_offset + 48);
+
+            emit_mov_reg_imm64(buf, R8_REG, (uint64_t)arg_layout->type);
+
+            emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->writeback_handler);
+            emit_call_reg(buf, R10_REG);
+
+            emit_mov_reg_mem(buf, RAX_REG, RSP_REG, 32);
+            emit_movsd_xmm_mem(buf, XMM0_REG, RSP_REG, 40);
+            emit_add_reg_imm32(buf, RSP_REG, 48);
+        }
+    }
+
+    // 3. Standard Epilogue
+    if (layout->total_stack_alloc > 0)
+        emit_add_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);
+
+    emit_pop_reg(buf, R15_REG);
+    emit_pop_reg(buf, R14_REG);
+    emit_pop_reg(buf, R13_REG);
+    emit_pop_reg(buf, R12_REG);
+    emit_pop_reg(buf, RBP_REG);
+    emit_ret(buf);
+
+    return INFIX_SUCCESS;
+}
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

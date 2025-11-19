@@ -9,6 +9,7 @@ For practical, in-depth examples, please see the [Cookbook](cookbook.md).
 *   [1. High-Level Signature API](#1-high-level-signature-api)
     *   [Forward Trampolines (Calling C)](#forward-trampolines-calling-c)
     *   [Reverse Trampolines (Callbacks & Closures)](#reverse-trampolines-callbacks--closures)
+    *   [Direct Marshalling (Advanced Language Bindings)](#direct-marshalling-advanced-language-bindings)
 *   [2. Error Handling API](#2-error-handling-api)
     *   [The Error Handling Pattern](#the-error-handling-pattern)
     *   [Common Error Categories](#common-error-categories)
@@ -67,6 +68,30 @@ infix_status infix_forward_create_in_arena(
     void* target_function,
     infix_registry_t* registry
 );
+```
+
+### Direct Marshalling (Advanced Language Bindings)
+
+These functions allow creating high-performance trampolines that call user-defined marshallers directly, bypassing intermediate buffers.
+
+#### `infix_forward_create_direct`
+Creates a trampoline where the JIT code invokes user-provided callbacks to fetch argument data.
+
+```c
+infix_status infix_forward_create_direct(
+    infix_forward_t** out_trampoline,
+    const char* signature,
+    void* target_function,
+    infix_direct_arg_handler_t* handlers,
+    infix_registry_t* registry
+);
+```
+
+#### `infix_forward_get_direct_code`
+Retrieves the callable pointer for a direct trampoline. The signature of this function pointer is `void (*)(void* ret_buf, void** lang_objs)`.
+
+```c
+infix_direct_cif_func infix_forward_get_direct_code(infix_forward_t* trampoline);
 ```
 
 ### Reverse Trampolines (Callbacks & Closures)
@@ -165,6 +190,7 @@ Functions for inspecting the properties of trampolines and types at runtime.
 *   `infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t* trampoline)`: Gets the callable function pointer from an **unbound** forward trampoline.
 *   `void* infix_reverse_get_code(const infix_reverse_t* context)`: Gets the native C function pointer from a reverse trampoline.
 *   `void* infix_reverse_get_user_data(const infix_reverse_t* context)`: Gets the `user_data` pointer from a closure.
+*   `infix_direct_cif_func infix_forward_get_direct_code(infix_forward_t* trampoline)`: Gets the callable function pointer from a **direct marshalling** forward trampoline.
 
 ### Inspecting Trampoline Properties
 
@@ -268,3 +294,4 @@ APIs for the fast, region-based arena allocator used by the Manual API. The inte
 *   `void infix_arena_destroy(infix_arena_t* arena)`: Destroys an arena and frees all memory allocated from it.
 *   `void* infix_arena_alloc(infix_arena_t* arena, size_t size, size_t alignment)`: Allocates a block of memory from an arena.
 *   `void* infix_arena_calloc(infix_arena_t* arena, ...)`: Allocates and zero-initializes memory from an arena.
+

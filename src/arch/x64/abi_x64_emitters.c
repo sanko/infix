@@ -685,6 +685,73 @@ void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, 
     else if (mod == 0x80)
         emit_int32(buf, offset);
 }
+/**
+ * @internal
+ * @brief Emits `cvtsd2ss xmm1, xmm2/m64` to convert a double to a float.
+ * @details Opcode format: F2 0F 5A /r
+ */
+void emit_cvtsd2ss_xmm_xmm(code_buffer * buf, x64_xmm dest, x64_xmm src) {
+    emit_byte(buf, 0xF2);
+    uint8_t rex = 0;
+    if (dest >= XMM8_REG)
+        rex |= REX_R;
+    if (src >= XMM8_REG)
+        rex |= REX_B;
+    if (rex)
+        emit_byte(buf, 0x40 | rex);
+    EMIT_BYTES(buf, 0x0F, 0x5A);
+    emit_modrm(buf, 3, dest % 8, src % 8);
+}
+
+/**
+ * @internal
+ * @brief Emits `cvtsd2ss xmm, [base + offset]` to load a double, convert to float, and store in xmm.
+ * @details Opcode format: F2 0F 5A /r
+ */
+void emit_cvtsd2ss_xmm_mem(code_buffer * buf, x64_xmm dest, x64_gpr src_base, int32_t offset) {
+    emit_byte(buf, 0xF2);  // F2 prefix for SD (scalar double)
+    uint8_t rex = 0;
+    if (dest >= XMM8_REG)
+        rex |= REX_R;
+    if (src_base >= R8_REG)
+        rex |= REX_B;
+    if (rex)
+        emit_byte(buf, 0x40 | rex);
+
+    EMIT_BYTES(buf, 0x0F, 0x5A);  // Opcode for CVTSD2SS
+
+    uint8_t mod = (offset >= -128 && offset <= 127) ? 0x40 : 0x80;
+    if (offset == 0 && (src_base % 8) != RBP_REG)
+        mod = 0x00;
+
+    emit_modrm(buf, mod >> 6, dest % 8, src_base % 8);
+
+    if (src_base % 8 == RSP_REG)
+        emit_byte(buf, 0x24);  // SIB byte for RSP base
+
+    if (mod == 0x40)
+        emit_byte(buf, (uint8_t)offset);
+    else if (mod == 0x80)
+        emit_int32(buf, offset);
+}
+
+/**
+ * @internal
+ * @brief Emits `movaps xmm1, xmm2/m128` to move 128 bits between XMM registers.
+ * @details Opcode format: 0F 28 /r
+ */
+void emit_movaps_xmm_xmm(code_buffer * buf, x64_xmm dest, x64_xmm src) {
+    uint8_t rex = 0;
+    if (dest >= XMM8_REG)
+        rex |= REX_R;
+    if (src >= XMM8_REG)
+        rex |= REX_B;
+    if (rex)
+        emit_byte(buf, 0x40 | rex);
+    EMIT_BYTES(buf, 0x0F, 0x28);
+    emit_modrm(buf, 3, dest % 8, src % 8);
+}
+
 // GPR <-> XMM Move Emitters
 /**
  * @internal

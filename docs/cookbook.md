@@ -93,6 +93,7 @@ This guide provides practical, real-world examples to help you solve common FFI 
 * [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
    + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
    + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
+* [Chapter 12: High-Performance Language Bindings (Direct Marshalling)](#chapter-12-high-performance-language-bindings-direct-marshalling)
 
 ---
 
@@ -1810,4 +1811,44 @@ static PyObject* infix_python_call(PyObject* self, PyObject* py_args) {
 
     Py_RETURN_NONE;
 }
+```
+
+## Chapter 12: High-Performance Language Bindings (Direct Marshalling)
+
+For advanced language bindings, `infix` offers the **Direct Marshalling API** (`infix_forward_create_direct`). This system moves the unboxing logic (converting host language objects to C values) **inside** the JIT-compiled trampoline, eliminating the need for intermediate `void*` arrays and temporary buffers.
+
+The resulting trampoline is callable with a signature like `void (*)(void* ret, void** objects)`.
+
+```c
+// A marshaller for integer objects.
+infix_direct_value_t marshal_int(void* obj_ptr) {
+    MyLangObject* obj = (MyLangObject*)obj_ptr;
+    return (infix_direct_value_t){ .i64 = MyLang_AsInt(obj) };
+}
+
+// A marshaller for point structs.
+void marshal_point(void* obj_ptr, void* dest, const infix_type* type) {
+    MyLangObject* obj = (MyLangObject*)obj_ptr;
+    Point* p = (Point*)dest;
+    p->x = MyLang_GetFieldDouble(obj, "x");
+    p->y = MyLang_GetFieldDouble(obj, "y");
+}
+
+// 1. Setup handlers for each argument in the signature.
+infix_direct_arg_handler_t handlers[2] = {0};
+handlers[0].aggregate_marshaller = marshal_point; // for Point p
+handlers[1].scalar_marshaller = marshal_int;      // for int dx
+
+// 2. Create the direct trampoline.
+infix_forward_t* trampoline;
+infix_forward_create_direct(&trampoline,
+    "({double,double}, int) -> void",
+    (void*)move_point,
+    handlers,
+    NULL);
+
+// 3. Call it directly with an array of language objects.
+MyLangObject* args[] = { point_obj, int_obj };
+infix_direct_cif_func cif = infix_forward_get_direct_code(trampoline);
+cif(NULL, (void**)args);
 ```

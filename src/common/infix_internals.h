@@ -268,7 +268,7 @@ typedef struct {
     infix_arg_location_type type; /**< The classification of the argument's location. */
     uint8_t reg_index;            /**< The index of the primary register used. */
     uint8_t reg_index2;           /**< The index of the second register (for pairs). */
-    uint8_t num_regs;             /**< The number of consecutive registers consumed (e.g., for HFAs). */
+    uint32_t num_regs;            /**< Number of regs OR scratch buffer offset. */
     uint32_t stack_offset;        /**< The byte offset from the stack pointer. */
 } infix_arg_location;
 /**

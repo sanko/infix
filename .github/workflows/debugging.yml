@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        harness: [abi, types, trampoline, signature]
+        harness: [abi, types, trampoline, signature, direct]
         os: [ubuntu-latest, ubuntu-24.04-arm]
         abi: [INFIX_FORCE_ABI_WINDOWS_X64, INFIX_FORCE_ABI_SYSV_X64, INFIX_FORCE_ABI_AAPCS64]
     uses: ./.github/workflows/debugging-fuzz.yml
@@ -86,10 +86,11 @@ jobs:
 
       - name: Build All Fuzzer Harnesses
         run: |
-          perl build.pl fuzz:types --compiler=clang
+          perl build.pl fuzz:types      --compiler=clang
           perl build.pl fuzz:trampoline --compiler=clang
-          perl build.pl fuzz:signature --compiler=clang
-          perl build.pl fuzz:abi --compiler=clang
+          perl build.pl fuzz:signature  --compiler=clang
+          perl build.pl fuzz:abi        --compiler=clang
+          perl build.pl fuzz:direct     --compiler=clang
 
       - name: Run Regression Test on All Found Crashes
         id: regression-test
