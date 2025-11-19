@@ -24,6 +24,11 @@
 #include <stdio.h>
 #include <string.h>
 
+// Explicitly declare the internal error clearing function.
+// This is necessary because the fuzzer runs in a loop on the same thread,
+// and we must ensure no stale stack pointers remain in the TLS error context.
+extern void _infix_clear_error(void);
+
 // Dummy Handlers (Addresses needed for JIT generation)
 infix_direct_value_t dummy_scalar_marshaller(void * src) { return (infix_direct_value_t){0}; }
 
@@ -47,6 +52,11 @@ void dummy_target_func(void) {
 
 // Main Fuzz Logic
 static void FuzzTest(fuzzer_input in) {
+    // Clear thread-local error state.
+    // Previous iterations might have left g_infix_last_signature_context pointing to
+    // a stack buffer that is now invalid (use-after-return).
+    _infix_clear_error();
+
     infix_arena_t * arena = infix_arena_create(65536);
     if (!arena)
         return;
