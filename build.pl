@@ -16,7 +16,7 @@ $|++;
 
 # Argument Parsing
 my %opts;
-GetOptions( \%opts, 'cc|compiler=s', 'cflags=s', 'h|help', 'codecov=s', 'abi=s', 'verbose|v', 'examples' );
+GetOptions( \%opts, qw[cc|compiler=s cflags=s h|help codecov=s abi=s verbose|v examples] );
 show_help() if $opts{help};
 my $command    = lc( shift @ARGV || 'build' );
 my @test_names = @ARGV;
@@ -672,7 +672,20 @@ sub run_command (@cmd) {
     @cmd = grep { defined && length } @cmd;
     print "Executing: " . join( ' ', @cmd ) . "\n";
     my $exit_code = system @cmd;
-    my $status    = $exit_code >> 8;
+
+    # Check if command couldn't be executed
+    die "FATAL: Failed to execute command: $!\n" if $exit_code == -1;
+
+    # Detect signal death (e.g. segfault)
+    # On Unix, low 7 bits are signal. On Windows, $exit_code might be the actual code.
+    my $status = 0;
+    if ( ( $exit_code & 127 ) && !( $^O eq 'MSWin32' ) ) {
+        $status = ( $exit_code & 127 ) + 128;    # 128 + SIG
+        warn "WARNING: Command died with signal " . ( $exit_code & 127 ) . "\n";
+    }
+    else {
+        $status = $exit_code >> 8;
+    }
     if ( $status != 0 ) {
         my $is_allowed_to_fail = 0;
         $is_allowed_to_fail = 1 if $cmd[0] eq 'prove';
@@ -680,7 +693,9 @@ sub run_command (@cmd) {
         $is_allowed_to_fail = 1 if $cmd[0] =~ /gcov/ || $cmd[0] =~ /llvm-/;
         $is_allowed_to_fail = 1
             if $ENV{PROGRAMFILES} && $cmd[0] eq File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
-        if ( $is_coverage_build && $cmd[0] =~ m{[\\/]?t[\\/]} && -x $cmd[0] ) {
+
+        # Allow test executables to fail so the runner can count them
+        if ( $cmd[0] =~ m{[\\/]?t[\\/]} && ( $cmd[0] =~ /\.exe$/ || -x $cmd[0] ) ) {
             $is_allowed_to_fail = 1;
         }
         unless ($is_allowed_to_fail) {
