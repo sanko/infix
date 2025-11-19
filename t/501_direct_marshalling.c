@@ -26,6 +26,9 @@ typedef struct {
     Point end;
 } Line;
 typedef struct {
+#if defined(_MSC_VER)
+    char dummy[0];  // MSVC does not support empty structs {}.
+#endif
 } EmptyStruct;
 typedef int (*IntFunc)(int);
 
