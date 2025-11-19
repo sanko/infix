@@ -36,6 +36,9 @@
 #endif
 /** @brief The simple C function used as the target for all benchmarked calls. */
 int add_for_benchmark(int a, int b) { return a + b; }
+/** @brief A marshaller for the direct benchmark that reads an int from a pointer. */
+infix_direct_value_t benchmark_int_marshaller(void * source) { return (infix_direct_value_t){.i64 = *(int *)source}; }
+
 TEST {
     plan(1);
     const int BENCHMARK_ITERATIONS = 10000000;
@@ -94,10 +97,34 @@ TEST {
          bound_time,
          bound_ns,
          bound_ns - direct_ns_per_call);
-    infix_forward_destroy(unbound_t);
-    infix_forward_destroy(bound_t);
-    // 4. (Optional) dyncall Comparison
+
+    // 4. `infix` Direct Marshalling Trampoline
+    infix_forward_t * direct_t = nullptr;
+    infix_direct_arg_handler_t handlers[2] = {{.scalar_marshaller = benchmark_int_marshaller},
+                                              {.scalar_marshaller = benchmark_int_marshaller}};
+    if (infix_forward_create_direct(&direct_t, "(int, int) -> int", (void *)add_for_benchmark, handlers, nullptr) !=
+        INFIX_SUCCESS)
+        bail_out("Failed to create direct trampoline");
+
+    infix_direct_cif_func direct_cif = infix_forward_get_direct_code(direct_t);
+
+    start = clock();
+    for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
+        int a = i, b = i + 1, result;
+        void * args[] = {&a, &b};
+        direct_cif(&result, args);
+        accumulator += result;
+    }
+    end = clock();
+    double direct_marsh_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+    double direct_marsh_ns = (direct_marsh_time / BENCHMARK_ITERATIONS) * 1e9;
+    diag("infix (Direct):     %.4f s (%.2f ns/call) -> Overhead: ~%.2f ns",
+         direct_marsh_time,
+         direct_marsh_ns,
+         direct_marsh_ns - direct_ns_per_call);
+
 #ifdef DYNCALL_BENCHMARK
+    // 5. (Optional) dyncall Comparison#ifdef DYNCALL_BENCHMARK
     DCCallVM * vm = dcNewCallVM(4096);
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i) {
@@ -119,4 +146,8 @@ TEST {
     note("dyncall benchmarking was not enabled.");
 #endif
     pass("Benchmark completed (final accumulator value: %d)", accumulator);
+
+    infix_forward_destroy(unbound_t);
+    infix_forward_destroy(bound_t);
+    infix_forward_destroy(direct_t);
 }
