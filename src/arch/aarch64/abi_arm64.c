@@ -1134,35 +1134,13 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
     if (layout->return_value_in_memory)
         emit_arm64_mov_reg(buf, true, X8_REG, X20_REG);
 
-    // Scratch buffer base relative to the frame pointer (x29).
-    // Stack grows down. Local variables are positive offsets from SP.
-    // However, we calculated standard_layout based on SP=0.
-    // Our layout is [Standard Outgoing Args] [Scratch Space].
-    // But SP points to the bottom.
-    // Standard outgoing args are at [SP, #0] to [SP, #standard_size].
-    // Scratch space is at [SP, #standard_size] to [SP, #total].
-
-    // Re-calculate the 'standard' alloc size to locate the start of scratch space.
-    // We need to reverse-engineer the 'standard_layout->total_stack_alloc' since it isn't explicitly saved,
-    // but we can rely on the fact that scratch space was added on top.
-    // Actually, the safest way is to recalculate offsets exactly as prepare did.
-
-    size_t current_scratch_offset = 0;
-    // Calculate the base of scratch space relative to SP.
-    // We need to subtract scratch_needed from total to find where standard args end? No.
-    // Prepare calculated total = standard + scratch.
-    // So scratch starts at standard_total.
-
-    // We need to re-run the standard stack allocation calculation to find the split point.
-    // This is slightly inefficient but robust.
+    // Re-calculate standard stack size to find where scratch space begins
     size_t standard_alloc_size = 0;
     {
         size_t stack_offset = 0;
         for (size_t i = 0; i < layout->num_args; ++i) {
             if (layout->args[i].location.type == ARG_LOCATION_STACK) {
                 size_t s = layout->args[i].type->size;
-                // Apple variadic rule check would go here but assuming standard AAPCS64 for size calc
-                // If we just iterate the locations, we can find the max stack_offset + size.
                 size_t end = layout->args[i].location.stack_offset + ((s + 7) & ~7);
                 if (end > stack_offset)
                     stack_offset = end;
@@ -1170,96 +1148,200 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
         }
         standard_alloc_size = (stack_offset + 15) & ~15;
     }
-
     size_t scratch_base_from_sp = standard_alloc_size;
+    size_t current_scratch_offset = 0;
+
+    // PHASE 1: MARSHALL & SAVE TO STACK
 
     for (size_t i = 0; i < layout->num_args; ++i) {
         const infix_direct_arg_layout * arg_layout = &layout->args[i];
-
-        // Arg 1 (X0): language object pointer.
-        emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, i * sizeof(void *));
-
         int32_t my_scratch_offset = -1;
 
+        // Calculate offset for all types requiring scratch space
+        bool needs_scratch = false;
+        size_t size = 0;
+        size_t align = 0;
+
         if (arg_layout->handler->aggregate_marshaller) {
-            current_scratch_offset = _infix_align_up(current_scratch_offset, arg_layout->type->alignment);
-            my_scratch_offset = (int32_t)(scratch_base_from_sp + current_scratch_offset);
-            current_scratch_offset += arg_layout->type->size;
-
-            // Arg 2 (X1): Pointer to scratch buffer.
-            emit_arm64_add_imm(buf, true, false, X1_REG, SP_REG, my_scratch_offset);
-
-            // Arg 3 (X2): The infix_type*.
-            emit_arm64_load_u64_immediate(buf, X2_REG, (uint64_t)arg_layout->type);
-
-            emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
-            emit_arm64_blr_reg(buf, X10_REG);
+            size = arg_layout->type->size;
+            align = arg_layout->type->alignment;
+            needs_scratch = true;
         }
         else if (arg_layout->handler->scalar_marshaller) {
-            // Allocate scratch for scalar bounce
-            current_scratch_offset = _infix_align_up(current_scratch_offset, 16);
-            my_scratch_offset = (int32_t)(scratch_base_from_sp + current_scratch_offset);
-            current_scratch_offset += 16;
-
-            emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
-            emit_arm64_blr_reg(buf, X10_REG);  // Result is in X0.
-
-            // If we need to move to VPR, or if we just want to be consistent, save X0 to stack.
-            emit_arm64_str_imm(buf, true, X0_REG, SP_REG, my_scratch_offset);
+            size = 16;
+            align = 16;
+            needs_scratch = true;
         }
         else if (arg_layout->handler->writeback_handler) {
-            // Reserve space but don't use it yet
             const infix_type * pointee = (arg_layout->type->category == INFIX_TYPE_POINTER)
                 ? arg_layout->type->meta.pointer_info.pointee_type
                 : arg_layout->type;
-            current_scratch_offset = _infix_align_up(current_scratch_offset, pointee->alignment);
-            // my_scratch_offset would be used in epilogue
-            current_scratch_offset += pointee->size;
+            size = pointee->size;
+            align = pointee->alignment;
+            needs_scratch = true;
         }
 
-        // MOVE TO DESTINATION
+        if (needs_scratch) {
+            current_scratch_offset = _infix_align_up(current_scratch_offset, align);
+            my_scratch_offset = (int32_t)(scratch_base_from_sp + current_scratch_offset);
+            current_scratch_offset += size;
+        }
+
+        // If no marshaller to call, skip to next arg
+        if (!arg_layout->handler->aggregate_marshaller && !arg_layout->handler->scalar_marshaller)
+            continue;
+
+        // Arg 1 (X0): language object pointer. Loaded from X21 (args array).
+        emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, i * sizeof(void *));
 
         if (arg_layout->handler->aggregate_marshaller) {
-            // Data is at [SP, #my_scratch_offset]. Move to registers/stack args.
+            // Arg 2 (X1): Pointer to scratch buffer.
+            emit_arm64_add_imm(buf, true, false, X1_REG, SP_REG, my_scratch_offset);
+            // Arg 3 (X2): Type
+            emit_arm64_load_u64_immediate(buf, X2_REG, (uint64_t)arg_layout->type);
+            // Call
+            emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
+            emit_arm64_blr_reg(buf, X10_REG);
+            // Data is now in [SP + my_scratch_offset].
+        }
+        else if (arg_layout->handler->scalar_marshaller) {
+            // Call
+            emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
+            emit_arm64_blr_reg(buf, X10_REG);
+            // Result in X0. Save to scratch slot.
+            emit_arm64_str_imm(buf, true, X0_REG, SP_REG, my_scratch_offset);
+        }
+    }
+
+    // PHASE 2: PLACE (Stack -> Registers)
+
+    current_scratch_offset = 0;
+
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg_layout = &layout->args[i];
+        int32_t my_scratch_offset = -1;
+
+        // Recalculate offset (must match Phase 1)
+        bool needs_scratch = false;
+        size_t size = 0;
+        size_t align = 0;
+        if (arg_layout->handler->aggregate_marshaller) {
+            size = arg_layout->type->size;
+            align = arg_layout->type->alignment;
+            needs_scratch = true;
+        }
+        else if (arg_layout->handler->scalar_marshaller) {
+            size = 16;
+            align = 16;
+            needs_scratch = true;
+        }
+        else if (arg_layout->handler->writeback_handler) {
+            const infix_type * pointee = (arg_layout->type->category == INFIX_TYPE_POINTER)
+                ? arg_layout->type->meta.pointer_info.pointee_type
+                : arg_layout->type;
+            size = pointee->size;
+            align = pointee->alignment;
+            needs_scratch = true;
+        }
+
+        if (needs_scratch) {
+            current_scratch_offset = _infix_align_up(current_scratch_offset, align);
+            my_scratch_offset = (int32_t)(scratch_base_from_sp + current_scratch_offset);
+            current_scratch_offset += size;
+        }
+
+        // Logic for moving data from scratch to destination
+        if (arg_layout->handler->aggregate_marshaller ||
+            (arg_layout->handler->writeback_handler && !arg_layout->handler->scalar_marshaller)) {
+
+            bool pass_address = (arg_layout->type->category == INFIX_TYPE_POINTER);
+
             switch (arg_layout->location.type) {
             case ARG_LOCATION_GPR_REFERENCE:
-                // X1 already holds the address (calculated above). Move to dest reg.
+                // Large structs passed by ref -> pass address of scratch
                 emit_arm64_add_imm(
                     buf, true, false, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
                 break;
-            case ARG_LOCATION_GPR:  // Small struct in GPR
-                emit_arm64_ldr_imm(buf, true, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
+            case ARG_LOCATION_GPR:
+                if (pass_address)
+                    // Pointer arg (e.g. int*, struct*) -> pass address of scratch
+                    emit_arm64_add_imm(
+                        buf, true, false, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
+                else
+                    // Small struct by value -> load value from scratch
+                    emit_arm64_ldr_imm(buf, true, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
                 break;
             case ARG_LOCATION_GPR_PAIR:
-                emit_arm64_ldr_imm(buf, true, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
-                emit_arm64_ldr_imm(
-                    buf, true, GPR_ARGS[arg_layout->location.reg_index + 1], SP_REG, my_scratch_offset + 8);
+                if (pass_address)
+                    emit_arm64_add_imm(
+                        buf, true, false, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
+                else {
+                    emit_arm64_ldr_imm(buf, true, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
+                    emit_arm64_ldr_imm(
+                        buf, true, GPR_ARGS[arg_layout->location.reg_index + 1], SP_REG, my_scratch_offset + 8);
+                }
                 break;
-            case ARG_LOCATION_VPR:  // Small struct in VPR
-                // Load from stack scratch to VPR
+            case ARG_LOCATION_VPR:
+                // Structs by value in VPR
                 emit_arm64_ldr_vpr(buf,
                                    arg_layout->type->size > 4,
                                    VPR_ARGS[arg_layout->location.reg_index],
                                    SP_REG,
                                    my_scratch_offset);
                 break;
-                // ... (Handle HFA / Stack args similar to abi_arm64.c logic, reading from [SP, my_scratch_offset]) ...
-                // For brevity, assume basic structs for now.
+            case ARG_LOCATION_VPR_HFA:
+                {
+                    infix_type * base = NULL;
+                    is_hfa(arg_layout->type, &base);
+                    for (uint8_t j = 0; j < arg_layout->location.num_regs; ++j) {
+                        emit_arm64_ldr_vpr(buf,
+                                           is_double(base),
+                                           VPR_ARGS[arg_layout->location.reg_index + j],
+                                           SP_REG,
+                                           my_scratch_offset + j * base->size);
+                    }
+                }
+                break;
+            case ARG_LOCATION_STACK:
+                for (size_t offset = 0; offset < arg_layout->type->size; offset += 8) {
+                    emit_arm64_ldr_imm(buf, true, X9_REG, SP_REG, my_scratch_offset + offset);
+                    emit_arm64_str_imm(buf, true, X9_REG, SP_REG, arg_layout->location.stack_offset + offset);
+                }
+                break;
             default:
                 break;
             }
         }
         else if (arg_layout->handler->scalar_marshaller) {
-            // Value is in X0 (and saved at [SP, my_scratch_offset]).
+            // Value was returned in X0 and saved to scratch slot.
             if (arg_layout->location.type == ARG_LOCATION_GPR) {
-                emit_arm64_mov_reg(buf, true, GPR_ARGS[arg_layout->location.reg_index], X0_REG);
+                // Load from scratch to destination GPR
+                emit_arm64_ldr_imm(buf, true, GPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
             }
             else if (arg_layout->location.type == ARG_LOCATION_VPR) {
-                // Load from the bounce slot we just wrote.
-                if (is_double(arg_layout->type))
-                    emit_arm64_ldr_vpr(buf, true, VPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
-                else
-                    emit_arm64_ldr_vpr(buf, false, VPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
+                if (is_float(arg_layout->type)) {
+                    // 1. Load 64-bit double from scratch into D-reg (use dest reg as temp)
+                    arm64_vpr dest_v = VPR_ARGS[arg_layout->location.reg_index];
+                    emit_arm64_ldr_vpr(buf, true, dest_v, SP_REG, my_scratch_offset);
+
+                    // 2. FCVT S, D (Double to Single)
+                    // Opcode: 0x1e624000 | (Rn << 5) | Rd.
+                    // Rn=dest_v, Rd=dest_v (in place conversion)
+                    uint32_t fcvt = 0x1e624000 | ((dest_v & 0x1F) << 5) | (dest_v & 0x1F);
+                    emit_int32(buf, fcvt);
+                }
+                else {
+                    // Load directly (double)
+                    emit_arm64_ldr_vpr(buf,
+                                       is_double(arg_layout->type),
+                                       VPR_ARGS[arg_layout->location.reg_index],
+                                       SP_REG,
+                                       my_scratch_offset);
+                }
+            }
+            else if (arg_layout->location.type == ARG_LOCATION_STACK) {
+                emit_arm64_ldr_imm(buf, true, X9_REG, SP_REG, my_scratch_offset);
+                emit_arm64_str_imm(buf, true, X9_REG, SP_REG, arg_layout->location.stack_offset);
             }
         }
     }
@@ -1325,9 +1407,58 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
         }
     }
 
+    // Re-calculate standard stack size to find scratch base
+    size_t standard_alloc_size = 0;
+    {
+        size_t stack_offset = 0;
+        for (size_t i = 0; i < layout->num_args; ++i) {
+            if (layout->args[i].location.type == ARG_LOCATION_STACK) {
+                size_t s = layout->args[i].type->size;
+                size_t end = layout->args[i].location.stack_offset + ((s + 7) & ~7);
+                if (end > stack_offset)
+                    stack_offset = end;
+            }
+        }
+        standard_alloc_size = (stack_offset + 15) & ~15;
+    }
+
     // 2. Call Write-Back Handlers
+    size_t epilogue_scratch_offset = 0;  // Track offset locally to ensure consistency
+
     for (size_t i = 0; i < layout->num_args; ++i) {
         const infix_direct_arg_layout * arg_layout = &layout->args[i];
+
+        // Re-calculate offset for this arg (Must match Phase 1 & 2 logic exactly)
+        int32_t my_scratch_offset = -1;
+        bool needs_scratch = false;
+        size_t size = 0;
+        size_t align = 0;
+
+        if (arg_layout->handler->aggregate_marshaller) {
+            size = arg_layout->type->size;
+            align = arg_layout->type->alignment;
+            needs_scratch = true;
+        }
+        else if (arg_layout->handler->scalar_marshaller) {
+            size = 16;
+            align = 16;
+            needs_scratch = true;
+        }
+        else if (arg_layout->handler->writeback_handler) {
+            const infix_type * pointee = (arg_layout->type->category == INFIX_TYPE_POINTER)
+                ? arg_layout->type->meta.pointer_info.pointee_type
+                : arg_layout->type;
+            size = pointee->size;
+            align = pointee->alignment;
+            needs_scratch = true;
+        }
+
+        if (needs_scratch) {
+            epilogue_scratch_offset = _infix_align_up(epilogue_scratch_offset, align);
+            my_scratch_offset = (int32_t)(standard_alloc_size + epilogue_scratch_offset);
+            epilogue_scratch_offset += size;
+        }
+
         if (arg_layout->handler->writeback_handler) {
             // Save C return value (in X0/V0) before calling out.
             // Note: Technically should save more registers for HFA returns, but this matches basic needs.
@@ -1340,9 +1471,9 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
             emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, i * sizeof(void *));
 
             // Arg 2 (X1): Pointer to the C data.
-            int32_t scratch_offset = (int32_t)layout->total_stack_alloc - (int32_t)arg_layout->location.stack_offset;
-            // Adjust for the extra stack we just grabbed
-            emit_arm64_add_imm(buf, true, false, X1_REG, SP_REG, scratch_offset + 32);
+            // Address = Current SP (which is Original SP - 32) + 32 + offset
+            int32_t total_offset = 32 + my_scratch_offset;
+            emit_arm64_add_imm(buf, true, false, X1_REG, SP_REG, total_offset);
 
             // Arg 3 (X2): The infix_type*.
             emit_arm64_load_u64_immediate(buf, X2_REG, (uint64_t)arg_layout->type);
