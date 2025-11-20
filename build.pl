@@ -453,11 +453,7 @@ sub compile_and_run_tests {
         }
     }
     rmtree($obj_dir);    # Clean up temporary object files
-    my $use_prove = command_exists('prove --version') && !$opts{abi}
-
-        # && !$config->{is_windows}
-        # && !$config->{arch} eq 'arm64'
-        ;
+    my $use_prove = command_exists('prove --version') && !$opts{abi} && !( $config->{is_windows} && $config->{arch} eq 'arm64' );
     if ($use_prove) {
         print "\nRunning all tests with 'prove'\n";
         return run_command( 'prove', '--verbose', @test_executables );
