@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 We'll find out where I go from here.
 
 ### Added
-
+- **Direct Marshalling API:** A new, high-performance API (`infix_forward_create_direct`) for language bindings. This allows the JIT compiler to call user-provided marshaller functions directly, bypassing intermediate argument buffers and reducing overhead.
+  - Added `infix_forward_create_direct`, `infix_forward_get_direct_code`.
+  - Added `infix_direct_arg_handler_t` and `infix_direct_value_t`.
+  - See #26.
 - Shared Arena Optimization API: Introduced a new set of advanced API functions (`infix_registry_create_in_arena`, `infix_forward_create_in_arena`, etc.) that allow the type registry and trampolines to be created within a user-provided, shared memory arena. When objects share an arena, the library avoids deep-copying named type metadata and instead shares pointers to the canonical types, significantly reducing memory consumption and improving trampoline creation performance for applications with many FFI calls referencing a common set of types.
 - Semantic Name Preservation for All Types: The type system can now preserve a semantic name for *any* type defined in a registry, not just structs and unions. An alias like `@MyInt = int32;` or `@MyHandle = *void;` will now produce a type that is structurally identical to its definition but carries the semantic name for introspection.
 - New Introspection API: Added `infix_type_get_name(const infix_type* type)` to the public API. This function is now the canonical way to retrieve the semantic alias of any type object, if one exists.

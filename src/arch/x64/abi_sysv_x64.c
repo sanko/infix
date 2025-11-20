@@ -47,6 +47,7 @@
 #include "common/utility.h"
 #include <stdbool.h>
 #include <stdlib.h>
+
 /** An array of GPRs used for passing the first 6 integer/pointer arguments, in order. */
 static const x64_gpr GPR_ARGS[] = {RDI_REG, RSI_REG, RDX_REG, RCX_REG, R8_REG, R9_REG};
 /** An array of XMM registers used for passing the first 8 floating-point arguments, in order. */
@@ -69,7 +70,8 @@ typedef enum {
     SSE,       ///< This eightbyte should be passed in an SSE register (XMM).
     MEMORY     ///< The argument is too complex or large and must be passed on the stack.
 } arg_class_t;
-// Forward Declarations
+
+/** The v-table of System V x64 functions for generating forward trampolines. */
 static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_call_frame_layout ** out_layout,
                                                         infix_type * ret_type,
@@ -87,6 +89,14 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer *, in
 static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_call_frame_layout * layout,
                                                        infix_type * ret_type);
+const infix_forward_abi_spec g_sysv_x64_forward_spec = {
+    .prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
+    .generate_forward_prologue = generate_forward_prologue_sysv_x64,
+    .generate_forward_argument_moves = generate_forward_argument_moves_sysv_x64,
+    .generate_forward_call_instruction = generate_forward_call_instruction_sysv_x64,
+    .generate_forward_epilogue = generate_forward_epilogue_sysv_x64};
+
+/** The v-table of System V x64 functions for generating reverse trampolines. */
 static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
                                                         infix_reverse_call_frame_layout ** out_layout,
                                                         infix_reverse_t * context);
@@ -100,20 +110,37 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_reverse_call_frame_layout * layout,
                                                        infix_reverse_t * context);
-/** The v-table of System V x64 functions for generating forward trampolines. */
-const infix_forward_abi_spec g_sysv_x64_forward_spec = {
-    .prepare_forward_call_frame = prepare_forward_call_frame_sysv_x64,
-    .generate_forward_prologue = generate_forward_prologue_sysv_x64,
-    .generate_forward_argument_moves = generate_forward_argument_moves_sysv_x64,
-    .generate_forward_call_instruction = generate_forward_call_instruction_sysv_x64,
-    .generate_forward_epilogue = generate_forward_epilogue_sysv_x64};
-/** The v-table of System V x64 functions for generating reverse trampolines. */
 const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
     .prepare_reverse_call_frame = prepare_reverse_call_frame_sysv_x64,
     .generate_reverse_prologue = generate_reverse_prologue_sysv_x64,
     .generate_reverse_argument_marshalling = generate_reverse_argument_marshalling_sysv_x64,
     .generate_reverse_dispatcher_call = generate_reverse_dispatcher_call_sysv_x64,
     .generate_reverse_epilogue = generate_reverse_epilogue_sysv_x64};
+
+/** The v-table for the new Direct Marshalling ABI. */
+static infix_status prepare_direct_forward_call_frame_sysv_x64(infix_arena_t * arena,
+                                                               infix_direct_call_frame_layout ** out_layout,
+                                                               infix_type * ret_type,
+                                                               infix_type ** arg_types,
+                                                               size_t num_args,
+                                                               infix_direct_arg_handler_t * handlers,
+                                                               void * target_fn);
+static infix_status generate_direct_forward_prologue_sysv_x64(code_buffer * buf,
+                                                              infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_argument_moves_sysv_x64(code_buffer * buf,
+                                                                    infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_call_instruction_sysv_x64(code_buffer * buf,
+                                                                      infix_direct_call_frame_layout * layout);
+static infix_status generate_direct_forward_epilogue_sysv_x64(code_buffer * buf,
+                                                              infix_direct_call_frame_layout * layout,
+                                                              infix_type * ret_type);
+const infix_direct_forward_abi_spec g_sysv_x64_direct_forward_spec = {
+    .prepare_direct_forward_call_frame = prepare_direct_forward_call_frame_sysv_x64,
+    .generate_direct_forward_prologue = generate_direct_forward_prologue_sysv_x64,
+    .generate_direct_forward_argument_moves = generate_direct_forward_argument_moves_sysv_x64,
+    .generate_direct_forward_call_instruction = generate_direct_forward_call_instruction_sysv_x64,
+    .generate_direct_forward_epilogue = generate_direct_forward_epilogue_sysv_x64};
+
 /**
  * @internal
  * @brief Recursively classifies the eightbytes of an aggregate type.
@@ -130,7 +157,7 @@ const infix_reverse_abi_spec g_sysv_x64_reverse_spec = {
  * @return `true` if a condition forcing MEMORY classification is found, `false` otherwise.
  */
 static bool classify_recursive(
-    infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
+    const infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
     // A recursive call can be made with a NULL type (e.g., from a malformed array from fuzzer).
     if (type == nullptr)
         return false;  // Terminate recusion path.
@@ -271,7 +298,7 @@ static bool classify_recursive(
  * @param[out] classes An array of two `arg_class_t` to be filled.
  * @param[out] num_classes The number of valid classes (1 or 2).
  */
-static void classify_aggregate_sysv(infix_type * type, arg_class_t classes[2], size_t * num_classes) {
+static void classify_aggregate_sysv(const infix_type * type, arg_class_t classes[2], size_t * num_classes) {
     // Initialize to a clean state.
     classes[0] = NO_CLASS;
     classes[1] = NO_CLASS;
@@ -1098,5 +1125,366 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
     emit_mov_reg_reg(buf, RSP_REG, RBP_REG);
     emit_pop_reg(buf, RBP_REG);
     emit_ret(buf);
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
+ * @brief Stage 1 (Direct): Analyzes a signature and creates a call frame layout for System V.
+ * @details This is the direct-marshalling equivalent of the standard `prepare` function.
+ * It performs the same argument classification, but populates the new `infix_direct_call_frame_layout`
+ * struct, which also stores pointers to the argument types and user-provided handlers.
+ * It also calculates the necessary scratch space on the stack for marshalling.
+ */
+static infix_status prepare_direct_forward_call_frame_sysv_x64(infix_arena_t * arena,
+                                                               infix_direct_call_frame_layout ** out_layout,
+                                                               infix_type * ret_type,
+                                                               infix_type ** arg_types,
+                                                               size_t num_args,
+                                                               infix_direct_arg_handler_t * handlers,
+                                                               void * target_fn) {
+    // Use the standard classifier to determine the final ABI locations for all arguments.
+    infix_call_frame_layout * standard_layout = NULL;
+    infix_status status = prepare_forward_call_frame_sysv_x64(
+        arena, &standard_layout, ret_type, arg_types, num_args, num_args, target_fn);
+    if (status != INFIX_SUCCESS)
+        return status;
+
+    // Create the new direct layout and copy basic info.
+    infix_direct_call_frame_layout * layout =
+        infix_arena_calloc(arena, 1, sizeof(infix_direct_call_frame_layout), _Alignof(infix_direct_call_frame_layout));
+    if (!layout)
+        return INFIX_ERROR_ALLOCATION_FAILED;
+
+    layout->args =
+        infix_arena_calloc(arena, num_args, sizeof(infix_direct_arg_layout), _Alignof(infix_direct_arg_layout));
+    if (!layout->args && num_args > 0)
+        return INFIX_ERROR_ALLOCATION_FAILED;
+
+    layout->num_args = num_args;
+    layout->target_fn = target_fn;
+    layout->return_value_in_memory = standard_layout->return_value_in_memory;
+
+    // Calculate scratch space needed on the stack.
+    size_t scratch_space_needed = 0;
+    for (size_t i = 0; i < num_args; ++i) {
+        layout->args[i].location = standard_layout->arg_locations[i];
+        layout->args[i].type = arg_types[i];
+        layout->args[i].handler = &handlers[i];
+
+        if (handlers[i].aggregate_marshaller) {
+            scratch_space_needed = _infix_align_up(scratch_space_needed, arg_types[i]->alignment);
+            layout->args[i].location.num_regs = (uint32_t)scratch_space_needed;
+            scratch_space_needed += arg_types[i]->size;
+        }
+        else if (handlers[i].scalar_marshaller) {
+            scratch_space_needed = _infix_align_up(scratch_space_needed, 16);
+            layout->args[i].location.num_regs = (uint32_t)scratch_space_needed;
+            scratch_space_needed += 16;
+        }
+        else if (handlers[i].writeback_handler) {
+            const infix_type * pointee = (arg_types[i]->category == INFIX_TYPE_POINTER)
+                ? arg_types[i]->meta.pointer_info.pointee_type
+                : arg_types[i];
+            scratch_space_needed = _infix_align_up(scratch_space_needed, pointee->alignment);
+            layout->args[i].location.num_regs = (uint32_t)scratch_space_needed;
+            scratch_space_needed += pointee->size;
+        }
+    }
+
+    // Calculate total stack allocation and finalize offsets.
+    size_t total_stack_arg_size = standard_layout->total_stack_alloc;
+
+    // Use scratch_space_needed, not the uninitialized temp_space_offset variable.
+    size_t total_needed = total_stack_arg_size + scratch_space_needed;
+
+    layout->total_stack_alloc = (total_needed + 15) & ~15;
+
+    // Adjust temp offsets to be relative to RSP after allocation.
+    // Standard args are at the bottom (lower offsets), scratch space is above them.
+    size_t temp_base_offset = total_stack_arg_size;
+    for (size_t i = 0; i < num_args; ++i) {
+        if (layout->args[i].handler->aggregate_marshaller || layout->args[i].handler->scalar_marshaller ||
+            layout->args[i].handler->writeback_handler) {
+            layout->args[i].location.num_regs += (uint32_t)temp_base_offset;
+        }
+    }
+
+    if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
+        *out_layout = nullptr;
+        return INFIX_ERROR_LAYOUT_FAILED;
+    }
+    *out_layout = layout;
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
+ * @brief Stage 2 (Direct): Generates the direct marshalling prologue for System V.
+ * @details Establishes a stack frame, saves callee-saved registers for context,
+ * moves the direct CIF arguments (`ret_ptr`, `lang_args`) into them, and allocates all
+ * stack space required for outgoing arguments and local marshalling buffers.
+ */
+static infix_status generate_direct_forward_prologue_sysv_x64(code_buffer * buf,
+                                                              infix_direct_call_frame_layout * layout) {
+    emit_push_reg(buf, RBP_REG);
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
+
+    // Save callee-saved registers we will use for our context.
+    // We push 4 registers (32 bytes) to maintain 16-byte stack alignment
+    // (Previous stack state: [RetAddr]+[OldRBP] = 16 bytes. +32 bytes = 48 bytes. Aligned.)
+    emit_push_reg(buf, R12_REG);  // Will hold scratch data / target function
+    emit_push_reg(buf, R13_REG);  // Will hold return value pointer
+    emit_push_reg(buf, R14_REG);  // Will hold language objects array pointer
+    emit_push_reg(buf, R15_REG);  // Padding/Scratch (keeps stack aligned)
+
+    // The direct CIF is called with (ret_ptr, lang_args) in RDI, RSI.
+    emit_mov_reg_reg(buf, R13_REG, RDI_REG);  // r13 = ret_ptr
+    emit_mov_reg_reg(buf, R14_REG, RSI_REG);  // r14 = lang_objects array
+
+    // Allocate all stack space.
+    if (layout->total_stack_alloc > 0)
+        emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
+ * @brief Stage 3 (Direct): Generates code to call marshallers and move arguments for System V.
+ * @details This corrected implementation uses a two-phase approach:
+ * 1. MARSHALL & SAVE: Call each user handler and save the C value to a temporary
+ *    local stack buffer. This prevents register clobbering.
+ * 2. PLACE: Load the C value from its temporary location and move it to its final
+ *    destination (the register or stack slot required by the System V ABI).
+ */
+static infix_status generate_direct_forward_argument_moves_sysv_x64(code_buffer * buf,
+                                                                    infix_direct_call_frame_layout * layout) {
+    // PHASE 1: MARSHALL & SAVE
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg_layout = &layout->args[i];
+        int32_t temp_offset = (int32_t)arg_layout->location.num_regs;
+
+        if (!arg_layout->handler->scalar_marshaller && !arg_layout->handler->aggregate_marshaller)
+            continue;
+
+        // Arg 1 (RDI) for marshaller: the language object pointer.
+        emit_mov_reg_mem(buf, RDI_REG, R14_REG, i * sizeof(void *));
+
+        if (arg_layout->handler->scalar_marshaller) {
+            emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
+            emit_call_reg(buf, R10_REG);  // Result is now in RAX or XMM0.
+
+            // Store RAX to stack. PLACE phase will load to XMM if needed.
+            emit_mov_mem_reg(buf, RSP_REG, temp_offset, RAX_REG);
+        }
+        else if (arg_layout->handler->aggregate_marshaller) {
+            // Arg 2 (RSI): Pointer to our stack buffer for the aggregate.
+            emit_lea_reg_mem(buf, RSI_REG, RSP_REG, temp_offset);
+            // Arg 3 (RDX): The infix_type*.
+            emit_mov_reg_imm64(buf, RDX_REG, (uint64_t)arg_layout->type);
+            emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
+            emit_call_reg(buf, R10_REG);
+        }
+    }
+
+    // PHASE 2: PLACE
+    if (layout->return_value_in_memory)
+        emit_mov_reg_reg(buf, GPR_ARGS[0], R13_REG);
+
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg_layout = &layout->args[i];
+        int32_t temp_offset = (int32_t)arg_layout->location.num_regs;
+
+        bool is_ptr_to_marshalled_agg =
+            (arg_layout->type->category == INFIX_TYPE_POINTER && arg_layout->handler->aggregate_marshaller != NULL);
+        bool is_out_param =
+            (arg_layout->type->category == INFIX_TYPE_POINTER && arg_layout->handler->writeback_handler != NULL &&
+             arg_layout->handler->scalar_marshaller == NULL && arg_layout->handler->aggregate_marshaller == NULL);
+
+        switch (arg_layout->location.type) {
+        case ARG_LOCATION_GPR:
+            if (is_ptr_to_marshalled_agg || is_out_param)
+                emit_lea_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            else
+                emit_mov_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            break;
+        case ARG_LOCATION_XMM:
+            if (is_float(arg_layout->type))
+                emit_cvtsd2ss_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            else
+                emit_movsd_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            break;
+        case ARG_LOCATION_GPR_PAIR:
+            emit_mov_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            emit_mov_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index2], RSP_REG, temp_offset + 8);
+            break;
+        case ARG_LOCATION_SSE_SSE_PAIR:
+            emit_movsd_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            emit_movsd_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index2], RSP_REG, temp_offset + 8);
+            break;
+        case ARG_LOCATION_INTEGER_SSE_PAIR:
+            emit_mov_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            emit_movsd_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index2], RSP_REG, temp_offset + 8);
+            break;
+        case ARG_LOCATION_SSE_INTEGER_PAIR:
+            emit_movsd_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            emit_mov_reg_mem(buf, GPR_ARGS[arg_layout->location.reg_index2], RSP_REG, temp_offset + 8);
+            break;
+
+        case ARG_LOCATION_STACK:
+            for (size_t offset = 0; offset < arg_layout->type->size; offset += 8) {
+                emit_mov_reg_mem(buf, RAX_REG, RSP_REG, temp_offset + offset);
+                emit_mov_mem_reg(buf, RSP_REG, arg_layout->location.stack_offset + offset, RAX_REG);
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    return INFIX_SUCCESS;
+}
+/**
+ * @internal
+ * @brief Stage 3.5 (Direct): Generates the call instruction for System V.
+ */
+static infix_status generate_direct_forward_call_instruction_sysv_x64(code_buffer * buf,
+                                                                      infix_direct_call_frame_layout * layout) {
+    emit_mov_reg_imm64(buf, R12_REG, (uint64_t)layout->target_fn);
+    emit_test_reg_reg(buf, R12_REG, R12_REG);
+    emit_jnz_short(buf, 2);
+    emit_ud2(buf);
+    emit_call_reg(buf, R12_REG);
+    return INFIX_SUCCESS;
+}
+
+/**
+ * @internal
+ * @brief Stage 4 (Direct): Generates the function epilogue for System V.
+ */
+static infix_status generate_direct_forward_epilogue_sysv_x64(code_buffer * buf,
+                                                              infix_direct_call_frame_layout * layout,
+                                                              infix_type * ret_type) {
+    if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
+        // Use full ABI classification for return values
+        if (is_long_double(ret_type))
+            emit_fstpt_mem(buf, R13_REG, 0);
+        else {
+            arg_class_t classes[2];
+            size_t num_classes = 0;
+            bool is_aggregate = ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
+                ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX;
+
+            if (is_aggregate)
+                classify_aggregate_sysv(ret_type, classes, &num_classes);
+            else if (is_float(ret_type) || is_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR)) {
+                classes[0] = SSE;
+                num_classes = 1;
+            }
+            else {
+                classes[0] = INTEGER;
+                num_classes = 1;
+                if (ret_type->size > 8) {
+                    classes[1] = INTEGER;
+                    num_classes = 2;
+                }
+            }
+
+            if (num_classes == 1) {
+                if (classes[0] == SSE) {
+                    if (is_float(ret_type))
+                        emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+                    else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32)
+                        emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);
+                    else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 64)
+                        emit_vmovupd_mem_zmm(buf, R13_REG, 0, XMM0_REG);
+                    else if (ret_type->category == INFIX_TYPE_VECTOR)
+                        emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+                    else
+                        emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+                }
+                else {  // INTEGER
+                    switch (ret_type->size) {
+                    case 1:
+                        emit_mov_mem_reg8(buf, R13_REG, 0, RAX_REG);
+                        break;
+                    case 2:
+                        emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
+                        break;
+                    case 4:
+                        emit_mov_mem_reg32(buf, R13_REG, 0, RAX_REG);
+                        break;
+                    default:
+                        emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);
+                        break;
+                    }
+                }
+            }
+            else if (num_classes == 2) {
+                if (classes[0] == INTEGER && classes[1] == INTEGER) {
+                    emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);
+                    emit_mov_mem_reg(buf, R13_REG, 8, RDX_REG);
+                }
+                else if (classes[0] == SSE && classes[1] == SSE) {
+                    emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+                    emit_movsd_mem_xmm(buf, R13_REG, 8, XMM1_REG);
+                }
+                else if (classes[0] == INTEGER && classes[1] == SSE) {
+                    emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);
+                    emit_movsd_mem_xmm(buf, R13_REG, 8, XMM0_REG);
+                }
+                else {  // SSE, INTEGER
+                    emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+                    emit_mov_mem_reg(buf, R13_REG, 8, RAX_REG);
+                }
+            }
+        }
+    }
+
+    // Call Write-Back Handlers
+    for (size_t i = 0; i < layout->num_args; ++i) {
+        const infix_direct_arg_layout * arg = &layout->args[i];
+        if (arg->handler->writeback_handler) {
+            // Save return registers before call
+            emit_push_reg(buf, RAX_REG);           // +8
+            emit_push_reg(buf, RDX_REG);           // +8
+            emit_sub_reg_imm32(buf, RSP_REG, 32);  // +32 (space for XMM0/XMM1)
+            // Total stack shift: +48 bytes
+
+            emit_movsd_mem_xmm(buf, RSP_REG, 0, XMM0_REG);
+
+            // Set up args for write-back call
+            emit_mov_reg_mem(buf, RDI_REG, R14_REG, i * sizeof(void *));
+
+            // Arg 2 (RSI): Pointer to the C data (in our scratch space)
+            // Offsets are relative to the *original* RSP of the body.
+            // Since we just pushed/subbed 48 bytes, we must add 48 to reach the original frame.
+            int32_t temp_offset = (int32_t)arg->location.num_regs;
+            emit_lea_reg_mem(buf, RSI_REG, RSP_REG, temp_offset + 48);
+
+            emit_mov_reg_imm64(buf, RDX_REG, (uint64_t)arg->type);
+
+            emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg->handler->writeback_handler);
+            emit_call_reg(buf, R10_REG);
+
+            // Restore return registers
+            emit_movsd_xmm_mem(buf, XMM0_REG, RSP_REG, 0);
+            emit_add_reg_imm32(buf, RSP_REG, 32);
+            emit_pop_reg(buf, RDX_REG);
+            emit_pop_reg(buf, RAX_REG);
+        }
+    }
+
+    // Standard Epilogue
+    if (layout->total_stack_alloc > 0)
+        emit_add_reg_imm32(buf, RSP_REG, (int32_t)layout->total_stack_alloc);
+
+    emit_pop_reg(buf, R15_REG);
+    emit_pop_reg(buf, R14_REG);
+    emit_pop_reg(buf, R13_REG);
+    emit_pop_reg(buf, R12_REG);
+
+    emit_pop_reg(buf, RBP_REG);
+    emit_ret(buf);
+
     return INFIX_SUCCESS;
 }

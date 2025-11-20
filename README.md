@@ -10,6 +10,7 @@ It's designed to be the simplest way to add a dynamic Foreign Function Interface
 
 *   **Human-Readable Signatures:** Describe complex C functions with an intuitive string format (e.g., `"({double, double}, int) -> *char"`).
 *   **Forward & Reverse Calls:** Call C functions ("forward") and create C function pointers that call back into your code ("reverse").
+*   **Direct Marshalling API:** Build high-performance language bindings where the JIT compiler calls your object-unboxing functions directly, bypassing intermediate buffers.
 *   **Simple Integration:** Add a single C file and a header directory to your project to get started. No complex dependencies.
 *   **Type Registry:** Define, reuse, and link complex, recursive, and mutually-dependent structs by name.
 *   **Security-First Design:** Hardened against vulnerabilities with Write XOR Execute (W^X) memory, guard pages, and fuzz testing.
@@ -92,6 +93,38 @@ void run_qsort_example() {
     // `numbers` is now sorted: [1, 2, 3, 4, 5]
 
     infix_reverse_destroy(context);
+}
+```
+
+## High-Performance Language Bindings
+
+If you are writing a binding for a language like Python, Perl, or Lua, `infix` offers a specialized direct marshalling API. This allows the JIT compiler to call your object unboxing functions ("marshallers") directly, eliminating the need to allocate intermediate C arrays.
+
+```c
+// A mock object from a scripting language.
+typedef struct { int type; union { int i; double d; } val; } PyObject;
+
+// A "Scalar Marshaller" converts a language object to a raw C value.
+infix_direct_value_t marshal_int(void* obj_ptr) {
+    PyObject* obj = (PyObject*)obj_ptr;
+    return (infix_direct_value_t){ .i64 = obj->val.i };
+}
+
+void run_binding_example(void* target_func) {
+    // 1. Define handlers for the arguments.
+    infix_direct_arg_handler_t handlers[2] = {0};
+    handlers[0].scalar_marshaller = marshal_int;
+    handlers[1].scalar_marshaller = marshal_int;
+
+    // 2. Create an optimized trampoline.
+    infix_forward_t* trampoline;
+    infix_forward_create_direct(&trampoline, "(int, int) -> void", target_func, handlers, NULL);
+
+    // 3. Call it directly with an array of language objects.
+    PyObject* args[] = { py_obj1, py_obj2 };
+
+    // The JIT code calls `marshal_int` for each arg, then calls the target.
+    infix_forward_get_direct_code(trampoline)(NULL, (void**)args);
 }
 ```
 

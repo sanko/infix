@@ -158,7 +158,7 @@ if get_config("examples") then
             add_files(example_file)
             add_deps("infix")
             set_targetdir("bin")
-            add_includedirs("eg/cookbook/lib") -- Add lib dir for all examples
+            add_includedirs("eg/cookbook/libs") -- Add lib dir for all examples
             if target_name == "03_opaque_pointers" then
                 add_files("eg/cookbook/lib/handle_lib.c")
             end

@@ -62,12 +62,15 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
 #if defined(INFIX_ABI_WINDOWS_X64)
 extern const infix_forward_abi_spec g_win_x64_forward_spec;
 extern const infix_reverse_abi_spec g_win_x64_reverse_spec;
+extern const infix_direct_forward_abi_spec g_win_x64_direct_forward_spec;
 #elif defined(INFIX_ABI_SYSV_X64)
 extern const infix_forward_abi_spec g_sysv_x64_forward_spec;
 extern const infix_reverse_abi_spec g_sysv_x64_reverse_spec;
+extern const infix_direct_forward_abi_spec g_sysv_x64_direct_forward_spec;
 #elif defined(INFIX_ABI_AAPCS64)
 extern const infix_forward_abi_spec g_arm64_forward_spec;
 extern const infix_reverse_abi_spec g_arm64_reverse_spec;
+extern const infix_direct_forward_abi_spec g_arm64_direct_forward_spec;
 #endif
 /**
  * @internal
@@ -102,6 +105,22 @@ const infix_reverse_abi_spec * get_current_reverse_abi_spec() {
     return &g_sysv_x64_reverse_spec;
 #elif defined(INFIX_ABI_AAPCS64)
     return &g_arm64_reverse_spec;
+#else
+    return nullptr;
+#endif
+}
+/**
+ * @internal
+ * @brief Retrieves a pointer to the ABI v-table for direct marshalling forward calls.
+ * @return A pointer to the active `infix_direct_forward_abi_spec`, or `nullptr`.
+ */
+const infix_direct_forward_abi_spec * get_current_direct_forward_abi_spec() {
+#if defined(INFIX_ABI_WINDOWS_X64)
+    return &g_win_x64_direct_forward_spec;
+#elif defined(INFIX_ABI_SYSV_X64)
+    return &g_sysv_x64_direct_forward_spec;
+#elif defined(INFIX_ABI_AAPCS64)
+    return &g_arm64_direct_forward_spec;
 #else
     return nullptr;
 #endif
@@ -252,14 +271,19 @@ static size_t _estimate_metadata_size(infix_arena_t * temp_arena,
 }
 // Forward Trampoline API Implementation
 c23_nodiscard infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t * trampoline) {
-    if (trampoline == nullptr || trampoline->target_fn != nullptr)
+    if (trampoline == nullptr || trampoline->is_direct_trampoline || trampoline->target_fn != nullptr)
         return nullptr;
     return (infix_unbound_cif_func)trampoline->exec.rx_ptr;
 }
 c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t * trampoline) {
-    if (trampoline == nullptr || trampoline->target_fn == nullptr)
+    if (trampoline == nullptr || trampoline->is_direct_trampoline || trampoline->target_fn == nullptr)
         return nullptr;
     return (infix_cif_func)trampoline->exec.rx_ptr;
+}
+c23_nodiscard infix_direct_cif_func infix_forward_get_direct_code(infix_forward_t * trampoline) {
+    if (trampoline == nullptr || !trampoline->is_direct_trampoline)
+        return nullptr;
+    return (infix_direct_cif_func)trampoline->exec.rx_ptr;
 }
 /**
  * @internal
@@ -275,13 +299,13 @@ c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t * trampoline
  *    making the handle completely self-contained and independent of its source types.
  * 7. Allocates executable memory, copies the generated code, and makes it executable.
  *
- * @param out_trampoline Receives the created trampoline handle.
- * @param target_arena The arena to eventually store the trampoline in.
- * @param return_type The fully resolved return type.
- * @param arg_types An array of fully resolved argument types.
- * @param num_args Total number of arguments.
- * @param num_fixed_args Number of fixed (non-variadic) arguments.
- * @param target_fn The target function pointer, or `nullptr` for an unbound trampoline.
+ * @param[out] out_trampoline Receives the created trampoline handle.
+ * @param[in] target_arena The arena to eventually store the trampoline in.
+ * @param[in] return_type The fully resolved return type.
+ * @param[in] arg_types An array of fully resolved argument types.
+ * @param[in] num_args Total number of arguments.
+ * @param[in] num_fixed_args Number of fixed (non-variadic) arguments.
+ * @param[in] target_fn The target function pointer, or `nullptr` for an unbound trampoline.
  * @return `INFIX_SUCCESS` on success.
  */
 c23_nodiscard infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline,
@@ -403,6 +427,144 @@ cleanup:
     if (status != INFIX_SUCCESS && handle != nullptr)
         infix_forward_destroy(handle);
     // The temporary arena is always destroyed.
+    infix_arena_destroy(temp_arena);
+    return status;
+}
+/**
+ * @internal
+ * @brief The core implementation for creating a direct marshalling forward trampoline.
+ *
+ * This function orchestrates the JIT compilation pipeline for the direct marshalling
+ * feature. It is the internal counterpart to the public `infix_forward_create_direct`
+ * function and is called after the signature string has been parsed into a type graph.
+ *
+ * The pipeline is as follows:
+ * 1.  Selects the appropriate `infix_direct_forward_abi_spec` v-table for the target platform.
+ * 2.  Invokes `prepare_direct_forward_call_frame` to analyze the signature and handlers,
+ *     producing a complete layout blueprint.
+ * 3.  Calls the `generate_*` functions from the v-table in sequence. This emits machine code
+ *     that includes direct calls to the user-provided marshaller and write-back functions.
+ * 4.  Finalizes the `infix_forward_t` handle, marking it as a `is_direct_trampoline`.
+ * 5.  Allocates executable memory, copies the generated code, and makes it executable.
+ *
+ * @param[out] out_trampoline Receives the created trampoline handle.
+ * @param[in] return_type The fully resolved return type.
+ * @param[in] arg_types An array of fully resolved argument types.
+ * @param[in] num_args Total number of arguments.
+ * @param[in] target_fn The target C function pointer.
+ * @param[in] handlers An array of handler structs provided by the user.
+ * @return `INFIX_SUCCESS` on success, or an error code on failure.
+ */
+c23_nodiscard infix_status _infix_forward_create_direct_impl(infix_forward_t ** out_trampoline,
+                                                             infix_type * return_type,
+                                                             infix_type ** arg_types,
+                                                             size_t num_args,
+                                                             void * target_fn,
+                                                             infix_direct_arg_handler_t * handlers) {
+    // 1. Validation and Setup
+    if (!out_trampoline || !return_type || (!arg_types && num_args > 0) || !target_fn || !handlers) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    const infix_direct_forward_abi_spec * spec = get_current_direct_forward_abi_spec();
+    if (spec == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNSUPPORTED_ABI, 0);
+        return INFIX_ERROR_UNSUPPORTED_ABI;
+    }
+
+    infix_status status = INFIX_SUCCESS;
+    infix_direct_call_frame_layout * layout = nullptr;
+    infix_forward_t * handle = nullptr;
+    infix_arena_t * temp_arena = infix_arena_create(65536);
+    if (!temp_arena) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    code_buffer buf;
+    code_buffer_init(&buf, temp_arena);
+
+    // 2. JIT Compilation Pipeline
+    status = spec->prepare_direct_forward_call_frame(
+        temp_arena, &layout, return_type, arg_types, num_args, handlers, target_fn);
+    if (status != INFIX_SUCCESS)
+        goto cleanup;
+
+    status = spec->generate_direct_forward_prologue(&buf, layout);
+    if (status != INFIX_SUCCESS)
+        goto cleanup;
+
+    status = spec->generate_direct_forward_argument_moves(&buf, layout);
+    if (status != INFIX_SUCCESS)
+        goto cleanup;
+
+    status = spec->generate_direct_forward_call_instruction(&buf, layout);
+    if (status != INFIX_SUCCESS)
+        goto cleanup;
+
+    status = spec->generate_direct_forward_epilogue(&buf, layout, return_type);
+    if (status != INFIX_SUCCESS)
+        goto cleanup;
+
+    if (buf.error || temp_arena->error) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+
+    // 3. Finalize Handle
+    handle = infix_calloc(1, sizeof(infix_forward_t));
+    if (handle == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+
+    handle->is_direct_trampoline = true;  // Mark this as a direct marshalling trampoline.
+
+    size_t required_metadata_size = _estimate_metadata_size(temp_arena, return_type, arg_types, num_args);
+    handle->arena = infix_arena_create(required_metadata_size + INFIX_TRAMPOLINE_HEADROOM);
+    handle->is_external_arena = false;
+    if (handle->arena == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+
+    handle->return_type = _copy_type_graph_to_arena(handle->arena, return_type);
+    if (num_args > 0) {
+        handle->arg_types = infix_arena_alloc(handle->arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+        if (!handle->arg_types) {
+            status = INFIX_ERROR_ALLOCATION_FAILED;
+            goto cleanup;
+        }
+        for (size_t i = 0; i < num_args; ++i) {
+            handle->arg_types[i] = _copy_type_graph_to_arena(handle->arena, arg_types[i]);
+            if (arg_types[i] && !handle->arg_types[i] && !handle->arena->error) {
+                status = INFIX_ERROR_ALLOCATION_FAILED;
+                goto cleanup;
+            }
+        }
+    }
+    handle->num_args = num_args;
+    handle->num_fixed_args = num_args;  // Direct trampolines are always fixed-arity.
+    handle->target_fn = target_fn;
+
+    // 4. Allocate and Finalize Executable Memory
+    handle->exec = infix_executable_alloc(buf.size);
+    if (handle->exec.rw_ptr == nullptr) {
+        status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+    infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
+    if (!infix_executable_make_executable(handle->exec)) {
+        status = INFIX_ERROR_PROTECTION_FAILED;
+        goto cleanup;
+    }
+
+    infix_dump_hex(handle->exec.rx_ptr, handle->exec.size, "Direct-Marshalling Forward Trampoline Machine Code");
+    *out_trampoline = handle;
+
+cleanup:
+    if (status != INFIX_SUCCESS && handle != nullptr)
+        infix_forward_destroy(handle);
     infix_arena_destroy(temp_arena);
     return status;
 }
@@ -834,6 +996,50 @@ c23_nodiscard infix_status infix_forward_create_unbound(infix_forward_t ** out_t
                                                         const char * signature,
                                                         infix_registry_t * registry) {
     return infix_forward_create_in_arena(out_trampoline, NULL, signature, NULL, registry);
+}
+c23_nodiscard infix_status infix_forward_create_direct(infix_forward_t ** out_trampoline,
+                                                       const char * signature,
+                                                       void * target_function,
+                                                       infix_direct_arg_handler_t * handlers,
+                                                       infix_registry_t * registry) {
+    _infix_clear_error();
+    if (!signature || !target_function || !handlers) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    infix_arena_t * arena = nullptr;
+    infix_type * ret_type = nullptr;
+    infix_function_argument * args = nullptr;
+    size_t num_args = 0, num_fixed = 0;
+    infix_type ** arg_types = nullptr;
+
+    // Parse the signature to get the type graph.
+    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
+    if (status != INFIX_SUCCESS) {
+        infix_arena_destroy(arena);
+        return status;
+    }
+
+    // Convert the parsed `infix_function_argument*` array to an `infix_type**` array.
+    if (num_args > 0) {
+        arg_types = infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *));
+        if (!arg_types) {
+            infix_arena_destroy(arena);
+            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+            return INFIX_ERROR_ALLOCATION_FAILED;
+        }
+        for (size_t i = 0; i < num_args; ++i)
+            arg_types[i] = args[i].type;
+    }
+
+    // Call the core internal implementation with the parsed types and provided handlers.
+    status =
+        _infix_forward_create_direct_impl(out_trampoline, ret_type, arg_types, num_args, target_function, handlers);
+
+    // Clean up the temporary arena used by the parser.
+    infix_arena_destroy(arena);
+    return status;
 }
 c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t ** out_context,
                                                          const char * signature,

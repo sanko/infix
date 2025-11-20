@@ -16,7 +16,7 @@ $|++;
 
 # Argument Parsing
 my %opts;
-GetOptions( \%opts, 'cc|compiler=s', 'cflags=s', 'h|help', 'codecov=s', 'abi=s', 'verbose|v', 'examples' );
+GetOptions( \%opts, qw[cc|compiler=s cflags=s h|help codecov=s abi=s verbose|v examples] );
 show_help() if $opts{help};
 my $command    = lc( shift @ARGV || 'build' );
 my @test_names = @ARGV;
@@ -280,7 +280,7 @@ sub show_help {
       helgrindtest       Runs the threading stress test under Valgrind/Helgrind.
       helgrindtest:bare  Runs a "barebones" Helgrind test with no testing framework.
       clean              Removes all build and coverage artifacts.
-      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi).
+      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi, fuzz:direct).
 
     Options:
       --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'clang').
@@ -453,9 +453,7 @@ sub compile_and_run_tests {
         }
     }
     rmtree($obj_dir);    # Clean up temporary object files
-    my $use_prove = command_exists('prove --version') && !$opts{abi} && !(
-        $config->{is_windows}    # && $config->{arch} eq 'arm64'
-    );
+    my $use_prove = command_exists('prove --version') && !$opts{abi} && !( $config->{is_windows} && $config->{arch} eq 'arm64' );
     if ($use_prove) {
         print "\nRunning all tests with 'prove'\n";
         return run_command( 'prove', '--verbose', @test_executables );
@@ -672,7 +670,20 @@ sub run_command (@cmd) {
     @cmd = grep { defined && length } @cmd;
     print "Executing: " . join( ' ', @cmd ) . "\n";
     my $exit_code = system @cmd;
-    my $status    = $exit_code >> 8;
+
+    # Check if command couldn't be executed
+    die "FATAL: Failed to execute command: $!\n" if $exit_code == -1;
+
+    # Detect signal death (e.g. segfault)
+    # On Unix, low 7 bits are signal. On Windows, $exit_code might be the actual code.
+    my $status = 0;
+    if ( ( $exit_code & 127 ) && !( $^O eq 'MSWin32' ) ) {
+        $status = ( $exit_code & 127 ) + 128;    # 128 + SIG
+        warn "WARNING: Command died with signal " . ( $exit_code & 127 ) . "\n";
+    }
+    else {
+        $status = $exit_code >> 8;
+    }
     if ( $status != 0 ) {
         my $is_allowed_to_fail = 0;
         $is_allowed_to_fail = 1 if $cmd[0] eq 'prove';
@@ -680,7 +691,9 @@ sub run_command (@cmd) {
         $is_allowed_to_fail = 1 if $cmd[0] =~ /gcov/ || $cmd[0] =~ /llvm-/;
         $is_allowed_to_fail = 1
             if $ENV{PROGRAMFILES} && $cmd[0] eq File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
-        if ( $is_coverage_build && $cmd[0] =~ m{[\\/]?t[\\/]} && -x $cmd[0] ) {
+
+        # Allow test executables to fail so the runner can count them
+        if ( $cmd[0] =~ m{[\\/]?t[\\/]} && ( $cmd[0] =~ /\.exe$/ || -x $cmd[0] ) ) {
             $is_allowed_to_fail = 1;
         }
         unless ($is_allowed_to_fail) {
