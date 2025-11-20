@@ -99,6 +99,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 /**
  * @defgroup high_level_api High-Level Signature API
  * @brief The primary, recommended API for creating trampolines from human-readable strings.
@@ -1363,3 +1367,6 @@ c23_nodiscard infix_status infix_forward_create_direct(infix_forward_t ** out_tr
  */
 c23_nodiscard infix_direct_cif_func infix_forward_get_direct_code(infix_forward_t * trampoline);
 /** @} */  // end of direct_marshalling_api group
+#ifdef __cplusplus
+}
+#endif

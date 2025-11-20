@@ -845,12 +845,14 @@ static infix_status prepare_direct_forward_call_frame_win_x64(infix_arena_t * ar
         }
     }
 
-    size_t total_stack_arg_size = outgoing_stack_offset - SHADOW_SPACE;
-    size_t total_needed = total_stack_arg_size + temp_space_offset + SHADOW_SPACE;
+    // Ensure the base of the scratch area is 16-byte aligned, matching Generate phase logic.
+    size_t scratch_base_offset = (outgoing_stack_offset + 15) & ~15;
+
+    size_t total_needed = scratch_base_offset + temp_space_offset;
     layout->total_stack_alloc = (total_needed + 15) & ~15;
 
     // Final pass: Adjust temp/scratch offsets to be relative to RSP after allocation.
-    size_t temp_base_offset = total_stack_arg_size + SHADOW_SPACE;
+    size_t temp_base_offset = scratch_base_offset;
     for (size_t i = 0; i < num_args; ++i) {
         if (layout->args[i].handler->aggregate_marshaller || layout->args[i].handler->scalar_marshaller ||
             layout->args[i].handler->writeback_handler) {
@@ -972,20 +974,7 @@ static infix_status generate_direct_forward_argument_moves_win_x64(code_buffer *
         case ARG_LOCATION_STACK:
             {
                 int32_t out_stack_offset = (int32_t)arg_layout->location.stack_offset;
-                //~ if (is_passed_by_reference(arg_layout->type) || is_ptr_to_marshalled_agg || is_out_param) {
-                //~ emit_lea_reg_mem(buf, RAX_REG, RSP_REG, temp_offset);
-                //~ emit_mov_mem_reg(buf, RSP_REG, out_stack_offset, RAX_REG);
-                //~ }
-                //~ else if (is_float(arg_layout->type) || is_double(arg_layout->type)) {
-                //~ // Per Win x64 ABI, floats/doubles on stack occupy 8 bytes.
-                //~ // Use a non-argument register to avoid clobbering.
-                //~ emit_movsd_xmm_mem(buf, XMM8_REG, RSP_REG, temp_offset);
-                //~ emit_movsd_mem_xmm(buf, RSP_REG, out_stack_offset, XMM8_REG);
-                //~ }
-                //~ else {
-                //~ emit_mov_reg_mem(buf, RAX_REG, RSP_REG, temp_offset);
-                //~ emit_mov_mem_reg(buf, RSP_REG, out_stack_offset, RAX_REG);
-                //~ }
+
                 if (is_float(arg_layout->type)) {
                     // Load the double from the temp slot, convert it, then store the single.
                     emit_movsd_xmm_mem(buf, XMM15_REG, RSP_REG, temp_offset);
@@ -1038,8 +1027,31 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
             emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (is_double(ret_type))
             emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
-        else
-            emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);
+        else if (ret_type->size == 16 &&
+                 (ret_type->category == INFIX_TYPE_PRIMITIVE || ret_type->category == INFIX_TYPE_VECTOR))
+            // `__int128_t` (on GCC/Clang) and 16-byte vectors are returned in XMM0.
+            emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
+        else if (ret_type->size == 32 && ret_type->category == INFIX_TYPE_VECTOR)
+            emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);
+        else {
+            // All other by-value types are returned in RAX. Use a size-appropriate store.
+            switch (ret_type->size) {
+            case 1:
+                emit_mov_mem_reg8(buf, R13_REG, 0, RAX_REG);
+                break;
+            case 2:
+                emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
+                break;
+            case 4:
+                emit_mov_mem_reg32(buf, R13_REG, 0, RAX_REG);
+                break;
+            case 8:
+                emit_mov_mem_reg(buf, R13_REG, 0, RAX_REG);
+                break;
+            default:
+                break;
+            }
+        }
     }
 
     // 2. Call Write-Back Handlers
