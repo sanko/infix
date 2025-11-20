@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['x_0',['x',['../md_docs_2internals.html#autotoc_md179',1,'3.1 Write XOR Execute (W^X)'],['../structPoint.html#ab99c56589bc8ad5fa5071387110a5bc7',1,'Point::x']]],
-  ['x_20write_20xor_20execute_20memory_20policy_1',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md245',1,'']]],
+  ['x_0',['x',['../md_docs_2internals.html#autotoc_md185',1,'3.1 Write XOR Execute (W^X)'],['../structMockObject.html#ad6699b58b928d3f991533966ae049630',1,'MockObject::x'],['../structPoint.html#ab99c56589bc8ad5fa5071387110a5bc7',1,'Point::x']]],
+  ['x_20write_20xor_20execute_20memory_20policy_1',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md251',1,'']]],
   ['x0_5freg_2',['X0_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aa0689257e9ed3bccebcb22a48336fc26',1,'abi_arm64_common.h']]],
   ['x10_5freg_3',['X10_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aff751fdf3e687c6e979b821e648ce1e2',1,'abi_arm64_common.h']]],
   ['x11_5freg_4',['X11_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a8bbc3234a80956b6d6b83d4fee59cfb1',1,'abi_arm64_common.h']]],
@@ -33,10 +33,10 @@ var searchData=
   ['x64_5fxmm_30',['x64_xmm',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c',1,'abi_x64_common.h']]],
   ['x6_5freg_31',['X6_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aa7a183bab674b52e04d158ce3b7af4cb',1,'abi_arm64_common.h']]],
   ['x7_5freg_32',['X7_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a45d807a6fb62dd94432a1b257a1f37e1',1,'abi_arm64_common.h']]],
-  ['x86_2064_20sse_20avx_20and_20avx_20512_33',['x86-64 (SSE, AVX, and AVX-512)',['../md_docs_2cookbook.html#autotoc_md67',1,'']]],
+  ['x86_2064_20sse_20avx_20and_20avx_20512_33',['x86-64 (SSE, AVX, and AVX-512)',['../md_docs_2cookbook.html#autotoc_md71',1,'']]],
   ['x8_5freg_34',['X8_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1a8eb432408cb01a824e1a17c059daa51d',1,'abi_arm64_common.h']]],
   ['x9_5freg_35',['X9_REG',['../abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1ae68729324bef088e6624776653a8d475',1,'abi_arm64_common.h']]],
-  ['xmake_36',['xmake',['../md_docs_2INSTALL.html#autotoc_md163',1,'Using xmake'],['../md_docs_2INSTALL.html#autotoc_md155',1,'Using xmake']]],
+  ['xmake_36',['xmake',['../md_docs_2INSTALL.html#autotoc_md168',1,'Using xmake'],['../md_docs_2INSTALL.html#autotoc_md160',1,'Using xmake']]],
   ['xmm0_5freg_37',['XMM0_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca7f7dd044d21d061cb237870e1fb1d9da',1,'abi_x64_common.h']]],
   ['xmm10_5freg_38',['XMM10_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853cad32577b3a79c6eb194a68194eb0f9c46',1,'abi_x64_common.h']]],
   ['xmm11_5freg_39',['XMM11_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853caee90d003aefd04b52ee634086530bd52',1,'abi_x64_common.h']]],
@@ -71,6 +71,6 @@ var searchData=
   ['xmm9_5freg_68',['XMM9_REG',['../abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853ca367f9cc2a1b55e531bdbcb1091c5fc9a',1,'abi_x64_common.h']]],
   ['xmm_5fargs_69',['xmm_args',['../abi__sysv__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_sysv_x64.c'],['../abi__win__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_win_x64.c']]],
   ['xmm_5fsave_5farea_5foffset_70',['xmm_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662',1,'infix_reverse_call_frame_layout']]],
-  ['xor_20execute_20memory_20policy_71',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md245',1,'']]],
-  ['xor_20execute_20w_20x_72',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md179',1,'']]]
+  ['xor_20execute_20memory_20policy_71',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md251',1,'']]],
+  ['xor_20execute_20w_20x_72',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md185',1,'']]]
 ];

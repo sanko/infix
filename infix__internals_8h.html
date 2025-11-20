@@ -177,6 +177,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the ABI-specific implementation interface for reverse trampolines.  <a href="structinfix__reverse__abi__spec.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__direct__arg__layout.html">infix_direct_arg_layout</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal layout information for a single argument in a direct marshalling trampoline.  <a href="structinfix__direct__arg__layout.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete layout blueprint for a direct marshalling forward call frame.  <a href="structinfix__direct__call__frame__layout.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the ABI-specific implementation interface for direct marshalling forward trampolines.  <a href="structinfix__direct__forward__abi__spec.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -249,6 +258,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8350c168a4d73e304563eec574db526d" id="r_a8350c168a4d73e304563eec574db526d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a8350c168a4d73e304563eec574db526d">get_current_reverse_abi_spec</a> (void)</td></tr>
 <tr class="memdesc:a8350c168a4d73e304563eec574db526d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for reverse calls for the current platform.  <br /></td></tr>
 <tr class="separator:a8350c168a4d73e304563eec574db526d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfa756bf41c1606fe83dcbfb2ed7b342" id="r_abfa756bf41c1606fe83dcbfb2ed7b342"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#abfa756bf41c1606fe83dcbfb2ed7b342">get_current_direct_forward_abi_spec</a> (void)</td></tr>
+<tr class="memdesc:abfa756bf41c1606fe83dcbfb2ed7b342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for direct marshalling forward calls for the current platform.  <br /></td></tr>
+<tr class="separator:abfa756bf41c1606fe83dcbfb2ed7b342"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aa83ec657f76fd7a7c4959e4595a4ca" id="r_a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a4aa83ec657f76fd7a7c4959e4595a4ca">code_buffer_init</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>)</td></tr>
 <tr class="memdesc:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a code buffer for JIT code generation.  <br /></td></tr>
 <tr class="separator:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1088,6 +1100,27 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="abfa756bf41c1606fe83dcbfb2ed7b342" name="abfa756bf41c1606fe83dcbfb2ed7b342"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfa756bf41c1606fe83dcbfb2ed7b342">&#9670;&#160;</a></span>get_current_direct_forward_abi_spec()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> * get_current_direct_forward_abi_spec </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the ABI v-table for direct marshalling forward calls for the current platform. </p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the active <code><a class="el" href="structinfix__direct__forward__abi__spec.html" title="Defines the ABI-specific implementation interface for direct marshalling forward trampolines.">infix_direct_forward_abi_spec</a></code>. </dd></dl>
 
 </div>
 </div>

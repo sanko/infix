@@ -113,6 +113,7 @@ Key Features</h1>
 <ul>
 <li><b>Human-Readable Signatures:</b> Describe complex C functions with an intuitive string format (e.g., <code>"({double, double}, int) -&gt; *char"</code>).</li>
 <li><b>Forward &amp; Reverse Calls:</b> Call C functions ("forward") and create C function pointers that call back into your code ("reverse").</li>
+<li><b>Direct Marshalling API:</b> Build high-performance language bindings where the JIT compiler calls your object-unboxing functions directly, bypassing intermediate buffers.</li>
 <li><b>Simple Integration:</b> Add a single C file and a header directory to your project to get started. No complex dependencies.</li>
 <li><b>Type Registry:</b> Define, reuse, and link complex, recursive, and mutually-dependent structs by name.</li>
 <li><b>Security-First Design:</b> Hardened against vulnerabilities with Write XOR Execute (W^X) memory, guard pages, and fuzz testing.</li>
@@ -164,10 +165,10 @@ How It Works: A Quick Example</h1>
 <div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:57</div></div>
 <div class="ttc" id="a821__threading__bare_8c_html_a840291bc02cba5474a4cb46a9b9566fe"><div class="ttname"><a href="821__threading__bare_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a></div><div class="ttdeci">int main(void)</div><div class="ttdef"><b>Definition</b> 821_threading_bare.c:69</div></div>
 <div class="ttc" id="aCh04__ThreadSafety_8c_html_a876d849a2f1867b8b2be9881f4a191d5"><div class="ttname"><a href="Ch04__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a></div><div class="ttdeci">static int add(int a, int b)</div><div class="ttdef"><b>Definition</b> Ch04_ThreadSafety.c:25</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:327</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:827</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:259</div></div>
-<div class="ttc" id="agroup__manual__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Destroys a forward trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:469</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:331</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga5362b6f6976298aebefdb2a487e72e36"><div class="ttname"><a href="group__high__level__api.html#ga5362b6f6976298aebefdb2a487e72e36">infix_forward_create</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:989</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga32fc7e60dd474cebc4ac082e49ac9ea8"><div class="ttname"><a href="group__introspection__api.html#ga32fc7e60dd474cebc4ac082e49ac9ea8">infix_forward_get_code</a></div><div class="ttdeci">c23_nodiscard infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:278</div></div>
+<div class="ttc" id="agroup__manual__api_html_gad87a8882dec00b89a4bc5c87db2fc032"><div class="ttname"><a href="group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032">infix_forward_destroy</a></div><div class="ttdeci">void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Destroys a forward trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:631</div></div>
 <div class="ttc" id="ainfix_8h_html"><div class="ttname"><a href="infix_8h.html">infix.h</a></div><div class="ttdoc">The public interface for the infix FFI library.</div></div>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:88</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
@@ -199,11 +200,46 @@ Creating Callbacks</h1>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a>(context);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:838</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga3b75e8481ac13d11faa15046fc4adb66"><div class="ttname"><a href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:733</div></div>
-<div class="ttc" id="agroup__manual__api_html_ga00b101025663c423a28433e139be5d4e"><div class="ttname"><a href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a></div><div class="ttdeci">void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:715</div></div>
-<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:113</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1044</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga3b75e8481ac13d11faa15046fc4adb66"><div class="ttname"><a href="group__introspection__api.html#ga3b75e8481ac13d11faa15046fc4adb66">infix_reverse_get_code</a></div><div class="ttdeci">c23_nodiscard void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:895</div></div>
+<div class="ttc" id="agroup__manual__api_html_ga00b101025663c423a28433e139be5d4e"><div class="ttname"><a href="group__manual__api.html#ga00b101025663c423a28433e139be5d4e">infix_reverse_destroy</a></div><div class="ttdeci">void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:877</div></div>
+<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:114</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
+High-Performance Language Bindings</h1>
+<p>If you are writing a binding for a language like Python, Perl, or Lua, <code>infix</code> offers a specialized direct marshalling API. This allows the JIT compiler to call your object unboxing functions ("marshallers") directly, eliminating the need to allocate intermediate C arrays.</p>
+<div class="fragment"><div class="line"><span class="comment">// A mock object from a scripting language.</span></div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>{ <span class="keywordtype">int</span> type; <span class="keyword">union </span>{ <span class="keywordtype">int</span> i; <span class="keywordtype">double</span> d; } val; } PyObject;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A &quot;Scalar Marshaller&quot; converts a language object to a raw C value.</span></div>
+<div class="line"><a class="code hl_union" href="unioninfix__direct__value__t.html">infix_direct_value_t</a> marshal_int(<span class="keywordtype">void</span>* obj_ptr) {</div>
+<div class="line">    PyObject* obj = (PyObject*)obj_ptr;</div>
+<div class="line">    <span class="keywordflow">return</span> (<a class="code hl_union" href="unioninfix__direct__value__t.html">infix_direct_value_t</a>){ .<a class="code hl_variable" href="group__high__level__api.html#gadba7bc037f3d126d3ba31f1ec2567dbd">i64</a> = obj-&gt;val.i };</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> run_binding_example(<span class="keywordtype">void</span>* target_func) {</div>
+<div class="line">    <span class="comment">// 1. Define handlers for the arguments.</span></div>
+<div class="line">    <a class="code hl_struct" href="structinfix__direct__arg__handler__t.html">infix_direct_arg_handler_t</a> <a class="code hl_variable" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>[2] = {0};</div>
+<div class="line">    <a class="code hl_variable" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>[0].<a class="code hl_variable" href="group__high__level__api.html#gaa1e4370577f1c6effe1db98e594032c1">scalar_marshaller</a> = marshal_int;</div>
+<div class="line">    <a class="code hl_variable" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>[1].<a class="code hl_variable" href="group__high__level__api.html#gaa1e4370577f1c6effe1db98e594032c1">scalar_marshaller</a> = marshal_int;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 2. Create an optimized trampoline.</span></div>
+<div class="line">    <a class="code hl_struct" href="structinfix__forward__t.html">infix_forward_t</a>* trampoline;</div>
+<div class="line">    <a class="code hl_function" href="group__direct__marshalling__api.html#ga2618eb29271aceb0df6aea41cbde1541">infix_forward_create_direct</a>(&amp;trampoline, <span class="stringliteral">&quot;(int, int) -&gt; void&quot;</span>, target_func, <a class="code hl_variable" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>, NULL);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 3. Call it directly with an array of language objects.</span></div>
+<div class="line">    PyObject* <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>[] = { py_obj1, py_obj2 };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// The JIT code calls `marshal_int` for each arg, then calls the target.</span></div>
+<div class="line">    <a class="code hl_function" href="group__direct__marshalling__api.html#gac9f07b550fbe492d5948833561a5e9d7">infix_forward_get_direct_code</a>(trampoline)(NULL, (<span class="keywordtype">void</span>**)<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>);</div>
+<div class="line">}</div>
+<div class="ttc" id="a901__call__overhead_8c_html_ae25bcbce63d0ec5da113a351193b608e"><div class="ttname"><a href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a></div><div class="ttdeci">infix_direct_arg_handler_t handlers[2]</div><div class="ttdef"><b>Definition</b> 901_call_overhead.c:103</div></div>
+<div class="ttc" id="agroup__direct__marshalling__api_html_ga2618eb29271aceb0df6aea41cbde1541"><div class="ttname"><a href="group__direct__marshalling__api.html#ga2618eb29271aceb0df6aea41cbde1541">infix_forward_create_direct</a></div><div class="ttdeci">c23_nodiscard infix_status infix_forward_create_direct(infix_forward_t **out_trampoline, const char *signature, void *target_function, infix_direct_arg_handler_t *handlers, infix_registry_t *registry)</div><div class="ttdoc">Creates a forward trampoline with direct, JIT-bound marshalling.</div><div class="ttdef"><b>Definition</b> trampoline.c:1000</div></div>
+<div class="ttc" id="agroup__direct__marshalling__api_html_gac9f07b550fbe492d5948833561a5e9d7"><div class="ttname"><a href="group__direct__marshalling__api.html#gac9f07b550fbe492d5948833561a5e9d7">infix_forward_get_direct_code</a></div><div class="ttdeci">c23_nodiscard infix_direct_cif_func infix_forward_get_direct_code(infix_forward_t *trampoline)</div><div class="ttdoc">Gets the callable function pointer from a direct marshalling trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:283</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gaa1e4370577f1c6effe1db98e594032c1"><div class="ttname"><a href="group__high__level__api.html#gaa1e4370577f1c6effe1db98e594032c1">infix_direct_arg_handler_t::scalar_marshaller</a></div><div class="ttdeci">infix_marshaller_fn scalar_marshaller</div><div class="ttdoc">For &quot;in&quot; parameters of a scalar type (int, float, pointer).</div><div class="ttdef"><b>Definition</b> infix.h:1331</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gadba7bc037f3d126d3ba31f1ec2567dbd"><div class="ttname"><a href="group__high__level__api.html#gadba7bc037f3d126d3ba31f1ec2567dbd">infix_direct_value_t::i64</a></div><div class="ttdeci">int64_t i64</div><div class="ttdoc">Used for all signed integer types up to 64 bits.</div><div class="ttdef"><b>Definition</b> infix.h:1277</div></div>
+<div class="ttc" id="astructinfix__direct__arg__handler__t_html"><div class="ttname"><a href="structinfix__direct__arg__handler__t.html">infix_direct_arg_handler_t</a></div><div class="ttdoc">A struct containing all the necessary handlers for a single function argument.</div><div class="ttdef"><b>Definition</b> infix.h:1329</div></div>
+<div class="ttc" id="aunioninfix__direct__value__t_html"><div class="ttname"><a href="unioninfix__direct__value__t.html">infix_direct_value_t</a></div><div class="ttdoc">A union to hold any primitive value returned by a scalar marshaller.</div><div class="ttdef"><b>Definition</b> infix.h:1275</div></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
 Getting Started</h1>
 <p>The easiest way to use <code>infix</code> is to add its source directly to your project.</p>
 <ol type="1">
@@ -213,7 +249,7 @@ Getting Started</h1>
 <li><code>#include &lt;<a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix/infix.h</a>&gt;</code> in your code.</li>
 </ol>
 <p>For more advanced build options, including building as a standalone library with CMake or xmake, see the <a class="el" href="md_docs_2INSTALL.html">Building and Integration Guide</a>.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Project Philosophy</h1>
 <p><code>infix</code> is built on three core principles:</p>
 <ol type="1">
@@ -221,7 +257,7 @@ Project Philosophy</h1>
 <li><b>Performance by Design:</b> FFI overhead should be minimal. <code>infix</code> separates the one-time <b>generation cost</b> from the near-zero <b>call-time cost</b>, making it exceptionally fast in high-performance applications when trampolines are cached.</li>
 <li><b>Simplicity and Portability:</b> Platform- and ABI-specific logic is strictly isolated, making the library easy to maintain, simple to integrate, and straightforward to port to new architectures.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Platform Support</h1>
 <p><code>infix</code> is rigorously tested on a wide array of operating systems, compilers, and architectures with every commit.</p>
 <table class="markdownTable">
@@ -279,7 +315,7 @@ Platform Support</h1>
 <td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">Server 2025   </td><td class="markdownTableBodyLeft">x86-64   </td><td class="markdownTableBodyLeft">MSVC   </td><td class="markdownTableBodyLeft"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&amp;style=for-the-badge&amp;label=%20&amp;query=windows-x86_64-msvc" alt="windows/x64/msvc    " class="inline"/>   </td></tr>
 </table>
 <p>In addition to the CI platforms tested here on Github, I can verify infix builds and passes unit tests on Android/Termux.</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Licenses</h1>
 <p>To maximize usability for all, <code>infix</code> is dual-licensed under the [Artistic License 2.0](LICENSE-A2) and the [MIT License](LICENSE-MIT). You may choose to use the code under the terms of either license.</p>
 <p>At your discretion, all standalone documentation (<code>.md</code>), explanatory text, Doxygen-style documentation blocks, comments, and code examples contained within this repository may be used, modified, and distributed under the terms of the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](LICENSE-CC). I encourage you to share and adapt the documentation for any purpose (generating an API reference website, creating tutorials, etc.), as long as you give appropriate credit. </p>

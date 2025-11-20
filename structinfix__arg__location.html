@@ -122,8 +122,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a4ca356cdf0cdc055bde2bb312278559a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa26753e6a3c286d4c3e1510c9c187c84" id="r_aa26753e6a3c286d4c3e1510c9c187c84"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arg__location.html#aa26753e6a3c286d4c3e1510c9c187c84">reg_index2</a></td></tr>
 <tr class="separator:aa26753e6a3c286d4c3e1510c9c187c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb31f72201607872c0f26be7d9dbc211" id="r_aeb31f72201607872c0f26be7d9dbc211"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arg__location.html#aeb31f72201607872c0f26be7d9dbc211">num_regs</a></td></tr>
-<tr class="separator:aeb31f72201607872c0f26be7d9dbc211"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a943b812ba26ef00078f2cd997cf92677" id="r_a943b812ba26ef00078f2cd997cf92677"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arg__location.html#a943b812ba26ef00078f2cd997cf92677">num_regs</a></td></tr>
+<tr class="separator:a943b812ba26ef00078f2cd997cf92677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2622131c3909a4c217acb4791ca69d1c" id="r_a2622131c3909a4c217acb4791ca69d1c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__arg__location.html#a2622131c3909a4c217acb4791ca69d1c">stack_offset</a></td></tr>
 <tr class="separator:a2622131c3909a4c217acb4791ca69d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -131,18 +131,18 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Detailed location information for a single function argument. </p>
 <p>This struct is the result of the ABI classification process for one argument. It provides all the information the code emitters need to generate the correct move/load/store instructions. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="aeb31f72201607872c0f26be7d9dbc211" name="aeb31f72201607872c0f26be7d9dbc211"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb31f72201607872c0f26be7d9dbc211">&#9670;&#160;</a></span>num_regs</h2>
+<a id="a943b812ba26ef00078f2cd997cf92677" name="a943b812ba26ef00078f2cd997cf92677"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a943b812ba26ef00078f2cd997cf92677">&#9670;&#160;</a></span>num_regs</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t infix_arg_location::num_regs</td>
+          <td class="memname">uint32_t infix_arg_location::num_regs</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The number of consecutive registers consumed (e.g., for HFAs). </p>
+<p><a class="el" href="unionNumber.html" title="A simple union to test aggregate classification.">Number</a> of regs OR scratch buffer offset. </p>
 
 </div>
 </div>

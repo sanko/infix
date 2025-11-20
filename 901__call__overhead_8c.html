@@ -131,6 +131,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aed3344f1605a3876df2f8bb77557f8b3" id="r_aed3344f1605a3876df2f8bb77557f8b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3">add_for_benchmark</a> (int a, int b)</td></tr>
 <tr class="memdesc:aed3344f1605a3876df2f8bb77557f8b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The simple C function used as the target for all benchmarked calls.  <br /></td></tr>
 <tr class="separator:aed3344f1605a3876df2f8bb77557f8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95495cbcf004922a280e35be83fb1330" id="r_a95495cbcf004922a280e35be83fb1330"><td class="memItemLeft" align="right" valign="top"><a class="el" href="unioninfix__direct__value__t.html">infix_direct_value_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a95495cbcf004922a280e35be83fb1330">benchmark_int_marshaller</a> (void *source)</td></tr>
+<tr class="memdesc:a95495cbcf004922a280e35be83fb1330"><td class="mdescLeft">&#160;</td><td class="mdescRight">A marshaller for the direct benchmark that reads an int from a pointer.  <br /></td></tr>
+<tr class="separator:a95495cbcf004922a280e35be83fb1330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ca4b504fdc395555951cfe46fa47a00" id="r_a0ca4b504fdc395555951cfe46fa47a00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a0ca4b504fdc395555951cfe46fa47a00">diag</a> (&quot;infix Call Overhead Benchmark&quot;)</td></tr>
 <tr class="separator:a0ca4b504fdc395555951cfe46fa47a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a995b400f1978d4445954d1990dd1bee5" id="r_a995b400f1978d4445954d1990dd1bee5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a995b400f1978d4445954d1990dd1bee5">diag</a> (&quot;Iterations: %d&quot;, <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>)</td></tr>
@@ -149,14 +152,20 @@ Functions</h2></td></tr>
 <tr class="separator:ad36da003b2b775d02bc4b5e57d3a2332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30d28852aed20dadb7729ee5835b9d99" id="r_a30d28852aed20dadb7729ee5835b9d99"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a30d28852aed20dadb7729ee5835b9d99">diag</a> (&quot;infix (Bound):      %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;, <a class="el" href="901__call__overhead_8c.html#af5223524456d9df67af038068758386e">bound_time</a>, <a class="el" href="901__call__overhead_8c.html#a8c00e10e354a6c5a7759581e3ac956a7">bound_ns</a>, <a class="el" href="901__call__overhead_8c.html#a8c00e10e354a6c5a7759581e3ac956a7">bound_ns</a> - <a class="el" href="901__call__overhead_8c.html#a165c1c6b8f1e6ca33eb1518edbf3da50">direct_ns_per_call</a>)</td></tr>
 <tr class="separator:a30d28852aed20dadb7729ee5835b9d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a135e615d18daec14ebf61bed5869abf1" id="r_a135e615d18daec14ebf61bed5869abf1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a135e615d18daec14ebf61bed5869abf1">infix_forward_destroy</a> (<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>)</td></tr>
-<tr class="separator:a135e615d18daec14ebf61bed5869abf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0139eb891f44c7b12e3dd3d383acfe" id="r_a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a9f0139eb891f44c7b12e3dd3d383acfe">infix_forward_destroy</a> (<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td></tr>
-<tr class="separator:a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a648c7eaa1611287cfe1d0e26f642a8b1" id="r_a648c7eaa1611287cfe1d0e26f642a8b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a648c7eaa1611287cfe1d0e26f642a8b1">if</a> (<a class="el" href="group__direct__marshalling__api.html#ga2618eb29271aceb0df6aea41cbde1541">infix_forward_create_direct</a>(&amp;<a class="el" href="901__call__overhead_8c.html#aea36557df60425296dce3fdf844f9453">direct_t</a>, &quot;(int, int) -&gt; int&quot;,(void *) <a class="el" href="901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3">add_for_benchmark</a>, <a class="el" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>, <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a>) !=<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) <a class="el" href="double__tap_8h.html#ae67140f57c292866c53eef6c962bc30d">bail_out</a>(&quot;Failed to create direct trampoline&quot;)</td></tr>
+<tr class="separator:a648c7eaa1611287cfe1d0e26f642a8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5b46722c4dd29756628d97248017a57" id="r_af5b46722c4dd29756628d97248017a57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#af5b46722c4dd29756628d97248017a57">diag</a> (&quot;infix (Direct):     %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;, <a class="el" href="901__call__overhead_8c.html#a302a8fac36eccce7b63d1dcce5c55969">direct_marsh_time</a>, <a class="el" href="901__call__overhead_8c.html#acf44cf055b22370645a617a34f7912b5">direct_marsh_ns</a>, <a class="el" href="901__call__overhead_8c.html#acf44cf055b22370645a617a34f7912b5">direct_marsh_ns</a> - <a class="el" href="901__call__overhead_8c.html#a165c1c6b8f1e6ca33eb1518edbf3da50">direct_ns_per_call</a>)</td></tr>
+<tr class="separator:af5b46722c4dd29756628d97248017a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fdc4d0e57bebf474e34348ed3ed74c3" id="r_a7fdc4d0e57bebf474e34348ed3ed74c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a7fdc4d0e57bebf474e34348ed3ed74c3">note</a> (&quot;dyncall benchmarking was not enabled.&quot;)</td></tr>
 <tr class="separator:a7fdc4d0e57bebf474e34348ed3ed74c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9627af862f20e92b7f9b56ed4edb8026" id="r_a9627af862f20e92b7f9b56ed4edb8026"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a9627af862f20e92b7f9b56ed4edb8026">pass</a> (&quot;Benchmark completed (final <a class="el" href="901__call__overhead_8c.html#a03cbb16bdd4a10f4fa29ecfa46c25045">accumulator</a> value: %d)&quot;, accumulator)</td></tr>
 <tr class="separator:a9627af862f20e92b7f9b56ed4edb8026"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135e615d18daec14ebf61bed5869abf1" id="r_a135e615d18daec14ebf61bed5869abf1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a135e615d18daec14ebf61bed5869abf1">infix_forward_destroy</a> (<a class="el" href="202__in__structs_8c.html#a783f3f2953f385e8223af2d3568e4a92">unbound_t</a>)</td></tr>
+<tr class="separator:a135e615d18daec14ebf61bed5869abf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0139eb891f44c7b12e3dd3d383acfe" id="r_a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a9f0139eb891f44c7b12e3dd3d383acfe">infix_forward_destroy</a> (<a class="el" href="202__in__structs_8c.html#a235edff479963a1a75ebc21f02111491">bound_t</a>)</td></tr>
+<tr class="separator:a9f0139eb891f44c7b12e3dd3d383acfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c9f36829fe7cba37d378a93cb9c1371" id="r_a3c9f36829fe7cba37d378a93cb9c1371"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a3c9f36829fe7cba37d378a93cb9c1371">infix_forward_destroy</a> (<a class="el" href="901__call__overhead_8c.html#aea36557df60425296dce3fdf844f9453">direct_t</a>)</td></tr>
+<tr class="separator:a3c9f36829fe7cba37d378a93cb9c1371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -192,6 +201,16 @@ Variables</h2></td></tr>
 <tr class="separator:af5223524456d9df67af038068758386e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c00e10e354a6c5a7759581e3ac956a7" id="r_a8c00e10e354a6c5a7759581e3ac956a7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a8c00e10e354a6c5a7759581e3ac956a7">bound_ns</a> = (<a class="el" href="901__call__overhead_8c.html#af5223524456d9df67af038068758386e">bound_time</a> / <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>) * 1e9</td></tr>
 <tr class="separator:a8c00e10e354a6c5a7759581e3ac956a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea36557df60425296dce3fdf844f9453" id="r_aea36557df60425296dce3fdf844f9453"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#aea36557df60425296dce3fdf844f9453">direct_t</a> = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td></tr>
+<tr class="separator:aea36557df60425296dce3fdf844f9453"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae25bcbce63d0ec5da113a351193b608e" id="r_ae25bcbce63d0ec5da113a351193b608e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__direct__arg__handler__t.html">infix_direct_arg_handler_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a> [2]</td></tr>
+<tr class="separator:ae25bcbce63d0ec5da113a351193b608e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe0a6ebd2c8543d7312fb910300eee46" id="r_abe0a6ebd2c8543d7312fb910300eee46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__direct__marshalling__api.html#ga48bf70b1899cacc0ee8951abb33b7a29">infix_direct_cif_func</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#abe0a6ebd2c8543d7312fb910300eee46">direct_cif</a> = <a class="el" href="group__direct__marshalling__api.html#gac9f07b550fbe492d5948833561a5e9d7">infix_forward_get_direct_code</a>(<a class="el" href="901__call__overhead_8c.html#aea36557df60425296dce3fdf844f9453">direct_t</a>)</td></tr>
+<tr class="separator:abe0a6ebd2c8543d7312fb910300eee46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a302a8fac36eccce7b63d1dcce5c55969" id="r_a302a8fac36eccce7b63d1dcce5c55969"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#a302a8fac36eccce7b63d1dcce5c55969">direct_marsh_time</a> = ((double)(<a class="el" href="901__call__overhead_8c.html#afb358f48b1646c750fb9da6c6585be2b">end</a> - <a class="el" href="901__call__overhead_8c.html#a550769bbd4e7537ff90a656f5b0c23b2">start</a>)) / CLOCKS_PER_SEC</td></tr>
+<tr class="separator:a302a8fac36eccce7b63d1dcce5c55969"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf44cf055b22370645a617a34f7912b5" id="r_acf44cf055b22370645a617a34f7912b5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html#acf44cf055b22370645a617a34f7912b5">direct_marsh_ns</a> = (<a class="el" href="901__call__overhead_8c.html#a302a8fac36eccce7b63d1dcce5c55969">direct_marsh_time</a> / <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>) * 1e9</td></tr>
+<tr class="separator:acf44cf055b22370645a617a34f7912b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A micro-benchmark to measure the performance overhead of an FFI call. </p>
@@ -250,8 +269,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a95495cbcf004922a280e35be83fb1330" name="a95495cbcf004922a280e35be83fb1330"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95495cbcf004922a280e35be83fb1330">&#9670;&#160;</a></span>benchmark_int_marshaller()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="unioninfix__direct__value__t.html">infix_direct_value_t</a> benchmark_int_marshaller </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>source</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A marshaller for the direct benchmark that reads an int from a pointer. </p>
+
+</div>
+</div>
 <a id="a8a94952f2ada02faaf8fe8571b069622" name="a8a94952f2ada02faaf8fe8571b069622"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a94952f2ada02faaf8fe8571b069622">&#9670;&#160;</a></span>diag() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a94952f2ada02faaf8fe8571b069622">&#9670;&#160;</a></span>diag() <span class="overload">[1/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,7 +324,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a30d28852aed20dadb7729ee5835b9d99" name="a30d28852aed20dadb7729ee5835b9d99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30d28852aed20dadb7729ee5835b9d99">&#9670;&#160;</a></span>diag() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a30d28852aed20dadb7729ee5835b9d99">&#9670;&#160;</a></span>diag() <span class="overload">[2/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,8 +363,48 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="af5b46722c4dd29756628d97248017a57" name="af5b46722c4dd29756628d97248017a57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5b46722c4dd29756628d97248017a57">&#9670;&#160;</a></span>diag() <span class="overload">[3/7]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">diag </td>
+          <td>(</td>
+          <td class="paramtype">&quot;infix (Direct): %.4f s (%.2f ns/call) -&gt; Overhead: ~%.2f ns&quot;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="901__call__overhead_8c.html#a302a8fac36eccce7b63d1dcce5c55969">direct_marsh_time</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="901__call__overhead_8c.html#acf44cf055b22370645a617a34f7912b5">direct_marsh_ns</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="901__call__overhead_8c.html#acf44cf055b22370645a617a34f7912b5">direct_marsh_ns</a> -&#160;</td>
+          <td class="paramname"><em>direct_ns_per_call</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4069e3c9baaa2e23160001053f7ec5f4" name="a4069e3c9baaa2e23160001053f7ec5f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4069e3c9baaa2e23160001053f7ec5f4">&#9670;&#160;</a></span>diag() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4069e3c9baaa2e23160001053f7ec5f4">&#9670;&#160;</a></span>diag() <span class="overload">[4/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -365,7 +444,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a0ca4b504fdc395555951cfe46fa47a00" name="a0ca4b504fdc395555951cfe46fa47a00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ca4b504fdc395555951cfe46fa47a00">&#9670;&#160;</a></span>diag() <span class="overload">[4/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ca4b504fdc395555951cfe46fa47a00">&#9670;&#160;</a></span>diag() <span class="overload">[5/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,7 +462,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a995b400f1978d4445954d1990dd1bee5" name="a995b400f1978d4445954d1990dd1bee5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a995b400f1978d4445954d1990dd1bee5">&#9670;&#160;</a></span>diag() <span class="overload">[5/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a995b400f1978d4445954d1990dd1bee5">&#9670;&#160;</a></span>diag() <span class="overload">[6/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -411,7 +490,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ad4da1cc2248db526f16cd6a2731281fb" name="ad4da1cc2248db526f16cd6a2731281fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4da1cc2248db526f16cd6a2731281fb">&#9670;&#160;</a></span>diag() <span class="overload">[6/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4da1cc2248db526f16cd6a2731281fb">&#9670;&#160;</a></span>diag() <span class="overload">[7/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -445,8 +524,48 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a648c7eaa1611287cfe1d0e26f642a8b1" name="a648c7eaa1611287cfe1d0e26f642a8b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a648c7eaa1611287cfe1d0e26f642a8b1">&#9670;&#160;</a></span>if() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">if </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__direct__marshalling__api.html#ga2618eb29271aceb0df6aea41cbde1541">infix_forward_create_direct</a>(&amp;, &quot;, int -&gt; int&quot;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">(void *)&#160;</td>
+          <td class="paramname"><em>add_for_benchmark</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad36da003b2b775d02bc4b5e57d3a2332" name="ad36da003b2b775d02bc4b5e57d3a2332"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad36da003b2b775d02bc4b5e57d3a2332">&#9670;&#160;</a></span>if() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad36da003b2b775d02bc4b5e57d3a2332">&#9670;&#160;</a></span>if() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -464,7 +583,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a25ec5bf2371dba8ff1cdb1cb6d499dbd" name="a25ec5bf2371dba8ff1cdb1cb6d499dbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25ec5bf2371dba8ff1cdb1cb6d499dbd">&#9670;&#160;</a></span>if() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a25ec5bf2371dba8ff1cdb1cb6d499dbd">&#9670;&#160;</a></span>if() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -482,7 +601,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a9f0139eb891f44c7b12e3dd3d383acfe" name="a9f0139eb891f44c7b12e3dd3d383acfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f0139eb891f44c7b12e3dd3d383acfe">&#9670;&#160;</a></span>infix_forward_destroy() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0139eb891f44c7b12e3dd3d383acfe">&#9670;&#160;</a></span>infix_forward_destroy() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -499,8 +618,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3c9f36829fe7cba37d378a93cb9c1371" name="a3c9f36829fe7cba37d378a93cb9c1371"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c9f36829fe7cba37d378a93cb9c1371">&#9670;&#160;</a></span>infix_forward_destroy() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">infix_forward_destroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="901__call__overhead_8c.html#aea36557df60425296dce3fdf844f9453">direct_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a135e615d18daec14ebf61bed5869abf1" name="a135e615d18daec14ebf61bed5869abf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a135e615d18daec14ebf61bed5869abf1">&#9670;&#160;</a></span>infix_forward_destroy() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a135e615d18daec14ebf61bed5869abf1">&#9670;&#160;</a></span>infix_forward_destroy() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -592,7 +729,7 @@ Variables</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">= {<a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>),</div>
 <div class="line">                                <a class="code hl_function" href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a>(<a class="code hl_enumvalue" href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a>)}</div>
 <div class="ttc" id="agroup__type__system_html_gae323d599fbc081976a99a1e3b726a0b8"><div class="ttname"><a href="group__type__system.html#gae323d599fbc081976a99a1e3b726a0b8">infix_type_create_primitive</a></div><div class="ttdeci">c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id)</div><div class="ttdoc">Creates a static descriptor for a primitive C type.</div><div class="ttdef"><b>Definition</b> types.c:130</div></div>
-<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdef"><b>Definition</b> infix.h:167</div></div>
+<div class="ttc" id="agroup__type__system_html_gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f"><div class="ttname"><a href="group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a449724cf88949d38538312535be9ce6f">INFIX_PRIMITIVE_SINT32</a></div><div class="ttdeci">@ INFIX_PRIMITIVE_SINT32</div><div class="ttdef"><b>Definition</b> infix.h:171</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -666,6 +803,48 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="abe0a6ebd2c8543d7312fb910300eee46" name="abe0a6ebd2c8543d7312fb910300eee46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe0a6ebd2c8543d7312fb910300eee46">&#9670;&#160;</a></span>direct_cif</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__direct__marshalling__api.html#ga48bf70b1899cacc0ee8951abb33b7a29">infix_direct_cif_func</a> direct_cif = <a class="el" href="group__direct__marshalling__api.html#gac9f07b550fbe492d5948833561a5e9d7">infix_forward_get_direct_code</a>(<a class="el" href="901__call__overhead_8c.html#aea36557df60425296dce3fdf844f9453">direct_t</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acf44cf055b22370645a617a34f7912b5" name="acf44cf055b22370645a617a34f7912b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf44cf055b22370645a617a34f7912b5">&#9670;&#160;</a></span>direct_marsh_ns</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double direct_marsh_ns = (<a class="el" href="901__call__overhead_8c.html#a302a8fac36eccce7b63d1dcce5c55969">direct_marsh_time</a> / <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>) * 1e9</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a302a8fac36eccce7b63d1dcce5c55969" name="a302a8fac36eccce7b63d1dcce5c55969"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a302a8fac36eccce7b63d1dcce5c55969">&#9670;&#160;</a></span>direct_marsh_time</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double direct_marsh_time = ((double)(<a class="el" href="901__call__overhead_8c.html#afb358f48b1646c750fb9da6c6585be2b">end</a> - <a class="el" href="901__call__overhead_8c.html#a550769bbd4e7537ff90a656f5b0c23b2">start</a>)) / CLOCKS_PER_SEC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a165c1c6b8f1e6ca33eb1518edbf3da50" name="a165c1c6b8f1e6ca33eb1518edbf3da50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a165c1c6b8f1e6ca33eb1518edbf3da50">&#9670;&#160;</a></span>direct_ns_per_call</h2>
 
@@ -674,6 +853,20 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">double direct_ns_per_call = (<a class="el" href="901__call__overhead_8c.html#ae5c855e93fa3dc5e9c76937de0a08bf7">direct_time</a> / <a class="el" href="903__generation__benchmark_8c.html#ae09100a38fd2f3c0840b55298791ee3c">BENCHMARK_ITERATIONS</a>) * 1e9</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea36557df60425296dce3fdf844f9453" name="aea36557df60425296dce3fdf844f9453"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea36557df60425296dce3fdf844f9453">&#9670;&#160;</a></span>direct_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a>* direct_t = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -706,6 +899,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="ae25bcbce63d0ec5da113a351193b608e" name="ae25bcbce63d0ec5da113a351193b608e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae25bcbce63d0ec5da113a351193b608e">&#9670;&#160;</a></span>handlers</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structinfix__direct__arg__handler__t.html">infix_direct_arg_handler_t</a> handlers[2]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {{.scalar_marshaller = <a class="code hl_function" href="901__call__overhead_8c.html#a95495cbcf004922a280e35be83fb1330">benchmark_int_marshaller</a>},</div>
+<div class="line">                                              {.scalar_marshaller = <a class="code hl_function" href="901__call__overhead_8c.html#a95495cbcf004922a280e35be83fb1330">benchmark_int_marshaller</a>}}</div>
+<div class="ttc" id="a901__call__overhead_8c_html_a95495cbcf004922a280e35be83fb1330"><div class="ttname"><a href="901__call__overhead_8c.html#a95495cbcf004922a280e35be83fb1330">benchmark_int_marshaller</a></div><div class="ttdeci">infix_direct_value_t benchmark_int_marshaller(void *source)</div><div class="ttdoc">A marshaller for the direct benchmark that reads an int from a pointer.</div><div class="ttdef"><b>Definition</b> 901_call_overhead.c:40</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a5f79aa6bd01b66791b7e5ee78dea11aa" name="a5f79aa6bd01b66791b7e5ee78dea11aa"></a>

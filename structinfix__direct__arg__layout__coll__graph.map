@@ -1,0 +1,22 @@
+<map id="infix_direct_arg_layout" name="infix_direct_arg_layout">
+<area shape="rect" id="Node000001" title="Internal layout information for a single argument in a direct marshalling trampoline." alt="" coords="177,332,347,357"/>
+<area shape="rect" id="Node000002" href="$structinfix__arg__location.html" title="Detailed location information for a single function argument." alt="" coords="5,244,143,269"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,273,238,329,235,334,111,278"/>
+<area shape="rect" id="Node000003" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="495,117,594,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="523,154,436,225,322,310,284,334,281,330,319,306,433,221,519,150"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="609,117,617,122,621,130,613,141,595,145,593,140,610,137,615,130,613,126,606,122"/>
+<area shape="rect" id="Node000005" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="487,244,655,269"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="531,155,519,187,517,203,522,219,532,232,546,242,543,246,528,235,517,221,512,204,513,186,527,153"/>
+<area shape="rect" id="Node000006" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="679,244,871,269"/>
+<area shape="poly" id="edge9_Node000006_Node000003" title=" " alt="" coords="575,148,697,218,748,241,746,246,694,222,573,152"/>
+<area shape="rect" id="Node000007" href="$structinfix__direct__arg__handler__t.html" title="A struct containing all the necessary handlers for a single function argument." alt="" coords="167,244,357,269"/>
+<area shape="poly" id="edge12_Node000007_Node000003" title=" " alt="" coords="482,138,420,145,355,156,299,172,279,181,265,192,259,204,257,218,261,243,256,244,252,217,254,202,261,189,276,177,298,167,354,151,420,140,481,133"/>
+<area shape="rect" id="Node000004" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="491,5,598,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="547,45,547,117,542,117,542,45"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="613,9,625,18,616,26,599,29,598,23,614,21,619,18,610,14"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="563,231,545,143,550,142,569,230"/>
+<area shape="poly" id="edge8_Node000003_Node000006" title=" " alt="" coords="763,232,750,211,732,193,699,172,663,157,593,140,595,135,665,152,702,168,736,189,754,208,767,230"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="265,283,265,331,259,331,259,283"/>
+<area shape="rect" id="Node000008" href="$unioninfix__direct__value__t.html" title="A union to hold any primitive value returned by a scalar marshaller." alt="" coords="35,117,185,143"/>
+<area shape="poly" id="edge11_Node000007_Node000008" title=" " alt="" coords="105,157,103,189,106,204,113,218,136,231,174,241,173,247,134,236,109,222,101,206,98,189,100,156"/>
+</map>

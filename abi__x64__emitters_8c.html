@@ -138,9 +138,9 @@ Functions</h2></td></tr>
 <tr class="separator:a877fb1f8f0703500d3c1210976a4f98e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbe0ce8d2a6b21fd4662133b077106c1" id="r_afbe0ce8d2a6b21fd4662133b077106c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#afbe0ce8d2a6b21fd4662133b077106c1">emit_modrm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint8_t mod, uint8_t reg_opcode, uint8_t rm)</td></tr>
 <tr class="separator:afbe0ce8d2a6b21fd4662133b077106c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69808c1385730322abbd5d63cf38aede" id="r_a69808c1385730322abbd5d63cf38aede"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a69808c1385730322abbd5d63cf38aede">emit_mov_reg_imm64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg, uint64_t imm)</td></tr>
+<tr class="memitem:a69808c1385730322abbd5d63cf38aede" id="r_a69808c1385730322abbd5d63cf38aede"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a69808c1385730322abbd5d63cf38aede">emit_mov_reg_imm64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, uint64_t imm)</td></tr>
 <tr class="separator:a69808c1385730322abbd5d63cf38aede"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f6e45beb7feceb9737140d329fc82c8" id="r_a8f6e45beb7feceb9737140d329fc82c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a8f6e45beb7feceb9737140d329fc82c8">emit_mov_reg_imm32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg, int32_t imm)</td></tr>
+<tr class="memitem:a8f6e45beb7feceb9737140d329fc82c8" id="r_a8f6e45beb7feceb9737140d329fc82c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a8f6e45beb7feceb9737140d329fc82c8">emit_mov_reg_imm32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, int32_t imm)</td></tr>
 <tr class="separator:a8f6e45beb7feceb9737140d329fc82c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b0be9dfe7f7784764a3a6caa87a57f2" id="r_a3b0be9dfe7f7784764a3a6caa87a57f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a3b0be9dfe7f7784764a3a6caa87a57f2">emit_mov_reg_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src)</td></tr>
 <tr class="separator:a3b0be9dfe7f7784764a3a6caa87a57f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,6 +190,13 @@ Functions</h2></td></tr>
 <tr class="separator:a0df58e4513026fa5dc4f231127e7b93c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6146595ae12549b606c5725bc71652a7" id="r_a6146595ae12549b606c5725bc71652a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a6146595ae12549b606c5725bc71652a7">emit_vmovupd_mem_zmm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest_base, int32_t offset, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
 <tr class="separator:a6146595ae12549b606c5725bc71652a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b06076df168adee5f8842e366d4b5a9" id="r_a2b06076df168adee5f8842e366d4b5a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a2b06076df168adee5f8842e366d4b5a9">emit_cvtsd2ss_xmm_xmm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
+<tr class="separator:a2b06076df168adee5f8842e366d4b5a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4f666a7d6e95a680e50a18f5ee1cc77" id="r_aa4f666a7d6e95a680e50a18f5ee1cc77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aa4f666a7d6e95a680e50a18f5ee1cc77">emit_cvtsd2ss_xmm_mem</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src_base, int32_t offset)</td></tr>
+<tr class="separator:aa4f666a7d6e95a680e50a18f5ee1cc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65a170bd32886e1501128916f3e3e437" id="r_a65a170bd32886e1501128916f3e3e437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a65a170bd32886e1501128916f3e3e437">emit_movaps_xmm_xmm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
+<tr class="memdesc:a65a170bd32886e1501128916f3e3e437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emits <code>movaps xmm1, xmm2/m128</code> to move 128 bits between XMM registers.  <br /></td></tr>
+<tr class="separator:a65a170bd32886e1501128916f3e3e437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae351c6af013cfa7ed22367d1839d7a37" id="r_ae351c6af013cfa7ed22367d1839d7a37"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#ae351c6af013cfa7ed22367d1839d7a37">emit_movq_xmm_gpr</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src)</td></tr>
 <tr class="separator:ae351c6af013cfa7ed22367d1839d7a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae185b40fc20f00d00bebd1aaad35cedd" id="r_ae185b40fc20f00d00bebd1aaad35cedd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#ae185b40fc20f00d00bebd1aaad35cedd">emit_movq_gpr_xmm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest, <a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a> src)</td></tr>
@@ -200,19 +207,19 @@ Functions</h2></td></tr>
 <tr class="separator:a858220710202cecc0565a2d4b09537ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff7b7c503d16adf7c32cbda720c750ac" id="r_aff7b7c503d16adf7c32cbda720c750ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aff7b7c503d16adf7c32cbda720c750ac">emit_lea_reg_mem</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> dest, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> src_base, int32_t offset)</td></tr>
 <tr class="separator:aff7b7c503d16adf7c32cbda720c750ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa449698c2e78bfde703f37126a1a736" id="r_aaa449698c2e78bfde703f37126a1a736"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aaa449698c2e78bfde703f37126a1a736">emit_add_reg_imm32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg, int32_t imm)</td></tr>
+<tr class="memitem:aaa449698c2e78bfde703f37126a1a736" id="r_aaa449698c2e78bfde703f37126a1a736"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aaa449698c2e78bfde703f37126a1a736">emit_add_reg_imm32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, int32_t imm)</td></tr>
 <tr class="separator:aaa449698c2e78bfde703f37126a1a736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b7a73b6eab83dabc633d96bf6692dbb" id="r_a5b7a73b6eab83dabc633d96bf6692dbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a5b7a73b6eab83dabc633d96bf6692dbb">emit_sub_reg_imm32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg, int32_t imm)</td></tr>
+<tr class="memitem:a5b7a73b6eab83dabc633d96bf6692dbb" id="r_a5b7a73b6eab83dabc633d96bf6692dbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a5b7a73b6eab83dabc633d96bf6692dbb">emit_sub_reg_imm32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, int32_t imm)</td></tr>
 <tr class="separator:a5b7a73b6eab83dabc633d96bf6692dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71403e87cc9138ee7fee9c892b2f14f8" id="r_a71403e87cc9138ee7fee9c892b2f14f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a71403e87cc9138ee7fee9c892b2f14f8">emit_add_reg_imm8</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg, int8_t imm)</td></tr>
+<tr class="memitem:a71403e87cc9138ee7fee9c892b2f14f8" id="r_a71403e87cc9138ee7fee9c892b2f14f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a71403e87cc9138ee7fee9c892b2f14f8">emit_add_reg_imm8</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, int8_t imm)</td></tr>
 <tr class="separator:a71403e87cc9138ee7fee9c892b2f14f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6487e4953ffbbadd032df97e107e2be6" id="r_a6487e4953ffbbadd032df97e107e2be6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a6487e4953ffbbadd032df97e107e2be6">emit_dec_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg)</td></tr>
+<tr class="memitem:a6487e4953ffbbadd032df97e107e2be6" id="r_a6487e4953ffbbadd032df97e107e2be6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a6487e4953ffbbadd032df97e107e2be6">emit_dec_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:a6487e4953ffbbadd032df97e107e2be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1315b5f0a9a5f239f39820717ae877d9" id="r_a1315b5f0a9a5f239f39820717ae877d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a1315b5f0a9a5f239f39820717ae877d9">emit_push_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg)</td></tr>
+<tr class="memitem:a1315b5f0a9a5f239f39820717ae877d9" id="r_a1315b5f0a9a5f239f39820717ae877d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a1315b5f0a9a5f239f39820717ae877d9">emit_push_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:a1315b5f0a9a5f239f39820717ae877d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac0d9495e0d21248e7d8d9ca84440846" id="r_aac0d9495e0d21248e7d8d9ca84440846"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aac0d9495e0d21248e7d8d9ca84440846">emit_pop_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg)</td></tr>
+<tr class="memitem:aac0d9495e0d21248e7d8d9ca84440846" id="r_aac0d9495e0d21248e7d8d9ca84440846"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aac0d9495e0d21248e7d8d9ca84440846">emit_pop_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:aac0d9495e0d21248e7d8d9ca84440846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f9e2617fa516d5ead8dea8d24243127" id="r_a8f9e2617fa516d5ead8dea8d24243127"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a8f9e2617fa516d5ead8dea8d24243127">emit_call_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg)</td></tr>
+<tr class="memitem:a8f9e2617fa516d5ead8dea8d24243127" id="r_a8f9e2617fa516d5ead8dea8d24243127"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a8f9e2617fa516d5ead8dea8d24243127">emit_call_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:a8f9e2617fa516d5ead8dea8d24243127"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14f744b31cf31174641929bae08a7c19" id="r_a14f744b31cf31174641929bae08a7c19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a14f744b31cf31174641929bae08a7c19">emit_ret</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf)</td></tr>
 <tr class="separator:a14f744b31cf31174641929bae08a7c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,7 +227,7 @@ Functions</h2></td></tr>
 <tr class="separator:ab6aacadbb4e1fc842c1d455dae197a18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30b75e0dbd849e9e8b8b6261effcda6b" id="r_a30b75e0dbd849e9e8b8b6261effcda6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a30b75e0dbd849e9e8b8b6261effcda6b">emit_jnz_short</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int8_t offset)</td></tr>
 <tr class="separator:a30b75e0dbd849e9e8b8b6261effcda6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a792c75d3780343d6ab4fc818bf1f4c18" id="r_a792c75d3780343d6ab4fc818bf1f4c18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a792c75d3780343d6ab4fc818bf1f4c18">emit_jmp_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> reg)</td></tr>
+<tr class="memitem:a792c75d3780343d6ab4fc818bf1f4c18" id="r_a792c75d3780343d6ab4fc818bf1f4c18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#a792c75d3780343d6ab4fc818bf1f4c18">emit_jmp_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:a792c75d3780343d6ab4fc818bf1f4c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7993e38c8ddf6aa07a7928e2c98b72f" id="r_aa7993e38c8ddf6aa07a7928e2c98b72f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__x64__emitters_8c.html#aa7993e38c8ddf6aa07a7928e2c98b72f">emit_ud2</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf)</td></tr>
 <tr class="separator:aa7993e38c8ddf6aa07a7928e2c98b72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -379,6 +386,80 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a>&#160;</td>
           <td class="paramname"><em>reg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa4f666a7d6e95a680e50a18f5ee1cc77" name="aa4f666a7d6e95a680e50a18f5ee1cc77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4f666a7d6e95a680e50a18f5ee1cc77">&#9670;&#160;</a></span>emit_cvtsd2ss_xmm_mem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_cvtsd2ss_xmm_mem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#a6a330aede6810e701de0834d5d0e0d95">x64_gpr</a>&#160;</td>
+          <td class="paramname"><em>src_base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b06076df168adee5f8842e366d4b5a9" name="a2b06076df168adee5f8842e366d4b5a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b06076df168adee5f8842e366d4b5a9">&#9670;&#160;</a></span>emit_cvtsd2ss_xmm_xmm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_cvtsd2ss_xmm_xmm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1087,6 +1168,42 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a65a170bd32886e1501128916f3e3e437" name="a65a170bd32886e1501128916f3e3e437"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65a170bd32886e1501128916f3e3e437">&#9670;&#160;</a></span>emit_movaps_xmm_xmm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_movaps_xmm_xmm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__x64__common_8h.html#aa0462ce602242494cfb714c3e286853c">x64_xmm</a>&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Emits <code>movaps xmm1, xmm2/m128</code> to move 128 bits between XMM registers. </p>
 
 </div>
 </div>

@@ -167,10 +167,20 @@ Functions</h2></td></tr>
 <tr class="separator:ab89d2499cec859d3ec6ba1cc0dda6f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ccaa409163eed3898078a84bc06bba8" id="r_a5ccaa409163eed3898078a84bc06bba8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a5ccaa409163eed3898078a84bc06bba8">generate_reverse_epilogue_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__reverse__call__frame__layout.html">infix_reverse_call_frame_layout</a> *layout, <a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context)</td></tr>
 <tr class="separator:a5ccaa409163eed3898078a84bc06bba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58a99e9d80c8281df72b2331e04da463" id="r_a58a99e9d80c8281df72b2331e04da463"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a58a99e9d80c8281df72b2331e04da463">classify_recursive</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, size_t offset, <a class="el" href="abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92">arg_class_t</a> classes[2], int depth, size_t *field_count)</td></tr>
-<tr class="separator:a58a99e9d80c8281df72b2331e04da463"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5052dbcf9bc6b7645dfed7f539deb9b" id="r_ab5052dbcf9bc6b7645dfed7f539deb9b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#ab5052dbcf9bc6b7645dfed7f539deb9b">classify_aggregate_sysv</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92">arg_class_t</a> classes[2], size_t *num_classes)</td></tr>
-<tr class="separator:ab5052dbcf9bc6b7645dfed7f539deb9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef8c95aab3d4f31bd958171a3eef0f34" id="r_aef8c95aab3d4f31bd958171a3eef0f34"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#aef8c95aab3d4f31bd958171a3eef0f34">prepare_direct_forward_call_frame_sysv_x64</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> **out_layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, <a class="el" href="structinfix__direct__arg__handler__t.html">infix_direct_arg_handler_t</a> *<a class="el" href="901__call__overhead_8c.html#ae25bcbce63d0ec5da113a351193b608e">handlers</a>, void *target_fn)</td></tr>
+<tr class="separator:aef8c95aab3d4f31bd958171a3eef0f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63761a7af5f42ad6e6bfebaaebbc2946" id="r_a63761a7af5f42ad6e6bfebaaebbc2946"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a63761a7af5f42ad6e6bfebaaebbc2946">generate_direct_forward_prologue_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *layout)</td></tr>
+<tr class="separator:a63761a7af5f42ad6e6bfebaaebbc2946"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0bf2e04eba3f61a45eb1c45cf617f9c" id="r_ad0bf2e04eba3f61a45eb1c45cf617f9c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#ad0bf2e04eba3f61a45eb1c45cf617f9c">generate_direct_forward_argument_moves_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *layout)</td></tr>
+<tr class="separator:ad0bf2e04eba3f61a45eb1c45cf617f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a057e916fbceef50d5d6626e64ed01094" id="r_a057e916fbceef50d5d6626e64ed01094"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a057e916fbceef50d5d6626e64ed01094">generate_direct_forward_call_instruction_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *layout)</td></tr>
+<tr class="separator:a057e916fbceef50d5d6626e64ed01094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7036151de5641ea2c7bdb0192be37067" id="r_a7036151de5641ea2c7bdb0192be37067"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a7036151de5641ea2c7bdb0192be37067">generate_direct_forward_epilogue_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *<a class="el" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>)</td></tr>
+<tr class="separator:a7036151de5641ea2c7bdb0192be37067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ff05e88c2b2f4d2955b459c324ee4c0" id="r_a4ff05e88c2b2f4d2955b459c324ee4c0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a4ff05e88c2b2f4d2955b459c324ee4c0">classify_recursive</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, size_t offset, <a class="el" href="abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92">arg_class_t</a> classes[2], int depth, size_t *field_count)</td></tr>
+<tr class="separator:a4ff05e88c2b2f4d2955b459c324ee4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abce30af3054b896adb3dd7040027a727" id="r_abce30af3054b896adb3dd7040027a727"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#abce30af3054b896adb3dd7040027a727">classify_aggregate_sysv</a> (const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="abi__sysv__x64_8c.html#a5e5211aed481778b519a589cd9e68f92">arg_class_t</a> classes[2], size_t *num_classes)</td></tr>
+<tr class="separator:abce30af3054b896adb3dd7040027a727"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a9c5631a392e90b54b2a12019b11da6" id="r_a9a9c5631a392e90b54b2a12019b11da6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a9a9c5631a392e90b54b2a12019b11da6">generate_forward_argument_moves_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **<a class="el" href="901__call__overhead_8c.html#a5ee7905532888ac403e1bf46e306b3ce">arg_types</a>, size_t num_args, <a class="el" href="compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f">c23_maybe_unused</a> size_t num_fixed_args)</td></tr>
 <tr class="separator:a9a9c5631a392e90b54b2a12019b11da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b01450fbfa3268f00d8bc24b73b9153" id="r_a8b01450fbfa3268f00d8bc24b73b9153"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a8b01450fbfa3268f00d8bc24b73b9153">generate_forward_call_instruction_sysv_x64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="compat__c23_8h.html#a1e6bd75674e959d22513f27892b0e38f">c23_maybe_unused</a> <a class="el" href="structinfix__call__frame__layout.html">infix_call_frame_layout</a> *layout)</td></tr>
@@ -186,6 +196,8 @@ Variables</h2></td></tr>
 <tr class="separator:ae0b297d249f204883fbeb6d155b20b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a713379357c03a1d1c1a87d956d12b866" id="r_a713379357c03a1d1c1a87d956d12b866"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#a713379357c03a1d1c1a87d956d12b866">g_sysv_x64_reverse_spec</a></td></tr>
 <tr class="separator:a713379357c03a1d1c1a87d956d12b866"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca5cc6060033dcaec95091961625cb1d" id="r_aca5cc6060033dcaec95091961625cb1d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__sysv__x64_8c.html#aca5cc6060033dcaec95091961625cb1d">g_sysv_x64_direct_forward_spec</a></td></tr>
+<tr class="separator:aca5cc6060033dcaec95091961625cb1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements the FFI logic for the System V AMD64 ABI. </p>
@@ -281,8 +293,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ab5052dbcf9bc6b7645dfed7f539deb9b" name="ab5052dbcf9bc6b7645dfed7f539deb9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5052dbcf9bc6b7645dfed7f539deb9b">&#9670;&#160;</a></span>classify_aggregate_sysv()</h2>
+<a id="abce30af3054b896adb3dd7040027a727" name="abce30af3054b896adb3dd7040027a727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abce30af3054b896adb3dd7040027a727">&#9670;&#160;</a></span>classify_aggregate_sysv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +305,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void classify_aggregate_sysv </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
@@ -323,8 +335,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a58a99e9d80c8281df72b2331e04da463" name="a58a99e9d80c8281df72b2331e04da463"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58a99e9d80c8281df72b2331e04da463">&#9670;&#160;</a></span>classify_recursive()</h2>
+<a id="a4ff05e88c2b2f4d2955b459c324ee4c0" name="a4ff05e88c2b2f4d2955b459c324ee4c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ff05e88c2b2f4d2955b459c324ee4c0">&#9670;&#160;</a></span>classify_recursive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -335,7 +347,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static bool classify_recursive </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
@@ -361,6 +373,156 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">size_t *&#160;</td>
           <td class="paramname"><em>field_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad0bf2e04eba3f61a45eb1c45cf617f9c" name="ad0bf2e04eba3f61a45eb1c45cf617f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0bf2e04eba3f61a45eb1c45cf617f9c">&#9670;&#160;</a></span>generate_direct_forward_argument_moves_sysv_x64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_direct_forward_argument_moves_sysv_x64 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *&#160;</td>
+          <td class="paramname"><em>layout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a057e916fbceef50d5d6626e64ed01094" name="a057e916fbceef50d5d6626e64ed01094"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a057e916fbceef50d5d6626e64ed01094">&#9670;&#160;</a></span>generate_direct_forward_call_instruction_sysv_x64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_direct_forward_call_instruction_sysv_x64 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *&#160;</td>
+          <td class="paramname"><em>layout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7036151de5641ea2c7bdb0192be37067" name="a7036151de5641ea2c7bdb0192be37067"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7036151de5641ea2c7bdb0192be37067">&#9670;&#160;</a></span>generate_direct_forward_epilogue_sysv_x64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_direct_forward_epilogue_sysv_x64 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *&#160;</td>
+          <td class="paramname"><em>layout</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>ret_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a63761a7af5f42ad6e6bfebaaebbc2946" name="a63761a7af5f42ad6e6bfebaaebbc2946"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63761a7af5f42ad6e6bfebaaebbc2946">&#9670;&#160;</a></span>generate_direct_forward_prologue_sysv_x64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> generate_direct_forward_prologue_sysv_x64 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> *&#160;</td>
+          <td class="paramname"><em>layout</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -797,6 +959,73 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aef8c95aab3d4f31bd958171a3eef0f34" name="aef8c95aab3d4f31bd958171a3eef0f34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef8c95aab3d4f31bd958171a3eef0f34">&#9670;&#160;</a></span>prepare_direct_forward_call_frame_sysv_x64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> prepare_direct_forward_call_frame_sysv_x64 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
+          <td class="paramname"><em>arena</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__direct__call__frame__layout.html">infix_direct_call_frame_layout</a> **&#160;</td>
+          <td class="paramname"><em>out_layout</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>ret_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
+          <td class="paramname"><em>arg_types</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__direct__arg__handler__t.html">infix_direct_arg_handler_t</a> *&#160;</td>
+          <td class="paramname"><em>handlers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>target_fn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The v-table for the new Direct Marshalling ABI. </p>
+
+</div>
+</div>
 <a id="a5a1d24c8257e473915d637d3841a6836" name="a5a1d24c8257e473915d637d3841a6836"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a1d24c8257e473915d637d3841a6836">&#9670;&#160;</a></span>prepare_forward_call_frame_sysv_x64()</h2>
 
@@ -860,6 +1089,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The v-table of System V x64 functions for generating forward trampolines. </p>
 
 </div>
 </div>
@@ -902,10 +1132,36 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>The v-table of System V x64 functions for generating reverse trampolines. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="aca5cc6060033dcaec95091961625cb1d" name="aca5cc6060033dcaec95091961625cb1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca5cc6060033dcaec95091961625cb1d">&#9670;&#160;</a></span>g_sysv_x64_direct_forward_spec</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> g_sysv_x64_direct_forward_spec</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    .prepare_direct_forward_call_frame = <a class="code hl_function" href="abi__sysv__x64_8c.html#aef8c95aab3d4f31bd958171a3eef0f34">prepare_direct_forward_call_frame_sysv_x64</a>,</div>
+<div class="line">    .generate_direct_forward_prologue = <a class="code hl_function" href="abi__sysv__x64_8c.html#a63761a7af5f42ad6e6bfebaaebbc2946">generate_direct_forward_prologue_sysv_x64</a>,</div>
+<div class="line">    .generate_direct_forward_argument_moves = <a class="code hl_function" href="abi__sysv__x64_8c.html#ad0bf2e04eba3f61a45eb1c45cf617f9c">generate_direct_forward_argument_moves_sysv_x64</a>,</div>
+<div class="line">    .generate_direct_forward_call_instruction = <a class="code hl_function" href="abi__sysv__x64_8c.html#a057e916fbceef50d5d6626e64ed01094">generate_direct_forward_call_instruction_sysv_x64</a>,</div>
+<div class="line">    .generate_direct_forward_epilogue = <a class="code hl_function" href="abi__sysv__x64_8c.html#a7036151de5641ea2c7bdb0192be37067">generate_direct_forward_epilogue_sysv_x64</a>}</div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a057e916fbceef50d5d6626e64ed01094"><div class="ttname"><a href="abi__sysv__x64_8c.html#a057e916fbceef50d5d6626e64ed01094">generate_direct_forward_call_instruction_sysv_x64</a></div><div class="ttdeci">static infix_status generate_direct_forward_call_instruction_sysv_x64(code_buffer *buf, infix_direct_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1350</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a63761a7af5f42ad6e6bfebaaebbc2946"><div class="ttname"><a href="abi__sysv__x64_8c.html#a63761a7af5f42ad6e6bfebaaebbc2946">generate_direct_forward_prologue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_direct_forward_prologue_sysv_x64(code_buffer *buf, infix_direct_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1228</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a7036151de5641ea2c7bdb0192be37067"><div class="ttname"><a href="abi__sysv__x64_8c.html#a7036151de5641ea2c7bdb0192be37067">generate_direct_forward_epilogue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_direct_forward_epilogue_sysv_x64(code_buffer *buf, infix_direct_call_frame_layout *layout, infix_type *ret_type)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1364</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_ad0bf2e04eba3f61a45eb1c45cf617f9c"><div class="ttname"><a href="abi__sysv__x64_8c.html#ad0bf2e04eba3f61a45eb1c45cf617f9c">generate_direct_forward_argument_moves_sysv_x64</a></div><div class="ttdeci">static infix_status generate_direct_forward_argument_moves_sysv_x64(code_buffer *buf, infix_direct_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1260</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_aef8c95aab3d4f31bd958171a3eef0f34"><div class="ttname"><a href="abi__sysv__x64_8c.html#aef8c95aab3d4f31bd958171a3eef0f34">prepare_direct_forward_call_frame_sysv_x64</a></div><div class="ttdeci">static infix_status prepare_direct_forward_call_frame_sysv_x64(infix_arena_t *arena, infix_direct_call_frame_layout **out_layout, infix_type *ret_type, infix_type **arg_types, size_t num_args, infix_direct_arg_handler_t *handlers, void *target_fn)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1139</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ae0b297d249f204883fbeb6d155b20b70" name="ae0b297d249f204883fbeb6d155b20b70"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae0b297d249f204883fbeb6d155b20b70">&#9670;&#160;</a></span>g_sysv_x64_forward_spec</h2>
 
@@ -923,13 +1179,12 @@ Variables</h2></td></tr>
 <div class="line">    .generate_forward_argument_moves = <a class="code hl_function" href="abi__sysv__x64_8c.html#ab916a9f71c392dbac1fec7f1b95c3657">generate_forward_argument_moves_sysv_x64</a>,</div>
 <div class="line">    .generate_forward_call_instruction = <a class="code hl_function" href="abi__sysv__x64_8c.html#ac48198ff4dd197fdda9d3a8682af6ea8">generate_forward_call_instruction_sysv_x64</a>,</div>
 <div class="line">    .generate_forward_epilogue = <a class="code hl_function" href="abi__sysv__x64_8c.html#a34ade7b84de96870e7609c1f0024a999">generate_forward_epilogue_sysv_x64</a>}</div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_a34ade7b84de96870e7609c1f0024a999"><div class="ttname"><a href="abi__sysv__x64_8c.html#a34ade7b84de96870e7609c1f0024a999">generate_forward_epilogue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_forward_epilogue_sysv_x64(code_buffer *buf, infix_call_frame_layout *layout, infix_type *ret_type)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:706</div></div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_a5a1d24c8257e473915d637d3841a6836"><div class="ttname"><a href="abi__sysv__x64_8c.html#a5a1d24c8257e473915d637d3841a6836">prepare_forward_call_frame_sysv_x64</a></div><div class="ttdeci">static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t *arena, infix_call_frame_layout **out_layout, infix_type *ret_type, infix_type **arg_types, size_t num_args, size_t num_fixed_args, void *target_fn)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:317</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a34ade7b84de96870e7609c1f0024a999"><div class="ttname"><a href="abi__sysv__x64_8c.html#a34ade7b84de96870e7609c1f0024a999">generate_forward_epilogue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_forward_epilogue_sysv_x64(code_buffer *buf, infix_call_frame_layout *layout, infix_type *ret_type)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:733</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a5a1d24c8257e473915d637d3841a6836"><div class="ttname"><a href="abi__sysv__x64_8c.html#a5a1d24c8257e473915d637d3841a6836">prepare_forward_call_frame_sysv_x64</a></div><div class="ttdeci">static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t *arena, infix_call_frame_layout **out_layout, infix_type *ret_type, infix_type **arg_types, size_t num_args, size_t num_fixed_args, void *target_fn)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:344</div></div>
 <div class="ttc" id="aabi__sysv__x64_8c_html_ab916a9f71c392dbac1fec7f1b95c3657"><div class="ttname"><a href="abi__sysv__x64_8c.html#ab916a9f71c392dbac1fec7f1b95c3657">generate_forward_argument_moves_sysv_x64</a></div><div class="ttdeci">static infix_status generate_forward_argument_moves_sysv_x64(code_buffer *buf, infix_call_frame_layout *layout, infix_type **arg_types, size_t num_args, size_t num_fixed_args)</div></div>
 <div class="ttc" id="aabi__sysv__x64_8c_html_ac48198ff4dd197fdda9d3a8682af6ea8"><div class="ttname"><a href="abi__sysv__x64_8c.html#ac48198ff4dd197fdda9d3a8682af6ea8">generate_forward_call_instruction_sysv_x64</a></div><div class="ttdeci">static infix_status generate_forward_call_instruction_sysv_x64(code_buffer *, infix_call_frame_layout *)</div></div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_ae9b0496f3a5a5e2da0484e1113bbb5bc"><div class="ttname"><a href="abi__sysv__x64_8c.html#ae9b0496f3a5a5e2da0484e1113bbb5bc">generate_forward_prologue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_forward_prologue_sysv_x64(code_buffer *buf, infix_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:520</div></div>
-</div><!-- fragment --><p>The v-table of System V x64 functions for generating forward trampolines. </p>
-
+<div class="ttc" id="aabi__sysv__x64_8c_html_ae9b0496f3a5a5e2da0484e1113bbb5bc"><div class="ttname"><a href="abi__sysv__x64_8c.html#ae9b0496f3a5a5e2da0484e1113bbb5bc">generate_forward_prologue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_forward_prologue_sysv_x64(code_buffer *buf, infix_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:547</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a713379357c03a1d1c1a87d956d12b866" name="a713379357c03a1d1c1a87d956d12b866"></a>
@@ -949,13 +1204,12 @@ Variables</h2></td></tr>
 <div class="line">    .generate_reverse_argument_marshalling = <a class="code hl_function" href="abi__sysv__x64_8c.html#aeef6218ef8fb970f2da9bb833000ce67">generate_reverse_argument_marshalling_sysv_x64</a>,</div>
 <div class="line">    .generate_reverse_dispatcher_call = <a class="code hl_function" href="abi__sysv__x64_8c.html#ab89d2499cec859d3ec6ba1cc0dda6f50">generate_reverse_dispatcher_call_sysv_x64</a>,</div>
 <div class="line">    .generate_reverse_epilogue = <a class="code hl_function" href="abi__sysv__x64_8c.html#a5ccaa409163eed3898078a84bc06bba8">generate_reverse_epilogue_sysv_x64</a>}</div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_a1a2a1975739db78fe2217834511a7261"><div class="ttname"><a href="abi__sysv__x64_8c.html#a1a2a1975739db78fe2217834511a7261">prepare_reverse_call_frame_sysv_x64</a></div><div class="ttdeci">static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t *arena, infix_reverse_call_frame_layout **out_layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:820</div></div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_a5ccaa409163eed3898078a84bc06bba8"><div class="ttname"><a href="abi__sysv__x64_8c.html#a5ccaa409163eed3898078a84bc06bba8">generate_reverse_epilogue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_epilogue_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1032</div></div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_a85f7abdfc580bdbd531c2a8a84490629"><div class="ttname"><a href="abi__sysv__x64_8c.html#a85f7abdfc580bdbd531c2a8a84490629">generate_reverse_prologue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_prologue_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:868</div></div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_ab89d2499cec859d3ec6ba1cc0dda6f50"><div class="ttname"><a href="abi__sysv__x64_8c.html#ab89d2499cec859d3ec6ba1cc0dda6f50">generate_reverse_dispatcher_call_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:984</div></div>
-<div class="ttc" id="aabi__sysv__x64_8c_html_aeef6218ef8fb970f2da9bb833000ce67"><div class="ttname"><a href="abi__sysv__x64_8c.html#aeef6218ef8fb970f2da9bb833000ce67">generate_reverse_argument_marshalling_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:883</div></div>
-</div><!-- fragment --><p>The v-table of System V x64 functions for generating reverse trampolines. </p>
-
+<div class="ttc" id="aabi__sysv__x64_8c_html_a1a2a1975739db78fe2217834511a7261"><div class="ttname"><a href="abi__sysv__x64_8c.html#a1a2a1975739db78fe2217834511a7261">prepare_reverse_call_frame_sysv_x64</a></div><div class="ttdeci">static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t *arena, infix_reverse_call_frame_layout **out_layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:847</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a5ccaa409163eed3898078a84bc06bba8"><div class="ttname"><a href="abi__sysv__x64_8c.html#a5ccaa409163eed3898078a84bc06bba8">generate_reverse_epilogue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_epilogue_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1059</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_a85f7abdfc580bdbd531c2a8a84490629"><div class="ttname"><a href="abi__sysv__x64_8c.html#a85f7abdfc580bdbd531c2a8a84490629">generate_reverse_prologue_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_prologue_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:895</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_ab89d2499cec859d3ec6ba1cc0dda6f50"><div class="ttname"><a href="abi__sysv__x64_8c.html#ab89d2499cec859d3ec6ba1cc0dda6f50">generate_reverse_dispatcher_call_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:1011</div></div>
+<div class="ttc" id="aabi__sysv__x64_8c_html_aeef6218ef8fb970f2da9bb833000ce67"><div class="ttname"><a href="abi__sysv__x64_8c.html#aeef6218ef8fb970f2da9bb833000ce67">generate_reverse_argument_marshalling_sysv_x64</a></div><div class="ttdeci">static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *buf, infix_reverse_call_frame_layout *layout, infix_reverse_t *context)</div><div class="ttdef"><b>Definition</b> abi_sysv_x64.c:910</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a49fb5a1f4ff2d9953c0a696bdcbb01de" name="a49fb5a1f4ff2d9953c0a696bdcbb01de"></a>

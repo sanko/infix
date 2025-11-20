@@ -1,0 +1,17 @@
+<map id="infix_direct_arg_handler_t" name="infix_direct_arg_handler_t">
+<area shape="rect" id="Node000001" title="A struct containing all the necessary handlers for a single function argument." alt="" coords="54,244,245,269"/>
+<area shape="rect" id="Node000002" href="$unioninfix__direct__value__t.html" title="A union to hold any primitive value returned by a scalar marshaller." alt="" coords="5,117,155,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,156,75,188,77,204,84,219,96,232,112,242,109,246,93,236,79,221,72,205,69,188,71,156"/>
+<area shape="rect" id="Node000003" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="425,117,524,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="412,145,334,164,252,193,168,246,165,242,250,188,333,159,411,140"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="539,117,547,122,551,130,543,141,525,145,523,140,540,137,545,130,543,126,536,122"/>
+<area shape="rect" id="Node000005" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="332,244,500,269"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="444,152,424,170,409,192,406,205,406,218,413,243,408,245,401,219,401,204,404,190,420,166,441,148"/>
+<area shape="rect" id="Node000006" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="535,244,727,269"/>
+<area shape="poly" id="edge9_Node000006_Node000003" title=" " alt="" coords="497,151,530,184,570,218,609,242,606,246,566,222,526,188,493,155"/>
+<area shape="rect" id="Node000004" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="421,5,528,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="477,45,477,117,472,117,472,45"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="543,9,555,18,546,26,529,29,528,23,544,21,549,18,540,14"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="434,232,443,219,460,177,470,142,475,144,465,179,448,221,439,235"/>
+<area shape="poly" id="edge8_Node000003_Node000006" title=" " alt="" coords="624,231,617,211,605,192,586,176,565,163,521,145,523,140,568,159,589,172,609,189,621,209,629,230"/>
+</map>

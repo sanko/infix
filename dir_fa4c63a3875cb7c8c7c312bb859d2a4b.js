@@ -41,5 +41,6 @@ var dir_fa4c63a3875cb7c8c7c312bb859d2a4b =
     [ "Ch08_CustomAllocators.c", "Ch08__CustomAllocators_8c.html", "Ch08__CustomAllocators_8c" ],
     [ "Ch08_ManualAPI.c", "Ch08__ManualAPI_8c.html", "Ch08__ManualAPI_8c" ],
     [ "Ch08_SharedArena.c", "Ch08__SharedArena_8c.html", "Ch08__SharedArena_8c" ],
-    [ "Ch09_ErrorReporting.c", "Ch09__ErrorReporting_8c.html", "Ch09__ErrorReporting_8c" ]
+    [ "Ch09_ErrorReporting.c", "Ch09__ErrorReporting_8c.html", "Ch09__ErrorReporting_8c" ],
+    [ "Ch12_DirectMarshalling.c", "Ch12__DirectMarshalling_8c.html", "Ch12__DirectMarshalling_8c" ]
 ];

@@ -1,0 +1,5 @@
+<map id="Line" name="Line">
+<area shape="rect" id="Node000001" title=" " alt="" coords="8,108,57,133"/>
+<area shape="rect" id="Node000002" href="$structPoint.html" title="A simple struct with two doubles, often used to test pass&#45;by&#45;value on registers." alt="" coords="5,5,60,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="35,45,35,108,30,108,30,45"/>
+</map>

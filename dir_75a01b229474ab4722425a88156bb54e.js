@@ -22,6 +22,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "401_large_stack.c", "401__large__stack_8c.html", "401__large__stack_8c" ],
     [ "402_variadic_functions.c", "402__variadic__functions_8c.html", "402__variadic__functions_8c" ],
     [ "403_special_types.c", "403__special__types_8c.html", "403__special__types_8c" ],
+    [ "501_direct_marshalling.c", "501__direct__marshalling_8c.html", "501__direct__marshalling_8c" ],
     [ "810_memory_stress.c", "810__memory__stress_8c.html", "810__memory__stress_8c" ],
     [ "811_fault_injection.c", "811__fault__injection_8c.html", "811__fault__injection_8c" ],
     [ "812_shared_arena.c", "812__shared__arena_8c.html", "812__shared__arena_8c" ],
