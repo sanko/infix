@@ -271,6 +271,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
 
             // Check for bitfield syntax: "name: type : width"
             uint8_t bit_width = 0;
+            bool is_bitfield = false;
             skip_whitespace(state);
             if (*state->p == ':') {
                 state->p++;  // Consume ':'
@@ -283,6 +284,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                     return nullptr;
                 }
                 bit_width = (uint8_t)width_val;
+                is_bitfield = true;
             }
 
             member_node * node = infix_arena_calloc(state->arena, 1, sizeof(member_node), _Alignof(member_node));
@@ -293,12 +295,13 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             }
             // The member offset is not calculated here; it will be done later
             // by `infix_type_create_struct` or `_infix_type_recalculate_layout`.
-            if (bit_width > 0)
+            if (is_bitfield)
                 node->m = infix_type_create_bitfield_member(name, member_type, 0, bit_width);
             else
                 node->m = infix_type_create_member(name, member_type, 0);
 
             node->next = nullptr;
+
             if (!head)
                 head = tail = node;
             else {

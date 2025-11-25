@@ -254,6 +254,7 @@ struct infix_struct_member_t {
     size_t offset;      /**< The byte offset of the member from the start of the aggregate. */
     uint8_t bit_width;  /**< The width of the bitfield in bits. 0 for standard members. */
     uint8_t bit_offset; /**< The bit offset within the byte (0-7). */
+    bool is_bitfield;   /**< True if this member is a bitfield (even if width is 0). */
 };
 /**
  * @struct infix_function_argument_t
