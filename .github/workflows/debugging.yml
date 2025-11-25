@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code with Fix
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.0
 
       - name: Install Dependencies
         run: sudo apt-get update && sudo apt-get install -y clang perl
