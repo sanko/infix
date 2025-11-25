@@ -215,6 +215,7 @@ struct infix_type_t {
         struct {
             struct infix_type_t * element_type; /**< The type of each element in the array. */
             size_t num_elements;                /**< The number of elements in the array. */
+            bool is_flexible;                   /**< Indicates this is a flexible array member */
         } array_info;
         /** @brief Metadata for `INFIX_TYPE_REVERSE_TRAMPOLINE`. */
         struct {
@@ -248,9 +249,11 @@ struct infix_type_t {
  * @brief Describes a single member of a C struct or union.
  */
 struct infix_struct_member_t {
-    const char * name; /**< The name of the member, or `nullptr` if anonymous. */
-    infix_type * type; /**< The `infix_type` of the member. */
-    size_t offset;     /**< The byte offset of the member from the start of the aggregate. */
+    const char * name;  /**< The name of the member, or `nullptr` if anonymous. */
+    infix_type * type;  /**< The `infix_type` of the member. */
+    size_t offset;      /**< The byte offset of the member from the start of the aggregate. */
+    uint8_t bit_width;  /**< The width of the bitfield in bits. 0 for standard members. */
+    uint8_t bit_offset; /**< The bit offset within the byte (0-7). */
 };
 /**
  * @struct infix_function_argument_t
@@ -915,13 +918,24 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t *, infix_type *
  */
 c23_nodiscard infix_status infix_type_create_array(infix_arena_t *, infix_type **, infix_type *, size_t);
 /**
- * @brief Creates a new enum type with a specified underlying integer type.
+ * @brief Creates a flexible array member type ([?:type]).
+ * @details A Flexible Array Member (FAM) has an unspecified size and can only appear as the last member of a struct.
  * @param[in] arena The arena for allocation.
  * @param[out] out_type A pointer to receive the new `infix_type`.
- * @param[in] underlying_type The integer `infix_type` (e.g., from
- * `infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)`).
+ * @param[in] element_type The primitive type of each element.
  * @return `INFIX_SUCCESS` on success.
  */
+infix_status infix_type_create_flexible_array(
+    infix_arena_t *,
+    infix_type **,
+    infix_type *); /**
+                    * @brief Creates a new enum type with a specified underlying integer type.
+                    * @param[in] arena The arena for allocation.
+                    * @param[out] out_type A pointer to receive the new `infix_type`.
+                    * @param[in] underlying_type The integer `infix_type` (e.g., from
+                    * `infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)`).
+                    * @return `INFIX_SUCCESS` on success.
+                    */
 c23_nodiscard infix_status infix_type_create_enum(infix_arena_t *, infix_type **, infix_type *);
 /**
  * @brief Creates a placeholder for a named type to be resolved by a registry.
@@ -960,6 +974,15 @@ c23_nodiscard infix_status infix_type_create_vector(infix_arena_t *, infix_type 
  * @return An initialized `infix_struct_member` object.
  */
 infix_struct_member infix_type_create_member(const char *, infix_type *, size_t);
+/**
+ * @brief A factory function to create a bitfield `infix_struct_member`.
+ * @param[in] name The name of the member.
+ * @param[in] type The integer `infix_type` of the bitfield.
+ * @param[in] offset The byte offset (usually calculated automatically, so 0 is fine for automatic layout).
+ * @param[in] bit_width The width of the bitfield in bits.
+ * @return An initialized `infix_struct_member` object with bitfield metadata.
+ */
+infix_struct_member infix_type_create_bitfield_member(const char *, infix_type *, size_t, uint8_t);
 /** @} */  // end of manual_api group (continued)
 /** @} */  // end of type_system group
 /**

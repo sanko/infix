@@ -635,13 +635,19 @@ static infix_type * parse_type(parser_state * state) {
         }
     }
     else if (*state->p == '[') {  // Array type: `[size:type]`
-        state->p++;
+        state->p++;               // Eat '['
         skip_whitespace(state);
+
+        bool is_flexible = false;
         size_t num_elements;
-        if (!parse_size_t(state, &num_elements)) {
-            state->depth--;
-            return nullptr;
+
+        if (*state->p == '?') {  // Found "[?", implying flexible array
+            is_flexible = true;
+            state->p++;  // Consume '?'
         }
+        else if (!parse_size_t(state, &num_elements))  // Must be a number
+            return nullptr;
+
         skip_whitespace(state);
         if (*state->p != ':') {
             set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
@@ -667,7 +673,11 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         state->p++;
-        if (infix_type_create_array(state->arena, &result_type, element_type, num_elements) != INFIX_SUCCESS)
+        if (is_flexible) {
+            if (infix_type_create_flexible_array(state->arena, &result_type, element_type) != INFIX_SUCCESS)
+                result_type = nullptr;
+        }
+        else if (infix_type_create_array(state->arena, &result_type, element_type, num_elements) != INFIX_SUCCESS)
             result_type = nullptr;
     }
     else if (*state->p == '!')  // Packed struct
@@ -1135,7 +1145,7 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
     }
-    // CRITICAL: If the type has a semantic name, always prefer printing it.
+    // If the type has a semantic name, always prefer printing it.
     if (type->name) {
         _print(state, "@%s", type->name);
         return;
@@ -1158,7 +1168,10 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             _infix_type_print_signature_recursive(state, type->meta.pointer_info.pointee_type);
         break;
     case INFIX_TYPE_ARRAY:
-        _print(state, "[%zu:", type->meta.array_info.num_elements);
+        if (type->meta.array_info.is_flexible)
+            _print(state, "[?:");  // Print the question mark
+        else
+            _print(state, "[%zu:", type->meta.array_info.num_elements);
         _infix_type_print_signature_recursive(state, type->meta.array_info.element_type);
         _print(state, "]");
         break;
