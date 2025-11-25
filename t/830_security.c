@@ -33,6 +33,7 @@
  *       error status (`INFIX_ERROR_INVALID_ARGUMENT`), and do not proceed with
  *       a potentially dangerous allocation.
  */
+#define _CRT_SECURE_NO_WARNINGS
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
@@ -46,9 +47,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #endif
+
 // Dummy functions to provide valid pointers for trampoline creation.
 int dummy_target_func(int a) { return a * 10; }
 void dummy_handler_func(void) {}
+
 /**
  * @internal
  * @brief (Windows) Helper function to run a test that is expected to crash in a child process.
@@ -95,6 +98,7 @@ static bool run_crash_test_as_child(const char * test_name) {
     return exit_code == EXCEPTION_ACCESS_VIOLATION;
 }
 #endif
+
 TEST {
 #if defined(_WIN32)
     const char * child_test_name = getenv("INFIX_CRASH_TEST_CHILD");
@@ -140,9 +144,12 @@ TEST {
         exit(1);
     }
 #endif
+
     plan(4);
+
     subtest("Guard pages prevent use-after-free") {
         plan(3);
+
         subtest("Calling a freed UNBOUND FORWARD trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
@@ -159,6 +166,7 @@ TEST {
                     exit(2);
                 infix_unbound_cif_func dangling_ptr = infix_forward_get_unbound_code(trampoline);
                 infix_forward_destroy(trampoline);
+
                 int arg = 5, result = 0;
                 void * args[] = {&arg};
                 dangling_ptr((void *)dummy_target_func, &result, args);
@@ -176,6 +184,7 @@ TEST {
             skip(1, "Crash test not supported on this platform.");
 #endif
         }
+
         subtest("Calling a freed BOUND FORWARD trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
@@ -191,6 +200,7 @@ TEST {
                     exit(2);
                 infix_cif_func f = infix_forward_get_code(t);
                 infix_forward_destroy(t);
+
                 int a = 5, r = 0;
                 void * aa[] = {&a};
                 f(&r, aa);
@@ -203,6 +213,7 @@ TEST {
             skip(1, "Crash test not supported.");
 #endif
         }
+
         subtest("Calling a freed REVERSE trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
@@ -235,6 +246,7 @@ TEST {
 #endif
         }
     }
+
     subtest("Writing to a hardened reverse trampoline context causes a crash") {
         plan(1);
 #if defined(INFIX_OS_MACOS)
@@ -265,8 +277,10 @@ TEST {
         skip(1, "Write protection test not supported on this platform.");
 #endif
     }
+
     subtest("API hardening against integer overflows") {
         plan(3);
+
         subtest("infix_type_create_struct overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
@@ -274,37 +288,49 @@ TEST {
             infix_struct_member members[2];
             members[0] = infix_type_create_member("a", &malicious_type, 0);
             members[1] = infix_type_create_member("b", &malicious_type, 0);
+
             infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_struct(arena, &bad_type, members, 2);
+
             ok(status == INFIX_ERROR_INVALID_ARGUMENT,
                "infix_type_create_struct returned error on calculated overflow");
             ok(bad_type == nullptr, "Output type is nullptr on failure");
+
             infix_arena_destroy(arena);
         }
+
         subtest("infix_type_create_array overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
             infix_type * element_type = infix_type_create_primitive(INFIX_PRIMITIVE_UINT64);
             size_t malicious_num_elements = (SIZE_MAX / element_type->size) + 1;
+
             infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_array(arena, &bad_type, element_type, malicious_num_elements);
+
             ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_array returned error on overflow");
             ok(bad_type == nullptr, "Output type is nullptr on failure");
+
             infix_arena_destroy(arena);
         }
+
         subtest("infix_type_create_union overflow") {
             plan(2);
             infix_arena_t * arena = infix_arena_create(256);
             infix_type malicious_member_type = {.size = SIZE_MAX - 2, .alignment = 8};
             infix_struct_member members[1];
             members[0] = infix_type_create_member("bad", &malicious_member_type, 0);
+
             infix_type * bad_type = nullptr;
             infix_status status = infix_type_create_union(arena, &bad_type, members, 1);
+
             ok(status == INFIX_ERROR_INVALID_ARGUMENT, "infix_type_create_union returned error on overflow");
             ok(bad_type == nullptr, "Output type is nullptr on failure");
+
             infix_arena_destroy(arena);
         }
     }
+
     subtest("POSIX hardened allocator (shm_open)") {
         plan(1);
 #if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_TERMUX) && \

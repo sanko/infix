@@ -203,9 +203,12 @@ static void run_regression_case(const regression_test_case_t * test) {
                 return;
             }
             size_t total_fields = 0;
-            infix_type * type_pool[1] = {generate_random_type(arena, &in, 0, &total_fields)};
-            if (type_pool[0] == nullptr)
-                type_pool[0] = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+            infix_type * generated_type = generate_random_type(arena, &in, 0, &total_fields);
+
+            // Ensure we have a valid type. If the fuzzer input was short/garbage,
+            // generated_type might be NULL. Use a fallback to ensure the API call happens.
+            if (generated_type == nullptr)
+                generated_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
 
             // If we expect success, use 0 arguments to avoid the hardcoded nullptr error.
             // If we expect failure (negative testing), use 1 argument which defaults to nullptr in arg_types[0].
@@ -214,8 +217,9 @@ static void run_regression_case(const regression_test_case_t * test) {
             infix_type * arg_types[] = {nullptr};
             infix_forward_t * fwd = nullptr;
             infix_status fwd_status =
-                infix_forward_create_unbound_manual(&fwd, type_pool[0], arg_types, num_args, num_args);
-            infix_forward_destroy(fwd);
+                infix_forward_create_unbound_manual(&fwd, generated_type, arg_types, num_args, num_args);
+            if (fwd)
+                infix_forward_destroy(fwd);
 
             infix_reverse_t * rev = nullptr;
             // For reverse callback, we need a handler. Passing nullptr is fine if we expect failure,
@@ -223,8 +227,9 @@ static void run_regression_case(const regression_test_case_t * test) {
             void * handler = (test->expected_status == INFIX_SUCCESS) ? (void *)dummy_reg_handler : nullptr;
 
             infix_status rev_status =
-                infix_reverse_create_callback_manual(&rev, type_pool[0], arg_types, num_args, num_args, handler);
-            infix_reverse_destroy(rev);
+                infix_reverse_create_callback_manual(&rev, generated_type, arg_types, num_args, num_args, handler);
+            if (rev)
+                infix_reverse_destroy(rev);
 
             ok(fwd_status == test->expected_status && rev_status == test->expected_status,
                "Trampoline generators correctly returned expected status %d (Got Fwd:%d, Rev:%d)",
