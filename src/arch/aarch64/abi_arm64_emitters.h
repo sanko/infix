@@ -39,6 +39,10 @@ void emit_arm64_mov_reg(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr 
 // Memory <-> GPR Load/Store Emitters
 /** @internal @brief Emits `LDR <Wt|Xt>, [<Xn|SP>, #imm]` to load a GPR from memory. */
 void emit_arm64_ldr_imm(code_buffer * buf, bool is64, arm64_gpr dest, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `LDRB <Wt>, [<Xn|SP>, #imm]` to load a byte from memory. */
+void emit_arm64_ldrb_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `LDRH <Wt>, [<Xn|SP>, #imm]` to load a half-word from memory. */
+void emit_arm64_ldrh_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `LDRSW <Xt>, [<Xn|SP>, #imm]` to load a 32-bit value and sign-extend to 64-bit. */
 void emit_arm64_ldrsw_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `STR <Wt|Xt>, [<Xn|SP>, #imm]` to store a GPR to memory. */

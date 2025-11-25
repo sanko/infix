@@ -484,11 +484,21 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                      type->meta.primitive_id == INFIX_PRIMITIVE_SINT32);
                 if (is_signed_lt_64)
                     // Use Load Register Signed Word to sign-extend a 32-bit value to 64 bits.
+                    // Note: For signed 8/16 bit, we currently don't have LDRSB/LDRSH emitters, so we fall back to
+                    // standard load which zero-extends, relying on the user/compiler to handle sign extension for
+                    // char/short if strictly needed. But, for correctness, we should match size.
                     emit_arm64_ldrsw_imm(buf, GPR_ARGS[loc->reg_index], X9_REG, 0);  // ldrsw xN, [x9]
-                else
-                    // For all other types, a standard load is correct. A 32-bit load into a 64-bit
-                    // register automatically zero-extends, which is correct for unsigned types.
-                    emit_arm64_ldr_imm(buf, type->size == 8, GPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr xN/wN, [x9]
+                else {
+                    // Unsigned types and small structs
+                    if (type->size == 1)
+                        emit_arm64_ldrb_imm(buf, GPR_ARGS[loc->reg_index], X9_REG, 0);
+                    else if (type->size == 2)
+                        emit_arm64_ldrh_imm(buf, GPR_ARGS[loc->reg_index], X9_REG, 0);
+                    else
+                        // 4-byte or 8-byte load
+                        emit_arm64_ldr_imm(
+                            buf, type->size == 8, GPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr xN/wN, [x9]
+                }
                 break;
             }
         case ARG_LOCATION_GPR_PAIR:

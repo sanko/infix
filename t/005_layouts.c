@@ -60,8 +60,8 @@ TEST {
     infix_arena_t * arena = infix_arena_create(4096);
     subtest("Struct with standard padding") {
         plan(5);
-        infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
-                                         {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0}};
+        infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0, 0, 0, false},
+                                         {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0, 0, 0, false}};
         infix_type * type = nullptr;
         infix_status status = infix_type_create_struct(arena, &type, members, 2);
         ok(status == INFIX_SUCCESS, "Struct creation should succeed");
@@ -78,8 +78,8 @@ TEST {
     }
     subtest("Struct with no padding") {
         plan(5);
-        infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 0},
-                                         {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0}};
+        infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 0, 0, 0, false},
+                                         {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0, 0, 0, false}};
         infix_type * type = nullptr;
         infix_status status = infix_type_create_struct(arena, &type, members, 2);
         ok(status == INFIX_SUCCESS, "Struct creation should succeed");
@@ -95,16 +95,18 @@ TEST {
     subtest("Nested struct") {
         plan(4);
         // First, create the inner struct type.
-        infix_struct_member inner_members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
-                                               {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0}};
+        infix_struct_member inner_members[] = {
+            {"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0, 0, 0, false},
+            {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 0, 0, 0, false}};
         infix_type * inner_type = nullptr;
         infix_status inner_status = infix_type_create_struct(arena, &inner_type, inner_members, 2);
         ok(inner_status == INFIX_SUCCESS, "Inner struct creation should succeed");
         // Then, create the outer struct type that contains the inner one.
         infix_type * outer_type = nullptr;
         if (inner_type) {
-            infix_struct_member outer_members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
-                                                   {"b", inner_type, 0}};
+            infix_struct_member outer_members[] = {
+                {"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0, 0, 0, false},
+                {"b", inner_type, 0, 0, 0, false}};
             infix_status outer_status = infix_type_create_struct(arena, &outer_type, outer_members, 2);
             ok(outer_status == INFIX_SUCCESS, "Nested struct creation should succeed");
         }
@@ -120,8 +122,8 @@ TEST {
     subtest("Packed struct (pack 1)") {
         plan(3);
         // For packed structs, we must provide the pre-calculated offsets.
-        infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0},
-                                         {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 1}};
+        infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 0, 0, 0, false},
+                                         {"b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), 1, 0, 0, false}};
         infix_type * type = nullptr;
         infix_status status = infix_type_create_packed_struct(
             arena, &type, sizeof(test_struct_packed), _Alignof(test_struct_packed), members, 2);
@@ -141,9 +143,9 @@ TEST {
         ok(array_status == INFIX_SUCCESS, "Array creation for union member should succeed");
         infix_type * type = nullptr;
         if (char_array) {
-            infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 0},
-                                             {"b", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 0},
-                                             {"c", char_array, 0}};
+            infix_struct_member members[] = {{"a", infix_type_create_primitive(INFIX_PRIMITIVE_SINT64), 0, 0, 0, false},
+                                             {"b", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 0, 0, 0, false},
+                                             {"c", char_array, 0, 0, 0, false}};
             infix_status union_status = infix_type_create_union(arena, &type, members, 3);
             ok(union_status == INFIX_SUCCESS, "Union creation should succeed");
         }

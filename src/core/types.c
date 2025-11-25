@@ -191,7 +191,6 @@ c23_nodiscard infix_type * infix_type_create_void(void) { return &_infix_type_vo
 infix_struct_member infix_type_create_member(const char * name, infix_type * type, size_t offset) {
     return (infix_struct_member){name, type, offset, 0, 0, false};
 }
-
 /**
  * @brief A factory function to create a bitfield `infix_struct_member`.
  * @param[in] name The name of the member.
@@ -210,8 +209,9 @@ infix_struct_member infix_type_create_bitfield_member(const char * name,
 /**
  * @internal
  * @brief Shared logic to calculate struct layout, including bitfields and FAMs.
+ * @return `true` on success, `false` if an integer overflow occurred.
  */
-static void _layout_struct(infix_type * type) {
+static bool _layout_struct(infix_type * type) {
     size_t current_byte_offset = 0;
     uint8_t current_bit_offset = 0;  // 0-7 bits used in the current byte
     size_t max_alignment = 1;
@@ -223,6 +223,10 @@ static void _layout_struct(infix_type * type) {
         if (member->type->category == INFIX_TYPE_ARRAY && member->type->meta.array_info.is_flexible) {
             // Flush any pending bits to the next byte
             if (current_bit_offset > 0) {
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
                 current_byte_offset++;
                 current_bit_offset = 0;
             }
@@ -232,7 +236,12 @@ static void _layout_struct(infix_type * type) {
             if (member_align == 0)
                 member_align = 1;
 
-            current_byte_offset = _infix_align_up(current_byte_offset, member_align);
+            size_t aligned = _infix_align_up(current_byte_offset, member_align);
+            if (aligned < current_byte_offset) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                return false;
+            }
+            current_byte_offset = aligned;
             member->offset = current_byte_offset;
 
             if (member_align > max_alignment)
@@ -245,6 +254,10 @@ static void _layout_struct(infix_type * type) {
             // Zero-width bitfield: force alignment to the next boundary of the declared type.
             if (member->bit_width == 0) {
                 if (current_bit_offset > 0) {
+                    if (current_byte_offset == SIZE_MAX) {
+                        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                        return false;
+                    }
                     current_byte_offset++;
                     current_bit_offset = 0;
                 }
@@ -252,7 +265,12 @@ static void _layout_struct(infix_type * type) {
                 if (align == 0)
                     align = 1;
 
-                current_byte_offset = _infix_align_up(current_byte_offset, align);
+                size_t aligned = _infix_align_up(current_byte_offset, align);
+                if (aligned < current_byte_offset) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
+                current_byte_offset = aligned;
                 member->offset = current_byte_offset;
                 member->bit_offset = 0;
 
@@ -265,6 +283,10 @@ static void _layout_struct(infix_type * type) {
             // Simplified System V packing: pack into current byte if it fits.
             if (current_bit_offset + member->bit_width > 8) {
                 // Overflow: move to start of next byte
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
                 current_byte_offset++;
                 current_bit_offset = 0;
             }
@@ -275,6 +297,10 @@ static void _layout_struct(infix_type * type) {
 
             // If we filled the byte exactly, advance to next byte
             if (current_bit_offset == 8) {
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
                 current_byte_offset++;
                 current_bit_offset = 0;
             }
@@ -291,6 +317,10 @@ static void _layout_struct(infix_type * type) {
 
             // Flush bits first
             if (current_bit_offset > 0) {
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
                 current_byte_offset++;
                 current_bit_offset = 0;
             }
@@ -302,20 +332,41 @@ static void _layout_struct(infix_type * type) {
             if (member_align > max_alignment)
                 max_alignment = member_align;
 
-            current_byte_offset = _infix_align_up(current_byte_offset, member_align);
+            size_t aligned = _infix_align_up(current_byte_offset, member_align);
+            if (aligned < current_byte_offset) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                return false;
+            }
+            current_byte_offset = aligned;
             member->offset = current_byte_offset;
+
+            if (current_byte_offset > SIZE_MAX - member->type->size) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                return false;
+            }
             current_byte_offset += member->type->size;
         }
     }
 
     // Final flush
-    if (current_bit_offset > 0)
+    if (current_bit_offset > 0) {
+        if (current_byte_offset == SIZE_MAX) {
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+            return false;
+        }
         current_byte_offset++;
+    }
 
     type->alignment = max_alignment;
-    type->size = _infix_align_up(current_byte_offset, max_alignment);
-}
 
+    size_t aligned_size = _infix_align_up(current_byte_offset, max_alignment);
+    if (aligned_size < current_byte_offset) {
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+        return false;
+    }
+    type->size = aligned_size;
+    return true;
+}
 /**
  * @internal
  * @brief Common setup logic for creating aggregate types (structs and unions).
@@ -675,7 +726,10 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
     }
 
     // Calculate Layout (including bitfields and FAMs)
-    _layout_struct(type);
+    if (!_layout_struct(type)) {
+        *out_type = nullptr;
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
 
     *out_type = type;
     return INFIX_SUCCESS;
