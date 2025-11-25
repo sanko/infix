@@ -116,8 +116,13 @@ infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int 
                 return NULL;
             size_t num_members = (num_members_byte % MAX_MEMBERS) + 1;
 
+            // For structs (case 4, 6), we might add a Flexible Array Member (FAM) at the end.
+            bool add_fam = (type_choice != 5) && (num_members_byte & 0x80);  // 50% chance if not union
+
+            // Allocate space for members. If adding FAM, we need +1 slot.
+            size_t alloc_count = num_members + (add_fam ? 1 : 0);
             infix_struct_member * members =
-                infix_arena_alloc(arena, num_members * sizeof(infix_struct_member), _Alignof(infix_struct_member));
+                infix_arena_alloc(arena, alloc_count * sizeof(infix_struct_member), _Alignof(infix_struct_member));
             if (!members)
                 return nullptr;
 
@@ -130,16 +135,64 @@ infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int 
                 if (!member_type)
                     return nullptr;
 
-                members[i].name = "fuzz";  // Use a dummy name.
-                members[i].type = member_type;
+                // Bitfield Logic:
+                // If it's a struct (not union) and the type is an integer, maybe make it a bitfield.
+                // Unions can have bitfields in C, but we'll focus on structs for layout complexity.
+                uint8_t bit_width = 0;
+                if (type_choice != 5 && member_type->category == INFIX_TYPE_PRIMITIVE) {
+                    // 25% chance to be a bitfield
+                    uint8_t chance;
+                    if (consume_uint8_t(in, &chance) && (chance % 4 == 0)) {
+                        // Generate a width.
+                        // Occasionally generate invalid widths (0 or > type size) to stress error handling.
+                        if (chance % 10 == 0)  // Zero-width (forces alignment)
+                            bit_width = 0;
+                        else  // Normalish width: 1 to (size*8)
+                            bit_width = (chance % (member_type->size * 8)) + 1;
+                    }
+                }
 
-                // For packed structs, consume a random offset. For others, this is ignored
-                // but still provides input variety.
+                if (bit_width > 0)
+                    members[i] = infix_type_create_bitfield_member("fuzz_bf", member_type, 0, bit_width);
+                else {
+                    members[i].name = "fuzz";  // Use a dummy name.
+                    members[i].type = member_type;
+                    members[i].offset = 0;  // Reset offset (will be calculated)
+                    members[i].bit_width = 0;
+                    members[i].bit_offset = 0;
+                    members[i].is_bitfield = false;
+                }
+
+                // For packed structs (type 6), consume a random offset to test user-supplied offsets.
                 size_t fuzz_offset;
-                if (!consume_size_t(in, &fuzz_offset))
-                    members[i].offset = (type_choice == 4 || type_choice == 6) ? (i * 8) : 0;
-                else
-                    members[i].offset = fuzz_offset;
+                if (consume_size_t(in, &fuzz_offset)) {
+                    if (type_choice == 6)
+                        members[i].offset = (i * 8);  // Simplified
+                    // In a real manual API usage, user provides offsets.
+                    // Here we let layout engine handle it for non-packed.
+                }
+            }
+
+            // Flexible Array Member Logic
+            if (add_fam) {
+                infix_type * elem_type = generate_random_type(arena, in, depth + 1, total_fields);
+                if (!elem_type)
+                    return nullptr;
+
+                // Create the FAM type
+                infix_type * fam_type = NULL;
+                if (infix_type_create_flexible_array(arena, &fam_type, elem_type) != INFIX_SUCCESS)
+                    return nullptr;
+
+                members[num_members].name = "fuzz_fam";
+                members[num_members].type = fam_type;
+                members[num_members].offset = 0;
+                members[num_members].bit_width = 0;
+                members[num_members].bit_offset = 0;
+                members[num_members].is_bitfield = false;
+
+                // Update count
+                num_members++;
             }
 
             infix_type * agg_type = NULL;
@@ -148,7 +201,7 @@ infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int 
                 size_t total_size;
                 uint8_t alignment_byte;
                 if (!consume_size_t(in, &total_size))
-                    total_size = num_members * 8;
+                    total_size = num_members * 8;  // Garbage size, let validation handle it
                 if (!consume_uint8_t(in, &alignment_byte))
                     alignment_byte = 1;
                 size_t alignment = (alignment_byte % 8) + 1;
