@@ -25,7 +25,7 @@ const char * LIB_NAME = "./libglobals.so";
 #endif
 
 int main() {
-    printf("--- Cookbook Chapter 6: Reading and Writing Global Variables ---\n");
+    printf("Cookbook Chapter 6: Reading and Writing Global Variables\n");
 
     infix_library_t * lib = infix_library_open(LIB_NAME);
     if (!lib) {

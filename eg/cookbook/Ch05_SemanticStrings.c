@@ -60,7 +60,7 @@ void introspect_and_print(const char * signature, infix_registry_t * registry) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 5: Handling Semantic String Types ---\n");
+    printf("Cookbook Chapter 5: Handling Semantic String Types\n");
 
     // 1. Define semantic aliases in a registry.
     infix_registry_t * registry = infix_registry_create();

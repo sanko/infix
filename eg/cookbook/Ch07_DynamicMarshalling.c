@@ -67,7 +67,7 @@ static void marshal_ordered_data(void * dest, const char * sig, void ** src) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 7: Dynamic Struct Marshalling ---\n");
+    printf("Cookbook Chapter 7: Dynamic Struct Marshalling\n");
 
     // Our source data, coming from some dynamic source.
     int32_t id = 123;

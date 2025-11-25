@@ -44,9 +44,20 @@
 // Use a portable mechanism for thread-local storage (TLS).
 // This series of #ifdefs selects the correct keyword for the current compiler.
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
+#if defined(__OpenBSD__) && !defined(_REENTRANT)
+// OpenBSD requires -pthread for TLS cleanup to work correctly at exit.
+// If _REENTRANT is not defined, we are likely in a single-threaded build, so we disable TLS
+// to prevent segfaults in __cxa_finalize.
+#define INFIX_TLS
+#else
 #define INFIX_TLS _Thread_local  // C11 standard TLS
+#endif
 #elif defined(__GNUC__) || defined(__clang__)
+#if defined(__OpenBSD__) && !defined(_REENTRANT)
+#define INFIX_TLS
+#else
 #define INFIX_TLS __thread  // GCC/Clang extension
+#endif
 #elif defined(_MSC_VER)
 #define INFIX_TLS __declspec(thread)  // MSVC specific
 #else

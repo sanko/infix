@@ -29,7 +29,7 @@ bool introspect_alias(const char * signature,
                       const char * expected_name,
                       infix_type_category expected_category,
                       size_t expected_size) {
-    printf("\n--- Introspecting '%s' ---\n", signature);
+    printf("\nIntrospecting '%s'\n", signature);
 
     infix_type * type = NULL;
     infix_arena_t * arena = NULL;
@@ -73,7 +73,7 @@ bool introspect_alias(const char * signature,
 }
 
 int main() {
-    printf("--- Cookbook Chapter 7: Creating and Introspecting Semantic Aliases ---\n");
+    printf("Cookbook Chapter 7: Creating and Introspecting Semantic Aliases\n");
 
     // 1. Define several kinds of aliases in a registry.
     infix_registry_t * registry = infix_registry_create();

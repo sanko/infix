@@ -11,7 +11,7 @@
 #include <string.h>
 
 int main() {
-    printf("--- Cookbook Chapter 1: Passing and Receiving Pointers ---\n");
+    printf("Cookbook Chapter 1: Passing and Receiving Pointers\n");
 
     // 1. Describe the signature for: const char* strchr(const char* s, int c);
     //    Note that `const char*` becomes `*char` and `int` is used for the character.

@@ -30,7 +30,7 @@ static const char * status_to_string(StatusCode code) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Enums ---\n");
+    printf("Cookbook Chapter 2: Working with Enums\n");
 
     // 1. Describe the signature for: const char* status_to_string(StatusCode code);
     //    The C `enum` is based on `int`, so we describe it as `e:int`.

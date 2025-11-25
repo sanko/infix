@@ -26,7 +26,7 @@ double average_series(DataSeries * series) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Bitfields ---\n");
+    printf("Cookbook Chapter 2: Working with Bitfields\n");
 
     // Signature syntax: "[ ? : type ]" (Question mark indicates unknown size)
     // The struct is passed by pointer (*) because it has variable size.

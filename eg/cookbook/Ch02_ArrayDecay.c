@@ -26,7 +26,7 @@ static int64_t sum_array_elements(const int64_t * arr, size_t count) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Fixed-Size Arrays ---\n");
+    printf("Cookbook Chapter 2: Working with Fixed-Size Arrays\n");
 
     // 1. Describe the signature for: int64_t sum_array_elements(const int64_t* arr, size_t count);
     //    Even though the original C declaration might look like `arr[4]`, it decays

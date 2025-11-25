@@ -25,7 +25,7 @@ void print_status(StatusRegister reg) {
     printf("Status Register: [Enable: %d] [Mode: %d] [Error: %d]\n", reg.enable, reg.mode, reg.error);
 }
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Bitfields ---\n");
+    printf("Cookbook Chapter 2: Working with Bitfields\n");
 
     // Signature syntax: "name : type : width"
     // We use !{} for packed struct to match the C definition.

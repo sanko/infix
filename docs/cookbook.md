@@ -826,12 +826,12 @@ infix_forward_create(&t_ctor, "(*void, int)->void", p_ctor, NULL);
 // Method is: int getValue(const MyClass* this);
 infix_forward_create(&t_getval, "(*void)->int", p_getval, NULL);
 
-// --- Simulate `MyClass* obj = new MyClass(100);` ---
+// Simulate `MyClass* obj = new MyClass(100);`
 void* obj = malloc(obj_size);
 int initial_val = 100;
 infix_forward_get_code(t_ctor)(NULL, (void*[]){ &obj, &initial_val });
 
-// --- Simulate `int result = obj->getValue();` ---
+// Simulate `int result = obj->getValue();`
 int result;
 infix_forward_get_code(t_getval)(&result, (void*[]){ &obj });
 ```

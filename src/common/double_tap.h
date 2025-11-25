@@ -56,20 +56,23 @@
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_ATOMICS__)
 #include <stdatomic.h>
 #define TAP_ATOMIC_SIZE_T _Atomic size_t
-#define TAP_ATOMIC_FETCH_ADD(ptr, val) atomic_fetch_add(ptr, val)
-#elif defined(__GNUC__) || defined(__clang__)
-#define TAP_ATOMIC_SIZE_T size_t
-#define TAP_ATOMIC_FETCH_ADD(ptr, val) __sync_fetch_and_add(ptr, val)
-#else
-// Fallback for older compilers without atomics support. This is not thread-safe.
-#define TAP_ATOMIC_SIZE_T size_t
 #define TAP_ATOMIC_FETCH_ADD(ptr, val) ((*ptr) += (val))
 #warning "Compiler does not support C11 atomics or GCC builtins; global counters will not be thread-safe."
 #endif
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
+#if defined(__OpenBSD__) && !defined(_REENTRANT)
+// OpenBSD requires -pthread for TLS cleanup to work correctly at exit.
+// If _REENTRANT is not defined, disable TLS to prevent segfaults.
+#define TAP_THREAD_LOCAL
+#else
 #define TAP_THREAD_LOCAL _Thread_local
+#endif
 #elif defined(__GNUC__) || defined(__clang__)
+#if defined(__OpenBSD__) && !defined(_REENTRANT)
+#define TAP_THREAD_LOCAL
+#else
 #define TAP_THREAD_LOCAL __thread
+#endif
 #elif defined(_MSC_VER)
 #define TAP_THREAD_LOCAL __declspec(thread)
 #else

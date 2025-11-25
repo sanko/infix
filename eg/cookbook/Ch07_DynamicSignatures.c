@@ -15,7 +15,7 @@
 #include <string.h>
 
 int main() {
-    printf("--- Cookbook Chapter 7: Building a Signature String at Runtime ---\n");
+    printf("Cookbook Chapter 7: Building a Signature String at Runtime\n");
 
     // Imagine this data comes from a config file or a user script.
     const char * user_defined_fields[] = {"int", "int", "double"};

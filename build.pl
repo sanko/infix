@@ -72,7 +72,7 @@ else {
 }
 die "Could not determine architecture for $^O" unless $config{arch};
 
-# --- ABI Forcing ---
+# ABI Forcing
 if ( $opts{abi} ) {
     my $forced_abi = lc( $opts{abi} );
     print "User is forcing ABI to: $forced_abi (for code generation logic only)\n";

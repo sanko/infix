@@ -15,7 +15,7 @@
 #include <windows.h>  // For UINT, etc.
 
 int main() {
-    printf("--- Cookbook Chapter 6: Calling Native System Libraries ---\n");
+    printf("Cookbook Chapter 6: Calling Native System Libraries\n");
 
     // 1. Open the system library by name. The OS will find it in the system path.
     infix_library_t * user32 = infix_library_open("user32.dll");
@@ -67,7 +67,7 @@ int main() {
 #else
 // Dummy implementation for non-Windows platforms to allow compilation.
 int main() {
-    printf("--- Cookbook Chapter 6: Calling Native System Libraries ---\n");
+    printf("Cookbook Chapter 6: Calling Native System Libraries\n");
     printf("SKIPPED: This example is for Windows only.\n");
     return 0;
 }

@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 int main() {
-    printf("--- Cookbook Chapter 1: Working with Opaque Pointers ---\n");
+    printf("Cookbook Chapter 1: Working with Opaque Pointers\n");
 
     // 1. Create a Type Registry to define a readable alias for our handle.
     infix_registry_t * reg = infix_registry_create();

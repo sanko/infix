@@ -43,7 +43,7 @@ static void process_list(const int * items, int count, item_processor_t process_
 }
 
 int main() {
-    printf("--- Cookbook Chapter 3: Creating a Stateful Callback ---\n");
+    printf("Cookbook Chapter 3: Creating a Stateful Callback\n");
 
     // a. Prepare your state.
     AppContext ctx = {"My List", 0};

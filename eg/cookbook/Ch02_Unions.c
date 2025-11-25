@@ -20,7 +20,7 @@ typedef union {
 static int process_number_as_int(Number n) { return n.i * 2; }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Unions ---\n");
+    printf("Cookbook Chapter 2: Working with Unions\n");
 
     // 1. Describe the signature for: int process_number_as_int(Number n);
     //    The union's members are listed inside angle brackets.

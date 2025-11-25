@@ -21,7 +21,7 @@ const char * LIB_NAME = "./libshapes.so";
 #endif
 
 int main() {
-    printf("--- Cookbook Chapter 5: Calling C++ Virtual Functions ---\n");
+    printf("Cookbook Chapter 5: Calling C++ Virtual Functions\n");
 
     infix_library_t * lib = infix_library_open(LIB_NAME);
     if (!lib) {
@@ -66,7 +66,7 @@ int main() {
     infix_forward_get_code(t_area)(&rect_area, args);
     infix_forward_get_code(t_name)((void *)&rect_name, args);
 
-    printf("\n--- Results ---\n");
+    printf("\nResults\n");
     printf("Object's virtual name() returned: '%s'\n", rect_name);
     printf("Object's virtual area() returned: %f\n", rect_area);
 

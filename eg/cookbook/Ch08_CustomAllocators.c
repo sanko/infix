@@ -42,7 +42,7 @@ void tracking_free(void * ptr) {
 void dummy_func() {}
 
 int main() {
-    printf("--- Cookbook Chapter 8: Using Custom Memory Allocators ---\n");
+    printf("Cookbook Chapter 8: Using Custom Memory Allocators\n");
 
     printf("\nCreating trampoline with custom allocators...\n");
     infix_forward_t * trampoline = NULL;

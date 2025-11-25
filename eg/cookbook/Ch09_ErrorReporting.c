@@ -22,7 +22,7 @@ static void report_parse_error(const char * signature) {
     infix_type * type = NULL;
     infix_arena_t * arena = NULL;
 
-    printf("\n--- Attempting to parse signature: ---\n\"%s\"\n", signature);
+    printf("\nAttempting to parse signature:\n\"%s\"\n", signature);
 
     infix_status status = infix_type_from_signature(&type, &arena, signature, NULL);
 
@@ -50,7 +50,7 @@ static void report_parse_error(const char * signature) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 9: Advanced Error Reporting ---\n");
+    printf("Cookbook Chapter 9: Advanced Error Reporting\n");
 
     // Test Case 1: An invalid character '^' instead of a comma.
     report_parse_error("{int, double, ^*char}");

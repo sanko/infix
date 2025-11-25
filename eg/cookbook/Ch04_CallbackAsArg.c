@@ -25,7 +25,7 @@ static int harness_func(int (*worker_func)(int), int base_val) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 4: Passing a Callback as an Argument ---\n");
+    printf("Cookbook Chapter 4: Passing a Callback as an Argument\n");
 
     // 1. Create the "inner" reverse trampoline for our callback logic.
     infix_reverse_t * inner_cb_ctx = NULL;

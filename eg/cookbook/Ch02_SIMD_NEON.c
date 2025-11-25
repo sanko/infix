@@ -20,7 +20,7 @@
 static float neon_horizontal_sum(float32x4_t vec) { return vaddvq_f32(vec); }
 
 int main() {
-    printf("--- Cookbook Chapter 2: SIMD Vectors (AArch64 NEON) ---\n");
+    printf("Cookbook Chapter 2: SIMD Vectors (AArch64 NEON)\n");
 
     // 1. The signature `v[4:float]` directly maps to the `float32x4_t` type.
     const char * signature = "(v[4:float]) -> float";
@@ -55,7 +55,7 @@ int main() {
 #else  // If not compiled for ARM NEON
 
 int main() {
-    printf("--- Cookbook Chapter 2: SIMD Vectors (AArch64 NEON) ---\n");
+    printf("Cookbook Chapter 2: SIMD Vectors (AArch64 NEON)\n");
     printf("SKIPPED: Not compiled for AArch64 with NEON support.\n");
     return 0;
 }

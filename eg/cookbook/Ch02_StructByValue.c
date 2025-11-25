@@ -23,7 +23,7 @@ static Point move_point(Point p, double dx) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Small Structs Passed by Value ---\n");
+    printf("Cookbook Chapter 2: Small Structs Passed by Value\n");
 
     // 1. Describe the signature: Point move_point(Point p, double dx);
     //    The struct is described inline with its member types.

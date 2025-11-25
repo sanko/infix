@@ -54,7 +54,7 @@ static int harness(int (*func)(int), int input) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 4: Proving Reentrancy ---\n");
+    printf("Cookbook Chapter 4: Proving Reentrancy\n");
 
     // 1. Create the innermost forward trampoline (for `multiply`).
     infix_forward_t * fwd_multiply = NULL;

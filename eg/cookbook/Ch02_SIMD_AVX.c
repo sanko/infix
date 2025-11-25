@@ -64,7 +64,7 @@ __m512d vector_add_512(__m512d a, __m512d b) { return _mm512_add_pd(a, b); }
 #endif
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with SIMD Vectors (x86-64) ---\n");
+    printf("Cookbook Chapter 2: Working with SIMD Vectors (x86-64)\n");
 
 #if defined(__AVX2__)
     if (cpu_has_avx2()) {

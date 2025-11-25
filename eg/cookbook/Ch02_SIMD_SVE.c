@@ -56,7 +56,7 @@ static bool is_sve_supported(void) {
 static double sve_horizontal_add(svfloat64_t vec) { return svaddv_f64(svptrue_b64(), vec); }
 
 int main() {
-    printf("--- Cookbook Chapter 2: SIMD Vectors (AArch64 SVE) ---\n");
+    printf("Cookbook Chapter 2: SIMD Vectors (AArch64 SVE)\n");
 
     if (!is_sve_supported()) {
         printf("SKIPPED: SVE not supported on this CPU at runtime.\n");
@@ -107,7 +107,7 @@ int main() {
 #else  // If not compiled with SVE support
 
 int main() {
-    printf("--- Cookbook Chapter 2: SIMD Vectors (AArch64 SVE) ---\n");
+    printf("Cookbook Chapter 2: SIMD Vectors (AArch64 SVE)\n");
     printf("SKIPPED: Not compiled with SVE support (e.g., -march=armv8-a+sve).\n");
     return 0;
 }

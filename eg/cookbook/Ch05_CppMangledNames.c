@@ -28,7 +28,7 @@ const char * LIB_NAME = "./libmyclass.so";
 #endif
 
 int main() {
-    printf("--- Cookbook Chapter 5: Calling C++ Mangled Names ---\n\n");
+    printf("Cookbook Chapter 5: Calling C++ Mangled Names\n\n");
 
     // 1. Open the C++ shared library.
     infix_library_t * lib = infix_library_open(LIB_NAME);

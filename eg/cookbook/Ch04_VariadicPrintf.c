@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 int main() {
-    printf("--- Cookbook Chapter 4: Calling Variadic Functions ---\n");
+    printf("Cookbook Chapter 4: Calling Variadic Functions\n");
 
     // 1. The signature for this specific call to `printf`.
     //    Signature: int printf(const char* format, ...);

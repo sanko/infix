@@ -57,7 +57,7 @@ void my_closure_handler(infix_context_t * context, void * ret, void ** args) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 5, Recipe 5: Bridging C++ Callbacks ---\n");
+    printf("Cookbook Chapter 5, Recipe 5: Bridging C++ Callbacks\n");
 
     infix_library_t * lib = infix_library_open(LIB_NAME);
     if (!lib) {

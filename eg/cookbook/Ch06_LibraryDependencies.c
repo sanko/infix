@@ -19,7 +19,7 @@ const char * LIB_A_NAME = "./libA.so";
 #endif
 
 int main() {
-    printf("--- Cookbook Chapter 6: Handling Library Dependencies ---\n");
+    printf("Cookbook Chapter 6: Handling Library Dependencies\n");
 
     // 1. We only need to open the top-level library, `libA`.
     //    The OS dynamic linker will automatically find and load `libB.so`/`.dll`
