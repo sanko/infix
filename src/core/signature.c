@@ -1205,6 +1205,11 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         _print(state, "]");
         break;
     case INFIX_TYPE_STRUCT:
+        if (type->meta.aggregate_info.is_packed) {
+            _print(state, "!");
+            if (type->alignment != 1)
+                _print(state, "%zu:", type->alignment);
+        }
         _print(state, "{");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
@@ -1373,6 +1378,11 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
     // and immediately print the underlying structure of the type.
     switch (type->category) {
     case INFIX_TYPE_STRUCT:
+        if (type->meta.aggregate_info.is_packed) {
+            _print(state, "!");
+            if (type->alignment != 1)
+                _print(state, "%zu:", type->alignment);
+        }
         _print(state, "{");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)

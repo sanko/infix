@@ -210,6 +210,7 @@ struct infix_type_t {
         struct {
             infix_struct_member * members; /**< An array of the aggregate's members. */
             size_t num_members;            /**< The number of members in the array. */
+            bool is_packed;                /**< True if the struct is packed (!{...}). */
         } aggregate_info;
         /** @brief Metadata for `INFIX_TYPE_ARRAY`. */
         struct {

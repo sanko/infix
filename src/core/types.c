@@ -349,22 +349,17 @@ static bool _layout_struct(infix_type * type) {
     }
 
     // Final flush
-    if (current_bit_offset > 0) {
-        if (current_byte_offset == SIZE_MAX) {
-            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-            return false;
-        }
+    if (current_bit_offset > 0)
         current_byte_offset++;
-    }
+
+    // If it is packed, the alignment is explicitly determined by the user (defaulting to 1
+    // if not specified in the syntax). We must respect this value absolutely, ignoring
+    // the natural alignment of members.
+    if (type->meta.aggregate_info.is_packed)
+        max_alignment = type->alignment;
 
     type->alignment = max_alignment;
-
-    size_t aligned_size = _infix_align_up(current_byte_offset, max_alignment);
-    if (aligned_size < current_byte_offset) {
-        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-        return false;
-    }
-    type->size = aligned_size;
+    type->size = _infix_align_up(current_byte_offset, max_alignment);
     return true;
 }
 /**
@@ -655,6 +650,7 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     type->category = INFIX_TYPE_UNION;
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
+    type->meta.aggregate_info.is_packed = false;  // Unions don't use this flag currently
     // A union's size is the size of its largest member, and its alignment is the
     // alignment of its most-aligned member.
     size_t max_size = 0;
@@ -702,6 +698,7 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
     type->category = INFIX_TYPE_STRUCT;
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
+    type->meta.aggregate_info.is_packed = false;
 
     // This performs a preliminary layout calculation.
     // Note: This layout may be incomplete if it contains unresolved named references or flexible arrays.
@@ -777,6 +774,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
     type->category = INFIX_TYPE_STRUCT;  // Packed structs are still fundamentally structs.
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
+    type->meta.aggregate_info.is_packed = true;  // Marked as packed
     *out_type = type;
     return INFIX_SUCCESS;
 }
@@ -1036,6 +1034,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
                 infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
             if (dest_type->meta.aggregate_info.members == nullptr)
                 return nullptr;
+            dest_type->meta.aggregate_info.is_packed = src_type->meta.aggregate_info.is_packed;  // Copy packed flag
             // Now, recurse for each member's type and copy its name.
             for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
                 dest_type->meta.aggregate_info.members[i] = src_type->meta.aggregate_info.members[i];
