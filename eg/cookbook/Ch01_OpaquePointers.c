@@ -1,6 +1,6 @@
 /**
  * @file Ch01_OpaquePointers.c
- * @brief Cookbook Chapter 1: Working with Opaque Pointers
+ * @brief Cookbook Chapter 2: Working with Bitfields
  *
  * This example shows how to interact with C libraries that use opaque pointers
  * or "handles" (e.g., `FILE*`), where the internal structure is hidden. The

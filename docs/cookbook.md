@@ -16,7 +16,8 @@ This guide provides practical, real-world examples to help you solve common FFI 
    + [Recipe: Receiving a Struct from a Function](#recipe-receiving-a-struct-from-a-function)
    + [Recipe: Large Structs Passed by Reference](#recipe-large-structs-passed-by-reference)
    + [Recipe: Working with Packed Structs](#recipe-working-with-packed-structs)
-   + [Recipe: Working with Structs that Contain Bitfields](#recipe-working-with-structs-that-contain-bitfields)
+   + [Recipe: Working with Bitfields](#recipe-working-with-bitfields)
+   + [Recipe: Working with Flexible Array Members (FAM)](#recipe-working-with-flexible-array-members-fam)
    + [Recipe: Working with Unions](#recipe-working-with-unions)
    + [Recipe: Working with Fixed-Size Arrays](#recipe-working-with-fixed-size-arrays)
    + [Recipe: Advanced Named Types (Recursive & Forward-Declared)](#recipe-advanced-named-types-recursive--forward-declared)
@@ -293,32 +294,74 @@ infix_forward_get_code(t)(&result, args);
 
 > Full example available in [`Ch02_PackedStructs.c`](/eg/cookbook/Ch02_PackedStructs.c).
 
-### Recipe: Working with Structs that Contain Bitfields
+### Recipe: Working with Bitfields
 
-**Problem**: You need to interact with a C struct that uses bitfields. `infix`'s signature language has no syntax for bitfields because their memory layout is implementation-defined and not portable.
+**Problem**: You need to interface with a C struct that uses bitfields to pack data (common in network protocols and driver headers).
 
-**Solution**: Treat the underlying integer that holds the bitfields as a single member in your signature. Then, use C's bitwise operators in your wrapper code to manually pack and unpack the values before and after the FFI call.
+**Solution**: Use the `name : type : width` syntax within a struct definition. `infix` handles the packing logic (byte-granular) to ensure the data is passed correctly.
 
 ```c
-// uint32_t process_bitfields(BitfieldStruct s);
-// 1. Describe the struct by its underlying integer storage.
-const char* signature = "({uint32}) -> uint32";
+// C definition:
+// struct Flags {
+//     uint8_t is_ready: 1;
+//     uint8_t mode    : 3;
+//     uint8_t error   : 2;
+//     uint8_t padding : 2;
+// };
+// void process_flags(struct Flags f);
+
+// The signature specifies the bit width after the type.
+// Use fixed-width integers (uint8, uint16) for best portability.
+const char* signature = "({ ready:uint8:1, mode:uint8:3, err:uint8:2, pad:uint8:2 }) -> void";
+
 infix_forward_t* t = NULL;
-infix_forward_create(&t, signature, (void*)process_bitfields, NULL);
+infix_forward_create(&t, signature, (void*)process_flags, NULL);
 
-// 2. Manually pack the data into a uint32_t.
-uint32_t packed_data = 0;
-packed_data |= (15 & 0xF) << 0;      // Field a = 15
-packed_data |= (1000 & 0xFFF) << 4;  // Field b = 1000
-packed_data |= (30000 & 0xFFFF) << 16; // Field c = 30000
+// Construct the bitfield value manually in a raw container.
+// Since the total size is 1 byte, we use a uint8_t.
+uint8_t raw_data = 0;
+raw_data |= (1 & 0x1);       // ready = 1
+raw_data |= (5 & 0x7) << 1;  // mode = 5
+raw_data |= (0 & 0x3) << 4;  // error = 0
 
-// 3. The FFI call sees a simple struct { uint32_t; }.
-void* args[] = { &packed_data };
-uint32_t result;
-infix_forward_get_code(t)(&result, args);
+void* args[] = { &raw_data };
+infix_forward_get_code(t)(NULL, args);
 ```
 
 > Full example available in [`Ch02_Bitfields.c`](/eg/cookbook/Ch02_Bitfields.c).
+
+### Recipe: Working with Flexible Array Members (FAM)
+
+**Problem**: You are dealing with a "header + data" struct where the last member is an array of unspecified size (e.g., `double data[]`).
+
+**Solution**: Use the `[ ? : type ]` syntax. The question mark `?` explicitly indicates that the array size is flexible. Note that such structs are typically passed by pointer.
+
+```c
+// C definition:
+// struct Series { uint32_t count; double data[]; };
+// double average(struct Series* s);
+
+// Define the struct with a Flexible Array Member (FAM).
+const char* signature = "(*{ count:u32, data:[?:double] }) -> double";
+
+infix_forward_t* t = NULL;
+infix_forward_create(&t, signature, (void*)average, NULL);
+
+// Allocate memory for the struct header PLUS the dynamic array data.
+size_t num_elements = 5;
+size_t total_size = sizeof(uint32_t) + 4 /* padding */ + (sizeof(double) * num_elements);
+void* series = malloc(total_size);
+
+// ... populate count and data ...
+
+void* args[] = { &series };
+double result;
+infix_forward_get_code(t)(&result, args);
+
+free(series);
+```
+
+> Full example available in [`Ch02_FlexibleArrayMembers.c`](/eg/cookbook/Ch02_FlexibleArrayMembers.c).
 
 ### Recipe: Working with Unions
 
@@ -1729,6 +1772,7 @@ infix_reverse_destroy(context);
 ## Chapter 11: Building Language Bindings
 
 ### The Four Pillars of a Language Binding
+
 A robust language binding built on `infix` must solve four main challenges:
 
 1.  **Type Mapping & Signature Generation:** The binding's primary job is to translate the host language's type representation (e.g., Python's `ctypes.c_int`) into an `infix` signature string.
