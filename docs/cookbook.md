@@ -342,7 +342,7 @@ infix_forward_get_code(t)(NULL, args);
 // double average(struct Series* s);
 
 // Define the struct with a Flexible Array Member (FAM).
-const char* signature = "(*{ count:u32, data:[?:double] }) -> double";
+const char* signature = "(*{ count:uint32, data:[?:double] }) -> double";
 
 infix_forward_t* t = NULL;
 infix_forward_create(&t, signature, (void*)average, NULL);

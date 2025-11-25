@@ -10,13 +10,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// A struct with a Flexible Array Member (FAM)
+//
 typedef struct {
     uint32_t length;
     double values[];  // Unknown size at compile time
 } DataSeries;
 
-// The native C function we want to call.
 double average_series(DataSeries * series) {
     if (series->length == 0)
         return 0.0;
@@ -31,10 +30,14 @@ int main() {
 
     // Signature syntax: "[ ? : type ]" (Question mark indicates unknown size)
     // The struct is passed by pointer (*) because it has variable size.
-    const char * series_sig = "(*{ len:u32, data:[?:double] }) -> double";
+    const char * series_sig = "(*{ len:uint32, data:[?:double] }) -> double";
 
     infix_forward_t * t_series = NULL;
-    infix_forward_create(&t_series, series_sig, (void *)average_series, NULL);
+    infix_status status = infix_forward_create(&t_series, series_sig, (void *)average_series, NULL);
+    if (status != INFIX_SUCCESS) {
+        fprintf(stderr, "Error: Failed to create trampoline (code %d)\n", status);
+        return 1;
+    }
 
     // Calculate the total size required for the struct header + data.
     // Note: In a real application, consider alignment padding between 'length' and 'values'.

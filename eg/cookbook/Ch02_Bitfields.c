@@ -24,7 +24,6 @@ typedef struct {
 void print_status(StatusRegister reg) {
     printf("Status Register: [Enable: %d] [Mode: %d] [Error: %d]\n", reg.enable, reg.mode, reg.error);
 }
-
 int main() {
     printf("--- Cookbook Chapter 2: Working with Bitfields ---\n");
 
@@ -39,7 +38,11 @@ int main() {
         "}) -> void";
 
     infix_forward_t * t_status = NULL;
-    infix_forward_create(&t_status, status_sig, (void *)print_status, NULL);
+    infix_status status = infix_forward_create(&t_status, status_sig, (void *)print_status, NULL);
+    if (status != INFIX_SUCCESS) {
+        fprintf(stderr, "Error: Failed to create trampoline (code %d)\n", status);
+        return 1;
+    }
 
     // Manually construct the bitfield value in a raw byte container.
     // Target: Enable=1, Mode=5 (101), Error=0.
