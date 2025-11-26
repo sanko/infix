@@ -5,7 +5,7 @@ All notable changes to this project will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.2] - 2025-11-26
 
 We'll find out where I go from here.
 
@@ -131,6 +131,7 @@ Everything. It's brand new.
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
-[unreleased]: https://github.com/sanko/infix/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/sanko/infix/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/sanko/infix/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/sanko/infix/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/sanko/infix/releases/tag/v0.1.0
