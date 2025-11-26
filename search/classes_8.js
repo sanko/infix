@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['manager_0',['Manager',['../structManager.html',1,'']]],
-  ['memo_5fnode_5ft_1',['memo_node_t',['../structmemo__node__t.html',1,'']]],
-  ['mixedintdouble_2',['MixedIntDouble',['../structMixedIntDouble.html',1,'']]],
-  ['mockobject_3',['MockObject',['../structMockObject.html',1,'']]]
+  ['largedata_0',['LargeData',['../structLargeData.html',1,'']]],
+  ['largestruct_1',['LargeStruct',['../structLargeStruct.html',1,'']]],
+  ['line_2',['Line',['../structLine.html',1,'']]]
 ];

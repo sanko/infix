@@ -10,6 +10,8 @@ var abi__arm64__emitters_8c =
     [ "emit_arm64_ldr_imm", "abi__arm64__emitters_8c.html#a1859924feee26110a597f8fdb40f641a", null ],
     [ "emit_arm64_ldr_q_imm", "abi__arm64__emitters_8c.html#aa70916450b63c970b33498cd54771a14", null ],
     [ "emit_arm64_ldr_vpr", "abi__arm64__emitters_8c.html#aaed516447368c493b87bee33576930f8", null ],
+    [ "emit_arm64_ldrb_imm", "abi__arm64__emitters_8c.html#a1ab8db1da3dd51241b266eddd85c9999", null ],
+    [ "emit_arm64_ldrh_imm", "abi__arm64__emitters_8c.html#aa20666702b18c3c2c467bee1083df740", null ],
     [ "emit_arm64_ldrsw_imm", "abi__arm64__emitters_8c.html#aadef894fddbb4159a515f76280c3e8a6", null ],
     [ "emit_arm64_load_u64_immediate", "abi__arm64__emitters_8c.html#aba20e09949a91f2d9a5ead5ffd89261e", null ],
     [ "emit_arm64_mov_imm_chunk", "abi__arm64__emitters_8c.html#a74320af783d0497f3cd9a936f8b64fba", null ],

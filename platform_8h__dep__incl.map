@@ -1,76 +1,78 @@
 <map id="src/common/platform.h" name="src/common/platform.h">
-<area shape="rect" id="Node000001" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="2519,5,2693,31"/>
-<area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="2401,79,2611,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2580,41,2524,81,2521,76,2577,36"/>
-<area shape="rect" id="Node000032" href="$platform_8c.html" title="Implements runtime detection of CPU and OS features." alt="" coords="3357,79,3501,104"/>
-<area shape="poly" id="edge41_Node000001_Node000032" title=" " alt="" coords="2707,25,3356,81,3356,86,2707,31"/>
-<area shape="rect" id="Node000003" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="579,159,726,185"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="2387,100,726,170,726,165,2387,95"/>
-<area shape="rect" id="Node000011" href="$abi__arm64_8c.html" title="Implements the FFI logic for the AArch64 (ARM64) architecture." alt="" coords="1223,240,1376,280"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="2387,96,2130,100,1819,110,1543,127,1445,140,1388,154,1363,172,1341,195,1311,241,1306,238,1337,192,1359,168,1386,150,1444,134,1542,122,1819,105,2129,95,2387,91"/>
-<area shape="rect" id="Node000012" href="$abi__arm64__emitters_8h.html" title="Declares internal helper functions for emitting AArch64 machine code." alt="" coords="1400,152,1553,192"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="2387,100,2036,119,1822,135,1606,155,1554,161,1553,156,1606,149,1821,130,2036,114,2387,95"/>
-<area shape="rect" id="Node000014" href="$abi__sysv__x64_8c.html" title="Implements the FFI logic for the System V AMD64 ABI." alt="" coords="1578,240,1741,280"/>
-<area shape="poly" id="edge14_Node000002_Node000014" title=" " alt="" coords="2387,95,2185,97,1953,105,1846,113,1755,123,1687,137,1665,145,1652,154,1642,173,1641,196,1645,219,1653,239,1648,241,1640,220,1635,196,1637,172,1648,150,1663,140,1686,132,1754,118,1846,107,1953,100,2185,91,2387,89"/>
-<area shape="rect" id="Node000015" href="$abi__win__x64_8c.html" title="Implements the FFI logic for the Windows x64 calling convention." alt="" coords="1946,240,2101,280"/>
-<area shape="poly" id="edge15_Node000002_Node000015" title=" " alt="" coords="2387,98,2240,104,2083,115,1951,131,1907,142,1884,154,1876,166,1876,178,1882,189,1893,200,1926,221,1965,237,1963,242,1923,225,1889,204,1877,192,1871,179,1871,165,1880,150,1905,137,1950,126,2082,109,2240,99,2387,93"/>
-<area shape="rect" id="Node000016" href="$abi__x64__emitters_8h.html" title="Declares internal helper functions for emitting x86&#45;64 machine code." alt="" coords="1663,152,1819,192"/>
-<area shape="poly" id="edge16_Node000002_Node000016" title=" " alt="" coords="2387,102,2134,122,1986,136,1838,155,1820,158,1819,152,1838,149,1985,131,2134,116,2387,97"/>
-<area shape="rect" id="Node000018" href="$arena_8c.html" title="Implements a simple, fast arena (or region&#45;based) allocator." alt="" coords="1894,159,2019,185"/>
-<area shape="poly" id="edge20_Node000002_Node000018" title=" " alt="" coords="2387,106,2218,126,2032,155,1999,162,1998,157,2031,149,2218,120,2387,101"/>
-<area shape="rect" id="Node000020" href="$error_8c.html" title="Implements the thread&#45;local error reporting system." alt="" coords="2044,159,2163,185"/>
-<area shape="poly" id="edge22_Node000002_Node000020" title=" " alt="" coords="2421,109,2176,155,2146,162,2144,157,2175,149,2420,104"/>
-<area shape="rect" id="Node000021" href="$loader_8c.html" title="Implements cross&#45;platform dynamic library loading." alt="" coords="2187,159,2315,185"/>
-<area shape="poly" id="edge24_Node000002_Node000021" title=" " alt="" coords="2457,111,2289,162,2288,157,2455,105"/>
-<area shape="rect" id="Node000022" href="$signature_8c.html" title="Implements the infix signature string parser and type printer." alt="" coords="2339,159,2489,185"/>
-<area shape="poly" id="edge26_Node000002_Node000022" title=" " alt="" coords="2484,115,2429,161,2426,157,2480,111"/>
-<area shape="rect" id="Node000023" href="$type__registry_8c.html" title="Implements the named type registry system." alt="" coords="2513,159,2685,185"/>
-<area shape="poly" id="edge28_Node000002_Node000023" title=" " alt="" coords="2532,111,2587,157,2584,161,2529,115"/>
-<area shape="rect" id="Node000024" href="$types_8c.html" title="Implements the public API for creating and managing type descriptions." alt="" coords="2709,159,2833,185"/>
-<area shape="poly" id="edge30_Node000002_Node000024" title=" " alt="" coords="2558,105,2733,157,2732,162,2557,110"/>
-<area shape="rect" id="Node000025" href="$executor_8c.html" title="Implements platform&#45;specific memory management for JIT code and execution." alt="" coords="2858,159,2986,185"/>
-<area shape="poly" id="edge32_Node000002_Node000025" title=" " alt="" coords="2593,104,2845,149,2878,157,2877,162,2844,155,2592,109"/>
-<area shape="rect" id="Node000026" href="$trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines." alt="" coords="3010,159,3154,185"/>
-<area shape="poly" id="edge34_Node000002_Node000026" title=" " alt="" coords="2626,101,2802,121,2998,149,3035,157,3034,162,2998,155,2801,126,2625,106"/>
-<area shape="rect" id="Node000027" href="$008__registry__introspection_8c.html" title="Unit test for the registry introspection and serialization APIs." alt="" coords="3179,159,3393,185"/>
-<area shape="poly" id="edge36_Node000002_Node000027" title=" " alt="" coords="2625,98,2874,119,3166,149,3218,157,3217,162,3166,155,2874,124,2624,104"/>
-<area shape="rect" id="Node000028" href="$101__by__value_8c.html" title="Unit test for passing and returning aggregates and vectors by value." alt="" coords="3417,159,3549,185"/>
-<area shape="poly" id="edge37_Node000002_Node000028" title=" " alt="" coords="2625,92,2781,96,2976,106,3190,123,3405,149,3442,157,3441,162,3404,155,3190,129,2976,111,2781,102,2625,97"/>
-<area shape="rect" id="Node000029" href="$501__direct__marshalling_8c.html" title="Test suite for the high&#45;performance direct marshalling API." alt="" coords="3574,159,3769,185"/>
-<area shape="poly" id="edge38_Node000002_Node000029" title=" " alt="" coords="2625,92,3040,109,3300,125,3561,149,3612,157,3611,162,3560,155,3299,130,3040,114,2625,98"/>
-<area shape="rect" id="Node000030" href="$830__security_8c.html" title="Unit test for security&#45;hardening features of the infix library." alt="" coords="3793,159,3915,185"/>
-<area shape="poly" id="edge39_Node000002_Node000030" title=" " alt="" coords="2625,92,3222,111,3545,127,3679,138,3781,149,3816,157,3815,162,3780,155,3679,143,3545,133,3222,116,2625,98"/>
-<area shape="rect" id="Node000031" href="$840__arena__allocator_8c.html" title="Unit test for the internal arena allocator." alt="" coords="3939,159,4113,185"/>
-<area shape="poly" id="edge40_Node000002_Node000031" title=" " alt="" coords="2625,89,2864,91,3188,98,3556,117,3744,131,3928,149,3974,157,3973,162,3927,155,3743,136,3555,122,3188,104,2864,96,2625,94"/>
+<area shape="rect" id="Node000001" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="2700,5,2875,31"/>
+<area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="2582,79,2793,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2762,41,2705,81,2702,76,2759,36"/>
+<area shape="rect" id="Node000033" href="$platform_8c.html" title="Implements runtime detection of CPU and OS features." alt="" coords="3538,79,3682,104"/>
+<area shape="poly" id="edge42_Node000001_Node000033" title=" " alt="" coords="2889,25,3538,81,3537,86,2888,31"/>
+<area shape="rect" id="Node000003" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="666,159,813,185"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="2568,100,813,170,813,165,2568,95"/>
+<area shape="rect" id="Node000012" href="$abi__arm64_8c.html" title="Implements the FFI logic for the AArch64 (ARM64) architecture." alt="" coords="1404,240,1557,280"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="2569,96,2311,100,2000,110,1724,127,1626,140,1570,154,1544,172,1522,195,1492,241,1488,238,1518,192,1540,168,1568,150,1625,134,1724,122,2000,105,2311,95,2569,91"/>
+<area shape="rect" id="Node000013" href="$abi__arm64__emitters_8h.html" title="Declares internal helper functions for emitting AArch64 machine code." alt="" coords="1581,152,1735,192"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="2568,100,2218,119,2003,135,1788,155,1735,161,1734,156,1787,149,2003,130,2217,114,2568,95"/>
+<area shape="rect" id="Node000015" href="$abi__sysv__x64_8c.html" title="Implements the FFI logic for the System V AMD64 ABI." alt="" coords="1759,240,1922,280"/>
+<area shape="poly" id="edge15_Node000002_Node000015" title=" " alt="" coords="2569,95,2366,97,2135,105,2028,113,1936,123,1869,137,1846,145,1833,154,1823,173,1822,196,1827,219,1834,239,1829,241,1822,220,1817,196,1818,172,1829,150,1844,140,1867,132,1935,118,2027,107,2134,100,2366,91,2569,89"/>
+<area shape="rect" id="Node000016" href="$abi__win__x64_8c.html" title="Implements the FFI logic for the Windows x64 calling convention." alt="" coords="2127,240,2282,280"/>
+<area shape="poly" id="edge16_Node000002_Node000016" title=" " alt="" coords="2568,98,2422,104,2264,115,2133,131,2088,142,2065,154,2058,166,2058,178,2063,189,2074,200,2107,221,2146,237,2144,242,2104,225,2071,204,2059,192,2052,179,2053,165,2062,150,2087,137,2132,126,2264,109,2421,99,2568,93"/>
+<area shape="rect" id="Node000017" href="$abi__x64__emitters_8h.html" title="Declares internal helper functions for emitting x86&#45;64 machine code." alt="" coords="1844,152,2000,192"/>
+<area shape="poly" id="edge17_Node000002_Node000017" title=" " alt="" coords="2568,102,2315,122,2167,136,2020,155,2001,158,2000,152,2019,149,2167,131,2315,116,2568,97"/>
+<area shape="rect" id="Node000019" href="$arena_8c.html" title="Implements a simple, fast arena (or region&#45;based) allocator." alt="" coords="2075,159,2201,185"/>
+<area shape="poly" id="edge21_Node000002_Node000019" title=" " alt="" coords="2569,106,2400,126,2213,155,2180,162,2179,157,2212,149,2399,120,2568,101"/>
+<area shape="rect" id="Node000021" href="$error_8c.html" title="Implements the thread&#45;local error reporting system." alt="" coords="2225,159,2344,185"/>
+<area shape="poly" id="edge23_Node000002_Node000021" title=" " alt="" coords="2602,109,2357,155,2327,162,2326,157,2356,149,2601,104"/>
+<area shape="rect" id="Node000022" href="$loader_8c.html" title="Implements cross&#45;platform dynamic library loading." alt="" coords="2369,159,2497,185"/>
+<area shape="poly" id="edge25_Node000002_Node000022" title=" " alt="" coords="2638,111,2471,162,2469,157,2636,105"/>
+<area shape="rect" id="Node000023" href="$signature_8c.html" title="Implements the infix signature string parser and type printer." alt="" coords="2521,159,2670,185"/>
+<area shape="poly" id="edge27_Node000002_Node000023" title=" " alt="" coords="2665,115,2611,161,2607,157,2662,111"/>
+<area shape="rect" id="Node000024" href="$type__registry_8c.html" title="Implements the named type registry system." alt="" coords="2695,159,2867,185"/>
+<area shape="poly" id="edge29_Node000002_Node000024" title=" " alt="" coords="2713,111,2769,157,2765,161,2710,115"/>
+<area shape="rect" id="Node000025" href="$types_8c.html" title="Implements the public API for creating and managing type descriptions." alt="" coords="2891,159,3015,185"/>
+<area shape="poly" id="edge31_Node000002_Node000025" title=" " alt="" coords="2740,105,2915,157,2913,162,2738,110"/>
+<area shape="rect" id="Node000026" href="$executor_8c.html" title="Implements platform&#45;specific memory management for JIT code and execution." alt="" coords="3039,159,3167,185"/>
+<area shape="poly" id="edge33_Node000002_Node000026" title=" " alt="" coords="2774,104,3027,149,3059,157,3058,162,3025,155,2773,109"/>
+<area shape="rect" id="Node000027" href="$trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines." alt="" coords="3191,159,3335,185"/>
+<area shape="poly" id="edge35_Node000002_Node000027" title=" " alt="" coords="2807,101,2983,121,3180,149,3216,157,3215,162,3179,155,2983,126,2806,106"/>
+<area shape="rect" id="Node000028" href="$008__registry__introspection_8c.html" title="Unit test for the registry introspection and serialization APIs." alt="" coords="3360,159,3575,185"/>
+<area shape="poly" id="edge37_Node000002_Node000028" title=" " alt="" coords="2806,98,3056,119,3348,149,3399,157,3399,162,3347,155,3055,124,2806,104"/>
+<area shape="rect" id="Node000029" href="$101__by__value_8c.html" title="Unit test for passing and returning aggregates and vectors by value." alt="" coords="3599,159,3731,185"/>
+<area shape="poly" id="edge38_Node000002_Node000029" title=" " alt="" coords="2807,92,2962,96,3157,106,3372,123,3586,149,3623,157,3622,162,3586,155,3371,129,3157,111,2962,102,2806,97"/>
+<area shape="rect" id="Node000030" href="$501__direct__marshalling_8c.html" title="Test suite for the high&#45;performance direct marshalling API." alt="" coords="3755,159,3950,185"/>
+<area shape="poly" id="edge39_Node000002_Node000030" title=" " alt="" coords="2807,92,3221,109,3481,125,3742,149,3793,157,3792,162,3742,155,3481,130,3221,114,2806,98"/>
+<area shape="rect" id="Node000031" href="$830__security_8c.html" title="Unit test for security&#45;hardening features of the infix library." alt="" coords="3974,159,4097,185"/>
+<area shape="poly" id="edge40_Node000002_Node000031" title=" " alt="" coords="2806,92,3404,111,3727,127,3860,138,3962,149,3997,157,3996,162,3962,155,3860,143,3726,133,3403,116,2806,98"/>
+<area shape="rect" id="Node000032" href="$840__arena__allocator_8c.html" title="Unit test for the internal arena allocator." alt="" coords="4121,159,4294,185"/>
+<area shape="poly" id="edge41_Node000002_Node000032" title=" " alt="" coords="2806,89,3046,91,3369,98,3737,117,3925,131,4109,149,4155,157,4154,162,4108,155,3925,136,3737,122,3369,104,3046,96,2806,94"/>
 <area shape="rect" id="Node000004" href="$fuzz__abi_8c.html" title="Fuzzer target for the ABI classification layer." alt="" coords="5,247,124,273"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="566,184,368,206,252,222,136,243,105,250,103,245,135,237,251,217,368,201,565,178"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="653,182,418,203,277,220,136,243,104,250,103,245,135,237,276,215,418,197,652,176"/>
 <area shape="rect" id="Node000005" href="$fuzz__direct_8c.html" title="Fuzzer target for the Direct Marshalling API generation logic." alt="" coords="148,247,283,273"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="574,190,296,243,263,250,262,245,295,237,573,185"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="653,187,487,210,296,243,262,250,261,245,295,237,486,205,652,182"/>
 <area shape="rect" id="Node000006" href="$fuzz__helpers_8c.html" title="Implements the core logic for generating random infix_type graphs from fuzzer input." alt="" coords="307,247,454,273"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="604,191,418,250,416,245,602,186"/>
-<area shape="rect" id="Node000007" href="$fuzz__signature_8c.html" title="Fuzzer target for the high&#45;level signature parsing API." alt="" coords="479,247,637,273"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="631,196,573,249,569,245,628,192"/>
-<area shape="rect" id="Node000008" href="$fuzz__trampoline_8c.html" title="Fuzzer target for the trampoline generation functions, including shared arena logic." alt="" coords="661,247,831,273"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="677,192,735,245,731,249,674,196"/>
-<area shape="rect" id="Node000009" href="$fuzz__types_8c.html" title="Fuzzer target for the random type generation logic." alt="" coords="855,247,989,273"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="703,186,887,245,885,250,701,191"/>
-<area shape="rect" id="Node000010" href="$850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="1013,247,1199,273"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="727,185,1046,245,1045,250,726,190"/>
-<area shape="poly" id="edge12_Node000012_Node000011" title=" " alt="" coords="1427,200,1339,242,1337,238,1424,196"/>
-<area shape="rect" id="Node000013" href="$abi__arm64__emitters_8c.html" title="Implements internal helper functions for emitting AArch64 machine code." alt="" coords="1400,240,1553,280"/>
-<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="1479,206,1479,240,1474,240,1474,206"/>
-<area shape="poly" id="edge17_Node000016_Node000014" title=" " alt="" coords="1715,204,1679,242,1675,238,1711,200"/>
-<area shape="poly" id="edge18_Node000016_Node000015" title=" " alt="" coords="1817,193,1962,237,1961,243,1815,199"/>
-<area shape="rect" id="Node000017" href="$abi__x64__emitters_8c.html" title="Implements internal helper functions for emitting x86&#45;64 machine code." alt="" coords="1765,240,1921,280"/>
-<area shape="poly" id="edge19_Node000016_Node000017" title=" " alt="" coords="1776,199,1822,238,1819,242,1772,203"/>
-<area shape="rect" id="Node000019" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="2557,247,2641,273"/>
-<area shape="poly" id="edge21_Node000018_Node000019" title=" " alt="" coords="2012,185,2032,189,2183,213,2332,232,2557,253,2557,258,2331,237,2182,219,2031,195,2011,191"/>
-<area shape="poly" id="edge23_Node000020_Node000019" title=" " alt="" coords="2158,185,2176,189,2390,227,2557,251,2557,256,2389,232,2175,195,2157,191"/>
-<area shape="poly" id="edge25_Node000021_Node000019" title=" " alt="" coords="2311,185,2328,189,2558,246,2556,251,2327,195,2310,190"/>
-<area shape="poly" id="edge27_Node000022_Node000019" title=" " alt="" coords="2453,188,2575,245,2573,249,2450,193"/>
-<area shape="poly" id="edge29_Node000023_Node000019" title=" " alt="" coords="2602,199,2602,247,2597,247,2597,199"/>
-<area shape="poly" id="edge31_Node000024_Node000019" title=" " alt="" coords="2737,193,2624,249,2622,245,2735,188"/>
-<area shape="poly" id="edge33_Node000025_Node000019" title=" " alt="" coords="2866,191,2642,250,2641,245,2865,186"/>
-<area shape="poly" id="edge35_Node000026_Node000019" title=" " alt="" coords="3020,190,2999,195,2799,230,2642,255,2641,250,2798,225,2997,189,3019,185"/>
-<area shape="poly" id="edge42_Node000032_Node000019" title=" " alt="" coords="3515,91,3679,95,3871,105,4038,122,4095,134,4114,142,4127,150,4134,161,4136,172,4134,183,4126,194,4103,204,4056,213,3905,228,3696,239,3454,248,2968,258,2642,261,2642,256,2968,253,3454,243,3696,234,3904,223,4055,208,4101,199,4123,190,4129,181,4131,172,4129,163,4123,154,4112,146,4093,139,4037,127,3871,110,3679,100,3514,96"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="679,190,429,250,428,245,678,185"/>
+<area shape="rect" id="Node000007" href="$fuzz__roundtrip_8c.html" title="Fuzzer target for Type &#45;&gt; String &#45;&gt; Type round&#45;trip consistency." alt="" coords="478,247,635,273"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="703,193,583,249,580,245,701,188"/>
+<area shape="rect" id="Node000008" href="$fuzz__signature_8c.html" title="Fuzzer target for the high&#45;level signature parsing API." alt="" coords="660,247,819,273"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="742,199,742,247,737,247,737,199"/>
+<area shape="rect" id="Node000009" href="$fuzz__trampoline_8c.html" title="Fuzzer target for the trampoline generation functions, including shared arena logic." alt="" coords="843,247,1012,273"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="778,188,903,245,901,249,776,193"/>
+<area shape="rect" id="Node000010" href="$fuzz__types_8c.html" title="Fuzzer target for the random type generation logic." alt="" coords="1036,247,1171,273"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="802,185,1056,245,1054,250,801,190"/>
+<area shape="rect" id="Node000011" href="$850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="1195,247,1380,273"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="827,183,1182,237,1225,245,1224,250,1182,243,826,188"/>
+<area shape="poly" id="edge13_Node000013_Node000012" title=" " alt="" coords="1608,200,1521,242,1518,238,1606,196"/>
+<area shape="rect" id="Node000014" href="$abi__arm64__emitters_8c.html" title="Implements internal helper functions for emitting AArch64 machine code." alt="" coords="1581,240,1735,280"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1661,206,1661,240,1655,240,1655,206"/>
+<area shape="poly" id="edge18_Node000017_Node000015" title=" " alt="" coords="1896,204,1861,242,1857,238,1893,200"/>
+<area shape="poly" id="edge19_Node000017_Node000016" title=" " alt="" coords="1998,193,2144,237,2142,243,1996,199"/>
+<area shape="rect" id="Node000018" href="$abi__x64__emitters_8c.html" title="Implements internal helper functions for emitting x86&#45;64 machine code." alt="" coords="1947,240,2103,280"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="1957,199,2004,238,2000,242,1954,203"/>
+<area shape="rect" id="Node000020" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="2739,247,2823,273"/>
+<area shape="poly" id="edge22_Node000019_Node000020" title=" " alt="" coords="2194,185,2213,189,2364,213,2513,232,2739,253,2738,258,2513,237,2363,219,2212,195,2192,191"/>
+<area shape="poly" id="edge24_Node000021_Node000020" title=" " alt="" coords="2339,185,2357,189,2571,227,2739,251,2738,256,2570,232,2356,195,2338,191"/>
+<area shape="poly" id="edge26_Node000022_Node000020" title=" " alt="" coords="2493,185,2509,189,2739,246,2738,251,2508,195,2491,190"/>
+<area shape="poly" id="edge28_Node000023_Node000020" title=" " alt="" coords="2634,188,2757,245,2754,249,2632,193"/>
+<area shape="poly" id="edge30_Node000024_Node000020" title=" " alt="" coords="2783,199,2783,247,2778,247,2778,199"/>
+<area shape="poly" id="edge32_Node000025_Node000020" title=" " alt="" coords="2919,193,2805,249,2803,245,2916,188"/>
+<area shape="poly" id="edge34_Node000026_Node000020" title=" " alt="" coords="3048,191,2824,250,2822,245,3046,186"/>
+<area shape="poly" id="edge36_Node000027_Node000020" title=" " alt="" coords="3202,190,3180,195,2980,230,2823,255,2822,250,2979,225,3179,189,3201,185"/>
+<area shape="poly" id="edge43_Node000033_Node000020" title=" " alt="" coords="3696,91,3860,95,4052,105,4219,122,4276,134,4296,142,4308,150,4315,161,4318,172,4315,183,4308,194,4284,204,4237,213,4086,228,3877,239,3635,248,3149,258,2823,261,2823,256,3149,253,3635,243,3877,234,4086,223,4237,208,4283,199,4304,190,4310,181,4312,172,4310,163,4304,154,4293,146,4275,139,4218,127,4052,110,3860,100,3696,96"/>
 </map>

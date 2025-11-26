@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Cookbook Chapter 1: Working with Opaque Pointers.">
+<g id="a_Node000001"><a xlink:title="Cookbook Chapter 2: Working with Bitfields.">
 <polygon fill="#999999" stroke="#666666" points="263.53,-184 66.53,-184 66.53,-165 263.53,-165 263.53,-184"/>
 <text text-anchor="middle" x="165.03" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">eg/cookbook/Ch01_OpaquePointers.c</text>
 </a>

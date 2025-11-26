@@ -13,6 +13,8 @@ var structinfix__type__t =
     [ "enum_info", "group__high__level__api.html#gabf1c7bb07d550892095e914072a7658c", null ],
     [ "func_ptr_info", "group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb", null ],
     [ "is_arena_allocated", "group__high__level__api.html#gafe120ad94ce32eb2d2150b64c7c2dccd", null ],
+    [ "is_flexible", "group__high__level__api.html#gaabf51313711bf8d1c0637991a02f3dce", null ],
+    [ "is_packed", "group__high__level__api.html#ga07213dba1ad9a1a43e437aa39916a038", null ],
     [ "members", "group__high__level__api.html#ga6129c5165e189c4e5aa99904a98079e1", null ],
     [ "meta", "group__high__level__api.html#ga06717387732a6557d456a760bb3150cc", null ],
     [ "name", "group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461", null ],

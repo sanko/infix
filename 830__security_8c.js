@@ -1,5 +1,6 @@
 var 830__security_8c =
 [
+    [ "_CRT_SECURE_NO_WARNINGS", "830__security_8c.html#af08ec37a8c99d747fb60fa15bc28678b", null ],
     [ "DBLTAP_IMPLEMENTATION", "830__security_8c.html#a1655e4adfda95660042d34619eb61845", null ],
     [ "dummy_handler_func", "830__security_8c.html#a84ec4fb6b076f7d0d2c769feb2d20a47", null ],
     [ "dummy_target_func", "830__security_8c.html#a8fcb0b2df065db9dd72f731a65b7caa4", null ],

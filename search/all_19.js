@@ -1,17 +1,17 @@
 var searchData=
 [
   ['name_0',['name',['../group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461',1,'infix_type_t::name'],['../group__high__level__api.html#ga88c9af9a10aedbc07aa46f4630fa35c1',1,'infix_type_t::@0::@8::name'],['../group__high__level__api.html#ga8dad067a06c5efd90028fb1cab9e2911',1,'infix_struct_member_t::name'],['../group__high__level__api.html#ga8789f5063ea8ce9896f44c1c9d8f365c',1,'infix_function_argument_t::name'],['../struct__infix__registry__entry__t.html#a47809e7062a374f100926aa1f7d33228',1,'_infix_registry_entry_t::name'],['../structregression__test__case__t.html#aed98b5d214919be70209e911177611e5',1,'regression_test_case_t::name'],['../structManager.html#a8749397d68334756801125e04a9e3c58',1,'Manager::name'],['../structEmployee.html#ae1544791bbec5eefe5bcbe8a326542f1',1,'Employee::name'],['../structAppContext.html#a2eda37a7404f6c6685737c71471ad462',1,'AppContext::name'],['../structConfig.html#ae0d2da03b1f998f0b7955b93a92ebf24',1,'Config::name'],['../structUserProfile.html#a8d28aeae8d045274ea59fa8a3db76cac',1,'UserProfile::name'],['../structUser.html#a82691adf94c2b132218faa2a8cd01472',1,'User::name']]],
-  ['named_20type_20registry_1',['named type registry',['../group__registry__api.html',1,'Named Type Registry'],['../md_docs_2signatures.html#autotoc_md218',1,'Part 3: The Named Type Registry']]],
+  ['named_20type_20registry_1',['named type registry',['../group__registry__api.html',1,'Named Type Registry'],['../md_docs_2signatures.html#autotoc_md220',1,'Part 3: The Named Type Registry']]],
   ['named_20type_20registry_20api_2',['4. Named Type Registry API',['../md_docs_2API.html#autotoc_md39',1,'']]],
-  ['named_20types_3',['Using Named Types',['../md_docs_2signatures.html#autotoc_md220',1,'']]],
-  ['named_20types_20recursive_20forward_20declared_4',['Recipe: Advanced Named Types (Recursive &amp; Forward-Declared)',['../md_docs_2cookbook.html#autotoc_md67',1,'']]],
+  ['named_20types_3',['Using Named Types',['../md_docs_2signatures.html#autotoc_md222',1,'']]],
+  ['named_20types_20recursive_20forward_20declared_4',['Recipe: Advanced Named Types (Recursive &amp; Forward-Declared)',['../md_docs_2cookbook.html#autotoc_md68',1,'']]],
   ['named_5freference_5',['named_reference',['../group__high__level__api.html#ga69c567720b478d07b87af0ef17aa9f82',1,'infix_type_t::@0::named_reference'],['../group__high__level__api.html#gaefbba96a3cadf0e38ba54f1ff7cb93b1',1,'infix_type_t::named_reference']]],
-  ['native_20system_20libraries_20without_20linking_6',['Recipe: Calling Native System Libraries without Linking',['../md_docs_2cookbook.html#autotoc_md106',1,'']]],
+  ['native_20system_20libraries_20without_20linking_6',['Recipe: Calling Native System Libraries without Linking',['../md_docs_2cookbook.html#autotoc_md107',1,'']]],
   ['native_5fsqrtl_7',['native_sqrtl',['../Ch04__LongDouble_8c.html#a894512bdd5306455b72357ca31e4394a',1,'Ch04_LongDouble.c']]],
-  ['neon_8',['AArch64 (NEON)',['../md_docs_2cookbook.html#autotoc_md73',1,'']]],
-  ['nested_20ffi_20calls_9',['Recipe: Proving Reentrancy with Nested FFI Calls',['../md_docs_2cookbook.html#autotoc_md87',1,'']]],
+  ['neon_8',['AArch64 (NEON)',['../md_docs_2cookbook.html#autotoc_md74',1,'']]],
+  ['nested_20ffi_20calls_9',['Recipe: Proving Reentrancy with Nested FFI Calls',['../md_docs_2cookbook.html#autotoc_md88',1,'']]],
   ['nested_5fcall_5fhandler_10',['nested_call_handler',['../Ch04__Reentrancy_8c.html#a44e24e8a11367eb1b22c59dd485c9dda',1,'Ch04_Reentrancy.c']]],
-  ['new_20abi_11',['new abi',['../md_docs_2porting.html',1,'Porting infix to a New ABI'],['../md_docs_2porting.html#autotoc_md203',1,'Step 4: Integrate the New ABI']]],
+  ['new_20abi_11',['new abi',['../md_docs_2porting.html',1,'Porting infix to a New ABI'],['../md_docs_2porting.html#autotoc_md204',1,'Step 4: Integrate the New ABI']]],
   ['newmockint_12',['NewMockInt',['../Ch12__DirectMarshalling_8c.html#a24d3311187f5e17fd43d771a9be6b163',1,'Ch12_DirectMarshalling.c']]],
   ['newmockpoint_13',['NewMockPoint',['../Ch12__DirectMarshalling_8c.html#ac8839693ad859bc647f1b1a395039152',1,'Ch12_DirectMarshalling.c']]],
   ['next_14',['next',['../structresolve__memo__node__t.html#a51de8ed5ed99b109b1753e21ad054f85',1,'resolve_memo_node_t::next'],['../struct__infix__registry__entry__t.html#a8f6cae58ec40201adf04aa2a6960be61',1,'_infix_registry_entry_t::next'],['../structrecalc__visited__node__t.html#a4dbefbead9c99d35b26122cbd8b911bb',1,'recalc_visited_node_t::next'],['../structmemo__node__t.html#a564a527a968dead4df52cdd0fd8edf43',1,'memo_node_t::next'],['../structestimate__visited__node__t.html#a9744fb4b8f888a8a7cdf33492e5b50c9',1,'estimate_visited_node_t::next'],['../structvisited__node__t.html#ad0852b9893a1c442f45eb10654e95809',1,'visited_node_t::next']]],
@@ -37,5 +37,5 @@ var searchData=
   ['num_5fxmm_5fargs_34',['num_xmm_args',['../structinfix__call__frame__layout.html#acce402d73219c05665e49c695d9cf1d2',1,'infix_call_frame_layout::num_xmm_args'],['../abi__win__x64_8c.html#ae43fd27e26591007a6e52ff762d515dc',1,'NUM_XMM_ARGS:&#160;abi_win_x64.c'],['../abi__sysv__x64_8c.html#ae43fd27e26591007a6e52ff762d515dc',1,'NUM_XMM_ARGS:&#160;abi_sysv_x64.c']]],
   ['number_35',['Number',['../unionNumber.html',1,'']]],
   ['number_5funion_5freturn_5fhandler_36',['number_union_return_handler',['../302__aggregates_8c.html#a70467ffbe02ac6056479d14ae084875b',1,'302_aggregates.c']]],
-  ['numbers_37',['Recipe: Working with Complex Numbers',['../md_docs_2cookbook.html#autotoc_md68',1,'']]]
+  ['numbers_37',['Recipe: Working with Complex Numbers',['../md_docs_2cookbook.html#autotoc_md69',1,'']]]
 ];

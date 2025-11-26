@@ -10,6 +10,7 @@ var dir_fa4c63a3875cb7c8c7c312bb859d2a4b =
     [ "Ch02_Bitfields.c", "Ch02__Bitfields_8c.html", "Ch02__Bitfields_8c" ],
     [ "Ch02_ComplexNumbers.c", "Ch02__ComplexNumbers_8c.html", "Ch02__ComplexNumbers_8c" ],
     [ "Ch02_Enums.c", "Ch02__Enums_8c.html", "Ch02__Enums_8c" ],
+    [ "Ch02_FlexibleArrayMembers.c", "Ch02__FlexibleArrayMembers_8c.html", "Ch02__FlexibleArrayMembers_8c" ],
     [ "Ch02_LargeStruct.c", "Ch02__LargeStruct_8c.html", "Ch02__LargeStruct_8c" ],
     [ "Ch02_PackedStructs.c", "Ch02__PackedStructs_8c.html", "Ch02__PackedStructs_8c" ],
     [ "Ch02_ReturnStruct.c", "Ch02__ReturnStruct_8c.html", "Ch02__ReturnStruct_8c" ],

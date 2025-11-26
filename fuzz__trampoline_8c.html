@@ -119,6 +119,9 @@ Include dependency graph for fuzz_trampoline.c:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a9b1239dadced21f143442b72b77d52bf" id="r_a9b1239dadced21f143442b72b77d52bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__trampoline_8c.html#a9b1239dadced21f143442b72b77d52bf">_infix_clear_error</a> (void)</td></tr>
+<tr class="memdesc:a9b1239dadced21f143442b72b77d52bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the thread-local error state.  <br /></td></tr>
+<tr class="separator:a9b1239dadced21f143442b72b77d52bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ae756b4fd31a3e10dafd23d69bb9171" id="r_a1ae756b4fd31a3e10dafd23d69bb9171"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__trampoline_8c.html#a1ae756b4fd31a3e10dafd23d69bb9171">dummy_target_for_fuzzing</a> (void)</td></tr>
 <tr class="separator:a1ae756b4fd31a3e10dafd23d69bb9171"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a538f66560cffcf319757fb932bb30458" id="r_a538f66560cffcf319757fb932bb30458"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fuzz__trampoline_8c.html#a538f66560cffcf319757fb932bb30458">dummy_closure_handler</a> (<a class="el" href="group__type__system.html#gad1b3ed7bb2f9a2bf47df3299111ab74f">infix_context_t</a> *ctx, void *ret, void **<a class="el" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>)</td></tr>
@@ -137,6 +140,35 @@ Functions</h2></td></tr>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a9b1239dadced21f143442b72b77d52bf" name="a9b1239dadced21f143442b72b77d52bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b1239dadced21f143442b72b77d52bf">&#9670;&#160;</a></span>_infix_clear_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _infix_clear_error </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clears the thread-local error state. </p>
+<p>Located in <code><a class="el" href="error_8c.html" title="Implements the thread-local error reporting system.">src/core/error.c</a></code>. This is called at the beginning of every public API function to ensure that a prior error from an unrelated call is not accidentally returned. </p>
+
+</div>
+</div>
 <a id="a538f66560cffcf319757fb932bb30458" name="a538f66560cffcf319757fb932bb30458"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a538f66560cffcf319757fb932bb30458">&#9670;&#160;</a></span>dummy_closure_handler()</h2>
 

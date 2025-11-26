@@ -14,6 +14,8 @@ var group__type__system =
       [ "enum_info", "group__high__level__api.html#gabf1c7bb07d550892095e914072a7658c", null ],
       [ "func_ptr_info", "group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb", null ],
       [ "is_arena_allocated", "group__high__level__api.html#gafe120ad94ce32eb2d2150b64c7c2dccd", null ],
+      [ "is_flexible", "group__high__level__api.html#gaabf51313711bf8d1c0637991a02f3dce", null ],
+      [ "is_packed", "group__high__level__api.html#ga07213dba1ad9a1a43e437aa39916a038", null ],
       [ "members", "group__high__level__api.html#ga6129c5165e189c4e5aa99904a98079e1", null ],
       [ "meta", "group__high__level__api.html#ga06717387732a6557d456a760bb3150cc", null ],
       [ "name", "group__high__level__api.html#ga736c003e9eef685d02153e46a46ad461", null ],
@@ -31,6 +33,9 @@ var group__type__system =
       [ "vector_info", "group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c", null ]
     ] ],
     [ "infix_struct_member_t", "structinfix__struct__member__t.html", [
+      [ "bit_offset", "group__high__level__api.html#ga5b136770a29661be0621c1dd5840e811", null ],
+      [ "bit_width", "group__high__level__api.html#gacb2f7cc197140e3c5beaef2ebafa43bc", null ],
+      [ "is_bitfield", "group__high__level__api.html#ga625606dc88be3e79221fce24fac75305", null ],
       [ "name", "group__high__level__api.html#ga8dad067a06c5efd90028fb1cab9e2911", null ],
       [ "offset", "group__high__level__api.html#gabc9fb3780626694111f4c8c74700a9b9", null ],
       [ "type", "group__high__level__api.html#gaa89e6621da98f5115dcc807599c4ac77", null ]
@@ -89,8 +94,10 @@ var group__type__system =
     [ "infix_reverse_get_num_fixed_args", "group__type__system.html#gae266bb4c63346afa5c4e0e1111bb7345", null ],
     [ "infix_reverse_get_return_type", "group__type__system.html#ga50a6028388baf020c5bdbf0dd5bbd3f1", null ],
     [ "infix_type_create_array", "group__type__system.html#ga9f0d8a41015262d2dcffc97cf5f87772", null ],
+    [ "infix_type_create_bitfield_member", "group__type__system.html#gaba443ecf9dc3387ff81111a12519e352", null ],
     [ "infix_type_create_complex", "group__type__system.html#ga642b11fa95d575f407b33a9dc28d81bf", null ],
     [ "infix_type_create_enum", "group__type__system.html#ga44df1ec1de746a0be838b55567d07cae", null ],
+    [ "infix_type_create_flexible_array", "group__type__system.html#ga152f2ac4260d95809356cd569ed0c66b", null ],
     [ "infix_type_create_member", "group__type__system.html#gaed99b57de2c839a66eb54c9e82d703d9", null ],
     [ "infix_type_create_named_reference", "group__type__system.html#gad83c177871541f45a24c9df3e780d341", null ],
     [ "infix_type_create_packed_struct", "group__type__system.html#ga013ec0163fd36e611251d1a0897f773e", null ],

@@ -9,12 +9,13 @@ var searchData=
   ['dummy_5ffunc_5ffor_5ftest_6',['dummy_func_for_test',['../812__shared__arena_8c.html#a93f315d1a029b20dd195d6c9b8f88ba1',1,'812_shared_arena.c']]],
   ['dummy_5fhandler_7',['dummy_handler',['../004__signatures_8c.html#afde8060cdaa4da8e4b27cc4d9cc73422',1,'004_signatures.c']]],
   ['dummy_5fhandler_5ffunc_8',['dummy_handler_func',['../830__security_8c.html#a84ec4fb6b076f7d0d2c769feb2d20a47',1,'830_security.c']]],
-  ['dummy_5fscalar_5fmarshaller_9',['dummy_scalar_marshaller',['../fuzz__direct_8c.html#ad85ac5a03eb06f89b07588a0b9ac5190',1,'fuzz_direct.c']]],
-  ['dummy_5fstress_5ffunc_5ffwd_10',['dummy_stress_func_fwd',['../810__memory__stress_8c.html#a8eed32a78508cd94143c2a5cfd09b775',1,'810_memory_stress.c']]],
-  ['dummy_5fstress_5fhandler_5frev_11',['dummy_stress_handler_rev',['../810__memory__stress_8c.html#afc8c21e9fd3d25a46ce06519b77cff72',1,'810_memory_stress.c']]],
-  ['dummy_5ftarget_5ffor_5ffuzzing_12',['dummy_target_for_fuzzing',['../fuzz__trampoline_8c.html#a1ae756b4fd31a3e10dafd23d69bb9171',1,'fuzz_trampoline.c']]],
-  ['dummy_5ftarget_5ffunc_13',['dummy_target_func',['../830__security_8c.html#a8fcb0b2df065db9dd72f731a65b7caa4',1,'dummy_target_func(int a):&#160;830_security.c'],['../fuzz__direct_8c.html#a2f19567d84adbb28956f8b730c18d57f',1,'dummy_target_func(void):&#160;fuzz_direct.c']]],
-  ['dummy_5fwriteback_14',['dummy_writeback',['../fuzz__direct_8c.html#a0c9b486accd3db3bbc321d7e362c8280',1,'fuzz_direct.c']]],
-  ['dynamic_5fffi_5fcall_15',['dynamic_ffi_call',['../Ch08__ArenaCallFrame_8c.html#a73494424b20107b9d3b6bc4fa3cedb0c',1,'Ch08_ArenaCallFrame.c']]],
-  ['dynamic_5fwrapper_16',['dynamic_wrapper',['../Ch07__IntrospectWrapper_8c.html#a05da45c28528a878b819bc1aeb67d460',1,'Ch07_IntrospectWrapper.c']]]
+  ['dummy_5freg_5fhandler_9',['dummy_reg_handler',['../850__regression__cases_8c.html#ab0ce6fb1160ee0e1ea988c69ed613d18',1,'850_regression_cases.c']]],
+  ['dummy_5fscalar_5fmarshaller_10',['dummy_scalar_marshaller',['../fuzz__direct_8c.html#ad85ac5a03eb06f89b07588a0b9ac5190',1,'fuzz_direct.c']]],
+  ['dummy_5fstress_5ffunc_5ffwd_11',['dummy_stress_func_fwd',['../810__memory__stress_8c.html#a8eed32a78508cd94143c2a5cfd09b775',1,'810_memory_stress.c']]],
+  ['dummy_5fstress_5fhandler_5frev_12',['dummy_stress_handler_rev',['../810__memory__stress_8c.html#afc8c21e9fd3d25a46ce06519b77cff72',1,'810_memory_stress.c']]],
+  ['dummy_5ftarget_5ffor_5ffuzzing_13',['dummy_target_for_fuzzing',['../fuzz__trampoline_8c.html#a1ae756b4fd31a3e10dafd23d69bb9171',1,'fuzz_trampoline.c']]],
+  ['dummy_5ftarget_5ffunc_14',['dummy_target_func',['../830__security_8c.html#a8fcb0b2df065db9dd72f731a65b7caa4',1,'dummy_target_func(int a):&#160;830_security.c'],['../fuzz__direct_8c.html#a2f19567d84adbb28956f8b730c18d57f',1,'dummy_target_func(void):&#160;fuzz_direct.c']]],
+  ['dummy_5fwriteback_15',['dummy_writeback',['../fuzz__direct_8c.html#a0c9b486accd3db3bbc321d7e362c8280',1,'fuzz_direct.c']]],
+  ['dynamic_5fffi_5fcall_16',['dynamic_ffi_call',['../Ch08__ArenaCallFrame_8c.html#a73494424b20107b9d3b6bc4fa3cedb0c',1,'Ch08_ArenaCallFrame.c']]],
+  ['dynamic_5fwrapper_17',['dynamic_wrapper',['../Ch07__IntrospectWrapper_8c.html#a05da45c28528a878b819bc1aeb67d460',1,'Ch07_IntrospectWrapper.c']]]
 ];

@@ -131,6 +131,10 @@ Functions</h2></td></tr>
 <tr class="separator:aa0331530c5c87c8574b432c1cfe824b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1859924feee26110a597f8fdb40f641a" id="r_a1859924feee26110a597f8fdb40f641a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a1859924feee26110a597f8fdb40f641a">emit_arm64_ldr_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
 <tr class="separator:a1859924feee26110a597f8fdb40f641a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ab8db1da3dd51241b266eddd85c9999" id="r_a1ab8db1da3dd51241b266eddd85c9999"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a1ab8db1da3dd51241b266eddd85c9999">emit_arm64_ldrb_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a1ab8db1da3dd51241b266eddd85c9999"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa20666702b18c3c2c467bee1083df740" id="r_aa20666702b18c3c2c467bee1083df740"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aa20666702b18c3c2c467bee1083df740">emit_arm64_ldrh_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:aa20666702b18c3c2c467bee1083df740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadef894fddbb4159a515f76280c3e8a6" id="r_aadef894fddbb4159a515f76280c3e8a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aadef894fddbb4159a515f76280c3e8a6">emit_arm64_ldrsw_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
 <tr class="separator:aadef894fddbb4159a515f76280c3e8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a889ea2650a40f3b7c4845df0c75882d9" id="r_a889ea2650a40f3b7c4845df0c75882d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a889ea2650a40f3b7c4845df0c75882d9">emit_arm64_str_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
@@ -580,6 +584,86 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1ab8db1da3dd51241b266eddd85c9999" name="a1ab8db1da3dd51241b266eddd85c9999"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ab8db1da3dd51241b266eddd85c9999">&#9670;&#160;</a></span>emit_arm64_ldrb_imm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_arm64_ldrb_imm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa20666702b18c3c2c467bee1083df740" name="aa20666702b18c3c2c467bee1083df740"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa20666702b18c3c2c467bee1083df740">&#9670;&#160;</a></span>emit_arm64_ldrh_imm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void emit_arm64_ldrh_imm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
         </tr>
         <tr>

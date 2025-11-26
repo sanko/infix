@@ -1,5 +1,5 @@
 <map id="eg/cookbook/Ch01_OpaquePointers.c" name="eg/cookbook/Ch01_OpaquePointers.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 1: Working with Opaque Pointers." alt="" coords="94,5,357,31"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with Bitfields." alt="" coords="94,5,357,31"/>
 <area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="126,79,221,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,33,192,69,188,66,215,29"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="245,79,312,104"/>

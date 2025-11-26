@@ -1,6 +1,6 @@
 var structBitfieldStruct =
 [
-    [ "a", "structBitfieldStruct.html#a118f0dea49765041589a278c47b32e6c", null ],
-    [ "b", "structBitfieldStruct.html#a9c7cc462b05342b15bdb7a2249bc6aab", null ],
-    [ "c", "structBitfieldStruct.html#a4b37ae28ae58a702642fc4007625fb98", null ]
+    [ "a", "structBitfieldStruct.html#a2f01c48b24b37f0914a75db4467f83d0", null ],
+    [ "b", "structBitfieldStruct.html#add65c5494cec3bb333f79314f57e547f", null ],
+    [ "c", "structBitfieldStruct.html#ae19a29da03af8533b6b8082af3d7d86d", null ]
 ];
