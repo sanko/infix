@@ -47,11 +47,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(__unix__) || defined(__APPLE__) || defined(__OpenBSD__)
+#include <unistd.h>
+#endif
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
-#elif defined(__unix__) || defined(__APPLE__)
+#elif (defined(__unix__) || defined(__APPLE__)) && !defined(__OpenBSD__)
+// Do not include pthread.h on OpenBSD to prevent linking/cleanup issues if -pthread is not used.
 #include <pthread.h>
 #endif
+
 // Portability Macros for Atomics and Thread-Local Storage
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_ATOMICS__)
 #include <stdatomic.h>
@@ -66,22 +71,34 @@
 #define TAP_ATOMIC_FETCH_ADD(ptr, val) ((*ptr) += (val))
 #warning "Compiler does not support C11 atomics or GCC builtins; global counters will not be thread-safe."
 #endif
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
-#define TAP_THREAD_LOCAL _Thread_local
-#elif defined(__GNUC__) || defined(__clang__)
-#define TAP_THREAD_LOCAL __thread
+
+#if defined(__OpenBSD__)
+// OpenBSD has known issues with TLS cleanup in some linking scenarios.
+// Disable TLS to prevent segfaults at exit.
+#define TAP_THREAD_LOCAL
 #elif defined(_MSC_VER)
+// Microsoft Visual C++
 #define TAP_THREAD_LOCAL __declspec(thread)
+#elif defined(_WIN32) && defined(__clang__)
+// Clang on Windows
+#define TAP_THREAD_LOCAL __declspec(thread)
+#elif defined(__GNUC__)
+// GCC (including MinGW) and Clang on *nix
+#define TAP_THREAD_LOCAL __thread
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
+#define TAP_THREAD_LOCAL _Thread_local
 #else
 #define TAP_THREAD_LOCAL
 #warning "Compiler does not support thread-local storage; tests will not be thread-safe."
 #endif
+
 // Compiler-specific attribute for printf-style format checking.
 #if defined(__GNUC__) || defined(__clang__)
 #define DBLTAP_PRINTF_FORMAT(fmt_index, arg_index) __attribute__((format(printf, fmt_index, arg_index)))
 #else
 #define DBLTAP_PRINTF_FORMAT(fmt_index, arg_index)
 #endif
+
 // Public Test Harness Functions (wrapped by macros for convenience)
 void tap_init(void);
 void tap_plan(size_t count);
@@ -97,6 +114,7 @@ void tap_skip(size_t count, const char * reason, ...) DBLTAP_PRINTF_FORMAT(2, 3)
 void tap_skip_all(const char * reason, ...) DBLTAP_PRINTF_FORMAT(1, 2);
 void diag(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
 void tap_note(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
+
 // Public Test Harness Macros
 /** @brief Declares the total number of tests to be run in the current scope. Must be called before any tests. */
 #define plan(count) tap_plan(count)
@@ -131,6 +149,7 @@ void tap_note(const char * fmt, ...) DBLTAP_PRINTF_FORMAT(1, 2);
 /** @brief Defines the main test function body where all tests are written. */
 #define TEST void test_body(void)
 void test_body(void);
+
 #else  // If DBLTAP_ENABLE is not defined, provide stub macros to allow code to compile without the harness.
 #define plan(count) ((void)0)
 #define done() (0)
@@ -155,6 +174,7 @@ void test_body(void);
 #define TEST \
     int main(void) { return 0; }
 #endif  // DBLTAP_ENABLE
+
 #if defined(DBLTAP_ENABLE) && defined(DBLTAP_IMPLEMENTATION)
 // Internal Test State Management
 /**
@@ -177,14 +197,17 @@ typedef struct {
     char todo_reason[256];  /**< The reason for the current `TODO` block. */
     char skip_reason[256];  /**< The reason for the current `skip_all`. */
 } tap_state_t;
+
 #define MAX_DEPTH 16         /**< Maximum nesting depth for subtests. */
 #define NO_PLAN ((size_t)-1) /**< Sentinel value for an undeclared plan. */
+
 /** @internal The thread-local stack of test states. */
 static TAP_THREAD_LOCAL tap_state_t state_stack[MAX_DEPTH];
 /** @internal A pointer to the current test state on the thread-local stack. */
 static TAP_THREAD_LOCAL tap_state_t * current_state = NULL;
 /** @internal A global, thread-safe counter for the total number of failed tests across all threads. */
 static TAP_ATOMIC_SIZE_T g_total_failed = 0;
+
 // One-Time Initialization for TAP Header
 #if defined(_WIN32) || defined(__CYGWIN__)
 static INIT_ONCE g_tap_init_once = INIT_ONCE_STATIC_INIT;
@@ -196,13 +219,16 @@ static BOOL CALLBACK _tap_init_routine(PINIT_ONCE initOnce, PVOID param, PVOID *
     fflush(stdout);
     return TRUE;
 }
-#elif defined(__unix__) || defined(__APPLE__)
+#elif (defined(__unix__) || defined(__APPLE__)) && !defined(__OpenBSD__)
 static pthread_once_t g_tap_init_once = PTHREAD_ONCE_INIT;
 static void _tap_init_routine(void) {
     printf("TAP version %d\n", TAP_VERSION);
     fflush(stdout);
 }
+#else  // OpenBSD or other platforms without robust pthread_once support in this context
+static bool g_tap_initialized = false;
 #endif
+
 /**
  * @internal
  * @brief Ensures the TAP header has been printed and thread-local state is initialized.
@@ -213,8 +239,15 @@ static void _tap_init_routine(void) {
 static void _tap_ensure_initialized(void) {
 #if defined(_WIN32) || defined(__CYGWIN__)
     InitOnceExecuteOnce(&g_tap_init_once, _tap_init_routine, NULL, NULL);
-#elif defined(__unix__) || defined(__APPLE__)
+#elif (defined(__unix__) || defined(__APPLE__)) && !defined(__OpenBSD__)
     pthread_once(&g_tap_init_once, _tap_init_routine);
+#else
+    // Fallback for OpenBSD/single-threaded builds
+    if (!g_tap_initialized) {
+        printf("TAP version %d\n", TAP_VERSION);
+        fflush(stdout);
+        g_tap_initialized = true;
+    }
 #endif
     if (!current_state) {
         current_state = &state_stack[0];
@@ -222,6 +255,7 @@ static void _tap_ensure_initialized(void) {
         current_state->plan = NO_PLAN;
     }
 }
+
 // Internal Helper Functions
 /** @internal Prints the indentation corresponding to the current subtest depth. */
 static void print_indent(FILE * stream) {
@@ -229,6 +263,7 @@ static void print_indent(FILE * stream) {
     for (int i = 0; i < current_state->indent_level; ++i)
         fprintf(stream, "    ");
 }
+
 /** @internal Pushes a new state onto the thread-local stack for entering a subtest. */
 static void push_state(void) {
     if (current_state >= &state_stack[MAX_DEPTH - 1])
@@ -244,14 +279,17 @@ static void push_state(void) {
         snprintf(current_state->todo_reason, sizeof(current_state->todo_reason), "%s", parent->todo_reason);
     }
 }
+
 /** @internal Pops the current state from the stack when a subtest ends. */
 static void pop_state(void) {
     if (current_state <= &state_stack[0])
         tap_bail_out("Internal error: Attempted to pop base test state");
     current_state--;
 }
+
 // Public API Implementation
 void tap_init(void) { _tap_ensure_initialized(); }
+
 void tap_plan(size_t count) {
     _tap_ensure_initialized();
     if (current_state->has_plan || current_state->count > 0)
@@ -262,6 +300,7 @@ void tap_plan(size_t count) {
     printf("1..%llu\n", (unsigned long long)count);
     fflush(stdout);
 }
+
 bool tap_ok(bool condition, const char * file, int line, const char * func, const char * expr, const char * name, ...) {
     _tap_ensure_initialized();
     if (current_state->skipping) {
@@ -316,6 +355,7 @@ bool tap_ok(bool condition, const char * file, int line, const char * func, cons
     fflush(stdout);
     return condition;
 }
+
 void tap_skip(size_t count, const char * reason, ...) {
     _tap_ensure_initialized();
     char buffer[256];
@@ -330,6 +370,7 @@ void tap_skip(size_t count, const char * reason, ...) {
     }
     fflush(stdout);
 }
+
 void tap_skip_all(const char * reason, ...) {
     _tap_ensure_initialized();
     current_state->skipping = true;
@@ -338,6 +379,7 @@ void tap_skip_all(const char * reason, ...) {
     vsnprintf(current_state->skip_reason, sizeof(current_state->skip_reason), reason, args);
     va_end(args);
 }
+
 void tap_todo_start(const char * reason, ...) {
     _tap_ensure_initialized();
     current_state->todo = true;
@@ -346,11 +388,13 @@ void tap_todo_start(const char * reason, ...) {
     vsnprintf(current_state->todo_reason, sizeof(current_state->todo_reason), reason, args);
     va_end(args);
 }
+
 void tap_todo_end(void) {
     _tap_ensure_initialized();
     current_state->todo = false;
     current_state->todo_reason[0] = '\0';
 }
+
 void diag(const char * fmt, ...) {
     _tap_ensure_initialized();
     char buffer[1024];
@@ -362,6 +406,7 @@ void diag(const char * fmt, ...) {
     fprintf(stderr, "# %s\n", buffer);
     fflush(stderr);
 }
+
 void tap_note(const char * fmt, ...) {
     _tap_ensure_initialized();
     char buffer[1024];
@@ -373,6 +418,7 @@ void tap_note(const char * fmt, ...) {
     fprintf(stdout, "# %s\n", buffer);
     fflush(stdout);
 }
+
 void tap_bail_out(const char * reason, ...) {
     fprintf(stderr, "Bail out! ");
     va_list args;
@@ -383,6 +429,7 @@ void tap_bail_out(const char * reason, ...) {
     fflush(stderr);
     exit(1);
 }
+
 bool tap_subtest_start(const char * name) {
     _tap_ensure_initialized();
     print_indent(stdout);
@@ -392,6 +439,7 @@ bool tap_subtest_start(const char * name) {
     snprintf(current_state->subtest_name, sizeof(current_state->subtest_name), "%s", name);
     return true;  // Enters the `for` loop body.
 }
+
 bool tap_subtest_end(void) {
     _tap_ensure_initialized();
     if (!current_state->has_plan) {
@@ -409,6 +457,7 @@ bool tap_subtest_end(void) {
     ok(subtest_ok, "%s", name_buffer);
     return false;  // Exits the `for` loop.
 }
+
 int tap_done(void) {
     _tap_ensure_initialized();
     if (current_state != &state_stack[0])
@@ -436,11 +485,20 @@ int tap_done(void) {
              (unsigned long long)current_state->plan);
     return (int)final_failed_count;
 }
+
 // The main test runner that gets compiled into the test executable.
 int main(void) {
     tap_init();
     test_body();
-    return (int)tap_done();
+    int result = tap_done();
+#if defined(__OpenBSD__) || (defined(_WIN32) && defined(__clang__))
+    // OpenBSD with Clang profiling runtime has a known issue where atexit handlers
+    // related to TLS or profiling can segfault. We bypass standard exit cleanup
+    // to avoid this false positive failure.
+    _exit(result);
+#else
+    return result;
+#endif
 }
 #endif  // DBLTAP_ENABLE && DBLTAP_IMPLEMENTATION
 /** @endinternal */

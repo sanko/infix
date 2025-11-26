@@ -2,62 +2,67 @@
  * @file Ch02_Bitfields.c
  * @brief Cookbook Chapter 2: Working with Structs that Contain Bitfields
  *
- * This example demonstrates how to work with C structs that use bitfields. The
- * `infix` signature language has no direct syntax for bitfields because their
- * in-memory layout is implementation-defined and not portable.
- *
- * The solution is to model the struct based on its underlying integer storage
- * type and manually pack/unpack the bitfield values in the host application
- * before and after the FFI call.
+ * This example demonstrates how to interface with C structs that use bitfields
+ * (e.g., `uint8_t flags : 3`) to pack data tightly.
  */
 #include <infix/infix.h>
 #include <stdint.h>
 #include <stdio.h>
 
-// The native C struct with bitfields. It occupies the space of a single uint32_t.
+// A packed struct with bitfields (simulating a hardware register or network flag byte)
+// Note: We use uint8_t base types to ensure consistent byte-aligned packing for this example.
+#pragma pack(push, 1)
 typedef struct {
-    uint32_t a : 4;   // 4 bits
-    uint32_t b : 12;  // 12 bits
-    uint32_t c : 16;  // 16 bits
-} BitfieldStruct;
+    uint8_t enable : 1;   // 1 bit
+    uint8_t mode : 3;     // 3 bits
+    uint8_t error : 2;    // 2 bits
+    uint8_t padding : 2;  // 2 bits (pad to 8)
+} StatusRegister;
+#pragma pack(pop)
 
 // The native C function we want to call.
-static uint32_t process_bitfields(BitfieldStruct s) { return s.a + s.b + s.c; }
-
+void print_status(StatusRegister reg) {
+    printf("Status Register: [Enable: %d] [Mode: %d] [Error: %d]\n", reg.enable, reg.mode, reg.error);
+}
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Bitfields ---\n");
+    printf("Cookbook Chapter 2: Working with Bitfields\n");
 
-    // 1. Describe the struct by its underlying integer storage. For the FFI
-    //    call, we treat it as a `struct { uint32_t; }`.
-    const char * signature = "({uint32}) -> uint32";
+    // Signature syntax: "name : type : width"
+    // We use !{} for packed struct to match the C definition.
+    const char * status_sig =
+        "(!{"
+        "  enable : uint8 : 1,"
+        "  mode   : uint8 : 3,"
+        "  error  : uint8 : 2,"
+        "  pad    : uint8 : 2"
+        "}) -> void";
 
-    // 2. Create the trampoline.
-    infix_forward_t * t = NULL;
-    infix_status status = infix_forward_create(&t, signature, (void *)process_bitfields, NULL);
+    infix_forward_t * t_status = NULL;
+    infix_status status = infix_forward_create(&t_status, status_sig, (void *)print_status, NULL);
     if (status != INFIX_SUCCESS) {
-        fprintf(stderr, "Failed to create trampoline.\n");
+        fprintf(stderr, "Error: Failed to create trampoline (code %d)\n", status);
         return 1;
     }
-    infix_cif_func cif = infix_forward_get_code(t);
 
-    // 3. Manually pack the data into a uint32_t using bitwise operators. This
-    //    mirrors what the C compiler does when assigning to bitfield members.
-    uint32_t packed_data = 0;
-    packed_data |= (15 & 0xF) << 0;         // Field a = 15
-    packed_data |= (1000 & 0xFFF) << 4;     // Field b = 1000
-    packed_data |= (30000 & 0xFFFF) << 16;  // Field c = 30000
+    // Manually construct the bitfield value in a raw byte container.
+    // Target: Enable=1, Mode=5 (101), Error=0.
+    // Binary layout (assuming LSB first packing):
+    // Bits: [ 7 6 | 5 4 | 3 2 1 | 0 ]
+    // Data: [ 0 0 | 0 0 | 1 0 1 | 1 ] = 00001011 = 0x0B
 
-    // 4. The FFI call sees a simple struct containing a single uint32_t.
-    void * args[] = {&packed_data};
-    uint32_t result;
+    uint8_t raw_byte = 0;
+    raw_byte |= (1 & 0x1);       // Enable (bit 0)
+    raw_byte |= (5 & 0x7) << 1;  // Mode   (bits 1-3)
+    raw_byte |= (0 & 0x3) << 4;  // Error  (bits 4-5)
 
-    cif(&result, args);
+    // Pass the raw data. The JIT handles the width logic during layout,
+    // but since it packs into a single byte here, we pass the pointer to that byte.
+    void * args[] = {&raw_byte};
 
-    printf("Calling function with manually packed bitfield data...\n");
-    printf("Bitfield sum: %u (Expected: 31015)\n", result);
+    infix_cif_func cif_status = infix_forward_get_code(t_status);
+    cif_status(NULL, args);
 
-    // 5. Clean up.
-    infix_forward_destroy(t);
+    infix_forward_destroy(t_status);
 
     return 0;
 }

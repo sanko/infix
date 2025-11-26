@@ -189,7 +189,178 @@ c23_nodiscard infix_type * infix_type_create_void(void) { return &_infix_type_vo
  * @return An initialized `infix_struct_member` object.
  */
 infix_struct_member infix_type_create_member(const char * name, infix_type * type, size_t offset) {
-    return (infix_struct_member){name, type, offset};
+    return (infix_struct_member){name, type, offset, 0, 0, false};
+}
+/**
+ * @brief A factory function to create a bitfield `infix_struct_member`.
+ * @param[in] name The name of the member.
+ * @param[in] type The integer `infix_type` of the bitfield.
+ * @param[in] offset The byte offset (usually 0 for automatic layout).
+ * @param[in] bit_width The width in bits.
+ * @return An initialized `infix_struct_member` object.
+ */
+infix_struct_member infix_type_create_bitfield_member(const char * name,
+                                                      infix_type * type,
+                                                      size_t offset,
+                                                      uint8_t bit_width) {
+    return (infix_struct_member){name, type, offset, bit_width, 0, true};
+}
+
+/**
+ * @internal
+ * @brief Shared logic to calculate struct layout, including bitfields and FAMs.
+ * @return `true` on success, `false` if an integer overflow occurred.
+ */
+static bool _layout_struct(infix_type * type) {
+    size_t current_byte_offset = 0;
+    uint8_t current_bit_offset = 0;  // 0-7 bits used in the current byte
+    size_t max_alignment = 1;
+
+    for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
+        infix_struct_member * member = &type->meta.aggregate_info.members[i];
+
+        // 1. Handle Flexible Array Members (FAM)
+        if (member->type->category == INFIX_TYPE_ARRAY && member->type->meta.array_info.is_flexible) {
+            // Flush any pending bits to the next byte
+            if (current_bit_offset > 0) {
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
+                current_byte_offset++;
+                current_bit_offset = 0;
+            }
+
+            // FAM aligns according to its element type.
+            size_t member_align = member->type->alignment;
+            if (member_align == 0)
+                member_align = 1;
+
+            size_t aligned = _infix_align_up(current_byte_offset, member_align);
+            if (aligned < current_byte_offset) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                return false;
+            }
+            current_byte_offset = aligned;
+            member->offset = current_byte_offset;
+
+            if (member_align > max_alignment)
+                max_alignment = member_align;
+            continue;  // FAM logic done
+        }
+
+        // 2. Handle Bitfields
+        if (member->is_bitfield) {
+            // Zero-width bitfield: force alignment to the next boundary of the declared type.
+            if (member->bit_width == 0) {
+                if (current_bit_offset > 0) {
+                    if (current_byte_offset == SIZE_MAX) {
+                        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                        return false;
+                    }
+                    current_byte_offset++;
+                    current_bit_offset = 0;
+                }
+                size_t align = member->type->alignment;
+                if (align == 0)
+                    align = 1;
+
+                size_t aligned = _infix_align_up(current_byte_offset, align);
+                if (aligned < current_byte_offset) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
+                current_byte_offset = aligned;
+                member->offset = current_byte_offset;
+                member->bit_offset = 0;
+
+                if (align > max_alignment)
+                    max_alignment = align;
+                continue;
+            }
+
+            // Standard Bitfield
+            // Simplified System V packing: pack into current byte if it fits.
+            if (current_bit_offset + member->bit_width > 8) {
+                // Overflow: move to start of next byte
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
+                current_byte_offset++;
+                current_bit_offset = 0;
+            }
+
+            member->offset = current_byte_offset;
+            member->bit_offset = current_bit_offset;
+            current_bit_offset += member->bit_width;
+
+            // If we filled the byte exactly, advance to next byte
+            if (current_bit_offset == 8) {
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
+                current_byte_offset++;
+                current_bit_offset = 0;
+            }
+
+            // Update struct alignment. Bitfields typically impose the alignment of their base type.
+            size_t align = member->type->alignment;
+            if (align == 0)
+                align = 1;
+            if (align > max_alignment)
+                max_alignment = align;
+        }
+        else {
+            // 3. Standard Member
+
+            // Flush bits first
+            if (current_bit_offset > 0) {
+                if (current_byte_offset == SIZE_MAX) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                    return false;
+                }
+                current_byte_offset++;
+                current_bit_offset = 0;
+            }
+
+            size_t member_align = member->type->alignment;
+            if (member_align == 0)
+                member_align = 1;
+
+            if (member_align > max_alignment)
+                max_alignment = member_align;
+
+            size_t aligned = _infix_align_up(current_byte_offset, member_align);
+            if (aligned < current_byte_offset) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                return false;
+            }
+            current_byte_offset = aligned;
+            member->offset = current_byte_offset;
+
+            if (current_byte_offset > SIZE_MAX - member->type->size) {
+                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
+                return false;
+            }
+            current_byte_offset += member->type->size;
+        }
+    }
+
+    // Final flush
+    if (current_bit_offset > 0)
+        current_byte_offset++;
+
+    // If it is packed, the alignment is explicitly determined by the user (defaulting to 1
+    // if not specified in the syntax). We must respect this value absolutely, ignoring
+    // the natural alignment of members.
+    if (type->meta.aggregate_info.is_packed)
+        max_alignment = type->alignment;
+
+    type->alignment = max_alignment;
+    type->size = _infix_align_up(current_byte_offset, max_alignment);
+    return true;
 }
 /**
  * @internal
@@ -304,12 +475,56 @@ c23_nodiscard infix_status infix_type_create_array(infix_arena_t * arena,
     type->category = INFIX_TYPE_ARRAY;
     type->meta.array_info.element_type = element_type;
     type->meta.array_info.num_elements = num_elements;
+    type->meta.array_info.is_flexible = false;
     // An array's alignment is the same as its element's alignment.
     type->alignment = element_type->alignment;
     type->size = element_type->size * num_elements;
     *out_type = type;
     return INFIX_SUCCESS;
 }
+
+/**
+ * @brief Creates a new flexible array member type (`[?:type]`).
+ * @param[in] arena The arena for allocation.
+ * @param[out] out_type A pointer to receive the new `infix_type`.
+ * @param[in] element_type The type of the array elements.
+ * @return `INFIX_SUCCESS` on success.
+ */
+c23_nodiscard infix_status infix_type_create_flexible_array(infix_arena_t * arena,
+                                                            infix_type ** out_type,
+                                                            infix_type * element_type) {
+    if (out_type == nullptr || element_type == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    // Flexible arrays of incomplete types (size 0) are generally not allowed.
+    if (element_type->category == INFIX_TYPE_VOID || element_type->size == 0) {
+        *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+
+    infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
+    if (type == nullptr) {
+        *out_type = nullptr;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    type->is_arena_allocated = true;
+    type->category = INFIX_TYPE_ARRAY;
+    type->meta.array_info.element_type = element_type;
+    type->meta.array_info.num_elements = 0;
+    type->meta.array_info.is_flexible = true;  // Mark as flexible
+
+    // A flexible array member itself has size 0 within the struct (it hangs off the end).
+    // However, its alignment requirement affects the struct.
+    type->alignment = element_type->alignment;
+    type->size = 0;
+
+    *out_type = type;
+    return INFIX_SUCCESS;
+}
+
 /**
  * @brief Creates a new enum type with a specified underlying integer type.
  * @param[in] arena The arena for allocation.
@@ -435,6 +650,7 @@ c23_nodiscard infix_status infix_type_create_union(infix_arena_t * arena,
     type->category = INFIX_TYPE_UNION;
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
+    type->meta.aggregate_info.is_packed = false;  // Unions don't use this flag currently
     // A union's size is the size of its largest member, and its alignment is the
     // alignment of its most-aligned member.
     size_t max_size = 0;
@@ -482,54 +698,36 @@ c23_nodiscard infix_status infix_type_create_struct(infix_arena_t * arena,
     type->category = INFIX_TYPE_STRUCT;
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
-    // This performs a preliminary layout calculation based on standard C packing rules.
-    // Note: This layout may be incomplete if it contains unresolved named references.
+    type->meta.aggregate_info.is_packed = false;
+
+    // This performs a preliminary layout calculation.
+    // Note: This layout may be incomplete if it contains unresolved named references or flexible arrays.
     // The final, correct layout will be computed by `_infix_type_recalculate_layout`.
-    size_t current_offset = 0;
-    size_t max_alignment = 1;
+    // However, we must set a preliminary size/alignment here.
+
+    // We use the recalculate logic to do the heavy lifting, assuming a temporary arena can be made.
+    // But we can't create an arena here easily if we are in a strict context.
+    // So we do a simplified pass just like the old logic, ignoring complex bitfield rules for now.
+    // The proper bitfield layout happens in `_infix_type_recalculate_layout`.
+
     for (size_t i = 0; i < num_members; ++i) {
         infix_struct_member * member = &arena_members[i];
-        size_t member_align = member->type->alignment;
-        // An unresolved named reference will have alignment 0 or 1. If it's 0, we treat it as 1 for
-        // this preliminary pass to avoid division by zero. The real alignment will be fixed later.
-        if (member_align == 0) {
-            if (member->type->category != INFIX_TYPE_NAMED_REFERENCE) {
-                // A zero-alignment type that isn't a named reference is invalid (e.g., a struct with a void member).
+        if (member->type->alignment == 0 && member->type->category != INFIX_TYPE_NAMED_REFERENCE &&
+            !(member->type->category == INFIX_TYPE_ARRAY && member->type->meta.array_info.is_flexible)) {
+            if (member->type->category != INFIX_TYPE_ARRAY) {
                 *out_type = nullptr;
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
                 return INFIX_ERROR_INVALID_ARGUMENT;
             }
-            member_align = 1;
         }
-        // Align the current offset up to the boundary required by the current member.
-        size_t aligned_offset = _infix_align_up(current_offset, member_align);
-        if (aligned_offset < current_offset) {  // Overflow check
-            *out_type = nullptr;
-            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-            return INFIX_ERROR_INVALID_ARGUMENT;
-        }
-        current_offset = aligned_offset;
-        member->offset = current_offset;
-        // Add the member's size to the current offset.
-        if (current_offset > SIZE_MAX - member->type->size) {  // Overflow check
-            *out_type = nullptr;
-            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-            return INFIX_ERROR_INVALID_ARGUMENT;
-        }
-        current_offset += member->type->size;
-        // Keep track of the largest alignment requirement.
-        if (member_align > max_alignment)
-            max_alignment = member_align;
     }
-    // A struct's alignment is the alignment of its most-aligned member.
-    type->alignment = max_alignment;
-    // The struct's total size is its occupied space, padded up to its alignment.
-    type->size = _infix_align_up(current_offset, max_alignment);
-    if (type->size < current_offset) {  // Overflow check
+
+    // Calculate Layout (including bitfields and FAMs)
+    if (!_layout_struct(type)) {
         *out_type = nullptr;
-        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
+
     *out_type = type;
     return INFIX_SUCCESS;
 }
@@ -576,6 +774,7 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
     type->category = INFIX_TYPE_STRUCT;  // Packed structs are still fundamentally structs.
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
+    type->meta.aggregate_info.is_packed = true;  // Marked as packed
     *out_type = type;
     return INFIX_SUCCESS;
 }
@@ -699,21 +898,8 @@ static void _infix_type_recalculate_layout_recursive(infix_arena_t * temp_arena,
         break;  // Other types have no child types to recurse into.
     }
     // After children are updated, recalculate this type's layout.
-    if (type->category == INFIX_TYPE_STRUCT) {
-        size_t current_offset = 0;
-        size_t max_alignment = 1;
-        for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
-            infix_struct_member * member = &type->meta.aggregate_info.members[i];
-            size_t member_align = member->type->alignment;
-            if (member_align > max_alignment)
-                max_alignment = member_align;
-            current_offset = _infix_align_up(current_offset, member_align);
-            member->offset = current_offset;
-            current_offset += member->type->size;
-        }
-        type->alignment = max_alignment;
-        type->size = _infix_align_up(current_offset, max_alignment);
-    }
+    if (type->category == INFIX_TYPE_STRUCT)
+        _layout_struct(type);
     else if (type->category == INFIX_TYPE_UNION) {
         size_t max_size = 0;
         size_t max_alignment = 1;
@@ -728,9 +914,16 @@ static void _infix_type_recalculate_layout_recursive(infix_arena_t * temp_arena,
         type->size = _infix_align_up(max_size, max_alignment);
     }
     else if (type->category == INFIX_TYPE_ARRAY) {
-        // Recalculate array size based on the (potentially updated) element size.
-        type->alignment = type->meta.array_info.element_type->alignment;
-        type->size = type->meta.array_info.element_type->size * type->meta.array_info.num_elements;
+        // Flexible arrays have size 0 but inherit alignment.
+        // Fixed arrays calculate size normally.
+        if (type->meta.array_info.is_flexible) {
+            type->alignment = type->meta.array_info.element_type->alignment;
+            type->size = 0;
+        }
+        else {
+            type->alignment = type->meta.array_info.element_type->alignment;
+            type->size = type->meta.array_info.element_type->size * type->meta.array_info.num_elements;
+        }
     }
 }
 /**
@@ -770,9 +963,8 @@ typedef struct memo_node_t {
  *
  * @details This function is the implementation of the **"Copy"** stage of the data pipeline.
  * It is essential for creating self-contained trampoline objects and for safely
- * managing type lifecycles. It uses a memoization table (`memo_head`) to correctly
- * handle cyclic graphs and shared type objects, ensuring that each source type
- * is copied exactly once.
+ * managing type lifecycles. It uses memoization to correctly handle cycles and shared
+ * type objects, ensuring that each source type is copied exactly once.
  *
  * @param dest_arena The destination arena for the new type graph.
  * @param src_type The source type to copy.
@@ -830,6 +1022,8 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
     case INFIX_TYPE_ARRAY:
         dest_type->meta.array_info.element_type =
             _copy_type_graph_to_arena_recursive(dest_arena, src_type->meta.array_info.element_type, memo_head);
+        // Explicitly copy the flexible flag to ensure it persists.
+        dest_type->meta.array_info.is_flexible = src_type->meta.array_info.is_flexible;
         break;
     case INFIX_TYPE_STRUCT:
     case INFIX_TYPE_UNION:
@@ -840,6 +1034,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
                 infix_arena_alloc(dest_arena, members_size, _Alignof(infix_struct_member));
             if (dest_type->meta.aggregate_info.members == nullptr)
                 return nullptr;
+            dest_type->meta.aggregate_info.is_packed = src_type->meta.aggregate_info.is_packed;  // Copy packed flag
             // Now, recurse for each member's type and copy its name.
             for (size_t i = 0; i < src_type->meta.aggregate_info.num_members; ++i) {
                 dest_type->meta.aggregate_info.members[i] = src_type->meta.aggregate_info.members[i];
@@ -854,6 +1049,13 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
                     infix_memcpy((void *)dest_name, src_name, name_len);
                     dest_type->meta.aggregate_info.members[i].name = dest_name;
                 }
+                // Copy bitfield properties
+                dest_type->meta.aggregate_info.members[i].bit_width =
+                    src_type->meta.aggregate_info.members[i].bit_width;
+                dest_type->meta.aggregate_info.members[i].bit_offset =
+                    src_type->meta.aggregate_info.members[i].bit_offset;
+                dest_type->meta.aggregate_info.members[i].is_bitfield =
+                    src_type->meta.aggregate_info.members[i].is_bitfield;
             }
         }
         break;

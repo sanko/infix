@@ -72,7 +72,7 @@ else {
 }
 die "Could not determine architecture for $^O" unless $config{arch};
 
-# --- ABI Forcing ---
+# ABI Forcing
 if ( $opts{abi} ) {
     my $forced_abi = lc( $opts{abi} );
     print "User is forcing ABI to: $forced_abi (for code generation logic only)\n";
@@ -280,7 +280,7 @@ sub show_help {
       helgrindtest       Runs the threading stress test under Valgrind/Helgrind.
       helgrindtest:bare  Runs a "barebones" Helgrind test with no testing framework.
       clean              Removes all build and coverage artifacts.
-      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi, fuzz:direct).
+      fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi, fuzz:direct, fuzz:roundtrip).
 
     Options:
       --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'clang').

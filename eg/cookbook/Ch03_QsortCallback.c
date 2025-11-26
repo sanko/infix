@@ -22,7 +22,7 @@ static int compare_integers_handler(const void * a, const void * b) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 3: Creating a Type-Safe Callback ---\n");
+    printf("Cookbook Chapter 3: Creating a Type-Safe Callback\n");
 
     // 2. Define the signature for the qsort comparison function:
     //    int (*)(const void*, const void*)

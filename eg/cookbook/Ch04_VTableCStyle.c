@@ -52,7 +52,7 @@ static Adder * create_adder(int base) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 4: C-Style V-Table Emulation ---\n");
+    printf("Cookbook Chapter 4: C-Style V-Table Emulation\n");
 
     // 1. Use the Type Registry to create clean, readable signatures for our types.
     infix_registry_t * reg = infix_registry_create();

@@ -21,7 +21,7 @@
 static long double native_sqrtl(long double x) { return sqrtl(x); }
 
 int main() {
-    printf("--- Cookbook Chapter 4: Handling `long double` ---\n");
+    printf("Cookbook Chapter 4: Handling `long double`\n");
     printf("Size of `long double` on this platform: %zu bytes\n", sizeof(long double));
 
     // 1. Use the `longdouble` keyword. infix will determine the correct ABI rules.

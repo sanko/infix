@@ -25,7 +25,7 @@ static bool get_user_stats(int user_id, int * out_posts, double * out_score) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 1: Working with \"Out\" Parameters ---\n");
+    printf("Cookbook Chapter 1: Working with \"Out\" Parameters\n");
 
     // 1. Signature for: bool get_user_stats(int, int*, double*);
     const char * signature = "(int, *int, *double) -> bool";

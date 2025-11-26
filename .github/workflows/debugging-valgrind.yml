@@ -17,7 +17,7 @@ jobs:
     name: ${{ inputs.test-type }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.0
       - name: Install Dependencies
         run: sudo apt-get update && sudo apt-get install -y gcc perl valgrind
       - name: Determine Test Command

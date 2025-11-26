@@ -27,7 +27,7 @@ Point move_point(Point p, double dx) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 8: The Full Manual API Lifecycle ---\n");
+    printf("Cookbook Chapter 8: The Full Manual API Lifecycle\n");
 
     // 1. Create an arena to hold all our type definitions.
     infix_arena_t * arena = infix_arena_create(4096);

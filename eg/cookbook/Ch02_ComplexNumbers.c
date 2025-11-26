@@ -21,7 +21,7 @@
 static double complex c_square(double complex z) { return z * z; }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Complex Numbers ---\n");
+    printf("Cookbook Chapter 2: Working with Complex Numbers\n");
 
     // 1. The signature for `double _Complex` is `c[double]`.
     const char * signature = "(c[double]) -> c[double]";
@@ -56,7 +56,7 @@ int main() {
 #include <stdio.h>
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Complex Numbers ---\n");
+    printf("Cookbook Chapter 2: Working with Complex Numbers\n");
     printf("SKIPPED: MSVC does not support C99 _Complex types.\n");
     return 0;
 }

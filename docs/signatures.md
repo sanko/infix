@@ -123,6 +123,17 @@ These syntax elements allow you to build complex types from simpler ones.
 | `m256d`                                   | An alias for `v[4:double]`, an AVX vector of 4 `double`s (`__m256d`).           |
 | `m512d`                                   | An alias for `v[8:double]`, an AVX-512 vector of 8 `double`s (`__m512d`).       |
 
+#### 2.4 Bitfields and Flexible Arrays
+
+*   **Bitfields:** Bitfields are defined by appending a colon and a bit-width to a struct member's type. They are only valid within `struct` definitions.
+    *   **Syntax:** `name : type : width`
+    *   **Example:** `!{ flags : uint16 : 3, mode : uint16 : 5 }`
+    *   **Zero-width:** `pad : uint32 : 0` forces alignment to the next boundary of the type.
+
+*   **Flexible Array Members (FAM):** A Flexible Array Member must be the *last* member of a struct. It is represented as an array with no size.
+    *   **Syntax:** `name : [ ? : type ]` (Note the size before the colon is represented with a question mark (`?`)).
+    *   **Example:** `{ len : int, data : [ ? : char ] }`
+
 ---
 
 ## Part 3: The Named Type Registry

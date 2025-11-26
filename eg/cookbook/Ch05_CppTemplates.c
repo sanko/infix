@@ -21,7 +21,7 @@ const char * LIB_NAME = "./libbox.so";
 #endif
 
 int main() {
-    printf("--- Cookbook Chapter 5: Interfacing with C++ Templates ---\n");
+    printf("Cookbook Chapter 5: Interfacing with C++ Templates\n");
 
     infix_library_t * lib = infix_library_open(LIB_NAME);
     if (!lib) {

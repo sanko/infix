@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 int main() {
-    printf("--- Cookbook Chapter 1: Calling a Simple C Function ---\n");
+    printf("Cookbook Chapter 1: Calling a Simple C Function\n");
 
     // 1. Describe the signature of the function we want to call:
     //    double atan2(double y, double x);

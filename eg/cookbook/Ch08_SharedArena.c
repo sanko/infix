@@ -46,7 +46,7 @@ void handle_user(const User * u) {
 }
 
 int main(void) {
-    printf("--- Shared Arena Optimization Example ---\n\n");
+    printf("Shared Arena Optimization Example\n\n");
 
     // 1. Create a single, long-lived arena to hold all FFI metadata.
     infix_arena_t * shared_arena = infix_arena_create(65536);

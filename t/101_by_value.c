@@ -535,7 +535,7 @@ TEST {
         infix_status status =
             infix_type_create_array(arena, &char_array_type, infix_type_create_primitive(INFIX_PRIMITIVE_SINT8), 20);
         ok(status == INFIX_SUCCESS, "Created infix_type for char[20]");
-        infix_struct_member members[] = {{"data", char_array_type, 0}};
+        infix_struct_member members[] = {{"data", char_array_type, 0, 0, 0, false}};
         infix_type * struct_type = NULL;
         status = infix_type_create_struct(arena, &struct_type, members, 1);
         ok(status == INFIX_SUCCESS && struct_type->size >= 20,

@@ -19,7 +19,7 @@ typedef struct {
 static Point make_point(double x, double y) { return (Point){x, y}; }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Receiving a Struct from a Function ---\n");
+    printf("Cookbook Chapter 2: Receiving a Struct from a Function\n");
 
     // 1. Describe the signature: Point make_point(double x, double y);
     const char * signature = "(double, double) -> {double, double}";

@@ -28,7 +28,7 @@ static int process_packed(Packed p) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Working with Packed Structs ---\n");
+    printf("Cookbook Chapter 2: Working with Packed Structs\n");
 
     // 2. The signature uses `!{...}` to indicate a packed layout. `infix` will
     //    calculate the correct unpadded size and 1-byte alignment.

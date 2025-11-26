@@ -56,7 +56,7 @@ void * worker_thread_func(void * arg) {
 }
 
 int main() {
-    printf("--- Cookbook Chapter 4: Proving Thread Safety ---\n");
+    printf("Cookbook Chapter 4: Proving Thread Safety\n");
 
     // 1. Main thread: Create the trampoline.
     printf("-> Main thread creating trampoline...\n");

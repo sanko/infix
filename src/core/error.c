@@ -41,19 +41,33 @@
 #include <stdarg.h>
 #include <stdio.h>  // For snprintf
 #include <string.h>
+
 // Use a portable mechanism for thread-local storage (TLS).
-// This series of #ifdefs selects the correct keyword for the current compiler.
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
-#define INFIX_TLS _Thread_local  // C11 standard TLS
-#elif defined(__GNUC__) || defined(__clang__)
-#define INFIX_TLS __thread  // GCC/Clang extension
+// The order of checks is critical for cross-platform compatibility.
+#if defined(__OpenBSD__)
+// OpenBSD has known issues with TLS cleanup in some linking scenarios (segfault on exit).
+// We disable TLS entirely on this platform to ensure stability, at the cost of thread-safety.
+#define INFIX_TLS
 #elif defined(_MSC_VER)
-#define INFIX_TLS __declspec(thread)  // MSVC specific
+// Microsoft Visual C++
+#define INFIX_TLS __declspec(thread)
+#elif defined(_WIN32) && defined(__clang__)
+// Clang on Windows: check if behaving like MSVC or GCC.
+// If using MSVC codegen/headers, use declspec.
+#define INFIX_TLS __declspec(thread)
+#elif defined(__GNUC__)
+// MinGW (GCC on Windows) and standard GCC/Clang on *nix.
+// MinGW prefers __thread or _Thread_local over __declspec(thread).
+#define INFIX_TLS __thread
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
+// Fallback to C11 standard
+#define INFIX_TLS _Thread_local
 #else
 // Fallback for compilers that do not support TLS. This is not thread-safe.
 #warning "Compiler does not support thread-local storage; error handling will not be thread-safe."
 #define INFIX_TLS
 #endif
+
 // A portable macro for safe string copying to prevent buffer overflows.
 #if defined(_MSC_VER)
 #define _INFIX_SAFE_STRNCPY(dest, src, count) strncpy_s(dest, sizeof(dest), src, count)
@@ -64,6 +78,7 @@
         (dest)[(sizeof(dest)) - 1] = '\0';    \
     } while (0)
 #endif
+
 /**
  * @var g_infix_last_error
  * @brief The thread-local variable that stores the details of the last error.
@@ -72,6 +87,7 @@
  * initialized to a "no error" state.
  */
 static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE, INFIX_CODE_SUCCESS, 0, 0, {0}};
+
 /**
  * @var g_infix_last_signature_context
  * @brief A thread-local pointer to the full signature string being parsed.
@@ -81,6 +97,7 @@ static INFIX_TLS infix_error_details_t g_infix_last_error = {INFIX_CATEGORY_NONE
  * context to generate a rich, contextual error message.
  */
 INFIX_TLS const char * g_infix_last_signature_context = nullptr;
+
 /**
  * @internal
  * @brief Maps an `infix_error_code_t` to its human-readable string representation.
@@ -131,6 +148,7 @@ static const char * _get_error_message_for_code(infix_error_code_t code) {
         return "An unknown or unspecified error occurred";
     }
 }
+
 /**
  * @internal
  * @brief Sets the last error details for the current thread.
@@ -198,6 +216,7 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
         _INFIX_SAFE_STRNCPY(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
     }
 }
+
 /**
  * @internal
  * @brief Sets a detailed system error with a platform-specific error code and message.
@@ -207,7 +226,7 @@ void _infix_set_error(infix_error_category_t category, infix_error_code_t code, 
  * underlying system error code (`errno` or `GetLastError`).
  *
  * @param category The category of the error.
- * @param code The `infix` error code.
+ * @param code The `infix` error code that corresponds to the failure.
  * @param system_code The OS-specific error code (e.g., from `errno` or `GetLastError`).
  * @param msg An optional custom message from the OS (e.g., from `dlerror`). If `nullptr`, the default message for
  * `code` is used.
@@ -220,14 +239,14 @@ void _infix_set_system_error(infix_error_category_t category,
     g_infix_last_error.code = code;
     g_infix_last_error.position = 0;
     g_infix_last_error.system_error_code = system_code;
-    if (msg) {
+    if (msg)
         _INFIX_SAFE_STRNCPY(g_infix_last_error.message, msg, sizeof(g_infix_last_error.message) - 1);
-    }
     else {
         const char * default_msg = _get_error_message_for_code(code);
         _INFIX_SAFE_STRNCPY(g_infix_last_error.message, default_msg, sizeof(g_infix_last_error.message) - 1);
     }
 }
+
 /**
  * @internal
  * @brief Resets the error state for the current thread to "no error".
@@ -244,6 +263,7 @@ void _infix_clear_error(void) {
     g_infix_last_error.message[0] = '\0';
     g_infix_last_signature_context = nullptr;
 }
+
 /**
  * @brief Retrieves detailed information about the last error that occurred on the current thread.
  * @return A copy of the last error details structure. This function is thread-safe.

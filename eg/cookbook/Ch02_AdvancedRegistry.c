@@ -26,7 +26,7 @@ struct Employee {
 static const char * get_manager_name(Employee * e) { return e->manager ? e->manager->name : "None"; }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Advanced Named Types ---\n");
+    printf("Cookbook Chapter 2: Advanced Named Types\n");
 
     infix_registry_t * registry = infix_registry_create();
     if (!registry) {

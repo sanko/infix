@@ -28,7 +28,7 @@ static int add_and_multiply(int a, double b) { return (int)((double)a * b); }
  */
 static bool dynamic_wrapper(
     infix_forward_t * trampoline, void * target_func, void ** args, size_t num_provided_args, void * ret_buffer) {
-    printf("--- Inside dynamic_wrapper ---\n");
+    printf("Inside dynamic_wrapper\n");
 
     // 1. Introspect the trampoline to get expected argument count.
     size_t num_expected_args = infix_forward_get_num_args(trampoline);
@@ -51,12 +51,12 @@ static bool dynamic_wrapper(
     infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
     cif(target_func, ret_buffer, args);
 
-    printf("--- Exiting dynamic_wrapper ---\n");
+    printf("Exiting dynamic_wrapper\n");
     return true;
 }
 
 int main() {
-    printf("--- Cookbook Chapter 7: Introspecting a Trampoline ---\n");
+    printf("Cookbook Chapter 7: Introspecting a Trampoline\n");
 
     const char * signature = "(int, double) -> int";
     infix_forward_t * trampoline = NULL;
@@ -67,7 +67,7 @@ int main() {
     }
 
     // Test Case 1: Correct number of arguments
-    printf("\n--- Calling wrapper with correct number of arguments ---\n");
+    printf("\nCalling wrapper with correct number of arguments\n");
     int a1 = 10;
     double b1 = 4.2;
     void * correct_args[] = {&a1, &b1};
@@ -76,7 +76,7 @@ int main() {
     printf("Wrapper call finished. Result: %d (Expected: 42)\n", result1);
 
     // Test Case 2: Incorrect number of arguments
-    printf("\n--- Calling wrapper with incorrect number of arguments ---\n");
+    printf("\nCalling wrapper with incorrect number of arguments\n");
     int a2 = 10;
     void * incorrect_args[] = {&a2};
     int result2 = 0;

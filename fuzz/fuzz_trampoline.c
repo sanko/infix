@@ -47,6 +47,9 @@
 
 #include "fuzz_helpers.h"
 
+// Access internal error clearing function
+extern void _infix_clear_error(void);
+
 /** @internal A dummy C function to serve as a valid target for bound trampolines. */
 void dummy_target_for_fuzzing(void) {}
 
@@ -68,6 +71,8 @@ void dummy_closure_handler(infix_context_t * ctx, void * ret, void ** args) {
  * @param in The fuzzer input data stream.
  */
 static void FuzzTest(fuzzer_input in) {
+    _infix_clear_error();  // Clear stale context
+
     uint8_t path_selector;
     if (!consume_uint8_t(&in, &path_selector))
         return;

@@ -268,6 +268,25 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
                 return nullptr;
             }
+
+            // Check for bitfield syntax: "name: type : width"
+            uint8_t bit_width = 0;
+            bool is_bitfield = false;
+            skip_whitespace(state);
+            if (*state->p == ':') {
+                state->p++;  // Consume ':'
+                skip_whitespace(state);
+                size_t width_val = 0;
+                if (!parse_size_t(state, &width_val))
+                    return nullptr;  // Error set by parse_size_t
+                if (width_val > 255) {
+                    set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
+                    return nullptr;
+                }
+                bit_width = (uint8_t)width_val;
+                is_bitfield = true;
+            }
+
             member_node * node = infix_arena_calloc(state->arena, 1, sizeof(member_node), _Alignof(member_node));
             if (!node) {
                 _infix_set_error(
@@ -276,8 +295,13 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             }
             // The member offset is not calculated here; it will be done later
             // by `infix_type_create_struct` or `_infix_type_recalculate_layout`.
-            node->m = infix_type_create_member(name, member_type, 0);
+            if (is_bitfield)
+                node->m = infix_type_create_bitfield_member(name, member_type, 0, bit_width);
+            else
+                node->m = infix_type_create_member(name, member_type, 0);
+
             node->next = nullptr;
+
             if (!head)
                 head = tail = node;
             else {
@@ -637,11 +661,19 @@ static infix_type * parse_type(parser_state * state) {
     else if (*state->p == '[') {  // Array type: `[size:type]`
         state->p++;
         skip_whitespace(state);
-        size_t num_elements;
-        if (!parse_size_t(state, &num_elements)) {
+        size_t num_elements = 0;
+        bool is_flexible = false;
+
+        if (*state->p == '?') {
+            // Flexible array member: `[?:type]`
+            is_flexible = true;
+            state->p++;
+        }
+        else if (!parse_size_t(state, &num_elements)) {
             state->depth--;
             return nullptr;
         }
+
         skip_whitespace(state);
         if (*state->p != ':') {
             set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
@@ -667,8 +699,15 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         state->p++;
-        if (infix_type_create_array(state->arena, &result_type, element_type, num_elements) != INFIX_SUCCESS)
-            result_type = nullptr;
+
+        if (is_flexible) {
+            if (infix_type_create_flexible_array(state->arena, &result_type, element_type) != INFIX_SUCCESS)
+                result_type = nullptr;
+        }
+        else {
+            if (infix_type_create_array(state->arena, &result_type, element_type, num_elements) != INFIX_SUCCESS)
+                result_type = nullptr;
+        }
     }
     else if (*state->p == '!')  // Packed struct
         result_type = parse_packed_struct(state);
@@ -1135,7 +1174,7 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
     }
-    // CRITICAL: If the type has a semantic name, always prefer printing it.
+    // If the type has a semantic name, always prefer printing it.
     if (type->name) {
         _print(state, "@%s", type->name);
         return;
@@ -1158,11 +1197,19 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             _infix_type_print_signature_recursive(state, type->meta.pointer_info.pointee_type);
         break;
     case INFIX_TYPE_ARRAY:
-        _print(state, "[%zu:", type->meta.array_info.num_elements);
+        if (type->meta.array_info.is_flexible)
+            _print(state, "[?:");
+        else
+            _print(state, "[%zu:", type->meta.array_info.num_elements);
         _infix_type_print_signature_recursive(state, type->meta.array_info.element_type);
         _print(state, "]");
         break;
     case INFIX_TYPE_STRUCT:
+        if (type->meta.aggregate_info.is_packed) {
+            _print(state, "!");
+            if (type->alignment != 1)
+                _print(state, "%zu:", type->alignment);
+        }
         _print(state, "{");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
@@ -1171,6 +1218,8 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             if (member->name)
                 _print(state, "%s:", member->name);
             _infix_type_print_signature_recursive(state, member->type);
+            if (member->bit_width > 0)
+                _print(state, ":%u", member->bit_width);
         }
         _print(state, "}");
         break;
@@ -1183,6 +1232,9 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
             if (member->name)
                 _print(state, "%s:", member->name);
             _infix_type_print_signature_recursive(state, member->type);
+            // Bitfields in unions are rare but syntactically valid in C.
+            if (member->bit_width > 0)
+                _print(state, ":%u", member->bit_width);
         }
         _print(state, ">");
         break;
@@ -1326,6 +1378,11 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
     // and immediately print the underlying structure of the type.
     switch (type->category) {
     case INFIX_TYPE_STRUCT:
+        if (type->meta.aggregate_info.is_packed) {
+            _print(state, "!");
+            if (type->alignment != 1)
+                _print(state, "%zu:", type->alignment);
+        }
         _print(state, "{");
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             if (i > 0)
@@ -1336,6 +1393,8 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
             // For nested members, we can use the standard printer, which IS allowed
             // to use the `@Name` shorthand for brevity.
             _infix_type_print_signature_recursive(state, member->type);
+            if (member->bit_width > 0)
+                _print(state, ":%u", member->bit_width);
         }
         _print(state, "}");
         break;
@@ -1348,6 +1407,8 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
             if (member->name)
                 _print(state, "%s:", member->name);
             _infix_type_print_signature_recursive(state, member->type);
+            if (member->bit_width > 0)
+                _print(state, ":%u", member->bit_width);
         }
         _print(state, ">");
         break;
@@ -1365,7 +1426,10 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
             _infix_type_print_signature_recursive(state, type->meta.pointer_info.pointee_type);
         break;
     case INFIX_TYPE_ARRAY:
-        _print(state, "[%zu:", type->meta.array_info.num_elements);
+        if (type->meta.array_info.is_flexible)
+            _print(state, "[?:");
+        else
+            _print(state, "[%zu:", type->meta.array_info.num_elements);
         _infix_type_print_signature_recursive(state, type->meta.array_info.element_type);
         _print(state, "]");
         break;

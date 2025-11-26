@@ -23,7 +23,7 @@ typedef struct {
 static int get_first_element(LargeStruct s) { return s.data[0]; }
 
 int main() {
-    printf("--- Cookbook Chapter 2: Large Structs Passed by Reference ---\n");
+    printf("Cookbook Chapter 2: Large Structs Passed by Reference\n");
 
     // 1. Describe the signature for: int get_first_element(LargeStruct s);
     //    The signature describes the struct by its contents.

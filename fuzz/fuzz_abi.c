@@ -51,6 +51,8 @@
 
 #include "fuzz_helpers.h"
 
+extern void _infix_clear_error(void);
+
 /**
  * @internal
  * @brief Main fuzzing logic for a single input.
@@ -62,6 +64,8 @@
  * @param in The fuzzer input data stream.
  */
 static void FuzzTest(fuzzer_input in) {
+    _infix_clear_error();  // Clear stale context
+
     infix_type * type_pool[MAX_TYPES_IN_POOL] = {0};
     int type_count = 0;
 

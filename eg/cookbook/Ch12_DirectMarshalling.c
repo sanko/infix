@@ -83,6 +83,7 @@ infix_direct_value_t marshal_mock_int(void * source_obj) {
  * Copies data from the MockObject into the temporary C buffer provided by the JIT.
  */
 void marshal_mock_point(void * source_obj, void * dest_buffer, const infix_type * type) {
+    (void)type;
     MockObject * obj = (MockObject *)source_obj;
     Point * p = (Point *)dest_buffer;
 
@@ -97,6 +98,7 @@ void marshal_mock_point(void * source_obj, void * dest_buffer, const infix_type 
  * Called after the C function returns. Copies data from the C buffer back to the MockObject.
  */
 void writeback_mock_point(void * source_obj, void * c_data_ptr, const infix_type * type) {
+    (void)type;
     MockObject * obj = (MockObject *)source_obj;
     Point * p = (Point *)c_data_ptr;
 

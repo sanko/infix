@@ -76,7 +76,7 @@ static void dynamic_ffi_call(infix_forward_t * trampoline, void * target_func, i
 }
 
 int main() {
-    printf("--- Cookbook Chapter 8: Building a Dynamic Call Frame with an Arena ---\n");
+    printf("Cookbook Chapter 8: Building a Dynamic Call Frame with an Arena\n");
 
     // Setup the trampoline once and cache it (as a real binding would).
     const char * signature = "(int, double, *char) -> void";

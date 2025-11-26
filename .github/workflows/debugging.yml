@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        harness: [abi, types, trampoline, signature, direct]
+        harness: [abi, types, trampoline, signature, direct, roundtrip]
         os: [ubuntu-latest, ubuntu-24.04-arm]
         abi: [INFIX_FORCE_ABI_WINDOWS_X64, INFIX_FORCE_ABI_SYSV_X64, INFIX_FORCE_ABI_AAPCS64]
     uses: ./.github/workflows/debugging-fuzz.yml
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code with Fix
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.0
 
       - name: Install Dependencies
         run: sudo apt-get update && sudo apt-get install -y clang perl
@@ -91,6 +91,7 @@ jobs:
           perl build.pl fuzz:signature  --compiler=clang
           perl build.pl fuzz:abi        --compiler=clang
           perl build.pl fuzz:direct     --compiler=clang
+          perl build.pl fuzz:roundtrip  --compiler=clang
 
       - name: Run Regression Test on All Found Crashes
         id: regression-test

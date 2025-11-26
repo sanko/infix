@@ -57,7 +57,7 @@ void EventManager::trigger(int value) {
         std::cout << "  -> C++ trigger called, but no handler is registered.\n";
 }
 
-// --- Extern "C" Helpers for a Stable C ABI ---
+// Extern "C" Helpers for a Stable C ABI
 extern "C" {
 /**
  * @brief Provides the true, compiler-determined size of the EventManager class.

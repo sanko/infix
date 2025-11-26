@@ -352,10 +352,27 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
                     (current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT8 ||
                      current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT16 ||
                      current_type->meta.primitive_id == INFIX_PRIMITIVE_SINT32);
-                if (is_signed)
-                    emit_movsxd_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                else
-                    emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+
+                if (is_signed) {
+                    // Signed types need sign extension
+                    if (current_type->size == 1)
+                        emit_movsx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else if (current_type->size == 2)
+                        emit_movsx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else
+                        emit_movsxd_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                }
+                else {
+                    // Unsigned types (including small structs/bitfields) need zero extension
+                    if (current_type->size == 1)
+                        emit_movzx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else if (current_type->size == 2)
+                        emit_movzx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else if (current_type->size == 4)
+                        emit_mov_reg32_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                    else
+                        emit_mov_reg_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
+                }
             }
         }
         else {  // ARG_LOCATION_XMM

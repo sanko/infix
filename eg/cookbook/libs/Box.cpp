@@ -49,7 +49,7 @@ public:
     ~Box() { std::cout << "  -> C++ Box<T>::~Box() called." << std::endl; }
 };
 
-// --- Extern "C" Helpers for C Interop ---
+// Extern "C" Helpers for C Interop
 // These are the "clean" factory functions and helpers that the C code will use.
 extern "C" {
 // We use a void* handle to hide the C++ template type from the C code.
@@ -80,7 +80,7 @@ MYCLASS_API const char * get_mangled_box_int_getvalue() {
 // Add more mangled name helpers for set_value, etc., as needed by the example.
 }
 
-// --- THE "HARD WAY": MANUALLY FORCING METHOD INSTANTIATION AND EXPORT ---
+// THE "HARD WAY": MANUALLY FORCING METHOD INSTANTIATION AND EXPORT
 //
 // To demonstrate the complexity, we create these dummy `extern "C"` functions.
 // Their only purpose is to call the template methods we need from C.

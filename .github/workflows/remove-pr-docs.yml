@@ -22,7 +22,7 @@ jobs:
           publish_dir: ${{ github.workspace }}
           destination_dir: PR-${{ github.event.pull_request.number }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.0
         with:
           sparse-checkout: .github
 
