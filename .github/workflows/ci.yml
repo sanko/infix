@@ -38,7 +38,8 @@ jobs:
             prepare_clang: 'pkg install -y perl5 llvm'
           - os: 'openbsd'
             version: '7.8'
-            prepare_gcc:   'pkg_add gcc-11.2.0p15'
+            #~ https://openbsd.app/
+            prepare_gcc:   'pkg_add gcc-11.2.0p19'
             prepare_clang: ''
           - os: 'netbsd'
             version: '10.1'
@@ -52,7 +53,7 @@ jobs:
           - os: 'omnios'
             version: 'r151054'
             prepare_gcc:   'pkg install -v --accept perl build-essential'
-        arch: ['x86_64', 'aarch64']
+        arch: ['x86_64', 'aarch64', 'riscv64']
         toolchain: ['gcc', 'clang']
         exclude:
           # Architecture exclusions
@@ -62,6 +63,14 @@ jobs:
             arch: 'aarch64'
           - platform: { os: 'omnios' }
             arch: 'aarch64'
+          - platform: { os: 'dragonflybsd' }
+            arch: 'riscv64'
+          - platform: { os: 'netbsd' }
+            arch: 'riscv64'
+          - platform: { os: 'solaris' }
+            arch: 'riscv64'
+          - platform: { os: 'omnios' }
+            arch: 'riscv64'
           # Toolchain exclusions for simplicity
           - platform: { os: 'netbsd' }
             toolchain: 'clang'
