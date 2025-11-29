@@ -216,3 +216,95 @@ jobs:
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Update build status matrix'
+  rollup:
+    name: Check ${{ matrix.category }}
+    needs: results
+    if: always() # Run even if builds failed, provided 'results' ran
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        category:
+          # Compilers
+          - gcc
+          - clang
+          - msvc
+          # OS Families
+          - linux   # matches ubuntu
+          - bsd     # matches freebsd, openbsd, netbsd, dragonflybsd
+          - windows
+          - solaris # matches solaris, omnios
+          - macos
+          # ABI
+          - x86_64
+          - aarch64
+          - riscv64
+          - SysV    # Custom logic: x86_64 non-windows
+    steps:
+      - name: Download Status JSON
+        uses: actions/download-artifact@v4
+        with:
+          name: status-files
+          path: status
+
+      - name: Verify Category Status
+        run: |
+          perl -MJSON::PP -e '
+            use strict;
+            use warnings;
+
+            my $cat = $ARGV[0];
+            my $json_file = "status/status.json";
+
+            # Load JSON status
+            local $/;
+            open(my $fh, "<", $json_file) or die "Could not open $json_file: $!";
+            my $json_text = <$fh>;
+            close($fh);
+            my $data = decode_json($json_text);
+
+            my $found_count = 0;
+            my $fail_count  = 0;
+
+            print "Checking category: $cat\n-----------------------------------\n";
+
+            foreach my $key (sort keys %$data) {
+                my $is_match = 0;
+
+                # --- Matching Logic ---
+                if ($cat eq "SysV") {
+                    # SysV Definition: x86_64 AND NOT Windows
+                    if ($key =~ /x86_64/ && $key !~ /windows/) {
+                        $is_match = 1;
+                    }
+                }
+                elsif ($key =~ /\Q$cat\E/i) {
+                    # Default: Simple substring match (e.g., "gcc", "openbsd")
+                    $is_match = 1;
+                }
+
+                if ($is_match) {
+                    $found_count++;
+                    my $status = $data->{$key}; # "passing" or "failing" (from shield logic) or raw "success"/"failure"
+
+                    # Normalized check (handle both raw git status and shield status)
+                    if ($status eq "success" || $status eq "passing") {
+                        print "[PASS] $key\n";
+                    } else {
+                        print "[FAIL] $key\n";
+                        $fail_count++;
+                    }
+                }
+            }
+
+            print "-----------------------------------\n";
+            if ($found_count == 0) {
+                print "::warning::No jobs matched the category \"$cat\".\n";
+            } elsif ($fail_count > 0) {
+                print "::error::$fail_count job(s) failed in category \"$cat\".\n";
+                exit 1;
+            } else {
+                print "All $found_count jobs in category \"$cat\" passed.\n";
+                exit 0;
+            }
+          ' "${{ matrix.category }}"
