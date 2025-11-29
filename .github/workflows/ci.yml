@@ -87,7 +87,7 @@ jobs:
             compiler_cmd: 'egcc'
 
   direct:
-    name:  ${{ matrix.platform.name }}
+    name: ${{ matrix.platform.name }}-${{ matrix.platform.arch }}
     uses: ./.github/workflows/unified-tester.yml
     secrets: inherit
     with:
@@ -108,7 +108,7 @@ jobs:
             prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl'
           - name: 'macos'
             os: 'macos-latest'
-            arch: 'x86_64'
+            arch: 'aarch64'
             prepare_gcc: ''
             prepare_clang: ''
           - name: 'windows'
@@ -118,12 +118,12 @@ jobs:
             prepare_gcc: 'choco install mingw'
             prepare_clang: 'choco install llvm'
             prepare_msvc: 'choco install opencppcoverage strawberryperl; bash'
-          - name: 'ubuntu-arm'
+          - name: 'ubuntu'
             os: 'ubuntu-24.04-arm'
             arch: 'aarch64'
             prepare_gcc: 'sudo apt-get update && sudo apt-get install -y gcc perl'
             prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl'
-          - name: 'windows-arm'
+          - name: 'windows'
             os: 'windows-11-arm'
             arch: 'aarch64'
             prepare_gcc: ''
@@ -134,8 +134,6 @@ jobs:
           #~ - platform: { name: 'macos' }
             #~ toolchain: 'gcc'
           - platform: { name: 'ubuntu' }
-            toolchain: 'msvc'
-          - platform: { name: 'ubuntu-arm' }
             toolchain: 'msvc'
           - platform: { name: 'macos' }
             toolchain: 'msvc'
