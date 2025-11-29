@@ -81,7 +81,7 @@ jobs:
 
       - name: Build and Test in NetBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'netbsd'
-        uses: vmactions/netbsd-vm@v1.2.1
+        uses: vmactions/netbsd-vm@v1.2.2
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -92,7 +92,7 @@ jobs:
 
       - name: Build and Test in DragonflyBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'dragonflybsd'
-        uses: vmactions/dragonflybsd-vm@v1.1.2
+        uses: vmactions/dragonflybsd-vm@v1.1.3
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -102,7 +102,7 @@ jobs:
 
       - name: Build and Test in Solaris
         if: inputs.runner_type == 'vm' && inputs.os == 'solaris'
-        uses: vmactions/solaris-vm@v1.1.6
+        uses: vmactions/solaris-vm@v1.1.7
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -112,7 +112,7 @@ jobs:
 
       - name: Build and Test in OmniOS
         if: inputs.runner_type == 'vm' && inputs.os == 'omnios'
-        uses: vmactions/omnios-vm@v1.1.2
+        uses: vmactions/omnios-vm@v1.1.3
         with:
           release: ${{ inputs.os_version }}
           usesh: true

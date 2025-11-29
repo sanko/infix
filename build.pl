@@ -143,6 +143,15 @@ else {    # GCC or Clang
             push @{ $config{cflags} },   '-fprofile-instr-generate', '-fcoverage-mapping';
             push @{ $config{cxxflags} }, '-fprofile-instr-generate', '-fcoverage-mapping';
             push @{ $config{ldflags} },  '-fprofile-instr-generate', '-fcoverage-mapping';
+            #
+            if ( $^O eq 'openbsd' ) {
+
+                # Clang 19+ on OpenBSD (and maybe others?) references bitmap profiling symbols
+                # in the runtime library even if MCDC isn't used. This causes link errors if the
+                # sections are missing. We define them to 0 to appease the linker.
+                push @{ $config{ldflags} }, '-Wl,--defsym=__llvm_profile_begin_bitmap=0';
+                push @{ $config{ldflags} }, '-Wl,--defsym=__llvm_profile_end_bitmap=0';
+            }
         }
         else {    # gcc
             push @{ $config{cflags} },   '--coverage';
@@ -506,11 +515,10 @@ sub run_coverage_gcov {
     my $cov_obj_dir  = File::Spec->catdir( $config->{lib_dir}, 'coverage_objects' );
     make_path($cov_obj_dir);
 
-    # Create a clean, uninstrumented version of the library object file.
-    my %clean_config = %$config;
-    my @clean_cflags = grep { $_ !~ /^-fprofile-instr-generate|-fcoverage-mapping|--coverage$/ } @{ $config->{cflags} };
-    $clean_config{cflags} = \@clean_cflags;
-    my @lib_obj_files = compile_objects( \%clean_config, $obj_suffix, $cov_obj_dir );
+    # Create the library object files using the standard config (which contains coverage flags).
+    # Clang requires the library to be compiled with -fprofile-instr-generate so that
+    # it produces the necessary symbols (e.g. __llvm_profile_begin_bitmap) to link with the runtime.
+    my @lib_obj_files = compile_objects( $config, $obj_suffix, $cov_obj_dir );
     my @test_c_files  = get_test_files($test_names_ref);
     for my $test_c (@test_c_files) {
         if ( $test_c =~ m{82\d_} ) { next; }
@@ -526,9 +534,7 @@ sub run_coverage_gcov {
         my $exe_path = $test_c;
         $exe_path =~ s/\.c$/$Config{_exe}/;
 
-        # Link the instrumented test against the clean library object file.
-        # The coverage flags in @local_cflags and ldflags will cause the linker to
-        # instrument the library code in the final executable.
+        # Link the instrumented test against the instrumented library object file.
         run_command( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @{ $config->{ldflags} } );
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }

@@ -32,12 +32,14 @@ jobs:
       matrix:
         platform:
           - os: 'freebsd'
-            version: '14.3'
+            #~ version: '14.3'
+            version: '15.0'
             prepare_gcc:   'pkg install -y perl5 lang/gcc'
             prepare_clang: 'pkg install -y perl5 llvm'
           - os: 'openbsd'
-            version: '7.7'
-            prepare_gcc:   'pkg_add gcc-11.2.0p15'
+            version: '7.8'
+            #~ https://openbsd.app/
+            prepare_gcc:   'pkg_add gcc-11.2.0p19'
             prepare_clang: ''
           - os: 'netbsd'
             version: '10.1'
@@ -49,9 +51,9 @@ jobs:
             version: '11.4'
             prepare_gcc:   'pkg install -v --accept perl-538 gcc'
           - os: 'omnios'
-            version: 'r151052'
+            version: 'r151054'
             prepare_gcc:   'pkg install -v --accept perl build-essential'
-        arch: ['x86_64', 'aarch64']
+        arch: ['x86_64', 'aarch64', 'riscv64']
         toolchain: ['gcc', 'clang']
         exclude:
           # Architecture exclusions
@@ -61,6 +63,14 @@ jobs:
             arch: 'aarch64'
           - platform: { os: 'omnios' }
             arch: 'aarch64'
+          - platform: { os: 'dragonflybsd' }
+            arch: 'riscv64'
+          - platform: { os: 'netbsd' }
+            arch: 'riscv64'
+          - platform: { os: 'solaris' }
+            arch: 'riscv64'
+          - platform: { os: 'omnios' }
+            arch: 'riscv64'
           # Toolchain exclusions for simplicity
           - platform: { os: 'netbsd' }
             toolchain: 'clang'
@@ -77,7 +87,7 @@ jobs:
             compiler_cmd: 'egcc'
 
   direct:
-    name:  ${{ matrix.platform.name }}
+    name: ${{ matrix.platform.name }}-${{ matrix.platform.arch }}
     uses: ./.github/workflows/unified-tester.yml
     secrets: inherit
     with:
@@ -98,7 +108,7 @@ jobs:
             prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl'
           - name: 'macos'
             os: 'macos-latest'
-            arch: 'x86_64'
+            arch: 'aarch64'
             prepare_gcc: ''
             prepare_clang: ''
           - name: 'windows'
@@ -108,12 +118,12 @@ jobs:
             prepare_gcc: 'choco install mingw'
             prepare_clang: 'choco install llvm'
             prepare_msvc: 'choco install opencppcoverage strawberryperl; bash'
-          - name: 'ubuntu-arm'
+          - name: 'ubuntu'
             os: 'ubuntu-24.04-arm'
             arch: 'aarch64'
             prepare_gcc: 'sudo apt-get update && sudo apt-get install -y gcc perl'
             prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl'
-          - name: 'windows-arm'
+          - name: 'windows'
             os: 'windows-11-arm'
             arch: 'aarch64'
             prepare_gcc: ''
@@ -124,8 +134,6 @@ jobs:
           #~ - platform: { name: 'macos' }
             #~ toolchain: 'gcc'
           - platform: { name: 'ubuntu' }
-            toolchain: 'msvc'
-          - platform: { name: 'ubuntu-arm' }
             toolchain: 'msvc'
           - platform: { name: 'macos' }
             toolchain: 'msvc'
