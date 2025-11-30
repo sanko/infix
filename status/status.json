@@ -5,13 +5,17 @@
 ,
 "freebsd-aarch64-gcc": "passing"
 ,
+"freebsd-riscv64-clang": "failing"
+,
+"freebsd-riscv64-gcc": "failing"
+,
 "freebsd-x86_64-clang": "passing"
 ,
 "freebsd-x86_64-gcc": "passing"
 ,
-"macos-x86_64-clang": "passing"
+"macos-aarch64-clang": "passing"
 ,
-"macos-x86_64-gcc": "passing"
+"macos-aarch64-gcc": "passing"
 ,
 "netbsd-aarch64-gcc": "passing"
 ,
@@ -23,25 +27,29 @@
 ,
 "openbsd-aarch64-egcc": "passing"
 ,
+"openbsd-riscv64-clang": "failing"
+,
+"openbsd-riscv64-egcc": "failing"
+,
 "openbsd-x86_64-clang": "passing"
 ,
 "openbsd-x86_64-egcc": "passing"
 ,
 "solaris-x86_64-gcc": "passing"
 ,
-"ubuntu-arm-aarch64-clang": "passing"
+"ubuntu-aarch64-clang": "passing"
 ,
-"ubuntu-arm-aarch64-gcc": "passing"
+"ubuntu-aarch64-gcc": "passing"
 ,
 "ubuntu-x86_64-clang": "passing"
 ,
 "ubuntu-x86_64-gcc": "passing"
 ,
-"windows-arm-aarch64-clang": "passing"
+"windows-aarch64-clang": "passing"
 ,
-"windows-arm-aarch64-gcc": "passing"
+"windows-aarch64-gcc": "passing"
 ,
-"windows-arm-aarch64-msvc": "passing"
+"windows-aarch64-msvc": "passing"
 ,
 "windows-x86_64-clang": "passing"
 ,
