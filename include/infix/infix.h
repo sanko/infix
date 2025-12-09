@@ -82,7 +82,7 @@
  */
 #define INFIX_MAJOR 0 /**< The major version number. Changes with incompatible API updates. */
 #define INFIX_MINOR 1 /**< The minor version number. Changes with new, backward-compatible features. */
-#define INFIX_PATCH 1 /**< The patch version number. Changes with backward-compatible bug fixes. */
+#define INFIX_PATCH 3 /**< The patch version number. Changes with backward-compatible bug fixes. */
 /** @} */
 // Define the POSIX source macro to ensure function declarations for shm_open,
 // ftruncate, etc., are visible on all POSIX-compliant systems.
@@ -198,6 +198,7 @@ struct infix_type_t {
     size_t alignment;             /**< The alignment requirement of the type in bytes. */
     bool is_arena_allocated;      /**< True if this type object lives in an arena and must be freed with it. */
     infix_arena_t * arena;        /**< A pointer to the arena that owns this type object, or nullptr if static. */
+    size_t source_offset;         /**< The byte offset in the source signature where this type was defined. */
     /** @brief A union containing metadata specific to the type's category. */
     union {
         /** @brief Metadata for `INFIX_TYPE_PRIMITIVE`. */

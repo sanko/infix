@@ -265,13 +265,13 @@ static infix_status _resolve_type_graph_inplace_recursive(infix_arena_t * temp_a
     *memo_head = memo_node;
     if (type->category == INFIX_TYPE_NAMED_REFERENCE) {
         if (!registry) {
-            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, type->source_offset);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
         const char * name = type->meta.named_reference.name;
         _infix_registry_entry_t * entry = _registry_lookup(registry, name);
         if (!entry || !entry->type) {
-            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, 0);
+            _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNRESOLVED_NAMED_TYPE, type->source_offset);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
         *type_ptr = entry->type;
@@ -571,9 +571,10 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             if (existing_entry && existing_entry->type)
                 type_to_alias = existing_entry->type;
             else {
+                size_t relative_pos = raw_type->source_offset;
                 _infix_set_error(INFIX_CATEGORY_PARSER,
                                  INFIX_CODE_UNRESOLVED_NAMED_TYPE,
-                                 (size_t)(defs_found[i].def_body_start - definitions));
+                                 (size_t)(defs_found[i].def_body_start - definitions) + relative_pos);
                 final_status = INFIX_ERROR_INVALID_ARGUMENT;
                 infix_arena_destroy(parser_arena);
                 goto cleanup;
@@ -612,6 +613,11 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
         if (entry->type) {
             // "Resolve" and "Layout" steps.
             if (_infix_resolve_type_graph_inplace(&entry->type, registry) != INFIX_SUCCESS) {
+                // The error was set inside resolve (relative to body).
+                // We need to re-base it to the full definitions string.
+                infix_error_details_t err = infix_get_last_error();
+                size_t body_offset = defs_found[i].def_body_start - definitions;
+                _infix_set_error(err.category, err.code, body_offset + err.position);
                 final_status = INFIX_ERROR_INVALID_ARGUMENT;
                 goto cleanup;
             }

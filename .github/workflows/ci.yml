@@ -193,19 +193,21 @@ jobs:
           path: status/
   publish-status:
     name: Publish Status Page
-    if: github.ref == 'refs/heads/main' # Only run on pushes to the main branch
+    if: ( success() || failure() ) && github.ref == 'refs/heads/main' # Only run on pushes to the main branch
     needs: [results]
     runs-on: ubuntu-latest
     permissions:
       contents: write # Important: Permission to write to the repo (for gh-pages branch)
     steps:
       - name: Download status files
+        #~ if: success() || failure()
         uses: actions/download-artifact@v4
         with:
           name: status-files
           path: ./status
 
       - name: Deploy to GitHub Pages
+        #~ if: success() || failure()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

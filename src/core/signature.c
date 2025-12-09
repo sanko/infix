@@ -588,6 +588,8 @@ static infix_type * parse_type(parser_state * state) {
     }
     state->depth++;
     skip_whitespace(state);
+    // Capture the offset from the start of the signature string *before* parsing the type.
+    size_t current_offset = state->p - state->start;
     infix_type * result_type = nullptr;
     const char * p_before_type = state->p;
     if (*state->p == '@') {  // Named type reference: `@MyStruct`
@@ -786,6 +788,9 @@ static infix_type * parse_type(parser_state * state) {
             }
         }
     }
+    // Only set source offset for dynamically allocated types (primitives are static singletons).
+    if (result_type && result_type->is_arena_allocated)
+        result_type->source_offset = current_offset;
     state->depth--;
     return result_type;
 }
