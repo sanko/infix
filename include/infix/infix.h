@@ -82,7 +82,7 @@
  */
 #define INFIX_MAJOR 0 /**< The major version number. Changes with incompatible API updates. */
 #define INFIX_MINOR 1 /**< The minor version number. Changes with new, backward-compatible features. */
-#define INFIX_PATCH 2 /**< The patch version number. Changes with backward-compatible bug fixes. */
+#define INFIX_PATCH 3 /**< The patch version number. Changes with backward-compatible bug fixes. */
 /** @} */
 // Define the POSIX source macro to ensure function declarations for shm_open,
 // ftruncate, etc., are visible on all POSIX-compliant systems.
