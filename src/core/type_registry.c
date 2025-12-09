@@ -406,22 +406,20 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
  *
  * - **Pass 1 (Scan & Index):** The entire definition string is scanned. The parser
  *   identifies every type name being defined (`@Name = ...`) or forward-declared
- *   (`@Name;`). It creates an entry for each name in the registry's hash table and
- *   stores a pointer to the start of its definition body, without parsing it yet.
- *   This pass ensures that all type names are known before any parsing begins.
+ *   (`@Name;`). It creates an entry for each name in the registry's hash table.
+ *   Critically, if a forward declaration is found, a placeholder `infix_type` is
+ *   created immediately to ensure subsequent lookups succeed.
  *
  * - **Pass 2 (Parse & Copy):** The function iterates through the definitions
- *   indexed in Pass 1. For each one, it calls the main signature parser
- *   (`_infix_parse_type_internal`) on the definition body to create a raw,
- *   unresolved `infix_type` graph. This graph is then deep-copied into the
- *   registry's permanent arena. At the end of this pass, every defined name has a
- *   corresponding (but still unresolved) type graph associated with it in the registry.
+ *   indexed in Pass 1. For each one, it calls the main signature parser to create
+ *   a raw type graph. This graph is then copied into the registry's arena. If a
+ *   placeholder already exists from Pass 1, the new definition is copied *in-place*
+ *   over the placeholder to preserve existing pointers.
  *
  * - **Pass 3 (Resolve & Layout):** The function iterates through all the newly
  *   created types from Pass 2. For each one, it performs the "Resolve" and
- *   "Layout" stages. Because all type graphs now exist, any `@Name` reference
- *   encountered during resolution is guaranteed to find a corresponding entry
- *   in the registry, successfully connecting the graph.
+ *   "Layout" stages. Because all type graphs now exist (either fully defined or
+ *   as valid placeholders), resolution succeeds for all recursive references.
  *
  * @param[in] registry The registry to populate.
  * @param[in] definitions A semicolon-separated string of definitions.
@@ -449,6 +447,7 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
     }
     size_t num_defs_found = 0;
     infix_status final_status = INFIX_SUCCESS;
+
     // Pass 1: Scan & Index all names and their definition bodies.
     while (*state.p != '\0') {
         _registry_parser_skip_whitespace(&state);
@@ -518,15 +517,37 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
             num_defs_found++;
         }
         else if (*state.p == ';') {  // This is a forward declaration.
-            if (entry) {             // Cannot forward-declare an already-defined type.
-                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
-                final_status = INFIX_ERROR_INVALID_ARGUMENT;
-                goto cleanup;
+            if (entry) {
+                // If the type is already fully defined, re-declaring it as a forward decl is an error.
+                if (!entry->is_forward_declaration) {
+                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_UNEXPECTED_TOKEN, state.p - state.start);
+                    final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                    goto cleanup;
+                }
+                // If it's already a forward declaration, this is a no-op.
             }
-            entry = _registry_insert(registry, name_buffer);
-            if (!entry) {
-                final_status = INFIX_ERROR_ALLOCATION_FAILED;
-                goto cleanup;
+            else {
+                entry = _registry_insert(registry, name_buffer);
+                if (!entry) {
+                    final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                    goto cleanup;
+                }
+            }
+            // Ensure a placeholder type exists so other types can reference it immediately.
+            // We create an opaque struct (size 0) as the placeholder and mark it incomplete.
+            if (!entry->type) {
+                entry->type = infix_arena_calloc(registry->arena, 1, sizeof(infix_type), _Alignof(infix_type));
+                if (!entry->type) {
+                    final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                    goto cleanup;
+                }
+                entry->type->is_arena_allocated = true;
+                entry->type->is_incomplete = true;  // Mark as incomplete
+                entry->type->arena = registry->arena;
+                entry->type->category = INFIX_TYPE_STRUCT;
+                entry->type->size = 0;
+                entry->type->alignment = 1;  // Minimal alignment to pass basic validation
+                entry->type->name = entry->name;
             }
             entry->is_forward_declaration = true;
         }
@@ -580,30 +601,46 @@ c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, con
                 goto cleanup;
             }
         }
+        // Prepare the new definition.
+        infix_type * new_def = nullptr;
         if (!type_to_alias->is_arena_allocated) {
             // This is a static type (e.g., primitive). We MUST create a mutable
             // copy in the registry's arena before we can attach a name to it.
             // This prevents corrupting the global static singletons.
-            infix_type * prim_copy = infix_arena_alloc(registry->arena, sizeof(infix_type), _Alignof(infix_type));
-            if (!prim_copy) {
-                final_status = INFIX_ERROR_ALLOCATION_FAILED;
-                infix_arena_destroy(parser_arena);
-                goto cleanup;
+            new_def = infix_arena_alloc(registry->arena, sizeof(infix_type), _Alignof(infix_type));
+            if (new_def) {
+                *new_def = *type_to_alias;
+                new_def->is_arena_allocated = true;
+                new_def->arena = registry->arena;
             }
-            *prim_copy = *type_to_alias;
-            prim_copy->is_arena_allocated = true;
-            prim_copy->arena = registry->arena;
-            entry->type = prim_copy;
         }
-        else
-            entry->type = _copy_type_graph_to_arena(registry->arena, type_to_alias);
+        else  // Dynamic type: deep copy.
+            new_def = _copy_type_graph_to_arena(registry->arena, type_to_alias);
+
         infix_arena_destroy(parser_arena);  // The temporary raw_type is no longer needed.
-        if (!entry->type) {
+
+        if (!new_def) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             final_status = INFIX_ERROR_ALLOCATION_FAILED;
             goto cleanup;
         }
-        // Attach the new alias name to the copied type. This is the key to preserving semantic names.
+
+        // Update the entry. If a placeholder already exists (from forward decl), we MUST update it in-place
+        // to preserve pointers from other types that have already resolved to it.
+        if (entry->type) {
+            // Struct-copy the new definition into the existing placeholder memory.
+            *entry->type = *new_def;
+            // Restore the self-reference if the copy logic pointed the arena elsewhere.
+            entry->type->arena = registry->arena;
+            // The new definition is complete, so ensure the flag is cleared.
+            entry->type->is_incomplete = false;
+        }
+        else {
+            entry->type = new_def;
+            entry->type->is_incomplete = false;
+        }
+
+        // Ensure the name is attached and the flag is cleared.
         entry->type->name = entry->name;
         entry->is_forward_declaration = false;
     }

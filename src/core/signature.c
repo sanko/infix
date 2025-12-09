@@ -22,7 +22,7 @@
  * 1.  **Parsing:** It contains a hand-written recursive descent parser that transforms a
  *     human-readable signature string (e.g., `"({int, *char}) -> void"`) into an
  *     unresolved `infix_type` object graph. This is the **"Parse"** stage of the core
- *     data pipeline. The internal entry point for this stage is `_infix_parse_type_internal`.
+ *     data pipeline. The internal entry point for the "Parse" stage is `_infix_parse_type_internal`.
  *
  * 2.  **Printing:** It provides functions to serialize a fully resolved `infix_type`
  *     graph back into a canonical signature string. This is crucial for introspection,
@@ -1660,9 +1660,11 @@ c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_siz
                     goto end_print_loop;
                 }
                 _print(&state, "@%s = %s;\n", entry->name, type_body_buffer);
-                if (state.status != INFIX_SUCCESS)
-                    goto end_print_loop;
             }
+            else if (entry->is_forward_declaration)  // Explicitly print forward declarations
+                _print(&state, "@%s;\n", entry->name);
+            if (state.status != INFIX_SUCCESS)
+                goto end_print_loop;
         }
     }
 end_print_loop:;

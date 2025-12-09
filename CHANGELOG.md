@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased] - 2025-12-xx
 
-Almost.
+This release should have more real-world usage fixes since I'm using it in Affix.pm and not just experimenting with different JIT forms.
+
+### Changed
+
+- Updated JIT validation logic to explicitly reject incomplete forward declarations, preventing the creation of broken trampolines.
 
 ### Fixed
 
-- Fixed signature positioning cache
+- Fixed signature positioning cache. The error messages will now (probably) point exactly where things are broken.
+- Fixed a critical bug in the Type Registry where forward declarations (e.g., `@Node;`) did not create valid placeholder types, causing subsequent references (e.g., `*@Node`) to fail resolution with `INFIX_CODE_UNRESOLVED_NAMED_TYPE`.
+- Fixed `infix_registry_print` to explicitly include forward declarations in the output, improving introspection visibility.
 
 ## [0.1.2] - 2025-11-26
 

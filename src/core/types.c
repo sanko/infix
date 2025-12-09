@@ -1007,6 +1007,7 @@ static infix_type * _copy_type_graph_to_arena_recursive(infix_arena_t * dest_are
     // Perform a shallow copy of the main struct, then recurse to deep copy child pointers.
     *dest_type = *src_type;
     dest_type->is_arena_allocated = true;
+    dest_type->is_incomplete = src_type->is_incomplete;
     dest_type->arena = dest_arena;  // The new type now belongs to the destination arena.
     // Deep copy the semantic name string, if it exists.
     if (src_type->name) {

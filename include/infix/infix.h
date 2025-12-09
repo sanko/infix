@@ -197,6 +197,7 @@ struct infix_type_t {
     size_t size;                  /**< The size of the type in bytes. */
     size_t alignment;             /**< The alignment requirement of the type in bytes. */
     bool is_arena_allocated;      /**< True if this type object lives in an arena and must be freed with it. */
+    bool is_incomplete;           /**< True if this is a forward declaration that has not yet been defined. */
     infix_arena_t * arena;        /**< A pointer to the arena that owns this type object, or nullptr if static. */
     size_t source_offset;         /**< The byte offset in the source signature where this type was defined. */
     /** @brief A union containing metadata specific to the type's category. */
