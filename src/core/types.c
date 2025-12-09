@@ -60,6 +60,7 @@
      .alignment = _Alignof(T),         \
      .is_arena_allocated = false,      \
      .arena = nullptr,                 \
+     .source_offset = 0,               \
      .meta.primitive_id = id}
 /**
  * @internal
@@ -72,6 +73,7 @@ static infix_type _infix_type_void = {.name = nullptr,
                                       .alignment = 0,
                                       .is_arena_allocated = false,
                                       .arena = nullptr,
+                                      .source_offset = 0,
                                       .meta = {0}};
 /**
  * @internal
@@ -84,6 +86,7 @@ static infix_type _infix_type_pointer = {.name = nullptr,
                                          .alignment = _Alignof(void *),
                                          .is_arena_allocated = false,
                                          .arena = nullptr,
+                                         .source_offset = 0,
                                          .meta.pointer_info = {.pointee_type = &_infix_type_void}};
 /** @internal Static singleton for the `bool` primitive type. */
 static infix_type _infix_type_bool = INFIX_TYPE_INIT(INFIX_PRIMITIVE_BOOL, bool);
