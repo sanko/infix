@@ -206,6 +206,8 @@ typedef struct visited_node_t {
 static bool _is_type_graph_resolved_recursive(const infix_type * type, visited_node_t * visited_head) {
     if (!type)
         return true;
+    if (type->is_incomplete)
+        return false;
     // Cycle detection: if we've seen this node before, we can assume it's resolved
     // for the purpose of this check, as we'll validate it on the first visit.
     for (visited_node_t * v = visited_head; v != NULL; v = v->next)

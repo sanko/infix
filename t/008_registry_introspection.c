@@ -11,7 +11,7 @@
  *
  * 1.  **`infix_registry_print`:**
  *     - Verifies that all *defined* types are serialized into a single string.
- *     - Confirms that undefined forward declarations are correctly omitted from the output.
+ *     - Confirms that undefined forward declarations are explicitly listed as incomplete types.
  *     - Checks that the function returns an error when the provided buffer is too small.
  *
  * 2.  **Registry Iterator (`infix_registry_iterator_*`)**:
@@ -19,7 +19,6 @@
  *     - Confirms that the correct number of types are found.
  *     - Checks that the `get_name` and `get_type` accessors return the correct data
  *       for each type.
- *     - Ensures that the iterator correctly skips over undefined forward declarations.
  */
 #define DBLTAP_IMPLEMENTATION
 #include "common/double_tap.h"
@@ -54,7 +53,8 @@ TEST {
             ok(strstr(buffer, "@Point = {x:double,y:double};") != NULL, "Output contains correct @Point definition");
             ok(strstr(buffer, "@Node = {value:sint32,next:*@Node};") != NULL,
                "Output contains correct @Node definition");
-            ok(strstr(buffer, "@FwdOnly") == NULL, "Output correctly omits undefined forward declaration");
+            // We now expect forward declarations to be printed as "@Name;\n"
+            ok(strstr(buffer, "@FwdOnly;") != NULL, "Output contains forward declaration @FwdOnly;");
         }
         else
             skip(4, "Skipping content checks due to print failure.");
@@ -84,10 +84,10 @@ TEST {
                     ok(type->category == INFIX_TYPE_STRUCT, "@Node has correct type");
                 }
                 else if (strcmp(name, "FwdOnly") == 0)
-                    fail("Iterator should not have found @FwdOnly");
+                    fail("Iterator should not have found @FwdOnly (it is incomplete)");
             }
         }
-        ok(count == 3, "Iterator found the correct number of defined types (3)");
+        ok(count == 3, "Iterator found the correct number of fully defined types (3)");
         ok(found_mask == 7, "All expected types (MyInt, Point, Node) were found by the iterator");
     }
     subtest("Lookup by Name API") {
