@@ -1144,7 +1144,7 @@ static infix_status prepare_direct_forward_call_frame_sysv_x64(infix_arena_t * a
                                                                infix_direct_arg_handler_t * handlers,
                                                                void * target_fn) {
     // Use the standard classifier to determine the final ABI locations for all arguments.
-    infix_call_frame_layout * standard_layout = NULL;
+    infix_call_frame_layout * standard_layout = nullptr;
     infix_status status = prepare_forward_call_frame_sysv_x64(
         arena, &standard_layout, ret_type, arg_types, num_args, num_args, target_fn);
     if (status != INFIX_SUCCESS)

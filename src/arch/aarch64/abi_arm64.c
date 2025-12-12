@@ -72,7 +72,7 @@ static const arm64_vpr VPR_ARGS[] = {V0_REG, V1_REG, V2_REG, V3_REG, V4_REG, V5_
 #define MAX_AGGREGATE_FIELDS_TO_CLASSIFY 32
 
 //
-static bool is_hfa(infix_type * type, infix_type ** base_type);
+static bool is_hfa(const infix_type * type, const infix_type ** base_type);
 
 /** @internal The v-table of AArch64 functions for generating forward trampolines. */
 static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
@@ -152,7 +152,7 @@ const infix_direct_forward_abi_spec g_arm64_direct_forward_spec = {
  * @param type The type to search within.
  * @return A pointer to the `infix_type` of the base element, or `nullptr` if not found.
  */
-static infix_type * get_hfa_base_type(infix_type * type) {
+static const infix_type * get_hfa_base_type(const infix_type * type) {
     if (type == nullptr)
         return nullptr;
     // Base case: we've found a primitive float or double.
@@ -179,7 +179,7 @@ static infix_type * get_hfa_base_type(infix_type * type) {
  * @param field_count A counter to prevent stack overflow/DoS from excessively complex types.
  * @return `true` if all constituent members of `type` are of `base_type`, `false` otherwise.
  */
-static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, size_t * field_count) {
+static bool is_hfa_recursive_check(const infix_type * type, const infix_type * base_type, size_t * field_count) {
     if (type == nullptr)
         return false;
     // Abort if the type is excessively complex.
@@ -218,7 +218,7 @@ static bool is_hfa_recursive_check(infix_type * type, infix_type * base_type, si
  * @param[out] out_base_type If the type is an HFA, this is set to its base `float` or `double` type.
  * @return `true` if the type is a valid HFA, `false` otherwise.
  */
-static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
+static bool is_hfa(const infix_type * type, const infix_type ** out_base_type) {
     if (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_ARRAY &&
         type->category != INFIX_TYPE_COMPLEX)
         return false;
@@ -226,7 +226,7 @@ static bool is_hfa(infix_type * type, infix_type ** out_base_type) {
     if (type->size == 0 || type->size > 64)  // Max HFA size is 4 * sizeof(double) = 32 on standard, 4*16=64 on others
         return false;
     // 1. Find the base float/double type of the first primitive element.
-    infix_type * base = get_hfa_base_type(type);
+    const infix_type * base = get_hfa_base_type(type);
     if (base == nullptr)
         return false;
     // 2. Check that the total size is a multiple of the base type, with 1 to 4 elements.
@@ -313,7 +313,7 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 #endif
         bool pass_fp_in_vpr =
             is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
-        infix_type * hfa_base_type = nullptr;
+        const infix_type * hfa_base_type = nullptr;
         bool is_hfa_candidate = is_hfa(type, &hfa_base_type);
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI Deviation: If the function is variadic, HFA rules are ignored,
@@ -519,7 +519,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
             break;
         case ARG_LOCATION_VPR_HFA:
             {
-                infix_type * base = nullptr;
+                const infix_type * base = nullptr;
                 is_hfa(type, &base);
                 for (uint32_t j = 0; j < loc->num_regs; ++j)
                     emit_arm64_ldr_vpr(
@@ -629,7 +629,7 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
     // If the function returns a value and it wasn't returned via hidden pointer...
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         // ...copy the result from the appropriate return register(s) into the user's return buffer (pointer in X20).
-        infix_type * hfa_base = nullptr;
+        const infix_type * hfa_base = nullptr;
         // The order of these checks is critical. Handle the most specific cases first.
         if (is_long_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
             // On non-Apple AArch64, long double is 16 bytes and returned in V0.
@@ -638,7 +638,11 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
         else if (is_hfa(ret_type, &hfa_base)) {
             size_t num_elements = ret_type->size / hfa_base->size;
             for (size_t i = 0; i < num_elements; ++i)
-                emit_arm64_str_vpr(buf, is_double(hfa_base), VPR_ARGS[i], X20_REG, i * hfa_base->size);
+                emit_arm64_str_vpr(buf,
+                                   is_double(hfa_base),
+                                   VPR_ARGS[i],
+                                   X20_REG,
+                                   (int32_t)(i * hfa_base->size));  // Explicit cast
         }
         else if (is_float(ret_type))
             emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);  // str s0, [x20]
@@ -729,8 +733,8 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
     // after the initial `sub sp, sp, #alloc` in the prologue.
     // The layout on our local stack will be: [ return_buffer | args_array | saved_args_data ]
     layout->return_buffer_offset = 0;
-    layout->args_array_offset = layout->return_buffer_offset + return_size;
-    layout->saved_args_offset = layout->args_array_offset + args_array_size;
+    layout->args_array_offset = layout->return_buffer_offset + (int32_t)return_size;
+    layout->saved_args_offset = layout->args_array_offset + (int32_t)args_array_size;
     *out_layout = layout;
     return INFIX_SUCCESS;
 }
@@ -753,7 +757,7 @@ static infix_status generate_reverse_prologue_arm64(code_buffer * buf, infix_rev
     emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
     // `sub sp, sp, #total_stack_alloc` : Allocate space for our local variables.
     if (layout->total_stack_alloc > 0)
-        emit_arm64_sub_imm(buf, true, false, SP_REG, SP_REG, layout->total_stack_alloc);
+        emit_arm64_sub_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);
     return INFIX_SUCCESS;
 }
 /**
@@ -796,8 +800,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             size_t size_on_stack = (type->size < 8) ? 8 : type->size;
             size_on_stack = (size_on_stack + 7) & ~7;  // Ensure it's a multiple of 8
             for (size_t offset = 0; offset < size_on_stack; offset += 8) {
-                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, caller_stack_offset + offset);
-                int32_t dest_offset = arg_save_loc + offset;
+                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, (int32_t)(caller_stack_offset + offset));
+                int32_t dest_offset = arg_save_loc + (int32_t)offset;
                 if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
                     emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
                 else {
@@ -807,8 +811,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             }
             caller_stack_offset += size_on_stack;
             // Set the pointer in args_array to point to the saved data
-            int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
-            emit_arm64_add_imm(buf, true, false, X9_REG, SP_REG, arg_save_loc);
+            int32_t dest_offset = layout->args_array_offset + (int32_t)(i * sizeof(void *));
+            emit_arm64_add_imm(buf, true, false, X9_REG, SP_REG, (uint32_t)arg_save_loc);
             if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
                 emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
             else {
@@ -829,12 +833,12 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             expect_in_vpr = false;
 #endif
         if (is_pass_by_ref) {
-            int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
+            int32_t dest_offset = layout->args_array_offset + (int32_t)(i * sizeof(void *));
             arm64_gpr src_reg;
             if (gpr_idx < NUM_GPR_ARGS)
                 src_reg = GPR_ARGS[gpr_idx++];
             else {
-                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, caller_stack_offset);
+                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, (int32_t)caller_stack_offset);
                 src_reg = X9_REG;
                 caller_stack_offset += 8;
             }
@@ -847,7 +851,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             }
             continue;
         }
-        infix_type * hfa_base_type = nullptr;
+        const infix_type * hfa_base_type = nullptr;
         bool is_hfa_candidate = !is_variadic_arg && is_hfa(type, &hfa_base_type);
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI disables HFA for variadic arguments.
@@ -859,7 +863,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             if (vpr_idx + num_elements <= NUM_VPR_ARGS) {
                 const int scale = is_double(hfa_base_type) ? 8 : 4;
                 for (size_t j = 0; j < num_elements; ++j) {
-                    int32_t dest_offset = arg_save_loc + j * hfa_base_type->size;
+                    int32_t dest_offset = arg_save_loc + (int32_t)(j * hfa_base_type->size);
                     if (dest_offset >= 0 && ((unsigned)dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
                         emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
                     else {
@@ -934,8 +938,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             size_t size_on_stack = (is_variadic_arg && type->size < 8) ? 8 : type->size;
             size_on_stack = (size_on_stack + 7) & ~7;  // Ensure it's a multiple of 8
             for (size_t offset = 0; offset < size_on_stack; offset += 8) {
-                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, caller_stack_offset + offset);
-                int32_t dest_offset = arg_save_loc + offset;
+                emit_arm64_ldr_imm(buf, true, X9_REG, X29_FP_REG, (int32_t)(caller_stack_offset + offset));
+                int32_t dest_offset = arg_save_loc + (int32_t)offset;
                 if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
                     emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
                 else {
@@ -945,8 +949,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             }
             caller_stack_offset += size_on_stack;
         }
-        int32_t dest_offset = layout->args_array_offset + i * sizeof(void *);
-        emit_arm64_add_imm(buf, true, false, X9_REG, SP_REG, arg_save_loc);
+        int32_t dest_offset = layout->args_array_offset + (int32_t)(i * sizeof(void *));
+        emit_arm64_add_imm(buf, true, false, X9_REG, SP_REG, (uint32_t)arg_save_loc);
         if (dest_offset >= 0 && ((unsigned)dest_offset / 8) <= 0xFFF && (dest_offset % 8 == 0))
             emit_arm64_str_imm(buf, true, X9_REG, SP_REG, dest_offset);
         else {
@@ -984,9 +988,9 @@ static infix_status generate_reverse_dispatcher_call_arm64(code_buffer * buf,
         emit_arm64_ldr_imm(buf, true, X1_REG, SP_REG, layout->return_buffer_offset);
     else
         // The return buffer is on our stack, so we calculate its address.
-        emit_arm64_add_imm(buf, true, false, X1_REG, SP_REG, layout->return_buffer_offset);
+        emit_arm64_add_imm(buf, true, false, X1_REG, SP_REG, (uint32_t)layout->return_buffer_offset);
     // Arg 3: Load pointer to args_array into X2.
-    emit_arm64_add_imm(buf, true, false, X2_REG, SP_REG, layout->args_array_offset);
+    emit_arm64_add_imm(buf, true, false, X2_REG, SP_REG, (uint32_t)layout->args_array_offset);
     // Load the C dispatcher's address into a scratch register (X9) and call it.
     emit_arm64_load_u64_immediate(buf, X9_REG, (uint64_t)context->internal_dispatcher);
     emit_arm64_blr_reg(buf, X9_REG);  // blr x9
@@ -1012,12 +1016,15 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
          context->return_type->category == INFIX_TYPE_ARRAY || context->return_type->category == INFIX_TYPE_COMPLEX);
     bool return_in_memory = ret_is_aggregate && context->return_type->size > 16;
     if (context->return_type->category != INFIX_TYPE_VOID && !return_in_memory) {
-        infix_type * base = nullptr;
+        const infix_type * base = nullptr;
         if (is_hfa(context->return_type, &base)) {
             size_t num_elements = context->return_type->size / base->size;
             for (size_t i = 0; i < num_elements; ++i) {
-                emit_arm64_ldr_vpr(
-                    buf, is_double(base), VPR_ARGS[i], SP_REG, layout->return_buffer_offset + i * base->size);
+                emit_arm64_ldr_vpr(buf,
+                                   is_double(base),
+                                   VPR_ARGS[i],
+                                   SP_REG,
+                                   (int32_t)(layout->return_buffer_offset + i * base->size));  // Explicit cast
             }
         }
         else if (is_long_double(context->return_type))
@@ -1034,7 +1041,7 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
     // Deallocate stack and restore frame.
     if (layout->total_stack_alloc > 0)
         // add sp, sp, #total_stack_alloc
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, layout->total_stack_alloc);
+        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);  // Cast size_t
     // Restore Frame Pointer and Link Register, then return.
     emit_arm64_ldp_post_index(
         buf, true, X29_FP_REG, X30_LR_REG, SP_REG, 16);  // ldp x29, x30, [sp], #16 (Load pair, post-indexed)
@@ -1054,7 +1061,7 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
                                                             infix_direct_arg_handler_t * handlers,
                                                             void * target_fn) {
     // 1. Reuse the standard classification logic.
-    infix_call_frame_layout * standard_layout = NULL;
+    infix_call_frame_layout * standard_layout = nullptr;
     infix_status status =
         prepare_forward_call_frame_arm64(arena, &standard_layout, ret_type, arg_types, num_args, num_args, target_fn);
     if (status != INFIX_SUCCESS)
@@ -1202,7 +1209,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
             continue;
 
         // Arg 1 (X0): language object pointer. Loaded from X21 (args array).
-        emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, i * sizeof(void *));
+        emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, (int32_t)(i * sizeof(void *)));
 
         if (arg_layout->handler->aggregate_marshaller) {
             // Arg 2 (X1): Pointer to scratch buffer.
@@ -1301,21 +1308,21 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 break;
             case ARG_LOCATION_VPR_HFA:
                 {
-                    infix_type * base = NULL;
+                    const infix_type * base = nullptr;
                     is_hfa(arg_layout->type, &base);
                     for (uint8_t j = 0; j < arg_layout->location.num_regs; ++j) {
                         emit_arm64_ldr_vpr(buf,
                                            is_double(base),
                                            VPR_ARGS[arg_layout->location.reg_index + j],
                                            SP_REG,
-                                           my_scratch_offset + j * base->size);
+                                           my_scratch_offset + (int32_t)(j * base->size));
                     }
                 }
                 break;
             case ARG_LOCATION_STACK:
                 for (size_t offset = 0; offset < arg_layout->type->size; offset += 8) {
-                    emit_arm64_ldr_imm(buf, true, X9_REG, SP_REG, my_scratch_offset + offset);
-                    emit_arm64_str_imm(buf, true, X9_REG, SP_REG, arg_layout->location.stack_offset + offset);
+                    emit_arm64_ldr_imm(buf, true, X9_REG, SP_REG, my_scratch_offset + (int32_t)offset);
+                    emit_arm64_str_imm(buf, true, X9_REG, SP_REG, arg_layout->location.stack_offset + (int32_t)offset);
                 }
                 break;
             default:
@@ -1380,13 +1387,14 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
                                                            infix_type * ret_type) {
     // 1. Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
-        infix_type * hfa_base = NULL;
+        const infix_type * hfa_base = nullptr;
         if (is_long_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
             emit_arm64_str_q_imm(buf, V0_REG, X20_REG, 0);
         else if (is_hfa(ret_type, &hfa_base)) {
             size_t num_elements = ret_type->size / hfa_base->size;
             for (size_t i = 0; i < num_elements; ++i)
-                emit_arm64_str_vpr(buf, is_double(hfa_base), VPR_ARGS[i], X20_REG, i * hfa_base->size);
+                emit_arm64_str_vpr(
+                    buf, is_double(hfa_base), VPR_ARGS[i], X20_REG, (int32_t)(i * hfa_base->size));  // Explicit cast
         }
         else if (is_float(ret_type))
             emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);
@@ -1478,7 +1486,7 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
             emit_arm64_str_q_imm(buf, V0_REG, SP_REG, 16);  // Save V0 (covers float/double/vector)
 
             // Arg 1 (X0): Original language object pointer.
-            emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, i * sizeof(void *));
+            emit_arm64_ldr_imm(buf, true, X0_REG, X21_REG, (int32_t)(i * sizeof(void *)));
 
             // Arg 2 (X1): Pointer to the C data.
             // Address = Current SP (which is Original SP - 32) + 32 + offset
