@@ -1234,7 +1234,7 @@ static size_t _estimate_graph_size_recursive(infix_arena_t * temp_arena,
 size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type * type) {
     if (!temp_arena || !type)
         return 0;
-    estimate_visited_node_t * visited_head = NULL;
+    estimate_visited_node_t * visited_head = nullptr;
     return _estimate_graph_size_recursive(temp_arena, type, &visited_head);
 }
 // Public API: Introspection Functions
