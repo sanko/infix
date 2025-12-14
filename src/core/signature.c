@@ -968,8 +968,12 @@ static infix_status parse_function_signature_details(parser_state * state,
 c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
                                                       infix_arena_t ** out_arena,
                                                       const char * signature) {
-    if (!out_type || !out_arena || !signature || *signature == '\0') {
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+    if (!out_type || !out_arena) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    if (!signature || *signature == '\0') {
+        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_EMPTY_SIGNATURE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     // The top-level public API is responsible for setting g_infix_last_signature_context.
@@ -1539,7 +1543,7 @@ c23_nodiscard infix_status infix_type_print(char * buffer,
                                             infix_print_dialect_t dialect) {
     _infix_clear_error();
     if (!buffer || buffer_size == 0 || !type) {
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
@@ -1587,7 +1591,7 @@ c23_nodiscard infix_status infix_function_print(char * buffer,
                                                 infix_print_dialect_t dialect) {
     _infix_clear_error();
     if (!buffer || buffer_size == 0 || !ret_type || (num_args > 0 && !args)) {
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_UNKNOWN, 0);
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
