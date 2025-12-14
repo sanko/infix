@@ -15,6 +15,7 @@ var group__type__system =
       [ "func_ptr_info", "group__high__level__api.html#ga2a2d9a8c127bba88a5da75433005bdfb", null ],
       [ "is_arena_allocated", "group__high__level__api.html#gafe120ad94ce32eb2d2150b64c7c2dccd", null ],
       [ "is_flexible", "group__high__level__api.html#gaabf51313711bf8d1c0637991a02f3dce", null ],
+      [ "is_incomplete", "group__high__level__api.html#ga14363cc7981546254783212a68bce152", null ],
       [ "is_packed", "group__high__level__api.html#ga07213dba1ad9a1a43e437aa39916a038", null ],
       [ "members", "group__high__level__api.html#ga6129c5165e189c4e5aa99904a98079e1", null ],
       [ "meta", "group__high__level__api.html#ga06717387732a6557d456a760bb3150cc", null ],
@@ -29,6 +30,7 @@ var group__type__system =
       [ "primitive_id", "group__high__level__api.html#gaf629b23eea8b27c2b7934e6b53b9a12d", null ],
       [ "return_type", "group__high__level__api.html#gab7190b72fd83d0a0384148f7606139dd", null ],
       [ "size", "group__high__level__api.html#ga48077b88e083d5e6fdad889427efaca7", null ],
+      [ "source_offset", "group__high__level__api.html#ga02a731f8697435de4c83b55beaa2abae", null ],
       [ "underlying_type", "group__high__level__api.html#gaeeeeac278209a4aa5f3024b196d89292", null ],
       [ "vector_info", "group__high__level__api.html#ga07a9b5fb5a01455688c83d682686f62c", null ]
     ] ],

@@ -158,15 +158,14 @@ Variables</h2></td></tr>
 <ol type="1">
 <li>**<code>infix_registry_print</code>:**<ul>
 <li>Verifies that all <em>defined</em> types are serialized into a single string.</li>
-<li>Confirms that undefined forward declarations are correctly omitted from the output.</li>
+<li>Confirms that undefined forward declarations are explicitly listed as incomplete types.</li>
 <li>Checks that the function returns an error when the provided buffer is too small.</li>
 </ul>
 </li>
 <li>**Registry Iterator (<code>infix_registry_iterator_*</code>)**:<ul>
 <li>Verifies that the iterator correctly traverses all defined types in the registry.</li>
 <li>Confirms that the correct number of types are found.</li>
-<li>Checks that the <code>get_name</code> and <code>get_type</code> accessors return the correct data for each type.</li>
-<li>Ensures that the iterator correctly skips over undefined forward declarations. </li>
+<li>Checks that the <code>get_name</code> and <code>get_type</code> accessors return the correct data for each type. </li>
 </ul>
 </li>
 </ol>

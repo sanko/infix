@@ -8,7 +8,7 @@ var searchData=
   ['3_20introspection_20api_5',['3. Introspection API',['../md_docs_2API.html#autotoc_md34',1,'']]],
   ['3_20linking_20against_20a_20pre_20built_20library_6',['3. Linking Against a Pre-Built Library',['../md_docs_2INSTALL.html#autotoc_md166',1,'']]],
   ['3_20our_20solution_3a_20a_20human_20first_20signature_20system_7',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md210',1,'']]],
-  ['3_20read_20only_20context_20hardening_8',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md255',1,'']]],
+  ['3_20read_20only_20context_20hardening_8',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md258',1,'']]],
   ['3_20security_20features_20deep_20dive_9',['3. Security Features Deep Dive',['../md_docs_2internals.html#autotoc_md185',1,'']]],
   ['3_20syntax_20showcase_10',['2.3 Syntax Showcase',['../md_docs_2signatures.html#autotoc_md217',1,'']]],
   ['301_5fprimitives_2ec_11',['301_primitives.c',['../301__primitives_8c.html',1,'']]],

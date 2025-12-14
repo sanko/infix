@@ -90,8 +90,8 @@ var searchData=
   ['is_5fdouble_87',['is_double',['../infix__internals_8h.html#a66444db9b24be80f8374cea4a550d26d',1,'infix_internals.h']]],
   ['is_5ffloat_88',['is_float',['../infix__internals_8h.html#ab27ab9623e218c251e7a9b822e867b5c',1,'infix_internals.h']]],
   ['is_5ffunction_5fsignature_5fahead_89',['is_function_signature_ahead',['../signature_8c.html#a168864a18641ec5e852690df1599b2bf',1,'signature.c']]],
-  ['is_5fhfa_90',['is_hfa',['../abi__arm64_8c.html#a56ff5e8b0015c5f26cb6e2af6cb2830d',1,'abi_arm64.c']]],
-  ['is_5fhfa_5frecursive_5fcheck_91',['is_hfa_recursive_check',['../abi__arm64_8c.html#a16ecf5ea62664294f7c0febd5a13f75c',1,'abi_arm64.c']]],
+  ['is_5fhfa_90',['is_hfa',['../abi__arm64_8c.html#a179cca1cc8b17753559e600e17dacbbf',1,'abi_arm64.c']]],
+  ['is_5fhfa_5frecursive_5fcheck_91',['is_hfa_recursive_check',['../abi__arm64_8c.html#a1dc4dd0c9734c0bf8d98d37eb45af48b',1,'abi_arm64.c']]],
   ['is_5flong_5fdouble_92',['is_long_double',['../infix__internals_8h.html#a21b756f84745ec837ea7f01cafdd2d47',1,'infix_internals.h']]],
   ['is_5fnegative_93',['is_negative',['../002__simple__calls_8c.html#a086ff2e41f82cbd717955766a0901f7a',1,'002_simple_calls.c']]],
   ['is_5fpassed_5fby_5freference_94',['is_passed_by_reference',['../abi__win__x64_8c.html#a63a4354f48e0fbf639851b31b3c35550',1,'abi_win_x64.c']]]

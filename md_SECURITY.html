@@ -105,9 +105,9 @@ $(document).ready(function(){initNavTree('md_SECURITY.html',''); initResizable()
   <div class="headertitle"><div class="title">Security Policy</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md248"></a> This document outlines the security policy for <code>infix</code>.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md251"></a> This document outlines the security policy for <code>infix</code>.</p>
 <p>The <code>infix</code> FFI library was designed with a security-first philosophy. Interfacing with C and generating executable code at runtime are inherently sensitive operations. This document outlines our threat model and the specific mitigations implemented to ensure the library is as safe and robust as possible.</p>
-<h1><a class="anchor" id="autotoc_md249"></a>
+<h1><a class="anchor" id="autotoc_md252"></a>
 Supported Versions</h1>
 <p>Security updates are provided for the latest public release. As this is a pre-1.0 project, users are encouraged to stay on the most recent commit from the main development branch.</p>
 <table class="markdownTable">
@@ -120,7 +120,7 @@ Supported Versions</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">[unversioned]   </td><td class="markdownTableBodyNone">:white_check_mark:   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md250"></a>
+<h1><a class="anchor" id="autotoc_md253"></a>
 Reporting a Vulnerability</h1>
 <p>I take all security vulnerabilities seriously. To protect the project's users, I request that you report all suspected vulnerabilities to me privately.</p>
 <p><b>Please do not report security vulnerabilities through public GitHub issues.</b></p>
@@ -134,7 +134,7 @@ Reporting a Vulnerability</h1>
 <li>The potential impact of the vulnerability (e.g., code execution, information disclosure).</li>
 </ul>
 <p>I will do my best to acknowledge your report within 48 hours and will work with you to understand and resolve the issue. I will publicly credit you for your discovery once the vulnerability has been patched, unless you prefer to remain anonymous.</p>
-<h1><a class="anchor" id="autotoc_md251"></a>
+<h1><a class="anchor" id="autotoc_md254"></a>
 Security Model</h1>
 <p>We consider the following to be the primary security threats for an FFI library:</p>
 <ol type="1">
@@ -143,10 +143,10 @@ Security Model</h1>
 <li><b>Use-After-Free Vulnerabilities</b>: An attacker causing the program to call a function pointer from a trampoline that has already been freed, potentially leading to arbitrary code execution.</li>
 <li><b>Runtime State Corruption</b>: An attacker modifying the internal state of a callback (reverse trampoline) after its creation to hijack its behavior.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md252"></a>
+<h2><a class="anchor" id="autotoc_md255"></a>
 Mitigations</h2>
 <p><code>infix</code> employs several layers of defense to mitigate these threats.</p>
-<h3><a class="anchor" id="autotoc_md253"></a>
+<h3><a class="anchor" id="autotoc_md256"></a>
 1. W^X (Write XOR Execute) Memory Policy</h3>
 <p><b>The most critical security feature of <code>infix</code> is its strict enforcement of a W^X memory policy.</b> Memory that is used for JIT-compiled trampolines is <b>never writable and executable at the same time</b>. This is a fundamental defense against code injection attacks.</p>
 <p>This policy is implemented in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">executor.c</a></code> using platform-specific, hardened techniques:</p>
@@ -159,19 +159,19 @@ Mitigations</h2>
 <li><b>On Windows</b>: We use the native <code>VirtualAlloc</code> and <code>VirtualProtect</code> APIs. Memory is allocated as <code>PAGE_READWRITE</code>. After the machine code has been written, its protection is changed to <code>PAGE_EXECUTE_READ</code>, revoking write permissions before the code is ever used.</li>
 <li><b>On macOS, OpenBSD, and others</b>: A reliable single-map <code>mmap</code> strategy is used. Memory is allocated as <code>PROT_READ | PROT_WRITE</code>. After code generation, <code>mprotect</code> is used to change the permissions to <code>PROT_READ | PROT_EXEC</code>.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md254"></a>
+<h3><a class="anchor" id="autotoc_md257"></a>
 2. Use-After-Free Prevention (Guard Pages)</h3>
 <p>When a trampoline is freed via <code>ffi_trampoline_free</code> or <code>ffi_reverse_trampoline_free</code>, the library does not simply release the memory.</p>
 <p>First, the executable memory region's permissions are changed to be completely inaccessible (<code>PAGE_NOACCESS</code> on Windows, <code>PROT_NONE</code> on POSIX). This turns the region into a <b>guard page</b>. If any dangling function pointer attempts to call this freed code, the program will trigger an immediate and safe access violation (segmentation fault), rather than executing stale or unrelated data. This makes use-after-free bugs easy to detect and prevents them from being exploitable.</p>
-<h3><a class="anchor" id="autotoc_md255"></a>
+<h3><a class="anchor" id="autotoc_md258"></a>
 3. Read-Only Context Hardening</h3>
 <p>The <code>ffi_reverse_trampoline_t</code> context struct holds critical information about a callback, including the pointer to the user's handler function. To prevent an attacker from modifying this context at runtime, the entire structure is placed in a protected memory region.</p>
 <p>After <code>generate_reverse_trampoline</code> successfully initializes the context, the memory page it resides on is made <b>read-only</b> using <code>VirtualProtect</code> or <code>mprotect</code>. Any subsequent attempt to write to this structure will result in a safe crash, preventing callback hijacking.</p>
-<h3><a class="anchor" id="autotoc_md256"></a>
+<h3><a class="anchor" id="autotoc_md259"></a>
 4. API Hardening Against Integer Overflows</h3>
 <p>The type creation API (<code><a class="el" href="types_8c.html" title="Implements the public API for creating and managing type descriptions.">types.c</a></code>) is a potential attack surface. An attacker could provide malicious <code>size</code>, <code>offset</code>, or <code>num_elements</code> values to functions like <code>ffi_type_create_struct</code> and <code>ffi_type_create_array</code> in an attempt to trigger an integer overflow during layout calculations.</p>
 <p>All such calculations in the <code>infix</code> library are hardened with checks against <code>SIZE_MAX</code> to prevent wrap-around. If a potential overflow is detected, the function will immediately fail with <code>INFIX_ERROR_INVALID_ARGUMENT</code>, preventing the creation of a malformed <code>ffi_type</code> that could lead to memory corruption in later stages.</p>
-<h3><a class="anchor" id="autotoc_md257"></a>
+<h3><a class="anchor" id="autotoc_md260"></a>
 5. Continuous Security Validation (Fuzzing)</h3>
 <p>The library is continuously tested using modern fuzzing tools (libFuzzer and AFL++). The fuzzing harnesses in the <code>fuzz/</code> directory are designed to attack the most complex parts of the library:</p>
 <ul>
