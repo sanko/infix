@@ -5,7 +5,7 @@ All notable changes to this project will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased] - 2025-12-xx
+## [Unreleased] - 2025-12-xx
 
 This release should have more real-world usage fixes since I'm using it in Affix.pm and not just experimenting with different JIT forms.
 
@@ -15,6 +15,7 @@ This release should have more real-world usage fixes since I'm using it in Affix
 
 ### Fixed
 
+- Fixed a critical file descriptor leak on POSIX platforms (Linux/FreeBSD) where the file descriptor returned by `shm_open` was kept open for the lifetime of the trampoline, eventually hitting the process file descriptor limit (EMFILE). The descriptor is now closed immediately after mapping, as intended.
 - Fixed signature positioning cache. The error messages will now (probably) point exactly where things are broken.
 - Fixed a critical bug in the Type Registry where forward declarations (e.g., `@Node;`) did not create valid placeholder types, causing subsequent references (e.g., `*@Node`) to fail resolution with `INFIX_CODE_UNRESOLVED_NAMED_TYPE`.
 - Fixed `infix_registry_print` to explicitly include forward declarations in the output, improving introspection visibility.
