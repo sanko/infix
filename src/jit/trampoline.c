@@ -156,6 +156,7 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
         return;
     if (len > SIZE_MAX - buf->size) {  // Overflow check
         buf->error = true;
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_INTEGER_OVERFLOW, 0);
         return;
     }
     if (buf->size + len > buf->capacity) {
@@ -163,6 +164,7 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
         while (new_capacity < buf->size + len) {
             if (new_capacity > SIZE_MAX / 2) {  // Overflow check
                 buf->error = true;
+                _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_INTEGER_OVERFLOW, 0);
                 return;
             }
             new_capacity *= 2;
@@ -170,6 +172,7 @@ void code_buffer_append(code_buffer * buf, const void * data, size_t len) {
         void * new_code = infix_arena_alloc(buf->arena, new_capacity, 16);
         if (new_code == nullptr) {
             buf->error = true;
+            // infix_arena_alloc already sets INFIX_CODE_OUT_OF_MEMORY, so we don't need to override it here
             return;
         }
         infix_memcpy(new_code, buf->code, buf->size);
