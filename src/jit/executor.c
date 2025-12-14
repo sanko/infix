@@ -267,6 +267,7 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         _infix_set_system_error(
             INFIX_CATEGORY_ALLOCATION, INFIX_CODE_EXECUTABLE_MEMORY_FAILURE, errno, "ftruncate failed");
         close(exec.shm_fd);
+        exec.shm_fd = -1;  // Ensure clean state
         return exec;
     }
     // The RW mapping.
@@ -275,13 +276,21 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     exec.rx_ptr = mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_SHARED, exec.shm_fd, 0);
     // If either mapping fails, clean up both and return an error.
     if (exec.rw_ptr == MAP_FAILED || exec.rx_ptr == MAP_FAILED) {
+        int err = errno;  // Capture errno before cleanup
         if (exec.rw_ptr != MAP_FAILED)
             munmap(exec.rw_ptr, size);
         if (exec.rx_ptr != MAP_FAILED)
             munmap(exec.rx_ptr, size);
         close(exec.shm_fd);
+        _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_EXECUTABLE_MEMORY_FAILURE, err, "mmap failed");
         return (infix_executable_t){.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
     }
+
+    // The mmap mappings hold a reference to the shared memory object, so we don't
+    // need the FD anymore. Keeping it open consumes a file descriptor per trampoline,
+    // causing "shm_open failed" after ~1024 trampolines.
+    close(exec.shm_fd);
+    exec.shm_fd = -1;
 #endif
     exec.size = size;
     INFIX_DEBUG_PRINTF("Allocated JIT memory. RW at %p, RX at %p", exec.rw_ptr, exec.rx_ptr);
