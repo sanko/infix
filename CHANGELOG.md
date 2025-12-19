@@ -19,6 +19,9 @@ This release should have more real-world usage fixes since I'm using it in Affix
 - Fixed signature positioning cache. The error messages will now (probably) point exactly where things are broken.
 - Fixed a critical bug in the Type Registry where forward declarations (e.g., `@Node;`) did not create valid placeholder types, causing subsequent references (e.g., `*@Node`) to fail resolution with `INFIX_CODE_UNRESOLVED_NAMED_TYPE`.
 - Fixed `infix_registry_print` to explicitly include forward declarations in the output, improving introspection visibility.
+- Updated `is_passed_by_reference` in `abi_win_x64.c` to always return `true` for `INFIX_TYPE_ARRAY`. This ensures the `prepare` stage allocates 8 bytes (pointer size) and the `generate` stage emits a move of the pointer address, not the content.
+- Updated `prepare_forward_call_frame_arm64` to treat `INFIX_TYPE_ARRAY` explicitly as a pointer passed in a GPR, bypassing the HFA and aggregate logic.
+- Updated `generate_forward_argument_moves_arm64` to handle `INFIX_TYPE_ARRAY` inside the `ARG_LOCATION_GPR` case by using `emit_arm64_mov_reg` to copy the pointer from the scratch register (X9) to the argument register.
 
 ## [0.1.2] - 2025-11-26
 
