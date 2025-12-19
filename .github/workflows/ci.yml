@@ -80,6 +80,8 @@ jobs:
             toolchain: 'clang'
           - platform: { os: 'omnios' }
             toolchain: 'clang'
+          # Skip RISC-V because, well, I haven't worked on adding support for it.
+          - arch: 'riscv64'
         include:
           # Use specific 'egcc' command for packaged GCC on OpenBSD
           - platform: { os: 'openbsd' }
