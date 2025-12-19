@@ -70,6 +70,7 @@ body:
       options:
         - x86-64
         - AArch64 (ARM64)
+        - RISC-V
         - Other
     validations:
       required: true
