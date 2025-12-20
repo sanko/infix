@@ -4,7 +4,7 @@
 
 It's designed to be the simplest way to add a dynamic Foreign Function Interface (FFI) to your project, whether you're building a language runtime, a plugin system, or just need to call functions from a dynamically loaded library.
 
-[![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](#supported-platforms)
+[![CI](https://github.com/sanko/infix/actions/workflows/ci.yml/badge.svg)](#platform-support)
 
 ## Key Features
 

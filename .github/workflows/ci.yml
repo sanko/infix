@@ -179,7 +179,7 @@ jobs:
               fi
               # The key is the unique job identifier, e.g., "freebsd-x86_64-gcc"
               # The value is "passing" or "failing" for Shields.io color coding
-              SHIELD_STATUS=$([[ $result == 'success' ]] && echo 'passing' || echo 'failing')
+              SHIELD_STATUS=$([[ $result == 'success' ]] && echo '👍🏽 passing' || echo '👎🏽 failing')
               echo "\"$filename\": \"$SHIELD_STATUS\"" >> $STATUS_JSON
               is_first_json_entry=false
             done
