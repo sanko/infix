@@ -4,8 +4,6 @@
 | **dragonflybsd** | `x86_64` | `gcc` | ✅ success |
 | **freebsd** | `aarch64` | `clang` | ✅ success |
 | **freebsd** | `aarch64` | `gcc` | ✅ success |
-| **freebsd** | `riscv64` | `clang` | ❌ failure |
-| **freebsd** | `riscv64` | `gcc` | ❌ failure |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
 | **freebsd** | `x86_64` | `gcc` | ✅ success |
 | **macos** | `aarch64` | `clang` | ✅ success |
@@ -15,8 +13,6 @@
 | **omnios** | `x86_64` | `gcc` | ✅ success |
 | **openbsd** | `aarch64` | `clang` | ✅ success |
 | **openbsd** | `aarch64` | `egcc` | ✅ success |
-| **openbsd** | `riscv64` | `clang` | ❌ failure |
-| **openbsd** | `riscv64` | `egcc` | ❌ failure |
 | **openbsd** | `x86_64` | `clang` | ✅ success |
 | **openbsd** | `x86_64` | `egcc` | ✅ success |
 | **solaris** | `x86_64` | `gcc` | ✅ success |
