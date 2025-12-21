@@ -19,9 +19,9 @@
 ,
 "omnios-x86_64-gcc": "👍🏽 passing"
 ,
-"openbsd-aarch64-clang": "👍🏽 passing"
+"openbsd-aarch64-clang": "👎🏽 failing"
 ,
-"openbsd-aarch64-egcc": "👍🏽 passing"
+"openbsd-aarch64-egcc": "👎🏽 failing"
 ,
 "openbsd-x86_64-clang": "👍🏽 passing"
 ,
