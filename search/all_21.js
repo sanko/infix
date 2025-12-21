@@ -5,7 +5,7 @@ var searchData=
   ['v0_201_200_200_201_200_20a_202025_2010_2027_2',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot; &gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md241',1,'']]],
   ['v0_201_200_20v0_201_201_200_201_201_20a_202025_2011_2001_3',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.0...v0.1.1&quot; &gt;0.1.1&lt;/a&gt; - 2025-11-01',['../md_CHANGELOG.html#autotoc_md237',1,'']]],
   ['v0_201_201_20v0_201_202_200_201_202_20a_202025_2011_2026_4',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.1...v0.1.2&quot; &gt;0.1.2&lt;/a&gt; - 2025-11-26',['../md_CHANGELOG.html#autotoc_md233',1,'']]],
-  ['v0_201_202_20head_20unreleased_20a_202025_2012_20xx_5',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...HEAD&quot; &gt;unreleased&lt;/a&gt; - 2025-12-xx',['../md_CHANGELOG.html#autotoc_md230',1,'']]],
+  ['v0_201_202_20v0_201_203_200_201_203_20a_202025_2012_2019_5',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...v0.1.3&quot; &gt;0.1.3&lt;/a&gt; - 2025-12-19',['../md_CHANGELOG.html#autotoc_md230',1,'']]],
   ['v0_5freg_6',['V0_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea3896c5caf6ec171184d53081ca1c2a29',1,'abi_arm64_common.h']]],
   ['v10_5freg_7',['V10_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea15800d9e3003c71ca9e1021d0b2426b1',1,'abi_arm64_common.h']]],
   ['v11_5freg_8',['V11_REG',['../abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3beaf37de9346b5322fc02ac1db3777d8cf6',1,'abi_arm64_common.h']]],

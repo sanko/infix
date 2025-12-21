@@ -2,10 +2,10 @@
 <area shape="rect" id="Node000001" title="Provides forward compatibility macros for C23 features." alt="" coords="5685,5,5882,31"/>
 <area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="5527,79,5672,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="5742,38,5630,81,5628,76,5740,33"/>
-<area shape="rect" id="Node000108" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="5696,79,5871,104"/>
-<area shape="poly" id="edge49_Node000001_Node000108" title=" " alt="" coords="5786,44,5786,79,5781,79,5781,44"/>
-<area shape="rect" id="Node000110" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="5895,79,6050,104"/>
-<area shape="poly" id="edge50_Node000001_Node000110" title=" " alt="" coords="5827,33,5943,76,5941,81,5826,38"/>
+<area shape="rect" id="Node000109" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="5696,79,5871,104"/>
+<area shape="poly" id="edge49_Node000001_Node000109" title=" " alt="" coords="5786,44,5786,79,5781,79,5781,44"/>
+<area shape="rect" id="Node000111" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="5895,79,6050,104"/>
+<area shape="poly" id="edge50_Node000001_Node000111" title=" " alt="" coords="5827,33,5943,76,5941,81,5826,38"/>
 <area shape="rect" id="Node000003" href="$Ch01__OpaquePointers_8c.html" title="Cookbook Chapter 2: Working with Bitfields." alt="" coords="5,159,268,185"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="5513,96,2858,112,1236,130,635,141,281,155,212,162,211,157,280,149,635,136,1236,124,2858,107,5512,90"/>
 <area shape="rect" id="Node000004" href="$Ch01__OutParameters_8c.html" title="Cookbook Chapter 1: Working with &quot;Out&quot; Parameters." alt="" coords="292,159,549,185"/>

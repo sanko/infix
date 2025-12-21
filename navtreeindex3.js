@@ -1,5 +1,12 @@
 var NAVTREEINDEX3 =
 {
+"abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1ae68729324bef088e6624776653a8d475":[12,0,4,0,0,1,32,9],
+"abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aec554e6e4912b374df45db75497bc49c":[12,0,4,0,0,1,32,2],
+"abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aed7d3a8e452b21f9508510470e77c556":[12,0,4,0,0,1,32,26],
+"abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1af923451956379d37c8d946756f520eab":[12,0,4,0,0,1,32,20],
+"abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1aff751fdf3e687c6e979b821e648ce1e2":[12,0,4,0,0,1,32,10],
+"abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be":[12,0,4,0,0,1,33],
+"abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea03c0351d273593fff55b19ed37b09ba3":[12,0,4,0,0,1,33,13],
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea11a5de9b0b3e8d8f91aa563900736b64":[12,0,4,0,0,1,33,23],
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea15800d9e3003c71ca9e1021d0b2426b1":[12,0,4,0,0,1,33,10],
 "abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea1aab5b3ad9003715ebf7b4a02aee740f":[12,0,4,0,0,1,33,5],
@@ -242,12 +249,5 @@ var NAVTREEINDEX3 =
 "abi__x64__emitters_8c.html#a80c467770d58bdb5d3f2e8b8ae4cfcc2":[12,0,4,0,1,3,10],
 "abi__x64__emitters_8c.html#a82fb0199ac09adb70037047ef98e4793":[12,0,4,0,1,3,16],
 "abi__x64__emitters_8c.html#a858220710202cecc0565a2d4b09537ce":[12,0,4,0,1,3,12],
-"abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e":[12,0,4,0,1,3,44],
-"abi__x64__emitters_8c.html#a8f6e45beb7feceb9737140d329fc82c8":[12,0,4,0,1,3,23],
-"abi__x64__emitters_8c.html#a8f9e2617fa516d5ead8dea8d24243127":[12,0,4,0,1,3,6],
-"abi__x64__emitters_8c.html#aa1c841bad414f9b05db64740d1fcd551":[12,0,4,0,1,3,49],
-"abi__x64__emitters_8c.html#aa4f666a7d6e95a680e50a18f5ee1cc77":[12,0,4,0,1,3,7],
-"abi__x64__emitters_8c.html#aa63e0189f159c8b48d62c341822fbdf6":[12,0,4,0,1,3,32],
-"abi__x64__emitters_8c.html#aa7993e38c8ddf6aa07a7928e2c98b72f":[12,0,4,0,1,3,48],
-"abi__x64__emitters_8c.html#aa98fe3d0067efea2ecc616a6ef3e2976":[12,0,4,0,1,3,52]
+"abi__x64__emitters_8c.html#a877fb1f8f0703500d3c1210976a4f98e":[12,0,4,0,1,3,44]
 };

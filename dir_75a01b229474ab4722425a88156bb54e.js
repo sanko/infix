@@ -35,6 +35,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "850_regression_cases.c", "850__regression__cases_8c.html", "850__regression__cases_8c" ],
     [ "851_lifecycle_regression.c", "851__lifecycle__regression_8c.html", "851__lifecycle__regression_8c" ],
     [ "860_error_handling.c", "860__error__handling_8c.html", "860__error__handling_8c" ],
+    [ "861_error_reporting.c", "861__error__reporting_8c.html", "861__error__reporting_8c" ],
     [ "901_call_overhead.c", "901__call__overhead_8c.html", "901__call__overhead_8c" ],
     [ "903_generation_benchmark.c", "903__generation__benchmark_8c.html", "903__generation__benchmark_8c" ]
 ];

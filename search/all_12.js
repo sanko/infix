@@ -79,7 +79,7 @@ var searchData=
   ['getting_20started_76',['Getting Started',['../index.html#autotoc_md7',1,'']]],
   ['github_20com_20sanko_20infix_20compare_20v0_201_200_20v0_201_201_200_201_201_20a_202025_2011_2001_77',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.0...v0.1.1&quot; &gt;0.1.1&lt;/a&gt; - 2025-11-01',['../md_CHANGELOG.html#autotoc_md237',1,'']]],
   ['github_20com_20sanko_20infix_20compare_20v0_201_201_20v0_201_202_200_201_202_20a_202025_2011_2026_78',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.1...v0.1.2&quot; &gt;0.1.2&lt;/a&gt; - 2025-11-26',['../md_CHANGELOG.html#autotoc_md233',1,'']]],
-  ['github_20com_20sanko_20infix_20compare_20v0_201_202_20head_20unreleased_20a_202025_2012_20xx_79',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...HEAD&quot; &gt;unreleased&lt;/a&gt; - 2025-12-xx',['../md_CHANGELOG.html#autotoc_md230',1,'']]],
+  ['github_20com_20sanko_20infix_20compare_20v0_201_202_20v0_201_203_200_201_203_20a_202025_2012_2019_79',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...v0.1.3&quot; &gt;0.1.3&lt;/a&gt; - 2025-12-19',['../md_CHANGELOG.html#autotoc_md230',1,'']]],
   ['github_20com_20sanko_20infix_20releases_20tag_20v0_201_200_200_201_200_20a_202025_2010_2027_80',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot; &gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md241',1,'']]],
   ['global_20variables_81',['Recipe: Reading and Writing Global Variables',['../md_docs_2cookbook.html#autotoc_md108',1,'']]],
   ['global_5fcounter_82',['global_counter',['../libglobals_8c.html#a2af81fdcbc7235e540b793bfd6ca55ba',1,'libglobals.c']]],

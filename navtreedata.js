@@ -266,7 +266,7 @@ var NAVTREE =
       [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md224", null ]
     ] ],
     [ "Changelog", "md_CHANGELOG.html", [
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.2...HEAD\" >unreleased</a> - 2025-12-xx", "md_CHANGELOG.html#autotoc_md230", [
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.2...v0.1.3\" >0.1.3</a> - 2025-12-19", "md_CHANGELOG.html#autotoc_md230", [
         [ "Changed", "md_CHANGELOG.html#autotoc_md231", null ],
         [ "Fixed", "md_CHANGELOG.html#autotoc_md232", null ]
       ] ],
@@ -324,7 +324,7 @@ var NAVTREE =
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
-        [ "Enumerator", "globals_eval.html", null ],
+        [ "Enumerator", "globals_eval.html", "globals_eval" ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -335,14 +335,14 @@ var NAVTREEINDEX =
 [
 "001__primitives_8c.html",
 "302__aggregates_8c.html#aede9c690b1c97a1302526c2d95c65564",
-"903__generation__benchmark_8c.html#a0dbedaf8c7b1e7ddd952c3a4381da057",
-"abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3bea11a5de9b0b3e8d8f91aa563900736b64",
-"abi__x64__emitters_8c.html#aaa449698c2e78bfde703f37126a1a736",
-"globals_func_l.html",
-"group__type__system.html#ga013ec0163fd36e611251d1a0897f773e",
-"infix_8h.html#a3024ccd4a9af5109d24e6c57565d74a1",
-"md_docs_2internals.html#autotoc_md183",
-"structinfix__forward__t.html"
+"901__call__overhead_8c.html#ae6c3dee962ab60df2dbf530cf8d68cb8",
+"abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1ae68729324bef088e6624776653a8d475",
+"abi__x64__emitters_8c.html#a8f6e45beb7feceb9737140d329fc82c8",
+"globals_eval_s.html",
+"group__memory__management.html#ga624819bf3bc628f63575001ed9c6ffd5",
+"group__type__system.html#ggaad7a91cc786d4cec1dbbddb5d7b165b7a192c803c42b18a1e8f76a0faf02fd5c6",
+"md_docs_2cookbook.html#autotoc_md87",
+"structinfix__direct__call__frame__layout.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

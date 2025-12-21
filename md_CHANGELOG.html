@@ -108,8 +108,8 @@ $(document).ready(function(){initNavTree('md_CHANGELOG.html',''); initResizable(
 <div class="textblock"><p><a class="anchor" id="autotoc_md229"></a> All notable changes to this project will (I hope) be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h1><a class="anchor" id="autotoc_md230"></a>
-&lt;a href="https://github.com/sanko/infix/compare/v0.1.2...HEAD" &gt;unreleased&lt;/a&gt; - 2025-12-xx</h1>
-<p>This release should have more real-world usage fixes since I'm using it in Affix.pm and not just experimenting with different JIT forms.</p>
+&lt;a href="https://github.com/sanko/infix/compare/v0.1.2...v0.1.3" &gt;0.1.3&lt;/a&gt; - 2025-12-19</h1>
+<p>This release contains real-world usage fixes since I'm using it in Affix.pm and not just experimenting with different JIT forms.</p>
 <h2><a class="anchor" id="autotoc_md231"></a>
 Changed</h2>
 <ul>
@@ -118,9 +118,13 @@ Changed</h2>
 <h2><a class="anchor" id="autotoc_md232"></a>
 Fixed</h2>
 <ul>
+<li>Fixed a critical file descriptor leak on POSIX platforms (Linux/FreeBSD) where the file descriptor returned by <code>shm_open</code> was kept open for the lifetime of the trampoline, eventually hitting the process file descriptor limit (EMFILE). The descriptor is now closed immediately after mapping, as intended.</li>
 <li>Fixed signature positioning cache. The error messages will now (probably) point exactly where things are broken.</li>
 <li>Fixed a critical bug in the Type Registry where forward declarations (e.g., <code>@Node;</code>) did not create valid placeholder types, causing subsequent references (e.g., <code>*@Node</code>) to fail resolution with <code>INFIX_CODE_UNRESOLVED_NAMED_TYPE</code>.</li>
 <li>Fixed <code>infix_registry_print</code> to explicitly include forward declarations in the output, improving introspection visibility.</li>
+<li>Updated <code>is_passed_by_reference</code> in <code><a class="el" href="abi__win__x64_8c.html" title="Implements the FFI logic for the Windows x64 calling convention.">abi_win_x64.c</a></code> to always return <code>true</code> for <code>INFIX_TYPE_ARRAY</code>. This ensures the <code>prepare</code> stage allocates 8 bytes (pointer size) and the <code>generate</code> stage emits a move of the pointer address, not the content.</li>
+<li>Updated <code>prepare_forward_call_frame_arm64</code> to treat <code>INFIX_TYPE_ARRAY</code> explicitly as a pointer passed in a GPR, bypassing the HFA and aggregate logic.</li>
+<li>Updated <code>generate_forward_argument_moves_arm64</code> to handle <code>INFIX_TYPE_ARRAY</code> inside the <code>ARG_LOCATION_GPR</code> case by using <code>emit_arm64_mov_reg</code> to copy the pointer from the scratch register (X9) to the argument register.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md233"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.1...v0.1.2" &gt;0.1.2&lt;/a&gt; - 2025-11-26</h1>
@@ -182,7 +186,7 @@ Changed</h2>
 <div class="line"><span class="comment">// Assume the registry already has &quot;@Adder_add_fn = (*{ val: int }, int) -&gt; int;&quot;</span></div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a>(&amp;ctx, <span class="stringliteral">&quot;@Adder_add_fn&quot;</span>, (<span class="keywordtype">void</span>*)Adder_add, <a class="code hl_variable" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>);</div>
 <div class="ttc" id="a501__direct__marshalling_8c_html_a70b9c24db773fd9634f2bafb98f7b3d9"><div class="ttname"><a href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a></div><div class="ttdeci">infix_registry_t * reg</div><div class="ttdef"><b>Definition</b> 501_direct_marshalling.c:185</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1046</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga010d41376c47f1100903d427776033ab"><div class="ttname"><a href="group__high__level__api.html#ga010d41376c47f1100903d427776033ab">infix_reverse_create_callback</a></div><div class="ttdeci">c23_nodiscard infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1050</div></div>
 </div><!-- fragment --></li>
 <li>The <code>infix_read_global</code> and <code>infix_write_global</code> functions now take an additional <code>infix_registry_t*</code> argument to support reading and writing global variables that are defined by a named type (e.g., <code>@MyStruct</code>).</li>
 </ul>

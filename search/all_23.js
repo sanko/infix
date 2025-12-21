@@ -72,6 +72,5 @@ var searchData=
   ['xmm_5fargs_69',['xmm_args',['../abi__sysv__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_sysv_x64.c'],['../abi__win__x64_8c.html#a7444cc5a39ff19393630bf176d2fa9a3',1,'XMM_ARGS:&#160;abi_win_x64.c']]],
   ['xmm_5fsave_5farea_5foffset_70',['xmm_save_area_offset',['../structinfix__reverse__call__frame__layout.html#a130be2fea30a8cdf0232ea0b9b7d6662',1,'infix_reverse_call_frame_layout']]],
   ['xor_20execute_20memory_20policy_71',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md256',1,'']]],
-  ['xor_20execute_20w_20x_72',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md186',1,'']]],
-  ['xx_73',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...HEAD&quot; &gt;unreleased&lt;/a&gt; - 2025-12-xx',['../md_CHANGELOG.html#autotoc_md230',1,'']]]
+  ['xor_20execute_20w_20x_72',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md186',1,'']]]
 ];
