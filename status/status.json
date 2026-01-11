@@ -1,9 +1,9 @@
 {
 "dragonflybsd-x86_64-gcc": "👍🏽 passing"
 ,
-"freebsd-aarch64-clang": "👍🏽 passing"
+"freebsd-aarch64-clang": "👎🏽 failing"
 ,
-"freebsd-aarch64-gcc": "👍🏽 passing"
+"freebsd-aarch64-gcc": "👎🏽 failing"
 ,
 "freebsd-x86_64-clang": "👍🏽 passing"
 ,

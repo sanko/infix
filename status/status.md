@@ -2,8 +2,8 @@
 | OS | Arch | Compiler | Result |
 |:---|:---|:---|:---|
 | **dragonflybsd** | `x86_64` | `gcc` | ✅ success |
-| **freebsd** | `aarch64` | `clang` | ✅ success |
-| **freebsd** | `aarch64` | `gcc` | ✅ success |
+| **freebsd** | `aarch64` | `clang` | ❌ failure |
+| **freebsd** | `aarch64` | `gcc` | ❌ failure |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
 | **freebsd** | `x86_64` | `gcc` | ✅ success |
 | **macos** | `aarch64` | `clang` | ✅ success |
