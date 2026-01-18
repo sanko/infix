@@ -163,6 +163,9 @@ A memory region is never simultaneously writable and executable. The implementat
 *   **On Older POSIX**: We fallback to `shm_open` with a randomized name that is `shm_unlink`ed immediately after creation.
 *   **On Windows/macOS**: We use the platform's standard single-mapping APIs (`VirtualAlloc`/`mmap`) and toggle permissions with `VirtualProtect`/`mprotect`.
 
+**The "Write Window" Mitigation (Dual-Mapping):**
+On dual-mapped systems (Linux/BSD), we map the memory twice: once as `RW` (for the JIT compiler) and once as `RX` (for execution). To prevent an attacker with a heap disclosure vulnerability from finding the `RW` pointer and modifying generated code later, `infix` **unmaps the RW view immediately** after the machine code generation is finalized.
+
 ```mermaid
 graph TD
     subgraph "Windows/macOS/etc. (Single-Mapping)"
@@ -174,8 +177,9 @@ graph TD
         E[memfd_create / SHM_ANON] --> F[mmap RW view];
         E --> G[mmap RX view];
         F --> H[Write JIT Code];
-        G --> I(Return RX Pointer);
-        H --> I;
+        H --> I["munmap(RW view)<br>(Close Write Window)"];
+        G --> J(Return RX Pointer);
+        I --> J;
     end
 ```
 

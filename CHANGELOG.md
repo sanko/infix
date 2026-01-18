@@ -19,6 +19,7 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 ### Changed
 
 - The JIT memory allocator on Linux now uses `memfd_create` (on kernels 3.17+) to create anonymous file descriptors for dual-mapped W^X memory. This avoids creating visible temporary files in `/dev/shm` and improves hygiene and security. On FreeBSD, `SHM_ANON` is now used.
+- On dual-mapped platforms (Linux/BSD), the Read-Write view of the JIT memory is now **unmapped immediately** after code generation. This closes a security window where an attacker with a heap read/write primitive could potentially modify executable code by finding the stale RW pointer.
 
 ### Fixed
 
