@@ -390,14 +390,13 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec) {
     // On AArch64 (and other RISC architectures), the instruction and data caches can be
     // separate. We must explicitly flush the D-cache (where the JIT wrote the code)
     // and invalidate the I-cache so the CPU fetches the new instructions.
-#if defined(INFIX_ARCH_AARCH64)
+    // We might as well do it on x64 too.
 #if defined(_MSC_VER)
     // Use the Windows-specific API.
     FlushInstructionCache(GetCurrentProcess(), exec->rw_ptr, exec->size);
 #else
     // Use the GCC/Clang built-in for other platforms.
     __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);
-#endif
 #endif
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
