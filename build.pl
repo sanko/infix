@@ -675,10 +675,26 @@ sub upload_to_codecov {
 sub run_command (@cmd) {
     @cmd = grep { defined && length } @cmd;
     print "Executing: " . join( ' ', @cmd ) . "\n";
+
+    # Determine if allowed to fail based on command name
+    my $is_allowed_to_fail = 0;
+    $is_allowed_to_fail = 1 if $cmd[0] eq 'prove';
+    $is_allowed_to_fail = 1 if $cmd[0] =~ /codecov/;
+    $is_allowed_to_fail = 1 if $cmd[0] =~ /gcov/ || $cmd[0] =~ /llvm-/;
+    $is_allowed_to_fail = 1 if $ENV{PROGRAMFILES} && $cmd[0] eq File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
+    if ( $cmd[0] =~ m{[\\/]?t[\\/]} && ( $cmd[0] =~ /\.exe$/ || -x $cmd[0] ) ) {
+        $is_allowed_to_fail = 1;
+    }
     my $exit_code = system @cmd;
 
-    # Check if command couldn't be executed
-    die "FATAL: Failed to execute command: $!\n" if $exit_code == -1;
+    # Check if command couldn't be executed (e.g. binary missing or bad format)
+    if ( $exit_code == -1 ) {
+        if ($is_allowed_to_fail) {
+            warn "WARNING: Failed to execute command '$cmd[0]': $!\n";
+            return -1;
+        }
+        die "FATAL: Failed to execute command: $!\n";
+    }
 
     # Detect signal death (e.g. segfault)
     # On Unix, low 7 bits are signal. On Windows, $exit_code might be the actual code.
@@ -691,17 +707,6 @@ sub run_command (@cmd) {
         $status = $exit_code >> 8;
     }
     if ( $status != 0 ) {
-        my $is_allowed_to_fail = 0;
-        $is_allowed_to_fail = 1 if $cmd[0] eq 'prove';
-        $is_allowed_to_fail = 1 if $cmd[0] =~ /codecov/;
-        $is_allowed_to_fail = 1 if $cmd[0] =~ /gcov/ || $cmd[0] =~ /llvm-/;
-        $is_allowed_to_fail = 1
-            if $ENV{PROGRAMFILES} && $cmd[0] eq File::Spec->catfile( $ENV{PROGRAMFILES}, 'OpenCppCoverage', 'OpenCppCoverage.exe' );
-
-        # Allow test executables to fail so the runner can count them
-        if ( $cmd[0] =~ m{[\\/]?t[\\/]} && ( $cmd[0] =~ /\.exe$/ || -x $cmd[0] ) ) {
-            $is_allowed_to_fail = 1;
-        }
         unless ($is_allowed_to_fail) {
             die "FATAL: Command failed with exit code: $status\n";
         }

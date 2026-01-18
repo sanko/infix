@@ -48,16 +48,16 @@ bool s128_callback_handler(__int128_t val) {
 // This function takes 8 doubles (filling XMM0-7)
 // Then s1 (stack offset 0)
 // Then s2 (stack offset 16 - MUST BE ALIGNED. If offset is 8, test fails)
-long double sysv_stack_alignment_callee(c23_maybe_unused double r1,
-                                        c23_maybe_unused double r2,
-                                        c23_maybe_unused double r3,
-                                        c23_maybe_unused double r4,
-                                        c23_maybe_unused double r5,
-                                        c23_maybe_unused double r6,
-                                        c23_maybe_unused double r7,
-                                        c23_maybe_unused double r8,
-                                        c23_maybe_unused double s1,
-                                        long double s2) {
+long double stack_alignment_callee(c23_maybe_unused double r1,
+                                   c23_maybe_unused double r2,
+                                   c23_maybe_unused double r3,
+                                   c23_maybe_unused double r4,
+                                   c23_maybe_unused double r5,
+                                   c23_maybe_unused double r6,
+                                   c23_maybe_unused double r7,
+                                   c23_maybe_unused double r8,
+                                   c23_maybe_unused double s1,
+                                   long double s2) {
     // We only care that s2 is read correctly.
     // If alignment logic is wrong, s2 will be read from offset 8 (overlapping s1), resulting in garbage.
     return s2;
@@ -152,7 +152,7 @@ TEST {
 #endif
     }
 
-    subtest("SysV x64 Stack Alignment Regression") {
+    subtest("Stack Alignment Regression") {
         plan(2);
 
         infix_arena_t * arena = infix_arena_create(4096);
@@ -167,9 +167,9 @@ TEST {
         args[9] = ldbl;
 
         infix_forward_t * t = NULL;
-        infix_status status = infix_forward_create_manual(&t, ldbl, args, 10, 10, (void *)sysv_stack_alignment_callee);
+        infix_status status = infix_forward_create_manual(&t, ldbl, args, 10, 10, (void *)stack_alignment_callee);
 
-        ok(status == INFIX_SUCCESS, "Created SysV alignment regression trampoline");
+        ok(status == INFIX_SUCCESS, "Created alignment regression trampoline");
 
         if (t) {
             double r_vals[8] = {1, 2, 3, 4, 5, 6, 7, 8};
@@ -177,7 +177,6 @@ TEST {
             long double s2 = 123.456L;
             long double result = 0.0;
 
-            // Corrected array initialization:
             void * call_args[10];
             for (int i = 0; i < 8; ++i)
                 call_args[i] = &r_vals[i];  // Regs 0-7 (fill XMMs)
@@ -191,9 +190,10 @@ TEST {
             if (diff < 0)
                 diff = -diff;
 
-            ok(diff < 1e-9L, "SysV Stack Alignment: long double read correctly from stack (Got %.5Lf)", result);
+            ok(diff < 1e-9L, "Stack Alignment: long double read correctly from stack (Got %.5f)", (double)result);
         }
-
+        else
+            skip(1, "Test skipped");
         infix_forward_destroy(t);
         infix_arena_destroy(arena);
     }

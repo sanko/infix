@@ -116,8 +116,7 @@ static infix_type _infix_type_sint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT128,
 static infix_type _infix_type_float = INFIX_TYPE_INIT(INFIX_PRIMITIVE_FLOAT, float);
 /** @internal Static singleton for the `double` primitive type. */
 static infix_type _infix_type_double = INFIX_TYPE_INIT(INFIX_PRIMITIVE_DOUBLE, double);
-#if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
-    defined(INFIX_OS_MACOS)
+#if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG))
 // On these platforms, long double is just an alias for double, so no separate singleton is needed.
 #else
 /** @internal Static singleton for the `long double` primitive type (where it is distinct from `double`). */
@@ -161,8 +160,7 @@ c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id i
     case INFIX_PRIMITIVE_DOUBLE:
         return &_infix_type_double;
     case INFIX_PRIMITIVE_LONG_DOUBLE:
-#if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
-    defined(INFIX_OS_MACOS)
+#if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG))
         // On MSVC and macOS/Clang (sometimes), long double is an alias for double.
         // We map to the double singleton to maintain type identity.
         return &_infix_type_double;

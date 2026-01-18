@@ -418,13 +418,15 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             }
             continue;  // Argument classified, skip the rest of the loop.
         }
-        // Step 1: Classify the argument type
+        // Classify the argument type
         // Special case: `long double` is always passed on the stack.
         if (is_long_double(type)) {
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
             size_t align = type->alignment;
+
             if (align < 8)
                 align = 8;  // Stack slots are minimum 8 bytes
+
             // Align current offset up to the required alignment (e.g. 16)
             current_stack_offset = (current_stack_offset + (align - 1)) & ~(align - 1);
             layout->arg_locations[i].stack_offset = current_stack_offset;
@@ -486,7 +488,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                 }
             }
             else {  // num_classes == 2
-                // Case 2: Argument is passed in two registers.
+                // Argument is passed in two registers.
                 // Here, a combined check is correct, as we must have room for both parts.
                 size_t gpr_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
                 size_t xmm_needed = (classes[0] == SSE) + (classes[1] == SSE);
@@ -519,7 +521,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
                 }
             }
         }
-        // Step 4: Fallback to stack
+        // Fallback to stack
         if (!placed_in_register) {
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
             // Align current offset to the argument's natural alignment requirements.
@@ -748,15 +750,10 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
     // If the function returns something and it wasn't via a hidden pointer...
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         if (is_long_double(ret_type))
-#if defined(INFIX_OS_MACOS)
-            // macOS x64 returns long double (128-bit) in XMM0, unlike Linux (x87 st0)
-            emit_movups_mem_xmm(buf, R13_REG, 0, XMM0_REG);
-#else
             // `long double` is returned on the x87 FPU stack (st0).
             // We store it into the user's return buffer (pointer held in r13).
             // fstpt [r13] (Store Floating Point value and Pop)
             emit_fstpt_mem(buf, R13_REG, 0);
-#endif
         else {
             // For other types, we must classify the return type just like an argument.
             arg_class_t classes[2];

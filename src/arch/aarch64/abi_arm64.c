@@ -544,10 +544,14 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
             emit_arm64_mov_reg(buf, true, GPR_ARGS[loc->reg_index], X9_REG);  // mov xN, x9
             break;
         case ARG_LOCATION_VPR:
-            if (is_long_double(type) || (type->category == INFIX_TYPE_VECTOR && type->size == 16))
+            if ((is_long_double(type) && type->size == 16) || (type->category == INFIX_TYPE_VECTOR && type->size == 16))
                 emit_arm64_ldr_q_imm(buf, VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr qN, [x9] (128-bit load)
             else
-                emit_arm64_ldr_vpr(buf, is_double(type), VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr dN/sN, [x9]
+                emit_arm64_ldr_vpr(buf,
+                                   is_double(type) || is_long_double(type),
+                                   VPR_ARGS[loc->reg_index],
+                                   X9_REG,
+                                   0);  // ldr dN/sN, [x9]
             break;
         case ARG_LOCATION_VPR_HFA:
             {
@@ -668,10 +672,11 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         // ...copy the result from the appropriate return register(s) into the user's return buffer (pointer in X20).
         const infix_type * hfa_base = nullptr;
+
         // The order of these checks is critical. Handle the most specific cases first.
-        if (is_long_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
-            // On non-Apple AArch64, long double is 16 bytes and returned in V0.
-            // On Apple, this case is never hit because types.c aliases it to a standard double.
+        // On Apple Silicon, long double is 8 bytes. Only emit 128-bit store if size is actually 16.
+        if ((is_long_double(ret_type) && ret_type->size == 16) ||
+            (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
             emit_arm64_str_q_imm(buf, V0_REG, X20_REG, 0);  // str q0, [x20]
         else if (is_hfa(ret_type, &hfa_base)) {
             size_t num_elements = ret_type->size / hfa_base->size;
@@ -684,7 +689,8 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
         }
         else if (is_float(ret_type))
             emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);  // str s0, [x20]
-        else if (is_double(ret_type))
+        // Handle standard double OR 8-byte long double (macOS)
+        else if (is_double(ret_type) || (is_long_double(ret_type) && ret_type->size == 8))
             emit_arm64_str_vpr(buf, true, V0_REG, X20_REG, 0);  // str d0, [x20]
         else {
             // Integer, pointer, or small aggregate return.

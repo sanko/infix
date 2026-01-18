@@ -205,6 +205,48 @@ c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * 
     return registry;
 }
 /**
+ * @brief Creates a deep copy of an existing registry.
+ * @param src The source registry to clone.
+ * @return A new registry containing deep copies of all types in 'src', or NULL on failure.
+ */
+c23_nodiscard infix_registry_t * infix_registry_clone(const infix_registry_t * src) {
+    if (!src)
+        return nullptr;
+
+    infix_registry_t * dest = infix_registry_create();
+    if (!dest)
+        return nullptr;
+
+    // Iterate over all buckets in the source registry
+    for (size_t i = 0; i < src->num_buckets; ++i) {
+        _infix_registry_entry_t * entry = src->buckets[i];
+        while (entry) {
+            // Create a new entry in the destination registry.
+            // _registry_insert handles allocating the entry and copying the name string.
+            _infix_registry_entry_t * new_entry = _registry_insert(dest, entry->name);
+            if (!new_entry) {
+                infix_registry_destroy(dest);
+                return nullptr;
+            }
+
+            // Copy flags
+            new_entry->is_forward_declaration = entry->is_forward_declaration;
+
+            // Deep copy the type graph into the new registry's arena
+            if (entry->type) {
+                new_entry->type = _copy_type_graph_to_arena(dest->arena, entry->type);
+                if (!new_entry->type) {
+                    infix_registry_destroy(dest);
+                    return nullptr;
+                }
+            }
+
+            entry = entry->next;
+        }
+    }
+    return dest;
+}
+/**
  * @brief Destroys a type registry and frees all associated memory.
  *
  * This includes freeing the registry handle itself and its internal arena, which in

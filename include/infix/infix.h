@@ -82,7 +82,19 @@
  */
 #define INFIX_MAJOR 0 /**< The major version number. Changes with incompatible API updates. */
 #define INFIX_MINOR 1 /**< The minor version number. Changes with new, backward-compatible features. */
-#define INFIX_PATCH 3 /**< The patch version number. Changes with backward-compatible bug fixes. */
+#define INFIX_PATCH 4 /**< The patch version number. Changes with backward-compatible bug fixes. */
+
+/**
+ * @struct infix_version_t
+ * @brief A structure representing the semantic version of the library.
+ * @see infix_get_version
+ */
+typedef struct {
+    int major; /**< The major version number (incremented for incompatible API changes). */
+    int minor; /**< The minor version number (incremented for backwards-compatible features). */
+    int patch; /**< The patch version number (incremented for backwards-compatible bug fixes). */
+} infix_version_t;
+
 /** @} */
 // Define the POSIX source macro to ensure function declarations for shm_open,
 // ftruncate, etc., are visible on all POSIX-compliant systems.
@@ -103,6 +115,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/**
+ * @brief Retrieves the version of the infix library linked at runtime.
+ *
+ * @details This function allows applications to verify that the version of the
+ *          library they are linked against matches the headers they were compiled with.
+ *          This is particularly useful when loading `infix` as a shared library/DLL
+ *          to detect version mismatches.
+ *
+ * @return An `infix_version_t` structure containing the major, minor, and patch numbers.
+ */
+c23_nodiscard infix_version_t infix_get_version(void);
+
 /**
  * @defgroup high_level_api High-Level Signature API
  * @brief The primary, recommended API for creating trampolines from human-readable strings.
@@ -378,6 +402,16 @@ typedef enum {
  *         handle must be freed with `infix_registry_destroy`.
  */
 c23_nodiscard infix_registry_t * infix_registry_create(void);
+/**
+ * @brief Creates a deep copy of an existing type registry.
+ *
+ * This copies all defined types and their dependency graphs into a new registry with its own arena.
+ * This is essential for thread safety in languages that spawn threads by cloning interpreter state (like Perl).
+ *
+ * @param[in] registry The registry to clone.
+ * @return A pointer to the new registry, or `nullptr` on failure.
+ */
+c23_nodiscard infix_registry_t * infix_registry_clone(const infix_registry_t *);
 /**
  * @brief Destroys a type registry and frees all associated memory.
  *

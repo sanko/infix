@@ -1,4 +1,4 @@
-# `infix`: A JIT-powered FFI library for C
+# infix: A JIT-powered FFI library for C
 
 `infix` is a modern, lightweight C library that lets you call any C function or create C callbacks at runtime, using simple, human-readable strings to describe the function's signature.
 
@@ -162,6 +162,8 @@ For more advanced build options, including building as a standalone library with
 |              | 15.0        | RISC-V64     | Clang     | ![freebsd/r64/clang   ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=freebsd-riscv64-clang)   |
 | macOS        | Sequoia     | AArch64      | Clang     | ![macos/a64/clang     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=macos-aarch64-clang)     |
 |              | Sequoia     | AArch64      | GCC       | ![macos/a64/gcc       ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=macos-aarch64-gcc)       |
+|              | Sequoia     | x86-64       | GCC       | ![macos/x64/gcc       ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=macos-x86_64-gcc)        |
+|              | Sequoia     | x86-64       | Clang     | ![macos/x64/clang     ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=macos-x86_64-clang)      |
 | NetBSD       | 10.1        | AArch64      | GCC       | ![netbsd/a64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=netbsd-aarch64-gcc)      |
 |              | 10.1        | x86-64       | GCC       | ![netbsd/x64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=netbsd-x86_64-gcc)       |
 | OmniOS       | r151054     | x86-64       | GCC       | ![omnios/x64/gcc      ](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsankorobinson.com%2Finfix%2Fstatus%2Fstatus.json&style=for-the-badge&label=%20&query=omnios-x86_64-gcc)       |

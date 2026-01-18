@@ -22,6 +22,14 @@
  * @endinternal
  */
 #include "common/platform.h"
+#include <infix/infix.h>
+
+/**
+ * @brief Retrieves the version of the infix library linked at runtime.
+ * @return An `infix_version_t` structure containing the major, minor, and patch numbers.
+ */
+infix_version_t infix_get_version(void) { return (infix_version_t){INFIX_MAJOR, INFIX_MINOR, INFIX_PATCH}; }
+
 #if defined(INFIX_ARCH_X64)
 #if defined(_MSC_VER)
 #include <intrin.h>

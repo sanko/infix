@@ -1,4 +1,4 @@
-# `infix` API Quick Reference
+# API Quick Reference
 
 This document provides a concise reference for the public API of the `infix` library. It's designed to be a quick lookup for developers who are already familiar with the library's concepts.
 
@@ -14,11 +14,12 @@ For practical, in-depth examples, please see the [Cookbook](cookbook.md).
     *   [The Error Handling Pattern](#the-error-handling-pattern)
     *   [Common Error Categories](#common-error-categories)
 *   [3. Introspection API](#3-introspection-api)
+    *   [Library Version](#library-version)
     *   [Getting Callable Code](#getting-callable-code)
     *   [Inspecting Trampoline Properties](#inspecting-trampoline-properties)
     *   [Inspecting Type Properties](#inspecting-type-properties)
 *   [4. Named Type Registry API](#4-named-type-registry-api)
-    *   [Creation and Population](#creation-and-population)
+    *   [Creation, Cloning, and Population](#creation-cloning-and-population)
     *   [Registry Introspection & Iteration](#registry-introspection--iteration)
 *   [5. Dynamic Library & Globals API](#5-dynamic-library--globals-api)
 *   [6. Manual API (Advanced)](#6-manual-api-advanced)
@@ -184,6 +185,10 @@ if (status != INFIX_SUCCESS) {
 
 Functions for inspecting the properties of trampolines and types at runtime.
 
+### Library Version
+
+*   `infix_version_t infix_get_version(void)`: Returns the semantic version of the linked library. The returned struct has `.major`, `.minor`, and `.patch` fields.
+
 ### Getting Callable Code
 
 *   `infix_cif_func infix_forward_get_code(infix_forward_t* trampoline)`: Gets the callable function pointer from a **bound** forward trampoline.
@@ -223,10 +228,11 @@ These functions work for both `infix_forward_t*` and `infix_reverse_t*` handles.
 
 APIs for defining, storing, reusing, and inspecting complex types by name.
 
-### Creation and Population
+### Creation, Cloning, and Population
 
 *   `infix_registry_t* infix_registry_create(void)`: Creates a new, empty type registry with an internal, automatically growing memory arena.
 *   `infix_registry_t* infix_registry_create_in_arena(infix_arena_t* arena)`: (Advanced) Creates a new registry that allocates from a user-provided arena. This is used for the shared arena optimization pattern.
+*   `infix_registry_t* infix_registry_clone(const infix_registry_t* registry)`: Creates a deep copy of an existing registry. The new registry has its own internal arena and copies of all types, making it thread-safe to use independently of the original.
 *   `void infix_registry_destroy(infix_registry_t* registry)`: Destroys a registry and all its contents. If the registry was created with an external arena (`infix_registry_create_in_arena`), the user-provided arena itself is **not** freed.
 *   `infix_status infix_register_types(infix_registry_t* registry, const char* definitions)`: Parses a semicolon-separated string of type definitions and adds them to the registry. The internal arena will grow automatically if needed.
 *   `const infix_type* infix_registry_lookup_type(const infix_registry_t* registry, const char* name)`: Retrieves a fully defined type object by its name.
@@ -294,4 +300,3 @@ APIs for the fast, region-based arena allocator used by the Manual API. The inte
 *   `void infix_arena_destroy(infix_arena_t* arena)`: Destroys an arena and frees all memory allocated from it.
 *   `void* infix_arena_alloc(infix_arena_t* arena, size_t size, size_t alignment)`: Allocates a block of memory from an arena.
 *   `void* infix_arena_calloc(infix_arena_t* arena, ...)`: Allocates and zero-initializes memory from an arena.
-

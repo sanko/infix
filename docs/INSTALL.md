@@ -1,4 +1,4 @@
-# Building and Integrating `infix`
+# Building and Integrating infix
 
 This guide shows you how to build the `infix` library and add it to your C projects.
 
