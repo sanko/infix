@@ -99,9 +99,19 @@ static void skip_whitespace(parser_state * state) {
 static bool parse_size_t(parser_state * state, size_t * out_val) {
     const char * start = state->p;
     char * end;
+    errno = 0;  // Reset errno before call
     unsigned long long val = strtoull(start, &end, 10);
-    if (end == start) {
-        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+
+    // Check for no conversion (end==start) OR overflow (ERANGE)
+    if (end == start || errno == ERANGE) {
+        // Use INTEGER_OVERFLOW code for range errors
+        set_parser_error(state, errno == ERANGE ? INFIX_CODE_INTEGER_OVERFLOW : INFIX_CODE_UNEXPECTED_TOKEN);
+        return false;
+    }
+
+    // Check for truncation if size_t is smaller than unsigned long long (e.g. 32-bit builds)
+    if (val > SIZE_MAX) {
+        set_parser_error(state, INFIX_CODE_INTEGER_OVERFLOW);
         return false;
     }
     *out_val = (size_t)val;
