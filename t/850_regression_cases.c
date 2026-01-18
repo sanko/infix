@@ -15,7 +15,7 @@
  *
  * By embedding these inputs into a permanent unit test, we can ensure that these
  * specific bugs do not reappear in future versions of the library. This forms a
- * crucial part of the project's quality assurance process. The `b64_decode`
+ * crucial part of the project's quality assurance process. The `infix_b64_decode`
  * helper from `fuzz_regression_helpers.h` is used to unpack the inputs at runtime.
  */
 #define DBLTAP_IMPLEMENTATION
@@ -156,7 +156,7 @@ static void run_regression_case(const regression_test_case_t * test) {
     subtest(test->name) {
         plan(2);
         size_t data_size;
-        unsigned char * data = b64_decode(test->b64_input, &data_size);
+        unsigned char * data = infix_b64_decode(test->b64_input, &data_size);
         ok(data != nullptr, "Base64 decoded successfully");
         if (!data) {
             fail("Skipping test due to Base64 decode failure.");
