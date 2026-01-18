@@ -158,19 +158,37 @@ static bool has_jit_entitlement(void) {
 #if !defined(INFIX_OS_WINDOWS) && !defined(INFIX_OS_MACOS) && !defined(INFIX_OS_ANDROID) && !defined(INFIX_OS_OPENBSD)
 #include <fcntl.h>
 #include <stdint.h>
+#if defined(__linux__) && defined(_GNU_SOURCE)
+#include <sys/syscall.h>
+#endif
+
 /**
  * @internal
- * @brief Creates an anonymous, unlinked shared memory object for dual-mapping.
+ * @brief Creates an anonymous file descriptor suitable for dual-mapping.
  *
- * @details This is the core of the dual-mapping W^X strategy on platforms like Linux
- * and FreeBSD. It creates a temporary shared memory object using a randomized
- * name to avoid collisions, immediately unlinks it so it cannot be accessed by
- * other processes and is automatically cleaned up by the kernel on process exit,
- * and returns the file descriptor.
- *
- * @return A valid file descriptor on success, or -1 on failure.
+ * @details Attempts multiple strategies in order of preference:
+ * 1. `memfd_create`: Modern Linux (kernel 3.17+). Best for security (no filesystem path).
+ * 2. `shm_open(SHM_ANON)`: FreeBSD/DragonFly. Automatic anonymity.
+ * 3. `shm_open(random_name)`: Fallback for older Linux/POSIX. Manually unlinked immediately.
  */
-static int shm_open_anonymous() {
+static int create_anonymous_file(void) {
+#if defined(__linux__) && defined(MFD_CLOEXEC)
+    // Strategy 1: memfd_create (Linux 3.17+)
+    // MFD_CLOEXEC ensures the FD isn't leaked to child processes.
+    int linux_fd = memfd_create("infix_jit", MFD_CLOEXEC);
+    if (linux_fd >= 0)
+        return linux_fd;
+    // If it fails (e.g. old kernel, ENOSYS), fall through to shm_open.
+#endif
+
+#if defined(__FreeBSD__) && defined(SHM_ANON)
+    // Strategy 2: SHM_ANON (FreeBSD)
+    int bsd_fd = shm_open(SHM_ANON, O_RDWR | O_CREAT | O_EXCL, 0600);
+    if (bsd_fd >= 0)
+        return bsd_fd;
+#endif
+
+    // Strategy 3: shm_open with randomized name (Legacy POSIX)
     char shm_name[64];
     uint64_t random_val = 0;
     // Generate a sufficiently random name to avoid collisions if multiple processes
@@ -182,12 +200,12 @@ static int shm_open_anonymous() {
     close(rand_fd);
     if (bytes_read != sizeof(random_val))
         return -1;
+
     snprintf(shm_name, sizeof(shm_name), "/infix-jit-%d-%llx", getpid(), (unsigned long long)random_val);
     // Create the shared memory object exclusively.
     int fd = shm_open(shm_name, O_RDWR | O_CREAT | O_EXCL, 0600);
     if (fd >= 0) {
-        // Unlink immediately. The file descriptor remains valid, but the name is removed.
-        // This ensures the kernel will clean up the memory object when the last fd is closed.
+        // Unlink immediately. The name is removed, but the inode persists until close().
         shm_unlink(shm_name);
         return fd;
     }
@@ -257,10 +275,10 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     exec.rx_ptr = code;
 #else
     // Dual-mapping POSIX platforms (e.g., Linux, FreeBSD). Create two separate views of the same memory.
-    exec.shm_fd = shm_open_anonymous();
+    exec.shm_fd = create_anonymous_file();
     if (exec.shm_fd < 0) {
         _infix_set_system_error(
-            INFIX_CATEGORY_ALLOCATION, INFIX_CODE_EXECUTABLE_MEMORY_FAILURE, errno, "shm_open failed");
+            INFIX_CATEGORY_ALLOCATION, INFIX_CODE_EXECUTABLE_MEMORY_FAILURE, errno, "create_anonymous_file failed");
         return exec;
     }
     if (ftruncate(exec.shm_fd, size) != 0) {
