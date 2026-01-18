@@ -25,11 +25,13 @@
 #define infix_free free
 #define infix_realloc realloc
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <stdint.h>
 #include <string.h>
+
 TEST {
     plan(1);
     subtest("Arena Allocator Core Functionality") {

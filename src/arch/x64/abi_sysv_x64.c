@@ -951,24 +951,51 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     for (size_t i = 0; i < context->num_args; i++) {
         int32_t arg_save_loc = layout->saved_args_offset + current_saved_data_offset;
         infix_type * current_type = context->arg_types[i];
-        arg_class_t classes[2];
-        size_t num_classes;
-        classify_aggregate_sysv(current_type, classes, &num_classes);
+
+        // Correct classification logic for vectors/primitives vs aggregates
+        arg_class_t classes[2] = {NO_CLASS, NO_CLASS};
+        size_t num_classes = 0;
+        bool is_aggregate =
+            (current_type->category == INFIX_TYPE_STRUCT || current_type->category == INFIX_TYPE_UNION ||
+             current_type->category == INFIX_TYPE_ARRAY || current_type->category == INFIX_TYPE_COMPLEX);
+
+        if (is_aggregate) {
+            classify_aggregate_sysv(current_type, classes, &num_classes);
+        }
+        else if (is_float(current_type) || is_double(current_type) || current_type->category == INFIX_TYPE_VECTOR) {
+            classes[0] = SSE;
+            num_classes = 1;
+        }
+        else {
+            classes[0] = INTEGER;
+            num_classes = 1;
+            if (current_type->size > 8) {
+                classes[1] = INTEGER;
+                num_classes = 2;
+            }
+        }
+
         bool is_from_stack = false;
         // Determine if the argument is in registers or on the stack.
         if (classes[0] == MEMORY)
             is_from_stack = true;
         else if (num_classes == 1) {
             if (classes[0] == SSE)
-                if (xmm_idx < NUM_XMM_ARGS)
-                    emit_movsd_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                if (xmm_idx < NUM_XMM_ARGS) {
+                    // Use 128-bit move for vectors to prevent truncation
+                    if (current_type->category == INFIX_TYPE_VECTOR && current_type->size == 16)
+                        emit_movups_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                    else if (is_float(current_type))
+                        emit_movss_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                    else
+                        emit_movsd_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                }
                 else
                     is_from_stack = true;
-            else  // INTEGER
-                if (gpr_idx < NUM_GPR_ARGS)
-                    emit_mov_mem_reg(buf, RBP_REG, arg_save_loc, GPR_ARGS[gpr_idx++]);
-                else
-                    is_from_stack = true;
+            else if (gpr_idx < NUM_GPR_ARGS)
+                emit_mov_mem_reg(buf, RBP_REG, arg_save_loc, GPR_ARGS[gpr_idx++]);
+            else
+                is_from_stack = true;
         }
         else if (num_classes == 2) {
             size_t gprs_needed = (classes[0] == INTEGER) + (classes[1] == INTEGER);
@@ -1102,8 +1129,10 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
             // Classify the return type to determine which registers to load.
             arg_class_t classes[2];
             size_t num_classes;
+            // Ensure 128-bit vectors are also classified as SSE
             if (context->return_type->category == INFIX_TYPE_VECTOR &&
-                (context->return_type->size == 32 || context->return_type->size == 64)) {
+                (context->return_type->size == 16 || context->return_type->size == 32 ||
+                 context->return_type->size == 64)) {
                 classes[0] = SSE;
                 num_classes = 1;
             }
@@ -1117,6 +1146,9 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                         emit_vmovupd_ymm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 64)
                         emit_vmovupd_zmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
+                    // Use 128-bit move for standard vectors
+                    else if (context->return_type->category == INFIX_TYPE_VECTOR)
+                        emit_movups_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else
                         emit_movsd_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                 }

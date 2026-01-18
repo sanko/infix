@@ -36,10 +36,12 @@
  *     are cloned correctly and retain their "incomplete" status.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
+
 // Native C Functions for Testing
 double get_point_x(Point p) {
     note("get_point_x received Point {x=%.1f, y=%.1f}", p.x, p.y);

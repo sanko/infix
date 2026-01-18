@@ -23,6 +23,7 @@
  * simplified in `infix` to flush to the next byte on overflow.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>

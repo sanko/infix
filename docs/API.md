@@ -272,6 +272,13 @@ These functions mirror the high-level API but take `infix_type` objects instead 
 *   `infix_status infix_reverse_create_callback_manual(...)`
 *   `infix_status infix_reverse_create_closure_manual(...)`
 
+### Trampoline Destruction
+
+All trampolines created by `infix` allocate executable memory and internal metadata that must be explicitly freed when no longer needed.
+
+*   `void infix_forward_destroy(infix_forward_t* trampoline)`: Destroys a forward trampoline.
+*   `void infix_reverse_destroy(infix_reverse_t* trampoline)`: Destroys a reverse trampoline.
+
 ### Manual Type Creation
 
 These functions are the building blocks for creating `infix_type` objects programmatically. All new types must be allocated from a user-provided arena.

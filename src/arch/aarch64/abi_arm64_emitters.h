@@ -45,6 +45,10 @@ void emit_arm64_ldrb_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int3
 void emit_arm64_ldrh_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `LDRSW <Xt>, [<Xn|SP>, #imm]` to load a 32-bit value and sign-extend to 64-bit. */
 void emit_arm64_ldrsw_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `LDRSB <Xt>, [<Xn|SP>, #imm]` to load a byte and sign-extend to 64-bit. */
+void emit_arm64_ldrsb_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `LDRSH <Xt>, [<Xn|SP>, #imm]` to load a half-word and sign-extend to 64-bit. */
+void emit_arm64_ldrsh_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `STR <Wt|Xt>, [<Xn|SP>, #imm]` to store a GPR to memory. */
 void emit_arm64_str_imm(code_buffer * buf, bool is64, arm64_gpr src, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `STRB <Wt>, [<Xn|SP>, #imm]` to store a byte from a GPR to memory. */

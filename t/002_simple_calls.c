@@ -16,9 +16,11 @@
  * both creation paths and calling conventions are working correctly.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <math.h>
+
 // C Functions to be Called via FFI
 /** @internal @brief A simple C function for testing integer arguments and return values. */
 int add_ints(int a, int b) { return a + b; }

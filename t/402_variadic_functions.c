@@ -30,6 +30,7 @@
  *   on macOS on ARM (which has its own unique stack-passing rules).
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include "types.h"
@@ -38,6 +39,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+
 int forward_variadic_checker(char * buffer, size_t size, const char * format, ...) {
     (void)buffer;
     (void)size;

@@ -21,6 +21,7 @@
  * emission, and memory management.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>

@@ -243,6 +243,52 @@ void emit_arm64_ldrsw_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int
 }
 /**
  * @internal
+ * @brief Emits a `LDRSB` (Load Register Signed Byte) instruction (64-bit destination).
+ * @details Opcode: 00_111_00_1_10_... (base 0x39800000)
+ */
+void emit_arm64_ldrsb_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset) {
+    if (buf->error)
+        return;
+    if (offset >= 0 && offset <= 0xFFF) {
+        uint32_t instr = 0x39800000;
+        instr |= ((uint32_t)offset & 0xFFF) << 10;
+        instr |= (uint32_t)(base & 0x1F) << 5;
+        instr |= (uint32_t)(dest & 0x1F);
+        emit_int32(buf, instr);
+    }
+    else {
+        if (offset >= 0)
+            emit_arm64_add_imm(buf, true, false, X16_REG, base, (uint32_t)offset);
+        else
+            emit_arm64_sub_imm(buf, true, false, X16_REG, base, (uint32_t)(-offset));
+        emit_arm64_ldrsb_imm(buf, dest, X16_REG, 0);
+    }
+}
+/**
+ * @internal
+ * @brief Emits a `LDRSH` (Load Register Signed Halfword) instruction (64-bit destination).
+ * @details Opcode: 01_111_00_1_10_... (base 0x79800000)
+ */
+void emit_arm64_ldrsh_imm(code_buffer * buf, arm64_gpr dest, arm64_gpr base, int32_t offset) {
+    if (buf->error)
+        return;
+    if (offset >= 0 && offset % 2 == 0 && (offset / 2) <= 0xFFF) {
+        uint32_t instr = 0x79800000;
+        instr |= ((uint32_t)(offset / 2) & 0xFFF) << 10;
+        instr |= (uint32_t)(base & 0x1F) << 5;
+        instr |= (uint32_t)(dest & 0x1F);
+        emit_int32(buf, instr);
+    }
+    else {
+        if (offset >= 0)
+            emit_arm64_add_imm(buf, true, false, X16_REG, base, (uint32_t)offset);
+        else
+            emit_arm64_sub_imm(buf, true, false, X16_REG, base, (uint32_t)(-offset));
+        emit_arm64_ldrsh_imm(buf, dest, X16_REG, 0);
+    }
+}
+/**
+ * @internal
  * @brief Emits a `STR` (Store Register) instruction with an unsigned immediate offset.
  * @details Assembly: `STR <Wt|Xt>, [<Xn|SP>, #pimm]`
  *

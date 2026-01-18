@@ -23,9 +23,11 @@
  * about the memory representation of C data structures.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
+
 // Native C types to use as a baseline for layout comparison
 /** @internal A test struct with standard internal padding. */
 typedef struct {

@@ -29,10 +29,12 @@
  *   parsing and printing are inverse operations.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <ctype.h>
 #include <infix/infix.h>
 #include <string.h>
+
 /** @internal Helper to run a positive test case for `infix_type_from_signature`. */
 static void test_type_ok(const char * signature, infix_type_category expected_cat, const char * name) {
     subtest(name) {

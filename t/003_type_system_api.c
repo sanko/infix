@@ -20,10 +20,12 @@
  * of C's data layout rules is accurate.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
 #include <stdint.h>
+
 // Native C types used as a baseline for comparison.
 /** @internal A test struct with standard padding requirements. */
 typedef struct {

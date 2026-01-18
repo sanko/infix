@@ -21,10 +21,12 @@
  *       for each type.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <string.h>
+
 TEST {
     plan(3);
     // Setup: Create a registry with a mix of types.

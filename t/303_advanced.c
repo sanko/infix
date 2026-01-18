@@ -27,10 +27,12 @@
  *     through closures.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <string.h>
+
 void pointer_modify_handler(int * p) {
     note("pointer_modify_handler received pointer p=%p", (void *)p);
     if (p)

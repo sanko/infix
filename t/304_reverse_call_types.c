@@ -25,9 +25,11 @@
  * harness function and produce the correct result.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <string.h>
+
 void harness(int (*func_ptr)(int, int), int a, int b, int expected) {
     int result = func_ptr(a, b);
     ok(result == expected, "Callback/closure returned the correct value (got %d, expected %d)", result, expected);

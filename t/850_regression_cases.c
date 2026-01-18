@@ -19,6 +19,7 @@
  * helper from `fuzz_regression_helpers.h` is used to unpack the inputs at runtime.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "fuzz_helpers.h"
 #include "fuzz_regression_helpers.h"

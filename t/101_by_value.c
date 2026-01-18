@@ -29,12 +29,14 @@
  *   based on architecture.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <stdbool.h>
+
 #if !defined(INFIX_NO_INTRINSICS)
 #if defined(__AVX512F__)
 #define INFIX_ARCH_X86_AVX512

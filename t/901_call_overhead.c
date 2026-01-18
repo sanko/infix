@@ -26,6 +26,7 @@
  * overhead and track performance regressions or improvements over time.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <time.h>

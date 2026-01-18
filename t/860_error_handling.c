@@ -30,11 +30,13 @@
  *       checks are in place and are reported correctly.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
+
 TEST {
     plan(2);
     subtest("Signature Parser Error Reporting") {

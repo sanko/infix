@@ -18,10 +18,12 @@
  * were correctly preserved through the FFI call.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <string.h>
+
 /**
  * @brief A C function that takes a struct containing pointers by value.
  * @details The ABI will pass this struct according to its size and alignment.

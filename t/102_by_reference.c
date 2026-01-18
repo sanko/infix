@@ -21,9 +21,11 @@
  *   ABIs (like Windows x64) that have strict size rules for register passing.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
+
 /** @brief A C function that takes a large struct, which the ABI will pass by reference. */
 int process_large_struct(LargeStruct s) {
     note("process_large_struct received s = { .a=%d, ..., .f=%d }", s.a, s.f);

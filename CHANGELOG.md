@@ -7,12 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.4] - 2026-01-17
 
-This release focuses on critical platform-specific stability fixes for macOS (both Intel and Apple Silicon) and improves the build system.
+This release focuses on SIMD vector support and critical platform-specific stability fixes for macOS (both Intel and Apple Silicon) and improves the build system.
 
 ### Added
 
-- Added `infix_get_version` and `infix_version_t` to the public API. This allows applications to query the semantic version of the library at runtime, useful for verifying dynamic link compatibility.
+- Added `infix_get_version` and `infix_version_t` to the public API. This allows applications to query the semantic version of the library at runtime.
 - Added `infix_registry_clone` to support deep-copying type registries for thread-safe interpreter cloning.
+- Added comprehensive unit tests for reverse callbacks involving SIMD vectors (`404_simd_vectors.c`), ensuring vector registers are correctly marshalled back to the caller.
 
 ### Fixed
 
@@ -21,6 +22,11 @@ This release focuses on critical platform-specific stability fixes for macOS (bo
 - Fixed a generic System V ABI bug where 128-bit types (vectors, `__int128`) were not correctly aligned to 16 bytes on the stack relative to the return address, causing data corruption when mixed with odd numbers of 8-byte arguments.
 - Fixed the build system (`build.pl`) to better handle external tool failures. Coverage gathering commands (like `codecov`) are now allowed to fail gracefully without breaking the build pipeline.
 - Enforced natural alignment for stack arguments in the AAPCS64 implementation. Previously, arguments were packed to 8-byte boundaries, which violated alignment requirements for 128-bit types.
+- Fixed a critical deployment issue where the public `infix.h` header included an internal file (`common/compat_c23.h`). The header is now fully self-contained and defines `INFIX_NODISCARD` for attribute compatibility.
+- Fixed 128-bit vector truncation on System V x64 (Linux/macOS). Reverse trampolines previously used 64-bit moves (`MOVSD`) for all SSE arguments, corrupting the upper half of vector arguments. They now correctly use `MOVUPS`.
+- Fixed vector argument corruption on AArch64. The reverse trampoline generator now correctly identifies vector types and uses 128-bit stores (`STR Qn`) instead of falling back to 64-bit/32-bit stores or GPRs.
+- Fixed floating-point corruption on Windows on ARM64. Reverse trampolines now force full 128-bit register saves for all floating-point arguments to ensure robust handling of volatile register states.
+- Fixed a logic error in the System V reverse argument classifier where vectors were defaulting to `INTEGER` class, causing the trampoline to look in `RDI`/`RSI` instead of `XMM` registers.
 
 ## [0.1.3] - 2025-12-19
 

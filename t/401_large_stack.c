@@ -29,11 +29,13 @@
  *     from the caller's stack frame in addition to registers.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <string.h>
+
 // Determine the number of floating-point registers used for arguments on the current ABI.
 #if defined(INFIX_ABI_WINDOWS_X64)
 #define MAX_REG_DOUBLES 4

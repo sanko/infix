@@ -34,12 +34,15 @@
  *       a potentially dangerous allocation.
  */
 #define _CRT_SECURE_NO_WARNINGS
+#include "common/infix_config.h"
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include <infix/infix.h>
 #include <limits.h>
 #include <stdlib.h>
+
 #if defined(_WIN32)
 #include <windows.h>
 #else

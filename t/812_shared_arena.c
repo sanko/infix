@@ -15,9 +15,11 @@
  * deep-copying behavior.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
-#include <stdlib.h>  // For malloc/free
+#include <stdlib.h>
+
 void dummy_func_for_test(void) {}
 TEST {
     plan(3);

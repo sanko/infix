@@ -22,9 +22,11 @@
  * that support the specific type, ensuring the test suite remains portable.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
+
 // Check if `long double` has a distinct representation on this platform.
 #if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
     defined(INFIX_OS_MACOS)
