@@ -13,7 +13,12 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 
 - Added `infix_get_version` and `infix_version_t` to the public API. This allows applications to query the semantic version of the library at runtime.
 - Added `infix_registry_clone` to support deep-copying type registries for thread-safe interpreter cloning.
-- Added comprehensive unit tests for reverse callbacks involving SIMD vectors (`404_simd_vectors.c`), ensuring vector registers are correctly marshalled back to the caller.
+- Added `t/404_simd_vectors.c`: new unit tests for 128-bit SIMD vectors.
+  - Currently targeting reverse callbacks to verify correct register marshalling.
+
+### Changed
+
+- The JIT memory allocator on Linux now uses `memfd_create` (on kernels 3.17+) to create anonymous file descriptors for dual-mapped W^X memory. This avoids creating visible temporary files in `/dev/shm` and improves hygiene and security. On FreeBSD, `SHM_ANON` is now used.
 
 ### Fixed
 
@@ -27,6 +32,7 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 - Fixed vector argument corruption on AArch64. The reverse trampoline generator now correctly identifies vector types and uses 128-bit stores (`STR Qn`) instead of falling back to 64-bit/32-bit stores or GPRs.
 - Fixed floating-point corruption on Windows on ARM64. Reverse trampolines now force full 128-bit register saves for all floating-point arguments to ensure robust handling of volatile register states.
 - Fixed a logic error in the System V reverse argument classifier where vectors were defaulting to `INTEGER` class, causing the trampoline to look in `RDI`/`RSI` instead of `XMM` registers.
+- Fixed Clang coverage reporting by switching from LLVM-specific profiles to standard GCOV formats.
 
 ## [0.1.3] - 2025-12-19
 

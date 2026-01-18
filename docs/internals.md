@@ -158,6 +158,11 @@ This separation allows the JIT to handle complex ABIs (like splitting structs ac
 
 A memory region is never simultaneously writable and executable. The implementation strategy varies by platform for maximum security and compatibility:
 
+*   **On Modern Linux (Kernel 3.17+)**: We use `memfd_create("infix_jit", MFD_CLOEXEC)`. This creates an anonymous file that lives purely in RAM and is automatically cleaned up when closed. This avoids filesystem pollution and race conditions associated with named shared memory.
+*   **On FreeBSD/DragonFly**: We use `shm_open(SHM_ANON, ...)` to achieve the same anonymous, auto-cleanup behavior.
+*   **On Older POSIX**: We fallback to `shm_open` with a randomized name that is `shm_unlink`ed immediately after creation.
+*   **On Windows/macOS**: We use the platform's standard single-mapping APIs (`VirtualAlloc`/`mmap`) and toggle permissions with `VirtualProtect`/`mprotect`.
+
 ```mermaid
 graph TD
     subgraph "Windows/macOS/etc. (Single-Mapping)"
@@ -166,7 +171,7 @@ graph TD
         C --> D(Return RX Pointer);
     end
     subgraph "Linux/BSD (Dual-Mapping)"
-        E[shm_open_anonymous] --> F[mmap RW view];
+        E[memfd_create / SHM_ANON] --> F[mmap RW view];
         E --> G[mmap RX view];
         F --> H[Write JIT Code];
         G --> I(Return RX Pointer);
@@ -200,25 +205,6 @@ Here is the logic, which is executed once per process:
     *   If **either** step fails, the library gracefully falls back to the **legacy, insecure path** (a standard `mmap` followed by `mprotect`). This path works for unhardened developer builds (like our CI tests) because macOS runs them in a more permissive mode.
 
 This ensures the library "just works" for developers, while automatically "leveling up" its security when run inside a properly configured application.
-
-```mermaid
-graph TD
-    A["infix_executable_alloc() called on macOS"] --> B{Is this the first call?};
-    B -->|Yes| C[Runtime Detection];
-    B -->|No| G[Use cached strategy];
-
-    subgraph Runtime Detection
-        C --> D{dlopen frameworks?};
-        D -->|Yes| E{has_jit_entitlement?};
-        D -->|No| F[Set strategy = LEGACY];
-        E -->|Yes| H[Set strategy = SECURE];
-        E -->|No| F;
-    end
-
-    G --> I{Strategy is SECURE?};
-    I -->|Yes| J[mmap with MAP_JIT];
-    I -->|No| K[mmap without MAP_JIT];
-```
 
 ### 3.4 Fuzz Testing
 The entire `infix` API surface, especially the signature parser and ABI classifiers, is continuously tested using `libFuzzer` and `AFL++`. The fuzzing harnesses (`fuzz/`) are designed to find memory safety violations (ASan), integer overflows (UBSan), and infinite loops (timeouts). All findings are converted into permanent regression tests.
