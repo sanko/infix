@@ -163,10 +163,12 @@ c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive_type_id i
     case INFIX_PRIMITIVE_LONG_DOUBLE:
 #if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
     defined(INFIX_OS_MACOS)
-        // On platforms where long double is just an alias for double, return the double singleton
-        // to maintain consistent type representation.
+        // On MSVC and macOS/Clang (sometimes), long double is an alias for double.
+        // We map to the double singleton to maintain type identity.
         return &_infix_type_double;
 #else
+        // On MinGW and Linux, long double is distinct (16 bytes).
+        // We MUST use the distinct type to handle layout and passing correctly.
         return &_infix_type_long_double;
 #endif
     default:
