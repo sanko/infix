@@ -40,6 +40,9 @@
 #include <stdlib.h>
 #include <string.h>
 // Static Descriptors for Primitive and Built-in Types
+
+#define INFIX_MAX_ALIGNMENT (1024 * 1024)  // 1MB Safety Limit
+
 /**
  * @internal
  * @def INFIX_TYPE_INIT
@@ -754,8 +757,13 @@ c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena_t * arena
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-    if (alignment == 0) {
+    // Validate alignment is power-of-two AND within sane limits.
+    if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_INVALID_ALIGNMENT, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    if (alignment > INFIX_MAX_ALIGNMENT) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_TYPE_TOO_LARGE, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     infix_type * type = infix_arena_calloc(arena, 1, sizeof(infix_type), _Alignof(infix_type));
