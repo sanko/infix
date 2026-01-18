@@ -678,7 +678,7 @@ void infix_executable_free(infix_executable_t exec);
  * @param exec The handle to the memory block to make executable.
  * @return `true` on success, `false` on failure.
  */
-c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec);
+c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec);
 /**
  * @brief Allocates a block of standard memory for later protection.
  * @details Located in `src/jit/executor.c`. This is used to allocate the memory

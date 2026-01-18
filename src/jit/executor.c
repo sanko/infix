@@ -384,8 +384,8 @@ void infix_executable_free(infix_executable_t exec) {
  * @param exec The executable memory block.
  * @return `true` on success, `false` on failure.
  */
-c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
-    if (exec.rw_ptr == nullptr || exec.size == 0)
+c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec) {
+    if (exec->rw_ptr == nullptr || exec->size == 0)
         return false;
     // On AArch64 (and other RISC architectures), the instruction and data caches can be
     // separate. We must explicitly flush the D-cache (where the JIT wrote the code)
@@ -393,16 +393,16 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
 #if defined(INFIX_ARCH_AARCH64)
 #if defined(_MSC_VER)
     // Use the Windows-specific API.
-    FlushInstructionCache(GetCurrentProcess(), exec.rw_ptr, exec.size);
+    FlushInstructionCache(GetCurrentProcess(), exec->rw_ptr, exec->size);
 #else
     // Use the GCC/Clang built-in for other platforms.
-    __builtin___clear_cache((char *)exec.rw_ptr, (char *)exec.rw_ptr + exec.size);
+    __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);
 #endif
 #endif
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
     // Finalize permissions to Read+Execute.
-    result = VirtualProtect(exec.rw_ptr, exec.size, PAGE_EXECUTE_READ, &(DWORD){0});
+    result = VirtualProtect(exec->rw_ptr, exec->size, PAGE_EXECUTE_READ, &(DWORD){0});
     if (!result)
         _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, GetLastError(), nullptr);
 #elif defined(INFIX_OS_MACOS)
@@ -419,20 +419,32 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t exec) {
         // RX by default, and we temporarily make it RW for writing.
         // However, the current logic does this change via `pthread_jit_write_protect_np`
         // within the allocator itself. For now, this is a placeholder for that logic.
-        result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
+        result = (mprotect(exec->rw_ptr, exec->size, PROT_READ | PROT_EXEC) == 0);
     if (!result)
         _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, errno, nullptr);
 #elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     // Other single-mapping POSIX platforms use mprotect.
-    result = (mprotect(exec.rw_ptr, exec.size, PROT_READ | PROT_EXEC) == 0);
+    result = (mprotect(exec->rw_ptr, exec->size, PROT_READ | PROT_EXEC) == 0);
     if (!result)
         _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, errno, nullptr);
 #else
-    // On dual-mapping platforms, the RX mapping is already executable. This is a no-op.
-    result = true;
+    // Dual-mapping POSIX (Linux, FreeBSD).
+    // The RX mapping is already executable.
+    // SECURITY CRITICAL: We MUST unmap the RW view now. If we leave it mapped,
+    // an attacker with a heap disclosure could find it and overwrite the JIT code,
+    // bypassing W^X.
+    if (munmap(exec->rw_ptr, exec->size) == 0) {
+        exec->rw_ptr = nullptr;  // Clear the pointer to prevent double-free or misuse.
+        result = true;
+    }
+    else {
+        _infix_set_system_error(
+            INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, errno, "munmap of RW view failed");
+        result = false;
+    }
 #endif
     if (result)
-        INFIX_DEBUG_PRINTF("Memory at %p is now executable.", exec.rx_ptr);
+        INFIX_DEBUG_PRINTF("Memory at %p is now executable.", exec->rx_ptr);
     return result;
 }
 // Public API: Protected (Read-Only) Memory
