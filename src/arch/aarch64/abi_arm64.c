@@ -400,6 +400,14 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
         // If it couldn't be placed in a register, it must go on the stack.
         if (!placed_in_register) {
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
+
+            // Enforce natural alignment for stack arguments on ARM64
+            size_t align = type->alignment;
+            if (align < 8)
+                align = 8;
+
+            // Align the current stack offset
+            stack_offset = (stack_offset + (align - 1)) & ~(align - 1);
             layout->arg_locations[i].stack_offset = (uint32_t)stack_offset;
             stack_offset += (type->size + 7) & ~7;  // Stack slots are 8-byte aligned.
             layout->num_stack_args++;
