@@ -1,0 +1,111 @@
+name: Dump Vector Assembly
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch: ~
+
+jobs:
+  dump-asm:
+    name: Dump Assembly on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Create C file with Vector Usage
+        shell: bash
+        run: |
+          cat << 'EOF' > harness.c
+          #include <immintrin.h>
+          #include <stdio.h>
+          #include <stdint.h>
+          #include <stdlib.h>
+
+          // Function taking vectors by value.
+          // On Windows, this *should* be compiled to take them by reference (hidden pointer).
+          // We want to see how GCC/Clang emits the call to this function.
+          __attribute__((noinline))
+          __m256d vector_add(__m256d a, __m256d b) {
+              return _mm256_add_pd(a, b);
+          }
+
+          // The trampoline simulation.
+          // This function will marshal pointers-to-vectors into the call.
+          __attribute__((noinline))
+          void call_harness(
+              void* target_fn,
+              void* return_value,
+              void** args
+          ) {
+              // Cast target_fn to the expected function pointer type.
+              __m256d (*func_ptr)(__m256d, __m256d) = (__m256d (*)(__m256d, __m256d))target_fn;
+
+              // Unpack arguments from void** array.
+              // In our trampoline logic, these are pointers to the data.
+              __m256d* p_arg1 = (__m256d*)args[0];
+              __m256d* p_arg2 = (__m256d*)args[1];
+
+              // Dereference to get the value.
+              // The critical question: Does the compiler load this into YMM0/YMM1?
+              // Or does it pass the pointer itself in RCX/RDX?
+              __m256d val1 = *p_arg1;
+              __m256d val2 = *p_arg2;
+
+              // Call the target.
+              __m256d result = func_ptr(val1, val2);
+
+              // Store result.
+              *(__m256d*)return_value = result;
+          }
+
+          int main() {
+              // Allocate aligned memory to simulate the arena allocator.
+              // We use _mm_malloc to guarantee 32-byte alignment.
+              __m256d* a = (__m256d*)_mm_malloc(sizeof(__m256d), 32);
+              __m256d* b = (__m256d*)_mm_malloc(sizeof(__m256d), 32);
+              __m256d* res = (__m256d*)_mm_malloc(sizeof(__m256d), 32);
+
+              *a = _mm256_set1_pd(1.0);
+              *b = _mm256_set1_pd(2.0);
+
+              void* args[] = { a, b };
+
+              call_harness(
+                  (void*)vector_add,
+                  (void*)res,
+                  (void**)args
+              );
+
+              // Prevent optimization
+              double* d = (double*)res;
+              printf("Result: %f\n", d[0]);
+
+              _mm_free(a);
+              _mm_free(b);
+              _mm_free(res);
+              return 0;
+          }
+          EOF
+
+      - name: Compile to Assembly (Windows/MinGW)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          # Use -mavx2 to enable AVX instructions
+          gcc -O2 -mavx2 -S harness.c -o harness.s
+
+      - name: Compile to Assembly (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          gcc -O2 -mavx2 -S harness.c -o harness.s
+
+      - name: Display Assembly
+        shell: bash
+        run: |
+          echo "=== Assembly Dump for ${{ matrix.os }} ==="
+          cat harness.s
