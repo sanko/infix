@@ -36,11 +36,7 @@ jobs:
           // The trampoline simulation.
           // This function will marshal pointers-to-vectors into the call.
           __attribute__((noinline))
-          void call_harness(
-              void* target_fn,
-              void* return_value,
-              void** args
-          ) {
+          void call_harness( void* target_fn, void* return_value, void** args ) {
               // Cast target_fn to the expected function pointer type.
               __m256d (*func_ptr)(__m256d, __m256d) = (__m256d (*)(__m256d, __m256d))target_fn;
 

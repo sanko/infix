@@ -130,7 +130,12 @@ else {    # GCC or Clang
     my @include_flags = map { "-I" . File::Spec->catfile($_) } @{ $config{include_dirs} };
     $config{cflags}   = [ @base_cflags, '-std=c11',   '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
     $config{cxxflags} = [ @base_cflags, '-std=c++11', '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
-    $config{ldflags}  = [];
+
+    # Symbol Visibility: Hide everything by default.
+    # Only functions marked INFIX_API in infix.h will be exported.
+    push @{ $config{cflags} },   '-fvisibility=hidden';
+    push @{ $config{cxxflags} }, '-fvisibility=hidden';
+    $config{ldflags} = [];
     if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch_raw !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
         print "ARM64 cross-compilation detected for clang. Adding --target flag.\n";
         my $target_triple = $config{is_windows} ? 'aarch64-pc-windows-msvc' : 'aarch64-linux-gnu';

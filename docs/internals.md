@@ -57,6 +57,8 @@ The process of creating a forward trampoline, from signature to executable code,
 2.  **Layout Calculation:** The resolved type graph is passed to the Trampoline Engine, which selects the correct ABI spec and calls its `prepare_forward_call_frame` function to produce a complete layout blueprint.
 3.  **Code Generation:** The engine calls the ABI spec's code generation functions (`generate_*_prologue`, etc.) in sequence, appending machine code to a buffer.
 4.  **Memory Finalization:** The generated code is copied to a new page of W^X-compliant executable memory.
+  *   **W^X Enforcement:** On dual-map systems, the Read-Write view used for copying is immediately unmapped. On single-map systems, permissions are flipped to Read-Execute.
+  *   **Cache Coherency:** On architectures like AArch64 (and Windows systems running emulators), the Instruction Cache (I-Cache) and Data Cache (D-Cache) may not be coherent. We explicitly flush the D-Cache and invalidate the I-Cache range using `__builtin___clear_cache` (GCC/Clang) or `FlushInstructionCache` (Windows) to ensure the CPU executes the newly generated instructions correctly.
 5.  **Handle Creation:** A final `infix_forward_t` handle is allocated, containing its own private arena into which a deep copy of the type graph is made, making the handle a safe, self-contained object.
 
 ```mermaid
@@ -212,6 +214,13 @@ This ensures the library "just works" for developers, while automatically "level
 
 ### 3.4 Fuzz Testing
 The entire `infix` API surface, especially the signature parser and ABI classifiers, is continuously tested using `libFuzzer` and `AFL++`. The fuzzing harnesses (`fuzz/`) are designed to find memory safety violations (ASan), integer overflows (UBSan), and infinite loops (timeouts). All findings are converted into permanent regression tests.
+
+### 3.5 API Input Hardening
+The library implements defense-in-depth against malicious or malformed inputs at the API boundary:
+
+*   **Signature Parsing:** The parser validates all numeric inputs (array sizes, vector widths). It checks for `ERANGE` and ensures values fit within `size_t`, rejecting inputs like `[99999999999999999999:int]` that would cause integer overflows during subsequent size calculations.
+*   **Alignment Limits:** The Manual API (`infix_type_create_packed_struct`) enforces a maximum alignment of **1MB**. This prevents attackers from supplying massive power-of-two alignments (e.g., `1 << 60`) that would cause internal alignment macros to wrap around zero, leading to heap corruption.
+*   **Recursion Depth:** The parser enforces a hard recursion limit (32 levels) to prevent stack overflow attacks via deeply nested signatures (e.g., `{{{{...}}}}`).
 
 ---
 

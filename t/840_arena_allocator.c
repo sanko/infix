@@ -44,7 +44,8 @@ TEST {
         }
         void * p1 = infix_arena_alloc(arena, 10, 1);
         ok(p1 != nullptr, "infix_arena_alloc returns a valid pointer");
-        (void)infix_arena_alloc(arena, 1, 1);
+        if (!infix_arena_alloc(arena, 1, 1))
+            fail("Allocation failed");
         uint64_t * aligned_ptr = infix_arena_alloc(arena, sizeof(uint64_t), _Alignof(uint64_t));
         ok(aligned_ptr != nullptr, "infix_arena_alloc for aligned type succeeds");
         ok(((uintptr_t)aligned_ptr % _Alignof(uint64_t)) == 0, "Pointer is correctly aligned");

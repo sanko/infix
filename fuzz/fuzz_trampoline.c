@@ -119,7 +119,8 @@ static void FuzzTest(fuzzer_input in) {
                     type_body_str, sizeof(type_body_str), base_type_pool[i], INFIX_DIALECT_SIGNATURE) ==
                 INFIX_SUCCESS) {
                 snprintf(def_buffer, sizeof(def_buffer), "@FuzzType%d = %s;", i, type_body_str);
-                (void)infix_register_types(registry, def_buffer);
+                if (infix_register_types(registry, def_buffer) != INFIX_SUCCESS) {
+                }
             }
         }
         else
@@ -175,7 +176,9 @@ static void FuzzTest(fuzzer_input in) {
 
             // 4. Exercise all trampoline creation functions.
             infix_forward_t * t1 = NULL;
-            (void)infix_forward_create_unbound_manual(&t1, return_type, arg_types, num_args, num_fixed_args);
+            if (infix_forward_create_unbound_manual(&t1, return_type, arg_types, num_args, num_fixed_args) !=
+                INFIX_SUCCESS) {
+            }
             infix_forward_destroy(t1);
 
             infix_forward_t * t2 = NULL;

@@ -115,7 +115,8 @@ int LLVMFuzzerTestOneInput(const uint8_t * data, size_t size) {
                 }
                 // This call should not crash, even if it runs out of system memory.
                 // It stresses the block-chaining logic of the arena.
-                (void)infix_register_types(registry, large_def_string);
+                if (infix_register_types(registry, large_def_string) != INFIX_SUCCESS) {
+                }
                 free(large_def_string);
             }
             infix_registry_destroy(registry);

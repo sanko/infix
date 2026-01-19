@@ -61,11 +61,14 @@ c23_nodiscard infix_library_t * infix_library_open(const char * path) {
     }
 #else
     // Use RTLD_LAZY for performance (resolve symbols only when they are first used).
+    // Use RTLD_LOCAL to keep symbols isolated within this handle. This prevents
+    // symbol pollution if multiple plugins link against different versions of the same
+    // dependency. Dependencies must be explicitly linked or loaded.
     // Use RTLD_GLOBAL to make symbols from this library available for resolution
     // by other libraries that might be loaded later. This is important for complex
     // dependency chains.
-    // On POSIX, passing NULL to dlopen returns a handle to the main executable, allowing searching of global symbols.
-    lib->handle = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
+    // On POSIX, passing NULL to dlopen returns a handle to the main executable.
+    lib->handle = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
 #endif
     if (lib->handle == nullptr) {
 #if defined(INFIX_OS_WINDOWS)

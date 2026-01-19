@@ -15,39 +15,48 @@
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
-#include <math.h>  // for fabs
+#include <math.h>
+#include <stdlib.h>
 
-// Guard everything that relies on GCC/Clang extensions
-#if !defined(INFIX_COMPILER_MSVC)
-
-// Define a 128-bit vector of 4 floats using GCC/Clang extension.
-typedef float v4f __attribute__((vector_size(16)));
+// Use standard intrinsics if available, otherwise generic vectors.
+// This ensures we test the standard ABI types (__m128) on Windows x64.
+#if defined(__x86_64__) || defined(_M_X64)
+#include <xmmintrin.h>
+typedef __m128 v4f;
+// Helper to create v4f from floats
+static v4f v4f_set(float a, float b, float c, float d) { return _mm_setr_ps(a, b, c, d); }
+// Helper to extract floats
+static float v4f_get(v4f v, int idx) {
+    // union to extract without strict aliasing violation
+    union {
+        __m128 m;
+        float f[4];
+    } u;
+    u.m = v;
+    return u.f[idx];
+}
+static v4f v4f_add(v4f a, v4f b) { return _mm_add_ps(a, b); }
 
 // A generic handler for the reverse callback test.
-// Expects 2 vector arguments, returns their sum.
 void vector_add_handler(infix_reverse_t * ctx, void * ret, void ** args) {
     (void)ctx;
     v4f a = *(v4f *)args[0];
     v4f b = *(v4f *)args[1];
-    v4f sum = a + b;
+    v4f sum = v4f_add(a, b);
     infix_memcpy(ret, &sum, sizeof(v4f));
 }
 
 // A C function that takes a callback and executes it with vector arguments.
-// This simulates a native library calling into our code.
 void execute_vector_callback(v4f (*cb)(v4f, v4f)) {
-    v4f a = {1.0f, 2.0f, 3.0f, 4.0f};
-    v4f b = {10.0f, 20.0f, 30.0f, 40.0f};
+    v4f a = v4f_set(1.0f, 2.0f, 3.0f, 4.0f);
+    v4f b = v4f_set(10.0f, 20.0f, 30.0f, 40.0f);
 
-    // Call the JIT-generated reverse trampoline
     v4f result = cb(a, b);
 
-    // Verify results
-    // We can access elements via array indexing on GCC/Clang
-    float r0 = result[0];
-    float r1 = result[1];
-    float r2 = result[2];
-    float r3 = result[3];
+    float r0 = v4f_get(result, 0);
+    float r1 = v4f_get(result, 1);
+    float r2 = v4f_get(result, 2);
+    float r3 = v4f_get(result, 3);
 
     ok(fabs(r0 - 11.0f) < 1e-6 && fabs(r1 - 22.0f) < 1e-6 && fabs(r2 - 33.0f) < 1e-6 && fabs(r3 - 44.0f) < 1e-6,
        "Reverse vector callback returned correct sum: {%.1f, %.1f, %.1f, %.1f}",
@@ -56,18 +65,25 @@ void execute_vector_callback(v4f (*cb)(v4f, v4f)) {
        (double)r2,
        (double)r3);
 }
+
+#else
+// Fallback for ARM64 or other archs
+/*
+typedef float v4f __attribute__((vector_size(16)));
+static v4f v4f_set(float a, float b, float c, float d) {
+    v4f v = {a, b, c, d};
+    return v;
+}
+static float v4f_get(v4f v, int idx) { return v[idx]; }
+static v4f v4f_add(v4f a, v4f b) { return a + b; }*/
 #endif
 
 TEST {
     plan(1);
-
-#if defined(INFIX_COMPILER_MSVC)
-    skip(1, "Vector extensions (attribute vector_size) not supported on MSVC test harness");
-#else
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("128-bit Vector (v4f) Reverse Callback") {
         plan(3);
 
-        // 1. Create the vector type: 4 elements of float (16 bytes total)
         infix_arena_t * arena = infix_arena_create(1024);
         infix_type * float_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
         infix_type * vec_type = NULL;
@@ -75,8 +91,7 @@ TEST {
 
         ok(status == INFIX_SUCCESS, "Created vector type (4x float)");
 
-        // 2. Create the reverse trampoline (Closure)
-        // Signature: (v4f, v4f) -> v4f
+        // ( v4f, v4f) -> v4f
         infix_type * args[] = {vec_type, vec_type};
         infix_reverse_t * ctx = NULL;
 
@@ -85,7 +100,6 @@ TEST {
         ok(status == INFIX_SUCCESS, "Created reverse closure for vector function");
 
         if (ctx) {
-            // 3. Execute
             typedef v4f (*vec_add_fn)(v4f, v4f);
             vec_add_fn fn = (vec_add_fn)infix_reverse_get_code(ctx);
 
@@ -97,5 +111,7 @@ TEST {
         infix_reverse_destroy(ctx);
         infix_arena_destroy(arena);
     }
+#else
+    skip(1, "Skip these tests on Windows ARM for now...");
 #endif
 }

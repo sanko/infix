@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.4] - 2026-01-17
 
-This release focuses on SIMD vector support and critical platform-specific stability fixes for macOS (both Intel and Apple Silicon) and improves the build system.
+This release focuses on SIMD vector support and critical platform-specific stability fixes for macOS (both Intel and Apple Silicon), and improving internal code hygiene.
 
 ### Added
 
@@ -15,11 +15,14 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 - Added `infix_registry_clone` to support deep-copying type registries for thread-safe interpreter cloning.
 - Added `t/404_simd_vectors.c`: new unit tests for 128-bit SIMD vectors.
   - Currently targeting reverse callbacks to verify correct register marshalling.
+- Introduced `INFIX_API` and `INFIX_INTERNAL` macros to explicitly control symbol visibility.
 
 ### Changed
 
 - The JIT memory allocator on Linux now uses `memfd_create` (on kernels 3.17+) to create anonymous file descriptors for dual-mapped W^X memory. This avoids creating visible temporary files in `/dev/shm` and improves hygiene and security. On FreeBSD, `SHM_ANON` is now used.
 - On dual-mapped platforms (Linux/BSD), the Read-Write view of the JIT memory is now **unmapped immediately** after code generation. This closes a security window where an attacker with a heap read/write primitive could potentially modify executable code by finding the stale RW pointer.
+- The library now builds with hidden symbol visibility by default on supported compilers (GCC/Clang). Only public API functions (`infix_*`) are exported. Internal functions (`_infix_*`) are now hidden, preventing symbol collisions and ABI leakage when `infix` is linked statically into a shared library.
+- `infix_library_open` now uses `RTLD_LOCAL` instead of `RTLD_GLOBAL` on POSIX systems. This prevents symbols from loaded libraries from polluting the global namespace and causing conflicts with other plugins or the host application.
 
 ### Fixed
 
@@ -34,6 +37,15 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 - Fixed floating-point corruption on Windows on ARM64. Reverse trampolines now force full 128-bit register saves for all floating-point arguments to ensure robust handling of volatile register states.
 - Fixed a logic error in the System V reverse argument classifier where vectors were defaulting to `INTEGER` class, causing the trampoline to look in `RDI`/`RSI` instead of `XMM` registers.
 - Fixed Clang coverage reporting by switching from LLVM-specific profiles to standard GCOV formats.
+- Fixed potential cache coherency issues on Windows x64. The library now unconditionally calls `FlushInstructionCache` after JIT compilation.
+- Hardened the signature parser against integer overflows when parsing array/vector sizes.
+- Capped the maximum alignment in `infix_type_create_packed_struct` to 1MB to prevent integer wrap-around bugs in layout calculation.
+- Fixed a buffer overread on macOS ARM64 where small signed integers were loaded using 32-bit `LDRSW`. Implemented `LDRSH` and `LDRSB`.
+- Updated the `INFIX_NODISCARD` macro logic in `infix.h`. It now prioritizes compiler-specific attributes (like `__attribute__((warn_unused_result))`) over C23 standard attributes on GCC/Clang when not in strict C23 mode. This fixes syntax errors when compiling with C11/C17 standards.
+- Fixed `warn_unused_result` warnings across the test suite and fuzzing helpers. Previous tests cast ignored return values to `(void)`, but GCC ignores this cast for functions marked with `warn_unused_result`. All tests now properly check `infix_status` return codes.
+- Fixed a "dangling else" warning in `fuzz/fuzz_helpers.c` by adding explicit braces.
+- Cleaned up `infix_internals.h` by removing the obsolete declaration for `_infix_forward_create_internal`.
+- Made `_infix_forward_create_impl` and `_infix_forward_create_direct_impl` static in `trampoline.c`, as they are only used within that translation unit in the unity build.
 
 ## [0.1.3] - 2025-12-19
 

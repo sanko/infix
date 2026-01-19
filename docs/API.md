@@ -122,6 +122,13 @@ infix_status infix_reverse_create_closure(
 );
 ```
 
+### Trampoline Destruction
+
+All trampolines created by `infix` allocate executable memory and internal metadata that must be explicitly freed when no longer needed.
+
+* `void infix_forward_destroy(infix_forward_t* trampoline)`: Destroys a forward trampoline (bound or unbound) and frees its private arena.
+* `void infix_reverse_destroy(infix_reverse_t* context)`: Destroys a reverse trampoline, unmaps its read only context, and frees its private arena.
+
 ---
 
 ## 2. Error Handling API

@@ -27,11 +27,11 @@ add_rules("mode.valgrind", "mode.coverage", "mode.release","mode.check")
 on_config(function (target)
     -- Only apply C/C++ compiler flags to buildable targets, not script targets.
     if target:has_tool("c") or target:has_tool("cxx") then
-        if target:toolchain("msvc") then
+         if target:toolchain("msvc") then
             target:add("cxflags", "/experimental:c11atomics", "/W3")
             target:add("defines", "_CRT_SECURE_NO_WARNINGS")
         else
-            target:add("cxflags", "-Wall", "-Wextra")
+            target:add("cxflags", "-Wall", "-Wextra", "-fvisibility=hidden")
             target:add("links", "m")
             if not target:is_plat("windows") then
                  target:add("cxflags", "-pthread")
