@@ -27,6 +27,13 @@
  *   to serialize the resulting type object back into a string. It then verifies that
  *   the output string matches the canonical representation of the input, ensuring that
  *   parsing and printing are inverse operations.
+ *
+ * - **Mangling:** This test verifies that `infix` can correctly generate C++ mangled names
+ *   for both Itanium (GCC/Clang) and MSVC ABIs. It covers:
+ *   - Primitive types (int, float, void, etc.)
+ *   - Pointers
+ *   - Named types (Structs)
+ *   - Function signatures
  */
 #define DBLTAP_IMPLEMENTATION
 #include "common/compat_c23.h"
@@ -110,8 +117,54 @@ static void test_print_roundtrip(const char * signature, const char * expected_o
         infix_arena_destroy(arena);
     }
 }
+
+#define CHECK_MANGLING(signature, dialect, expected_output)                                   \
+    do {                                                                                      \
+        infix_type * type = NULL;                                                             \
+        infix_arena_t * arena = NULL;                                                         \
+        if (infix_type_from_signature(&type, &arena, signature, registry) == INFIX_SUCCESS) { \
+            char buffer[256];                                                                 \
+            if (infix_type_print(buffer, sizeof(buffer), type, dialect) == INFIX_SUCCESS) {   \
+                ok(strcmp(buffer, expected_output) == 0,                                      \
+                   "Mangling '%s' -> '%s' (Expected: '%s')",                                  \
+                   signature,                                                                 \
+                   buffer,                                                                    \
+                   expected_output);                                                          \
+            }                                                                                 \
+            else {                                                                            \
+                fail("Print failed for '%s'", signature);                                     \
+            }                                                                                 \
+        }                                                                                     \
+        else {                                                                                \
+            fail("Parse failed for '%s'", signature);                                         \
+        }                                                                                     \
+        infix_arena_destroy(arena);                                                           \
+    } while (0)
+
+#define CHECK_FUNC_MANGLING(sig, name, dialect, expected)                                                         \
+    do {                                                                                                          \
+        infix_arena_t * arena = NULL;                                                                             \
+        infix_type * ret_type = NULL;                                                                             \
+        infix_function_argument * args = NULL;                                                                    \
+        size_t n_args, n_fixed;                                                                                   \
+        if (infix_signature_parse(sig, &arena, &ret_type, &args, &n_args, &n_fixed, registry) == INFIX_SUCCESS) { \
+            char buffer[256];                                                                                     \
+            if (infix_function_print(buffer, sizeof(buffer), name, ret_type, args, n_args, n_fixed, dialect) ==   \
+                INFIX_SUCCESS) {                                                                                  \
+                ok(strcmp(buffer, expected) == 0, "Func Mangling '%s' -> '%s'", name, buffer);                    \
+            }                                                                                                     \
+            else {                                                                                                \
+                fail("Func print failed");                                                                        \
+            }                                                                                                     \
+        }                                                                                                         \
+        else {                                                                                                    \
+            fail("Func parse failed");                                                                            \
+        }                                                                                                         \
+        infix_arena_destroy(arena);                                                                               \
+    } while (0)
+
 TEST {
-    plan(7);
+    plan(8);  // 7 existing + 1 new Mangling subtest
     subtest("Valid Single Types") {
         plan(15);
         test_type_ok("void", INFIX_TYPE_VOID, "void");
@@ -342,5 +395,79 @@ TEST {
         test_print_roundtrip("{id:sint32,score:double}", NULL);
         test_print_roundtrip("<ival:sint32,fval:float>", NULL);
         test_print_roundtrip("(count:sint32;data:*void)->void", NULL);
+    }
+
+    subtest("Mangling") {
+        plan(7);
+
+        infix_registry_t * registry = infix_registry_create();
+        // Check return value to satisfy c23_nodiscard
+        if (!ok(infix_register_types(registry,
+                                     "@MyStruct = {a:int};"
+                                     "@MyUnion = <a:int>;"
+                                     "@MyNS::MyClass = {x:int};") == INFIX_SUCCESS,
+                "Setup: Registered types for mangling")) {
+            // If setup fails, remaining tests will likely fail too, but we proceed to report them.
+        }
+
+        subtest("Itanium C++ Mangling (Primitives & Pointers)") {
+            plan(6);
+            CHECK_MANGLING("void", INFIX_DIALECT_ITANIUM_MANGLING, "v");
+            CHECK_MANGLING("int", INFIX_DIALECT_ITANIUM_MANGLING, "i");
+            CHECK_MANGLING("double", INFIX_DIALECT_ITANIUM_MANGLING, "d");
+            CHECK_MANGLING("*int", INFIX_DIALECT_ITANIUM_MANGLING, "Pi");
+            CHECK_MANGLING("**char", INFIX_DIALECT_ITANIUM_MANGLING, "PPa");  // signed char = a
+            CHECK_MANGLING("bool", INFIX_DIALECT_ITANIUM_MANGLING, "b");
+        }
+
+        subtest("MSVC C++ Mangling (Primitives & Pointers)") {
+            plan(6);
+            CHECK_MANGLING("void", INFIX_DIALECT_MSVC_MANGLING, "X");
+            CHECK_MANGLING("int", INFIX_DIALECT_MSVC_MANGLING, "H");
+            CHECK_MANGLING("double", INFIX_DIALECT_MSVC_MANGLING, "N");
+            CHECK_MANGLING("*int", INFIX_DIALECT_MSVC_MANGLING, "PEAH");
+            CHECK_MANGLING("**char", INFIX_DIALECT_MSVC_MANGLING, "PEAPEAC");  // signed char = C
+            CHECK_MANGLING("bool", INFIX_DIALECT_MSVC_MANGLING, "_N");
+        }
+
+        subtest("Named Types (Structs)") {
+            plan(3);
+            CHECK_MANGLING("@MyStruct", INFIX_DIALECT_ITANIUM_MANGLING, "8MyStruct");
+            CHECK_MANGLING("@MyStruct", INFIX_DIALECT_MSVC_MANGLING, "UMyStruct@@");
+            CHECK_MANGLING("@MyUnion", INFIX_DIALECT_MSVC_MANGLING, "TMyUnion@@");
+        }
+
+        subtest("Namespaced Types") {
+            plan(2);
+            // Itanium: N4MyNS7MyClassE
+            CHECK_MANGLING("@MyNS::MyClass", INFIX_DIALECT_ITANIUM_MANGLING, "N4MyNS7MyClassE");
+            // MSVC: UMyClass@MyNS@@
+            CHECK_MANGLING("@MyNS::MyClass", INFIX_DIALECT_MSVC_MANGLING, "UMyClass@MyNS@@");
+        }
+
+        subtest("Full Function Signatures") {
+            plan(2);
+
+            // void my_func(int, double)
+            // Itanium: _Z7my_funcid
+            CHECK_FUNC_MANGLING("(int, double)->void", "my_func", INFIX_DIALECT_ITANIUM_MANGLING, "_Z7my_funcid");
+
+            // MSVC: ?my_func@@YAXHN@Z
+            // Y = Function, A = __cdecl, X = void ret, H = int arg, N = double arg, @Z = End
+            CHECK_FUNC_MANGLING("(int, double)->void", "my_func", INFIX_DIALECT_MSVC_MANGLING, "?my_func@@YAXHN@Z");
+        }
+
+        subtest("Namespaced Functions") {
+            plan(2);
+            // Itanium: _ZN5Outer5Inner4FuncEid
+            CHECK_FUNC_MANGLING(
+                "(int, double)->void", "Outer::Inner::Func", INFIX_DIALECT_ITANIUM_MANGLING, "_ZN5Outer5Inner4FuncEid");
+
+            // MSVC: ?Func@Inner@Outer@@YAXHN@Z
+            CHECK_FUNC_MANGLING(
+                "(int, double)->void", "Outer::Inner::Func", INFIX_DIALECT_MSVC_MANGLING, "?Func@Inner@Outer@@YAXHN@Z");
+        }
+
+        infix_registry_destroy(registry);
     }
 }

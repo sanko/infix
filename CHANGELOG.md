@@ -46,6 +46,7 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 - Fixed a "dangling else" warning in `fuzz/fuzz_helpers.c` by adding explicit braces.
 - Cleaned up `infix_internals.h` by removing the obsolete declaration for `_infix_forward_create_internal`.
 - Made `_infix_forward_create_impl` and `_infix_forward_create_direct_impl` static in `trampoline.c`, as they are only used within that translation unit in the unity build.
+- Early attempt to support Itanium and MSVC mangling in signature stringification. This is mostly for debugging the type system quickly.
 
 ## [0.1.3] - 2025-12-19
 
