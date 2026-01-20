@@ -46,7 +46,12 @@ This release focuses on SIMD vector support and critical platform-specific stabi
 - Fixed a "dangling else" warning in `fuzz/fuzz_helpers.c` by adding explicit braces.
 - Cleaned up `infix_internals.h` by removing the obsolete declaration for `_infix_forward_create_internal`.
 - Made `_infix_forward_create_impl` and `_infix_forward_create_direct_impl` static in `trampoline.c`, as they are only used within that translation unit in the unity build.
-- Early attempt to support Itanium and MSVC mangling in signature stringification. This is mostly for debugging the type system quickly.
+- Early attempt to support C++ Itanium (`INFIX_DIALECT_ITANIUM_MANGLING`) and MSVC (`INFIX_DIALECT_MSVC_MANGLING`) mangling in signature stringification. This is mostly for debugging the type system quickly.
+  - Supports deeply nested namespaces and scopes (`@Outer::Inner::MyClass`).
+  - MSVC mangling correctly handles the reversed-order namespace requirements and special type prefixes (`U` for structs, `T` for unions).
+- Added native support for Apple's Hardened Runtime security policy.
+  - The JIT engine now utilizes `MAP_JIT` when the `com.apple.security.cs.allow-jit` entitlement is detected.
+  - Implemented thread-local permission toggling via `pthread_jit_write_protect_np` to maintain W^X compliance.
 
 ## [0.1.3] - 2025-12-19
 

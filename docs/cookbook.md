@@ -838,6 +838,21 @@ infix_forward_get_code(t_getval)(&result, (void*[]){ &obj });
 
 > Full example available in [`Ch05_CppMangledNames.c`](/eg/cookbook/Ch05_CppMangledNames.c) and library source in [`libs/MyClass.cpp`](/eg/cookbook/libs/MyClass.cpp).
 
+Bonus tip: You could do things backwards and try something like...
+
+```c
+// Describe the signature in infix format
+const char* sig = "(*void, int) -> void"; // MyClass::MyClass(int)
+
+// Generate the mangled name for the target ABI (e.g., Itanium)
+char mangled[256];
+infix_function_print(mangled, sizeof(mangled), "MyClass::MyClass", ret, args, n, nf, INFIX_DIALECT_ITANIUM_MANGLING);
+
+// Look up and call
+void* p_ctor = infix_library_get_symbol(lib, mangled);
+infix_forward_create(&t_ctor, sig, p_ctor, NULL);
+```
+
 ### Recipe: Interfacing with C++ Templates
 
 **Problem**: How do you call a C++ function template from C?

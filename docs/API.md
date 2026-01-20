@@ -153,8 +153,10 @@ This function returns a copy of an `infix_error_details_t` struct, which contain
 ### Common Error Categories
 
 #### Parser Errors (`INFIX_CATEGORY_PARSER`)
+
 **What it means:** There is a syntax error in a signature string you provided.
-**How to handle:** This is the most common type of error. You can use the `position` and `message` from the error details to provide a rich diagnostic to the user, much like a compiler would.
+
+**But... what does it mean‽:** This is the most common type of error. You can use the `position` and `message` from the error details to provide a rich diagnostic to the user, much like a compiler would.
 
 ```c
 // Example: Handling a parser error
@@ -170,21 +172,27 @@ if (status != INFIX_SUCCESS) {
 ```
 
 #### Allocation Errors (`INFIX_CATEGORY_ALLOCATION`)
+
 **What it means:** The library failed to allocate memory, either from the standard heap (`malloc`) or from the OS for executable JIT code (`mmap`/`VirtualAlloc`). This usually means the system is out of memory.
-**How to handle:** There is often little you can do to recover. The best course of action is to log the error and terminate the process gracefully.
+
+**How to handle this:** There is often little you can do to recover. The best course of action is to log the error and terminate the process gracefully.
 
 #### ABI & Layout Errors (`INFIX_CATEGORY_ABI`)
+
 **What it means:** This is a more subtle category of error related to the function's structure.
 *   You used a named type (e.g., `@Point`) in a signature but didn't provide a registry, or the name wasn't found.
 *   You tried to create an invalid type, like a struct containing a `void` member.
 *   A type was too large or complex for the target architecture's ABI to handle (e.g., a struct larger than the maximum safe stack allocation size).
-**How to handle:** Double-check your signature strings and type definitions in the registry. Ensure you are passing the correct registry handle to the creation function.
+
+**How to handle this:** Double-check your signature strings and type definitions in the registry. Ensure you are passing the correct registry handle to the creation function.
 
 #### General & Library Errors
+
 **What it means:** This is a catch-all for other issues.
 *   You passed an invalid argument to an API function (e.g., `NULL` where a valid pointer was required).
 *   When using the dynamic library API, the requested library (`.so`, `.dll`) could not be found or a symbol lookup failed.
-**How to handle:** For library errors, ensure the shared library file is in the expected location (e.g., the current directory, or a system path). For other errors, review the arguments you are passing to the `infix` function call.
+
+**How to handle this:** For library errors, ensure the shared library file is in the expected location (e.g., the current directory, or a system path). For other errors, review the arguments you are passing to the `infix` function call.
 
 ---
 
@@ -227,7 +235,10 @@ These functions work for both `infix_forward_t*` and `infix_reverse_t*` handles.
     *   `.name`: The name of the field as a `const char*`.
     *   `.type`: The `infix_type*` of the field.
     *   `.offset`: The field's byte offset from the start of the struct.
-*   `infix_status infix_type_print(...)`: Serializes an `infix_type` back into a human-readable string.
+*   `infix_status infix_type_print(char* buffer, size_t buffer_size, const infix_type* type, infix_print_dialect_t dialect)`: Serializes an `infix_type` back into a human-readable string or a mangled symbol. Supported dialects:
+    *   `INFIX_DIALECT_SIGNATURE`: Standard `infix` format.
+    *   `INFIX_DIALECT_ITANIUM_MANGLING`: C++ mangling for GCC/Clang/Linux/macOS.
+    *   `INFIX_DIALECT_MSVC_MANGLING`: C++ mangling for Visual Studio.
 
 ---
 

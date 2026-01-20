@@ -192,7 +192,7 @@ static int create_anonymous_file(void) {
     // If it fails (e.g. old kernel, ENOSYS), fall through to shm_open.
 #endif
 
-#if (defined(__FreeBSD__) || defined(__DragonFly__)) && defined(SHM_ANON)
+#if (defined(__FreeBSD__)) && defined(SHM_ANON)
     // Strategy 2: SHM_ANON (FreeBSD / DragonFly)
     int bsd_fd = shm_open(SHM_ANON, O_RDWR | O_CREAT | O_EXCL, 0600);
     if (bsd_fd >= 0)

@@ -58,7 +58,10 @@ The process of creating a forward trampoline, from signature to executable code,
 3.  **Code Generation:** The engine calls the ABI spec's code generation functions (`generate_*_prologue`, etc.) in sequence, appending machine code to a buffer.
 4.  **Memory Finalization:** The generated code is copied to a new page of W^X-compliant executable memory.
   *   **W^X Enforcement:** On dual-map systems, the Read-Write view used for copying is immediately unmapped. On single-map systems, permissions are flipped to Read-Execute.
-  *   **Cache Coherency:** On architectures like AArch64 (and Windows systems running emulators), the Instruction Cache (I-Cache) and Data Cache (D-Cache) may not be coherent. We explicitly flush the D-Cache and invalidate the I-Cache range using `__builtin___clear_cache` (GCC/Clang) or `FlushInstructionCache` (Windows) to ensure the CPU executes the newly generated instructions correctly.
+  *   **Cache Coherency:** On architectures like AArch64, the Instruction Cache (I-Cache) and Data Cache (D-Cache) are not coherent. We explicitly flush the D-Cache and invalidate the I-Cache to ensure the CPU executes the newly generated instructions correctly.
+      - On macOS, we utilize the system-provided `sys_icache_invalidate` API (which handles the complexities of both Intel and Apple Silicon)
+      - On other POSIX systems, we use `__builtin___clear_cache`.
+      - On Windows, we use `FlushInstructionCache`
 5.  **Handle Creation:** A final `infix_forward_t` handle is allocated, containing its own private arena into which a deep copy of the type graph is made, making the handle a safe, self-contained object.
 
 ```mermaid
