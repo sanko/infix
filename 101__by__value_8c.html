@@ -113,7 +113,8 @@ $(document).ready(function(){initNavTree('101__by__value_8c.html',''); initResiz
 
 <p>Unit test for passing and returning aggregates and vectors by value.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="compat__c23_8h_source.html">common/compat_c23.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -122,7 +123,7 @@ $(document).ready(function(){initNavTree('101__by__value_8c.html',''); initResiz
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 101_by_value.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="101__by__value_8c__incl.svg" width="100%" height="547"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="101__by__value_8c__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -151,6 +152,10 @@ Functions</h2></td></tr>
 <tr class="memitem:aa1e0119956fd778dccef1e895d402ec4" id="r_aa1e0119956fd778dccef1e895d402ec4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#aa1e0119956fd778dccef1e895d402ec4">process_char_array_param</a> (char s[20])</td></tr>
 <tr class="memdesc:aa1e0119956fd778dccef1e895d402ec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A C function that receives a char array parameter.  <br /></td></tr>
 <tr class="separator:aa1e0119956fd778dccef1e895d402ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2615e7a9e5a7dae2fd945533a0535293" id="r_a2615e7a9e5a7dae2fd945533a0535293"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a2615e7a9e5a7dae2fd945533a0535293">alloc_aligned</a> (size_t size, size_t alignment)</td></tr>
+<tr class="separator:a2615e7a9e5a7dae2fd945533a0535293"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60f438e040391128e52edb426bf32c0e" id="r_a60f438e040391128e52edb426bf32c0e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#a60f438e040391128e52edb426bf32c0e">free_aligned</a> (void *p)</td></tr>
+<tr class="separator:a60f438e040391128e52edb426bf32c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcb522a8c16222b5a7b655de5cac9e78" id="r_afcb522a8c16222b5a7b655de5cac9e78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#afcb522a8c16222b5a7b655de5cac9e78">subtest</a> (&quot;Simple struct (<a class="el" href="structPoint.html">Point</a>) passed and returned by value&quot;)</td></tr>
 <tr class="separator:afcb522a8c16222b5a7b655de5cac9e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad17e967090fc52ff46e3f39b56313de3" id="r_ad17e967090fc52ff46e3f39b56313de3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html#ad17e967090fc52ff46e3f39b56313de3">subtest</a> (&quot;ABI Specific: System V x64 mixed-register struct&quot;)</td></tr>
@@ -203,6 +208,68 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a2615e7a9e5a7dae2fd945533a0535293" name="a2615e7a9e5a7dae2fd945533a0535293"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2615e7a9e5a7dae2fd945533a0535293">&#9670;&#160;</a></span>alloc_aligned()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void * alloc_aligned </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>alignment</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60f438e040391128e52edb426bf32c0e" name="a60f438e040391128e52edb426bf32c0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60f438e040391128e52edb426bf32c0e">&#9670;&#160;</a></span>free_aligned()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void free_aligned </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad9cbd602bb911c0a54accbced245d15f" name="ad9cbd602bb911c0a54accbced245d15f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad9cbd602bb911c0a54accbced245d15f">&#9670;&#160;</a></span>process_char20_struct()</h2>
 

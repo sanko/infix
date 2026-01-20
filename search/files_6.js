@@ -10,5 +10,6 @@ var searchData=
   ['850_5fregression_5fcases_2ec_7',['850_regression_cases.c',['../850__regression__cases_8c.html',1,'']]],
   ['851_5flifecycle_5fregression_2ec_8',['851_lifecycle_regression.c',['../851__lifecycle__regression_8c.html',1,'']]],
   ['860_5ferror_5fhandling_2ec_9',['860_error_handling.c',['../860__error__handling_8c.html',1,'']]],
-  ['861_5ferror_5freporting_2ec_10',['861_error_reporting.c',['../861__error__reporting_8c.html',1,'']]]
+  ['861_5ferror_5freporting_2ec_10',['861_error_reporting.c',['../861__error__reporting_8c.html',1,'']]],
+  ['880_5fexports_2ec_11',['880_exports.c',['../880__exports_8c.html',1,'']]]
 ];

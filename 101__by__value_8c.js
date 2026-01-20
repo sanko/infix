@@ -2,6 +2,8 @@ var 101__by__value_8c =
 [
     [ "Char20Struct", "structChar20Struct.html", "structChar20Struct" ],
     [ "DBLTAP_IMPLEMENTATION", "101__by__value_8c.html#a1655e4adfda95660042d34619eb61845", null ],
+    [ "alloc_aligned", "101__by__value_8c.html#a2615e7a9e5a7dae2fd945533a0535293", null ],
+    [ "free_aligned", "101__by__value_8c.html#a60f438e040391128e52edb426bf32c0e", null ],
     [ "process_char20_struct", "101__by__value_8c.html#ad9cbd602bb911c0a54accbced245d15f", null ],
     [ "process_char_array_param", "101__by__value_8c.html#aa1e0119956fd778dccef1e895d402ec4", null ],
     [ "process_mixed_struct", "101__by__value_8c.html#a62b10b0c8a49ea3416056aa70b146deb", null ],

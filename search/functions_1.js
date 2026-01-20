@@ -5,5 +5,6 @@ var searchData=
   ['add_5ffor_5fbenchmark_2',['add_for_benchmark',['../901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3',1,'901_call_overhead.c']]],
   ['add_5fints_3',['add_ints',['../002__simple__calls_8c.html#a9af107eb75c4b1a86c6588d00a4be76c',1,'002_simple_calls.c']]],
   ['add_5fpoints_4',['add_points',['../501__direct__marshalling_8c.html#abf805158fc0836021372203d9c31f043',1,'501_direct_marshalling.c']]],
-  ['average_5fseries_5',['average_series',['../Ch02__FlexibleArrayMembers_8c.html#a841c71d1018eedd92bd2c45890c0ffb6',1,'Ch02_FlexibleArrayMembers.c']]]
+  ['alloc_5faligned_5',['alloc_aligned',['../101__by__value_8c.html#a2615e7a9e5a7dae2fd945533a0535293',1,'101_by_value.c']]],
+  ['average_5fseries_6',['average_series',['../Ch02__FlexibleArrayMembers_8c.html#a841c71d1018eedd92bd2c45890c0ffb6',1,'Ch02_FlexibleArrayMembers.c']]]
 ];

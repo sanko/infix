@@ -15,6 +15,6 @@ var group__direct__marshalling__api =
     [ "infix_direct_cif_func", "group__direct__marshalling__api.html#ga48bf70b1899cacc0ee8951abb33b7a29", null ],
     [ "infix_marshaller_fn", "group__direct__marshalling__api.html#ga8e3909a7152082f98aee927c927f961b", null ],
     [ "infix_writeback_fn", "group__direct__marshalling__api.html#gaff0d10703f402ae5b9b781d624837231", null ],
-    [ "infix_forward_create_direct", "group__direct__marshalling__api.html#ga2618eb29271aceb0df6aea41cbde1541", null ],
-    [ "infix_forward_get_direct_code", "group__direct__marshalling__api.html#gac9f07b550fbe492d5948833561a5e9d7", null ]
+    [ "infix_forward_create_direct", "group__direct__marshalling__api.html#gab17fd59a6911f44237f38661a630ebfc", null ],
+    [ "infix_forward_get_direct_code", "group__direct__marshalling__api.html#ga70cec7a127ebff96d48759b41be824f7", null ]
 ];

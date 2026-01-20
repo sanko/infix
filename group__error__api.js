@@ -40,5 +40,5 @@ var group__error__api =
       [ "INFIX_CODE_SYMBOL_NOT_FOUND", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a9c8699662d2ee3ae2f8375737973efd6", null ],
       [ "INFIX_CODE_LIBRARY_LOAD_FAILED", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ab361be082168c39d3c673a344b86e4b7", null ]
     ] ],
-    [ "infix_get_last_error", "group__error__api.html#gaeee66e7ba26a8f8dea16d441200d147b", null ]
+    [ "infix_get_last_error", "group__error__api.html#ga21384ed8be53830a542c2864b0c1a4ed", null ]
 ];

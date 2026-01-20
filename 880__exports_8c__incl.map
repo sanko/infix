@@ -1,0 +1,20 @@
+<map id="t/880_exports.c" name="t/880_exports.c">
+<area shape="rect" id="Node000001" title="Unit test for the dynamic library loading and symbol access API." alt="" coords="217,5,339,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="5,79,180,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,33,136,76,135,71,247,28"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="151,152,245,177"/>
+<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="274,32,247,80,213,141,209,138,242,77,269,29"/>
+<area shape="rect" id="Node000007" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="256,79,423,104"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="290,29,322,66,318,70,286,33"/>
+<area shape="rect" id="Node000008" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="447,79,616,104"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="319,28,478,72,476,77,318,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,102,171,142,168,147,108,106"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="123,225,206,251"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="101,103,155,212,150,214,96,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="25,225,99,251"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="93,105,70,213,65,212,88,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="195,179,178,214,173,212,190,177"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="177,180,97,221,95,217,175,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="231,225,301,251"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="211,176,247,213,243,217,207,180"/>
+</map>

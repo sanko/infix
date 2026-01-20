@@ -10,6 +10,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "007_type_registry.c", "007__type__registry_8c.html", "007__type__registry_8c" ],
     [ "008_registry_introspection.c", "008__registry__introspection_8c.html", "008__registry__introspection_8c" ],
     [ "009_bitfields_fam.c", "009__bitfields__fam_8c.html", "009__bitfields__fam_8c" ],
+    [ "010_registry_scaling.c", "010__registry__scaling_8c.html", "010__registry__scaling_8c" ],
     [ "101_by_value.c", "101__by__value_8c.html", "101__by__value_8c" ],
     [ "102_by_reference.c", "102__by__reference_8c.html", "102__by__reference_8c" ],
     [ "103_unions.c", "103__unions_8c.html", "103__unions_8c" ],
@@ -24,6 +25,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "401_large_stack.c", "401__large__stack_8c.html", "401__large__stack_8c" ],
     [ "402_variadic_functions.c", "402__variadic__functions_8c.html", "402__variadic__functions_8c" ],
     [ "403_special_types.c", "403__special__types_8c.html", "403__special__types_8c" ],
+    [ "404_simd_vectors.c", "404__simd__vectors_8c.html", "404__simd__vectors_8c" ],
     [ "501_direct_marshalling.c", "501__direct__marshalling_8c.html", "501__direct__marshalling_8c" ],
     [ "810_memory_stress.c", "810__memory__stress_8c.html", "810__memory__stress_8c" ],
     [ "811_fault_injection.c", "811__fault__injection_8c.html", "811__fault__injection_8c" ],
@@ -36,6 +38,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "851_lifecycle_regression.c", "851__lifecycle__regression_8c.html", "851__lifecycle__regression_8c" ],
     [ "860_error_handling.c", "860__error__handling_8c.html", "860__error__handling_8c" ],
     [ "861_error_reporting.c", "861__error__reporting_8c.html", "861__error__reporting_8c" ],
+    [ "880_exports.c", "880__exports_8c.html", "880__exports_8c" ],
     [ "901_call_overhead.c", "901__call__overhead_8c.html", "901__call__overhead_8c" ],
     [ "903_generation_benchmark.c", "903__generation__benchmark_8c.html", "903__generation__benchmark_8c" ]
 ];

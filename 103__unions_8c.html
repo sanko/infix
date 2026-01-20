@@ -112,7 +112,8 @@ $(document).ready(function(){initNavTree('103__unions_8c.html',''); initResizabl
 
 <p>Unit test for passing and returning unions by value.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="compat__c23_8h_source.html">common/compat_c23.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
@@ -120,7 +121,7 @@ $(document).ready(function(){initNavTree('103__unions_8c.html',''); initResizabl
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 103_unions.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="103__unions_8c__incl.svg" width="630" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="103__unions_8c__incl.svg" width="100%" height="492"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -152,13 +153,13 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a67c1cbb549407d754fe1894f74b40c3e" id="r_a67c1cbb549407d754fe1894f74b40c3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a67c1cbb549407d754fe1894f74b40c3e">TEST</a></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb7c3f5e091eb15b03c0a427c1a3ad1e" id="r_afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = <a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a>(4096)</td></tr>
+<tr class="memitem:afb7c3f5e091eb15b03c0a427c1a3ad1e" id="r_afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = <a class="el" href="group__memory__management.html#gab81d4a611a176166ec13c31fb51c55cb">infix_arena_create</a>(4096)</td></tr>
 <tr class="separator:afb7c3f5e091eb15b03c0a427c1a3ad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7fe37bb07add2b1981130a458016adb" id="r_ab7fe37bb07add2b1981130a458016adb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga52e1a21df4188be7b30f8fd1cdcd68e8">infix_struct_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a></td></tr>
 <tr class="separator:ab7fe37bb07add2b1981130a458016adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a009bce9a7a96f39a5bc9ba080de9aa61" id="r_a009bce9a7a96f39a5bc9ba080de9aa61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a> = <a class="el" href="compat__c23_8h.html#ab979d9d4b4923f7c54d6caa6e1a61936">nullptr</a></td></tr>
 <tr class="separator:a009bce9a7a96f39a5bc9ba080de9aa61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td></tr>
+<tr class="memitem:a433468dce2d10c4f34424732ef15ebdd" id="r_a433468dce2d10c4f34424732ef15ebdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="el" href="group__type__system.html#ga4cfe91be517ae465427d68d611ab5b23">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td></tr>
 <tr class="separator:a433468dce2d10c4f34424732ef15ebdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -326,7 +327,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a>* arena = <a class="el" href="group__memory__management.html#gae39ca61ea3637aee7e87c1b41188c733">infix_arena_create</a>(4096)</td>
+          <td class="memname"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a>* arena = <a class="el" href="group__memory__management.html#gab81d4a611a176166ec13c31fb51c55cb">infix_arena_create</a>(4096)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -345,10 +346,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">        <a class="code hl_function" href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a>(<a class="code hl_variable" href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
-<div class="ttc" id="a103__unions_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 103_unions.c:51</div></div>
-<div class="ttc" id="agroup__memory__management_html_gabb32fed25010a3111812c8dfacd4cf40"><div class="ttname"><a href="group__memory__management.html#gabb32fed25010a3111812c8dfacd4cf40">infix_arena_alloc</a></div><div class="ttdeci">c23_nodiscard void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from an arena.</div><div class="ttdef"><b>Definition</b> arena.c:117</div></div>
-<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of a C struct or union.</div><div class="ttdef"><b>Definition</b> infix.h:254</div></div>
+<div class="line">        <a class="code hl_function" href="group__memory__management.html#ga0f117745422c56323f3053380d3f08cd">infix_arena_alloc</a>(<a class="code hl_variable" href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>) * 2, _Alignof(<a class="code hl_struct" href="structinfix__struct__member__t.html">infix_struct_member</a>))</div>
+<div class="ttc" id="a103__unions_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="103__unions_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 103_unions.c:53</div></div>
+<div class="ttc" id="agroup__memory__management_html_ga0f117745422c56323f3053380d3f08cd"><div class="ttname"><a href="group__memory__management.html#ga0f117745422c56323f3053380d3f08cd">infix_arena_alloc</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD void * infix_arena_alloc(infix_arena_t *, size_t, size_t)</div><div class="ttdoc">Allocates a block of memory from an arena.</div><div class="ttdef"><b>Definition</b> arena.c:117</div></div>
+<div class="ttc" id="astructinfix__struct__member__t_html"><div class="ttname"><a href="structinfix__struct__member__t.html">infix_struct_member_t</a></div><div class="ttdoc">Describes a single member of a C struct or union.</div><div class="ttdef"><b>Definition</b> infix.h:333</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -359,7 +360,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status = <a class="el" href="group__type__system.html#ga4027aa78465a98b270d1d6e54e7c5e90">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td>
+          <td class="memname"><a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> status = <a class="el" href="group__type__system.html#ga4cfe91be517ae465427d68d611ab5b23">infix_type_create_union</a>(<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="el" href="103__unions_8c.html#a009bce9a7a96f39a5bc9ba080de9aa61">union_type</a>, <a class="el" href="103__unions_8c.html#ab7fe37bb07add2b1981130a458016adb">members</a>, 2)</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -1,14 +1,22 @@
 <map id="src/core/platform.c" name="src/core/platform.c">
-<area shape="rect" id="Node000001" title="Implements runtime detection of CPU and OS features." alt="" coords="88,5,232,31"/>
-<area shape="rect" id="Node000002" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="85,79,235,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,31,163,65,157,65,157,31"/>
-<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="73,152,247,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="163,104,163,138,157,138,157,104"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,88,251"/>
-<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="127,107,92,125,76,138,62,153,51,182,48,212,43,211,46,181,58,151,72,134,89,121,125,102"/>
-<area shape="rect" id="Node000006" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="271,152,441,177"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="192,102,312,145,310,150,191,107"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="143,180,78,220,75,216,140,175"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="123,225,197,251"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="163,178,163,212,157,212,157,178"/>
+<area shape="rect" id="Node000001" title="Implements runtime detection of CPU and OS features." alt="" coords="359,5,503,31"/>
+<area shape="rect" id="Node000002" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="133,79,283,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="396,33,258,77,256,72,394,28"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="346,225,441,251"/>
+<area shape="poly" id="edge11_Node000001_Node000004" title=" " alt="" coords="431,31,407,178,401,212,395,211,401,177,426,30"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="442,299,513,324"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="435,30,476,285,471,286,430,31"/>
+<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="218,152,393,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="225,102,280,141,277,146,222,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="216,299,299,324"/>
+<area shape="poly" id="edge10_Node000002_Node000005" title=" " alt="" coords="133,101,82,109,37,124,21,134,11,146,8,159,14,176,32,200,53,221,102,255,155,279,203,295,202,300,153,284,99,260,49,225,28,203,10,179,3,160,6,144,17,130,35,119,81,104,132,95"/>
+<area shape="rect" id="Node000008" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="25,152,194,177"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="194,106,138,146,135,142,191,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="321,175,370,214,367,219,318,179"/>
+<area shape="poly" id="edge7_Node000003_Node000005" title=" " alt="" coords="304,179,268,286,263,285,299,177"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="336,299,411,324"/>
+<area shape="poly" id="edge8_Node000003_Node000006" title=" " alt="" coords="311,177,320,210,336,249,358,286,354,289,331,252,315,212,306,178"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="373,253,293,295,290,290,370,248"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="393,252,383,286,378,285,388,250"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="409,249,455,287,451,292,405,253"/>
 </map>

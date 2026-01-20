@@ -7,9 +7,11 @@ var 403__special__types_8c =
     [ "passthrough_long_double", "403__special__types_8c.html#a5808aeb9d53769c00dd0978dfb854ebb", null ],
     [ "return_s128", "403__special__types_8c.html#a0d0daf4ce37451da0859fee6634d380d", null ],
     [ "s128_callback_handler", "403__special__types_8c.html#ae2a6be2a0e4bf20de7696ca7c5f55a5f", null ],
+    [ "stack_alignment_callee", "403__special__types_8c.html#a0b16bb3aea6bf01f412777ecc249b7c3", null ],
     [ "subtest", "403__special__types_8c.html#a76b30f5d5a70bbd77bbfe938843a0538", null ],
     [ "subtest", "403__special__types_8c.html#abcc7e766a74e1db51aafbba52ed778e4", null ],
     [ "subtest", "403__special__types_8c.html#a7a62952c4f12ae5244ff3f20830cc1d7", null ],
+    [ "subtest", "403__special__types_8c.html#ab42d5293b3d9eca02c13776e808bc73e", null ],
     [ "S128_CONSTANT", "403__special__types_8c.html#aa08ef55b5eeaf6d4d0107919e1515387", null ],
     [ "TEST", "403__special__types_8c.html#a67c1cbb549407d754fe1894f74b40c3e", null ],
     [ "U128_CONSTANT", "403__special__types_8c.html#aa353688349098e5a03c5e5db496d662f", null ]

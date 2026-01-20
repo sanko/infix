@@ -42,6 +42,7 @@ var annotated_dup =
     [ "infix_reverse_t", "structinfix__reverse__t.html", "structinfix__reverse__t" ],
     [ "infix_struct_member_t", "structinfix__struct__member__t.html", "structinfix__struct__member__t" ],
     [ "infix_type_t", "structinfix__type__t.html", "structinfix__type__t" ],
+    [ "infix_version_t", "structinfix__version__t.html", "structinfix__version__t" ],
     [ "LargeData", "structLargeData.html", "structLargeData" ],
     [ "LargeStruct", "structLargeStruct.html", "structLargeStruct" ],
     [ "Line", "structLine.html", "structLine" ],

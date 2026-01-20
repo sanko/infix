@@ -115,7 +115,8 @@ $(document).ready(function(){initNavTree('501__direct__marshalling_8c.html','');
 
 <p>Test suite for the high-performance direct marshalling API.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="compat__c23_8h_source.html">common/compat_c23.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -123,7 +124,7 @@ $(document).ready(function(){initNavTree('501__direct__marshalling_8c.html','');
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 501_direct_marshalling.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="501__direct__marshalling_8c__incl.svg" width="100%" height="547"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="501__direct__marshalling_8c__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -201,7 +202,7 @@ Functions</h2></td></tr>
 <tr class="separator:a422b3cf8832ebed5846b2a6e4ab76f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a516ae92e0ae3b68a1323f3d8de5bc8eb" id="r_a516ae92e0ae3b68a1323f3d8de5bc8eb"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a516ae92e0ae3b68a1323f3d8de5bc8eb">mock_c_callback</a> (int a)</td></tr>
 <tr class="separator:a516ae92e0ae3b68a1323f3d8de5bc8eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0612357232526083b8d2dddc1e27b14" id="r_ab0612357232526083b8d2dddc1e27b14"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#ab0612357232526083b8d2dddc1e27b14">ok</a> (<a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a>(<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, &quot;@Point = { x: double, y: double };&quot; &quot;@<a class="el" href="structLine.html">Line</a> = { start: @<a class="el" href="structPoint.html">Point</a>, end: @<a class="el" href="structPoint.html">Point</a> };&quot; &quot;@Empty = {};&quot; &quot;@<a class="el" href="501__direct__marshalling_8c.html#a19e90595dab081328e512e81494242aa">IntFunc</a> = (int)-&gt;int;&quot;)==INFIX_SUCCESS, &quot;Successfully registered all test types&quot;)</td></tr>
+<tr class="memitem:ab0612357232526083b8d2dddc1e27b14" id="r_ab0612357232526083b8d2dddc1e27b14"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#ab0612357232526083b8d2dddc1e27b14">ok</a> (<a class="el" href="group__registry__api.html#ga9ffe6b87941bcb364cc386ae7b0877cd">infix_register_types</a>(<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, &quot;@Point = { x: double, y: double };&quot; &quot;@<a class="el" href="structLine.html">Line</a> = { start: @<a class="el" href="structPoint.html">Point</a>, end: @<a class="el" href="structPoint.html">Point</a> };&quot; &quot;@Empty = {};&quot; &quot;@<a class="el" href="501__direct__marshalling_8c.html#a19e90595dab081328e512e81494242aa">IntFunc</a> = (int)-&gt;int;&quot;)==INFIX_SUCCESS, &quot;Successfully registered all test types&quot;)</td></tr>
 <tr class="separator:ab0612357232526083b8d2dddc1e27b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f90d22b2257a83b0737bc5861a790ba" id="r_a9f90d22b2257a83b0737bc5861a790ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a9f90d22b2257a83b0737bc5861a790ba">subtest</a> (&quot;Test struct-by-value with add_points&quot;)</td></tr>
 <tr class="separator:a9f90d22b2257a83b0737bc5861a790ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,7 +229,7 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a67c1cbb549407d754fe1894f74b40c3e" id="r_a67c1cbb549407d754fe1894f74b40c3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a67c1cbb549407d754fe1894f74b40c3e">TEST</a></td></tr>
 <tr class="separator:a67c1cbb549407d754fe1894f74b40c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70b9c24db773fd9634f2bafb98f7b3d9" id="r_a70b9c24db773fd9634f2bafb98f7b3d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a> = <a class="el" href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a>()</td></tr>
+<tr class="memitem:a70b9c24db773fd9634f2bafb98f7b3d9" id="r_a70b9c24db773fd9634f2bafb98f7b3d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a> = <a class="el" href="group__registry__api.html#gabc173ceb38459e181fb2e9c724da9a92">infix_registry_create</a>()</td></tr>
 <tr class="separator:a70b9c24db773fd9634f2bafb98f7b3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -827,7 +828,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">ok </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__registry__api.html#ga4ece2363948c40fe528826bf65dac280">infix_register_types</a>(<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, &quot;@Point = { x: double, y: double };&quot; &quot;@<a class="el" href="structLine.html">Line</a> = { start: @<a class="el" href="structPoint.html">Point</a>, end: @<a class="el" href="structPoint.html">Point</a> };&quot; &quot;@Empty = {};&quot; &quot;@<a class="el" href="501__direct__marshalling_8c.html#a19e90595dab081328e512e81494242aa">IntFunc</a> = (int)-&gt;int;&quot;)&#160;</td>
+          <td class="paramtype"><a class="el" href="group__registry__api.html#ga9ffe6b87941bcb364cc386ae7b0877cd">infix_register_types</a>(<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, &quot;@Point = { x: double, y: double };&quot; &quot;@<a class="el" href="structLine.html">Line</a> = { start: @<a class="el" href="structPoint.html">Point</a>, end: @<a class="el" href="structPoint.html">Point</a> };&quot; &quot;@Empty = {};&quot; &quot;@<a class="el" href="501__direct__marshalling_8c.html#a19e90595dab081328e512e81494242aa">IntFunc</a> = (int)-&gt;int;&quot;)&#160;</td>
           <td class="paramname"> = <code>=<a class="el" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></code>, </td>
         </tr>
         <tr>
@@ -1148,7 +1149,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a>* reg = <a class="el" href="group__registry__api.html#gac808273483db7a9db2bc275c41b13296">infix_registry_create</a>()</td>
+          <td class="memname"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a>* reg = <a class="el" href="group__registry__api.html#gabc173ceb38459e181fb2e9c724da9a92">infix_registry_create</a>()</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -1,6 +1,6 @@
 var structinfix__registry__iterator__t =
 [
-    [ "current_bucket", "structinfix__registry__iterator__t.html#a8623db8b3d993d6d262a4cc6c30bc9f6", null ],
-    [ "current_entry", "structinfix__registry__iterator__t.html#a04768f86307d20cebdd51a42f7ebcde5", null ],
-    [ "registry", "structinfix__registry__iterator__t.html#a0e762586e319f285e8f841e53c4989ff", null ]
+    [ "_bucket_index", "group__high__level__api.html#ga9c93d32e2fa567f5d77d9cb9f821e30f", null ],
+    [ "_current_entry", "group__high__level__api.html#ga03901a56958f0d9f3ce3968048754b5d", null ],
+    [ "registry", "group__high__level__api.html#ga0e762586e319f285e8f841e53c4989ff", null ]
 ];

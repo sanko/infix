@@ -1,17 +1,18 @@
 <map id="t/861_error_reporting.c" name="t/861_error_reporting.c">
-<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,251,31"/>
-<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,33,113,71,110,67,152,29"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="196,79,291,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,29,222,67,219,71,177,33"/>
-<area shape="rect" id="Node000004" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="93,152,268,177"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="235,106,202,143,198,140,231,103"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="82,225,165,251"/>
-<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="196,106,128,127,100,140,83,154,78,168,81,184,103,214,98,217,76,186,73,168,78,150,97,136,126,122,195,101"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="199,225,274,251"/>
-<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="257,103,279,136,285,157,283,178,273,199,260,217,256,214,269,196,278,177,280,157,274,138,252,106"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="344,152,415,177"/>
-<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="266,102,346,143,344,148,264,106"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="173,179,143,216,139,213,169,176"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="192,176,221,213,217,216,188,179"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="125,5,295,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="123,79,297,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,31,213,65,207,65,207,31"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="57,152,152,177"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="175,33,140,52,125,64,112,80,103,109,103,139,98,139,98,108,108,77,121,61,138,47,173,28"/>
+<area shape="rect" id="Node000007" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="321,79,488,104"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="242,28,361,71,359,76,240,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="195,106,134,147,132,142,192,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="199,225,282,251"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="215,104,238,212,233,213,210,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="101,225,175,251"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="206,106,152,214,147,212,202,103"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="128,175,208,217,205,221,125,180"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="113,177,129,212,124,214,108,179"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,225,76,251"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="96,179,62,217,58,213,92,176"/>
 </map>

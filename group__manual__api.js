@@ -1,10 +1,10 @@
 var group__manual__api =
 [
     [ "Type System", "group__type__system.html", "group__type__system" ],
-    [ "infix_forward_create_manual", "group__manual__api.html#ga017f14762b217bc6d0101e994481bfd0", null ],
-    [ "infix_forward_create_unbound_manual", "group__manual__api.html#gaa265f727b644889b3a6e0817532bfe6a", null ],
-    [ "infix_forward_destroy", "group__manual__api.html#gad87a8882dec00b89a4bc5c87db2fc032", null ],
-    [ "infix_reverse_create_callback_manual", "group__manual__api.html#ga28d7f22662c45343bd1c821fa79f19eb", null ],
-    [ "infix_reverse_create_closure_manual", "group__manual__api.html#ga8aa8e7c6bc0e47f2e796c8899796012a", null ],
-    [ "infix_reverse_destroy", "group__manual__api.html#ga00b101025663c423a28433e139be5d4e", null ]
+    [ "infix_forward_create_manual", "group__manual__api.html#ga40abd9291fbdb2a2c7c2d8eacb495867", null ],
+    [ "infix_forward_create_unbound_manual", "group__manual__api.html#ga586118d8fe9831dd4e94ca119d874c98", null ],
+    [ "infix_forward_destroy", "group__manual__api.html#ga99eb42f542d16a38b1d9c3686991823d", null ],
+    [ "infix_reverse_create_callback_manual", "group__manual__api.html#ga7347d63c0b506a2f777fa6e22027005a", null ],
+    [ "infix_reverse_create_closure_manual", "group__manual__api.html#ga60b9f828e466d7babe0274ca2a464d97", null ],
+    [ "infix_reverse_destroy", "group__manual__api.html#ga05ccd7be42743b64276e2b5b6247422a", null ]
 ];

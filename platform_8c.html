@@ -102,6 +102,8 @@ $(document).ready(function(){initNavTree('platform_8c.html',''); initResizable()
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">platform.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -109,10 +111,12 @@ $(document).ready(function(){initNavTree('platform_8c.html',''); initResizable()
 <p>Implements runtime detection of CPU and OS features.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="platform_8h_source.html">common/platform.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for platform.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="platform_8c__incl.svg" width="447" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="platform_8c__incl.svg" width="519" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -121,6 +125,13 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="platform_8c_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ade57800ed519a9651842c98ba33b91d5" id="r_ade57800ed519a9651842c98ba33b91d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="structinfix__version__t.html">infix_version_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#ade57800ed519a9651842c98ba33b91d5">infix_get_version</a> (void)</td></tr>
+<tr class="memdesc:ade57800ed519a9651842c98ba33b91d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the version of the infix library linked at runtime.  <br /></td></tr>
+<tr class="separator:ade57800ed519a9651842c98ba33b91d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements runtime detection of CPU and OS features. </p>
 <p>Copyright (c) 2025 Sanko Robinson</p>
@@ -128,7 +139,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>SPDX-License-Identifier: (Artistic-2.0 OR MIT)</p>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="ade57800ed519a9651842c98ba33b91d5" name="ade57800ed519a9651842c98ba33b91d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade57800ed519a9651842c98ba33b91d5">&#9670;&#160;</a></span>infix_get_version()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="structinfix__version__t.html">infix_version_t</a> infix_get_version </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the version of the infix library linked at runtime. </p>
+<dl class="section return"><dt>Returns</dt><dd>An <code><a class="el" href="structinfix__version__t.html" title="A structure representing the semantic version of the library.">infix_version_t</a></code> structure containing the major, minor, and patch numbers. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

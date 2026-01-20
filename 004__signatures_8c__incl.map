@@ -1,21 +1,22 @@
 <map id="t/004_signatures.c" name="t/004_signatures.c">
-<area shape="rect" id="Node000001" title="Unit test for the signature string parser." alt="" coords="214,5,355,31"/>
-<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="5,79,172,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="254,33,134,76,133,71,252,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="196,79,267,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="278,33,250,69,246,66,274,29"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="291,79,385,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="296,29,323,66,319,69,291,33"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="409,79,480,104"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="311,28,407,71,405,75,309,33"/>
-<area shape="rect" id="Node000005" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="188,152,363,177"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="330,106,297,143,293,140,326,103"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="177,225,259,251"/>
-<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="291,106,223,127,194,140,178,154,173,168,176,184,197,214,193,217,171,186,167,168,173,150,192,136,221,122,290,101"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="294,225,369,251"/>
-<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="351,103,373,136,380,157,378,178,368,199,355,217,350,214,363,196,373,177,374,157,368,138,347,106"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="439,152,509,177"/>
-<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="361,102,441,143,439,148,359,106"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="268,179,238,216,234,213,264,176"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="287,176,316,213,312,216,282,179"/>
+<area shape="rect" id="Node000001" title="Unit test for the signature string parser." alt="" coords="334,5,475,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="123,79,297,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="374,33,255,76,254,71,372,28"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="57,152,152,177"/>
+<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="334,27,270,33,204,44,147,60,126,69,112,80,104,93,101,108,102,138,96,139,95,107,99,91,108,77,123,65,145,55,203,39,270,28,333,21"/>
+<area shape="rect" id="Node000007" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="321,79,488,104"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="407,31,407,65,402,65,402,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="512,79,583,104"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="429,28,513,70,511,75,426,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="607,79,677,104"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="444,28,594,73,592,78,442,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="195,106,134,147,132,142,192,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="199,225,282,251"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="215,104,238,212,233,213,210,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="101,225,175,251"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="206,106,152,214,147,212,202,103"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="128,175,208,217,205,221,125,180"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="113,177,129,212,124,214,108,179"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,225,76,251"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="96,179,62,217,58,213,92,176"/>
 </map>

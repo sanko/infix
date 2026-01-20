@@ -1,38 +1,38 @@
 <map id="src/arch/x64/abi_win_x64.c" name="src/arch/x64/abi_win_x64.c">
-<area shape="rect" id="Node000001" title="Implements the FFI logic for the Windows x64 calling convention." alt="" coords="283,5,438,45"/>
-<area shape="rect" id="Node000002" href="$abi__x64__common_8h.html" title="Common register definitions for the x86&#45;64 architecture." alt="" coords="44,167,253,192"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="284,40,226,60,199,75,176,95,160,123,153,154,147,153,155,121,172,92,196,71,224,55,282,35"/>
-<area shape="rect" id="Node000004" href="$abi__x64__emitters_8h.html" title="Declares internal helper functions for emitting x86&#45;64 machine code." alt="" coords="186,93,393,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="345,47,311,85,307,81,341,44"/>
-<area shape="rect" id="Node000005" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="278,167,464,192"/>
-<area shape="poly" id="edge18_Node000001_Node000005" title=" " alt="" coords="379,44,395,66,407,93,409,110,406,127,391,156,387,154,401,125,404,110,402,94,390,69,375,47"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="162,387,244,412"/>
-<area shape="poly" id="edge22_Node000001_Node000009" title=" " alt="" coords="283,30,196,39,150,48,106,62,67,81,36,106,16,138,10,157,8,178,8,254,11,300,18,318,33,337,59,357,88,372,149,390,148,395,86,377,56,362,29,341,13,320,6,301,3,254,3,178,5,156,11,136,32,103,65,77,104,57,149,43,195,33,283,24"/>
-<area shape="rect" id="Node000012" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="522,240,652,265"/>
-<area shape="poly" id="edge19_Node000001_Node000012" title=" " alt="" coords="381,44,567,228,563,232,378,47"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="540,93,610,119"/>
-<area shape="poly" id="edge23_Node000001_Node000013" title=" " alt="" coords="413,43,532,86,530,91,411,48"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="44,313,114,339"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,194,93,302,88,300,140,191"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="268,121,185,163,182,158,266,116"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="305,117,349,156,346,160,301,121"/>
-<area shape="rect" id="Node000006" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="490,313,660,339"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="390,190,459,238,550,303,547,307,456,242,387,195"/>
-<area shape="rect" id="Node000007" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="296,240,446,265"/>
-<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="374,192,374,226,368,226,368,192"/>
-<area shape="rect" id="Node000011" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="156,240,250,265"/>
-<area shape="poly" id="edge13_Node000005_Node000011" title=" " alt="" coords="345,194,244,237,242,232,343,190"/>
-<area shape="poly" id="edge11_Node000007_Node000006" title=" " alt="" coords="405,263,530,306,528,311,403,268"/>
-<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="292,313,466,339"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="375,265,379,300,374,300,370,266"/>
-<area shape="poly" id="edge12_Node000007_Node000009" title=" " alt="" coords="351,268,317,289,281,315,249,347,223,377,218,374,245,343,277,311,314,284,349,263"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="352,341,246,384,244,379,350,336"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="342,387,416,412"/>
-<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="382,339,382,373,376,373,376,339"/>
-<area shape="poly" id="edge17_Node000011_Node000003" title=" " alt="" coords="185,268,113,309,110,304,182,263"/>
-<area shape="poly" id="edge14_Node000011_Node000008" title=" " alt="" coords="232,263,339,306,337,310,230,268"/>
-<area shape="poly" id="edge15_Node000011_Node000009" title=" " alt="" coords="200,266,190,299,187,318,187,338,196,373,191,374,182,339,181,318,184,298,195,265"/>
-<area shape="poly" id="edge16_Node000011_Node000010" title=" " alt="" coords="214,264,242,298,281,337,313,359,345,378,342,383,310,364,277,341,238,302,209,267"/>
-<area shape="poly" id="edge20_Node000012_Node000008" title=" " alt="" coords="555,268,427,311,425,306,553,263"/>
-<area shape="poly" id="edge21_Node000012_Node000010" title=" " alt="" coords="616,263,642,277,666,296,680,317,681,329,675,340,658,354,633,365,569,381,496,392,430,398,430,393,495,387,568,376,632,360,655,349,670,337,675,327,675,318,662,299,639,282,613,268"/>
+<area shape="rect" id="Node000001" title="Implements the FFI logic for the Windows x64 calling convention." alt="" coords="425,5,579,45"/>
+<area shape="rect" id="Node000002" href="$abi__x64__common_8h.html" title="Common register definitions for the x86&#45;64 architecture." alt="" coords="5,167,215,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="425,38,324,58,270,75,218,96,171,126,133,158,129,154,168,121,215,91,268,70,323,53,424,33"/>
+<area shape="rect" id="Node000004" href="$abi__x64__emitters_8h.html" title="Declares internal helper functions for emitting x86&#45;64 machine code." alt="" coords="229,93,436,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="463,48,371,90,369,85,460,43"/>
+<area shape="rect" id="Node000005" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="239,167,426,192"/>
+<area shape="poly" id="edge18_Node000001_Node000005" title=" " alt="" coords="497,47,478,83,449,121,415,145,380,164,377,159,413,141,445,117,474,80,492,44"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="343,460,426,485"/>
+<area shape="poly" id="edge22_Node000001_Node000010" title=" " alt="" coords="509,45,544,206,558,290,560,321,558,340,531,379,497,411,459,437,425,456,422,452,457,433,493,407,527,376,553,338,555,321,553,291,539,206,504,46"/>
+<area shape="rect" id="Node000012" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="567,240,698,265"/>
+<area shape="poly" id="edge19_Node000001_Node000012" title=" " alt="" coords="518,44,551,92,592,165,624,227,619,229,588,168,546,95,514,47"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="619,93,689,119"/>
+<area shape="poly" id="edge23_Node000001_Node000013" title=" " alt="" coords="540,43,620,84,618,89,537,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="133,460,204,485"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,194,87,220,69,256,59,297,59,318,63,338,79,371,101,401,146,449,142,452,96,405,75,374,58,340,53,318,54,296,64,254,82,217,99,191"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="298,121,160,165,158,160,296,116"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="335,119,335,153,330,153,330,119"/>
+<area shape="rect" id="Node000006" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="73,313,243,339"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="264,195,185,214,153,227,133,242,128,255,129,270,143,301,138,303,124,272,123,254,129,238,150,223,183,209,263,189"/>
+<area shape="rect" id="Node000007" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="144,240,295,265"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="316,194,251,235,248,230,313,190"/>
+<area shape="rect" id="Node000009" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="321,387,416,412"/>
+<area shape="poly" id="edge17_Node000005_Node000009" title=" " alt="" coords="337,192,359,338,366,373,361,374,354,339,332,193"/>
+<area shape="poly" id="edge15_Node000007_Node000006" title=" " alt="" coords="211,267,179,305,175,301,207,264"/>
+<area shape="rect" id="Node000008" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="369,313,544,339"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="258,263,406,307,404,312,257,268"/>
+<area shape="poly" id="edge16_Node000007_Node000010" title=" " alt="" coords="229,264,256,312,281,364,292,385,311,410,333,432,356,450,353,454,329,436,307,414,288,388,276,366,252,315,224,267"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="444,341,395,380,392,376,441,337"/>
+<area shape="poly" id="edge13_Node000008_Node000010" title=" " alt="" coords="456,339,446,373,430,413,405,451,401,448,425,411,441,371,451,338"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="467,460,542,485"/>
+<area shape="poly" id="edge14_Node000008_Node000011" title=" " alt="" coords="463,338,499,446,494,448,458,340"/>
+<area shape="poly" id="edge12_Node000009_Node000003" title=" " alt="" coords="337,415,215,458,214,453,336,410"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="374,412,382,446,377,447,369,413"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="392,410,472,451,469,456,389,414"/>
+<area shape="poly" id="edge20_Node000012_Node000008" title=" " alt="" coords="605,268,499,310,497,306,603,263"/>
+<area shape="poly" id="edge21_Node000012_Node000011" title=" " alt="" coords="636,266,632,332,622,374,603,414,578,439,549,456,547,452,575,434,598,410,617,372,627,331,631,265"/>
 </map>

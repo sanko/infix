@@ -1,19 +1,15 @@
 <map id="eg/cookbook/Ch02_ArrayDecay.c" name="eg/cookbook/Ch02_ArrayDecay.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with Fixed&#45;Size Arrays." alt="" coords="236,5,470,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="190,79,284,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,33,269,74,266,69,333,28"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="200,225,274,251"/>
-<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="360,30,368,58,374,96,373,139,368,159,359,179,345,196,327,210,289,228,286,223,325,205,341,192,355,176,363,158,368,138,369,97,363,59,355,32"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="275,152,346,177"/>
-<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="352,32,320,139,315,138,347,30"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="421,79,488,104"/>
-<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="371,28,428,68,425,73,368,33"/>
-<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,152,199,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,106,145,147,143,143,215,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="8,225,90,251"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="190,101,87,120,41,135,25,144,14,154,8,168,11,183,29,213,25,216,6,185,3,167,9,150,21,140,39,131,86,115,189,96"/>
-<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="240,104,240,212,234,212,234,104"/>
-<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="251,102,290,140,287,144,247,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,179,70,217,66,213,99,176"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="133,175,206,216,203,221,130,180"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with Fixed&#45;Size Arrays." alt="" coords="71,5,305,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="98,79,193,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,32,161,68,157,66,179,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,152,80,177"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="161,33,124,53,89,81,68,110,54,140,49,138,63,107,85,77,121,48,158,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="211,152,282,177"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="195,30,239,138,234,140,190,32"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="268,79,335,104"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="208,28,273,69,270,74,205,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="104,152,187,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="148,104,148,138,143,138,143,104"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="130,106,72,146,69,142,127,102"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="163,102,220,142,217,146,160,106"/>
 </map>

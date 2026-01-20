@@ -103,6 +103,7 @@ $(document).ready(function(){initNavTree('group__version__info.html',''); initRe
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">Version Information</div></div>
 </div><!--header-->
@@ -111,19 +112,68 @@ $(document).ready(function(){initNavTree('group__version__info.html',''); initRe
 <p>Macros defining the semantic version of the infix library.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__version__t.html">infix_version_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure representing the semantic version of the library.  <a href="structinfix__version__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:gaa56a725089ff7a0e38ca631b713e9272" id="r_gaa56a725089ff7a0e38ca631b713e9272"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#gaa56a725089ff7a0e38ca631b713e9272">INFIX_MAJOR</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:gaa56a725089ff7a0e38ca631b713e9272"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf4871cdb1bb657b303e053d8e633d040" id="r_gaf4871cdb1bb657b303e053d8e633d040"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#gaf4871cdb1bb657b303e053d8e633d040">INFIX_MINOR</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:gaf4871cdb1bb657b303e053d8e633d040"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga47d1a3d7d801e3ecd110e3457154eb80" id="r_ga47d1a3d7d801e3ecd110e3457154eb80"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#ga47d1a3d7d801e3ecd110e3457154eb80">INFIX_PATCH</a>&#160;&#160;&#160;3</td></tr>
+<tr class="memitem:ga47d1a3d7d801e3ecd110e3457154eb80" id="r_ga47d1a3d7d801e3ecd110e3457154eb80"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#ga47d1a3d7d801e3ecd110e3457154eb80">INFIX_PATCH</a>&#160;&#160;&#160;4</td></tr>
 <tr class="separator:ga47d1a3d7d801e3ecd110e3457154eb80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b7f03670df4c70ddfbe31b1ff5cb301" id="r_ga6b7f03670df4c70ddfbe31b1ff5cb301"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#ga6b7f03670df4c70ddfbe31b1ff5cb301">_INFIX_HAS_C_ATTRIBUTE</a>(x)&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ga6b7f03670df4c70ddfbe31b1ff5cb301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf6436c47724bc1059aa82f37329f7991" id="r_gaf6436c47724bc1059aa82f37329f7991"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a></td></tr>
+<tr class="memdesc:gaf6436c47724bc1059aa82f37329f7991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Symbol visibility macro.  <br /></td></tr>
+<tr class="separator:gaf6436c47724bc1059aa82f37329f7991"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9806a5783de91a5ddc7798bca59aaa10" id="r_ga9806a5783de91a5ddc7798bca59aaa10"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a></td></tr>
+<tr class="memdesc:ga9806a5783de91a5ddc7798bca59aaa10"><td class="mdescLeft">&#160;</td><td class="mdescRight">A compatibility macro for the C23 <code>[[nodiscard]]</code> attribute.  <br /></td></tr>
+<tr class="separator:ga9806a5783de91a5ddc7798bca59aaa10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Macros defining the semantic version of the infix library. </p>
 <p>The versioning scheme follows Semantic Versioning 2.0.0 (SemVer). </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ga6b7f03670df4c70ddfbe31b1ff5cb301" name="ga6b7f03670df4c70ddfbe31b1ff5cb301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6b7f03670df4c70ddfbe31b1ff5cb301">&#9670;&#160;</a></span>_INFIX_HAS_C_ATTRIBUTE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _INFIX_HAS_C_ATTRIBUTE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="gaf6436c47724bc1059aa82f37329f7991" name="gaf6436c47724bc1059aa82f37329f7991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf6436c47724bc1059aa82f37329f7991">&#9670;&#160;</a></span>INFIX_API</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INFIX_API</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Symbol visibility macro. </p>
+<p>infix relies on a unity build so we've been lax about symbol visibility. Functions like <code>_infix_set_error</code> or <code>_infix_type_recalculate_layout</code> are shared between internal modules (files included by <code><a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">infix.c</a></code>) and thus cannot be static. However, this means that if <a class="el" href="infix_8c.html" title="The unity build source file for the infix library.">infix.c</a> is compiled into a shared library (<code>libinfix.so</code>), all of these internal <em>infix</em>* functions are exported in the dynamic symbol table. This pollutes the ABI and allows users to link against internal functions that might change. </p>
+
+</div>
+</div>
 <a id="gaa56a725089ff7a0e38ca631b713e9272" name="gaa56a725089ff7a0e38ca631b713e9272"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaa56a725089ff7a0e38ca631b713e9272">&#9670;&#160;</a></span>INFIX_MAJOR</h2>
 
@@ -154,6 +204,30 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="ga9806a5783de91a5ddc7798bca59aaa10" name="ga9806a5783de91a5ddc7798bca59aaa10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9806a5783de91a5ddc7798bca59aaa10">&#9670;&#160;</a></span>INFIX_NODISCARD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INFIX_NODISCARD</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A compatibility macro for the C23 <code>[[nodiscard]]</code> attribute. </p>
+<p>This attribute is used to issue a compiler warning if the return value of a function is ignored by the caller. This is extremely useful for catching bugs where an error code or an important result is not checked.</p>
+<p>This macro expands to:</p><ul>
+<li><code>[[nodiscard]]</code> on compilers that support the C23 standard syntax.</li>
+<li><code>__attribute__((warn_unused_result))</code> on GCC and Clang.</li>
+<li><code>_Check_return_</code> on Microsoft Visual C++.</li>
+<li>Nothing on other compilers.</li>
+</ul>
+<p>This is aliased as <code>c23_nodiscard</code> in <code><a class="el" href="compat__c23_8h.html" title="Provides forward compatibility macros for C23 features.">compat_c23.h</a></code>. </p>
+
+</div>
+</div>
 <a id="ga47d1a3d7d801e3ecd110e3457154eb80" name="ga47d1a3d7d801e3ecd110e3457154eb80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga47d1a3d7d801e3ecd110e3457154eb80">&#9670;&#160;</a></span>INFIX_PATCH</h2>
 
@@ -161,7 +235,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INFIX_PATCH&#160;&#160;&#160;3</td>
+          <td class="memname">#define INFIX_PATCH&#160;&#160;&#160;4</td>
         </tr>
       </table>
 </div><div class="memdoc">

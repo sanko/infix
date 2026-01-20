@@ -1,20 +1,16 @@
 <map id="eg/cookbook/Ch07_DynamicMarshalling.c" name="eg/cookbook/Ch07_DynamicMarshalling.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 7: Dynamic Struct Marshalling." alt="" coords="241,5,448,45"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="177,93,272,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="317,48,255,88,252,84,314,43"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="275,167,345,192"/>
-<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="343,46,318,154,313,152,338,45"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="347,93,414,119"/>
-<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="356,44,372,79,367,82,351,47"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="439,93,509,119"/>
-<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="377,43,445,84,442,88,374,48"/>
-<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,167,199,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,121,143,162,140,157,205,116"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="13,240,95,265"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="178,116,81,136,39,151,13,168,8,183,11,198,33,229,28,232,6,200,3,182,9,165,36,146,80,131,177,111"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="130,240,205,265"/>
-<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="227,119,223,153,212,193,189,231,184,228,207,191,218,152,222,118"/>
-<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="240,117,287,156,284,160,237,121"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,194,74,231,70,227,100,191"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="123,191,152,228,148,231,118,194"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 7: Dynamic Struct Marshalling." alt="" coords="174,5,381,45"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="107,93,202,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,48,186,88,183,84,246,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="211,167,282,192"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="276,46,254,154,249,152,271,45"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="280,93,347,119"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="288,44,305,79,300,82,284,47"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="371,93,442,119"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="310,43,377,84,375,88,307,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,88,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,121,77,161,74,157,136,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="112,167,187,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,119,154,153,149,153,151,119"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="171,117,223,156,219,160,168,121"/>
 </map>

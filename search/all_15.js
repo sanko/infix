@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['jit_20hardening_20and_20the_20entitlement_20fallback_0',['3.3 macOS JIT Hardening and the Entitlement Fallback',['../md_docs_2internals.html#autotoc_md188',1,'']]],
-  ['jit_20powered_20ffi_20library_20for_20c_1',['&lt;tt&gt;infix&lt;/tt&gt;: A JIT-powered FFI library for C',['../index.html',1,'']]]
+  ['key_20architectural_20decisions_0',['1.2 Key Architectural Decisions',['../md_docs_2internals.html#autotoc_md178',1,'']]],
+  ['key_20features_1',['key features',['../index.html#autotoc_md1',1,'Key Features'],['..//home/runner/work/infix/infix/include/infix/infix.h#features_sec',1,'Key Features']]]
 ];

@@ -112,20 +112,25 @@ $(document).ready(function(){initNavTree('004__signatures_8c.html',''); initResi
 
 <p>Unit test for the signature string parser.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="compat__c23_8h_source.html">common/compat_c23.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &lt;ctype.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 004_signatures.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="004__signatures_8c__incl.svg" width="515" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="004__signatures_8c__incl.svg" width="100%" height="492"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a1655e4adfda95660042d34619eb61845" id="r_a1655e4adfda95660042d34619eb61845"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a1655e4adfda95660042d34619eb61845">DBLTAP_IMPLEMENTATION</a></td></tr>
 <tr class="separator:a1655e4adfda95660042d34619eb61845"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a301397440254e1ebb72f6c635c8792fe" id="r_a301397440254e1ebb72f6c635c8792fe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a301397440254e1ebb72f6c635c8792fe">CHECK_MANGLING</a>(signature,  dialect,  expected_output)</td></tr>
+<tr class="separator:a301397440254e1ebb72f6c635c8792fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7750fee73aef16d012ed6ee917d26e3d" id="r_a7750fee73aef16d012ed6ee917d26e3d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a7750fee73aef16d012ed6ee917d26e3d">CHECK_FUNC_MANGLING</a>(sig,  name,  dialect,  expected)</td></tr>
+<tr class="separator:a7750fee73aef16d012ed6ee917d26e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -153,6 +158,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab32e5ed3c170e4a27fa5b64dd5a06b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49e412c64dc5212b8fb69cc4973c3880" id="r_a49e412c64dc5212b8fb69cc4973c3880"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a49e412c64dc5212b8fb69cc4973c3880">subtest</a> (&quot;Round trip with named fields&quot;)</td></tr>
 <tr class="separator:a49e412c64dc5212b8fb69cc4973c3880"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35643f6238a7183d3bf2f3bcf1146fcf" id="r_a35643f6238a7183d3bf2f3bcf1146fcf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="004__signatures_8c.html#a35643f6238a7183d3bf2f3bcf1146fcf">subtest</a> (&quot;Mangling&quot;)</td></tr>
+<tr class="separator:a35643f6238a7183d3bf2f3bcf1146fcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -167,9 +174,143 @@ Variables</h2></td></tr>
 <li><b>Valid Edge Cases:</b> Tests the parser's handling of non-standard but valid syntax, such as extra whitespace, comments, empty aggregates (<code>{}</code>), and deeply nested pointer/function types.</li>
 <li><b>Valid Full Function Signatures:</b> Uses <code>infix_signature_parse</code> to test the parsing of complete function signatures, including variadic functions (with <code>;</code>) and named arguments.</li>
 <li><b>Invalid Syntax and Logic:</b> A large set of negative test cases that feed the parser deliberately malformed or logically invalid signatures (e.g., <code>[10:void]</code>). It verifies that the parser correctly fails for each case.</li>
-<li><b>Round Trip:</b> A critical test that parses a signature, then uses <code>infix_type_print</code> to serialize the resulting type object back into a string. It then verifies that the output string matches the canonical representation of the input, ensuring that parsing and printing are inverse operations. </li>
+<li><b>Round Trip:</b> A critical test that parses a signature, then uses <code>infix_type_print</code> to serialize the resulting type object back into a string. It then verifies that the output string matches the canonical representation of the input, ensuring that parsing and printing are inverse operations.</li>
+<li><b>Mangling:</b> This test verifies that <code>infix</code> can correctly generate C++ mangled names for both Itanium (GCC/Clang) and MSVC ABIs. It covers:<ul>
+<li>Primitive types (int, float, void, etc.)</li>
+<li>Pointers</li>
+<li>Named types (Structs)</li>
+<li>Function signatures </li>
+</ul>
+</li>
 </ul>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a7750fee73aef16d012ed6ee917d26e3d" name="a7750fee73aef16d012ed6ee917d26e3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7750fee73aef16d012ed6ee917d26e3d">&#9670;&#160;</a></span>CHECK_FUNC_MANGLING</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CHECK_FUNC_MANGLING</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">sig, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">dialect, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">expected&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                                          \</div>
+<div class="line">        <a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a> * <a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = NULL;                                                                             \</div>
+<div class="line">        <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a> * <a class="code hl_variable" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a> = NULL;                                                                             \</div>
+<div class="line">        <a class="code hl_struct" href="structinfix__function__argument__t.html">infix_function_argument</a> * <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a> = NULL;                                                                    \</div>
+<div class="line">        <span class="keywordtype">size_t</span> n_args, n_fixed;                                                                                   \</div>
+<div class="line">        if (<a class="code hl_function" href="group__high__level__api.html#ga1f6ef54b1b3e333ef7186f11fa00f9c9">infix_signature_parse</a>(sig, &amp;<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, &amp;<a class="code hl_variable" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, &amp;<a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, &amp;n_args, &amp;n_fixed, <a class="code hl_variable" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>) == <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) { \</div>
+<div class="line">            <span class="keywordtype">char</span> buffer[256];                                                                                     \</div>
+<div class="line">            if (<a class="code hl_function" href="group__introspection__api.html#ga6c98231c9b9f94b31632d5bc612eaa67">infix_function_print</a>(buffer, <span class="keyword">sizeof</span>(buffer), name, <a class="code hl_variable" href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a>, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>, n_args, n_fixed, dialect) ==   \</div>
+<div class="line">                <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {                                                                                  \</div>
+<div class="line">                ok(strcmp(buffer, expected) == 0, <span class="stringliteral">&quot;Func Mangling &#39;%s&#39; -&gt; &#39;%s&#39;&quot;</span>, name, buffer);                    \</div>
+<div class="line">            }                                                                                                     \</div>
+<div class="line">            <span class="keywordflow">else</span> {                                                                                                \</div>
+<div class="line">                fail(<span class="stringliteral">&quot;Func print failed&quot;</span>);                                                                        \</div>
+<div class="line">            }                                                                                                     \</div>
+<div class="line">        }                                                                                                         \</div>
+<div class="line">        <span class="keywordflow">else</span> {                                                                                                    \</div>
+<div class="line">            fail(<span class="stringliteral">&quot;Func parse failed&quot;</span>);                                                                            \</div>
+<div class="line">        }                                                                                                         \</div>
+<div class="line">        infix_arena_destroy(<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>);                                                                               \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="a005__layouts_8c_html_afb7c3f5e091eb15b03c0a427c1a3ad1e"><div class="ttname"><a href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a></div><div class="ttdeci">infix_arena_t * arena</div><div class="ttdef"><b>Definition</b> 005_layouts.c:62</div></div>
+<div class="ttc" id="a008__registry__introspection_8c_html_aa7e646c2771eaee632371488e9b195fa"><div class="ttname"><a href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a></div><div class="ttdeci">infix_registry_t * registry</div><div class="ttdef"><b>Definition</b> 008_registry_introspection.c:33</div></div>
+<div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:59</div></div>
+<div class="ttc" id="a901__call__overhead_8c_html_a5f79aa6bd01b66791b7e5ee78dea11aa"><div class="ttname"><a href="901__call__overhead_8c.html#a5f79aa6bd01b66791b7e5ee78dea11aa">ret_type</a></div><div class="ttdeci">infix_type * ret_type</div><div class="ttdef"><b>Definition</b> 901_call_overhead.c:61</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga1f6ef54b1b3e333ef7186f11fa00f9c9"><div class="ttname"><a href="group__high__level__api.html#ga1f6ef54b1b3e333ef7186f11fa00f9c9">infix_signature_parse</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_signature_parse(const char *, infix_arena_t **, infix_type **, infix_function_argument **, size_t *, size_t *, infix_registry_t *)</div><div class="ttdoc">Parses a full function signature string into its constituent parts.</div><div class="ttdef"><b>Definition</b> signature.c:1087</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdef"><b>Definition</b> infix.h:434</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga6c98231c9b9f94b31632d5bc612eaa67"><div class="ttname"><a href="group__introspection__api.html#ga6c98231c9b9f94b31632d5bc612eaa67">infix_function_print</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_function_print(char *, size_t, const char *, const infix_type *, const infix_function_argument *, size_t, size_t, infix_print_dialect_t)</div><div class="ttdoc">Serializes a function signature's components into a string.</div><div class="ttdef"><b>Definition</b> signature.c:1892</div></div>
+<div class="ttc" id="astructinfix__arena__t_html"><div class="ttname"><a href="structinfix__arena__t.html">infix_arena_t</a></div><div class="ttdoc">Internal definition of a memory arena.</div><div class="ttdef"><b>Definition</b> infix_internals.h:138</div></div>
+<div class="ttc" id="astructinfix__function__argument__t_html"><div class="ttname"><a href="structinfix__function__argument__t.html">infix_function_argument_t</a></div><div class="ttdoc">Describes a single argument to a C function.</div><div class="ttdef"><b>Definition</b> infix.h:345</div></div>
+<div class="ttc" id="astructinfix__type__t_html"><div class="ttname"><a href="structinfix__type__t.html">infix_type_t</a></div><div class="ttdoc">A semi-opaque structure that describes a C type.</div><div class="ttdef"><b>Definition</b> infix.h:273</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a301397440254e1ebb72f6c635c8792fe" name="a301397440254e1ebb72f6c635c8792fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a301397440254e1ebb72f6c635c8792fe">&#9670;&#160;</a></span>CHECK_MANGLING</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CHECK_MANGLING</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">signature, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">dialect, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">expected_output&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                      \</div>
+<div class="line">        <a class="code hl_struct" href="structinfix__type__t.html">infix_type</a> * type = NULL;                                                             \</div>
+<div class="line">        <a class="code hl_struct" href="structinfix__arena__t.html">infix_arena_t</a> * <a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a> = NULL;                                                         \</div>
+<div class="line">        if (<a class="code hl_function" href="group__high__level__api.html#ga69968a0587dbd72c4fc247b930071faf">infix_type_from_signature</a>(&amp;type, &amp;<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>, signature, <a class="code hl_variable" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>) == <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) { \</div>
+<div class="line">            <span class="keywordtype">char</span> buffer[256];                                                                 \</div>
+<div class="line">            if (<a class="code hl_function" href="group__introspection__api.html#ga7e15ef21eb261b2f99aa2d2cc45de10f">infix_type_print</a>(buffer, <span class="keyword">sizeof</span>(buffer), type, dialect) == <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a>) {   \</div>
+<div class="line">                ok(strcmp(buffer, expected_output) == 0,                                      \</div>
+<div class="line">                   <span class="stringliteral">&quot;Mangling &#39;%s&#39; -&gt; &#39;%s&#39; (Expected: &#39;%s&#39;)&quot;</span>,                                  \</div>
+<div class="line">                   signature,                                                                 \</div>
+<div class="line">                   buffer,                                                                    \</div>
+<div class="line">                   expected_output);                                                          \</div>
+<div class="line">            }                                                                                 \</div>
+<div class="line">            <span class="keywordflow">else</span> {                                                                            \</div>
+<div class="line">                fail(<span class="stringliteral">&quot;Print failed for &#39;%s&#39;&quot;</span>, signature);                                     \</div>
+<div class="line">            }                                                                                 \</div>
+<div class="line">        }                                                                                     \</div>
+<div class="line">        <span class="keywordflow">else</span> {                                                                                \</div>
+<div class="line">            fail(<span class="stringliteral">&quot;Parse failed for &#39;%s&#39;&quot;</span>, signature);                                         \</div>
+<div class="line">        }                                                                                     \</div>
+<div class="line">        infix_arena_destroy(<a class="code hl_variable" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>);                                                           \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="agroup__high__level__api_html_ga69968a0587dbd72c4fc247b930071faf"><div class="ttname"><a href="group__high__level__api.html#ga69968a0587dbd72c4fc247b930071faf">infix_type_from_signature</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_type_from_signature(infix_type **, infix_arena_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Parses a signature string representing a single data type.</div><div class="ttdef"><b>Definition</b> signature.c:1028</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga7e15ef21eb261b2f99aa2d2cc45de10f"><div class="ttname"><a href="group__introspection__api.html#ga7e15ef21eb261b2f99aa2d2cc45de10f">infix_type_print</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_type_print(char *, size_t, const infix_type *, infix_print_dialect_t)</div><div class="ttdoc">Serializes an infix_type object graph back into a signature string.</div><div class="ttdef"><b>Definition</b> signature.c:1845</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
 
@@ -229,7 +370,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a590b5e3d87ffe270379ac162fc5a0a07" name="a590b5e3d87ffe270379ac162fc5a0a07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a590b5e3d87ffe270379ac162fc5a0a07">&#9670;&#160;</a></span>subtest() <span class="overload">[1/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a590b5e3d87ffe270379ac162fc5a0a07">&#9670;&#160;</a></span>subtest() <span class="overload">[1/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -246,8 +387,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a35643f6238a7183d3bf2f3bcf1146fcf" name="a35643f6238a7183d3bf2f3bcf1146fcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35643f6238a7183d3bf2f3bcf1146fcf">&#9670;&#160;</a></span>subtest() <span class="overload">[2/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subtest </td>
+          <td>(</td>
+          <td class="paramtype">&quot;Mangling&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a02591756183fa2625eed0668cf2d26da" name="a02591756183fa2625eed0668cf2d26da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02591756183fa2625eed0668cf2d26da">&#9670;&#160;</a></span>subtest() <span class="overload">[2/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a02591756183fa2625eed0668cf2d26da">&#9670;&#160;</a></span>subtest() <span class="overload">[3/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +424,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a49e412c64dc5212b8fb69cc4973c3880" name="a49e412c64dc5212b8fb69cc4973c3880"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49e412c64dc5212b8fb69cc4973c3880">&#9670;&#160;</a></span>subtest() <span class="overload">[3/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a49e412c64dc5212b8fb69cc4973c3880">&#9670;&#160;</a></span>subtest() <span class="overload">[4/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,7 +442,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ab32e5ed3c170e4a27fa5b64dd5a06b55" name="ab32e5ed3c170e4a27fa5b64dd5a06b55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab32e5ed3c170e4a27fa5b64dd5a06b55">&#9670;&#160;</a></span>subtest() <span class="overload">[4/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab32e5ed3c170e4a27fa5b64dd5a06b55">&#9670;&#160;</a></span>subtest() <span class="overload">[5/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,7 +460,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ad753886ab556837ec1f4255beed37e8e" name="ad753886ab556837ec1f4255beed37e8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad753886ab556837ec1f4255beed37e8e">&#9670;&#160;</a></span>subtest() <span class="overload">[5/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad753886ab556837ec1f4255beed37e8e">&#9670;&#160;</a></span>subtest() <span class="overload">[6/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -319,7 +478,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ae61ba6a7e3622d1a48d8caa5ca0d2c35" name="ae61ba6a7e3622d1a48d8caa5ca0d2c35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae61ba6a7e3622d1a48d8caa5ca0d2c35">&#9670;&#160;</a></span>subtest() <span class="overload">[6/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae61ba6a7e3622d1a48d8caa5ca0d2c35">&#9670;&#160;</a></span>subtest() <span class="overload">[7/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -337,7 +496,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a3c0cdba54b3d63d544c29d2eaa22870d" name="a3c0cdba54b3d63d544c29d2eaa22870d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c0cdba54b3d63d544c29d2eaa22870d">&#9670;&#160;</a></span>subtest() <span class="overload">[7/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c0cdba54b3d63d544c29d2eaa22870d">&#9670;&#160;</a></span>subtest() <span class="overload">[8/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -481,7 +640,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(7)</div>
+<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(8)</div>
 <div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:154</div></div>
 </div><!-- fragment -->
 </div>

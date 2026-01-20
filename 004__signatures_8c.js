@@ -1,9 +1,12 @@
 var 004__signatures_8c =
 [
+    [ "CHECK_FUNC_MANGLING", "004__signatures_8c.html#a7750fee73aef16d012ed6ee917d26e3d", null ],
+    [ "CHECK_MANGLING", "004__signatures_8c.html#a301397440254e1ebb72f6c635c8792fe", null ],
     [ "DBLTAP_IMPLEMENTATION", "004__signatures_8c.html#a1655e4adfda95660042d34619eb61845", null ],
     [ "dummy_handler", "004__signatures_8c.html#afde8060cdaa4da8e4b27cc4d9cc73422", null ],
     [ "normalize_string", "004__signatures_8c.html#af37e8ab6a7739e06f92838b9208d3932", null ],
     [ "subtest", "004__signatures_8c.html#a590b5e3d87ffe270379ac162fc5a0a07", null ],
+    [ "subtest", "004__signatures_8c.html#a35643f6238a7183d3bf2f3bcf1146fcf", null ],
     [ "subtest", "004__signatures_8c.html#a02591756183fa2625eed0668cf2d26da", null ],
     [ "subtest", "004__signatures_8c.html#a49e412c64dc5212b8fb69cc4973c3880", null ],
     [ "subtest", "004__signatures_8c.html#ab32e5ed3c170e4a27fa5b64dd5a06b55", null ],

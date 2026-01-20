@@ -114,7 +114,8 @@ $(document).ready(function(){initNavTree('850__regression__cases_8c.html',''); i
 
 <p>A suite of regression tests for bugs discovered by fuzzing.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="compat__c23_8h_source.html">common/compat_c23.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="double__tap_8h_source.html">common/double_tap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="fuzz__helpers_8h_source.html">fuzz_helpers.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="fuzz__regression__helpers_8h_source.html">fuzz_regression_helpers.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
@@ -168,7 +169,7 @@ Variables</h2></td></tr>
 <li>A Base64-encoded string representing the raw fuzzer input.</li>
 <li>The target component (<code>TARGET_TYPE_GENERATOR</code>, <code>TARGET_SIGNATURE_PARSER</code>, etc.) that the input should be sent to.</li>
 </ul>
-<p>By embedding these inputs into a permanent unit test, we can ensure that these specific bugs do not reappear in future versions of the library. This forms a crucial part of the project's quality assurance process. The <code>b64_decode</code> helper from <code><a class="el" href="fuzz__regression__helpers_8h.html" title="Helper functions specifically for running regression tests from saved fuzzer inputs.">fuzz_regression_helpers.h</a></code> is used to unpack the inputs at runtime. </p>
+<p>By embedding these inputs into a permanent unit test, we can ensure that these specific bugs do not reappear in future versions of the library. This forms a crucial part of the project's quality assurance process. The <code>infix_b64_decode</code> helper from <code><a class="el" href="fuzz__regression__helpers_8h.html" title="Helper functions specifically for running regression tests from saved fuzzer inputs.">fuzz_regression_helpers.h</a></code> is used to unpack the inputs at runtime. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a1655e4adfda95660042d34619eb61845" name="a1655e4adfda95660042d34619eb61845"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1655e4adfda95660042d34619eb61845">&#9670;&#160;</a></span>DBLTAP_IMPLEMENTATION</h2>
@@ -320,7 +321,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="keywordtype">size_t</span> num_tests = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>[0])</div>
-<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:37</div></div>
+<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:38</div></div>
 </div><!-- fragment -->
 </div>
 </div>

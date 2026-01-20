@@ -1,17 +1,13 @@
 <map id="eg/cookbook/Ch02_LargeStruct.c" name="eg/cookbook/Ch02_LargeStruct.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Large Structs Passed by Reference." alt="" coords="108,5,343,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="126,79,221,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,33,192,69,188,66,215,29"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="245,79,312,104"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="236,29,264,66,260,69,232,33"/>
-<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="23,152,198,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="165,106,132,143,128,140,161,103"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="12,225,95,251"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="126,98,96,104,65,115,36,131,13,153,8,168,11,184,33,214,28,217,7,186,3,168,8,151,33,126,63,110,95,99,125,93"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="129,225,204,251"/>
-<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="187,103,209,136,215,157,213,178,203,199,190,217,186,214,199,196,208,177,210,157,204,138,182,106"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="274,152,345,177"/>
-<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="196,102,276,143,274,148,194,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,179,73,216,69,213,99,176"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="122,176,151,213,147,216,118,179"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Large Structs Passed by Reference." alt="" coords="84,5,319,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="102,79,197,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,33,168,69,164,66,191,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="221,79,288,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="212,29,240,66,236,69,208,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,88,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,106,76,146,73,142,131,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="112,152,187,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="152,104,152,138,147,138,147,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="211,152,282,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="167,102,221,141,218,146,163,106"/>
 </map>

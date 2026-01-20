@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('executor_8c.html',''); initResizable()
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for executor.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="executor_8c__incl.svg" width="100%" height="547"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="executor_8c__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -137,17 +137,17 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa8f362c13a4f32d15b32f4980e685932" id="r_aa8f362c13a4f32d15b32f4980e685932"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#aa8f362c13a4f32d15b32f4980e685932">shm_open_anonymous</a> ()</td></tr>
-<tr class="separator:aa8f362c13a4f32d15b32f4980e685932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b4025860b0812c9a7cac0bad6be472a" id="r_a3b4025860b0812c9a7cac0bad6be472a"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a3b4025860b0812c9a7cac0bad6be472a">create_anonymous_file</a> (void)</td></tr>
+<tr class="separator:a3b4025860b0812c9a7cac0bad6be472a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f1c9cffdcefd87ca6cf40b0d99adc" id="r_a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a721f1c9cffdcefd87ca6cf40b0d99adc">infix_executable_alloc</a> (size_t size)</td></tr>
 <tr class="memdesc:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of executable memory using the platform's W^X strategy.  <br /></td></tr>
 <tr class="separator:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dc6a62860160637126cf984b77a2d46" id="r_a2dc6a62860160637126cf984b77a2d46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a2dc6a62860160637126cf984b77a2d46">infix_executable_free</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
 <tr class="memdesc:a2dc6a62860160637126cf984b77a2d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of executable memory and applies guard pages to prevent use-after-free.  <br /></td></tr>
 <tr class="separator:a2dc6a62860160637126cf984b77a2d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28b554e0d17b214853dca915ecc1afc1" id="r_a28b554e0d17b214853dca915ecc1afc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a28b554e0d17b214853dca915ecc1afc1">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
-<tr class="memdesc:a28b554e0d17b214853dca915ecc1afc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of JIT memory executable, completing the W^X process.  <br /></td></tr>
-<tr class="separator:a28b554e0d17b214853dca915ecc1afc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75e32de0bfa19ecd2d49e7b5e6b6b9c5" id="r_a75e32de0bfa19ecd2d49e7b5e6b6b9c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a75e32de0bfa19ecd2d49e7b5e6b6b9c5">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> *exec)</td></tr>
+<tr class="memdesc:a75e32de0bfa19ecd2d49e7b5e6b6b9c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of JIT memory executable, completing the W^X process.  <br /></td></tr>
+<tr class="separator:a75e32de0bfa19ecd2d49e7b5e6b6b9c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6661b906602a04bbd15a91ecc1c6adde" id="r_a6661b906602a04bbd15a91ecc1c6adde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="executor_8c.html#a6661b906602a04bbd15a91ecc1c6adde">infix_protected_alloc</a> (size_t size)</td></tr>
 <tr class="memdesc:a6661b906602a04bbd15a91ecc1c6adde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of standard memory for later protection.  <br /></td></tr>
 <tr class="separator:a6661b906602a04bbd15a91ecc1c6adde"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,6 +175,32 @@ Functions</h2></td></tr>
 <li><b>Universal Dispatch:</b> It contains the <code>infix_internal_dispatch_callback_fn_impl</code>, the universal C entry point that is the final target of all reverse trampoline stubs. This function is the bridge between the low-level JIT code and the high-level user-provided C handlers. </li>
 </ol>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a3b4025860b0812c9a7cac0bad6be472a" name="a3b4025860b0812c9a7cac0bad6be472a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b4025860b0812c9a7cac0bad6be472a">&#9670;&#160;</a></span>create_anonymous_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int create_anonymous_file </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a721f1c9cffdcefd87ca6cf40b0d99adc" name="a721f1c9cffdcefd87ca6cf40b0d99adc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a721f1c9cffdcefd87ca6cf40b0d99adc">&#9670;&#160;</a></span>infix_executable_alloc()</h2>
 
@@ -228,8 +254,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a28b554e0d17b214853dca915ecc1afc1" name="a28b554e0d17b214853dca915ecc1afc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28b554e0d17b214853dca915ecc1afc1">&#9670;&#160;</a></span>infix_executable_make_executable()</h2>
+<a id="a75e32de0bfa19ecd2d49e7b5e6b6b9c5" name="a75e32de0bfa19ecd2d49e7b5e6b6b9c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75e32de0bfa19ecd2d49e7b5e6b6b9c5">&#9670;&#160;</a></span>infix_executable_make_executable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +263,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool infix_executable_make_executable </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a> *&#160;</td>
           <td class="paramname"><em>exec</em></td><td>)</td>
           <td></td>
         </tr>
@@ -376,31 +402,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> on failure. </dd></dl>
-
-</div>
-</div>
-<a id="aa8f362c13a4f32d15b32f4980e685932" name="aa8f362c13a4f32d15b32f4980e685932"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8f362c13a4f32d15b32f4980e685932">&#9670;&#160;</a></span>shm_open_anonymous()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int shm_open_anonymous </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

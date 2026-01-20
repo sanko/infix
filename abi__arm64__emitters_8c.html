@@ -123,56 +123,60 @@ Include dependency graph for abi_arm64_emitters.c:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a74320af783d0497f3cd9a936f8b64fba" id="r_a74320af783d0497f3cd9a936f8b64fba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a74320af783d0497f3cd9a936f8b64fba">emit_arm64_mov_imm_chunk</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is_movz, uint64_t dest_reg, uint16_t imm, uint8_t shift_count)</td></tr>
-<tr class="separator:a74320af783d0497f3cd9a936f8b64fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba20e09949a91f2d9a5ead5ffd89261e" id="r_aba20e09949a91f2d9a5ead5ffd89261e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aba20e09949a91f2d9a5ead5ffd89261e">emit_arm64_load_u64_immediate</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, uint64_t value)</td></tr>
-<tr class="separator:aba20e09949a91f2d9a5ead5ffd89261e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0331530c5c87c8574b432c1cfe824b1" id="r_aa0331530c5c87c8574b432c1cfe824b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aa0331530c5c87c8574b432c1cfe824b1">emit_arm64_mov_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src)</td></tr>
-<tr class="separator:aa0331530c5c87c8574b432c1cfe824b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1859924feee26110a597f8fdb40f641a" id="r_a1859924feee26110a597f8fdb40f641a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a1859924feee26110a597f8fdb40f641a">emit_arm64_ldr_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:a1859924feee26110a597f8fdb40f641a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ab8db1da3dd51241b266eddd85c9999" id="r_a1ab8db1da3dd51241b266eddd85c9999"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a1ab8db1da3dd51241b266eddd85c9999">emit_arm64_ldrb_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:a1ab8db1da3dd51241b266eddd85c9999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa20666702b18c3c2c467bee1083df740" id="r_aa20666702b18c3c2c467bee1083df740"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aa20666702b18c3c2c467bee1083df740">emit_arm64_ldrh_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:aa20666702b18c3c2c467bee1083df740"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadef894fddbb4159a515f76280c3e8a6" id="r_aadef894fddbb4159a515f76280c3e8a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aadef894fddbb4159a515f76280c3e8a6">emit_arm64_ldrsw_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:aadef894fddbb4159a515f76280c3e8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a889ea2650a40f3b7c4845df0c75882d9" id="r_a889ea2650a40f3b7c4845df0c75882d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a889ea2650a40f3b7c4845df0c75882d9">emit_arm64_str_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:a889ea2650a40f3b7c4845df0c75882d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3cc813449472a19651a5267fb9f8094" id="r_ac3cc813449472a19651a5267fb9f8094"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#ac3cc813449472a19651a5267fb9f8094">emit_arm64_strb_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:ac3cc813449472a19651a5267fb9f8094"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad87392f8262a82657763d0f145796f3e" id="r_ad87392f8262a82657763d0f145796f3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#ad87392f8262a82657763d0f145796f3e">emit_arm64_strh_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:ad87392f8262a82657763d0f145796f3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc81f93b66c7f0f90c8908d84bc02ae2" id="r_afc81f93b66c7f0f90c8908d84bc02ae2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#afc81f93b66c7f0f90c8908d84bc02ae2">emit_arm64_stp_pre_index</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src1, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src2, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:afc81f93b66c7f0f90c8908d84bc02ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d8ed18b3a095c6351a43852e155973c" id="r_a2d8ed18b3a095c6351a43852e155973c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a2d8ed18b3a095c6351a43852e155973c">emit_arm64_ldp_post_index</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest1, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest2, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:a2d8ed18b3a095c6351a43852e155973c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaed516447368c493b87bee33576930f8" id="r_aaed516447368c493b87bee33576930f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aaed516447368c493b87bee33576930f8">emit_arm64_ldr_vpr</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:aaed516447368c493b87bee33576930f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa691c5501861dfccc30b87cbe4b9c5da" id="r_aa691c5501861dfccc30b87cbe4b9c5da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aa691c5501861dfccc30b87cbe4b9c5da">emit_arm64_str_vpr</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:aa691c5501861dfccc30b87cbe4b9c5da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa70916450b63c970b33498cd54771a14" id="r_aa70916450b63c970b33498cd54771a14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aa70916450b63c970b33498cd54771a14">emit_arm64_ldr_q_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:aa70916450b63c970b33498cd54771a14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51f958133d7a2ce1298a59599b107460" id="r_a51f958133d7a2ce1298a59599b107460"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a51f958133d7a2ce1298a59599b107460">emit_arm64_str_q_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
-<tr class="separator:a51f958133d7a2ce1298a59599b107460"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5de54239ffcce074129023518fdda4be" id="r_a5de54239ffcce074129023518fdda4be"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a5de54239ffcce074129023518fdda4be">emit_arm64_arith_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is_sub, bool is64, bool set_flags, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, uint32_t imm)</td></tr>
-<tr class="separator:a5de54239ffcce074129023518fdda4be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a230cdc983d0ea859c80655bd3969ffb4" id="r_a230cdc983d0ea859c80655bd3969ffb4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a230cdc983d0ea859c80655bd3969ffb4">emit_arm64_add_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, bool set_flags, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, uint32_t imm)</td></tr>
-<tr class="separator:a230cdc983d0ea859c80655bd3969ffb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37a62baf0afa71286f3a4aa5269003b6" id="r_a37a62baf0afa71286f3a4aa5269003b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a37a62baf0afa71286f3a4aa5269003b6">emit_arm64_sub_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, bool set_flags, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, uint32_t imm)</td></tr>
-<tr class="separator:a37a62baf0afa71286f3a4aa5269003b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dbaf851c5ee3f9bbad629febe4a521d" id="r_a0dbaf851c5ee3f9bbad629febe4a521d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a0dbaf851c5ee3f9bbad629febe4a521d">emit_arm64_blr_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
-<tr class="separator:a0dbaf851c5ee3f9bbad629febe4a521d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2de539870803a035af6bbee04505a2c2" id="r_a2de539870803a035af6bbee04505a2c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a2de539870803a035af6bbee04505a2c2">emit_arm64_ret</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
-<tr class="separator:a2de539870803a035af6bbee04505a2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1629838eb8d7c67ba894789ceda18bf6" id="r_a1629838eb8d7c67ba894789ceda18bf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a1629838eb8d7c67ba894789ceda18bf6">emit_arm64_cbnz</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, int32_t offset)</td></tr>
-<tr class="separator:a1629838eb8d7c67ba894789ceda18bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebd252486ae56720ad58e4f9353c9297" id="r_aebd252486ae56720ad58e4f9353c9297"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aebd252486ae56720ad58e4f9353c9297">emit_arm64_brk</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint16_t imm)</td></tr>
-<tr class="separator:aebd252486ae56720ad58e4f9353c9297"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8b09b107e091e1b5d940266441c960f" id="r_af8b09b107e091e1b5d940266441c960f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#af8b09b107e091e1b5d940266441c960f">emit_arm64_b_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
-<tr class="separator:af8b09b107e091e1b5d940266441c960f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9dc878eb2b8259bc102068d59785b2d" id="r_ac9dc878eb2b8259bc102068d59785b2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#ac9dc878eb2b8259bc102068d59785b2d">emit_arm64_svc_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint16_t imm)</td></tr>
-<tr class="separator:ac9dc878eb2b8259bc102068d59785b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364522f9d890039c12f709673224fda7" id="r_a364522f9d890039c12f709673224fda7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a364522f9d890039c12f709673224fda7">emit_arm64_mov_imm_chunk</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is_movz, uint64_t dest_reg, uint16_t imm, uint8_t shift_count)</td></tr>
+<tr class="separator:a364522f9d890039c12f709673224fda7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba98db74369e4c1ece0676ec5fd1426b" id="r_aba98db74369e4c1ece0676ec5fd1426b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aba98db74369e4c1ece0676ec5fd1426b">emit_arm64_load_u64_immediate</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, uint64_t value)</td></tr>
+<tr class="separator:aba98db74369e4c1ece0676ec5fd1426b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5a915ba3aba6b6217bd9b7f5565faec" id="r_ae5a915ba3aba6b6217bd9b7f5565faec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#ae5a915ba3aba6b6217bd9b7f5565faec">emit_arm64_mov_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src)</td></tr>
+<tr class="separator:ae5a915ba3aba6b6217bd9b7f5565faec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a372be5c9888912d71419a986062a252d" id="r_a372be5c9888912d71419a986062a252d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a372be5c9888912d71419a986062a252d">emit_arm64_ldr_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a372be5c9888912d71419a986062a252d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa31569bb22325f453f626c5ab97fbf79" id="r_aa31569bb22325f453f626c5ab97fbf79"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aa31569bb22325f453f626c5ab97fbf79">emit_arm64_ldrb_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:aa31569bb22325f453f626c5ab97fbf79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82a195ac3174ddfe2c004589df34c88e" id="r_a82a195ac3174ddfe2c004589df34c88e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a82a195ac3174ddfe2c004589df34c88e">emit_arm64_ldrh_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a82a195ac3174ddfe2c004589df34c88e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9565e67b1eec23c69c6fb6e3a4699adf" id="r_a9565e67b1eec23c69c6fb6e3a4699adf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a9565e67b1eec23c69c6fb6e3a4699adf">emit_arm64_ldrsw_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a9565e67b1eec23c69c6fb6e3a4699adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4103a136f2752290d1b3c3e8d2fa5ec4" id="r_a4103a136f2752290d1b3c3e8d2fa5ec4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a4103a136f2752290d1b3c3e8d2fa5ec4">emit_arm64_ldrsb_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a4103a136f2752290d1b3c3e8d2fa5ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7ac7ad907de1074a002bfadc55a145e" id="r_ad7ac7ad907de1074a002bfadc55a145e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#ad7ac7ad907de1074a002bfadc55a145e">emit_arm64_ldrsh_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:ad7ac7ad907de1074a002bfadc55a145e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3773712e21067ff88457c05c668d94bf" id="r_a3773712e21067ff88457c05c668d94bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a3773712e21067ff88457c05c668d94bf">emit_arm64_str_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a3773712e21067ff88457c05c668d94bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16dcb00d1d3de9b835372901858142b2" id="r_a16dcb00d1d3de9b835372901858142b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a16dcb00d1d3de9b835372901858142b2">emit_arm64_strb_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a16dcb00d1d3de9b835372901858142b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaee5a90025f6f78e500ea88751208f52" id="r_aaee5a90025f6f78e500ea88751208f52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#aaee5a90025f6f78e500ea88751208f52">emit_arm64_strh_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:aaee5a90025f6f78e500ea88751208f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a891d3411d2986ee0d2a9984e88b197" id="r_a6a891d3411d2986ee0d2a9984e88b197"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a6a891d3411d2986ee0d2a9984e88b197">emit_arm64_stp_pre_index</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src1, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> src2, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a6a891d3411d2986ee0d2a9984e88b197"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38810556833b52761519dcc759885db6" id="r_a38810556833b52761519dcc759885db6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a38810556833b52761519dcc759885db6">emit_arm64_ldp_post_index</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest1, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest2, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a38810556833b52761519dcc759885db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbb41de3383b51bfcd91b6492b0d56c4" id="r_afbb41de3383b51bfcd91b6492b0d56c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#afbb41de3383b51bfcd91b6492b0d56c4">emit_arm64_ldr_vpr</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:afbb41de3383b51bfcd91b6492b0d56c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58359bf626ec8ca81aa427933a85af30" id="r_a58359bf626ec8ca81aa427933a85af30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a58359bf626ec8ca81aa427933a85af30">emit_arm64_str_vpr</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a58359bf626ec8ca81aa427933a85af30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdf72f6645dd0a44fedbfebb992a4d8a" id="r_abdf72f6645dd0a44fedbfebb992a4d8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#abdf72f6645dd0a44fedbfebb992a4d8a">emit_arm64_ldr_q_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:abdf72f6645dd0a44fedbfebb992a4d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a937cd7df910cd10354f6959a60a21bb4" id="r_a937cd7df910cd10354f6959a60a21bb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a937cd7df910cd10354f6959a60a21bb4">emit_arm64_str_q_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a84639a49e91a2455fb857495a718e3be">arm64_vpr</a> src, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, int32_t offset)</td></tr>
+<tr class="separator:a937cd7df910cd10354f6959a60a21bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf6e05278137d0dcec8311fab010f8fe" id="r_adf6e05278137d0dcec8311fab010f8fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#adf6e05278137d0dcec8311fab010f8fe">emit_arm64_arith_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is_sub, bool is64, bool set_flags, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, uint32_t imm)</td></tr>
+<tr class="separator:adf6e05278137d0dcec8311fab010f8fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b53fa5636791242490f7e89ea5a528d" id="r_a8b53fa5636791242490f7e89ea5a528d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a8b53fa5636791242490f7e89ea5a528d">emit_arm64_add_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, bool set_flags, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, uint32_t imm)</td></tr>
+<tr class="separator:a8b53fa5636791242490f7e89ea5a528d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a649cab6b26b237c98126759e55fc97ee" id="r_a649cab6b26b237c98126759e55fc97ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a649cab6b26b237c98126759e55fc97ee">emit_arm64_sub_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, bool set_flags, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> dest, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> base, uint32_t imm)</td></tr>
+<tr class="separator:a649cab6b26b237c98126759e55fc97ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23e0898b6650decac30e6d45f628cdc2" id="r_a23e0898b6650decac30e6d45f628cdc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a23e0898b6650decac30e6d45f628cdc2">emit_arm64_blr_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
+<tr class="separator:a23e0898b6650decac30e6d45f628cdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cbc91da309da271a7b7527e762a1974" id="r_a0cbc91da309da271a7b7527e762a1974"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a0cbc91da309da271a7b7527e762a1974">emit_arm64_ret</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
+<tr class="separator:a0cbc91da309da271a7b7527e762a1974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62a9ec3e6e7ed180cfa3b68fa30e4135" id="r_a62a9ec3e6e7ed180cfa3b68fa30e4135"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a62a9ec3e6e7ed180cfa3b68fa30e4135">emit_arm64_cbnz</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, bool is64, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, int32_t offset)</td></tr>
+<tr class="separator:a62a9ec3e6e7ed180cfa3b68fa30e4135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a677f5d9f8d6516590b04eda1590d98dc" id="r_a677f5d9f8d6516590b04eda1590d98dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a677f5d9f8d6516590b04eda1590d98dc">emit_arm64_brk</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint16_t imm)</td></tr>
+<tr class="separator:a677f5d9f8d6516590b04eda1590d98dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a239e4cf9563d44192c400ec3cd522a56" id="r_a239e4cf9563d44192c400ec3cd522a56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a239e4cf9563d44192c400ec3cd522a56">emit_arm64_b_reg</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a> <a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
+<tr class="separator:a239e4cf9563d44192c400ec3cd522a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a7668e0ef1463dae245aa463e00374b" id="r_a4a7668e0ef1463dae245aa463e00374b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="abi__arm64__emitters_8c.html#a4a7668e0ef1463dae245aa463e00374b">emit_arm64_svc_imm</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint16_t imm)</td></tr>
+<tr class="separator:a4a7668e0ef1463dae245aa463e00374b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements internal helper functions for emitting AArch64 machine code. </p>
@@ -182,14 +186,14 @@ Functions</h2></td></tr>
 <p>The documentation blocks within this file are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).</p>
 <p>SPDX-License-Identifier: CC-BY-4.0</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a230cdc983d0ea859c80655bd3969ffb4" name="a230cdc983d0ea859c80655bd3969ffb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a230cdc983d0ea859c80655bd3969ffb4">&#9670;&#160;</a></span>emit_arm64_add_imm()</h2>
+<a id="a8b53fa5636791242490f7e89ea5a528d" name="a8b53fa5636791242490f7e89ea5a528d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b53fa5636791242490f7e89ea5a528d">&#9670;&#160;</a></span>emit_arm64_add_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_add_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_add_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -234,17 +238,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5de54239ffcce074129023518fdda4be" name="a5de54239ffcce074129023518fdda4be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5de54239ffcce074129023518fdda4be">&#9670;&#160;</a></span>emit_arm64_arith_imm()</h2>
+<a id="adf6e05278137d0dcec8311fab010f8fe" name="adf6e05278137d0dcec8311fab010f8fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf6e05278137d0dcec8311fab010f8fe">&#9670;&#160;</a></span>emit_arm64_arith_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void emit_arm64_arith_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_arith_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -291,23 +292,18 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af8b09b107e091e1b5d940266441c960f" name="af8b09b107e091e1b5d940266441c960f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8b09b107e091e1b5d940266441c960f">&#9670;&#160;</a></span>emit_arm64_b_reg()</h2>
+<a id="a239e4cf9563d44192c400ec3cd522a56" name="a239e4cf9563d44192c400ec3cd522a56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a239e4cf9563d44192c400ec3cd522a56">&#9670;&#160;</a></span>emit_arm64_b_reg()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_b_reg </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_b_reg </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -328,14 +324,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0dbaf851c5ee3f9bbad629febe4a521d" name="a0dbaf851c5ee3f9bbad629febe4a521d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0dbaf851c5ee3f9bbad629febe4a521d">&#9670;&#160;</a></span>emit_arm64_blr_reg()</h2>
+<a id="a23e0898b6650decac30e6d45f628cdc2" name="a23e0898b6650decac30e6d45f628cdc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23e0898b6650decac30e6d45f628cdc2">&#9670;&#160;</a></span>emit_arm64_blr_reg()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_blr_reg </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_blr_reg </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -356,14 +352,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aebd252486ae56720ad58e4f9353c9297" name="aebd252486ae56720ad58e4f9353c9297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebd252486ae56720ad58e4f9353c9297">&#9670;&#160;</a></span>emit_arm64_brk()</h2>
+<a id="a677f5d9f8d6516590b04eda1590d98dc" name="a677f5d9f8d6516590b04eda1590d98dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a677f5d9f8d6516590b04eda1590d98dc">&#9670;&#160;</a></span>emit_arm64_brk()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_brk </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_brk </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -384,14 +380,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1629838eb8d7c67ba894789ceda18bf6" name="a1629838eb8d7c67ba894789ceda18bf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1629838eb8d7c67ba894789ceda18bf6">&#9670;&#160;</a></span>emit_arm64_cbnz()</h2>
+<a id="a62a9ec3e6e7ed180cfa3b68fa30e4135" name="a62a9ec3e6e7ed180cfa3b68fa30e4135"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62a9ec3e6e7ed180cfa3b68fa30e4135">&#9670;&#160;</a></span>emit_arm64_cbnz()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_cbnz </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_cbnz </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -424,14 +420,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2d8ed18b3a095c6351a43852e155973c" name="a2d8ed18b3a095c6351a43852e155973c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d8ed18b3a095c6351a43852e155973c">&#9670;&#160;</a></span>emit_arm64_ldp_post_index()</h2>
+<a id="a38810556833b52761519dcc759885db6" name="a38810556833b52761519dcc759885db6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38810556833b52761519dcc759885db6">&#9670;&#160;</a></span>emit_arm64_ldp_post_index()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldp_post_index </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldp_post_index </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -476,14 +472,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1859924feee26110a597f8fdb40f641a" name="a1859924feee26110a597f8fdb40f641a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1859924feee26110a597f8fdb40f641a">&#9670;&#160;</a></span>emit_arm64_ldr_imm()</h2>
+<a id="a372be5c9888912d71419a986062a252d" name="a372be5c9888912d71419a986062a252d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a372be5c9888912d71419a986062a252d">&#9670;&#160;</a></span>emit_arm64_ldr_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldr_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldr_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -522,14 +518,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa70916450b63c970b33498cd54771a14" name="aa70916450b63c970b33498cd54771a14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa70916450b63c970b33498cd54771a14">&#9670;&#160;</a></span>emit_arm64_ldr_q_imm()</h2>
+<a id="abdf72f6645dd0a44fedbfebb992a4d8a" name="abdf72f6645dd0a44fedbfebb992a4d8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdf72f6645dd0a44fedbfebb992a4d8a">&#9670;&#160;</a></span>emit_arm64_ldr_q_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldr_q_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldr_q_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -562,14 +558,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aaed516447368c493b87bee33576930f8" name="aaed516447368c493b87bee33576930f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaed516447368c493b87bee33576930f8">&#9670;&#160;</a></span>emit_arm64_ldr_vpr()</h2>
+<a id="afbb41de3383b51bfcd91b6492b0d56c4" name="afbb41de3383b51bfcd91b6492b0d56c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbb41de3383b51bfcd91b6492b0d56c4">&#9670;&#160;</a></span>emit_arm64_ldr_vpr()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldr_vpr </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldr_vpr </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -608,14 +604,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ab8db1da3dd51241b266eddd85c9999" name="a1ab8db1da3dd51241b266eddd85c9999"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ab8db1da3dd51241b266eddd85c9999">&#9670;&#160;</a></span>emit_arm64_ldrb_imm()</h2>
+<a id="aa31569bb22325f453f626c5ab97fbf79" name="aa31569bb22325f453f626c5ab97fbf79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa31569bb22325f453f626c5ab97fbf79">&#9670;&#160;</a></span>emit_arm64_ldrb_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldrb_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldrb_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -648,14 +644,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa20666702b18c3c2c467bee1083df740" name="aa20666702b18c3c2c467bee1083df740"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa20666702b18c3c2c467bee1083df740">&#9670;&#160;</a></span>emit_arm64_ldrh_imm()</h2>
+<a id="a82a195ac3174ddfe2c004589df34c88e" name="a82a195ac3174ddfe2c004589df34c88e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82a195ac3174ddfe2c004589df34c88e">&#9670;&#160;</a></span>emit_arm64_ldrh_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldrh_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldrh_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -688,14 +684,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aadef894fddbb4159a515f76280c3e8a6" name="aadef894fddbb4159a515f76280c3e8a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadef894fddbb4159a515f76280c3e8a6">&#9670;&#160;</a></span>emit_arm64_ldrsw_imm()</h2>
+<a id="a4103a136f2752290d1b3c3e8d2fa5ec4" name="a4103a136f2752290d1b3c3e8d2fa5ec4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4103a136f2752290d1b3c3e8d2fa5ec4">&#9670;&#160;</a></span>emit_arm64_ldrsb_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ldrsw_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldrsb_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -728,14 +724,94 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aba20e09949a91f2d9a5ead5ffd89261e" name="aba20e09949a91f2d9a5ead5ffd89261e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba20e09949a91f2d9a5ead5ffd89261e">&#9670;&#160;</a></span>emit_arm64_load_u64_immediate()</h2>
+<a id="ad7ac7ad907de1074a002bfadc55a145e" name="ad7ac7ad907de1074a002bfadc55a145e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7ac7ad907de1074a002bfadc55a145e">&#9670;&#160;</a></span>emit_arm64_ldrsh_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_load_u64_immediate </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldrsh_imm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9565e67b1eec23c69c6fb6e3a4699adf" name="a9565e67b1eec23c69c6fb6e3a4699adf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9565e67b1eec23c69c6fb6e3a4699adf">&#9670;&#160;</a></span>emit_arm64_ldrsw_imm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ldrsw_imm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="abi__arm64__common_8h.html#a7c1f154648630ca0306ce870180092b1">arm64_gpr</a>&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba98db74369e4c1ece0676ec5fd1426b" name="aba98db74369e4c1ece0676ec5fd1426b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba98db74369e4c1ece0676ec5fd1426b">&#9670;&#160;</a></span>emit_arm64_load_u64_immediate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_load_u64_immediate </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -762,17 +838,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a74320af783d0497f3cd9a936f8b64fba" name="a74320af783d0497f3cd9a936f8b64fba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74320af783d0497f3cd9a936f8b64fba">&#9670;&#160;</a></span>emit_arm64_mov_imm_chunk()</h2>
+<a id="a364522f9d890039c12f709673224fda7" name="a364522f9d890039c12f709673224fda7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a364522f9d890039c12f709673224fda7">&#9670;&#160;</a></span>emit_arm64_mov_imm_chunk()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void emit_arm64_mov_imm_chunk </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_mov_imm_chunk </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -807,23 +880,18 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa0331530c5c87c8574b432c1cfe824b1" name="aa0331530c5c87c8574b432c1cfe824b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0331530c5c87c8574b432c1cfe824b1">&#9670;&#160;</a></span>emit_arm64_mov_reg()</h2>
+<a id="ae5a915ba3aba6b6217bd9b7f5565faec" name="ae5a915ba3aba6b6217bd9b7f5565faec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5a915ba3aba6b6217bd9b7f5565faec">&#9670;&#160;</a></span>emit_arm64_mov_reg()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_mov_reg </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_mov_reg </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -856,14 +924,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2de539870803a035af6bbee04505a2c2" name="a2de539870803a035af6bbee04505a2c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2de539870803a035af6bbee04505a2c2">&#9670;&#160;</a></span>emit_arm64_ret()</h2>
+<a id="a0cbc91da309da271a7b7527e762a1974" name="a0cbc91da309da271a7b7527e762a1974"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cbc91da309da271a7b7527e762a1974">&#9670;&#160;</a></span>emit_arm64_ret()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_ret </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_ret </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -884,14 +952,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="afc81f93b66c7f0f90c8908d84bc02ae2" name="afc81f93b66c7f0f90c8908d84bc02ae2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc81f93b66c7f0f90c8908d84bc02ae2">&#9670;&#160;</a></span>emit_arm64_stp_pre_index()</h2>
+<a id="a6a891d3411d2986ee0d2a9984e88b197" name="a6a891d3411d2986ee0d2a9984e88b197"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a891d3411d2986ee0d2a9984e88b197">&#9670;&#160;</a></span>emit_arm64_stp_pre_index()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_stp_pre_index </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_stp_pre_index </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -936,14 +1004,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a889ea2650a40f3b7c4845df0c75882d9" name="a889ea2650a40f3b7c4845df0c75882d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a889ea2650a40f3b7c4845df0c75882d9">&#9670;&#160;</a></span>emit_arm64_str_imm()</h2>
+<a id="a3773712e21067ff88457c05c668d94bf" name="a3773712e21067ff88457c05c668d94bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3773712e21067ff88457c05c668d94bf">&#9670;&#160;</a></span>emit_arm64_str_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_str_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_str_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -982,14 +1050,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a51f958133d7a2ce1298a59599b107460" name="a51f958133d7a2ce1298a59599b107460"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51f958133d7a2ce1298a59599b107460">&#9670;&#160;</a></span>emit_arm64_str_q_imm()</h2>
+<a id="a937cd7df910cd10354f6959a60a21bb4" name="a937cd7df910cd10354f6959a60a21bb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a937cd7df910cd10354f6959a60a21bb4">&#9670;&#160;</a></span>emit_arm64_str_q_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_str_q_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_str_q_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1022,14 +1090,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa691c5501861dfccc30b87cbe4b9c5da" name="aa691c5501861dfccc30b87cbe4b9c5da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa691c5501861dfccc30b87cbe4b9c5da">&#9670;&#160;</a></span>emit_arm64_str_vpr()</h2>
+<a id="a58359bf626ec8ca81aa427933a85af30" name="a58359bf626ec8ca81aa427933a85af30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58359bf626ec8ca81aa427933a85af30">&#9670;&#160;</a></span>emit_arm64_str_vpr()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_str_vpr </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_str_vpr </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1068,14 +1136,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac3cc813449472a19651a5267fb9f8094" name="ac3cc813449472a19651a5267fb9f8094"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3cc813449472a19651a5267fb9f8094">&#9670;&#160;</a></span>emit_arm64_strb_imm()</h2>
+<a id="a16dcb00d1d3de9b835372901858142b2" name="a16dcb00d1d3de9b835372901858142b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16dcb00d1d3de9b835372901858142b2">&#9670;&#160;</a></span>emit_arm64_strb_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_strb_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_strb_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1108,14 +1176,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad87392f8262a82657763d0f145796f3e" name="ad87392f8262a82657763d0f145796f3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad87392f8262a82657763d0f145796f3e">&#9670;&#160;</a></span>emit_arm64_strh_imm()</h2>
+<a id="aaee5a90025f6f78e500ea88751208f52" name="aaee5a90025f6f78e500ea88751208f52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaee5a90025f6f78e500ea88751208f52">&#9670;&#160;</a></span>emit_arm64_strh_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_strh_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_strh_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1148,14 +1216,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a37a62baf0afa71286f3a4aa5269003b6" name="a37a62baf0afa71286f3a4aa5269003b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37a62baf0afa71286f3a4aa5269003b6">&#9670;&#160;</a></span>emit_arm64_sub_imm()</h2>
+<a id="a649cab6b26b237c98126759e55fc97ee" name="a649cab6b26b237c98126759e55fc97ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a649cab6b26b237c98126759e55fc97ee">&#9670;&#160;</a></span>emit_arm64_sub_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_sub_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_sub_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1200,14 +1268,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac9dc878eb2b8259bc102068d59785b2d" name="ac9dc878eb2b8259bc102068d59785b2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9dc878eb2b8259bc102068d59785b2d">&#9670;&#160;</a></span>emit_arm64_svc_imm()</h2>
+<a id="a4a7668e0ef1463dae245aa463e00374b" name="a4a7668e0ef1463dae245aa463e00374b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a7668e0ef1463dae245aa463e00374b">&#9670;&#160;</a></span>emit_arm64_svc_imm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_arm64_svc_imm </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_arm64_svc_imm </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>

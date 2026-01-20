@@ -1,18 +1,14 @@
 <map id="eg/cookbook/Ch08_ManualAPI.c" name="eg/cookbook/Ch08_ManualAPI.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 8: The Full Manual API Lifecycle." alt="" coords="269,5,498,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="190,79,284,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="361,33,274,75,272,70,359,28"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="200,225,274,251"/>
-<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="388,31,390,59,388,98,380,140,360,179,345,195,327,208,289,226,286,222,325,204,342,191,356,176,375,138,383,97,384,59,382,31"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="421,79,488,104"/>
-<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="397,29,435,67,431,71,393,33"/>
-<area shape="rect" id="Node000003" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="24,152,199,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,106,145,147,143,143,215,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="8,225,90,251"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="190,101,87,120,41,135,25,144,14,154,8,168,11,183,29,213,25,216,6,185,3,167,9,150,21,140,39,131,86,115,189,96"/>
-<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="240,104,240,212,234,212,234,104"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="275,152,346,177"/>
-<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="251,102,290,140,287,144,247,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="103,179,70,217,66,213,99,176"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="133,175,206,216,203,221,130,180"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 8: The Full Manual API Lifecycle." alt="" coords="127,5,356,31"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="106,79,201,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,33,180,72,177,68,226,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="208,152,283,177"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="244,31,247,138,242,138,239,31"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="279,79,345,104"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="255,29,293,67,289,71,251,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,88,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="138,106,77,147,74,142,135,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="170,102,221,141,218,146,166,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="113,152,183,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="155,105,153,139,147,138,150,104"/>
 </map>

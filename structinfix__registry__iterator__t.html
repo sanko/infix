@@ -105,14 +105,14 @@ $(document).ready(function(){initNavTree('structinfix__registry__iterator__t.htm
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structinfix__registry__iterator__t-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">infix_registry_iterator_t Struct Reference</div></div>
+  <div class="headertitle"><div class="title">infix_registry_iterator_t Struct Reference<div class="ingroups"><a class="el" href="group__high__level__api.html">High-Level Signature API</a> &raquo; <a class="el" href="group__registry__introspection__api.html">Registry Introspection API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Internal definition of a registry iterator.  
+<p>An iterator for traversing a type registry.  
  <a href="structinfix__registry__iterator__t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="infix_8h_source.html">infix.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for infix_registry_iterator_t:</div>
 <div class="dyncontent">
@@ -121,64 +121,19 @@ Collaboration diagram for infix_registry_iterator_t:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0e762586e319f285e8f841e53c4989ff" id="r_a0e762586e319f285e8f841e53c4989ff"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__registry__iterator__t.html#a0e762586e319f285e8f841e53c4989ff">registry</a></td></tr>
-<tr class="separator:a0e762586e319f285e8f841e53c4989ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8623db8b3d993d6d262a4cc6c30bc9f6" id="r_a8623db8b3d993d6d262a4cc6c30bc9f6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__registry__iterator__t.html#a8623db8b3d993d6d262a4cc6c30bc9f6">current_bucket</a></td></tr>
-<tr class="separator:a8623db8b3d993d6d262a4cc6c30bc9f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04768f86307d20cebdd51a42f7ebcde5" id="r_a04768f86307d20cebdd51a42f7ebcde5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__registry__iterator__t.html#a04768f86307d20cebdd51a42f7ebcde5">current_entry</a></td></tr>
-<tr class="separator:a04768f86307d20cebdd51a42f7ebcde5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e762586e319f285e8f841e53c4989ff" id="r_ga0e762586e319f285e8f841e53c4989ff"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="group__type__system.html#ga4d21b1e186eab9aa867748d225794aaa">infix_registry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga0e762586e319f285e8f841e53c4989ff">registry</a></td></tr>
+<tr class="separator:ga0e762586e319f285e8f841e53c4989ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9c93d32e2fa567f5d77d9cb9f821e30f" id="r_ga9c93d32e2fa567f5d77d9cb9f821e30f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga9c93d32e2fa567f5d77d9cb9f821e30f">_bucket_index</a></td></tr>
+<tr class="separator:ga9c93d32e2fa567f5d77d9cb9f821e30f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga03901a56958f0d9f3ce3968048754b5d" id="r_ga03901a56958f0d9f3ce3968048754b5d"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga03901a56958f0d9f3ce3968048754b5d">_current_entry</a></td></tr>
+<tr class="separator:ga03901a56958f0d9f3ce3968048754b5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Internal definition of a registry iterator. </p>
-<p>This struct holds the complete state needed to traverse the registry's internal hash table, including the current bucket and the current entry within that bucket's linked list. </p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8623db8b3d993d6d262a4cc6c30bc9f6" name="a8623db8b3d993d6d262a4cc6c30bc9f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8623db8b3d993d6d262a4cc6c30bc9f6">&#9670;&#160;</a></span>current_bucket</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t infix_registry_iterator_t::current_bucket</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The index of the current hash bucket. </p>
-
-</div>
-</div>
-<a id="a04768f86307d20cebdd51a42f7ebcde5" name="a04768f86307d20cebdd51a42f7ebcde5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04768f86307d20cebdd51a42f7ebcde5">&#9670;&#160;</a></span>current_entry</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="struct__infix__registry__entry__t.html">_infix_registry_entry_t</a>* infix_registry_iterator_t::current_entry</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The current entry in the bucket's chain. </p>
-
-</div>
-</div>
-<a id="a0e762586e319f285e8f841e53c4989ff" name="a0e762586e319f285e8f841e53c4989ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e762586e319f285e8f841e53c4989ff">&#9670;&#160;</a></span>registry</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="structinfix__registry__t.html">infix_registry_t</a>* infix_registry_iterator_t::registry</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The registry being iterated. </p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/common/<a class="el" href="infix__internals_8h_source.html">infix_internals.h</a></li>
+<div class="textblock"><p>An iterator for traversing a type registry. </p>
+<p>This struct holds the complete state needed to traverse the registry's internal hash table, including the current bucket and the current entry within that bucket's linked list.</p>
+<p>The fields in this struct are implementation details and should not be accessed directly. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li>include/infix/<a class="el" href="infix_8h_source.html">infix.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

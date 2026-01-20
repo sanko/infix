@@ -21,5 +21,6 @@ var searchData=
   ['infix_5freverse_5fcall_5fframe_5flayout_18',['infix_reverse_call_frame_layout',['../structinfix__reverse__call__frame__layout.html',1,'']]],
   ['infix_5freverse_5ft_19',['infix_reverse_t',['../structinfix__reverse__t.html',1,'']]],
   ['infix_5fstruct_5fmember_5ft_20',['infix_struct_member_t',['../structinfix__struct__member__t.html',1,'']]],
-  ['infix_5ftype_5ft_21',['infix_type_t',['../structinfix__type__t.html',1,'']]]
+  ['infix_5ftype_5ft_21',['infix_type_t',['../structinfix__type__t.html',1,'']]],
+  ['infix_5fversion_5ft_22',['infix_version_t',['../structinfix__version__t.html',1,'']]]
 ];

@@ -1,38 +1,38 @@
 <map id="fuzz/fuzz_direct.c" name="fuzz/fuzz_direct.c">
-<area shape="rect" id="Node000001" title="Fuzzer target for the Direct Marshalling API generation logic." alt="" coords="622,5,756,31"/>
-<area shape="rect" id="Node000002" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="391,79,507,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="651,33,502,77,500,72,650,28"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="656,152,722,177"/>
-<area shape="poly" id="edge22_Node000001_Node000011" title=" " alt="" coords="692,31,692,138,686,138,686,31"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="747,152,818,177"/>
-<area shape="poly" id="edge23_Node000001_Node000013" title=" " alt="" coords="699,30,770,139,765,142,694,33"/>
-<area shape="rect" id="Node000003" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="356,152,542,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="452,104,452,138,446,138,446,104"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="424,372,506,397"/>
-<area shape="poly" id="edge16_Node000002_Node000007" title=" " alt="" coords="478,102,517,122,556,150,588,184,607,216,616,252,622,298,625,312,622,325,601,347,576,363,548,374,520,380,519,375,546,369,573,358,598,343,617,323,620,312,617,299,611,253,602,218,584,187,552,154,514,126,475,106"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="93,372,168,397"/>
-<area shape="poly" id="edge17_Node000002_Node000008" title=" " alt="" coords="391,100,298,116,243,131,187,150,133,176,84,209,43,250,11,300,8,312,10,322,25,341,50,357,81,368,79,373,48,361,21,345,5,324,3,311,6,298,38,247,81,205,131,172,185,145,242,126,297,111,390,95"/>
-<area shape="rect" id="Node000009" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="154,225,248,251"/>
-<area shape="poly" id="edge15_Node000002_Node000009" title=" " alt="" coords="391,101,319,118,282,133,249,154,226,182,211,213,206,211,221,179,246,150,280,128,317,113,390,95"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="22,299,92,324"/>
-<area shape="poly" id="edge18_Node000002_Node000010" title=" " alt="" coords="391,103,309,121,265,135,224,154,177,185,136,222,76,289,72,286,132,218,174,181,221,150,263,130,308,116,390,97"/>
-<area shape="poly" id="edge19_Node000002_Node000011" title=" " alt="" coords="488,101,643,147,642,152,487,107"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="260,152,331,177"/>
-<area shape="poly" id="edge20_Node000002_Node000012" title=" " alt="" coords="425,106,334,149,332,144,423,102"/>
-<area shape="poly" id="edge21_Node000002_Node000013" title=" " alt="" coords="506,101,734,149,733,154,505,107"/>
-<area shape="rect" id="Node000004" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="418,299,587,324"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="444,178,431,212,429,231,433,250,449,272,470,289,467,293,445,275,428,252,423,231,426,211,439,176"/>
-<area shape="rect" id="Node000005" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="443,225,594,251"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="462,176,500,214,496,217,458,180"/>
-<area shape="poly" id="edge10_Node000003_Node000009" title=" " alt="" coords="410,180,255,224,253,219,408,175"/>
-<area shape="poly" id="edge8_Node000005_Node000004" title=" " alt="" coords="518,252,510,286,505,285,513,250"/>
-<area shape="rect" id="Node000006" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="219,299,394,324"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="485,253,354,297,353,292,483,248"/>
-<area shape="poly" id="edge9_Node000005_Node000007" title=" " alt="" coords="545,248,569,262,591,280,605,301,605,313,601,325,584,344,564,358,521,376,519,371,562,354,581,340,596,323,600,313,599,303,587,284,566,267,542,253"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="333,322,428,364,426,369,331,326"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="279,326,173,369,171,364,277,322"/>
-<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="219,248,279,289,276,293,216,253"/>
-<area shape="poly" id="edge12_Node000009_Node000007" title=" " alt="" coords="200,251,197,286,199,306,208,322,221,333,240,342,293,357,410,376,409,381,292,362,238,347,218,337,204,326,194,307,191,286,195,250"/>
-<area shape="poly" id="edge13_Node000009_Node000008" title=" " alt="" coords="195,252,165,300,140,360,136,358,160,297,190,249"/>
-<area shape="poly" id="edge14_Node000009_Node000010" title=" " alt="" coords="179,253,94,295,92,290,177,248"/>
+<area shape="rect" id="Node000001" title="Fuzzer target for the Direct Marshalling API generation logic." alt="" coords="547,5,681,31"/>
+<area shape="rect" id="Node000002" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="333,79,449,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="579,33,441,77,439,72,577,28"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="581,152,647,177"/>
+<area shape="poly" id="edge22_Node000001_Node000011" title=" " alt="" coords="617,31,617,138,611,138,611,31"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="672,152,743,177"/>
+<area shape="poly" id="edge23_Node000001_Node000013" title=" " alt="" coords="624,30,695,139,690,142,619,33"/>
+<area shape="rect" id="Node000003" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="298,152,485,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="394,104,394,138,389,138,389,104"/>
+<area shape="rect" id="Node000007" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="117,372,212,397"/>
+<area shape="poly" id="edge15_Node000002_Node000007" title=" " alt="" coords="333,96,297,101,258,111,222,128,192,154,176,177,166,203,155,260,156,314,162,357,157,358,151,314,150,259,160,202,172,175,188,150,219,124,256,106,296,96,333,91"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="523,445,606,471"/>
+<area shape="poly" id="edge16_Node000002_Node000008" title=" " alt="" coords="420,102,459,122,498,150,537,185,566,215,588,250,608,298,617,325,622,348,620,371,612,398,602,419,589,437,584,434,598,416,608,396,615,370,616,348,612,326,604,300,583,252,562,218,534,189,495,154,456,126,417,106"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="127,445,202,471"/>
+<area shape="poly" id="edge17_Node000002_Node000009" title=" " alt="" coords="333,96,252,103,207,112,164,125,125,143,94,167,73,198,68,216,66,237,66,312,73,350,92,383,116,412,140,435,136,438,112,416,87,386,68,351,61,313,61,237,63,215,69,196,90,164,122,139,162,120,206,107,251,98,333,90"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="5,445,76,471"/>
+<area shape="poly" id="edge18_Node000002_Node000010" title=" " alt="" coords="333,95,277,98,212,108,145,125,82,154,54,171,33,187,20,208,15,237,15,313,22,377,36,432,30,433,17,378,10,313,10,236,15,206,29,184,51,167,79,150,143,120,211,102,277,93,333,89"/>
+<area shape="poly" id="edge19_Node000002_Node000011" title=" " alt="" coords="428,101,568,146,567,151,426,107"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="203,152,273,177"/>
+<area shape="poly" id="edge20_Node000002_Node000012" title=" " alt="" coords="368,106,276,149,274,144,366,102"/>
+<area shape="poly" id="edge21_Node000002_Node000013" title=" " alt="" coords="444,101,659,149,658,154,443,107"/>
+<area shape="rect" id="Node000004" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="203,299,372,324"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="385,179,306,289,301,286,381,176"/>
+<area shape="rect" id="Node000005" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="387,225,537,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="405,176,443,214,439,218,401,180"/>
+<area shape="poly" id="edge14_Node000003_Node000007" title=" " alt="" coords="363,180,325,198,278,224,232,258,192,300,178,329,170,359,165,358,173,327,188,297,228,254,275,220,322,193,361,175"/>
+<area shape="poly" id="edge12_Node000005_Node000004" title=" " alt="" coords="435,253,330,296,328,291,433,248"/>
+<area shape="rect" id="Node000006" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="396,299,571,324"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="468,250,479,285,473,286,463,252"/>
+<area shape="poly" id="edge13_Node000005_Node000008" title=" " alt="" coords="514,248,553,267,570,280,584,297,592,314,597,332,596,369,589,405,578,434,573,432,584,403,591,369,591,333,587,316,580,300,566,284,550,271,512,253"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="433,327,226,373,225,367,432,321"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="492,323,554,432,549,435,488,326"/>
+<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="459,327,203,442,201,437,457,322"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="213,392,510,444,509,450,212,397"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="167,398,167,432,162,432,162,398"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="146,400,74,441,71,436,143,395"/>
 </map>

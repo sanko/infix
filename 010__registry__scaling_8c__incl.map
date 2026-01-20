@@ -1,0 +1,19 @@
+<map id="t/010_registry_scaling.c" name="t/010_registry_scaling.c">
+<area shape="rect" id="Node000001" title="Unit test for the registry&#39;s hash table auto&#45;scaling (rehashing)." alt="" coords="261,5,437,31"/>
+<area shape="rect" id="Node000002" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="5,79,172,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,33,145,78,143,72,306,28"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="196,79,291,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="333,33,273,73,270,69,330,28"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="315,79,382,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="351,31,351,65,346,65,346,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="407,79,477,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="365,29,418,68,414,72,362,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="501,79,572,104"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="380,28,494,71,492,76,378,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="99,152,182,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="228,106,170,146,167,142,225,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="206,152,281,177"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="246,104,246,138,241,138,241,104"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="305,152,376,177"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="261,102,315,141,312,146,257,106"/>
+</map>

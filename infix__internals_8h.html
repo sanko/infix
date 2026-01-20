@@ -120,7 +120,7 @@ $(document).ready(function(){initNavTree('infix__internals_8h.html',''); initRes
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for infix_internals.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="infix__internals_8h__incl.svg" width="628" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="infix__internals_8h__incl.svg" width="502" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -152,9 +152,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal definition of a named type registry.  <a href="structinfix__registry__t.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__registry__iterator__t.html">infix_registry_iterator_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal definition of a registry iterator.  <a href="structinfix__registry__iterator__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcode__buffer.html">code_buffer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dynamic buffer for staged machine code generation.  <a href="structcode__buffer.html#details">More...</a><br /></td></tr>
@@ -225,81 +222,78 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2f7cc75767456985e072ee240664c50d" id="r_a2f7cc75767456985e072ee240664c50d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a2f7cc75767456985e072ee240664c50d">_infix_set_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> category, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code, size_t position)</td></tr>
-<tr class="memdesc:a2f7cc75767456985e072ee240664c50d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error state with detailed information.  <br /></td></tr>
-<tr class="separator:a2f7cc75767456985e072ee240664c50d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67026feedb9cc35134aca1ecc41cfab6" id="r_a67026feedb9cc35134aca1ecc41cfab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a67026feedb9cc35134aca1ecc41cfab6">_infix_set_system_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> category, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code, long system_code, const char *msg)</td></tr>
-<tr class="memdesc:a67026feedb9cc35134aca1ecc41cfab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error state for a system-level error.  <br /></td></tr>
-<tr class="separator:a67026feedb9cc35134aca1ecc41cfab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b1239dadced21f143442b72b77d52bf" id="r_a9b1239dadced21f143442b72b77d52bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a9b1239dadced21f143442b72b77d52bf">_infix_clear_error</a> (void)</td></tr>
-<tr class="memdesc:a9b1239dadced21f143442b72b77d52bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the thread-local error state.  <br /></td></tr>
-<tr class="separator:a9b1239dadced21f143442b72b77d52bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fbfba2a7a90f3d1bd898c4b577e1487" id="r_a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a2fbfba2a7a90f3d1bd898c4b577e1487">_infix_type_recalculate_layout</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
-<tr class="memdesc:a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recalculates the layout of a fully resolved type graph.  <br /></td></tr>
-<tr class="separator:a2fbfba2a7a90f3d1bd898c4b577e1487"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65e11dc8cc3a958fc03f93d473f4e51d" id="r_a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a65e11dc8cc3a958fc03f93d473f4e51d">_infix_resolve_type_graph_inplace</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
-<tr class="memdesc:a65e11dc8cc3a958fc03f93d473f4e51d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves all named type references in a type graph in-place.  <br /></td></tr>
-<tr class="separator:a65e11dc8cc3a958fc03f93d473f4e51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bd3e766c6e1fcd30d720f471208f4a1" id="r_a3bd3e766c6e1fcd30d720f471208f4a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a3bd3e766c6e1fcd30d720f471208f4a1">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, const char *)</td></tr>
-<tr class="memdesc:a3bd3e766c6e1fcd30d720f471208f4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The internal core of the signature parser.  <br /></td></tr>
-<tr class="separator:a3bd3e766c6e1fcd30d720f471208f4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac041fd1368f3841603ad0fdd54524d6a" id="r_ac041fd1368f3841603ad0fdd54524d6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ac041fd1368f3841603ad0fdd54524d6a">_infix_type_print_body_only</a> (char *, size_t, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a>)</td></tr>
-<tr class="memdesc:ac041fd1368f3841603ad0fdd54524d6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An internal-only function to serialize a type's body without its registered name.  <br /></td></tr>
-<tr class="separator:ac041fd1368f3841603ad0fdd54524d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54adf97fe7f3b32a1224c63d810c37df" id="r_a54adf97fe7f3b32a1224c63d810c37df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a54adf97fe7f3b32a1224c63d810c37df">_copy_type_graph_to_arena</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
-<tr class="memdesc:a54adf97fe7f3b32a1224c63d810c37df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep copy of a type graph into a destination arena.  <br /></td></tr>
-<tr class="separator:a54adf97fe7f3b32a1224c63d810c37df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c625d2f656fb0050bc9495a32c586e5" id="r_a5c625d2f656fb0050bc9495a32c586e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a5c625d2f656fb0050bc9495a32c586e5">_infix_estimate_graph_size</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
-<tr class="memdesc:a5c625d2f656fb0050bc9495a32c586e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates the total memory required to deep-copy a complete type graph.  <br /></td></tr>
-<tr class="separator:a5c625d2f656fb0050bc9495a32c586e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1494081d07d1f770d1d6d0b6811df28a" id="r_a1494081d07d1f770d1d6d0b6811df28a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1494081d07d1f770d1d6d0b6811df28a">get_current_forward_abi_spec</a> (void)</td></tr>
-<tr class="memdesc:a1494081d07d1f770d1d6d0b6811df28a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for forward calls for the current platform.  <br /></td></tr>
-<tr class="separator:a1494081d07d1f770d1d6d0b6811df28a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8350c168a4d73e304563eec574db526d" id="r_a8350c168a4d73e304563eec574db526d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a8350c168a4d73e304563eec574db526d">get_current_reverse_abi_spec</a> (void)</td></tr>
-<tr class="memdesc:a8350c168a4d73e304563eec574db526d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for reverse calls for the current platform.  <br /></td></tr>
-<tr class="separator:a8350c168a4d73e304563eec574db526d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfa756bf41c1606fe83dcbfb2ed7b342" id="r_abfa756bf41c1606fe83dcbfb2ed7b342"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#abfa756bf41c1606fe83dcbfb2ed7b342">get_current_direct_forward_abi_spec</a> (void)</td></tr>
-<tr class="memdesc:abfa756bf41c1606fe83dcbfb2ed7b342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for direct marshalling forward calls for the current platform.  <br /></td></tr>
-<tr class="separator:abfa756bf41c1606fe83dcbfb2ed7b342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4aa83ec657f76fd7a7c4959e4595a4ca" id="r_a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a4aa83ec657f76fd7a7c4959e4595a4ca">code_buffer_init</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>)</td></tr>
-<tr class="memdesc:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a code buffer for JIT code generation.  <br /></td></tr>
-<tr class="separator:a4aa83ec657f76fd7a7c4959e4595a4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9d33eaa80bda7f5098a8c9a54f3a970" id="r_aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aa9d33eaa80bda7f5098a8c9a54f3a970">code_buffer_append</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, const void *data, size_t len)</td></tr>
-<tr class="memdesc:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends raw bytes to a code buffer, reallocating within its arena if necessary.  <br /></td></tr>
-<tr class="separator:aa9d33eaa80bda7f5098a8c9a54f3a970"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d0918e753909d08082ed9b2824dcbb8" id="r_a0d0918e753909d08082ed9b2824dcbb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a0d0918e753909d08082ed9b2824dcbb8">emit_byte</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint8_t byte)</td></tr>
-<tr class="memdesc:a0d0918e753909d08082ed9b2824dcbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a single byte to a code buffer.  <br /></td></tr>
-<tr class="separator:a0d0918e753909d08082ed9b2824dcbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd9ba2199b4fe230a75cccf849da3831" id="r_abd9ba2199b4fe230a75cccf849da3831"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#abd9ba2199b4fe230a75cccf849da3831">emit_int32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int32_t value)</td></tr>
-<tr class="memdesc:abd9ba2199b4fe230a75cccf849da3831"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 32-bit integer (little-endian) to a code buffer.  <br /></td></tr>
-<tr class="separator:abd9ba2199b4fe230a75cccf849da3831"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bb6e3bc5fc462f6d764002029c7dfe4" id="r_a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a8bb6e3bc5fc462f6d764002029c7dfe4">emit_int64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int64_t value)</td></tr>
-<tr class="memdesc:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 64-bit integer (little-endian) to a code buffer.  <br /></td></tr>
-<tr class="separator:a8bb6e3bc5fc462f6d764002029c7dfe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88790b737cfe6a90125e4fa0295d15aa" id="r_a88790b737cfe6a90125e4fa0295d15aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a88790b737cfe6a90125e4fa0295d15aa">_infix_forward_create_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, size_t, size_t, void *)</td></tr>
-<tr class="memdesc:a88790b737cfe6a90125e4fa0295d15aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core implementation for creating all forward trampolines.  <br /></td></tr>
-<tr class="separator:a88790b737cfe6a90125e4fa0295d15aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a721f1c9cffdcefd87ca6cf40b0d99adc" id="r_a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a721f1c9cffdcefd87ca6cf40b0d99adc">infix_executable_alloc</a> (size_t size)</td></tr>
-<tr class="memdesc:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of executable memory using the platform's W^X strategy.  <br /></td></tr>
-<tr class="separator:a721f1c9cffdcefd87ca6cf40b0d99adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dc6a62860160637126cf984b77a2d46" id="r_a2dc6a62860160637126cf984b77a2d46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a2dc6a62860160637126cf984b77a2d46">infix_executable_free</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
-<tr class="memdesc:a2dc6a62860160637126cf984b77a2d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of executable memory and applies guard pages to prevent use-after-free.  <br /></td></tr>
-<tr class="separator:a2dc6a62860160637126cf984b77a2d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28b554e0d17b214853dca915ecc1afc1" id="r_a28b554e0d17b214853dca915ecc1afc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a28b554e0d17b214853dca915ecc1afc1">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
-<tr class="memdesc:a28b554e0d17b214853dca915ecc1afc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of JIT memory executable, completing the W^X process.  <br /></td></tr>
-<tr class="separator:a28b554e0d17b214853dca915ecc1afc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6661b906602a04bbd15a91ecc1c6adde" id="r_a6661b906602a04bbd15a91ecc1c6adde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a6661b906602a04bbd15a91ecc1c6adde">infix_protected_alloc</a> (size_t size)</td></tr>
-<tr class="memdesc:a6661b906602a04bbd15a91ecc1c6adde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of standard memory for later protection.  <br /></td></tr>
-<tr class="separator:a6661b906602a04bbd15a91ecc1c6adde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cf96474020e05e7a98b191a61fd7fbf" id="r_a1cf96474020e05e7a98b191a61fd7fbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a1cf96474020e05e7a98b191a61fd7fbf">infix_protected_free</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
-<tr class="memdesc:a1cf96474020e05e7a98b191a61fd7fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of protected memory.  <br /></td></tr>
-<tr class="separator:a1cf96474020e05e7a98b191a61fd7fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b41b11f951e09fb9ea8b609c312ac95" id="r_a9b41b11f951e09fb9ea8b609c312ac95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a9b41b11f951e09fb9ea8b609c312ac95">infix_protected_make_readonly</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
-<tr class="memdesc:a9b41b11f951e09fb9ea8b609c312ac95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of memory read-only for security hardening.  <br /></td></tr>
-<tr class="separator:a9b41b11f951e09fb9ea8b609c312ac95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab973839755f4384eb456335fcb87cdc2" id="r_ab973839755f4384eb456335fcb87cdc2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ab973839755f4384eb456335fcb87cdc2">infix_internal_dispatch_callback_fn_impl</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context, void *return_value_ptr, void **args_array)</td></tr>
-<tr class="memdesc:ab973839755f4384eb456335fcb87cdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The universal C entry point for all reverse call trampolines.  <br /></td></tr>
-<tr class="separator:ab973839755f4384eb456335fcb87cdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab44e698d3d035f746bd5be98c8c5d30c" id="r_ab44e698d3d035f746bd5be98c8c5d30c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ab44e698d3d035f746bd5be98c8c5d30c">_infix_set_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> category, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code, size_t position)</td></tr>
+<tr class="memdesc:ab44e698d3d035f746bd5be98c8c5d30c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error state with detailed information.  <br /></td></tr>
+<tr class="separator:ab44e698d3d035f746bd5be98c8c5d30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dde5a007b967fe97a50f905af6eb783" id="r_a5dde5a007b967fe97a50f905af6eb783"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a5dde5a007b967fe97a50f905af6eb783">_infix_set_system_error</a> (<a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a> category, <a class="el" href="group__error__api.html#gaa01b3a24da70df184cec497c18aaee70">infix_error_code_t</a> code, long system_code, const char *msg)</td></tr>
+<tr class="memdesc:a5dde5a007b967fe97a50f905af6eb783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the thread-local error state for a system-level error.  <br /></td></tr>
+<tr class="separator:a5dde5a007b967fe97a50f905af6eb783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad4e97ab8d384bb9c872a62ecfa9f312" id="r_aad4e97ab8d384bb9c872a62ecfa9f312"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aad4e97ab8d384bb9c872a62ecfa9f312">_infix_clear_error</a> (void)</td></tr>
+<tr class="memdesc:aad4e97ab8d384bb9c872a62ecfa9f312"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the thread-local error state.  <br /></td></tr>
+<tr class="separator:aad4e97ab8d384bb9c872a62ecfa9f312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa546bee8a1f97cc3698ec2ca9d03f705" id="r_aa546bee8a1f97cc3698ec2ca9d03f705"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aa546bee8a1f97cc3698ec2ca9d03f705">_infix_type_recalculate_layout</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="memdesc:aa546bee8a1f97cc3698ec2ca9d03f705"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recalculates the layout of a fully resolved type graph.  <br /></td></tr>
+<tr class="separator:aa546bee8a1f97cc3698ec2ca9d03f705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b5d3ddd7e5a483d57e177fbf770e6f1" id="r_a2b5d3ddd7e5a483d57e177fbf770e6f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a2b5d3ddd7e5a483d57e177fbf770e6f1">_infix_resolve_type_graph_inplace</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **type_ptr, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *<a class="el" href="008__registry__introspection_8c.html#aa7e646c2771eaee632371488e9b195fa">registry</a>)</td></tr>
+<tr class="memdesc:a2b5d3ddd7e5a483d57e177fbf770e6f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves all named type references in a type graph in-place.  <br /></td></tr>
+<tr class="separator:a2b5d3ddd7e5a483d57e177fbf770e6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a119cd58272fa2cc8fd156c2ab72de187" id="r_a119cd58272fa2cc8fd156c2ab72de187"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a119cd58272fa2cc8fd156c2ab72de187">_infix_parse_type_internal</a> (<a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> **, const char *)</td></tr>
+<tr class="memdesc:a119cd58272fa2cc8fd156c2ab72de187"><td class="mdescLeft">&#160;</td><td class="mdescRight">The internal core of the signature parser.  <br /></td></tr>
+<tr class="separator:a119cd58272fa2cc8fd156c2ab72de187"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff8bcd7174b4600deca25b4c1dc913b0" id="r_aff8bcd7174b4600deca25b4c1dc913b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aff8bcd7174b4600deca25b4c1dc913b0">_infix_type_print_body_only</a> (char *, size_t, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a>)</td></tr>
+<tr class="memdesc:aff8bcd7174b4600deca25b4c1dc913b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">An internal-only function to serialize a type's body without its registered name.  <br /></td></tr>
+<tr class="separator:aff8bcd7174b4600deca25b4c1dc913b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f1e5dda7c55536fc56528a818709af3" id="r_a7f1e5dda7c55536fc56528a818709af3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a7f1e5dda7c55536fc56528a818709af3">_copy_type_graph_to_arena</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *)</td></tr>
+<tr class="memdesc:a7f1e5dda7c55536fc56528a818709af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a deep copy of a type graph into a destination arena.  <br /></td></tr>
+<tr class="separator:a7f1e5dda7c55536fc56528a818709af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a934c552d12ca2c83c5e5964e7e89144a" id="r_a934c552d12ca2c83c5e5964e7e89144a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a934c552d12ca2c83c5e5964e7e89144a">_infix_estimate_graph_size</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *temp_arena, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="memdesc:a934c552d12ca2c83c5e5964e7e89144a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates the total memory required to deep-copy a complete type graph.  <br /></td></tr>
+<tr class="separator:a934c552d12ca2c83c5e5964e7e89144a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78053e010617cd0b60e0c022b9133937" id="r_a78053e010617cd0b60e0c022b9133937"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a78053e010617cd0b60e0c022b9133937">get_current_forward_abi_spec</a> (void)</td></tr>
+<tr class="memdesc:a78053e010617cd0b60e0c022b9133937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for forward calls for the current platform.  <br /></td></tr>
+<tr class="separator:a78053e010617cd0b60e0c022b9133937"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accdb6b266a7321360342fa41cac0f77e" id="r_accdb6b266a7321360342fa41cac0f77e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#accdb6b266a7321360342fa41cac0f77e">get_current_reverse_abi_spec</a> (void)</td></tr>
+<tr class="memdesc:accdb6b266a7321360342fa41cac0f77e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for reverse calls for the current platform.  <br /></td></tr>
+<tr class="separator:accdb6b266a7321360342fa41cac0f77e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad4c7c39e223c8a708409943f1505b07" id="r_aad4c7c39e223c8a708409943f1505b07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aad4c7c39e223c8a708409943f1505b07">get_current_direct_forward_abi_spec</a> (void)</td></tr>
+<tr class="memdesc:aad4c7c39e223c8a708409943f1505b07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ABI v-table for direct marshalling forward calls for the current platform.  <br /></td></tr>
+<tr class="separator:aad4c7c39e223c8a708409943f1505b07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae4d73b79fe2b179051285e8b5980821" id="r_aae4d73b79fe2b179051285e8b5980821"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aae4d73b79fe2b179051285e8b5980821">code_buffer_init</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *<a class="el" href="005__layouts_8c.html#afb7c3f5e091eb15b03c0a427c1a3ad1e">arena</a>)</td></tr>
+<tr class="memdesc:aae4d73b79fe2b179051285e8b5980821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a code buffer for JIT code generation.  <br /></td></tr>
+<tr class="separator:aae4d73b79fe2b179051285e8b5980821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83c8c5e13a98e1d7754dd9b78994cdab" id="r_a83c8c5e13a98e1d7754dd9b78994cdab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a83c8c5e13a98e1d7754dd9b78994cdab">code_buffer_append</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, const void *data, size_t len)</td></tr>
+<tr class="memdesc:a83c8c5e13a98e1d7754dd9b78994cdab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends raw bytes to a code buffer, reallocating within its arena if necessary.  <br /></td></tr>
+<tr class="separator:a83c8c5e13a98e1d7754dd9b78994cdab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab31c7f16cd8906ca64d58381c1045fe4" id="r_ab31c7f16cd8906ca64d58381c1045fe4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#ab31c7f16cd8906ca64d58381c1045fe4">emit_byte</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, uint8_t byte)</td></tr>
+<tr class="memdesc:ab31c7f16cd8906ca64d58381c1045fe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a single byte to a code buffer.  <br /></td></tr>
+<tr class="separator:ab31c7f16cd8906ca64d58381c1045fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ebe2ed2e36fc4ea55af9370b2aee56a" id="r_a4ebe2ed2e36fc4ea55af9370b2aee56a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a4ebe2ed2e36fc4ea55af9370b2aee56a">emit_int32</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int32_t value)</td></tr>
+<tr class="memdesc:a4ebe2ed2e36fc4ea55af9370b2aee56a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 32-bit integer (little-endian) to a code buffer.  <br /></td></tr>
+<tr class="separator:a4ebe2ed2e36fc4ea55af9370b2aee56a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a514a7b07822c93fc7c2553c5f2569f45" id="r_a514a7b07822c93fc7c2553c5f2569f45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a514a7b07822c93fc7c2553c5f2569f45">emit_int64</a> (<a class="el" href="structcode__buffer.html">code_buffer</a> *buf, int64_t value)</td></tr>
+<tr class="memdesc:a514a7b07822c93fc7c2553c5f2569f45"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience wrapper to append a 64-bit integer (little-endian) to a code buffer.  <br /></td></tr>
+<tr class="separator:a514a7b07822c93fc7c2553c5f2569f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61ca34a40b46e96c7344a5134a37219a" id="r_a61ca34a40b46e96c7344a5134a37219a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a61ca34a40b46e96c7344a5134a37219a">infix_executable_alloc</a> (size_t size)</td></tr>
+<tr class="memdesc:a61ca34a40b46e96c7344a5134a37219a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of executable memory using the platform's W^X strategy.  <br /></td></tr>
+<tr class="separator:a61ca34a40b46e96c7344a5134a37219a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a270990004a8eb2abb62f6e1c67a6c67d" id="r_a270990004a8eb2abb62f6e1c67a6c67d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a270990004a8eb2abb62f6e1c67a6c67d">infix_executable_free</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> exec)</td></tr>
+<tr class="memdesc:a270990004a8eb2abb62f6e1c67a6c67d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of executable memory and applies guard pages to prevent use-after-free.  <br /></td></tr>
+<tr class="separator:a270990004a8eb2abb62f6e1c67a6c67d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b5a8bbc85b6217bc6ade961dff3c6a" id="r_aa6b5a8bbc85b6217bc6ade961dff3c6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aa6b5a8bbc85b6217bc6ade961dff3c6a">infix_executable_make_executable</a> (<a class="el" href="structinfix__executable__t.html">infix_executable_t</a> *exec)</td></tr>
+<tr class="memdesc:aa6b5a8bbc85b6217bc6ade961dff3c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of JIT memory executable, completing the W^X process.  <br /></td></tr>
+<tr class="separator:aa6b5a8bbc85b6217bc6ade961dff3c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47ac666d687541b36cd24534dbe42187" id="r_a47ac666d687541b36cd24534dbe42187"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a47ac666d687541b36cd24534dbe42187">infix_protected_alloc</a> (size_t size)</td></tr>
+<tr class="memdesc:a47ac666d687541b36cd24534dbe42187"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a block of standard memory for later protection.  <br /></td></tr>
+<tr class="separator:a47ac666d687541b36cd24534dbe42187"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52e1edfdddcff3ed0507921e9b8be7a2" id="r_a52e1edfdddcff3ed0507921e9b8be7a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a52e1edfdddcff3ed0507921e9b8be7a2">infix_protected_free</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
+<tr class="memdesc:a52e1edfdddcff3ed0507921e9b8be7a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a block of protected memory.  <br /></td></tr>
+<tr class="separator:a52e1edfdddcff3ed0507921e9b8be7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa08e3010cf982a6909827d8f82b284a6" id="r_aa08e3010cf982a6909827d8f82b284a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aa08e3010cf982a6909827d8f82b284a6">infix_protected_make_readonly</a> (<a class="el" href="structinfix__protected__t.html">infix_protected_t</a> prot)</td></tr>
+<tr class="memdesc:aa08e3010cf982a6909827d8f82b284a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a block of memory read-only for security hardening.  <br /></td></tr>
+<tr class="separator:aa08e3010cf982a6909827d8f82b284a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea4b886ed589895b105d068274a9a84b" id="r_aea4b886ed589895b105d068274a9a84b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#aea4b886ed589895b105d068274a9a84b">infix_internal_dispatch_callback_fn_impl</a> (<a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *context, void *return_value_ptr, void **args_array)</td></tr>
+<tr class="memdesc:aea4b886ed589895b105d068274a9a84b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The universal C entry point for all reverse call trampolines.  <br /></td></tr>
+<tr class="separator:aea4b886ed589895b105d068274a9a84b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aac04bf0a20b7fc5cf2a2c5544ce716" id="r_a5aac04bf0a20b7fc5cf2a2c5544ce716"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a5aac04bf0a20b7fc5cf2a2c5544ce716">_infix_align_up</a> (size_t value, size_t alignment)</td></tr>
 <tr class="memdesc:a5aac04bf0a20b7fc5cf2a2c5544ce716"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aligns a value up to the next multiple of a power-of-two alignment.  <br /></td></tr>
 <tr class="separator:a5aac04bf0a20b7fc5cf2a2c5544ce716"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -457,14 +451,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a54adf97fe7f3b32a1224c63d810c37df" name="a54adf97fe7f3b32a1224c63d810c37df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54adf97fe7f3b32a1224c63d810c37df">&#9670;&#160;</a></span>_copy_type_graph_to_arena()</h2>
+<a id="a7f1e5dda7c55536fc56528a818709af3" name="a7f1e5dda7c55536fc56528a818709af3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f1e5dda7c55536fc56528a818709af3">&#9670;&#160;</a></span>_copy_type_graph_to_arena()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * _copy_type_graph_to_arena </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> * _copy_type_graph_to_arena </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
           <td class="paramname"><em>dest_arena</em>, </td>
@@ -541,14 +535,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9b1239dadced21f143442b72b77d52bf" name="a9b1239dadced21f143442b72b77d52bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b1239dadced21f143442b72b77d52bf">&#9670;&#160;</a></span>_infix_clear_error()</h2>
+<a id="aad4e97ab8d384bb9c872a62ecfa9f312" name="aad4e97ab8d384bb9c872a62ecfa9f312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad4e97ab8d384bb9c872a62ecfa9f312">&#9670;&#160;</a></span>_infix_clear_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void _infix_clear_error </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void _infix_clear_error </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -562,14 +556,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5c625d2f656fb0050bc9495a32c586e5" name="a5c625d2f656fb0050bc9495a32c586e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c625d2f656fb0050bc9495a32c586e5">&#9670;&#160;</a></span>_infix_estimate_graph_size()</h2>
+<a id="a934c552d12ca2c83c5e5964e7e89144a" name="a934c552d12ca2c83c5e5964e7e89144a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a934c552d12ca2c83c5e5964e7e89144a">&#9670;&#160;</a></span>_infix_estimate_graph_size()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t _infix_estimate_graph_size </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> size_t _infix_estimate_graph_size </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td>
           <td class="paramname"><em>temp_arena</em>, </td>
@@ -600,69 +594,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a88790b737cfe6a90125e4fa0295d15aa" name="a88790b737cfe6a90125e4fa0295d15aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88790b737cfe6a90125e4fa0295d15aa">&#9670;&#160;</a></span>_infix_forward_create_internal()</h2>
+<a id="a119cd58272fa2cc8fd156c2ab72de187" name="a119cd58272fa2cc8fd156c2ab72de187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a119cd58272fa2cc8fd156c2ab72de187">&#9670;&#160;</a></span>_infix_parse_type_internal()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_forward_create_internal </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The core implementation for creating all forward trampolines. </p>
-<p>Located in <code><a class="el" href="trampoline_8c.html" title="The core JIT engine for generating forward and reverse trampolines.">src/jit/trampoline.c</a></code>, this function orchestrates the entire JIT pipeline for forward calls, from ABI classification to code generation and final handle creation. </p><dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
-
-</div>
-</div>
-<a id="a3bd3e766c6e1fcd30d720f471208f4a1" name="a3bd3e766c6e1fcd30d720f471208f4a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bd3e766c6e1fcd30d720f471208f4a1">&#9670;&#160;</a></span>_infix_parse_type_internal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_parse_type_internal </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_parse_type_internal </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
           <td class="paramname"><em>out_type</em>, </td>
@@ -700,14 +639,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a65e11dc8cc3a958fc03f93d473f4e51d" name="a65e11dc8cc3a958fc03f93d473f4e51d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65e11dc8cc3a958fc03f93d473f4e51d">&#9670;&#160;</a></span>_infix_resolve_type_graph_inplace()</h2>
+<a id="a2b5d3ddd7e5a483d57e177fbf770e6f1" name="a2b5d3ddd7e5a483d57e177fbf770e6f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b5d3ddd7e5a483d57e177fbf770e6f1">&#9670;&#160;</a></span>_infix_resolve_type_graph_inplace()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_resolve_type_graph_inplace </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_resolve_type_graph_inplace </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> **&#160;</td>
           <td class="paramname"><em>type_ptr</em>, </td>
@@ -738,14 +677,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2f7cc75767456985e072ee240664c50d" name="a2f7cc75767456985e072ee240664c50d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f7cc75767456985e072ee240664c50d">&#9670;&#160;</a></span>_infix_set_error()</h2>
+<a id="ab44e698d3d035f746bd5be98c8c5d30c" name="ab44e698d3d035f746bd5be98c8c5d30c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab44e698d3d035f746bd5be98c8c5d30c">&#9670;&#160;</a></span>_infix_set_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void _infix_set_error </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void _infix_set_error </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a>&#160;</td>
           <td class="paramname"><em>category</em>, </td>
@@ -782,14 +721,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a67026feedb9cc35134aca1ecc41cfab6" name="a67026feedb9cc35134aca1ecc41cfab6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67026feedb9cc35134aca1ecc41cfab6">&#9670;&#160;</a></span>_infix_set_system_error()</h2>
+<a id="a5dde5a007b967fe97a50f905af6eb783" name="a5dde5a007b967fe97a50f905af6eb783"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dde5a007b967fe97a50f905af6eb783">&#9670;&#160;</a></span>_infix_set_system_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void _infix_set_system_error </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void _infix_set_system_error </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__error__api.html#gaf83a0f846497c5e67af7577b047ba815">infix_error_category_t</a>&#160;</td>
           <td class="paramname"><em>category</em>, </td>
@@ -833,14 +772,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac041fd1368f3841603ad0fdd54524d6a" name="ac041fd1368f3841603ad0fdd54524d6a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac041fd1368f3841603ad0fdd54524d6a">&#9670;&#160;</a></span>_infix_type_print_body_only()</h2>
+<a id="aff8bcd7174b4600deca25b4c1dc913b0" name="aff8bcd7174b4600deca25b4c1dc913b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff8bcd7174b4600deca25b4c1dc913b0">&#9670;&#160;</a></span>_infix_type_print_body_only()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_type_print_body_only </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> _infix_type_print_body_only </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
@@ -885,14 +824,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2fbfba2a7a90f3d1bd898c4b577e1487" name="a2fbfba2a7a90f3d1bd898c4b577e1487"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fbfba2a7a90f3d1bd898c4b577e1487">&#9670;&#160;</a></span>_infix_type_recalculate_layout()</h2>
+<a id="aa546bee8a1f97cc3698ec2ca9d03f705" name="aa546bee8a1f97cc3698ec2ca9d03f705"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa546bee8a1f97cc3698ec2ca9d03f705">&#9670;&#160;</a></span>_infix_type_recalculate_layout()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void _infix_type_recalculate_layout </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void _infix_type_recalculate_layout </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
           <td class="paramname"><em>type</em></td><td>)</td>
@@ -911,14 +850,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa9d33eaa80bda7f5098a8c9a54f3a970" name="aa9d33eaa80bda7f5098a8c9a54f3a970"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9d33eaa80bda7f5098a8c9a54f3a970">&#9670;&#160;</a></span>code_buffer_append()</h2>
+<a id="a83c8c5e13a98e1d7754dd9b78994cdab" name="a83c8c5e13a98e1d7754dd9b78994cdab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83c8c5e13a98e1d7754dd9b78994cdab">&#9670;&#160;</a></span>code_buffer_append()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void code_buffer_append </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void code_buffer_append </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -955,14 +894,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4aa83ec657f76fd7a7c4959e4595a4ca" name="a4aa83ec657f76fd7a7c4959e4595a4ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4aa83ec657f76fd7a7c4959e4595a4ca">&#9670;&#160;</a></span>code_buffer_init()</h2>
+<a id="aae4d73b79fe2b179051285e8b5980821" name="aae4d73b79fe2b179051285e8b5980821"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae4d73b79fe2b179051285e8b5980821">&#9670;&#160;</a></span>code_buffer_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void code_buffer_init </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void code_buffer_init </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -992,14 +931,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0d0918e753909d08082ed9b2824dcbb8" name="a0d0918e753909d08082ed9b2824dcbb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d0918e753909d08082ed9b2824dcbb8">&#9670;&#160;</a></span>emit_byte()</h2>
+<a id="ab31c7f16cd8906ca64d58381c1045fe4" name="ab31c7f16cd8906ca64d58381c1045fe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab31c7f16cd8906ca64d58381c1045fe4">&#9670;&#160;</a></span>emit_byte()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_byte </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_byte </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1029,14 +968,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abd9ba2199b4fe230a75cccf849da3831" name="abd9ba2199b4fe230a75cccf849da3831"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd9ba2199b4fe230a75cccf849da3831">&#9670;&#160;</a></span>emit_int32()</h2>
+<a id="a4ebe2ed2e36fc4ea55af9370b2aee56a" name="a4ebe2ed2e36fc4ea55af9370b2aee56a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ebe2ed2e36fc4ea55af9370b2aee56a">&#9670;&#160;</a></span>emit_int32()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_int32 </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_int32 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1066,14 +1005,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8bb6e3bc5fc462f6d764002029c7dfe4" name="a8bb6e3bc5fc462f6d764002029c7dfe4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bb6e3bc5fc462f6d764002029c7dfe4">&#9670;&#160;</a></span>emit_int64()</h2>
+<a id="a514a7b07822c93fc7c2553c5f2569f45" name="a514a7b07822c93fc7c2553c5f2569f45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a514a7b07822c93fc7c2553c5f2569f45">&#9670;&#160;</a></span>emit_int64()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void emit_int64 </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void emit_int64 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcode__buffer.html">code_buffer</a> *&#160;</td>
           <td class="paramname"><em>buf</em>, </td>
@@ -1103,14 +1042,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abfa756bf41c1606fe83dcbfb2ed7b342" name="abfa756bf41c1606fe83dcbfb2ed7b342"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfa756bf41c1606fe83dcbfb2ed7b342">&#9670;&#160;</a></span>get_current_direct_forward_abi_spec()</h2>
+<a id="aad4c7c39e223c8a708409943f1505b07" name="aad4c7c39e223c8a708409943f1505b07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad4c7c39e223c8a708409943f1505b07">&#9670;&#160;</a></span>get_current_direct_forward_abi_spec()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> * get_current_direct_forward_abi_spec </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> const <a class="el" href="structinfix__direct__forward__abi__spec.html">infix_direct_forward_abi_spec</a> * get_current_direct_forward_abi_spec </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1124,14 +1063,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1494081d07d1f770d1d6d0b6811df28a" name="a1494081d07d1f770d1d6d0b6811df28a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1494081d07d1f770d1d6d0b6811df28a">&#9670;&#160;</a></span>get_current_forward_abi_spec()</h2>
+<a id="a78053e010617cd0b60e0c022b9133937" name="a78053e010617cd0b60e0c022b9133937"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78053e010617cd0b60e0c022b9133937">&#9670;&#160;</a></span>get_current_forward_abi_spec()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> * get_current_forward_abi_spec </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> const <a class="el" href="structinfix__forward__abi__spec.html">infix_forward_abi_spec</a> * get_current_forward_abi_spec </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1145,14 +1084,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8350c168a4d73e304563eec574db526d" name="a8350c168a4d73e304563eec574db526d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8350c168a4d73e304563eec574db526d">&#9670;&#160;</a></span>get_current_reverse_abi_spec()</h2>
+<a id="accdb6b266a7321360342fa41cac0f77e" name="accdb6b266a7321360342fa41cac0f77e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accdb6b266a7321360342fa41cac0f77e">&#9670;&#160;</a></span>get_current_reverse_abi_spec()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> * get_current_reverse_abi_spec </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> const <a class="el" href="structinfix__reverse__abi__spec.html">infix_reverse_abi_spec</a> * get_current_reverse_abi_spec </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1166,14 +1105,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a721f1c9cffdcefd87ca6cf40b0d99adc" name="a721f1c9cffdcefd87ca6cf40b0d99adc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a721f1c9cffdcefd87ca6cf40b0d99adc">&#9670;&#160;</a></span>infix_executable_alloc()</h2>
+<a id="a61ca34a40b46e96c7344a5134a37219a" name="a61ca34a40b46e96c7344a5134a37219a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61ca34a40b46e96c7344a5134a37219a">&#9670;&#160;</a></span>infix_executable_alloc()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a> infix_executable_alloc </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__executable__t.html">infix_executable_t</a> infix_executable_alloc </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>size</em></td><td>)</td>
@@ -1193,14 +1132,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2dc6a62860160637126cf984b77a2d46" name="a2dc6a62860160637126cf984b77a2d46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2dc6a62860160637126cf984b77a2d46">&#9670;&#160;</a></span>infix_executable_free()</h2>
+<a id="a270990004a8eb2abb62f6e1c67a6c67d" name="a270990004a8eb2abb62f6e1c67a6c67d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a270990004a8eb2abb62f6e1c67a6c67d">&#9670;&#160;</a></span>infix_executable_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void infix_executable_free </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void infix_executable_free </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td>
           <td class="paramname"><em>exec</em></td><td>)</td>
@@ -1219,16 +1158,16 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a28b554e0d17b214853dca915ecc1afc1" name="a28b554e0d17b214853dca915ecc1afc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28b554e0d17b214853dca915ecc1afc1">&#9670;&#160;</a></span>infix_executable_make_executable()</h2>
+<a id="aa6b5a8bbc85b6217bc6ade961dff3c6a" name="aa6b5a8bbc85b6217bc6ade961dff3c6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6b5a8bbc85b6217bc6ade961dff3c6a">&#9670;&#160;</a></span>infix_executable_make_executable()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool infix_executable_make_executable </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool infix_executable_make_executable </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="structinfix__executable__t.html">infix_executable_t</a> *&#160;</td>
           <td class="paramname"><em>exec</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1246,14 +1185,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab973839755f4384eb456335fcb87cdc2" name="ab973839755f4384eb456335fcb87cdc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab973839755f4384eb456335fcb87cdc2">&#9670;&#160;</a></span>infix_internal_dispatch_callback_fn_impl()</h2>
+<a id="aea4b886ed589895b105d068274a9a84b" name="aea4b886ed589895b105d068274a9a84b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea4b886ed589895b105d068274a9a84b">&#9670;&#160;</a></span>infix_internal_dispatch_callback_fn_impl()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void infix_internal_dispatch_callback_fn_impl </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void infix_internal_dispatch_callback_fn_impl </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__reverse__t.html">infix_reverse_t</a> *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
@@ -1290,14 +1229,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6661b906602a04bbd15a91ecc1c6adde" name="a6661b906602a04bbd15a91ecc1c6adde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6661b906602a04bbd15a91ecc1c6adde">&#9670;&#160;</a></span>infix_protected_alloc()</h2>
+<a id="a47ac666d687541b36cd24534dbe42187" name="a47ac666d687541b36cd24534dbe42187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47ac666d687541b36cd24534dbe42187">&#9670;&#160;</a></span>infix_protected_alloc()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a> infix_protected_alloc </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="structinfix__protected__t.html">infix_protected_t</a> infix_protected_alloc </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>size</em></td><td>)</td>
@@ -1317,14 +1256,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1cf96474020e05e7a98b191a61fd7fbf" name="a1cf96474020e05e7a98b191a61fd7fbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cf96474020e05e7a98b191a61fd7fbf">&#9670;&#160;</a></span>infix_protected_free()</h2>
+<a id="a52e1edfdddcff3ed0507921e9b8be7a2" name="a52e1edfdddcff3ed0507921e9b8be7a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52e1edfdddcff3ed0507921e9b8be7a2">&#9670;&#160;</a></span>infix_protected_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void infix_protected_free </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void infix_protected_free </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td>
           <td class="paramname"><em>prot</em></td><td>)</td>
@@ -1343,14 +1282,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9b41b11f951e09fb9ea8b609c312ac95" name="a9b41b11f951e09fb9ea8b609c312ac95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b41b11f951e09fb9ea8b609c312ac95">&#9670;&#160;</a></span>infix_protected_make_readonly()</h2>
+<a id="aa08e3010cf982a6909827d8f82b284a6" name="aa08e3010cf982a6909827d8f82b284a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa08e3010cf982a6909827d8f82b284a6">&#9670;&#160;</a></span>infix_protected_make_readonly()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool infix_protected_make_readonly </td>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> <a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> bool infix_protected_make_readonly </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structinfix__protected__t.html">infix_protected_t</a>&#160;</td>
           <td class="paramname"><em>prot</em></td><td>)</td>

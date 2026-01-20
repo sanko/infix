@@ -127,6 +127,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ae3d32fd45b8b48968091b55a8a6ca817" id="r_ae3d32fd45b8b48968091b55a8a6ca817"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#ae3d32fd45b8b48968091b55a8a6ca817">INFIX_TRAMPOLINE_HEADROOM</a>&#160;&#160;&#160;128</td></tr>
 <tr class="memdesc:ae3d32fd45b8b48968091b55a8a6ca817"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra bytes to allocate in a trampoline's private arena.  <br /></td></tr>
 <tr class="separator:ae3d32fd45b8b48968091b55a8a6ca817"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a280d05886c0cb71aa83c4ab137b8415e" id="r_a280d05886c0cb71aa83c4ab137b8415e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a></td></tr>
+<tr class="memdesc:a280d05886c0cb71aa83c4ab137b8415e"><td class="mdescLeft">&#160;</td><td class="mdescRight">When compiling with -fvisibility=hidden, we use this to explicitly mark internal-but-shared functions as hidden.  <br /></td></tr>
+<tr class="separator:a280d05886c0cb71aa83c4ab137b8415e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Platform, architecture, and ABI detection macros. </p>
@@ -166,6 +169,22 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <p>This section defines <code>INFIX_OS_*</code> macros based on compiler-provided preprocessor definitions. It also defines the broader <code>INFIX_ENV_POSIX</code> for systems that follow POSIX conventions, which simplifies later <code>#ifdef</code> logic.</p>
 <p>Defines <code>INFIX_COMPILER_*</code> macros. The order is important, as Clang often defines <code>__GNUC__</code> for compatibility, so it must be checked for first. </p>
+
+</div>
+</div>
+<a id="a280d05886c0cb71aa83c4ab137b8415e" name="a280d05886c0cb71aa83c4ab137b8415e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a280d05886c0cb71aa83c4ab137b8415e">&#9670;&#160;</a></span>INFIX_INTERNAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INFIX_INTERNAL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>When compiling with -fvisibility=hidden, we use this to explicitly mark internal-but-shared functions as hidden. </p>
 
 </div>
 </div>

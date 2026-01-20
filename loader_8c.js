@@ -1,8 +1,8 @@
 var loader_8c =
 [
-    [ "infix_library_close", "group__exports__api.html#ga1a55403ddf64eaed05f2fcb013412003", null ],
-    [ "infix_library_get_symbol", "group__exports__api.html#ga227480098fa596f3c372837461a6b805", null ],
-    [ "infix_library_open", "group__exports__api.html#gabfd1bb148a39b758e57e772c09b9ea84", null ],
-    [ "infix_read_global", "group__exports__api.html#gaec836cea65f5c0ff31780b26f5315796", null ],
-    [ "infix_write_global", "group__exports__api.html#ga02212862110c752548fbdc0b3ba65bec", null ]
+    [ "infix_library_close", "group__exports__api.html#gaa3185053e1cb727a0487a199977f6e26", null ],
+    [ "infix_library_get_symbol", "group__exports__api.html#ga5513a3125c3b0cfa6399368360f95b9c", null ],
+    [ "infix_library_open", "group__exports__api.html#ga5826a53fc81ff44014d7c754a1edd9dd", null ],
+    [ "infix_read_global", "group__exports__api.html#ga0e9a881cd6fba5f6303f0c9bf3ab42da", null ],
+    [ "infix_write_global", "group__exports__api.html#gaa3beb43c4497b9cff4a0990e72a59f7e", null ]
 ];
