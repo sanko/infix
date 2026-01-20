@@ -52,6 +52,7 @@
 #endif
 #if defined(INFIX_OS_MACOS)
 #include <dlfcn.h>
+#include <libkern/OSCacheControl.h>
 #include <pthread.h>
 #endif
 // Polyfills for mmap flags for maximum POSIX compatibility.
@@ -89,6 +90,8 @@ static struct {
     CFTypeRef kCFAllocatorDefault;
     SecTaskRef (*SecTaskCreateFromSelf)(CFTypeRef allocator);
     CFTypeRef (*SecTaskCopyValueForEntitlement)(SecTaskRef task, CFStringRef entitlement, CFErrorRef * error);
+    void (*pthread_jit_write_protect_np)(int enabled);
+    void (*sys_icache_invalidate)(void * start, size_t len);
 } g_macos_apis;
 /**
  * @internal
@@ -101,13 +104,17 @@ static void initialize_macos_apis(void) {
     // We don't need to link against these frameworks, which makes building simpler.
     void * cf = dlopen("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", RTLD_LAZY);
     void * sec = dlopen("/System/Library/Frameworks/Security.framework/Security", RTLD_LAZY);
+
+    // Hardened Runtime helpers found in libSystem/libpthread
+    g_macos_apis.pthread_jit_write_protect_np = dlsym(RTLD_DEFAULT, "pthread_jit_write_protect_np");
+    g_macos_apis.sys_icache_invalidate = dlsym(RTLD_DEFAULT, "sys_icache_invalidate");
+
     if (!cf || !sec) {
         INFIX_DEBUG_PRINTF("Warning: Could not dlopen macOS frameworks. JIT security features will be degraded.");
         if (cf)
             dlclose(cf);
         if (sec)
             dlclose(sec);
-        memset(&g_macos_apis, 0, sizeof(g_macos_apis));
         return;
     }
     g_macos_apis.CFRelease = dlsym(cf, "CFRelease");
@@ -130,6 +137,11 @@ static bool has_jit_entitlement(void) {
     // Use pthread_once to ensure the dynamic loading happens exactly once, thread-safely.
     static pthread_once_t init_once = PTHREAD_ONCE_INIT;
     pthread_once(&init_once, initialize_macos_apis);
+
+    // Secure JIT path on macOS requires both the entitlement check and the toggle API.
+    if (!g_macos_apis.pthread_jit_write_protect_np)
+        return false;
+
     if (!g_macos_apis.SecTaskCopyValueForEntitlement || !g_macos_apis.CFStringCreateWithCString)
         return false;
     bool result = false;
@@ -259,6 +271,12 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         flags |= MAP_JIT;
 #endif  // INFIX_OS_MACOS
     code = mmap(nullptr, size, PROT_READ | PROT_WRITE, flags, -1, 0);
+#if defined(INFIX_OS_MACOS)
+    if (code != MAP_FAILED && g_use_secure_jit_path) {
+        // Switch thread to Write mode. enabled=0 means Write allowed.
+        g_macos_apis.pthread_jit_write_protect_np(0);
+    }
+#endif
 #endif  // MAP_ANON
     if (code == MAP_FAILED) {  // Fallback for older systems without MAP_ANON
         int fd = open("/dev/zero", O_RDWR);
@@ -340,12 +358,6 @@ void infix_executable_free(infix_executable_t exec) {
     // On macOS with MAP_JIT, the memory is managed with special thread-local permissions.
     // We only need to unmap the single mapping.
     if (exec.rw_ptr) {
-#if INFIX_MACOS_SECURE_JIT_AVAILABLE  // This macro is not yet defined, placeholder for future
-        // If using the secure path, we should toggle write protection back on.
-        static bool g_use_secure_jit_path = false;  // Re-check or use a shared flag
-        if (g_use_secure_jit_path)
-            pthread_jit_write_protect_np(true);
-#endif
         // Creating a guard page before unmapping is good practice.
         mprotect(exec.rw_ptr, exec.size, PROT_NONE);
         munmap(exec.rw_ptr, exec.size);
@@ -394,6 +406,12 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec) {
 #if defined(_MSC_VER)
     // Use the Windows-specific API.
     FlushInstructionCache(GetCurrentProcess(), exec->rw_ptr, exec->size);
+#elif defined(INFIX_OS_MACOS)
+    // Use the Apple-specific API if available (required for Apple Silicon correctness)
+    if (g_macos_apis.sys_icache_invalidate)
+        g_macos_apis.sys_icache_invalidate(exec->rw_ptr, exec->size);
+    else
+        __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);
 #else
     // Use the GCC/Clang built-in for other platforms.
     __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);
@@ -405,20 +423,21 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec) {
     if (!result)
         _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, GetLastError(), nullptr);
 #elif defined(INFIX_OS_MACOS)
-#if INFIX_MACOS_SECURE_JIT_AVAILABLE  // Placeholder
     static bool g_use_secure_jit_path = false;
-    if (g_use_secure_jit_path) {
-        pthread_jit_write_protect_np(false);  // Make writable region executable.
+    static bool g_checked_jit_support = false;
+    if (!g_checked_jit_support) {
+        g_use_secure_jit_path = has_jit_entitlement();
+        g_checked_jit_support = true;
+    }
+
+    if (g_use_secure_jit_path && g_macos_apis.pthread_jit_write_protect_np) {
+        // Switch thread state to Execute allowed (enabled=1)
+        g_macos_apis.pthread_jit_write_protect_np(1);
         result = true;
     }
-    else
-#endif
-        // On macOS with the JIT entitlement, we don't use mprotect. Instead, we toggle
-        // a thread-local "write permission" state for all JIT memory. The memory is
-        // RX by default, and we temporarily make it RW for writing.
-        // However, the current logic does this change via `pthread_jit_write_protect_np`
-        // within the allocator itself. For now, this is a placeholder for that logic.
+    else {
         result = (mprotect(exec->rw_ptr, exec->size, PROT_READ | PROT_EXEC) == 0);
+    }
     if (!result)
         _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, errno, nullptr);
 #elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
