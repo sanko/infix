@@ -8,6 +8,8 @@
 | **freebsd** | `x86_64` | `gcc` | ✅ success |
 | **macos** | `aarch64` | `clang` | ✅ success |
 | **macos** | `aarch64` | `gcc` | ✅ success |
+| **macos** | `x86_64` | `clang` | ✅ success |
+| **macos** | `x86_64` | `gcc` | ✅ success |
 | **netbsd** | `aarch64` | `gcc` | ✅ success |
 | **netbsd** | `x86_64` | `gcc` | ✅ success |
 | **omnios** | `x86_64` | `gcc` | ✅ success |
