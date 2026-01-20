@@ -194,7 +194,7 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
  * @return A pointer to the new registry, or `nullptr` on allocation failure. The returned
  *         handle must be freed with `infix_registry_destroy`.
  */
-c23_nodiscard infix_registry_t * infix_registry_create(void) {
+INFIX_API c23_nodiscard infix_registry_t * infix_registry_create(void) {
     _infix_clear_error();
     infix_registry_t * registry = infix_malloc(sizeof(infix_registry_t));
     if (!registry) {
@@ -232,7 +232,7 @@ c23_nodiscard infix_registry_t * infix_registry_create(void) {
  * @return A pointer to the new registry, or `nullptr` on allocation failure. The returned
  *         handle must be freed with `infix_registry_destroy`.
  */
-c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * arena) {
+INFIX_API c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * arena) {
     _infix_clear_error();
     if (!arena) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
@@ -261,7 +261,7 @@ c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_arena_t * 
  * @param src The source registry to clone.
  * @return A new registry containing deep copies of all types in 'src', or NULL on failure.
  */
-c23_nodiscard infix_registry_t * infix_registry_clone(const infix_registry_t * src) {
+INFIX_API c23_nodiscard infix_registry_t * infix_registry_clone(const infix_registry_t * src) {
     if (!src)
         return nullptr;
 
@@ -307,7 +307,7 @@ c23_nodiscard infix_registry_t * infix_registry_clone(const infix_registry_t * s
  *
  * @param[in] registry The registry to destroy. Safe to call with `nullptr`.
  */
-void infix_registry_destroy(infix_registry_t * registry) {
+INFIX_API void infix_registry_destroy(infix_registry_t * registry) {
     if (!registry)
         return;
     // Only destroy the arena if it was created internally by `infix_registry_create`.
@@ -519,7 +519,7 @@ static char * _registry_parser_parse_name(_registry_parser_state_t * state, char
  * @param[in] definitions A semicolon-separated string of definitions.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, const char * definitions) {
+INFIX_API c23_nodiscard infix_status infix_register_types(infix_registry_t * registry, const char * definitions) {
     _infix_clear_error();
     if (!registry || !definitions) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
@@ -779,7 +779,7 @@ cleanup:
  * }
  * @endcode
  */
-c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t * registry) {
+INFIX_API c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infix_registry_t * registry) {
     // Return an iterator positioned before the first element.
     // The first call to next() will advance it to the first valid element.
     infix_registry_iterator_t it;
@@ -796,7 +796,7 @@ c23_nodiscard infix_registry_iterator_t infix_registry_iterator_begin(const infi
  * @return `true` if the iterator was advanced to a valid type, or `false` if there are
  *         no more types to visit.
  */
-c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter) {
+INFIX_API c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter) {
     if (!iter || !iter->registry)
         return false;
 
@@ -839,7 +839,7 @@ c23_nodiscard bool infix_registry_iterator_next(infix_registry_iterator_t * iter
  * @return The name of the type (e.g., "Point"), or `nullptr` if the iterator is invalid
  *         or has reached the end of the collection.
  */
-c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry_iterator_t * iter) {
+INFIX_API c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry_iterator_t * iter) {
     if (!iter || !iter->_current_entry)
         return nullptr;
     const _infix_registry_entry_t * entry = (const _infix_registry_entry_t *)iter->_current_entry;
@@ -853,7 +853,7 @@ c23_nodiscard const char * infix_registry_iterator_get_name(const infix_registry
  * @return A pointer to the canonical `infix_type` object, or `nullptr` if the iterator
  *         is invalid or has reached the end of the collection.
  */
-c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_registry_iterator_t * iter) {
+INFIX_API c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_registry_iterator_t * iter) {
     if (!iter || !iter->_current_entry)
         return nullptr;
     const _infix_registry_entry_t * entry = (const _infix_registry_entry_t *)iter->_current_entry;
@@ -869,7 +869,7 @@ c23_nodiscard const infix_type * infix_registry_iterator_get_type(const infix_re
  * @param[in] name The name of the type to check (e.g., "MyStruct").
  * @return `true` if a complete definition for the name exists, `false` otherwise.
  */
-c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, const char * name) {
+INFIX_API c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, const char * name) {
     if (!registry || !name)
         return false;
     _infix_registry_entry_t * entry = _registry_lookup((infix_registry_t *)registry, name);
@@ -885,7 +885,8 @@ c23_nodiscard bool infix_registry_is_defined(const infix_registry_t * registry, 
  *         Returns `nullptr` if the name is not found or is only a forward declaration.
  *         The returned pointer is owned by the registry and is valid for its lifetime.
  */
-c23_nodiscard const infix_type * infix_registry_lookup_type(const infix_registry_t * registry, const char * name) {
+INFIX_API c23_nodiscard const infix_type * infix_registry_lookup_type(const infix_registry_t * registry,
+                                                                      const char * name) {
     if (!registry || !name)
         return nullptr;
     _infix_registry_entry_t * entry = _registry_lookup((infix_registry_t *)registry, name);

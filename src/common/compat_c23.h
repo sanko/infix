@@ -48,7 +48,7 @@
  * the codebase can use `nullptr` consistently without causing compilation errors
  * in a strict C11/C17 environment.
  */
-#ifndef nullptr
+#if !defined(nullptr) && !defined(__cplusplus)
 #define nullptr ((void *)0)
 #endif
 /**
@@ -60,7 +60,8 @@
  * even if they support the underlying `_Static_assert` keyword. It allows for
  * compile-time assertions throughout the codebase.
  */
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || (defined(_MSC_VER) && _MSC_VER >= 1900)
+#if !defined(__cplusplus) && \
+    ((defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || (defined(_MSC_VER) && _MSC_VER >= 1900))
 #include <assert.h>
 #ifndef static_assert
 #define static_assert(cond, msg) _Static_assert(cond, msg)

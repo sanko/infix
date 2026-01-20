@@ -1842,10 +1842,10 @@ c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
  * @param[in] dialect The desired output format dialect.
  * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_INVALID_ARGUMENT` if the buffer is too small.
  */
-c23_nodiscard infix_status infix_type_print(char * buffer,
-                                            size_t buffer_size,
-                                            const infix_type * type,
-                                            infix_print_dialect_t dialect) {
+INFIX_API c23_nodiscard infix_status infix_type_print(char * buffer,
+                                                      size_t buffer_size,
+                                                      const infix_type * type,
+                                                      infix_print_dialect_t dialect) {
     _infix_clear_error();
     if (!buffer || buffer_size == 0 || !type) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
@@ -1889,14 +1889,14 @@ c23_nodiscard infix_status infix_type_print(char * buffer,
  * @param[in] dialect The output dialect.
  * @return `INFIX_SUCCESS` on success, or `INFIX_ERROR_INVALID_ARGUMENT` if the buffer is too small.
  */
-c23_nodiscard infix_status infix_function_print(char * buffer,
-                                                size_t buffer_size,
-                                                const char * function_name,
-                                                const infix_type * ret_type,
-                                                const infix_function_argument * args,
-                                                size_t num_args,
-                                                size_t num_fixed_args,
-                                                infix_print_dialect_t dialect) {
+INFIX_API c23_nodiscard infix_status infix_function_print(char * buffer,
+                                                          size_t buffer_size,
+                                                          const char * function_name,
+                                                          const infix_type * ret_type,
+                                                          const infix_function_argument * args,
+                                                          size_t num_args,
+                                                          size_t num_fixed_args,
+                                                          infix_print_dialect_t dialect) {
     _infix_clear_error();
     if (!buffer || buffer_size == 0 || !ret_type || (num_args > 0 && !args)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);

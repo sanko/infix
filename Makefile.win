@@ -30,6 +30,8 @@ LIB_OBJECTS = $(OBJ_DIR)\infix.obj
 # --- Main Targets ---
 all: $(OBJ_DIR)\$(LIB_NAME)
 
+shared: $(OBJ_DIR)\infix.dll
+
 # --- Build Rules ---
 
 # Rule to create the static library from its object files.
@@ -37,11 +39,16 @@ $(OBJ_DIR)\$(LIB_NAME): $(LIB_OBJECTS)
     @echo AR $@
     $(LIB) /OUT:$@ $(LIB_OBJECTS)
 
+# Rule to create the dynamic library (DLL).
+$(OBJ_DIR)\infix.dll: $(LIB_OBJECTS)
+    @echo LD $@
+    $(CC) /LD /Fe$@ $(LIB_OBJECTS) /link /DLL
+
 # Inference Rule to build .obj files from .c files found in the core source directory.
 {$(SRC_DIR)}.c{$(OBJ_DIR)}.obj:
     @if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
     @echo CC $**
-    $(CC) $(CFLAGS) /c $** /Fo$@
+    $(CC) $(CFLAGS) /DINFIX_BUILDING_DLL /c $** /Fo$@
 
 # --- Cleanup ---
 clean:

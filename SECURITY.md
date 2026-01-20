@@ -10,8 +10,8 @@ Security updates are provided for the latest public release. As this is a pre-1.
 
 | Version       | Supported          |
 | ------------- | ------------------ |
-| >= 0.1.0      | :white_check_mark: |
-| < 0.1.0       | :x:                |
+| >= 0.1.3      | :white_check_mark: |
+| < 0.1.3       | :x:                |
 | [unversioned] | :white_check_mark: |
 
 ## Reporting a Vulnerability

@@ -1256,7 +1256,7 @@ size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type *
  * @return The name of the type if it was created from a registry alias (e.g., "MyInt"), or `nullptr` if the type is
  * anonymous.
  */
-c23_nodiscard const char * infix_type_get_name(const infix_type * type) {
+INFIX_API c23_nodiscard const char * infix_type_get_name(const infix_type * type) {
     if (type == nullptr)
         return nullptr;
     return type->name;
@@ -1266,7 +1266,7 @@ c23_nodiscard const char * infix_type_get_name(const infix_type * type) {
  * @param[in] type The type object to inspect.
  * @return The `infix_type_category` enum value, or -1 if `type` is `nullptr`.
  */
-c23_nodiscard infix_type_category infix_type_get_category(const infix_type * type) {
+INFIX_API c23_nodiscard infix_type_category infix_type_get_category(const infix_type * type) {
     return type ? type->category : (infix_type_category)-1;
 }
 /**
@@ -1274,20 +1274,20 @@ c23_nodiscard infix_type_category infix_type_get_category(const infix_type * typ
  * @param[in] type The type object to inspect.
  * @return The size in bytes, or 0 if `type` is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_size(const infix_type * type) { return type ? type->size : 0; }
+INFIX_API c23_nodiscard size_t infix_type_get_size(const infix_type * type) { return type ? type->size : 0; }
 /**
  * @brief Gets the alignment requirement of a type in bytes.
  * @param[in] type The type object to inspect.
  * @return The alignment in bytes, or 0 if `type` is `nullptr`.
  */
-c23_nodiscard size_t infix_type_get_alignment(const infix_type * type) { return type ? type->alignment : 0; }
+INFIX_API c23_nodiscard size_t infix_type_get_alignment(const infix_type * type) { return type ? type->alignment : 0; }
 /**
  * @brief Gets the number of members in a struct or union type.
  * @param[in] type The aggregate type object to inspect. Must have category
  * `INFIX_TYPE_STRUCT` or `INFIX_TYPE_UNION`.
  * @return The number of members, or 0 if the type is not a struct or union.
  */
-c23_nodiscard size_t infix_type_get_member_count(const infix_type * type) {
+INFIX_API c23_nodiscard size_t infix_type_get_member_count(const infix_type * type) {
     if (!type || (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_UNION))
         return 0;
     return type->meta.aggregate_info.num_members;
@@ -1298,7 +1298,7 @@ c23_nodiscard size_t infix_type_get_member_count(const infix_type * type) {
  * @param[in] index The zero-based index of the member.
  * @return A pointer to the `infix_struct_member`, or `nullptr` if the index is out of bounds or the type is invalid.
  */
-c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type * type, size_t index) {
+INFIX_API c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type * type, size_t index) {
     if (!type || (type->category != INFIX_TYPE_STRUCT && type->category != INFIX_TYPE_UNION) ||
         index >= type->meta.aggregate_info.num_members)
         return nullptr;
@@ -1311,7 +1311,7 @@ c23_nodiscard const infix_struct_member * infix_type_get_member(const infix_type
  * @return The name of the argument as a string, or `nullptr` if the argument is anonymous or the index is out of
  * bounds.
  */
-c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type, size_t index) {
+INFIX_API c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type, size_t index) {
     if (!func_type || func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE ||
         index >= func_type->meta.func_ptr_info.num_args)
         return nullptr;
@@ -1323,7 +1323,7 @@ c23_nodiscard const char * infix_type_get_arg_name(const infix_type * func_type,
  * @param[in] index The zero-based index of the argument.
  * @return A pointer to the argument's `infix_type`, or `nullptr` if the index is out of bounds.
  */
-c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func_type, size_t index) {
+INFIX_API c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func_type, size_t index) {
     if (!func_type || func_type->category != INFIX_TYPE_REVERSE_TRAMPOLINE ||
         index >= func_type->meta.func_ptr_info.num_args)
         return nullptr;
@@ -1334,7 +1334,7 @@ c23_nodiscard const infix_type * infix_type_get_arg_type(const infix_type * func
  * @param[in] trampoline The trampoline handle.
  * @return The number of arguments, or 0 if `trampoline` is `nullptr`.
  */
-c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t * trampoline) {
+INFIX_API c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->num_args : 0;
 }
 /**
@@ -1342,7 +1342,7 @@ c23_nodiscard size_t infix_forward_get_num_args(const infix_forward_t * trampoli
  * @param[in] trampoline The trampoline handle.
  * @return The number of fixed arguments, or 0 if `trampoline` is `nullptr`.
  */
-c23_nodiscard size_t infix_forward_get_num_fixed_args(const infix_forward_t * trampoline) {
+INFIX_API c23_nodiscard size_t infix_forward_get_num_fixed_args(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->num_fixed_args : 0;
 }
 /**
@@ -1350,7 +1350,7 @@ c23_nodiscard size_t infix_forward_get_num_fixed_args(const infix_forward_t * tr
  * @param[in] trampoline The trampoline handle.
  * @return A pointer to the `infix_type` for the return value, or `nullptr` if `trampoline` is `nullptr`.
  */
-c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t * trampoline) {
+INFIX_API c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forward_t * trampoline) {
     return trampoline ? trampoline->return_type : nullptr;
 }
 /**
@@ -1359,7 +1359,8 @@ c23_nodiscard const infix_type * infix_forward_get_return_type(const infix_forwa
  * @param[in] index The zero-based index of the argument.
  * @return A pointer to the `infix_type`, or `nullptr` if the index is out of bounds or `trampoline` is `nullptr`.
  */
-c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t * trampoline, size_t index) {
+INFIX_API c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_t * trampoline,
+                                                                      size_t index) {
     if (!trampoline || index >= trampoline->num_args)
         return nullptr;
     return trampoline->arg_types[index];
@@ -1369,7 +1370,7 @@ c23_nodiscard const infix_type * infix_forward_get_arg_type(const infix_forward_
  * @param[in] trampoline The trampoline context handle.
  * @return The number of arguments, or 0 if `trampoline` is `nullptr`.
  */
-c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t * trampoline) {
+INFIX_API c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t * trampoline) {
     return trampoline ? trampoline->num_args : 0;
 }
 /**
@@ -1377,7 +1378,7 @@ c23_nodiscard size_t infix_reverse_get_num_args(const infix_reverse_t * trampoli
  * @param[in] trampoline The trampoline context handle.
  * @return The number of fixed arguments, or 0 if `trampoline` is `nullptr`.
  */
-c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t * trampoline) {
+INFIX_API c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t * trampoline) {
     return trampoline ? trampoline->num_fixed_args : 0;
 }
 /**
@@ -1385,7 +1386,7 @@ c23_nodiscard size_t infix_reverse_get_num_fixed_args(const infix_reverse_t * tr
  * @param[in] trampoline The trampoline context handle.
  * @return A pointer to the `infix_type` for the return value, or `nullptr` if `trampoline` is `nullptr`.
  */
-c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t * trampoline) {
+INFIX_API c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_reverse_t * trampoline) {
     return trampoline ? trampoline->return_type : nullptr;
 }
 /**
@@ -1394,7 +1395,8 @@ c23_nodiscard const infix_type * infix_reverse_get_return_type(const infix_rever
  * @param[in] index The zero-based index of the argument.
  * @return A pointer to the `infix_type`, or `nullptr` if the index is out of bounds or `trampoline` is `nullptr`.
  */
-c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t * trampoline, size_t index) {
+INFIX_API c23_nodiscard const infix_type * infix_reverse_get_arg_type(const infix_reverse_t * trampoline,
+                                                                      size_t index) {
     if (!trampoline || index >= trampoline->num_args)
         return nullptr;
     return trampoline->arg_types[index];

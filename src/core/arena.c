@@ -49,7 +49,7 @@
  *        size can reduce the chance of reallocation for complex types.
  * @return A pointer to the new `infix_arena_t`, or `nullptr` on failure.
  */
-c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
+INFIX_API c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
     // Use calloc to ensure the initial struct state is zeroed.
     infix_arena_t * arena = infix_calloc(1, sizeof(infix_arena_t));
     if (arena == nullptr) {
@@ -80,7 +80,7 @@ c23_nodiscard infix_arena_t * infix_arena_create(size_t initial_size) {
  *
  * @param arena A pointer to the arena to destroy.
  */
-void infix_arena_destroy(infix_arena_t * arena) {
+INFIX_API void infix_arena_destroy(infix_arena_t * arena) {
     if (arena == nullptr)
         return;
     // Traverse the chain of blocks and free each one.
@@ -185,7 +185,7 @@ INFIX_API c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t s
  * @param alignment The required alignment for the allocation. Must be a power of two.
  * @return A pointer to the zero-initialized memory, or `nullptr` on failure.
  */
-c23_nodiscard void * infix_arena_calloc(infix_arena_t * arena, size_t num, size_t size, size_t alignment) {
+INFIX_API c23_nodiscard void * infix_arena_calloc(infix_arena_t * arena, size_t num, size_t size, size_t alignment) {
     // Security: Check for multiplication overflow.
     if (size > 0 && num > SIZE_MAX / size) {
         if (arena)
