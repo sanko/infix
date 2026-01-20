@@ -27,9 +27,11 @@
  *     named types, including aliases.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <string.h>
+
 void dummy_func() {}
 TEST {
     plan(6);

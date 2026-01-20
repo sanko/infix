@@ -1,9 +1,57 @@
 # Changelog
 
-All notable changes to this project will (I hope) be documented in this file.
+All notable changes to `infix` will (I hope) be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.4] - 2026-01-17
+
+This release focuses on SIMD vector support and critical platform-specific stability fixes for macOS (both Intel and Apple Silicon), and improving internal code hygiene.
+
+### Added
+
+- Added `infix_get_version` and `infix_version_t` to the public API. This allows applications to query the semantic version of the library at runtime.
+- Added `infix_registry_clone` to support deep-copying type registries for thread-safe interpreter cloning.
+- Added `t/404_simd_vectors.c`: new unit tests for 128-bit SIMD vectors.
+  - Currently targeting reverse callbacks to verify correct register marshalling.
+- Introduced `INFIX_API` and `INFIX_INTERNAL` macros to explicitly control symbol visibility.
+
+### Changed
+
+- The JIT memory allocator on Linux now uses `memfd_create` (on kernels 3.17+) to create anonymous file descriptors for dual-mapped W^X memory. This avoids creating visible temporary files in `/dev/shm` and improves hygiene and security. On FreeBSD, `SHM_ANON` is now used.
+- On dual-mapped platforms (Linux/BSD), the Read-Write view of the JIT memory is now **unmapped immediately** after code generation. This closes a security window where an attacker with a heap read/write primitive could potentially modify executable code by finding the stale RW pointer.
+- The library now builds with hidden symbol visibility by default on supported compilers (GCC/Clang). Only public API functions (`infix_*`) are exported. Internal functions (`_infix_*`) are now hidden, preventing symbol collisions and ABI leakage when `infix` is linked statically into a shared library.
+- `infix_library_open` now uses `RTLD_LOCAL` instead of `RTLD_GLOBAL` on POSIX systems. This prevents symbols from loaded libraries from polluting the global namespace and causing conflicts with other plugins or the host application.
+
+### Fixed
+
+- Fixed stack corruption on macOS ARM64 (Apple Silicon). `long double` on this platform is 8 bytes (an alias for `double`), unlike standard AAPCS64 where it is 16 bytes. The JIT previously emitted 16-byte stores (`STR Qn`) for these types, overwriting adjacent stack memory.
+- Fixed `long double` handling on macOS Intel (Darwin). Verified that Apple adheres to the System V ABI for this type: it requires 16-byte stack alignment and returns values on the x87 FPU stack (`ST(0)`).
+- Fixed a generic System V ABI bug where 128-bit types (vectors, `__int128`) were not correctly aligned to 16 bytes on the stack relative to the return address, causing data corruption when mixed with odd numbers of 8-byte arguments.
+- Fixed the build system (`build.pl`) to better handle external tool failures. Coverage gathering commands (like `codecov`) are now allowed to fail gracefully without breaking the build pipeline.
+- Enforced natural alignment for stack arguments in the AAPCS64 implementation. Previously, arguments were packed to 8-byte boundaries, which violated alignment requirements for 128-bit types.
+- Fixed a critical deployment issue where the public `infix.h` header included an internal file (`common/compat_c23.h`). The header is now fully self-contained and defines `INFIX_NODISCARD` for attribute compatibility.
+- Fixed 128-bit vector truncation on System V x64 (Linux/macOS). Reverse trampolines previously used 64-bit moves (`MOVSD`) for all SSE arguments, corrupting the upper half of vector arguments. They now correctly use `MOVUPS`.
+- Fixed vector argument corruption on AArch64. The reverse trampoline generator now correctly identifies vector types and uses 128-bit stores (`STR Qn`) instead of falling back to 64-bit/32-bit stores or GPRs.
+- Fixed floating-point corruption on Windows on ARM64. Reverse trampolines now force full 128-bit register saves for all floating-point arguments to ensure robust handling of volatile register states.
+- Fixed a logic error in the System V reverse argument classifier where vectors were defaulting to `INTEGER` class, causing the trampoline to look in `RDI`/`RSI` instead of `XMM` registers.
+- Fixed Clang coverage reporting by switching from LLVM-specific profiles to standard GCOV formats.
+- Fixed potential cache coherency issues on Windows x64. The library now unconditionally calls `FlushInstructionCache` after JIT compilation.
+- Hardened the signature parser against integer overflows when parsing array/vector sizes.
+- Capped the maximum alignment in `infix_type_create_packed_struct` to 1MB to prevent integer wrap-around bugs in layout calculation.
+- Fixed a buffer overread on macOS ARM64 where small signed integers were loaded using 32-bit `LDRSW`. Implemented `LDRSH` and `LDRSB`.
+- Updated the `INFIX_NODISCARD` macro logic in `infix.h`. It now prioritizes compiler-specific attributes (like `__attribute__((warn_unused_result))`) over C23 standard attributes on GCC/Clang when not in strict C23 mode. This fixes syntax errors when compiling with C11/C17 standards.
+- Fixed `warn_unused_result` warnings across the test suite and fuzzing helpers. Previous tests cast ignored return values to `(void)`, but GCC ignores this cast for functions marked with `warn_unused_result`. All tests now properly check `infix_status` return codes.
+- Fixed a "dangling else" warning in `fuzz/fuzz_helpers.c` by adding explicit braces.
+- Cleaned up `infix_internals.h` by removing the obsolete declaration for `_infix_forward_create_internal`.
+- Made `_infix_forward_create_impl` and `_infix_forward_create_direct_impl` static in `trampoline.c`, as they are only used within that translation unit in the unity build.
+- Early attempt to support C++ Itanium (`INFIX_DIALECT_ITANIUM_MANGLING`) and MSVC (`INFIX_DIALECT_MSVC_MANGLING`) mangling in signature stringification. This is mostly for debugging the type system quickly.
+  - Supports deeply nested namespaces and scopes (`@Outer::Inner::MyClass`).
+  - MSVC mangling correctly handles the reversed-order namespace requirements and special type prefixes (`U` for structs, `T` for unions).
+- Added native support for Apple's Hardened Runtime security policy.
+  - The JIT engine now utilizes `MAP_JIT` when the `com.apple.security.cs.allow-jit` entitlement is detected.
+  - Implemented thread-local permission toggling via `pthread_jit_write_protect_np` to maintain W^X compliance.
 
 ## [0.1.3] - 2025-12-19
 
@@ -149,6 +197,8 @@ Everything. It's brand new.
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
+[unreleased]: https://github.com/sanko/infix/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/sanko/infix/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sanko/infix/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sanko/infix/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/sanko/infix/compare/v0.1.0...v0.1.1

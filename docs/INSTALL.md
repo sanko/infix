@@ -1,4 +1,4 @@
-# Building and Integrating `infix`
+# Building and Integrating infix
 
 This guide shows you how to build the `infix` library and add it to your C projects.
 
@@ -91,6 +91,14 @@ Open a Developer Command Prompt and run:
 ```bash
 nmake /f Makefile.win
 ```
+
+### Symbol Visibility
+
+When building `infix` as a shared library (DLL/.so), you must ensure that only the public API is exported.
+ - Public API: All public functions are marked with the `INFIX_API` macro in `infix.h`.
+ - Internal Functions: All internal functions shared between source files are marked with `INFIX_INTERNAL`.
+
+If you are compiling infix yourself, you should define `INFIX_INTERNAL` to hide internal symbols if your compiler supports it (`-fvisibility=hidden`). The provided build scripts handle this automatically.
 
 ### Advanced Methods
 

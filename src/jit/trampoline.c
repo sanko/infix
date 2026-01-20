@@ -313,13 +313,13 @@ c23_nodiscard infix_direct_cif_func infix_forward_get_direct_code(infix_forward_
  * @param[in] target_fn The target function pointer, or `nullptr` for an unbound trampoline.
  * @return `INFIX_SUCCESS` on success.
  */
-c23_nodiscard infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline,
-                                                      infix_arena_t * target_arena,
-                                                      infix_type * return_type,
-                                                      infix_type ** arg_types,
-                                                      size_t num_args,
-                                                      size_t num_fixed_args,
-                                                      void * target_fn) {
+static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline,
+                                               infix_arena_t * target_arena,
+                                               infix_type * return_type,
+                                               infix_type ** arg_types,
+                                               size_t num_args,
+                                               size_t num_fixed_args,
+                                               void * target_fn) {
     if (out_trampoline == nullptr || return_type == nullptr || (arg_types == nullptr && num_args > 0)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -421,7 +421,7 @@ c23_nodiscard infix_status _infix_forward_create_impl(infix_forward_t ** out_tra
         goto cleanup;
     }
     infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(handle->exec)) {
+    if (!infix_executable_make_executable(&handle->exec)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -460,12 +460,12 @@ cleanup:
  * @param[in] handlers An array of handler structs provided by the user.
  * @return `INFIX_SUCCESS` on success, or an error code on failure.
  */
-c23_nodiscard infix_status _infix_forward_create_direct_impl(infix_forward_t ** out_trampoline,
-                                                             infix_type * return_type,
-                                                             infix_type ** arg_types,
-                                                             size_t num_args,
-                                                             void * target_fn,
-                                                             infix_direct_arg_handler_t * handlers) {
+static infix_status _infix_forward_create_direct_impl(infix_forward_t ** out_trampoline,
+                                                      infix_type * return_type,
+                                                      infix_type ** arg_types,
+                                                      size_t num_args,
+                                                      void * target_fn,
+                                                      infix_direct_arg_handler_t * handlers) {
     // 1. Validation and Setup
     if (!out_trampoline || !return_type || (!arg_types && num_args > 0) || !target_fn || !handlers) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
@@ -559,7 +559,7 @@ c23_nodiscard infix_status _infix_forward_create_direct_impl(infix_forward_t ** 
         goto cleanup;
     }
     infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(handle->exec)) {
+    if (!infix_executable_make_executable(&handle->exec)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -810,7 +810,7 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
         goto cleanup;
     }
     infix_memcpy(context->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(context->exec)) {
+    if (!infix_executable_make_executable(&context->exec)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }

@@ -10,6 +10,7 @@
 
 // Define these before including double_tap to enable the harness and its implementation.
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include "common/infix_internals.h"

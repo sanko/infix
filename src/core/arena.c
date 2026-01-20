@@ -114,52 +114,61 @@ void infix_arena_destroy(infix_arena_t * arena) {
  * @return A pointer to the allocated memory, or `nullptr` if the arena is out of
  *         memory, has its error flag set, or an invalid alignment is requested.
  */
-c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
+INFIX_API c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t size, size_t alignment) {
     if (arena == nullptr)
         return nullptr;
-    // Alignment must be a power of two for the bitwise alignment trick to work.
+
+    // Ensure alignment is power of 2
     if (alignment == 0 || (alignment & (alignment - 1)) != 0) {
         arena->error = true;
-        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INVALID_ALIGNMENT, 0);  // Programmatic error
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INVALID_ALIGNMENT, 0);
         return nullptr;
     }
-    infix_arena_t * current_block = arena;
-    while (true) {  // Loop until allocation succeeds or fails definitively.
-        if (current_block->error)
+
+    infix_arena_t * block = arena;
+    while (true) {
+        if (block->error)
             return nullptr;
-        if (size == 0)
-            return (void *)(current_block->buffer + current_block->current_offset);
-        size_t aligned_offset = _infix_align_up(current_block->current_offset, alignment);
-        if (aligned_offset < current_block->current_offset) {
-            current_block->error = true;
-            _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_INTEGER_OVERFLOW, 0);
+
+        // 1. Calculate current absolute address
+        uintptr_t current_ptr = (uintptr_t)(block->buffer + block->current_offset);
+
+        // 2. Calculate aligned address
+        // (x + align - 1) & ~(align - 1)
+        uintptr_t aligned_ptr = (current_ptr + (alignment - 1)) & ~(alignment - 1);
+
+        // 3. Calculate padding needed
+        size_t padding = (size_t)(aligned_ptr - current_ptr);
+
+        // 4. Calculate total space required in this block
+        size_t total_needed = size + padding;
+
+        // Check if fits in current block
+        if (block->current_offset + total_needed <= block->capacity) {
+            void * ret = (void *)aligned_ptr;
+            block->current_offset += total_needed;
+            return ret;
+        }
+
+        // 5. Allocation failed in current block. Check next or create new.
+        if (block->next_block) {
+            block = block->next_block;
+            continue;
+        }
+
+        // Create new block. Ensure it's large enough for alignment + size.
+        size_t next_cap = block->block_size * 2;
+        if (next_cap < size + alignment)
+            next_cap = size + alignment;
+
+        block->next_block = infix_arena_create(next_cap);
+        if (!block->next_block) {
+            block->error = true;
             return nullptr;
         }
-        // Attempt to allocate in the current block.
-        if (SIZE_MAX - size >= aligned_offset && aligned_offset + size <= current_block->capacity) {
-            void * ptr = current_block->buffer + aligned_offset;
-            current_block->current_offset = aligned_offset + size;
-            return ptr;  // Success: Allocation complete.
-        }
-        // If allocation failed, find or create the next block and let the loop retry.
-        if (current_block->next_block != nullptr) {
-            current_block = current_block->next_block;
-        }
-        else {
-            // Reached the end of the chain, so create a new block.
-            size_t next_size = current_block->block_size * 2;
-            if (next_size < size + alignment)
-                next_size = size + alignment;
-            current_block->next_block = infix_arena_create(next_size);
-            if (current_block->next_block == nullptr) {
-                current_block->error = true;  // Mark the last valid block as errored.
-                return nullptr;               // Growth failed.
-            }
-            current_block = current_block->next_block;
-        }
+
+        block = block->next_block;
     }
-    // This line should be unreachable if the logic is correct.
-    return nullptr;
 }
 /**
  * @internal

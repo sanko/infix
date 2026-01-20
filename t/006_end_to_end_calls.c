@@ -23,10 +23,12 @@
  * together correctly for a common and important use case.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
+
 // Native C Functions for Testing
 /** @brief A C function to be called via a forward trampoline. Takes and returns a struct. */
 Point move_point(Point p, double dx, double dy) {

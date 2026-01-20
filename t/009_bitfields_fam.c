@@ -23,6 +23,7 @@
  * simplified in `infix` to flush to the next byte on overflow.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
@@ -122,14 +123,16 @@ TEST {
             infix_struct_member bf1_m[] = {infix_type_create_bitfield_member("a", u8, 0, 1),
                                            infix_type_create_bitfield_member("b", u8, 0, 7)};
             infix_type * bf1 = NULL;
-            (void)infix_type_create_struct(arena, &bf1, bf1_m, 2);
+            if (infix_type_create_struct(arena, &bf1, bf1_m, 2) != INFIX_SUCCESS)
+                fail("Setup failed");
             ok(bf1->size == sizeof(BitfieldStruct1), "BitfieldStruct1 size matches (1 byte)");
 
             // Overflow { a:u8:4, b:u8:6 } -> 2 bytes
             infix_struct_member bf2_m[] = {infix_type_create_bitfield_member("a", u8, 0, 4),
                                            infix_type_create_bitfield_member("b", u8, 0, 6)};
             infix_type * bf2 = NULL;
-            (void)infix_type_create_struct(arena, &bf2, bf2_m, 2);
+            if (infix_type_create_struct(arena, &bf2, bf2_m, 2) != INFIX_SUCCESS)
+                fail("Setup failed");
             ok(bf2->size == sizeof(BitfieldStructOverflow), "BitfieldStructOverflow size matches (2 bytes)");
 
             // Zero width forcing alignment { a:u8:4, :0, b:u8:4 } -> 2 bytes
@@ -137,7 +140,8 @@ TEST {
                                            infix_type_create_bitfield_member("", u8, 0, 0),  // Zero width
                                            infix_type_create_bitfield_member("b", u8, 0, 4)};
             infix_type * bf3 = NULL;
-            (void)infix_type_create_struct(arena, &bf3, bf3_m, 3);
+            if (infix_type_create_struct(arena, &bf3, bf3_m, 3) != INFIX_SUCCESS)
+                fail("Setup failed");
             ok(bf3->size == sizeof(BitfieldStructZeroWidth), "BitfieldStructZeroWidth size matches (2 bytes)");
         }
         subtest("Signature Parsing") {

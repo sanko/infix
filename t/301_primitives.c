@@ -24,10 +24,12 @@
  * was transmitted back to the harness.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <string.h>
+
 // Handler Functions for Testing
 /** @brief A type-safe handler for an `int(int, int)` callback. */
 int int_callback_handler(int a, int b) {

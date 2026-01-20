@@ -57,6 +57,11 @@ The process of creating a forward trampoline, from signature to executable code,
 2.  **Layout Calculation:** The resolved type graph is passed to the Trampoline Engine, which selects the correct ABI spec and calls its `prepare_forward_call_frame` function to produce a complete layout blueprint.
 3.  **Code Generation:** The engine calls the ABI spec's code generation functions (`generate_*_prologue`, etc.) in sequence, appending machine code to a buffer.
 4.  **Memory Finalization:** The generated code is copied to a new page of W^X-compliant executable memory.
+  *   **W^X Enforcement:** On dual-map systems, the Read-Write view used for copying is immediately unmapped. On single-map systems, permissions are flipped to Read-Execute.
+  *   **Cache Coherency:** On architectures like AArch64, the Instruction Cache (I-Cache) and Data Cache (D-Cache) are not coherent. We explicitly flush the D-Cache and invalidate the I-Cache to ensure the CPU executes the newly generated instructions correctly.
+      - On macOS, we utilize the system-provided `sys_icache_invalidate` API (which handles the complexities of both Intel and Apple Silicon)
+      - On other POSIX systems, we use `__builtin___clear_cache`.
+      - On Windows, we use `FlushInstructionCache`
 5.  **Handle Creation:** A final `infix_forward_t` handle is allocated, containing its own private arena into which a deep copy of the type graph is made, making the handle a safe, self-contained object.
 
 ```mermaid
@@ -158,6 +163,14 @@ This separation allows the JIT to handle complex ABIs (like splitting structs ac
 
 A memory region is never simultaneously writable and executable. The implementation strategy varies by platform for maximum security and compatibility:
 
+*   **On Modern Linux (Kernel 3.17+)**: We use `memfd_create("infix_jit", MFD_CLOEXEC)`. This creates an anonymous file that lives purely in RAM and is automatically cleaned up when closed. This avoids filesystem pollution and race conditions associated with named shared memory.
+*   **On FreeBSD/DragonFly**: We use `shm_open(SHM_ANON, ...)` to achieve the same anonymous, auto-cleanup behavior.
+*   **On Older POSIX**: We fallback to `shm_open` with a randomized name that is `shm_unlink`ed immediately after creation.
+*   **On Windows/macOS**: We use the platform's standard single-mapping APIs (`VirtualAlloc`/`mmap`) and toggle permissions with `VirtualProtect`/`mprotect`.
+
+**The "Write Window" Mitigation (Dual-Mapping):**
+On dual-mapped systems (Linux/BSD), we map the memory twice: once as `RW` (for the JIT compiler) and once as `RX` (for execution). To prevent an attacker with a heap disclosure vulnerability from finding the `RW` pointer and modifying generated code later, `infix` **unmaps the RW view immediately** after the machine code generation is finalized.
+
 ```mermaid
 graph TD
     subgraph "Windows/macOS/etc. (Single-Mapping)"
@@ -166,11 +179,12 @@ graph TD
         C --> D(Return RX Pointer);
     end
     subgraph "Linux/BSD (Dual-Mapping)"
-        E[shm_open_anonymous] --> F[mmap RW view];
+        E[memfd_create / SHM_ANON] --> F[mmap RW view];
         E --> G[mmap RX view];
         F --> H[Write JIT Code];
-        G --> I(Return RX Pointer);
-        H --> I;
+        H --> I["munmap(RW view)<br>(Close Write Window)"];
+        G --> J(Return RX Pointer);
+        I --> J;
     end
 ```
 
@@ -201,27 +215,15 @@ Here is the logic, which is executed once per process:
 
 This ensures the library "just works" for developers, while automatically "leveling up" its security when run inside a properly configured application.
 
-```mermaid
-graph TD
-    A["infix_executable_alloc() called on macOS"] --> B{Is this the first call?};
-    B -->|Yes| C[Runtime Detection];
-    B -->|No| G[Use cached strategy];
-
-    subgraph Runtime Detection
-        C --> D{dlopen frameworks?};
-        D -->|Yes| E{has_jit_entitlement?};
-        D -->|No| F[Set strategy = LEGACY];
-        E -->|Yes| H[Set strategy = SECURE];
-        E -->|No| F;
-    end
-
-    G --> I{Strategy is SECURE?};
-    I -->|Yes| J[mmap with MAP_JIT];
-    I -->|No| K[mmap without MAP_JIT];
-```
-
 ### 3.4 Fuzz Testing
 The entire `infix` API surface, especially the signature parser and ABI classifiers, is continuously tested using `libFuzzer` and `AFL++`. The fuzzing harnesses (`fuzz/`) are designed to find memory safety violations (ASan), integer overflows (UBSan), and infinite loops (timeouts). All findings are converted into permanent regression tests.
+
+### 3.5 API Input Hardening
+The library implements defense-in-depth against malicious or malformed inputs at the API boundary:
+
+*   **Signature Parsing:** The parser validates all numeric inputs (array sizes, vector widths). It checks for `ERANGE` and ensures values fit within `size_t`, rejecting inputs like `[99999999999999999999:int]` that would cause integer overflows during subsequent size calculations.
+*   **Alignment Limits:** The Manual API (`infix_type_create_packed_struct`) enforces a maximum alignment of **1MB**. This prevents attackers from supplying massive power-of-two alignments (e.g., `1 << 60`) that would cause internal alignment macros to wrap around zero, leading to heap corruption.
+*   **Recursion Depth:** The parser enforces a hard recursion limit (32 levels) to prevent stack overflow attacks via deeply nested signatures (e.g., `{{{{...}}}}`).
 
 ---
 

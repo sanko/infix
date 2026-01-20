@@ -134,6 +134,12 @@ These syntax elements allow you to build complex types from simpler ones.
     *   **Syntax:** `name : [ ? : type ]` (Note the size before the colon is represented with a question mark (`?`)).
     *   **Example:** `{ len : int, data : [ ? : char ] }`
 
+### 2.5 Scope and Namespaces
+
+`infix` supports C++-style namespaces and nested scopes using the `::` operator. This is used in the Type Registry to define types that live within a namespace, and it is recognized by the C++ mangling dialects to generate correct ABI-compliant symbols.
+
+*   **Example:** `@Graphics::Math::Vector3`
+
 ---
 
 ## Part 3: The Named Type Registry
@@ -245,6 +251,6 @@ Integer             ::= [0-9]+
 
 #### 4.4 Comparison with Other Systems
 
-*   **vs. Itanium C++ ABI:** Itanium is a "write-only" format designed for linkers. `infix` signatures are designed for humans to read and write.
+*   **vs. Itanium C++ ABI:** Itanium is a "write-only" format designed for linkers. `infix` signatures are designed for humans to read and write. The library includes built-in "dialects" to transform these human-readable strings into standard C++ mangled symbols. This allows developers to resolve C++ functions dynamically without manually calculating complex mangled names.
 *   **vs. Python's `ctypes`:** `ctypes` uses a programmatic, object-oriented approach. The `infix` format is a standalone, declarative string that can be used by *any* language.
 *   **vs. `dyncall`'s Signature Format:** `dyncall`'s format is a flat string of single characters (e.g., `isL)d`), prioritizing brevity. `infix` prioritizes human readability (`(int, ushort, longlong) -> double`). Further, `dyncall` handles aggregate types programmatically via a separate `DCaggr` API, whereas `infix` treats complex data structures as first-class citizens *within the signature string itself*, making the call site much more declarative.

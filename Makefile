@@ -24,7 +24,7 @@ else
 endif
 
 # Base flags for all compilations
-BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2
+BASE_CFLAGS  := -std=c17 -Wall -Wextra -g -O2 -fvisibility=hidden
 
 # Add debug flag if DEBUG=1 is passed on the command line
 ifeq ($(DEBUG),1)

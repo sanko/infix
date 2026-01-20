@@ -25,10 +25,12 @@
  * long-term stability of applications that frequently create and destroy trampolines.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <stddef.h>
+
 #define STRESS_ITERATIONS 5000
 typedef struct {
     uint64_t object_id;

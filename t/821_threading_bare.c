@@ -17,11 +17,13 @@
  * This test prints basic TAP output manually and exits with a status code, but
  * its primary success condition is a clean report from the thread sanitizer.
  */
+#include "common/compat_c23.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+
 #if defined(INFIX_OS_WINDOWS) || defined(INFIX_ENV_CYGWIN)
 #include <windows.h>
 #else

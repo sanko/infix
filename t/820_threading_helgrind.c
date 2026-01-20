@@ -17,10 +17,12 @@
  * applications.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
 #include <stdbool.h>
+
 #if defined(INFIX_OS_WINDOWS)
 #include <windows.h>
 #else

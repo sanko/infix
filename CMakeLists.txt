@@ -6,15 +6,22 @@ project(infix VERSION 0.1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Build docs from Doxygen
-add_subdirectory(docs)
-
 # Use the standard GNUInstallDirs module to define portable installation paths.
 include(GNUInstallDirs)
 
 # Add the static library target.
 # Since infix uses a unity build, we only need to specify the main infix.c file.
 add_library(infix STATIC src/infix.c)
+
+# Default to hidden visibility to avoid polluting the global symbol table
+# with internal functions (like _infix_set_error) when linked.
+set_target_properties(infix PROPERTIES C_VISIBILITY_PRESET hidden)
+
+if(INFIX_DEBUG_ENABLED)
+    target_compile_definitions(infix PRIVATE
+        INFIX_DEBUG_ENABLED=1
+    )
+endif()
 
 # Specify include directories for the library target itself and for its consumers.
 target_include_directories(infix
@@ -46,7 +53,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/infix.pc"
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig"
 )
 
-# --- Testing ---
+# Testing
 enable_testing()
 
 # Define a function to simplify adding test executables
@@ -72,7 +79,7 @@ function(add_infix_test test_name)
         target_include_directories("${test_name}" PRIVATE fuzz)
     endif()
 
-    target_compile_definitions("${test_name}" PRIVATE
+    target_compile_definitions(${test_name} PRIVATE
         DBLTAP_ENABLE=1
         INFIX_DEBUG_ENABLED=1
     )
@@ -94,37 +101,19 @@ function(add_infix_test test_name)
 endfunction()
 
 # Add all test targets using the helper function.
-add_infix_test(001_primitives)
-add_infix_test(002_simple_calls)
-add_infix_test(003_type_system_api)
-add_infix_test(004_signatures)
-add_infix_test(005_layouts)
-add_infix_test(006_end_to_end_calls)
-add_infix_test(007_type_registry)
-add_infix_test(008_registry_introspection)
-add_infix_test(101_by_value)
-add_infix_test(102_by_reference)
-add_infix_test(103_unions)
-add_infix_test(201_basic)
-add_infix_test(202_in_structs)
-add_infix_test(203_complex)
-add_infix_test(301_primitives)
-add_infix_test(302_aggregates)
-add_infix_test(303_advanced)
-add_infix_test(304_reverse_call_types)
-add_infix_test(401_large_stack)
-add_infix_test(402_variadic_functions)
-add_infix_test(403_special_types)
-add_infix_test(810_memory_stress)
-add_infix_test(811_fault_injection)
-add_infix_test(820_threading_helgrind)
-add_infix_test(821_threading_bare)
-add_infix_test(830_security)
-add_infix_test(840_arena_allocator)
-add_infix_test(850_regression_cases)
-add_infix_test(851_lifecycle_regression)
-add_infix_test(860_error_handling)
-add_infix_test(901_call_overhead)
-add_infix_test(903_generation_benchmark)
+# CONFIGURE_DEPENDS ensures CMake re-runs if you add/remove files in this directory.
+file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "t/*.c")
 
-# cmake -B build ; cmake --build build; ctest --test-dir build
+foreach(test_source ${TEST_SOURCES})
+    # Extract the filename without the extension ("t/001_primitives.c" => "001_primitives")
+    get_filename_component(test_name "${test_source}" NAME_WE)
+
+    # To skip specific files if they aren't meant to be run automatically, do something like this:
+    if(test_name STREQUAL "903_generation_benchmark")
+         continue()
+    endif()
+
+    add_infix_test("${test_name}")
+endforeach()
+
+# cmake -DINFIX_DEBUG_ENABLED=1 -B build ; cmake --build build ; ctest --test-dir build --rerun-failed --output-on-failure

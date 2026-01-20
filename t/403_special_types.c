@@ -22,9 +22,11 @@
  * that support the specific type, ensuring the test suite remains portable.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
+
 // Check if `long double` has a distinct representation on this platform.
 #if defined(INFIX_COMPILER_MSVC) || (defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)) || \
     defined(INFIX_OS_MACOS)
@@ -44,8 +46,27 @@ bool s128_callback_handler(__int128_t val) {
     return val == S128_CONSTANT;
 }
 #endif
+
+// This function takes 8 doubles (filling XMM0-7)
+// Then s1 (stack offset 0)
+// Then s2 (stack offset 16 - MUST BE ALIGNED. If offset is 8, test fails)
+long double stack_alignment_callee(c23_maybe_unused double r1,
+                                   c23_maybe_unused double r2,
+                                   c23_maybe_unused double r3,
+                                   c23_maybe_unused double r4,
+                                   c23_maybe_unused double r5,
+                                   c23_maybe_unused double r6,
+                                   c23_maybe_unused double r7,
+                                   c23_maybe_unused double r8,
+                                   c23_maybe_unused double s1,
+                                   long double s2) {
+    // We only care that s2 is read correctly.
+    // If alignment logic is wrong, s2 will be read from offset 8 (overlapping s1), resulting in garbage.
+    return s2;
+}
+
 TEST {
-    plan(3);
+    plan(4);
     subtest("Special type: long double") {
         plan(2);
 #if HAS_DISTINCT_LONG_DOUBLE
@@ -131,5 +152,51 @@ TEST {
 #else
         skip(2, "128-bit integers are not supported on MSVC");
 #endif
+    }
+
+    subtest("Stack Alignment Regression") {
+        plan(2);
+
+        infix_arena_t * arena = infix_arena_create(4096);
+
+        // Create Signature: (double x 9, long double) -> long double
+        infix_type * dbl = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+        infix_type * ldbl = infix_type_create_primitive(INFIX_PRIMITIVE_LONG_DOUBLE);
+
+        infix_type * args[10];
+        for (int i = 0; i < 9; ++i)
+            args[i] = dbl;
+        args[9] = ldbl;
+
+        infix_forward_t * t = NULL;
+        infix_status status = infix_forward_create_manual(&t, ldbl, args, 10, 10, (void *)stack_alignment_callee);
+
+        ok(status == INFIX_SUCCESS, "Created alignment regression trampoline");
+
+        if (t) {
+            double r_vals[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+            double s1 = 9.0;
+            long double s2 = 123.456L;
+            long double result = 0.0;
+
+            void * call_args[10];
+            for (int i = 0; i < 8; ++i)
+                call_args[i] = &r_vals[i];  // Regs 0-7 (fill XMMs)
+            call_args[8] = &s1;             // Stack 0  (double)
+            call_args[9] = &s2;             // Stack 1  (long double) -> Must be at offset 16
+
+            infix_cif_func cif = infix_forward_get_code(t);
+            cif(&result, call_args);
+
+            long double diff = result - s2;
+            if (diff < 0)
+                diff = -diff;
+
+            ok(diff < 1e-9L, "Stack Alignment: long double read correctly from stack (Got %.5f)", (double)result);
+        }
+        else
+            skip(1, "Test skipped");
+        infix_forward_destroy(t);
+        infix_arena_destroy(arena);
     }
 }

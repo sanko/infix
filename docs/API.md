@@ -1,4 +1,4 @@
-# `infix` API Quick Reference
+# API Quick Reference
 
 This document provides a concise reference for the public API of the `infix` library. It's designed to be a quick lookup for developers who are already familiar with the library's concepts.
 
@@ -14,11 +14,12 @@ For practical, in-depth examples, please see the [Cookbook](cookbook.md).
     *   [The Error Handling Pattern](#the-error-handling-pattern)
     *   [Common Error Categories](#common-error-categories)
 *   [3. Introspection API](#3-introspection-api)
+    *   [Library Version](#library-version)
     *   [Getting Callable Code](#getting-callable-code)
     *   [Inspecting Trampoline Properties](#inspecting-trampoline-properties)
     *   [Inspecting Type Properties](#inspecting-type-properties)
 *   [4. Named Type Registry API](#4-named-type-registry-api)
-    *   [Creation and Population](#creation-and-population)
+    *   [Creation, Cloning, and Population](#creation-cloning-and-population)
     *   [Registry Introspection & Iteration](#registry-introspection--iteration)
 *   [5. Dynamic Library & Globals API](#5-dynamic-library--globals-api)
 *   [6. Manual API (Advanced)](#6-manual-api-advanced)
@@ -121,6 +122,13 @@ infix_status infix_reverse_create_closure(
 );
 ```
 
+### Trampoline Destruction
+
+All trampolines created by `infix` allocate executable memory and internal metadata that must be explicitly freed when no longer needed.
+
+* `void infix_forward_destroy(infix_forward_t* trampoline)`: Destroys a forward trampoline (bound or unbound) and frees its private arena.
+* `void infix_reverse_destroy(infix_reverse_t* context)`: Destroys a reverse trampoline, unmaps its read only context, and frees its private arena.
+
 ---
 
 ## 2. Error Handling API
@@ -145,8 +153,10 @@ This function returns a copy of an `infix_error_details_t` struct, which contain
 ### Common Error Categories
 
 #### Parser Errors (`INFIX_CATEGORY_PARSER`)
+
 **What it means:** There is a syntax error in a signature string you provided.
-**How to handle:** This is the most common type of error. You can use the `position` and `message` from the error details to provide a rich diagnostic to the user, much like a compiler would.
+
+**But... what does it mean‽:** This is the most common type of error. You can use the `position` and `message` from the error details to provide a rich diagnostic to the user, much like a compiler would.
 
 ```c
 // Example: Handling a parser error
@@ -162,27 +172,37 @@ if (status != INFIX_SUCCESS) {
 ```
 
 #### Allocation Errors (`INFIX_CATEGORY_ALLOCATION`)
+
 **What it means:** The library failed to allocate memory, either from the standard heap (`malloc`) or from the OS for executable JIT code (`mmap`/`VirtualAlloc`). This usually means the system is out of memory.
-**How to handle:** There is often little you can do to recover. The best course of action is to log the error and terminate the process gracefully.
+
+**How to handle this:** There is often little you can do to recover. The best course of action is to log the error and terminate the process gracefully.
 
 #### ABI & Layout Errors (`INFIX_CATEGORY_ABI`)
+
 **What it means:** This is a more subtle category of error related to the function's structure.
 *   You used a named type (e.g., `@Point`) in a signature but didn't provide a registry, or the name wasn't found.
 *   You tried to create an invalid type, like a struct containing a `void` member.
 *   A type was too large or complex for the target architecture's ABI to handle (e.g., a struct larger than the maximum safe stack allocation size).
-**How to handle:** Double-check your signature strings and type definitions in the registry. Ensure you are passing the correct registry handle to the creation function.
+
+**How to handle this:** Double-check your signature strings and type definitions in the registry. Ensure you are passing the correct registry handle to the creation function.
 
 #### General & Library Errors
+
 **What it means:** This is a catch-all for other issues.
 *   You passed an invalid argument to an API function (e.g., `NULL` where a valid pointer was required).
 *   When using the dynamic library API, the requested library (`.so`, `.dll`) could not be found or a symbol lookup failed.
-**How to handle:** For library errors, ensure the shared library file is in the expected location (e.g., the current directory, or a system path). For other errors, review the arguments you are passing to the `infix` function call.
+
+**How to handle this:** For library errors, ensure the shared library file is in the expected location (e.g., the current directory, or a system path). For other errors, review the arguments you are passing to the `infix` function call.
 
 ---
 
 ## 3. Introspection API
 
 Functions for inspecting the properties of trampolines and types at runtime.
+
+### Library Version
+
+*   `infix_version_t infix_get_version(void)`: Returns the semantic version of the linked library. The returned struct has `.major`, `.minor`, and `.patch` fields.
 
 ### Getting Callable Code
 
@@ -215,7 +235,10 @@ These functions work for both `infix_forward_t*` and `infix_reverse_t*` handles.
     *   `.name`: The name of the field as a `const char*`.
     *   `.type`: The `infix_type*` of the field.
     *   `.offset`: The field's byte offset from the start of the struct.
-*   `infix_status infix_type_print(...)`: Serializes an `infix_type` back into a human-readable string.
+*   `infix_status infix_type_print(char* buffer, size_t buffer_size, const infix_type* type, infix_print_dialect_t dialect)`: Serializes an `infix_type` back into a human-readable string or a mangled symbol. Supported dialects:
+    *   `INFIX_DIALECT_SIGNATURE`: Standard `infix` format.
+    *   `INFIX_DIALECT_ITANIUM_MANGLING`: C++ mangling for GCC/Clang/Linux/macOS.
+    *   `INFIX_DIALECT_MSVC_MANGLING`: C++ mangling for Visual Studio.
 
 ---
 
@@ -223,10 +246,11 @@ These functions work for both `infix_forward_t*` and `infix_reverse_t*` handles.
 
 APIs for defining, storing, reusing, and inspecting complex types by name.
 
-### Creation and Population
+### Creation, Cloning, and Population
 
 *   `infix_registry_t* infix_registry_create(void)`: Creates a new, empty type registry with an internal, automatically growing memory arena.
 *   `infix_registry_t* infix_registry_create_in_arena(infix_arena_t* arena)`: (Advanced) Creates a new registry that allocates from a user-provided arena. This is used for the shared arena optimization pattern.
+*   `infix_registry_t* infix_registry_clone(const infix_registry_t* registry)`: Creates a deep copy of an existing registry. The new registry has its own internal arena and copies of all types, making it thread-safe to use independently of the original.
 *   `void infix_registry_destroy(infix_registry_t* registry)`: Destroys a registry and all its contents. If the registry was created with an external arena (`infix_registry_create_in_arena`), the user-provided arena itself is **not** freed.
 *   `infix_status infix_register_types(infix_registry_t* registry, const char* definitions)`: Parses a semicolon-separated string of type definitions and adds them to the registry. The internal arena will grow automatically if needed.
 *   `const infix_type* infix_registry_lookup_type(const infix_registry_t* registry, const char* name)`: Retrieves a fully defined type object by its name.
@@ -266,6 +290,13 @@ These functions mirror the high-level API but take `infix_type` objects instead 
 *   `infix_status infix_reverse_create_callback_manual(...)`
 *   `infix_status infix_reverse_create_closure_manual(...)`
 
+### Trampoline Destruction
+
+All trampolines created by `infix` allocate executable memory and internal metadata that must be explicitly freed when no longer needed.
+
+*   `void infix_forward_destroy(infix_forward_t* trampoline)`: Destroys a forward trampoline.
+*   `void infix_reverse_destroy(infix_reverse_t* trampoline)`: Destroys a reverse trampoline.
+
 ### Manual Type Creation
 
 These functions are the building blocks for creating `infix_type` objects programmatically. All new types must be allocated from a user-provided arena.
@@ -294,4 +325,3 @@ APIs for the fast, region-based arena allocator used by the Manual API. The inte
 *   `void infix_arena_destroy(infix_arena_t* arena)`: Destroys an arena and frees all memory allocated from it.
 *   `void* infix_arena_alloc(infix_arena_t* arena, size_t size, size_t alignment)`: Allocates a block of memory from an arena.
 *   `void* infix_arena_calloc(infix_arena_t* arena, ...)`: Allocates and zero-initializes memory from an arena.
-

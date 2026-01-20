@@ -23,11 +23,13 @@
  * @note This test is skipped entirely on MSVC.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <complex.h>
 #include <infix/infix.h>
 #include <math.h>
+
 #if !defined(_MSC_VER)  // MSVC does not support the _Complex keyword.
 typedef double _Complex complex_double_t;
 // Native C Functions for Testing

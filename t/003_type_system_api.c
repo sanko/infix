@@ -20,10 +20,12 @@
  * of C's data layout rules is accurate.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
 #include <stdint.h>
+
 // Native C types used as a baseline for comparison.
 /** @internal A test struct with standard padding requirements. */
 typedef struct {
@@ -147,7 +149,8 @@ TEST {
         infix_type * arg1_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_struct_member members[] = {{"d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 0, 0, 0, false}};
         infix_type * arg2_type = nullptr;
-        (void)infix_type_create_struct(arena, &arg2_type, members, 1);
+        if (infix_type_create_struct(arena, &arg2_type, members, 1) != INFIX_SUCCESS)
+            fail("Setup failed");
         infix_type * arg_types[] = {arg1_type, arg2_type};
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_unbound_manual(&trampoline, ret_type, arg_types, 2, 2);

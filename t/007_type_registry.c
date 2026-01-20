@@ -24,12 +24,24 @@
  * - **Error Handling:** Ensures that the system fails gracefully with the correct error
  *   codes when using unregistered types, unresolved forward declarations, or when
  *   using the `@Name` syntax with a `NULL` registry.
+ *
+ * - **Deep Copying:** Verifies that types defined in the source exist in the
+ *     destination but reside at different memory addresses (indicating a deep copy
+ *     occurred, not just a reference copy).
+ *
+ * - **Independence:** Verifies that destroying the source registry does not
+ *     invalidate the destination registry.
+ *
+ * - **Forward Declarations:** Verifies that incomplete types (forward declarations)
+ *     are cloned correctly and retain their "incomplete" status.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
+
 // Native C Functions for Testing
 double get_point_x(Point p) {
     note("get_point_x received Point {x=%.1f, y=%.1f}", p.x, p.y);
@@ -47,7 +59,7 @@ void execute_move_point_callback(Point (*func_ptr)(Point), Point p_in) {
        "Callback returned correctly modified Point");
 }
 TEST {
-    plan(6);
+    plan(9);
     subtest("Basic Registry Lifecycle and Simple Definitions") {
         plan(4);
         infix_registry_t * registry = infix_registry_create();
@@ -211,5 +223,104 @@ TEST {
         infix_arena_destroy(arena2);
         infix_arena_destroy(arena3);
         infix_registry_destroy(registry);
+    }
+
+    subtest("Cloning a populated registry") {
+        plan(6);
+
+        infix_registry_t * src = infix_registry_create();
+        if (!src)
+            bail_out("Failed to create source registry");
+
+        // Register a mix of types: Alias, Struct, and Recursive
+        const char * defs =
+            "@MyInt = int32;"
+            "@Point = { x: double, y: double };"
+            "@Node = { val: int, next: *@Node };";
+
+        ok(infix_register_types(src, defs) == INFIX_SUCCESS, "Registered types in source");
+
+        // Perform the clone
+        infix_registry_t * dest = infix_registry_clone(src);
+        ok(dest != NULL, "infix_registry_clone returned a non-null pointer");
+
+        // Verify content exists in dest
+        const infix_type * src_point = infix_registry_lookup_type(src, "Point");
+        const infix_type * dest_point = infix_registry_lookup_type(dest, "Point");
+
+        ok(dest_point != NULL, "Destination registry contains 'Point'");
+
+        // CRITICAL: Ensure pointers are different (Deep Copy)
+        if (dest_point) {
+            ok(src_point != dest_point, "Source and Dest type pointers are different (Deep Copy confirmed)");
+
+            // Verify structure survived
+            ok(dest_point->category == INFIX_TYPE_STRUCT, "Cloned type has correct category");
+            ok(infix_type_get_size(dest_point) == sizeof(double) * 2, "Cloned type has correct size");
+        }
+        else {
+            skip(2, "Skipping details check");
+        }
+
+        infix_registry_destroy(src);
+        infix_registry_destroy(dest);
+    }
+
+    subtest("Lifecycle Independence") {
+        plan(4);
+        note("Verifying that destination survives source destruction");
+
+        infix_registry_t * src = infix_registry_create();
+
+        infix_status status = infix_register_types(src, "@Survivor = { a: int };");
+        ok(status == INFIX_SUCCESS, "Successfully added @Survivor struct type");
+
+        infix_registry_t * dest = infix_registry_clone(src);
+
+        // Destroy source immediately
+        infix_registry_destroy(src);
+
+        // Dest should still work
+        ok(infix_registry_is_defined(dest, "Survivor"), "Type exists in dest after src is destroyed");
+
+        const infix_type * t = infix_registry_lookup_type(dest, "Survivor");
+        ok(t != NULL, "Can lookup type in dest");
+
+        // Modify dest (add new type)
+        status = infix_register_types(dest, "@NewType = int;");
+        ok(status == INFIX_SUCCESS, "Can register new types into cloned registry");
+
+        infix_registry_destroy(dest);
+    }
+
+    subtest("Cloning Forward Declarations") {
+        plan(6);
+
+        infix_registry_t * src = infix_registry_create();
+
+        infix_status status = infix_register_types(src, "@Incomplete;");
+        ok(status == INFIX_SUCCESS, "Successfully added @Incomplete forward declaration");
+
+        infix_registry_t * dest = infix_registry_clone(src);
+
+        // infix doesn't expose "is_forward_declaration" directly via public API easily,
+        // but lookup_type returns NULL for incomplete types unless we check internal flags
+        // or check if it can be resolved.
+
+        // Ideally, infix_registry_is_defined returns false for fwd decls
+        ok(!infix_registry_is_defined(src, "Incomplete"), "Source: Incomplete is not fully defined");
+        ok(!infix_registry_is_defined(dest, "Incomplete"), "Dest: Incomplete is not fully defined");
+
+        // Now define it in Dest
+        status = infix_register_types(dest, "@Incomplete = int;");
+        ok(status == INFIX_SUCCESS, "Successfully defined @Incomplete");
+
+        ok(infix_registry_is_defined(dest, "Incomplete"), "Dest: Incomplete is now defined");
+
+        // Source should remain incomplete
+        ok(!infix_registry_is_defined(src, "Incomplete"), "Source: Remains incomplete (Independence check)");
+
+        infix_registry_destroy(src);
+        infix_registry_destroy(dest);
     }
 }

@@ -20,10 +20,12 @@
  * whether the value was transmitted correctly through the FFI boundary.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_config.h"
 #include <infix/infix.h>
 #include <inttypes.h>
+
 // A set of simple "passthrough" functions, one for each primitive type.
 // These functions simply return their input argument, making it easy to verify
 // that the FFI call correctly transmitted the value.

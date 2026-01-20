@@ -21,11 +21,13 @@
  * a type that is less common than structs but still a core part of the C language.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <string.h>
+
 // Native C Functions for Testing
 /** @brief A C function that interprets a passed-in `Number` union as an integer. */
 int process_number_union_as_int(Number num) {

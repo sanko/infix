@@ -20,11 +20,13 @@
  *   the raw bytes are correctly marshalled regardless of internal layout.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <string.h>
+
 Point point_callback_handler(Point p) {
     note("point_callback_handler received p={%.1f, %.1f}", p.x, p.y);
     return (Point){p.x * 2.0, p.y * 2.0};
@@ -95,7 +97,7 @@ TEST {
                &rt_cb, point_type, &point_type, 1, 1, (void *)point_callback_handler) == INFIX_SUCCESS,
            "Type-safe callback created");
         if (rt_cb)
-            execute_point_callback((Point(*)(Point))infix_reverse_get_code(rt_cb), (Point){10.0, -5.0});
+            execute_point_callback((Point (*)(Point))infix_reverse_get_code(rt_cb), (Point){10.0, -5.0});
         else
             skip(1, "Test skipped");
         infix_reverse_t * rt_cl = nullptr;
@@ -103,7 +105,7 @@ TEST {
                INFIX_SUCCESS,
            "Generic closure created");
         if (rt_cl)
-            execute_point_callback((Point(*)(Point))infix_reverse_get_code(rt_cl), (Point){-2.0, 3.0});
+            execute_point_callback((Point (*)(Point))infix_reverse_get_code(rt_cl), (Point){-2.0, 3.0});
         else
             skip(1, "Test skipped");
         infix_reverse_destroy(rt_cb);
@@ -157,7 +159,7 @@ TEST {
             &rt, large_struct_type, &arg_type, 1, 1, (void *)large_struct_return_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
         if (rt)
-            execute_large_struct_return_callback((LargeStruct(*)(int))infix_reverse_get_code(rt), 50);
+            execute_large_struct_return_callback((LargeStruct (*)(int))infix_reverse_get_code(rt), 50);
         else
             skip(1, "Test skipped");
         infix_reverse_destroy(rt);
@@ -214,7 +216,7 @@ TEST {
             infix_reverse_create_callback_manual(&rt, union_type, &arg_type, 1, 1, (void *)number_union_return_handler);
         ok(status == INFIX_SUCCESS, "Reverse trampoline created");
         if (rt)
-            execute_number_union_return_callback((Number(*)(float))infix_reverse_get_code(rt), 3.14f);
+            execute_number_union_return_callback((Number (*)(float))infix_reverse_get_code(rt), 3.14f);
         else
             skip(1, "Test skipped");
         infix_reverse_destroy(rt);

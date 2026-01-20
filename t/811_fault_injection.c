@@ -28,9 +28,11 @@
 #define infix_free test_free
 #define infix_realloc test_realloc
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>
+
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
 #else

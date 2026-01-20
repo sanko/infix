@@ -14,6 +14,7 @@
  *    a FAM works, allowing the C function to access data beyond the struct's nominal size.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <stddef.h>

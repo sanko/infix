@@ -103,7 +103,8 @@ infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int 
                 return NULL;
 
             infix_type * array_type = NULL;
-            (void)infix_type_create_array(arena, &array_type, element_type, num_elements);
+            if (infix_type_create_array(arena, &array_type, element_type, num_elements) != INFIX_SUCCESS)
+                return NULL;
             return array_type;
         }
     // Cases 4, 5, 6: Generate an Aggregate Type (Struct, Union, Packed Struct)
@@ -205,13 +206,17 @@ infix_type * generate_random_type(infix_arena_t * arena, fuzzer_input * in, int 
                 if (!consume_uint8_t(in, &alignment_byte))
                     alignment_byte = 1;
                 size_t alignment = (alignment_byte % 8) + 1;
-                (void)infix_type_create_packed_struct(arena, &agg_type, total_size, alignment, members, num_members);
+                if (infix_type_create_packed_struct(arena, &agg_type, total_size, alignment, members, num_members) !=
+                    INFIX_SUCCESS)
+                    return NULL;
             }
-            else {
-                if (type_choice == 4)  // Regular Struct
-                    (void)infix_type_create_struct(arena, &agg_type, members, num_members);
-                else  // Union
-                    (void)infix_type_create_union(arena, &agg_type, members, num_members);
+            else if (type_choice == 4) {  // Regular Struct
+                if (infix_type_create_struct(arena, &agg_type, members, num_members) != INFIX_SUCCESS)
+                    return NULL;
+            }
+            else {  // Union
+                if (infix_type_create_union(arena, &agg_type, members, num_members) != INFIX_SUCCESS)
+                    return NULL;
             }
 
             return agg_type;

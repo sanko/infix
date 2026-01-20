@@ -23,10 +23,12 @@
  *     passed through the FFI boundary and is received as `NULL` by the callee.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <string.h>
+
 // Native C Functions for Testing
 /** @brief A C function that takes a string and a character, and returns a pointer into the string. */
 const char * find_char_in_string(const char * s, int c) {

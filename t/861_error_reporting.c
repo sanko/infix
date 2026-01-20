@@ -9,6 +9,7 @@
  * or "error code 1" scenarios encountered in production.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include <infix/infix.h>
 

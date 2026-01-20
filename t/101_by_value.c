@@ -29,12 +29,14 @@
  *   based on architecture.
  */
 #define DBLTAP_IMPLEMENTATION
+#include "common/compat_c23.h"
 #include "common/double_tap.h"
 #include "common/infix_internals.h"
 #include "types.h"
 #include <infix/infix.h>
 #include <math.h>
 #include <stdbool.h>
+
 #if !defined(INFIX_NO_INTRINSICS)
 #if defined(__AVX512F__)
 #define INFIX_ARCH_X86_AVX512
@@ -75,7 +77,12 @@ __m128d native_vector_add_128(__m128d a, __m128d b) { return _mm_add_pd(a, b); }
 float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) { return vaddq_f64(a, b); }
 #endif
 #if defined(INFIX_ARCH_X86_AVX2)
-__m256d native_vector_add_256(__m256d a, __m256d b) { return _mm256_add_pd(a, b); }
+#include <immintrin.h>
+__m256d XXXnative_vector_add_256(__m256d a, __m256d b) { return _mm256_add_pd(a, b); }
+__attribute__((noinline)) __m256d native_vector_add_256(__m256d a, __m256d b) {
+    note("Before return");
+    return _mm256_add_pd(a, b);
+}
 #endif
 #if defined(INFIX_ARCH_X86_AVX512)
 __m512d native_vector_add_512d(__m512d a, __m512d b) { return _mm512_add_pd(a, b); }
@@ -114,6 +121,28 @@ int process_char_array_param(char s[20]) {
         return 1;  // Success
     return 0;      // Failure
 }
+
+// Helper to ensure strict alignment for AVX types, which malloc/calloc
+// on Windows (16-byte align) does not guarantee.
+static void * alloc_aligned(size_t size, size_t alignment) {
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    return _aligned_malloc(size, alignment);
+#else
+    void * p;
+    if (posix_memalign(&p, alignment, size) != 0)
+        return NULL;
+    return p;
+#endif
+}
+
+static void free_aligned(void * p) {
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    _aligned_free(p);
+#else
+    free(p);
+#endif
+}
+
 TEST {
     plan(10);
     subtest("Simple struct (Point) passed and returned by value") {
@@ -182,7 +211,8 @@ TEST {
         members[1] = infix_type_create_member(
             "d", infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), offsetof(MixedIntDouble, d));
         infix_type * mixed_type = nullptr;
-        (void)infix_type_create_struct(arena, &mixed_type, members, 2);
+        if (infix_type_create_struct(arena, &mixed_type, members, 2) != INFIX_SUCCESS)
+            fail("Setup failed");
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create_unbound_manual(
             &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &mixed_type, 1, 1);
@@ -249,19 +279,32 @@ TEST {
             infix_type * arg_types[] = {vector_type, vector_type};
             infix_forward_t * trampoline = nullptr;
             status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
-            __m128d vec_a = _mm_set_pd(20.0, 10.0);
-            __m128d vec_b = _mm_set_pd(22.0, 32.0);
-            void * args[] = {&vec_a, &vec_b};
+
+            // FORCE 16-BYTE ALIGNMENT using the arena allocator.
+            // On Windows x64, arguments passed by reference MUST be aligned if they contain SIMD types
+            // that will be accessed with aligned instructions (movapd/movaps).
+            // Stack-allocated variables in the test harness may only be 8-byte aligned.
+            __m128d * vec_a = infix_arena_alloc(arena, sizeof(__m128d), 16);
+            __m128d * vec_b = infix_arena_alloc(arena, sizeof(__m128d), 16);
+            __m128d * result_vec = infix_arena_alloc(arena, sizeof(__m128d), 16);
+
+            *vec_a = _mm_set_pd(20.0, 10.0);
+            *vec_b = _mm_set_pd(22.0, 32.0);
+            *result_vec = _mm_setzero_pd();
+
+            void * args[] = {vec_a, vec_b};
+
+            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
+            cif((void *)native_vector_add_128, result_vec, args);
+
             union {
                 __m128d v;
                 double d[2];
-            } result;
-            result.v = _mm_setzero_pd();
-            infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-            cif((void *)native_vector_add_128, &result.v, args);
-            ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9,
-               "SIMD vector passed/returned correctly");
-            diag("Result: [%f, %f]", result.d[0], result.d[1]);
+            } cvt;
+            cvt.v = *result_vec;
+
+            ok(fabs(cvt.d[0] - 42.0) < 1e-9 && fabs(cvt.d[1] - 42.0) < 1e-9, "SIMD vector passed/returned correctly");
+            diag("Result: [%f, %f]", cvt.d[0], cvt.d[1]);
             infix_forward_destroy(trampoline);
             infix_arena_destroy(arena);
         }
@@ -313,21 +356,30 @@ TEST {
                 infix_type * arg_types[] = {vector_type, vector_type};
                 infix_forward_t * trampoline = nullptr;
                 status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
-                __m256d vec_a = _mm256_set_pd(40.0, 30.0, 20.0, 10.0);
-                __m256d vec_b = _mm256_set_pd(2.0, 12.0, 22.0, 32.0);
-                void * args[] = {&vec_a, &vec_b};
-                union {
-                    __m256d v;
-                    double d[4];
-                } result;
-                result.v = _mm256_setzero_pd();
+
+                // Use direct aligned allocation
+                __m256d * vec_a = alloc_aligned(sizeof(__m256d), 32);
+                __m256d * vec_b = alloc_aligned(sizeof(__m256d), 32);
+                __m256d * res_vec = alloc_aligned(sizeof(__m256d), 32);
+
+                *vec_a = _mm256_set_pd(40.0, 30.0, 20.0, 10.0);
+                *vec_b = _mm256_set_pd(2.0, 12.0, 22.0, 32.0);
+                *res_vec = _mm256_setzero_pd();
+
+                void * args[] = {vec_a, vec_b};
+
                 infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-                cif((void *)native_vector_add_256, &result.v, args);
-                ok(fabs(result.d[0] - 42.0) < 1e-9 && fabs(result.d[1] - 42.0) < 1e-9 &&
-                       fabs(result.d[2] - 42.0) < 1e-9 && fabs(result.d[3] - 42.0) < 1e-9,
+                cif((void *)native_vector_add_256, res_vec, args);
+
+                double * d = (double *)res_vec;
+                ok(fabs(d[0] - 42.0) < 1e-9 && fabs(d[1] - 42.0) < 1e-9 && fabs(d[2] - 42.0) < 1e-9 &&
+                       fabs(d[3] - 42.0) < 1e-9,
                    "256-bit SIMD vector passed/returned correctly");
-                diag("Result: [%f, %f, %f, %f]", result.d[0], result.d[1], result.d[2], result.d[3]);
+
                 infix_forward_destroy(trampoline);
+                free_aligned(vec_a);
+                free_aligned(vec_b);
+                free_aligned(res_vec);
             }
             infix_arena_destroy(arena);
         }
@@ -399,43 +451,49 @@ TEST {
     subtest("ABI Specific: 512-bit AVX-512 Vector (__m512d)") {
 #if defined(INFIX_ARCH_X86_AVX512)
         if (infix_cpu_has_avx512f()) {
-            plan(2);
+            plan(3);  // Fix plan count
             note("Testing __m512d (8x double) passed and returned by value on x86-64 with AVX-512F.");
             infix_arena_t * arena = infix_arena_create(4096);
             infix_type * vector_type = nullptr;
             infix_status status =
                 infix_type_create_vector(arena, &vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), 8);
             if (!ok(status == INFIX_SUCCESS, "infix_type for __m512d created successfully"))
-                skip(1, "Cannot proceed without vector type");
+                skip(2, "Cannot proceed without vector type");
             else {
                 infix_type * arg_types[] = {vector_type, vector_type};
                 infix_forward_t * trampoline = nullptr;
                 status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
-                __m512d vec_a = _mm512_set_pd(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
-                __m512d vec_b = _mm512_set_pd(34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0);
-                void * args[] = {&vec_a, &vec_b};
-                union {
-                    __m512d v;
-                    double d[8];
-                } result;
-                result.v = _mm512_setzero_pd();
+
+                // Use direct aligned allocation to rule out arena bugs
+                __m512d * vec_a = alloc_aligned(sizeof(__m512d), 64);
+                __m512d * vec_b = alloc_aligned(sizeof(__m512d), 64);
+                __m512d * res_vec = alloc_aligned(sizeof(__m512d), 64);
+
+                ok(((uintptr_t)vec_a % 64) == 0, "vec_a aligned");
+
+                *vec_a = _mm512_set_pd(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0);
+                *vec_b = _mm512_set_pd(34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0);
+                *res_vec = _mm512_setzero_pd();
+
+                void * args[] = {vec_a, vec_b};
+
                 infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-                cif((void *)native_vector_add_512d, &result.v, args);
+
+                // Pass the pointers (by reference for Windows, or as value pointers for SysV unboxing)
+                cif((void *)native_vector_add_512d, res_vec, args);
+
+                double * d = (double *)res_vec;
+
                 bool all_correct = true;
                 for (int i = 0; i < 8; ++i)
-                    if (fabs(result.d[i] - 42.0) > 1e-9)
+                    if (fabs(d[i] - 42.0) > 1e-9)
                         all_correct = false;
                 ok(all_correct, "512-bit double vector (__m512d) passed/returned correctly");
-                diag("Result: [%.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f, %.1f]",
-                     result.d[0],
-                     result.d[1],
-                     result.d[2],
-                     result.d[3],
-                     result.d[4],
-                     result.d[5],
-                     result.d[6],
-                     result.d[7]);
+
                 infix_forward_destroy(trampoline);
+                free_aligned(vec_a);
+                free_aligned(vec_b);
+                free_aligned(res_vec);
             }
             infix_arena_destroy(arena);
         }
@@ -463,53 +521,59 @@ TEST {
                 infix_type * arg_types[] = {vector_type, vector_type};
                 infix_forward_t * trampoline = nullptr;
                 status = infix_forward_create_unbound_manual(&trampoline, vector_type, arg_types, 2, 2);
-                __m512 vec_a = _mm512_set_ps(16.0f,
-                                             15.0f,
-                                             14.0f,
-                                             13.0f,
-                                             12.0f,
-                                             11.0f,
-                                             10.0f,
-                                             9.0f,
-                                             8.0f,
-                                             7.0f,
-                                             6.0f,
-                                             5.0f,
-                                             4.0f,
-                                             3.0f,
-                                             2.0f,
-                                             1.0f);
-                __m512 vec_b = _mm512_set_ps(26.0f,
-                                             27.0f,
-                                             28.0f,
-                                             29.0f,
-                                             30.0f,
-                                             31.0f,
-                                             32.0f,
-                                             33.0f,
-                                             34.0f,
-                                             35.0f,
-                                             36.0f,
-                                             37.0f,
-                                             38.0f,
-                                             39.0f,
-                                             40.0f,
-                                             41.0f);
-                void * args[] = {&vec_a, &vec_b};
-                union {
-                    __m512 v;
-                    float f[16];
-                } result;
-                result.v = _mm512_setzero_ps();
+
+                // Use arena for 64-byte alignment
+                __m512 * vec_a = infix_arena_alloc(arena, sizeof(__m512), 64);
+                __m512 * vec_b = infix_arena_alloc(arena, sizeof(__m512), 64);
+                __m512 * res_vec = infix_arena_alloc(arena, sizeof(__m512), 64);
+
+                *vec_a = _mm512_set_ps(16.0f,
+                                       15.0f,
+                                       14.0f,
+                                       13.0f,
+                                       12.0f,
+                                       11.0f,
+                                       10.0f,
+                                       9.0f,
+                                       8.0f,
+                                       7.0f,
+                                       6.0f,
+                                       5.0f,
+                                       4.0f,
+                                       3.0f,
+                                       2.0f,
+                                       1.0f);
+                *vec_b = _mm512_set_ps(26.0f,
+                                       27.0f,
+                                       28.0f,
+                                       29.0f,
+                                       30.0f,
+                                       31.0f,
+                                       32.0f,
+                                       33.0f,
+                                       34.0f,
+                                       35.0f,
+                                       36.0f,
+                                       37.0f,
+                                       38.0f,
+                                       39.0f,
+                                       40.0f,
+                                       41.0f);
+                *res_vec = _mm512_setzero_ps();
+
+                void * args[] = {vec_a, vec_b};
+
                 infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-                cif((void *)native_vector_add_512, &result.v, args);
+                cif((void *)native_vector_add_512, res_vec, args);
+
+                float * f = (float *)res_vec;
                 bool all_correct = true;
                 for (int i = 0; i < 16; ++i) {
                     // _mm512_set_ps sets the values in reverse memory order.
                     float expected = (1.0f + i) + (41.0f - i);
-                    if (fabsf(result.f[i] - expected) > 1e-6) {
+                    if (fabsf(f[i] - expected) > 1e-6) {
                         all_correct = false;
-                        diag("Mismatch at element %d: expected %.1f, got %f", i, expected, result.f[i]);
+                        diag("Mismatch at element %d: expected %.1f, got %f", i, expected, f[i]);
                     }
                 }
                 ok(all_correct, "512-bit float vector (__m512) passed/returned correctly");
