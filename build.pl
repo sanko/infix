@@ -196,6 +196,14 @@ else {    # GCC or Clang
     if ( $^O eq 'openbsd' ) {
         push @{ $config{ldflags} }, '-Wl,-w';
     }
+    if ( $^O eq 'freebsd' && $config{compiler} =~ /gcc/ ) {
+        my $libgcc = `$config{cc} --print-file-name=libgcc_s.so.1`;
+        chomp $libgcc;
+        if ( $libgcc ne 'libgcc_s.so.1' && -e $libgcc ) {
+            my $dir = dirname($libgcc);
+            push @{ $config{ldflags} }, "-Wl,-rpath,$dir";
+        }
+    }
     if ( !( $config{is_windows} && $config{compiler} eq 'clang' ) ) {
         push @{ $config{ldflags} }, '-lm';
     }
@@ -522,7 +530,7 @@ sub compile_and_run_tests {
             print "# INFO: Skipping '821_threading_bare.c' in regular test run. Use 'helgrindtest:bare' to run it.\n";
             next;
         }
-        if ( $test_file =~ m{870_cpp_compat} && ( $^O eq 'openbsd' || $^O eq 'freebsd' ) ) {
+        if ( $test_file =~ m{870_cpp_compat} && ( $^O eq 'openbsd' ) ) {
             print "# INFO: Skipping '$test_file' on $^O due to known C++ standard library incompatibilities.\n";
             next;
         }
@@ -547,8 +555,10 @@ sub compile_and_run_tests {
         elsif ( $config{arch} eq 'arm64' ) {
             if ( $config{compiler} eq 'gcc' || $config{compiler} eq 'clang' ) {
 
-                # For GCC/Clang on ARM, enable SVE. NEON is baseline and needs no flag.
-                push @local_cflags, '-march=armv8-a+sve';
+                # For GCC/Clang on ARM, NEON is baseline and needs no flag.
+                # We do NOT enable SVE (-march=armv8-a+sve) by default because it causes
+                # SIGILL on hardware that doesn't support it (like standard QEMU).
+                # User must supply --cflags="-march=armv8-a+sve" to enable SVE testing.
             }
 
             # MSVC on ARM64 enables NEON/SVE by default, no flag needed.
