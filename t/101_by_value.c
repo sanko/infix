@@ -79,7 +79,7 @@ float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) { return vaddq_f64(a, 
 #if defined(INFIX_ARCH_X86_AVX2)
 #include <immintrin.h>
 __m256d XXXnative_vector_add_256(__m256d a, __m256d b) { return _mm256_add_pd(a, b); }
-__attribute__((noinline)) __m256d native_vector_add_256(__m256d a, __m256d b) {
+DBLTAP_NOINLINE __m256d native_vector_add_256(__m256d a, __m256d b) {
     note("Before return");
     return _mm256_add_pd(a, b);
 }
@@ -122,6 +122,7 @@ int process_char_array_param(char s[20]) {
     return 0;      // Failure
 }
 
+#if defined(INFIX_ARCH_X86_AVX2) || defined(INFIX_ARCH_X86_AVX512)
 // Helper to ensure strict alignment for AVX types, which malloc/calloc
 // on Windows (16-byte align) does not guarantee.
 static void * alloc_aligned(size_t size, size_t alignment) {
@@ -142,7 +143,7 @@ static void free_aligned(void * p) {
     free(p);
 #endif
 }
-
+#endif
 TEST {
     plan(10);
     subtest("Simple struct (Point) passed and returned by value") {

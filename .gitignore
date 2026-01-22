@@ -37,3 +37,17 @@ latex/*
 leak-*
 .tidyall.d/*
 docs/api/
+
+# Build artifacts and extensionless binaries
+*.so
+*.dylib
+*.dll
+fuzz_*_harness
+preprocessed.cpp
+
+# Ignore extensionless binaries in t/ but keep sources and include dir
+t/*
+!t/include/
+!t/*.c
+!t/*.cpp
+!t/*.h

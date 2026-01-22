@@ -137,6 +137,8 @@ The easiest way to use `infix` is to add its source directly to your project.
 3.  Add the `include/` directory to your include paths.
 4.  `#include <infix/infix.h>` in your code.
 
+> **Note:** If you are linking against `infix` as a shared library (DLL) on Windows, you must define `INFIX_USING_DLL` in your project settings. See the [Installation Guide](docs/INSTALL.md) for details.
+
 For more advanced build options, including building as a standalone library with CMake or xmake, see the [Building and Integration Guide](docs/INSTALL.md).
 
 ## Project Philosophy

@@ -1,6 +1,14 @@
 # CMake build script for the infix FFI library
 cmake_minimum_required(VERSION 3.12)
-project(infix VERSION 0.1.0 LANGUAGES C)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/infix/infix.h" INFIX_MAJOR_LINE REGEX "^#define INFIX_MAJOR")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/infix/infix.h" INFIX_MINOR_LINE REGEX "^#define INFIX_MINOR")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/infix/infix.h" INFIX_PATCH_LINE REGEX "^#define INFIX_PATCH")
+
+string(REGEX MATCH "[0-9]+" INFIX_MAJOR "${INFIX_MAJOR_LINE}")
+string(REGEX MATCH "[0-9]+" INFIX_MINOR "${INFIX_MINOR_LINE}")
+string(REGEX MATCH "[0-9]+" INFIX_PATCH "${INFIX_PATCH_LINE}")
+
+project(infix VERSION ${INFIX_MAJOR}.${INFIX_MINOR}.${INFIX_PATCH} LANGUAGES C CXX)
 
 # Set the C standard to C17 and make it a requirement.
 set(CMAKE_C_STANDARD 17)
@@ -9,13 +17,19 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # Use the standard GNUInstallDirs module to define portable installation paths.
 include(GNUInstallDirs)
 
-# Add the static library target.
-# Since infix uses a unity build, we only need to specify the main infix.c file.
-add_library(infix STATIC src/infix.c)
+# Add the library target.
+# If BUILD_SHARED_LIBS is set to ON, this will generate a shared library.
+add_library(infix src/infix.c)
 
 # Default to hidden visibility to avoid polluting the global symbol table
 # with internal functions (like _infix_set_error) when linked.
 set_target_properties(infix PROPERTIES C_VISIBILITY_PRESET hidden)
+
+# If building as a shared library, define INFIX_BUILDING_DLL to export symbols on Windows.
+get_target_property(INFIX_TARGET_TYPE infix TYPE)
+if(INFIX_TARGET_TYPE STREQUAL "SHARED_LIBRARY")
+    target_compile_definitions(infix PRIVATE INFIX_BUILDING_DLL)
+endif()
 
 if(INFIX_DEBUG_ENABLED)
     target_compile_definitions(infix PRIVATE
@@ -78,6 +92,20 @@ function(add_infix_test test_name)
         target_sources("${test_name}" PRIVATE "fuzz/fuzz_helpers.c")
         target_include_directories("${test_name}" PRIVATE fuzz)
     endif()
+    
+    # Special handling for 880_exports: Link against shared library if available
+    if(test_name STREQUAL "880_exports")
+        if(BUILD_SHARED_LIBS)
+            # Force linkage against the shared library target
+            target_link_libraries("${test_name}" PRIVATE infix)
+            # Define INFIX_USING_DLL on Windows to ensure correct import
+            if(WIN32)
+                target_compile_definitions("${test_name}" PRIVATE INFIX_USING_DLL)
+            endif()
+        endif()
+        # Enable exports from the executable so it can dlsym itself
+        set_target_properties("${test_name}" PROPERTIES ENABLE_EXPORTS ON)
+    endif()
 
     target_compile_definitions(${test_name} PRIVATE
         DBLTAP_ENABLE=1
@@ -102,7 +130,7 @@ endfunction()
 
 # Add all test targets using the helper function.
 # CONFIGURE_DEPENDS ensures CMake re-runs if you add/remove files in this directory.
-file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "t/*.c")
+file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "t/*.c" "t/*.cpp")
 
 foreach(test_source ${TEST_SOURCES})
     # Extract the filename without the extension ("t/001_primitives.c" => "001_primitives")
@@ -113,7 +141,26 @@ foreach(test_source ${TEST_SOURCES})
          continue()
     endif()
 
-    add_infix_test("${test_name}")
+    # The function add_infix_test assumes .c, but we now have .cpp. 
+    # Let's adjust the logic slightly or handle it here.
+    # Since add_infix_test is a bit rigid, let's call add_executable directly for C++ 
+    # or modify add_infix_test. For minimal changes, let's update add_infix_test to take source.
+
+    if (test_source MATCHES "\\.cpp$")
+         # Manual handling for C++ test
+         add_executable("${test_name}" "${test_source}")
+         target_include_directories("${test_name}" PRIVATE "t/include" "${CMAKE_CURRENT_SOURCE_DIR}/src")
+         target_link_libraries("${test_name}" PRIVATE infix)
+         if(UNIX)
+            target_link_libraries("${test_name}" PRIVATE m)
+         endif()
+         target_compile_definitions(${test_name} PRIVATE DBLTAP_ENABLE=1 INFIX_DEBUG_ENABLED=1)
+         
+         # SIMD flags logic duplicated for C++... simpler to just assume standard flags or none for this compat test.
+         add_test(NAME "${test_name}" COMMAND "${test_name}")
+    else()
+         add_infix_test("${test_name}")
+    endif()
 endforeach()
 
 # cmake -DINFIX_DEBUG_ENABLED=1 -B build ; cmake --build build ; ctest --test-dir build --rerun-failed --output-on-failure

@@ -95,10 +95,18 @@ nmake /f Makefile.win
 ### Symbol Visibility
 
 When building `infix` as a shared library (DLL/.so), you must ensure that only the public API is exported.
- - Public API: All public functions are marked with the `INFIX_API` macro in `infix.h`.
- - Internal Functions: All internal functions shared between source files are marked with `INFIX_INTERNAL`.
 
-If you are compiling infix yourself, you should define `INFIX_INTERNAL` to hide internal symbols if your compiler supports it (`-fvisibility=hidden`). The provided build scripts handle this automatically.
+**Windows (DLL):**
+*   **Building:** You **must** define `INFIX_BUILDING_DLL` when compiling the library. This ensures that `__declspec(dllexport)` is applied only to public API functions, preventing internal symbols from polluting the DLL export table.
+*   **Using:** You **must** define `INFIX_USING_DLL` when compiling code that links against the `infix` DLL. This applies `__declspec(dllimport)` to the function declarations.
+
+**Linux/macOS:**
+All public functions are marked with `INFIX_API` (default visibility). Internal functions are marked with `INFIX_INTERNAL` (hidden visibility). The provided build scripts automatically set `-fvisibility=hidden` to ensure `INFIX_INTERNAL` works as intended.
+
+**Static Library:**
+Do not define `INFIX_BUILDING_DLL` or `INFIX_USING_DLL`. This is the default.
+
+The provided build scripts (perl, xmake, CMake, Makefiles) handle these definitions automatically when you select a shared library build.
 
 ### Advanced Methods
 

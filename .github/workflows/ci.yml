@@ -32,14 +32,13 @@ jobs:
       matrix:
         platform:
           - os: 'freebsd'
-            #~ version: '14.3'
             version: '15.0'
             prepare_gcc:   'pkg install -y perl5 lang/gcc'
             prepare_clang: 'pkg install -y perl5 llvm'
           - os: 'openbsd'
             version: '7.8'
             #~ https://openbsd.app/
-            prepare_gcc:   'pkg_add gcc-11.2.0p19'
+            prepare_gcc:   'pkg_add gcc-11.2.0p19 g++-11.2.0p19'
             prepare_clang: ''
           - os: 'netbsd'
             version: '10.1'
@@ -51,7 +50,7 @@ jobs:
             version: '11.4'
             prepare_gcc:   'pkg install -v --accept perl-538 gcc'
           - os: 'omnios'
-            version: 'r151054'
+            version: 'r151056'
             prepare_gcc:   'pkg install -v --accept perl build-essential'
         arch: ['x86_64', 'aarch64', 'riscv64']
         toolchain: ['gcc', 'clang']

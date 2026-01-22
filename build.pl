@@ -16,13 +16,35 @@ $|++;
 
 # Argument Parsing
 my %opts;
-GetOptions( \%opts, qw[cc|compiler=s cflags=s h|help codecov=s abi=s verbose|v examples] );
+GetOptions( \%opts, qw[cc|compiler=s cflags=s h|help codecov=s abi=s verbose|v examples shared] );
 show_help() if $opts{help};
-my $command    = lc( shift @ARGV || 'build' );
-my @test_names = @ARGV;
+my $command       = lc( shift @ARGV || 'build' );
+my @test_names    = @ARGV;
+my $infix_version = get_infix_version();            # Call get_infix_version early
 
 # Global Cache for Git Info
 my %git_info;
+
+sub get_infix_version {
+    my $major       = 0;
+    my $minor       = 0;
+    my $patch       = 0;
+    my $header_path = File::Spec->catfile( $FindBin::Bin, 'include', 'infix', 'infix.h' );
+    open( my $fh, '<', $header_path ) or die "Cannot open $header_path: $!";
+    while ( my $line = <$fh> ) {
+        if ( $line =~ /#define INFIX_MAJOR (\d+)/ ) {
+            $major = $1;
+        }
+        elsif ( $line =~ /#define INFIX_MINOR (\d+)/ ) {
+            $minor = $1;
+        }
+        elsif ( $line =~ /#define INFIX_PATCH (\d+)/ ) {
+            $patch = $1;
+        }
+    }
+    close($fh);
+    return "$major.$minor.$patch";
+}
 
 # Build Configuration
 my $is_fuzz_build     = ( $command =~ /^fuzz/ );
@@ -93,15 +115,15 @@ if ( $opts{abi} ) {
 # Compiler Selection
 my %valid_compilers = map { $_ => 1 } qw[msvc gcc egcc clang];
 my $compiler_arg    = $opts{cc} || '';
-die "Error: Unknown compiler '$compiler_arg'. Please use one of: msvc, gcc, clang." if $compiler_arg && !$valid_compilers{$compiler_arg};
+die "Error: Unknown compiler '$compiler_arg'. Please use one of: msvc, gcc, egcc, clang." if $compiler_arg && !$valid_compilers{$compiler_arg};
 $config{compiler}
     = $compiler_arg ? $compiler_arg :
     ( $^O eq 'darwin' ? 'clang' :
         $config{is_windows}    ? ( command_exists('cl') ? 'msvc' : command_exists('gcc') ? 'gcc' : 'clang' ) :
         command_exists('egcc') ? 'egcc' :
         'gcc' );
-if ( $is_fuzz_build && ( $config{compiler} ne 'clang' && $config{compiler} ne 'gcc' ) ) {
-    die "Error: Fuzzing requires the 'clang' compiler for libFuzzer support or 'gcc' for AFL++ support.";
+if ( $is_fuzz_build && ( $config{compiler} ne 'clang' && $config{compiler} ne 'gcc' && $config{compiler} ne 'egcc' ) ) {
+    die "Error: Fuzzing requires the 'clang' compiler for libFuzzer support, or 'gcc'/'egcc' for AFL++ support.";
 }
 
 # Configure Build
@@ -112,7 +134,7 @@ if ( $config{compiler} eq 'msvc' ) {
     $config{cxx} = 'cl';
     my @include_flags = map { '-I' . File::Spec->catfile($_) } @{ $config{include_dirs} };
     $config{cflags}   = [ @base_cflags, '-std:c11',   '-experimental:c11atomics', '-W3', '-GS', '-MD', @include_flags ];
-    $config{cxxflags} = [ @base_cflags, '-std:c++11', '-EHsc',                    '-W3', '-GS', '-MD', @include_flags ];
+    $config{cxxflags} = [ @base_cflags, '-std:c++17', '-EHsc',                    '-W3', '-GS', '-MD', @include_flags ];
     $config{ldflags}  = ['-link'];
     if ( $is_coverage_build || $command eq 'test' ) {
         push @{ $config{cflags} },   '-Zi';
@@ -126,10 +148,10 @@ if ( $config{compiler} eq 'msvc' ) {
 }
 else {    # GCC or Clang
     $config{cc}  = $config{compiler};
-    $config{cxx} = ( $config{compiler} eq 'clang' ) ? 'clang++' : 'g++';
+    $config{cxx} = ( $config{compiler} eq 'clang' ) ? 'clang++' : ( $config{compiler} eq 'egcc' ) ? 'eg++' : 'g++';
     my @include_flags = map { "-I" . File::Spec->catfile($_) } @{ $config{include_dirs} };
     $config{cflags}   = [ @base_cflags, '-std=c11',   '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
-    $config{cxxflags} = [ @base_cflags, '-std=c++11', '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
+    $config{cxxflags} = [ @base_cflags, '-std=c++17', '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
 
     # Symbol Visibility: Hide everything by default.
     # Only functions marked INFIX_API in infix.h will be exported.
@@ -174,6 +196,14 @@ else {    # GCC or Clang
     if ( $^O eq 'openbsd' ) {
         push @{ $config{ldflags} }, '-Wl,-w';
     }
+    if ( $^O eq 'freebsd' && $config{compiler} =~ /gcc/ ) {
+        my $libgcc = `$config{cc} --print-file-name=libgcc_s.so.1`;
+        chomp $libgcc;
+        if ( $libgcc ne 'libgcc_s.so.1' && -e $libgcc ) {
+            my $dir = dirname($libgcc);
+            push @{ $config{ldflags} }, "-Wl,-rpath,$dir";
+        }
+    }
     if ( !( $config{is_windows} && $config{compiler} eq 'clang' ) ) {
         push @{ $config{ldflags} }, '-lm';
     }
@@ -192,6 +222,10 @@ elsif ( $command eq 'build' ) {
     push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     my $lib_path = create_static_library( \%config, $obj_suffix );
     print "\nStatic library '$lib_path' built successfully.\n";
+    if ( $opts{shared} ) {
+        my $shared_lib_path = create_shared_library( \%config, $obj_suffix, $infix_version );
+        print "Shared library '$shared_lib_path' built successfully.\n" if $shared_lib_path;
+    }
     if ( $opts{examples} ) {
         build_examples( \%config, $obj_suffix, $lib_path );
     }
@@ -201,8 +235,9 @@ elsif ( $command eq 'examples' ) {
     build_examples( \%config, $obj_suffix, $lib_path );
 }
 elsif ( $command eq 'test' || $command eq 'coverage' ) {
-    push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $config{cflags} },   '-DDBLTAP_ENABLE=1';
+    push @{ $config{cxxflags} }, '-DDBLTAP_ENABLE=1';
+    push @{ $config{cflags} },   '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
     $final_status = compile_and_run_tests( \%config, $obj_suffix, \@test_names, $is_coverage_build );
 }
 elsif ( $command eq 'memtest' ) {
@@ -297,12 +332,13 @@ sub show_help {
       fuzz:<name>        Builds a specific fuzzer (e.g., fuzz:types, fuzz:trampoline, fuzz:signature, fuzz:abi, fuzz:direct, fuzz:roundtrip).
 
     Options:
-      --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'clang').
+      --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'egcc', 'clang').
       --cflags=<s>          Append custom flags to the compiler command line.
       --abi=<s>             Force a specific ABI for code generation. Overrides auto-detection.
                             Supported: windows_x64, sysv_x64, aapcs64
       --codecov=<s>         Specify a Codecov token to upload coverage results (or use CODECOV_TOKEN env var).
       --examples            Build all cookbook examples (used with 'build' command).
+      --shared              Build the shared library (DLL/.so) in addition to the static library.
       -v, --verbose         Enable verbose debug output from the library by compiling with -DINFIX_DEBUG_ENABLED=1.
       -h, --help            Show this help message.
     END_HELP
@@ -311,24 +347,24 @@ sub show_help {
 
 sub get_test_files {
     my ($test_names_ref) = @_;
-    my @all_c_files;
+    my @all_files;
     find(
         sub {
             if ( -d $_ && $File::Find::dir =~ m{[/\\]old$} ) { $File::Find::prune = 1; return; }
-            push @all_c_files, $File::Find::name if /\.c$/ && -f $_;
+            push @all_files, $File::Find::name if /\.(c|cpp)$/ && -f $_;
         },
         't'
     );
     my @tests;
     if ( @{$test_names_ref} ) {
         for my $name (@$test_names_ref) {
-            my @found = grep { $_ =~ qr{[/\\]$name(?:\.c)?$}i or $_ =~ qr{[/\\]\d+_$name(?:\.c)?$}i } @all_c_files;
+            my @found = grep { $_ =~ qr{[/\\]$name(?:\.(?:c|cpp))?$}i or $_ =~ qr{[/\\]\d+_$name(?:\.(?:c|cpp))?$}i } @all_files;
             die "Error: Test '$name' not found or is ambiguous (found " . scalar(@found) . " matches)." if @found != 1;
             push @tests, $found[0];
         }
     }
-    else { @tests = @all_c_files; }
-    die "No test C files were found in 't/'." unless @tests;
+    else { @tests = @all_files; }
+    die "No test files were found in 't/'." unless @tests;
     return sort @tests;
 }
 
@@ -390,6 +426,80 @@ sub create_static_library {
     return $lib_path;
 }
 
+sub create_shared_library {
+    my ( $config, $obj_suffix, $version ) = @_;
+    my $obj_dir = File::Spec->catdir( $config->{lib_dir}, 'shared_objects_' . time() . int( rand(1000) ) );
+    make_path($obj_dir);
+
+    # Create a local config copy to add -fPIC without affecting the global config
+    my %shared_config = %$config;
+    if ( $config->{compiler} ne 'msvc' ) {
+        $shared_config{cflags} = [ @{ $config->{cflags} }, '-fPIC' ];
+    }
+    push @{ $shared_config{cflags} }, '-DINFIX_BUILDING_DLL';
+    print "Compiling shared library objects...\n";
+    my @obj_files = compile_objects( \%shared_config, $obj_suffix, $obj_dir );
+    return unless @obj_files;
+    my $lib_name = $config->{lib_name};
+    my ( $major, $minor, $patch ) = split /\./, $version;
+    my $output_path;
+    my @cmd;
+
+    if ( $config->{is_windows} ) {
+        my $dll_name = "$lib_name.dll";
+        $output_path = File::Spec->catfile( $config->{lib_dir}, $dll_name );
+        my $lib_out = File::Spec->catfile( $config->{lib_dir}, "$lib_name.lib" );
+        if ( $config->{compiler} eq 'msvc' ) {
+            @cmd = ( $config->{cc}, '-LD', "-Fe$output_path", @obj_files, '-link', "-IMPLIB:$lib_out" );
+        }
+        else {
+            @cmd = ( $config->{cc}, '-shared', '-o', $output_path, @obj_files, "-Wl,--out-implib,$lib_out" );
+        }
+        run_command(@cmd);
+    }
+    elsif ( $^O eq 'darwin' ) {
+        my $dylib_name   = "lib$lib_name.$version.dylib";
+        my $dylib_soname = "lib$lib_name.$major.dylib";
+        my $dylib_link   = "lib$lib_name.dylib";
+        $output_path = File::Spec->catfile( $config->{lib_dir}, $dylib_name );
+        @cmd         = (
+            $config->{cc},            '-dynamiclib', '-current_version', $version,
+            '-compatibility_version', "$major.0.0",  '-install_name',    "\@rpath/$dylib_soname",
+            '-o',                     $output_path,  @obj_files,         @{ $config->{ldflags} }
+        );
+        run_command(@cmd);
+
+        # Create symlinks
+        my $pwd = cwd();
+        chdir( $config->{lib_dir} );
+        unlink $dylib_soname if -e $dylib_soname;
+        unlink $dylib_link   if -e $dylib_link;
+        symlink( $dylib_name,   $dylib_soname );
+        symlink( $dylib_soname, $dylib_link );
+        chdir($pwd);
+    }
+    else {
+        # Linux/BSD/etc.
+        my $so_name   = "lib$lib_name.so.$version";
+        my $so_soname = "lib$lib_name.so.$major";
+        my $so_link   = "lib$lib_name.so";
+        $output_path = File::Spec->catfile( $config->{lib_dir}, $so_name );
+        @cmd         = ( $config->{cc}, '-shared', "-Wl,-soname,$so_soname", '-o', $output_path, @obj_files, @{ $config->{ldflags} } );
+        run_command(@cmd);
+
+        # Create symlinks
+        my $pwd = cwd();
+        chdir( $config->{lib_dir} );
+        unlink $so_soname if -e $so_soname;
+        unlink $so_link   if -e $so_link;
+        symlink( $so_name,   $so_soname );
+        symlink( $so_soname, $so_link );
+        chdir($pwd);
+    }
+    rmtree($obj_dir);
+    return $output_path;
+}
+
 sub compile_and_run_tests {
     my ( $config, $obj_suffix, $test_names_ref, $is_coverage ) = @_;
     if ($is_coverage) {
@@ -403,19 +513,32 @@ sub compile_and_run_tests {
     make_path($obj_dir);
     my @lib_obj_files = compile_objects( $config, $obj_suffix, $obj_dir );
     die "Failed to compile library object files, cannot proceed." unless @lib_obj_files;
-    my @test_c_files = get_test_files($test_names_ref);
+    my @test_files = get_test_files($test_names_ref);
     print "\nCompiling all test executables...\n";
     my @test_executables;
 
-    for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{821_threading_bare\.c$} ) {
+    # Build the shared library if we are testing exports or using C++ tests that might prefer it
+    my $shared_lib_path;
+    if ( grep {/880_exports/} @test_files ) {
+
+        # Ensure shared library exists for export tests
+        $shared_lib_path = create_shared_library( $config, $obj_suffix, get_infix_version() );
+        print "Built shared library for testing: $shared_lib_path\n";
+    }
+    for my $test_file (@test_files) {
+        if ( $test_file =~ m{821_threading_bare\.c$} ) {
             print "# INFO: Skipping '821_threading_bare.c' in regular test run. Use 'helgrindtest:bare' to run it.\n";
             next;
         }
-        my @source_files = ($test_c);
+        if ( $test_file =~ m{870_cpp_compat} && ( $^O eq 'openbsd' ) ) {
+            print "# INFO: Skipping '$test_file' on $^O due to known C++ standard library incompatibilities.\n";
+            next;
+        }
+        my @source_files = ($test_file);
+        my $is_cpp       = ( $test_file =~ /\.cpp$/ );
 
         # Create a copy of the main cflags to modify locally for this test.
-        my @local_cflags = @{ $config->{cflags} };
+        my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
 
         # Add architecture-specific flags to enable SIMD instruction sets required by vector tests.
         if ( $config{arch} eq 'x64' ) {
@@ -432,41 +555,92 @@ sub compile_and_run_tests {
         elsif ( $config{arch} eq 'arm64' ) {
             if ( $config{compiler} eq 'gcc' || $config{compiler} eq 'clang' ) {
 
-                # For GCC/Clang on ARM, enable SVE. NEON is baseline and needs no flag.
-                push @local_cflags, '-march=armv8-a+sve';
+                # For GCC/Clang on ARM, NEON is baseline and needs no flag.
+                # We do NOT enable SVE (-march=armv8-a+sve) by default because it causes
+                # SIGILL on hardware that doesn't support it (like standard QEMU).
+                # User must supply --cflags="-march=armv8-a+sve" to enable SVE testing.
             }
 
             # MSVC on ARM64 enables NEON/SVE by default, no flag needed.
         }
-        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+        if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
         }
-        my $exe_path = $test_c;
-        $exe_path =~ s/\.c$/$Config{_exe}/;
-        push @test_executables, $exe_path;
         my @ldflags = @{ $config->{ldflags} };
+
+        # Special handling for 880_exports: Link dynamically
+        my $use_shared = 0;
+        if ( $test_file =~ /880_exports\.c$/ ) {
+            if ($shared_lib_path) {
+                $use_shared = 1;
+                push @local_cflags, '-DINFIX_USING_DLL' if $config{is_windows};
+            }
+            if ( !$config{is_windows} ) {
+                push @ldflags, '-rdynamic';
+            }
+        }
+        my $exe_path = $test_file;
+        $exe_path =~ s/\.(c|cpp)$/$Config{_exe}/;
+        push @test_executables, $exe_path;
+        my $compiler = $is_cpp ? $config->{cxx} : $config->{cc};
         if ( $config->{compiler} eq 'msvc' ) {
             my @obj_paths;
             for my $src (@source_files) {
                 my $obj_path = $src;
-                $obj_path =~ s/\.c$/.obj/i;
-                run_command( $config->{cc}, @local_cflags, '-c', '-Fo' . $obj_path, $src );
+                $obj_path =~ s/\.(c|cpp)$/.obj/i;
+                run_command( $compiler, @local_cflags, '-c', '-Fo' . $obj_path, $src );
                 push @obj_paths, $obj_path;
             }
+            if ($use_shared) {
 
-            # Link against the .lib file as usual
-            my $static_lib_path = create_static_library( $config, $obj_suffix );
-            run_command( $config->{cc}, '-Fe' . $exe_path, @obj_paths, $static_lib_path, @ldflags );
+                # Link against the import lib (e.g. infix.lib) found in the same dir as the DLL
+                my $implib_path = $shared_lib_path;
+                $implib_path =~ s/\.dll$/.lib/i;
+                run_command( $compiler, '-Fe' . $exe_path, @obj_paths, $implib_path, @ldflags );
+            }
+            else {
+                # Link against the .lib file as usual
+                my $static_lib_path = create_static_library( $config, $obj_suffix );
+                run_command( $compiler, '-Fe' . $exe_path, @obj_paths, $static_lib_path, @ldflags );
+            }
         }
         else {
-            # Link directly against the library's object files, not the static archive.
-            my @compile_cmd = ( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @ldflags );
-            run_command(@compile_cmd);
+            if ($use_shared) {
+
+                # Link against the shared library
+                # For Windows (GCC/MinGW), we link against the .dll directly or its implib
+                # For Unix, we link against the .so/.dylib and set RPATH if needed
+                my @link_cmd = ( $compiler, @local_cflags, '-o', $exe_path, @source_files );
+                if ( $config{is_windows} ) {
+                    push @link_cmd, $shared_lib_path;
+                }
+                else {
+                    push @link_cmd, $shared_lib_path;
+                    push @link_cmd, "-Wl,-rpath," . dirname($shared_lib_path);
+                }
+                push @link_cmd, @ldflags;
+                run_command(@link_cmd);
+            }
+            else {
+                # Link directly against the library's object files
+                my @compile_cmd = ( $compiler, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @ldflags );
+                run_command(@compile_cmd);
+            }
         }
     }
     rmtree($obj_dir);    # Clean up temporary object files
+
+    # Set up library path for shared library tests
+    my $lib_dir_abs = abs_path( $config{lib_dir} );
+    if ( $config{is_windows} ) {
+        $ENV{PATH} = $lib_dir_abs . ';' . $ENV{PATH};
+    }
+    else {
+        $ENV{LD_LIBRARY_PATH}   = $lib_dir_abs . ( $ENV{LD_LIBRARY_PATH}   ? ':' . $ENV{LD_LIBRARY_PATH}   : '' );
+        $ENV{DYLD_LIBRARY_PATH} = $lib_dir_abs . ( $ENV{DYLD_LIBRARY_PATH} ? ':' . $ENV{DYLD_LIBRARY_PATH} : '' );
+    }
     my $use_prove = command_exists('prove --version') && !$opts{abi} && !( $config->{is_windows} && $config->{arch} eq 'arm64' );
     if ($use_prove) {
         print "\nRunning all tests with 'prove'\n";
@@ -524,27 +698,49 @@ sub run_coverage_gcov {
     # Clang requires the library to be compiled with -fprofile-instr-generate so that
     # it produces the necessary symbols (e.g. __llvm_profile_begin_bitmap) to link with the runtime.
     my @lib_obj_files = compile_objects( $config, $obj_suffix, $cov_obj_dir );
-    my @test_c_files  = get_test_files($test_names_ref);
-    for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{82\d_} ) { next; }
-        my @source_files = ($test_c);
+    my @test_files    = get_test_files($test_names_ref);
+    for my $test_file (@test_files) {
+        if ( $test_file =~ m{82\d_} ) { next; }
+        my @source_files = ($test_file);
+        my $is_cpp       = ( $test_file =~ /\.cpp$/ );
 
         # Use the original config with coverage flags for compiling the test itself.
-        my @local_cflags = @{ $config->{cflags} };
-        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+        my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+        if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to coverage build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
         }
-        my $exe_path = $test_c;
-        $exe_path =~ s/\.c$/$Config{_exe}/;
+        my $exe_path = $test_file;
+        $exe_path =~ s/\.(c|cpp)$/$Config{_exe}/;
 
         # Link the instrumented test against the instrumented library object file.
-        run_command( $config->{cc}, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @{ $config->{ldflags} } );
+        my $compiler = $is_cpp ? $config->{cxx} : $config->{cc};
+        run_command( $compiler, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @{ $config->{ldflags} } );
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }
     print "\nGenerating .gcov reports...\n";
-    if ( command_exists('gcov') ) {
+    my $gcov_cmd = 'gcov';
+    if ( ( $^O eq 'freebsd' || $^O eq 'openbsd' ) && $config->{compiler} =~ /gcc/ ) {
+
+        # Find the gcov version that matches the GCC version (e.g., gcov13)
+        my $gcc_ver = `$config->{cc} -dumpversion`;
+        chomp $gcc_ver;
+        $gcc_ver =~ s/\..*//;    # Major version only
+        my $versioned_gcov = ( $^O eq 'freebsd' ) ? "gcov$gcc_ver" : "gcov";
+
+        # On OpenBSD, ports GCC might provide egcov or gcov
+        if ( $^O eq 'openbsd' ) {
+            if ( $config->{compiler} eq 'egcc' && command_exists('egcov') ) {
+                $versioned_gcov = 'egcov';
+            }
+        }
+        if ( command_exists($versioned_gcov) ) {
+            $gcov_cmd = $versioned_gcov;
+            print "# INFO: Using versioned gcov: $gcov_cmd\n";
+        }
+    }
+    if ( command_exists($gcov_cmd) ) {
 
         # Consolidate all .gcda files into the object directory before running gcov.
         my @gcda_files;
@@ -559,7 +755,8 @@ sub run_coverage_gcov {
 
             # Run gcov from inside the object directory. It will find .gcno and .gcda files
             # in the CWD and generate the .c.gcov file here.
-            run_command( 'gcov', abs_path($src) );
+            my $null_device = $config->{is_windows} ? 'NUL' : '/dev/null';
+            system "$gcov_cmd @{[abs_path($src)]} >$null_device 2>&1";
         }
 
         # Move the generated reports back to the project root for Codecov.
@@ -585,30 +782,32 @@ sub run_coverage_msvc {
     print "\nBuilding libraries with debug info for coverage (MSVC)\n";
     my $normal_lib_path = create_static_library( $config, $obj_suffix );
     die "Failed to build standard library." unless $normal_lib_path && -e $normal_lib_path;
-    my @test_c_files = get_test_files($test_names_ref);
+    my @test_files = get_test_files($test_names_ref);
     my @cov_files;
     my $failed_tests = 0;
     print "\nCompiling and running tests under OpenCppCoverage\n";
 
-    for my $test_c (@test_c_files) {
-        if ( $test_c =~ m{821_threading_bare\.c$} ) { next; }
-        my @source_files = ($test_c);
-        my @local_cflags = @{ $config->{cflags} };
-        if ( $test_c =~ /850_regression_cases\.c$/ ) {
+    for my $test_file (@test_files) {
+        if ( $test_file =~ m{821_threading_bare\.c$} ) { next; }
+        my @source_files = ($test_file);
+        my $is_cpp       = ( $test_file =~ /\.cpp$/ );
+        my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+        if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to MSVC coverage build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
             push @local_cflags, '-Ifuzz';
         }
         my @link_objects;
+        my $compiler = $is_cpp ? $config->{cxx} : $config->{cc};
         for my $src (@source_files) {
             my $obj_path = $src;
-            $obj_path =~ s/\.c$/.obj/i;
-            run_command( $config->{cc}, @local_cflags, '-c', '-Fo' . $obj_path, $src );
+            $obj_path =~ s/\.(c|cpp)$/.obj/i;
+            run_command( $compiler, @local_cflags, '-c', '-Fo' . $obj_path, $src );
             push @link_objects, $obj_path;
         }
-        my $exe_path = $test_c;
-        $exe_path =~ s/\.c$/$Config{_exe}/;
-        run_command( $config->{cc}, '-Fe' . $exe_path, @link_objects, $normal_lib_path, @{ $config->{ldflags} } );
+        my $exe_path = $test_file;
+        $exe_path =~ s/\.(c|cpp)$/$Config{_exe}/;
+        run_command( $compiler, '-Fe' . $exe_path, @link_objects, $normal_lib_path, @{ $config->{ldflags} } );
         my $cov_file = $exe_path;
         $cov_file =~ s/\.exe$/.cov/;
         push @cov_files, $cov_file;

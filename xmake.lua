@@ -2,7 +2,7 @@
 -- This single file supports Windows, macOS, and Linux.
 
 set_project("infix")
-set_version("0.1.0", {build = "%Y%m%d%H%M", soname = true})
+set_version("0.1.4", {build = "%Y%m%d%H%M", soname = true})
 set_languages("c17", "cxx17")
 
 -- Config
@@ -28,7 +28,8 @@ on_config(function (target)
     -- Only apply C/C++ compiler flags to buildable targets, not script targets.
     if target:has_tool("c") or target:has_tool("cxx") then
          if target:toolchain("msvc") then
-            target:add("cxflags", "/experimental:c11atomics", "/W3")
+            target:add("cxflags", "/experimental:c11atomics", "/W3", "/arch:AVX2")
+            target:add("defines", "INFIX_ARCH_X86_AVX2")
             target:add("defines", "_CRT_SECURE_NO_WARNINGS")
         else
             target:add("cxflags", "-Wall", "-Wextra", "-fvisibility=hidden")
@@ -50,19 +51,28 @@ on_config(function (target)
     end
 end)
 
--- Define the static library target "infix"
+-- Define the library target "infix"
 target("infix")
-    set_kind("static")
+    set_kind("$(kind)") 
     -- Only compile the top-level core files. The unity build in trampoline.c
     -- will include the correct arch-specific .c files.
     add_files("src/infix.c")
     -- Expose only the public 'include' directory to consumers of this library
     add_includedirs("include", {public = true})
+    
+    on_load(function (target)
+        if target:kind() == "shared" then
+            target:add("defines", "INFIX_BUILDING_DLL")
+        end
+    end)
     -- Be noisy
 --~     add_defines("INFIX_DEBUG_ENABLED=1")
 
 -- Define the test targets.
-for _, test_file in ipairs(os.files("t/*.c")) do
+local test_files = os.files("t/*.c")
+table.join2(test_files, os.files("t/*.cpp"))
+
+for _, test_file in ipairs(test_files) do
     local target_name = path.basename(test_file)
 
     target(target_name)
@@ -81,6 +91,19 @@ for _, test_file in ipairs(os.files("t/*.c")) do
             add_includedirs("fuzz")
         end
 
+        -- Special handling for 880_exports
+        if target_name == "880_exports" then
+             -- If we are building shared (xmake f -k shared), define INFIX_USING_DLL
+             after_load(function (target)
+                 if is_plat("windows") and target:dep("infix"):kind() == "shared" then
+                     target:add("defines", "INFIX_USING_DLL")
+                 end
+                 if not is_plat("windows") then
+                     target:add("ldflags", "-rdynamic")
+                 end
+             end)
+        end
+
         add_deps("infix")
         set_targetdir("bin")
 
@@ -90,7 +113,7 @@ for _, test_file in ipairs(os.files("t/*.c")) do
 
         -- https://xmake.io/api/description/project-target.html#add-vectorexts
         -- v[4:double] support requires avx2
-        add_vectorexts("all")
+        add_vectorexts("avx", "avx2")
         --~ add_vectorexts("avx512") TODO
 
         -- Add platform-specific system libraries for tests
