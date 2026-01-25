@@ -175,11 +175,14 @@ Using Makefiles</h2>
 </div><!-- fragment --><p><b>NMake (Windows with MSVC):</b> Open a Developer Command Prompt and run: </p><div class="fragment"><div class="line">nmake /f Makefile.win</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md167"></a>
 Symbol Visibility</h2>
-<p>When building <code>infix</code> as a shared library (DLL/.so), you must ensure that only the public API is exported.</p><ul>
-<li>Public API: All public functions are marked with the <code>INFIX_API</code> macro in <code><a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a></code>.</li>
-<li>Internal Functions: All internal functions shared between source files are marked with <code>INFIX_INTERNAL</code>.</li>
+<p>When building <code>infix</code> as a shared library (DLL/.so), you must ensure that only the public API is exported.</p>
+<p><b>Windows (DLL):</b></p><ul>
+<li><b>Building:</b> You <b>must</b> define <code>INFIX_BUILDING_DLL</code> when compiling the library. This ensures that <code>__declspec(dllexport)</code> is applied only to public API functions, preventing internal symbols from polluting the DLL export table.</li>
+<li><b>Using:</b> You <b>must</b> define <code>INFIX_USING_DLL</code> when compiling code that links against the <code>infix</code> DLL. This applies <code>__declspec(dllimport)</code> to the function declarations.</li>
 </ul>
-<p>If you are compiling infix yourself, you should define <code>INFIX_INTERNAL</code> to hide internal symbols if your compiler supports it (<code>-fvisibility=hidden</code>). The provided build scripts handle this automatically.</p>
+<p><b>Linux/macOS:</b> All public functions are marked with <code>INFIX_API</code> (default visibility). Internal functions are marked with <code>INFIX_INTERNAL</code> (hidden visibility). The provided build scripts automatically set <code>-fvisibility=hidden</code> to ensure <code>INFIX_INTERNAL</code> works as intended.</p>
+<p><b>Static Library:</b> Do not define <code>INFIX_BUILDING_DLL</code> or <code>INFIX_USING_DLL</code>. This is the default.</p>
+<p>The provided build scripts (perl, xmake, CMake, Makefiles) handle these definitions automatically when you select a shared library build.</p>
 <h2><a class="anchor" id="autotoc_md168"></a>
 Advanced Methods</h2>
 <p>For minimal environments or direct embedding, you can compile the library manually. The Perl-based builder is also available for advanced development tasks. For details, see the original <code><a class="el" href="INSTALL_8md.html">INSTALL.md</a></code>.</p>

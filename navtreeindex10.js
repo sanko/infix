@@ -1,7 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"unioninfix__direct__value__t.html":[10,1,8,0],
-"uniontest__union.html":[11,0,68],
 "uniontest__union.html#a185d2f195f022d51d69da1b4b0c17d86":[11,0,68,0],
 "uniontest__union.html#a443e3386d3522b1919bb48f58af851c2":[11,0,68,2],
 "uniontest__union.html#ac73b9e302816b369503668d2e86f7d5e":[11,0,68,1],

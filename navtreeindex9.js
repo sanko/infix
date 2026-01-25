@@ -1,7 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"struct____m256d.html#aa259aa4dfd909e110cb0b3c8e27bde51":[11,0,0,0],
-"struct____m512d.html":[11,0,1],
 "struct____m512d.html#a92762ac09ae420596dd048c54e577734":[11,0,1,0],
 "struct__infix__registry__entry__t.html":[11,0,2],
 "struct__infix__registry__entry__t.html#a393ed36b69638cf2a3f786b0b4a2c77b":[11,0,2,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX9 =
 "unionNumber.html#ace96e77a2c99a9d07825ea4cf54cd8d2":[11,0,51,1],
 "unionTestUnion.html":[11,0,70],
 "unionTestUnion.html#a16a4b7f85670e1c04adf3575394b24c1":[11,0,70,0],
-"unionTestUnion.html#a4d7541b2f9ef91baff464d7c982cce79":[11,0,70,1]
+"unionTestUnion.html#a4d7541b2f9ef91baff464d7c982cce79":[11,0,70,1],
+"unioninfix__direct__value__t.html":[10,1,8,0],
+"uniontest__union.html":[11,0,68]
 };

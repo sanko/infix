@@ -1,7 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"md_docs_2cookbook.html#autotoc_md139":[2,18,0],
-"md_docs_2cookbook.html#autotoc_md140":[2,18,0,0],
 "md_docs_2cookbook.html#autotoc_md141":[2,18,0,1],
 "md_docs_2cookbook.html#autotoc_md142":[2,18,0,2],
 "md_docs_2cookbook.html#autotoc_md143":[2,18,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX8 =
 "structUserProfile.html#acde5e199f2ff45eeb86fcfd57fced770":[11,0,73,2],
 "structVector4.html":[11,0,74],
 "structVector4.html#ac9727ff9cc4250d8604d067f700d4085":[11,0,74,0],
-"struct____m256d.html":[11,0,0]
+"struct____m256d.html":[11,0,0],
+"struct____m256d.html#aa259aa4dfd909e110cb0b3c8e27bde51":[11,0,0,0],
+"struct____m512d.html":[11,0,1]
 };
