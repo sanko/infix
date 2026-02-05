@@ -88,10 +88,13 @@ TEST {
     }
     subtest("C++ Exception Propagation") {
         plan(2);
+#if defined(_WIN32) && defined(_M_X64)
+        // Exception unwinding through JIT code is now supported on Windows x64.
+#else
         // Exception unwinding through JIT code requires platform-specific metadata
-        // (PDATA/XDATA on Windows, .eh_frame/DWARF on Linux/macOS) which is not yet implemented.
-        skip(2, "Exception unwinding through JIT code is not yet supported on any platform.");
-#if 0
+        // (.eh_frame/DWARF on Linux/macOS) which is not yet implemented.
+        skip(2, "Exception unwinding through JIT code is not yet supported on this platform.");
+#endif
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create(&trampoline, "()->void", (void *)throw_exception_func, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline created for exception thrower");
@@ -116,6 +119,5 @@ TEST {
         else
             skip(1, "Test skipped");
         infix_forward_destroy(trampoline);
-#endif
     }
 }

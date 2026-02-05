@@ -271,19 +271,26 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             // Check for bitfield syntax: "name: type : width"
             uint8_t bit_width = 0;
             bool is_bitfield = false;
+            const char * p_before_colon = state->p;
             skip_whitespace(state);
             if (*state->p == ':') {
                 state->p++;  // Consume ':'
                 skip_whitespace(state);
-                size_t width_val = 0;
-                if (!parse_size_t(state, &width_val))
-                    return nullptr;  // Error set by parse_size_t
-                if (width_val > 255) {
-                    _infix_set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
-                    return nullptr;
+                if (!isdigit((unsigned char)*state->p)) {
+                    // Not a bitfield width, backtrack. This handles "name: type" where ':' is part of name prefix.
+                    state->p = p_before_colon;
                 }
-                bit_width = (uint8_t)width_val;
-                is_bitfield = true;
+                else {
+                    size_t width_val = 0;
+                    if (!parse_size_t(state, &width_val))
+                        return nullptr;  // Error set by parse_size_t
+                    if (width_val > 255) {
+                        _infix_set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
+                        return nullptr;
+                    }
+                    bit_width = (uint8_t)width_val;
+                    is_bitfield = true;
+                }
             }
 
             member_node * node = infix_arena_calloc(state->arena, 1, sizeof(member_node), _Alignof(member_node));
@@ -474,6 +481,8 @@ INFIX_INTERNAL infix_type * parse_primitive(parser_state * state) {
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT128);
     if (consume_keyword(state, "uint128"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_UINT128);
+    if (consume_keyword(state, "float16"))
+        return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT16);
     if (consume_keyword(state, "float32"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
     if (consume_keyword(state, "float64"))
@@ -1369,6 +1378,9 @@ static void _infix_type_print_signature_recursive(printer_state * state, const i
         case INFIX_PRIMITIVE_UINT128:
             _print(state, "uint128");
             break;
+        case INFIX_PRIMITIVE_FLOAT16:
+            _print(state, "float16");
+            break;
         case INFIX_PRIMITIVE_FLOAT:
             _print(state, "float");
             break;
@@ -1440,6 +1452,9 @@ static void _infix_type_print_itanium_recursive(printer_state * state, const inf
         case INFIX_PRIMITIVE_UINT128:
             _print(state, "o");
             break;  // unsigned __int128
+        case INFIX_PRIMITIVE_FLOAT16:
+            _print(state, "Dh");
+            break;  // half-precision float (IEEE 754)
         case INFIX_PRIMITIVE_FLOAT:
             _print(state, "f");
             break;
@@ -1611,6 +1626,9 @@ static void _infix_type_print_msvc_recursive(printer_state * state, const infix_
         case INFIX_PRIMITIVE_UINT64:
             _print(state, "_K");
             break;  // unsigned __int64
+        case INFIX_PRIMITIVE_FLOAT16:
+            _print(state, "_T");
+            break;  // half-precision float (__half)
         case INFIX_PRIMITIVE_FLOAT:
             _print(state, "M");
             break;
@@ -1780,6 +1798,9 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
             break;
         case INFIX_PRIMITIVE_UINT128:
             _print(state, "uint128");
+            break;
+        case INFIX_PRIMITIVE_FLOAT16:
+            _print(state, "float16");
             break;
         case INFIX_PRIMITIVE_FLOAT:
             _print(state, "float");

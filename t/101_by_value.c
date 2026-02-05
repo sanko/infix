@@ -71,20 +71,19 @@ int process_mixed_struct(MixedIntDouble s) {
     return s.i == -500 && fabs(s.d - 3.14) < 0.001;
 }
 float sum_vector4(Vector4 vec) { return vec.v[0] + vec.v[1] + vec.v[2] + vec.v[3]; }
-#if defined(INFIX_ARCH_X86_SSE2)
+#if defined(INFIX_ARCH_X86_SSE2) && defined(__SSE2__)
 __m128d native_vector_add_128(__m128d a, __m128d b) { return _mm_add_pd(a, b); }
 #elif defined(INFIX_ARCH_ARM_NEON)
 float64x2_t neon_vector_add(float64x2_t a, float64x2_t b) { return vaddq_f64(a, b); }
 #endif
-#if defined(INFIX_ARCH_X86_AVX2)
+#if defined(INFIX_ARCH_X86_AVX2) && defined(__AVX__)
 #include <immintrin.h>
-__m256d XXXnative_vector_add_256(__m256d a, __m256d b) { return _mm256_add_pd(a, b); }
 DBLTAP_NOINLINE __m256d native_vector_add_256(__m256d a, __m256d b) {
     note("Before return");
     return _mm256_add_pd(a, b);
 }
 #endif
-#if defined(INFIX_ARCH_X86_AVX512)
+#if defined(INFIX_ARCH_X86_AVX512) && defined(__AVX512F__)
 __m512d native_vector_add_512d(__m512d a, __m512d b) { return _mm512_add_pd(a, b); }
 __m512 native_vector_add_512(__m512 a, __m512 b) { return _mm512_add_ps(a, b); }
 #endif
@@ -267,7 +266,7 @@ TEST {
     }
     subtest("ABI Specific: 128-bit SIMD Vector") {
         plan(2);
-#if defined(INFIX_ARCH_X86_SSE2)
+#if defined(INFIX_ARCH_X86_SSE2) && defined(__SSE2__)
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * vector_type = nullptr;
         infix_status status =
@@ -343,7 +342,7 @@ TEST {
 #endif
     }
     subtest("ABI Specific: 256-bit AVX Vector") {
-#if defined(INFIX_ARCH_X86_AVX2)
+#if defined(INFIX_ARCH_X86_AVX2) && defined(__AVX__)
         if (infix_cpu_has_avx2()) {
             plan(2);
             note("Testing __m256d passed and returned by value on x86-64 with AVX2.");
@@ -450,7 +449,7 @@ TEST {
 #endif
     }
     subtest("ABI Specific: 512-bit AVX-512 Vector (__m512d)") {
-#if defined(INFIX_ARCH_X86_AVX512)
+#if defined(INFIX_ARCH_X86_AVX512) && defined(__AVX512F__)
         if (infix_cpu_has_avx512f()) {
             plan(3);  // Fix plan count
             note("Testing __m512d (8x double) passed and returned by value on x86-64 with AVX-512F.");
@@ -508,7 +507,7 @@ TEST {
 #endif
     }
     subtest("ABI Specific: 512-bit AVX-512 Vector (__m512)") {
-#if defined(INFIX_ARCH_X86_AVX512)
+#if defined(INFIX_ARCH_X86_AVX512) && defined(__AVX512F__)
         if (infix_cpu_has_avx512f()) {
             plan(2);
             note("Testing __m512 (16x float) passed and returned by value on x86-64 with AVX-512F.");

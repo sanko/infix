@@ -82,7 +82,20 @@ if ( $is_fuzz_build && ( $config{compiler} ne 'clang' && $config{compiler} ne 'g
 
 # Environment Detection
 $config{arch} = 'x64';
-my $host_arch_raw = '';
+my $host_arch = 'x64';
+
+# Detect host architecture from environment
+if ( ( $ENV{PROCESSOR_IDENTIFIER} || '' ) =~ m[ARM]i ||
+    ( $ENV{PROCESSOR_ARCHITECTURE} || '' ) =~ /ARM64/i ||
+    ( $ENV{PROCESSOR_ARCHITEW6432} || '' ) =~ /ARM64/i ) {
+    $host_arch = 'arm64';
+}
+else {
+    my $m = `uname -m 2>&1` || '';
+    if ( $m =~ /aarch64|arm64/i ) {
+        $host_arch = 'arm64';
+    }
+}
 if ( $config{is_windows} ) {
 
     # On Windows, environment variables can be misleading due to emulation.
@@ -92,36 +105,27 @@ if ( $config{is_windows} ) {
         my $dump = `$cc -dumpmachine 2>&1`;
         if ( $dump =~ /aarch64|arm64/i ) {
             $config{arch} = 'arm64';
-            $host_arch_raw = 'arm64';
         }
         elsif ( $dump =~ /x86_64|amd64|i686|i386/i ) {
             $config{arch} = 'x64';
-            $host_arch_raw = 'x86_64';
         }
     }
-
-    # Fallback to environment variables if compiler check was inconclusive
-    if ( !$host_arch_raw ) {
-        if ( ( $ENV{PROCESSOR_IDENTIFIER} || '' ) =~ m[ARM]i || ( $ENV{PROCESSOR_ARCHITECTURE} || '' ) =~ /ARM64/i ) {
-            $config{arch} = 'arm64';
-            $host_arch_raw = 'arm64';
-        }
-        else {
-            $config{arch} = 'x64';
-            $host_arch_raw = 'x86_64';
-        }
+    else {
+        # Fallback to host arch if compiler check was inconclusive
+        $config{arch} = $host_arch;
     }
 }
 else {
-    $host_arch_raw = `uname -m`;
-    chomp $host_arch_raw;
-    $config{arch} = $host_arch_raw;
+    my $m = `uname -m 2>&1` || '';
+    chomp $m;
+    $config{arch} = $m;
     $config{arch} = 'arm64' if $config{arch} eq 'arm64' || $config{arch} eq 'aarch64' || $config{arch} eq 'evbarm';
 
     # Solaris 'uname -m' returns 'i86pc' for x86/x64 hardware
     $config{arch} = 'x64' if $config{arch} eq 'x86_64' || $config{arch} eq 'amd64' || $config{arch} eq 'i86pc';
 }
 die "Could not determine architecture for $^O" unless $config{arch};
+$config{host_arch} = $host_arch;
 
 # Enable verbose/debug mode if requested
 if ( $opts{verbose} ) {
@@ -161,7 +165,7 @@ else {    # GCC or Clang
     # push @{ $config{cflags} },   '-fvisibility=hidden';
     # push @{ $config{cxxflags} }, '-fvisibility=hidden';
     $config{ldflags} = [];
-    if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch_raw !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
+    if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
         print "ARM64 cross-compilation detected for clang. Adding --target flag.\n";
         my $target_triple = $config{is_windows} ? 'aarch64-pc-windows-msvc' : 'aarch64-linux-gnu';
         push @{ $config{cflags} },   "--target=$target_triple";
@@ -509,16 +513,16 @@ sub get_simd_flags {
     if ( $config->{arch} eq 'x64' ) {
         if ( $config->{compiler} eq 'msvc' ) {
 
-            # Only enable AVX2 if the test mentions AVX or large vectors
-            if ( $src_content && $src_content =~ /_mm256|_mm512/ ) {
+            # Only enable AVX2 if the test mentions AVX or large vectors AND we are not emulating
+            if ( $src_content && $src_content =~ /AVX|m256|m512/i && $config->{host_arch} eq 'x64' ) {
                 push @flags, '-arch:AVX2';
             }
         }
         else {
             # GCC/Clang
             push @flags, '-msse2';    # Baseline for x86-64
-            if ($src_content) {
-                if ( $src_content =~ /_mm256/ ) {
+            if ( $src_content && $config->{host_arch} eq 'x64' ) {
+                if ( $src_content =~ /AVX|m256/i ) {
                     push @flags, '-mavx', '-mavx2';
                 }
             }
@@ -537,7 +541,9 @@ sub compile_and_run_tests {
     # and link them directly into each test executable. This resolves linker issues
     # with coverage/profiling data in static archives.
     my $obj_dir = File::Spec->catdir( $config->{lib_dir}, 'test_objects' );
-    make_path($obj_dir);
+    unless ( -d $obj_dir ) {
+        make_path($obj_dir) or die "Failed to create directory $obj_dir: $!";
+    }
     my @lib_obj_files = compile_objects( $config, $obj_suffix, $obj_dir );
     die "Failed to compile library object files, cannot proceed." unless @lib_obj_files;
     my @test_files = get_test_files($test_names_ref);

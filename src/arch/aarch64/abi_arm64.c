@@ -329,8 +329,8 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
             continue;  // Argument classified, proceed to the next one.
         }
 #endif
-        bool pass_fp_in_vpr =
-            is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+        bool pass_fp_in_vpr = is_float16(type) || is_float(type) || is_double(type) || is_long_double(type) ||
+            type->category == INFIX_TYPE_VECTOR;
         const infix_type * hfa_base_type = nullptr;
         bool is_hfa_candidate = is_hfa(type, &hfa_base_type);
 #if defined(INFIX_OS_WINDOWS)
@@ -549,11 +549,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
             if ((is_long_double(type) && type->size == 16) || (type->category == INFIX_TYPE_VECTOR && type->size == 16))
                 emit_arm64_ldr_q_imm(buf, VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr qN, [x9] (128-bit load)
             else
-                emit_arm64_ldr_vpr(buf,
-                                   is_double(type) || is_long_double(type),
-                                   VPR_ARGS[loc->reg_index],
-                                   X9_REG,
-                                   0);  // ldr dN/sN, [x9]
+                emit_arm64_ldr_vpr(buf, type->size, VPR_ARGS[loc->reg_index], X9_REG, 0);
             break;
         case ARG_LOCATION_VPR_HFA:
             {
@@ -561,7 +557,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                 is_hfa(type, &base);
                 for (uint32_t j = 0; j < loc->num_regs; ++j)
                     emit_arm64_ldr_vpr(
-                        buf, is_double(base), VPR_ARGS[loc->reg_index + j], X9_REG, (int32_t)(j * base->size));
+                        buf, base->size, VPR_ARGS[loc->reg_index + j], X9_REG, (int32_t)(j * base->size));
                 break;
             }
         case ARG_LOCATION_STACK:
@@ -574,12 +570,12 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                     if (type->category == INFIX_TYPE_PRIMITIVE || type->category == INFIX_TYPE_POINTER) {
                         if (is_float(type) || is_double(type)) {
                             // Floats are promoted to doubles.
-                            emit_arm64_ldr_vpr(buf, true, V16_REG, X9_REG, 0);  // Load as double
+                            emit_arm64_ldr_vpr(buf, 8, V16_REG, X9_REG, 0);  // Load as double
                             if (loc->stack_offset < (unsigned)max_imm_offset)
-                                emit_arm64_str_vpr(buf, true, V16_REG, SP_REG, loc->stack_offset);
+                                emit_arm64_str_vpr(buf, 8, V16_REG, SP_REG, loc->stack_offset);
                             else {
                                 emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, loc->stack_offset);
-                                emit_arm64_str_vpr(buf, true, V16_REG, X10_REG, 0);
+                                emit_arm64_str_vpr(buf, 8, V16_REG, X10_REG, 0);
                             }
                         }
                         else {  // Integer and pointer types
@@ -684,16 +680,18 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
             size_t num_elements = ret_type->size / hfa_base->size;
             for (size_t i = 0; i < num_elements; ++i)
                 emit_arm64_str_vpr(buf,
-                                   is_double(hfa_base),
+                                   hfa_base->size,
                                    VPR_ARGS[i],
                                    X20_REG,
                                    (int32_t)(i * hfa_base->size));  // Explicit cast
         }
+        else if (is_float16(ret_type))
+            emit_arm64_str_vpr(buf, 2, V0_REG, X20_REG, 0);  // str h0, [x20]
         else if (is_float(ret_type))
-            emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);  // str s0, [x20]
+            emit_arm64_str_vpr(buf, 4, V0_REG, X20_REG, 0);  // str s0, [x20]
         // Handle standard double OR 8-byte long double (macOS)
         else if (is_double(ret_type) || (is_long_double(ret_type) && ret_type->size == 8))
-            emit_arm64_str_vpr(buf, true, V0_REG, X20_REG, 0);  // str d0, [x20]
+            emit_arm64_str_vpr(buf, 8, V0_REG, X20_REG, 0);  // str d0, [x20]
         else {
             // Integer, pointer, or small aggregate return.
             switch (ret_type->size) {
@@ -937,14 +935,14 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             // Homogeneous Floating-point Aggregate
             size_t num_elements = type->size / hfa_base_type->size;
             if (vpr_idx + num_elements <= NUM_VPR_ARGS) {
-                const int scale = is_double(hfa_base_type) ? 8 : 4;
+                const int scale = (int)hfa_base_type->size;
                 for (size_t j = 0; j < num_elements; ++j) {
                     int32_t dest_offset = arg_save_loc + (int32_t)(j * hfa_base_type->size);
                     if (dest_offset >= 0 && ((unsigned)dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
-                        emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
+                        emit_arm64_str_vpr(buf, hfa_base_type->size, VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
                     else {
                         emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
-                        emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], X10_REG, 0);
+                        emit_arm64_str_vpr(buf, hfa_base_type->size, VPR_ARGS[vpr_idx++], X10_REG, 0);
                     }
                 }
             }
@@ -955,7 +953,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         else if (expect_in_vpr) {
             // Single FP/Vector argument
             if (vpr_idx < NUM_VPR_ARGS) {
-                // Determine width: 128-bit (Quad), 64-bit (Double), or 32-bit (Single).
+                // Determine width: 128-bit (Quad), 64-bit (Double), 32-bit (Single), or 16-bit (Half).
                 // On macOS ARM64, long double is 8 bytes, so we must check size == 16.
                 bool is_128bit = (type->size == 16);
 
@@ -974,17 +972,16 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                     }
                 }
                 else {
-                    // Use STR Dn (64-bit) or STR Sn (32-bit)
-                    // Note: macOS long double (8 bytes) falls into 'is_double' path here via size check/alias logic
-                    const int scale = (is_double(type) || is_long_double(type)) ? 8 : 4;
-                    bool is_64bit = (scale == 8);
+                    // Use STR Hn (16-bit), STR Sn (32-bit), or STR Dn (64-bit)
+                    // Note: macOS long double (8 bytes) falls into path here via size check/alias logic
+                    const int scale = (int)type->size;
 
                     if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / scale) <= 0xFFF && (arg_save_loc % scale == 0)) {
-                        emit_arm64_str_vpr(buf, is_64bit, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
+                        emit_arm64_str_vpr(buf, type->size, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
                     }
                     else {
                         emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                        emit_arm64_str_vpr(buf, is_64bit, VPR_ARGS[vpr_idx++], X10_REG, 0);
+                        emit_arm64_str_vpr(buf, type->size, VPR_ARGS[vpr_idx++], X10_REG, 0);
                     }
                 }
             }

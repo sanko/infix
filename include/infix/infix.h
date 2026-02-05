@@ -252,6 +252,7 @@ typedef enum {
     INFIX_PRIMITIVE_SINT64,     /**< `int64_t`. */
     INFIX_PRIMITIVE_UINT128,    /**< `__uint128_t` (GCC/Clang extension). */
     INFIX_PRIMITIVE_SINT128,    /**< `__int128_t` (GCC/Clang extension). */
+    INFIX_PRIMITIVE_FLOAT16,    /**< `_Float16` (C23 / GCC/Clang extension). */
     INFIX_PRIMITIVE_FLOAT,      /**< `float`. */
     INFIX_PRIMITIVE_DOUBLE,     /**< `double`. */
     INFIX_PRIMITIVE_LONG_DOUBLE /**< `long double`. */

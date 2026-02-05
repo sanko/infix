@@ -19,10 +19,13 @@
 #define NOINLINE __attribute__((noinline))
 #endif
 
+#ifdef __SSE2__
 NOINLINE __m128 v4f_add_c(__m128 a, __m128 b) { return _mm_add_ps(a, b); }
+#endif
 
 NOINLINE float v4f_add_4_floats(float a, float b, float c, float d) { return a + b + c + d; }
 
+#ifdef __SSE2__
 NOINLINE int v4f_check_c(__m128 a) {
     union {
         __m128 m;
@@ -33,8 +36,11 @@ NOINLINE int v4f_check_c(__m128 a) {
         return 42;
     return 0;
 }
+#endif
 
+#ifdef __AVX__
 NOINLINE __m256 v8f_add_c(__m256 a, __m256 b) { return _mm256_add_ps(a, b); }
+#endif
 
 #endif
 
@@ -42,6 +48,7 @@ TEST {
     plan(4);
 #if defined(__x86_64__) || defined(_M_X64)
     subtest("128-bit Vector (v4f) Forward Call") {
+#ifdef __SSE2__
         plan(3);
         infix_arena_t * arena = infix_arena_create(2048);
         infix_type * float_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
@@ -71,6 +78,10 @@ TEST {
         }
         infix_forward_destroy(forward);
         infix_arena_destroy(arena);
+#else
+        plan(1);
+        skip(1, "SSE2 support not enabled at compile-time");
+#endif
     }
 
     subtest("4 floats Argument Passing") {
@@ -96,6 +107,7 @@ TEST {
     }
 
     subtest("128-bit Vector (v4f) Argument Passing") {
+#ifdef __SSE2__
         plan(3);
         infix_arena_t * arena = infix_arena_create(2048);
         infix_type * float_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
@@ -119,10 +131,15 @@ TEST {
         }
         infix_forward_destroy(forward);
         infix_arena_destroy(arena);
+#else
+        plan(1);
+        skip(1, "SSE2 support not enabled at compile-time");
+#endif
     }
 
-    if (infix_cpu_has_avx2()) {
-        subtest("256-bit Vector (v8f) Forward Call") {
+    subtest("256-bit Vector (v8f) Forward Call") {
+#ifdef __AVX__
+        if (infix_cpu_has_avx2()) {
             plan(3);
             infix_arena_t * arena = infix_arena_create(2048);
             infix_type * float_type = infix_type_create_primitive(INFIX_PRIMITIVE_FLOAT);
@@ -153,12 +170,14 @@ TEST {
             infix_forward_destroy(forward);
             infix_arena_destroy(arena);
         }
-    }
-    else {
-        subtest("256-bit Vector (v8f) Forward Call") {
+        else {
             plan(1);
             skip(1, "CPU does not support AVX2");
         }
+#else
+        plan(1);
+        skip(1, "AVX support not enabled at compile-time");
+#endif
     }
 #else
     skip(4, "SIMD tests only for x86-64");

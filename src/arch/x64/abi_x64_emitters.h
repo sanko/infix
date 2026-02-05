@@ -87,6 +87,8 @@ INFIX_INTERNAL void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gp
 INFIX_INTERNAL void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
 /** @internal @brief Emits `vmovupd [base + offset], ymm` to store a 256-bit unaligned value (AVX). */
 INFIX_INTERNAL void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
+/** @internal @brief Emits `vzeroupper` to clear the upper bits of all YMM/ZMM registers. */
+INFIX_INTERNAL void emit_vzeroupper(code_buffer * buf);
 /** @internal @brief Emits `cvtsd2ss xmm1, xmm2/m64` to convert a double to a float. */
 INFIX_INTERNAL void emit_cvtsd2ss_xmm_xmm(code_buffer * buf, x64_xmm dest, x64_xmm src);
 /** @brief Emits `movaps xmm1, xmm2/m128` to move 128 bits between XMM registers. */

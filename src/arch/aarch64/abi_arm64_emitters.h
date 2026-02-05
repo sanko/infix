@@ -62,10 +62,10 @@ INFIX_INTERNAL void emit_arm64_stp_pre_index(
 INFIX_INTERNAL void emit_arm64_ldp_post_index(
     code_buffer * buf, bool is64, arm64_gpr dest1, arm64_gpr dest2, arm64_gpr base, int32_t offset);
 // Memory <-> VPR (SIMD/FP) Emitters
-/** @internal @brief Emits `LDR <St|Dt>, [<Xn|SP>, #imm]` to load a 32/64-bit FP value from memory. */
-INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, bool is64, arm64_vpr dest, arm64_gpr base, int32_t offset);
-/** @internal @brief Emits `STR <St|Dt>, [<Xn|SP>, #imm]` to store a 32/64-bit FP value to memory. */
-INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, bool is64, arm64_vpr src, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `LDR <Ht|St|Dt>, [<Xn|SP>, #imm]` to load a 16/32/64-bit FP value from memory. */
+INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, size_t size, arm64_vpr dest, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `STR <Ht|St|Dt>, [<Xn|SP>, #imm]` to store a 16/32/64-bit FP value to memory. */
+INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, size_t size, arm64_vpr src, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `LDR <Qt>, [<Xn|SP>, #imm]` for a 128-bit load into a SIMD&FP register. */
 INFIX_INTERNAL void emit_arm64_ldr_q_imm(code_buffer * buf, arm64_vpr dest, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `STR <Qt>, [<Xn|SP>, #imm]` for a 128-bit store from a SIMD&FP register. */

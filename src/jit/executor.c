@@ -61,6 +61,38 @@
 #define MAP_ANON MAP_ANONYMOUS
 #endif
 #endif
+
+#if defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_X64)
+// SEH Unwind Info Opcodes and Structures for JIT code on Windows x64.
+// These are defined in winnt.h but we redefine them here for clarity and to ensure availability.
+#define UWOP_PUSH_NONVOL 0
+#define UWOP_ALLOC_LARGE 1
+#define UWOP_ALLOC_SMALL 2
+#define UWOP_SET_FPREG 3
+
+#pragma pack(push, 1)
+typedef struct _UNWIND_CODE {
+    uint8_t CodeOffset;
+    uint8_t UnwindOp : 4;
+    uint8_t OpInfo : 4;
+} UNWIND_CODE;
+
+typedef struct _UNWIND_INFO {
+    uint8_t Version : 3;
+    uint8_t Flags : 5;
+    uint8_t SizeOfPrologue;
+    uint8_t CountOfCodes;
+    uint8_t FrameRegister : 4;
+    uint8_t FrameOffset : 4;
+    UNWIND_CODE UnwindCode[10];  // Enough for our current needs
+} UNWIND_INFO;
+
+// We reserve 128 bytes at the end of every JIT block for SEH metadata.
+#define INFIX_SEH_METADATA_SIZE 128
+#else
+#define INFIX_SEH_METADATA_SIZE 0
+#endif
+
 // macOS JIT Security Hardening Logic
 #if defined(INFIX_OS_MACOS)
 /**
@@ -234,15 +266,20 @@ static int create_anonymous_file(void) {
  */
 c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
 #if defined(INFIX_OS_WINDOWS)
-    infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .handle = nullptr};
+    infix_executable_t exec = {
+        .rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .handle = nullptr, .seh_registration = nullptr};
 #else
     infix_executable_t exec = {.rx_ptr = nullptr, .rw_ptr = nullptr, .size = 0, .shm_fd = -1};
 #endif
     if (size == 0)
         return exec;
+
 #if defined(INFIX_OS_WINDOWS)
+    // Add headroom for SEH metadata on Windows x64.
+    size_t total_size = size + INFIX_SEH_METADATA_SIZE;
+
     // Windows: Single-mapping W^X. Allocate as RW, later change to RX via VirtualProtect.
-    void * code = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    void * code = VirtualAlloc(nullptr, total_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (code == nullptr) {
         _infix_set_system_error(
             INFIX_CATEGORY_ALLOCATION, INFIX_CODE_EXECUTABLE_MEMORY_FAILURE, GetLastError(), nullptr);
@@ -332,6 +369,85 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     INFIX_DEBUG_PRINTF("Allocated JIT memory. RW at %p, RX at %p", exec.rw_ptr, exec.rx_ptr);
     return exec;
 }
+
+#if defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_X64)
+// Internal: Populates and registers SEH metadata for a Windows x64 JIT block.
+static void _infix_register_seh_windows_x64(infix_executable_t * exec,
+                                            infix_executable_category_t category,
+                                            uint32_t prologue_size) {
+    // metadata_ptr starts after the machine code.
+    uint8_t * metadata_base = (uint8_t *)exec->rw_ptr + exec->size;
+
+    // RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
+    RUNTIME_FUNCTION * rf = (RUNTIME_FUNCTION *)_infix_align_up((size_t)metadata_base, 4);
+
+    // UNWIND_INFO (XDATA) - Follows PDATA.
+    UNWIND_INFO * ui = (UNWIND_INFO *)_infix_align_up((size_t)(rf + 1), 2);
+
+    ui->Version = 1;
+    ui->Flags = 0;
+    ui->FrameRegister = 5;  // RBP
+    ui->FrameOffset = 0;
+    ui->SizeOfPrologue = (uint8_t)prologue_size;
+
+    if (category == INFIX_EXECUTABLE_REVERSE) {
+        // Reverse Trampoline: push rbp, mov rbp, rsp, push rsi, push rdi, and rsp -mask, [sub rsp, alloc]
+        ui->CountOfCodes = 4;
+        ui->UnwindCode[0].CodeOffset = 6;
+        ui->UnwindCode[0].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[0].OpInfo = 7;  // RDI
+
+        ui->UnwindCode[1].CodeOffset = 5;
+        ui->UnwindCode[1].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[1].OpInfo = 6;  // RSI
+
+        ui->UnwindCode[2].CodeOffset = 4;  // After mov rbp, rsp
+        ui->UnwindCode[2].UnwindOp = UWOP_SET_FPREG;
+        ui->UnwindCode[2].OpInfo = 0;
+
+        ui->UnwindCode[3].CodeOffset = 1;  // After push rbp
+        ui->UnwindCode[3].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[3].OpInfo = 5;  // RBP
+    }
+    else {
+        // Forward or Direct Trampoline: push rbp, mov rbp, rsp, push r12-r15, and rsp -16, [sub rsp, alloc]
+        ui->CountOfCodes = 6;
+        // Opcodes in reverse order:
+        ui->UnwindCode[0].CodeOffset = 12;
+        ui->UnwindCode[0].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[0].OpInfo = 15;  // R15
+
+        ui->UnwindCode[1].CodeOffset = 10;
+        ui->UnwindCode[1].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[1].OpInfo = 14;  // R14
+
+        ui->UnwindCode[2].CodeOffset = 8;
+        ui->UnwindCode[2].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[2].OpInfo = 13;  // R13
+
+        ui->UnwindCode[3].CodeOffset = 6;
+        ui->UnwindCode[3].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[3].OpInfo = 12;  // R12
+
+        ui->UnwindCode[4].CodeOffset = 4;  // After mov rbp, rsp
+        ui->UnwindCode[4].UnwindOp = UWOP_SET_FPREG;
+        ui->UnwindCode[4].OpInfo = 0;
+
+        ui->UnwindCode[5].CodeOffset = 1;  // After push rbp
+        ui->UnwindCode[5].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[5].OpInfo = 5;  // RBP
+    }
+
+    rf->BeginAddress = 0;  // Relative to BaseAddress (rx_ptr)
+    rf->EndAddress = (DWORD)exec->size;
+    rf->UnwindData = (DWORD)((uint8_t *)ui - (uint8_t *)exec->rx_ptr);
+
+    if (RtlAddFunctionTable(rf, 1, (DWORD64)exec->rx_ptr)) {
+        exec->seh_registration = rf;
+        INFIX_DEBUG_PRINTF("Registered SEH PDATA at %p (XDATA at %p) for JIT code at %p", rf, ui, exec->rx_ptr);
+    }
+}
+#endif
 /**
  * @internal
  * @brief Frees a block of executable memory with use-after-free hardening.
@@ -348,6 +464,10 @@ void infix_executable_free(infix_executable_t exec) {
     if (exec.size == 0)
         return;
 #if defined(INFIX_OS_WINDOWS)
+#if defined(INFIX_ARCH_X64)
+    if (exec.seh_registration)
+        RtlDeleteFunctionTable((PRUNTIME_FUNCTION)exec.seh_registration);
+#endif
     if (exec.rw_ptr) {
         // Change protection to NOACCESS to catch use-after-free bugs immediately.
         if (!VirtualProtect(exec.rw_ptr, exec.size, PAGE_NOACCESS, &(DWORD){0}))
@@ -394,11 +514,16 @@ void infix_executable_free(infix_executable_t exec) {
  * re-read the newly written machine code instructions.
  *
  * @param exec The executable memory block.
+ * @param category The category of the trampoline.
+ * @param prologue_size The size of the prologue.
  * @return `true` on success, `false` on failure.
  */
-c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec) {
+c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
+                                                    infix_executable_category_t category,
+                                                    uint32_t prologue_size) {
     if (exec->rw_ptr == nullptr || exec->size == 0)
         return false;
+
     // On AArch64 (and other RISC architectures), the instruction and data caches can be
     // separate. We must explicitly flush the D-cache (where the JIT wrote the code)
     // and invalidate the I-cache so the CPU fetches the new instructions.
@@ -416,10 +541,16 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec) {
     // Use the GCC/Clang built-in for other platforms.
     __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);
 #endif
+
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
+    // On Windows x64, we register SEH unwind info before making the memory executable.
+#if defined(INFIX_ARCH_X64)
+    _infix_register_seh_windows_x64(exec, category, prologue_size);
+#endif
     // Finalize permissions to Read+Execute.
-    result = VirtualProtect(exec->rw_ptr, exec->size, PAGE_EXECUTE_READ, &(DWORD){0});
+    // We include the SEH metadata in the protected region.
+    result = VirtualProtect(exec->rw_ptr, exec->size + INFIX_SEH_METADATA_SIZE, PAGE_EXECUTE_READ, &(DWORD){0});
     if (!result)
         _infix_set_system_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_PROTECTION_FAILURE, GetLastError(), nullptr);
 #elif defined(INFIX_OS_MACOS)
@@ -571,8 +702,17 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
  * @param args_array A pointer to the `void**` array of argument pointers.
  */
 void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * return_value_ptr, void ** args_array) {
-    INFIX_DEBUG_PRINTF(
-        "Dispatching reverse call. Context: %p, User Fn: %p", (void *)context, context->user_callback_fn);
+    INFIX_DEBUG_PRINTF("Dispatching reverse call. Context: %p, User Fn: %p, ret=%p, args=%p",
+                       (void *)context,
+                       context->user_callback_fn,
+                       return_value_ptr,
+                       (void *)args_array);
+    if (args_array) {
+        for (size_t i = 0; i < context->num_args; i++) {
+            INFIX_DEBUG_PRINTF(
+                "  args[%zu] = %p (val: 0x%04X)", i, args_array[i], args_array[i] ? *(uint16_t *)args_array[i] : 0);
+        }
+    }
     if (context->user_callback_fn == nullptr) {
         // If no handler is set, do nothing. If the function has a return value,
         // it's good practice to zero it out to avoid returning garbage.

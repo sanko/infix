@@ -22,6 +22,7 @@
 // Use standard intrinsics if available, otherwise generic vectors.
 // This ensures we test the standard ABI types (__m128) on Windows x64.
 #if defined(__x86_64__) || defined(_M_X64)
+#ifdef __SSE2__
 #include <xmmintrin.h>
 typedef __m128 v4f;
 // Helper to create v4f from floats
@@ -67,10 +68,12 @@ void execute_vector_callback(v4f (*cb)(v4f, v4f)) {
        (double)r3);
 }
 #endif
+#endif
 
 TEST {
     plan(1);
 #if defined(__x86_64__) || defined(_M_X64)
+#ifdef __SSE2__
     subtest("128-bit Vector (v4f) Reverse Callback") {
         plan(3);
         infix_arena_t * arena = infix_arena_create(1024);
@@ -93,6 +96,9 @@ TEST {
         infix_reverse_destroy(ctx);
         infix_arena_destroy(arena);
     }
+#else
+    skip(1, "SSE2 support not enabled at compile-time");
+#endif
 #else
     skip(1, "SIMD tests only for x86-64");
 #endif

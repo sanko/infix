@@ -64,6 +64,7 @@ static const x64_xmm XMM_ARGS[] = {XMM0_REG, XMM1_REG, XMM2_REG, XMM3_REG};
 #define NUM_XMM_ARGS 4
 /** The size in bytes of the mandatory stack space reserved by the caller for the callee. */
 #define SHADOW_SPACE 32
+
 /** @brief The v-table of Windows x64 functions for generating forward trampolines. */
 static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
                                                        infix_call_frame_layout ** out_layout,
@@ -143,9 +144,10 @@ const infix_direct_forward_abi_spec g_win_x64_direct_forward_spec = {
  */
 static bool return_value_is_by_reference(const infix_type * type) {
     if (type->category == INFIX_TYPE_VECTOR) {
-// Windows x64 ABI (MSVC) returns ALL vectors in registers (XMM0, YMM0, ZMM0).
-// However, MinGW (GCC on Windows) diverges for __m256 and __m512, returning them via hidden pointer.
-#if defined(__MINGW32__) || defined(__MINGW64__)
+// Windows x64 ABI (MSVC and Clang) returns ALL vectors in registers (XMM0, YMM0, ZMM0).
+// However, MinGW GCC diverges for __m256 and __m512, returning them via hidden pointer.
+// We target specifically MinGW GCC by checking for __GNUC__ and excluding __clang__.
+#if defined(__GNUC__) && !defined(__clang__) && (defined(__MINGW32__) || defined(__MINGW64__))
         if (type->size > 16)
             return true;
 #endif
@@ -155,6 +157,11 @@ static bool return_value_is_by_reference(const infix_type * type) {
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION ||
         type->category == INFIX_TYPE_ARRAY || type->category == INFIX_TYPE_COMPLEX)
         return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
+
+    // Small scalar primitives (including float16) are returned by value.
+    if (type->category == INFIX_TYPE_PRIMITIVE && type->size <= 8)
+        return false;
+
 #if defined(INFIX_COMPILER_GCC)
     // GCC/Clang have a special case for returning long double by reference on Windows.
     if (is_long_double(type))
@@ -182,6 +189,10 @@ static bool is_passed_by_reference(const infix_type * type) {
     // Vectors of 256 bits or 512 bits are always passed by reference.
     if (type->category == INFIX_TYPE_VECTOR)
         return type->size >= 16;
+
+    // Small scalar primitives (including float16) are passed by value.
+    if (type->category == INFIX_TYPE_PRIMITIVE && type->size <= 8)
+        return false;
 
     return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
 }
@@ -237,7 +248,8 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
         if (current_type->alignment > max_align)
             max_align = current_type->alignment;
         // Detect vectors as FP so they get XMM slots if passed by value (<=16 bytes).
-        bool is_fp = is_float(current_type) || is_double(current_type) || (current_type->category == INFIX_TYPE_VECTOR);
+        bool is_fp = is_float16(current_type) || is_float(current_type) || is_double(current_type) ||
+            (current_type->category == INFIX_TYPE_VECTOR);
         // as FP register args in the slot assignment logic
         // (they go to GPR slots as pointers).
         bool is_ref = is_passed_by_reference(current_type);
@@ -311,9 +323,11 @@ static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_c
     emit_push_reg(buf, R14_REG);  // push r14 (will hold argument pointers array)
     emit_push_reg(buf, R15_REG);  // push r15 (will be a scratch register for data moves)
 
-    // FORCE ALIGNMENT.
-    // AND RSP, -max_align
-    emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
+    layout->prologue_size = (uint32_t)buf->size;
+
+    // FORCE 16-BYTE ALIGNMENT.
+    // AND RSP, -16
+    emit_and_reg_imm8(buf, RSP_REG, -16);
 
     // Move incoming trampoline arguments to non-volatile registers.
     if (layout->target_fn == nullptr) {           // Unbound: (target_fn, ret_ptr, args_ptr) in RCX, RDX, R8
@@ -328,6 +342,7 @@ static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_c
     // Allocate stack space for arguments and shadow space.
     if (layout->total_stack_alloc > 0)
         emit_sub_reg_imm32(buf, RSP_REG, (int32_t)layout->total_stack_alloc);
+
     return INFIX_SUCCESS;
 }
 /**
@@ -371,12 +386,19 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
             if (is_passed_by_reference(current_type))
                 // For Arrays/By-Ref Structs/Vectors: The data in R15 IS the pointer we want. Move it to destination.
                 emit_mov_reg_reg(buf, GPR_ARGS[loc->reg_index], R15_REG);
-            else if (layout->is_variadic && is_variadic_arg && (is_float(current_type) || is_double(current_type))) {
+            else if (layout->is_variadic && is_variadic_arg &&
+                     (is_float16(current_type) || is_float(current_type) || is_double(current_type))) {
                 // Variadic Rule: float/double are passed in both GPR and XMM.
                 x64_xmm xmm_reg = XMM_ARGS[loc->reg_index];
                 x64_gpr gpr_reg = GPR_ARGS[loc->reg_index];
-                emit_movsd_xmm_mem(buf, xmm_reg, R15_REG, 0);  // Load into XMM
-                emit_movq_gpr_xmm(buf, gpr_reg, xmm_reg);      // Copy from XMM to GPR
+                if (is_float16(current_type)) {
+                    emit_movzx_reg64_mem16(buf, gpr_reg, R15_REG, 0);
+                    emit_movq_xmm_gpr(buf, xmm_reg, gpr_reg);
+                }
+                else {
+                    emit_movsd_xmm_mem(buf, xmm_reg, R15_REG, 0);  // Load into XMM
+                    emit_movq_gpr_xmm(buf, gpr_reg, xmm_reg);      // Copy from XMM to GPR
+                }
             }
             else {
                 bool is_signed = current_type->category == INFIX_TYPE_PRIMITIVE && current_type->size <= 4 &&
@@ -397,7 +419,7 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
                     // Unsigned types (including small structs/bitfields) need zero extension
                     if (current_type->size == 1)
                         emit_movzx_reg64_mem8(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
-                    else if (current_type->size == 2)
+                    else if (current_type->size == 2 || is_float16(current_type))
                         emit_movzx_reg64_mem16(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
                     else if (current_type->size == 4)
                         emit_mov_reg32_mem(buf, GPR_ARGS[loc->reg_index], R15_REG, 0);
@@ -407,7 +429,13 @@ static infix_status generate_forward_argument_moves_win_x64(code_buffer * buf,
             }
         }
         else {  // ARG_LOCATION_XMM
-            if (is_float(current_type))
+            if (is_float16(current_type)) {
+                // Half-precision is passed in the low 16 bits of the XMM register.
+                // We use movzx to load exactly 16 bits from memory to avoid over-reading local variables.
+                emit_movzx_reg64_mem16(buf, RAX_REG, R15_REG, 0);
+                emit_movq_xmm_gpr(buf, XMM_ARGS[loc->reg_index], RAX_REG);
+            }
+            else if (is_float(current_type))
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else if (current_type->category == INFIX_TYPE_VECTOR)
                 emit_movups_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
@@ -483,7 +511,13 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
                                                       infix_type * ret_type) {
     // R13 holds the pointer to the FFI return buffer.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
-        if (is_float(ret_type))
+        if (is_float16(ret_type)) {
+            // Half-precision is returned in the low 16 bits of XMM0.
+            // movd eax, xmm0 ; mov [r13], ax
+            emit_movq_gpr_xmm(buf, RAX_REG, XMM0_REG);
+            emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
+        }
+        else if (is_float(ret_type))
             emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (is_double(ret_type))
             emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
@@ -502,6 +536,7 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
                 emit_mov_mem_reg8(buf, R13_REG, 0, RAX_REG);
                 break;
             case 2:
+                // This handles int16 and float16
                 emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
                 break;
             case 4:
@@ -515,6 +550,9 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
             }
         }
     }
+    if (layout->max_align >= 32)
+        emit_vzeroupper(buf);
+
     // Restore stack pointer to the saved registers area.
     // 4 registers pushed (R12, R13, R14, R15) relative to RBP.
     // LEA RSP, [RBP - 32]
@@ -641,14 +679,17 @@ static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_r
     emit_push_reg(buf, RSI_REG);
     emit_push_reg(buf, RDI_REG);
 
-    // FORCE ALIGNMENT.
-    // AND RSP, -max_align
-    emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
+    layout->prologue_size = (uint32_t)buf->size;
+
+    // FORCE STACK ALIGNMENT.
+    // Use the maximum alignment required by the signature (16, 32, or 64).
+    emit_and_reg_imm8(buf, RSP_REG, -(int8_t)layout->max_align);
 
     // Allocate all local stack space calculated in the prepare stage. This includes
     // space for register save areas, the return buffer, args_array, and shadow space.
     if (layout->total_stack_alloc > 0)
-        emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);
+        emit_sub_reg_imm32(buf, RSP_REG, (int32_t)layout->total_stack_alloc);
+
     return INFIX_SUCCESS;
 }
 /**
@@ -680,24 +721,35 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
                                                                   infix_reverse_call_frame_layout * layout,
                                                                   infix_reverse_t * context) {
     // Step 1: Save all potential incoming argument registers to our local stack.
-    // Use 64-byte offsets to support AVX-512 in the stack layout, but save only 128-bits for now to be safe.
+    // Use 64-byte offsets to support AVX-512 in the stack layout.
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 0 * 8, RCX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 1 * 8, RDX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 2 * 8, R8_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 3 * 8, R9_REG);
 
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 0 * 64, XMM0_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 1 * 64, XMM1_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 64, XMM2_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 64, XMM3_REG);
+    if (layout->max_align >= 32) {
+        // AVX enabled: Save full 256 bits
+        emit_vmovupd_mem_ymm(buf, RSP_REG, layout->xmm_save_area_offset + 0 * 64, XMM0_REG);
+        emit_vmovupd_mem_ymm(buf, RSP_REG, layout->xmm_save_area_offset + 1 * 64, XMM1_REG);
+        emit_vmovupd_mem_ymm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 64, XMM2_REG);
+        emit_vmovupd_mem_ymm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 64, XMM3_REG);
+    }
+    else {
+        // SSE only: Save 128 bits
+        emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 0 * 64, XMM0_REG);
+        emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 1 * 64, XMM1_REG);
+        emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 64, XMM2_REG);
+        emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 64, XMM3_REG);
+    }
 
     // Step 2: Populate the `args_array` with pointers to the argument data
-    size_t arg_pos_offset = return_value_is_by_reference(context->return_type) ? 1 : 0;
+    bool ret_by_ref = return_value_is_by_reference(context->return_type);
+    size_t arg_pos_offset = ret_by_ref ? 1 : 0;
     size_t stack_slot_offset = 0;  // Tracks arguments on the caller's stack.
     size_t current_saved_data_offset = 0;
     for (size_t i = 0; i < context->num_args; i++) {
         infix_type * current_type = context->arg_types[i];
-        bool is_fp = is_float(current_type) || is_double(current_type) ||
+        bool is_fp = is_float16(current_type) || is_float(current_type) || is_double(current_type) ||
             (current_type->category == INFIX_TYPE_VECTOR && current_type->size <= 16);
         bool passed_by_ref = is_passed_by_reference(current_type);
         size_t arg_pos = i + arg_pos_offset;
@@ -722,22 +774,44 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
                 if (use_xmm) {
                     reg_source_offset = layout->xmm_save_area_offset + (int32_t)arg_pos * 64;
                     if (current_type->category == INFIX_TYPE_VECTOR) {
-                        // Use 128-bit move for vectors
-                        emit_movups_xmm_mem(buf, XMM15_REG, RSP_REG, reg_source_offset);
-                        emit_movups_mem_xmm(buf, RSP_REG, arg_save_loc, XMM15_REG);
+                        // Use size-appropriate move for vectors
+                        if (current_type->size == 32) {
+                            emit_vmovupd_ymm_mem(buf, XMM4_REG, RSP_REG, reg_source_offset);
+                            emit_vmovupd_mem_ymm(buf, RSP_REG, arg_save_loc, XMM4_REG);
+                        }
+                        else {
+                            emit_movups_xmm_mem(buf, XMM4_REG, RSP_REG, reg_source_offset);
+                            emit_movups_mem_xmm(buf, RSP_REG, arg_save_loc, XMM4_REG);
+                        }
+                    }
+                    else if (is_float16(current_type)) {
+                        // Half-precision is in the low 16 bits of XMM register in save area.
+                        // We must load only 16 bits.
+                        emit_movzx_reg64_mem16(buf, RAX_REG, RSP_REG, reg_source_offset);
+                        emit_mov_mem_reg16(buf, RSP_REG, arg_save_loc, RAX_REG);
                     }
                     else {
                         if (is_float(current_type))
-                            emit_movss_xmm_mem(buf, XMM15_REG, RSP_REG, reg_source_offset);
+                            emit_movss_xmm_mem(buf, XMM4_REG, RSP_REG, reg_source_offset);
                         else
-                            emit_movsd_xmm_mem(buf, XMM15_REG, RSP_REG, reg_source_offset);
-                        emit_movsd_mem_xmm(buf, RSP_REG, arg_save_loc, XMM15_REG);
+                            emit_movsd_xmm_mem(buf, XMM4_REG, RSP_REG, reg_source_offset);
+                        emit_movsd_mem_xmm(buf, RSP_REG, arg_save_loc, XMM4_REG);
                     }
                 }
                 else {
                     reg_source_offset = layout->gpr_save_area_offset + (int32_t)arg_pos * 8;
-                    emit_mov_reg_mem(buf, RAX_REG, RSP_REG, reg_source_offset);
-                    emit_mov_mem_reg(buf, RSP_REG, arg_save_loc, RAX_REG);
+                    if (current_type->size == 1) {
+                        emit_movzx_reg64_mem8(buf, RAX_REG, RSP_REG, reg_source_offset);
+                        emit_mov_mem_reg8(buf, RSP_REG, arg_save_loc, RAX_REG);
+                    }
+                    else if (current_type->size == 2 || is_float16(current_type)) {
+                        emit_movzx_reg64_mem16(buf, RAX_REG, RSP_REG, reg_source_offset);
+                        emit_mov_mem_reg16(buf, RSP_REG, arg_save_loc, RAX_REG);
+                    }
+                    else {
+                        emit_mov_reg_mem(buf, RAX_REG, RSP_REG, reg_source_offset);
+                        emit_mov_mem_reg(buf, RSP_REG, arg_save_loc, RAX_REG);
+                    }
                 }
                 emit_lea_reg_mem(buf, RAX_REG, RSP_REG, arg_save_loc);
             }
@@ -746,6 +820,10 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
         }
         else {
             // Argument was passed on the caller's stack.
+            // [RBP] -> Saved RBP
+            // [RBP+8] -> Return Address
+            // [RBP+16..47] -> Shadow Space (32 bytes)
+            // [RBP+48..] -> Stack arguments
             int32_t caller_stack_offset = 16 + SHADOW_SPACE + (int32_t)(stack_slot_offset * 8);
             if (passed_by_ref)
                 emit_mov_reg_mem(buf, RAX_REG, RBP_REG, caller_stack_offset);
@@ -790,13 +868,18 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
     // Arg 2 (RDX): Load the pointer to the return value buffer.
     if (return_value_is_by_reference(context->return_type))
         // If the return is by reference, the original caller passed the destination
-        // pointer in RCX. We saved it in our GPR save area. Load it back now.
+        // pointer in RCX. We saved it in our GPR save area (Step 1 of marshalling).
         emit_mov_reg_mem(buf, RDX_REG, RSP_REG, layout->gpr_save_area_offset + 0 * 8);
     else
         // Otherwise, the return buffer is on our local stack. Load its address.
         emit_lea_reg_mem(buf, RDX_REG, RSP_REG, layout->return_buffer_offset);
+
     // Arg 3 (R8): Load the address of the `args_array` on our local stack.
     emit_lea_reg_mem(buf, R8_REG, RSP_REG, layout->args_array_offset);
+
+    if (layout->max_align >= 32)
+        emit_vzeroupper(buf);
+
     // Load the C dispatcher's address into a scratch register (R9) and call it.
     emit_mov_reg_imm64(buf, R9_REG, (uint64_t)context->internal_dispatcher);
     emit_call_reg(buf, R9_REG);
@@ -821,6 +904,16 @@ static infix_status generate_reverse_dispatcher_call_win_x64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                                                       infix_reverse_call_frame_layout * layout,
                                                       infix_reverse_t * context) {
+    if (layout->max_align >= 32) {
+        // Only call VZEROUPPER if we aren't returning a value in YMM/ZMM registers,
+        // as VZEROUPPER would zero the upper half of the result.
+        bool returning_large_vector =
+            (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size >= 32 &&
+             !return_value_is_by_reference(context->return_type));
+        if (!returning_large_vector)
+            emit_vzeroupper(buf);
+    }
+
     // Handle the return value after the dispatcher returns.
     if (context->return_type->category != INFIX_TYPE_VOID) {
         if (return_value_is_by_reference(context->return_type))
@@ -843,6 +936,11 @@ static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
                 else  // size 16
                     emit_movups_xmm_mem(buf, XMM0_REG, RSP_REG, layout->return_buffer_offset);
             }
+            else if (is_float16(context->return_type)) {
+                // Half-precision is returned in the low 16 bits of XMM0.
+                emit_movzx_reg64_mem16(buf, RAX_REG, RSP_REG, layout->return_buffer_offset);
+                emit_movq_xmm_gpr(buf, XMM0_REG, RAX_REG);
+            }
             else if (is_float(context->return_type))
                 emit_movss_xmm_mem(buf, XMM0_REG, RSP_REG, layout->return_buffer_offset);
             else if (is_double(context->return_type))
@@ -854,12 +952,14 @@ static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
     }
     // Restore stack pointer to the saved registers area.
     // 2 registers pushed (RSI, RDI) = 16 bytes.
-    // LEA RSP, [RBP - 16]
+    // We pushed RSI then RDI AFTER mov rbp, rsp.
+    // So RSI is at RBP-8, RDI is at RBP-16.
     emit_lea_reg_mem(buf, RSP_REG, RBP_REG, -16);
 
     emit_pop_reg(buf, RDI_REG);
     emit_pop_reg(buf, RSI_REG);
     emit_pop_reg(buf, RBP_REG);
+
     emit_ret(buf);
     return INFIX_SUCCESS;
 }
@@ -924,7 +1024,7 @@ static infix_status prepare_direct_forward_call_frame_win_x64(infix_arena_t * ar
         }
 
         // Determine final ABI location.
-        bool is_fp = is_float(type) || is_double(type) || (type->category == INFIX_TYPE_VECTOR);
+        bool is_fp = is_float16(type) || is_float(type) || is_double(type) || (type->category == INFIX_TYPE_VECTOR);
         bool by_ref =
             is_passed_by_reference(type) || (type->category == INFIX_TYPE_POINTER && handlers[i].aggregate_marshaller);
 
@@ -996,9 +1096,11 @@ static infix_status generate_direct_forward_prologue_win_x64(code_buffer * buf,
     emit_push_reg(buf, R14_REG);  // Will hold language objects array pointer
     emit_push_reg(buf, R15_REG);  // Will hold target function address
 
-    // FORCE 16-BYTE ALIGNMENT.
-    // AND RSP, -16 (48 83 E4 F0)
-    emit_and_reg_imm8(buf, RSP_REG, -16);
+    layout->prologue_size = (uint32_t)buf->size;
+
+    // FORCE 64-BYTE ALIGNMENT.
+    // AND RSP, -64 (48 83 E4 C0)
+    emit_and_reg_imm8(buf, RSP_REG, -64);
 
     // The direct CIF is called with (ret_ptr, lang_args) in RCX, RDX.
     emit_mov_reg_reg(buf, R13_REG, RCX_REG);  // r13 = ret_ptr
@@ -1007,6 +1109,7 @@ static infix_status generate_direct_forward_prologue_win_x64(code_buffer * buf,
     // Allocate all stack space.
     if (layout->total_stack_alloc > 0)
         emit_sub_reg_imm32(buf, RSP_REG, (int32_t)layout->total_stack_alloc);
+
     return INFIX_SUCCESS;
 }
 
@@ -1141,7 +1244,13 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
                                                              infix_type * ret_type) {
     // 1. Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
-        if (is_float(ret_type))
+        if (is_float16(ret_type)) {
+            // Half-precision is returned in the low 16 bits of XMM0.
+            // movd eax, xmm0 ; mov [r13], ax
+            emit_movq_gpr_xmm(buf, RAX_REG, XMM0_REG);
+            emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
+        }
+        else if (is_float(ret_type))
             emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
         else if (is_double(ret_type))
             emit_movsd_mem_xmm(buf, R13_REG, 0, XMM0_REG);
@@ -1199,6 +1308,19 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
     }
 
     // 3. Safe Epilogue
+    // If AVX was potentially used, clear the upper bits of YMM registers.
+    // Note: We'll add max_align to direct layout in the next step.
+    // For now, let's assume if any arg was a vector, we might have used AVX.
+    bool maybe_avx = false;
+    for (size_t i = 0; i < layout->num_args; i++) {
+        if (layout->args[i].type->category == INFIX_TYPE_VECTOR && layout->args[i].type->size >= 32) {
+            maybe_avx = true;
+            break;
+        }
+    }
+    if (maybe_avx || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size >= 32))
+        emit_vzeroupper(buf);
+
     // Restore stack pointer to the saved registers area.
     // 4 registers pushed (R12, R13, R14, R15) = 32 bytes.
     // LEA RSP, [RBP - 32]
@@ -1209,6 +1331,7 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
     emit_pop_reg(buf, R13_REG);
     emit_pop_reg(buf, R12_REG);
     emit_pop_reg(buf, RBP_REG);
+
     emit_ret(buf);
 
     return INFIX_SUCCESS;

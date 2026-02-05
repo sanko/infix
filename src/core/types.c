@@ -115,6 +115,15 @@ static infix_type _infix_type_uint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT128,
 /** @internal Static singleton for the `__int128_t` primitive type (GCC/Clang only). */
 static infix_type _infix_type_sint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT128, __int128_t);
 #endif
+/** @internal Static singleton for the `_Float16` primitive type. */
+static infix_type _infix_type_float16 = {.name = nullptr,
+                                         .category = INFIX_TYPE_PRIMITIVE,
+                                         .size = 2,
+                                         .alignment = 2,
+                                         .is_arena_allocated = false,
+                                         .arena = nullptr,
+                                         .source_offset = 0,
+                                         .meta.primitive_id = INFIX_PRIMITIVE_FLOAT16};
 /** @internal Static singleton for the `float` primitive type. */
 static infix_type _infix_type_float = INFIX_TYPE_INIT(INFIX_PRIMITIVE_FLOAT, float);
 /** @internal Static singleton for the `double` primitive type. */
@@ -158,6 +167,8 @@ INFIX_API c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive
     case INFIX_PRIMITIVE_SINT128:
         return &_infix_type_sint128;
 #endif
+    case INFIX_PRIMITIVE_FLOAT16:
+        return &_infix_type_float16;
     case INFIX_PRIMITIVE_FLOAT:
         return &_infix_type_float;
     case INFIX_PRIMITIVE_DOUBLE:

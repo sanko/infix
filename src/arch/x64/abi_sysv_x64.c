@@ -196,7 +196,7 @@ static bool classify_recursive(
         size_t end_offset = start_offset + type->size - 1;
         size_t start_eightbyte = start_offset / 8;
         size_t end_eightbyte = end_offset / 8;
-        arg_class_t new_class = (is_float(type) || is_double(type)) ? SSE : INTEGER;
+        arg_class_t new_class = (is_float16(type) || is_float(type) || is_double(type)) ? SSE : INTEGER;
         for (size_t index = start_eightbyte; index <= end_eightbyte && index < 2; ++index) {
             // Merge the new class with the existing class for this eightbyte.
             // The rule is: if an eightbyte contains both SSE and INTEGER parts, it is classified as INTEGER.
@@ -459,7 +459,7 @@ static infix_status prepare_forward_call_frame_sysv_x64(infix_arena_t * arena,
             classify_aggregate_sysv(type, classes, &num_classes);
         else {
             // Simple primitive and vector types are classified directly.
-            if (is_float(type) || is_double(type) || type->category == INFIX_TYPE_VECTOR) {
+            if (is_float16(type) || is_float(type) || is_double(type) || type->category == INFIX_TYPE_VECTOR) {
                 classes[0] = SSE;
                 num_classes = 1;
                 // Special classification for large AVX vectors (YMM/ZMM).
@@ -668,7 +668,14 @@ static infix_status generate_forward_argument_moves_sysv_x64(code_buffer * buf,
                 break;
             }
         case ARG_LOCATION_XMM:
-            if (is_float(arg_types[i]))
+            if (is_float16(arg_types[i]))
+                // movzx eax, word ptr [r15] ; movd xmm_reg, eax
+                // Half-precision is passed in the low 16 bits of the XMM register.
+                // We use a temporary GPR to avoid unaligned 16-bit loads directly into XMM if possible,
+                // although movd/movss would also work.
+                emit_movzx_reg64_mem16(buf, RAX_REG, R15_REG, 0),
+                    emit_movq_xmm_gpr(buf, XMM_ARGS[loc->reg_index], RAX_REG);
+            else if (is_float(arg_types[i]))
                 // movss xmm_reg, [r15] (Move Scalar Single-Precision)
                 emit_movss_xmm_mem(buf, XMM_ARGS[loc->reg_index], R15_REG, 0);
             else if (arg_types[i]->category == INFIX_TYPE_VECTOR && arg_types[i]->size == 32)
@@ -791,7 +798,12 @@ static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
             }
             if (num_classes == 1) {  // Returned in a single register
                 if (classes[0] == SSE) {
-                    if (is_float(ret_type))
+                    if (is_float16(ret_type)) {
+                        // movd eax, xmm0 ; mov [r13], ax
+                        emit_movq_gpr_xmm(buf, RAX_REG, XMM0_REG);
+                        emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
+                    }
+                    else if (is_float(ret_type))
                         emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);  // movss [r13], xmm0
                     else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32)
                         emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);  // AVX case
@@ -997,7 +1009,8 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
         if (is_aggregate) {
             classify_aggregate_sysv(current_type, classes, &num_classes);
         }
-        else if (is_float(current_type) || is_double(current_type) || current_type->category == INFIX_TYPE_VECTOR) {
+        else if (is_float16(current_type) || is_float(current_type) || is_double(current_type) ||
+                 current_type->category == INFIX_TYPE_VECTOR) {
             classes[0] = SSE;
             num_classes = 1;
         }
@@ -1025,6 +1038,11 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
                             emit_vmovupd_mem_ymm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
                         else  // size 16 or other
                             emit_movups_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                    }
+                    else if (is_float16(current_type)) {
+                        // movd eax, xmm_reg ; mov [rbp + arg_save_loc], ax
+                        emit_movq_gpr_xmm(buf, RAX_REG, XMM_ARGS[xmm_idx++]);
+                        emit_mov_mem_reg16(buf, RBP_REG, arg_save_loc, RAX_REG);
                     }
                     else if (is_float(current_type))
                         emit_movss_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);

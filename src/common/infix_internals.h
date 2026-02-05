@@ -55,7 +55,8 @@
  */
 typedef struct {
 #if defined(INFIX_OS_WINDOWS)
-    HANDLE handle; /**< The handle from `VirtualAlloc`, needed for `VirtualFree`. */
+    HANDLE handle;           /**< The handle from `VirtualAlloc`, needed for `VirtualFree`. */
+    void * seh_registration; /**< (Windows x64) Opaque handle from `RtlAddFunctionTable`. */
 #else
     int shm_fd; /**< The file descriptor for shared memory on dual-mapping POSIX systems. -1 otherwise. */
 #endif
@@ -289,6 +290,7 @@ typedef struct {
     size_t num_args;             /**< The total number of arguments. */
     void * target_fn;            /**< The target function address. */
     uint32_t max_align;          /**< Maximum required alignment for any argument or the stack. */
+    uint32_t prologue_size;      /**< Size of the generated prologue in bytes. */
 } infix_call_frame_layout;
 /**
  * @struct infix_reverse_call_frame_layout
@@ -305,6 +307,7 @@ typedef struct {
     int32_t gpr_save_area_offset; /**< (Win x64) Stack offset for saving non-volatile GPRs. */
     int32_t xmm_save_area_offset; /**< (Win x64) Stack offset for saving non-volatile XMMs. */
     uint32_t max_align;           /**< Maximum required alignment for any argument or the stack. */
+    uint32_t prologue_size;       /**< Size of the generated prologue in bytes. */
 } infix_reverse_call_frame_layout;
 /**
  * @brief Defines the ABI-specific implementation interface for forward trampolines.
@@ -465,6 +468,7 @@ typedef struct {
     void * target_fn;                ///< The target C function address.
     bool return_value_in_memory;     ///< `true` if the return value uses a hidden pointer argument.
     infix_direct_arg_layout * args;  ///< An array of layout info for each argument.
+    uint32_t prologue_size;          ///< Size of the generated prologue in bytes.
 } infix_direct_call_frame_layout;
 
 /**
@@ -668,15 +672,25 @@ INFIX_INTERNAL c23_nodiscard infix_executable_t infix_executable_alloc(size_t si
  * @param exec The handle to the memory block to free.
  */
 INFIX_INTERNAL void infix_executable_free(infix_executable_t exec);
+typedef enum {
+    INFIX_EXECUTABLE_FORWARD,
+    INFIX_EXECUTABLE_REVERSE,
+    INFIX_EXECUTABLE_DIRECT
+} infix_executable_category_t;
+
 /**
  * @brief Makes a block of JIT memory executable, completing the W^X process.
  * @details Located in `src/jit/executor.c`. For single-map platforms, this calls
  * `VirtualProtect` or `mprotect`. For dual-map platforms, this is a no-op. It
  * also handles instruction cache flushing on relevant architectures like AArch64.
  * @param exec The handle to the memory block to make executable.
+ * @param prologue_size The size of the generated prologue in bytes.
+ * @param category The type of trampoline being finalized.
  * @return `true` on success, `false` on failure.
  */
-INFIX_INTERNAL c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec);
+INFIX_INTERNAL c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
+                                                                   infix_executable_category_t category,
+                                                                   uint32_t prologue_size);
 /**
  * @brief Allocates a block of standard memory for later protection.
  * @details Located in `src/jit/executor.c`. This is used to allocate the memory
@@ -711,6 +725,7 @@ INFIX_INTERNAL c23_nodiscard bool infix_protected_make_readonly(infix_protected_
 INFIX_INTERNAL void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context,
                                                              void * return_value_ptr,
                                                              void ** args_array);
+
 // Utility Macros & Inlines
 /** @brief Appends a sequence of bytes (e.g., an instruction opcode) to a code buffer. */
 #define EMIT_BYTES(buf, ...)                             \
@@ -728,7 +743,15 @@ static inline size_t _infix_align_up(size_t value, size_t alignment) {
     return (value + alignment - 1) & ~(alignment - 1);
 }
 /**
- * @brief A fast inline check to determine if an `infix_type` is a `float`.
+ * @brief A fast inline check to determine if an `infix_type` is a half-precision float (`float16`).
+ * @param type The type to check.
+ * @return `true` if the type is a float16 primitive.
+ */
+static inline bool is_float16(const infix_type * type) {
+    return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_FLOAT16;
+}
+/**
+ * @brief A fast inline check to determine if an `infix_type` is a `float` (32-bit).
  * @param type The type to check.
  * @return `true` if the type is a float primitive.
  */

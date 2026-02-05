@@ -687,6 +687,17 @@ INFIX_INTERNAL void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, i
 }
 /**
  * @internal
+ * @brief Emits `vzeroupper` to clear the upper bits of all YMM/ZMM registers.
+ * @details Opcode format: VEX.128.0F.77
+ */
+INFIX_INTERNAL void emit_vzeroupper(code_buffer * buf) {
+    // VEX.128.0F.77 (C5 F8 77)
+    // L=0 (128-bit), p=0 (no prefix), m-mmmm=1 (0F map), vvvv=1111 (none)
+    emit_vex_prefix(buf, 0, 0, 0, 1, 0, 0, 0, 0);
+    emit_byte(buf, 0x77);
+}
+/**
+ * @internal
  * @brief Emits `cvtsd2ss xmm1, xmm2/m64` to convert a double to a float.
  * @details Opcode format: F2 0F 5A /r
  */

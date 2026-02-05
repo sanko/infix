@@ -433,17 +433,18 @@ INFIX_INTERNAL void emit_arm64_ldp_post_index(
 // Memory <-> VPR (SIMD/FP) Emitters
 /*
  * Implementation for emit_arm64_ldr_vpr.
- * Encodes `LDR <St|Dt>, [<Xn|SP>, #imm]`.
+ * Encodes `LDR <Ht|St|Dt>, [<Xn|SP>, #imm]`.
  * Opcode (64-bit, D reg): 11_111_10_1_01_... (base 0xBD400000)
  * Opcode (32-bit, S reg): 10_111_10_1_01_... (base 0x7D400000)
+ * Opcode (16-bit, H reg): 01_111_10_1_01_... (base 0x3D400000)
  */
-INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, bool is64, arm64_vpr dest, arm64_gpr base, int32_t offset) {
+INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, size_t size, arm64_vpr dest, arm64_gpr base, int32_t offset) {
     if (buf->error)
         return;
-    const int scale = is64 ? 8 : 4;
+    const int scale = (int)size;
     if (offset >= 0 && offset % scale == 0 && (offset / scale) <= 0xFFF) {
         uint32_t instr = 0x3d400000;
-        uint32_t size_bits = is64 ? 0b11 : 0b10;
+        uint32_t size_bits = (size == 8) ? 0b11 : (size == 4) ? 0b10 : 0b01;
         instr |= (size_bits << 30);
         instr |= ((uint32_t)(offset / scale) & 0xFFF) << 10;
         instr |= (uint32_t)(base & 0x1F) << 5;
@@ -456,22 +457,23 @@ INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, bool is64, arm64_vpr d
             emit_arm64_add_imm(buf, true, false, X16_REG, base, (uint32_t)offset);
         else
             emit_arm64_sub_imm(buf, true, false, X16_REG, base, (uint32_t)(-offset));
-        emit_arm64_ldr_vpr(buf, is64, dest, X16_REG, 0);
+        emit_arm64_ldr_vpr(buf, size, dest, X16_REG, 0);
     }
 }
 /*
  * Implementation for emit_arm64_str_vpr.
- * Encodes `STR <St|Dt>, [<Xn|SP>, #imm]`.
+ * Encodes `STR <Ht|St|Dt>, [<Xn|SP>, #imm]`.
  * Opcode (64-bit, D reg): 11_111_10_1_00_... (base 0xBD000000)
  * Opcode (32-bit, S reg): 10_111_10_1_00_... (base 0x7D000000)
+ * Opcode (16-bit, H reg): 01_111_10_1_00_... (base 0x3D000000)
  */
-INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, bool is64, arm64_vpr src, arm64_gpr base, int32_t offset) {
+INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, size_t size, arm64_vpr src, arm64_gpr base, int32_t offset) {
     if (buf->error)
         return;
-    const int scale = is64 ? 8 : 4;
+    const int scale = (int)size;
     if (offset >= 0 && offset % scale == 0 && (offset / scale) <= 0xFFF) {
         uint32_t instr = 0x3d000000;
-        uint32_t size_bits = is64 ? 0b11 : 0b10;
+        uint32_t size_bits = (size == 8) ? 0b11 : (size == 4) ? 0b10 : 0b01;
         instr |= (size_bits << 30);
         instr |= ((uint32_t)(offset / scale) & 0xFFF) << 10;
         instr |= (uint32_t)(base & 0x1F) << 5;
@@ -484,7 +486,7 @@ INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, bool is64, arm64_vpr s
             emit_arm64_add_imm(buf, true, false, X16_REG, base, (uint32_t)offset);
         else
             emit_arm64_sub_imm(buf, true, false, X16_REG, base, (uint32_t)(-offset));
-        emit_arm64_str_vpr(buf, is64, src, X16_REG, 0);
+        emit_arm64_str_vpr(buf, size, src, X16_REG, 0);
     }
 }
 /*
