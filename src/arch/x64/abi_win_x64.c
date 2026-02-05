@@ -230,9 +230,12 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
     if (layout->return_value_in_memory)
         arg_position++;  // The hidden return pointer consumes the first slot (RCX).
     size_t current_stack_offset = SHADOW_SPACE;
+    size_t max_align = 16;
     layout->num_stack_args = 0;
     for (size_t i = 0; i < num_args; ++i) {
         infix_type * current_type = arg_types[i];
+        if (current_type->alignment > max_align)
+            max_align = current_type->alignment;
         // Detect vectors as FP so they get XMM slots if passed by value (<=16 bytes).
         bool is_fp = is_float(current_type) || is_double(current_type) || (current_type->category == INFIX_TYPE_VECTOR);
         // as FP register args in the slot assignment logic
@@ -252,6 +255,7 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
         }
         else {
             layout->arg_locations[i].type = ARG_LOCATION_STACK;
+            current_stack_offset = _infix_align_up(current_stack_offset, current_type->alignment);
             layout->arg_locations[i].stack_offset = (uint32_t)current_stack_offset;
             layout->num_stack_args++;
             // Calculate space needed on the stack for this argument.
@@ -265,9 +269,13 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
             }
         }
     }
-    size_t total_stack_arg_size = current_stack_offset - SHADOW_SPACE;
-    // Total allocation must include shadow space and be 16-byte aligned.
-    layout->total_stack_alloc = (SHADOW_SPACE + total_stack_arg_size + 15) & ~15;
+    if (ret_type->alignment > max_align)
+        max_align = ret_type->alignment;
+
+    size_t total_stack_arg_size = current_stack_offset;
+    // Total allocation must include shadow space and be aligned to max_align.
+    layout->total_stack_alloc = (uint32_t)_infix_align_up(total_stack_arg_size, max_align);
+    layout->max_align = (uint32_t)max_align;
     // Prevent integer overflow and excessive stack allocation.
     if (layout->total_stack_alloc > INFIX_MAX_STACK_ALLOC) {
         fprintf(stderr, "Error: Calculated stack allocation exceeds safe limit of %d bytes.\n", INFIX_MAX_STACK_ALLOC);
@@ -303,9 +311,9 @@ static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_c
     emit_push_reg(buf, R14_REG);  // push r14 (will hold argument pointers array)
     emit_push_reg(buf, R15_REG);  // push r15 (will be a scratch register for data moves)
 
-    // FORCE 16-BYTE ALIGNMENT.
-    // AND RSP, -16 (48 83 E4 F0)
-    EMIT_BYTES(buf, 0x48, 0x83, 0xE4, 0xF0);
+    // FORCE ALIGNMENT.
+    // AND RSP, -max_align
+    emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
 
     // Move incoming trampoline arguments to non-volatile registers.
     if (layout->target_fn == nullptr) {           // Unbound: (target_fn, ret_ptr, args_ptr) in RCX, RDX, R8
@@ -558,12 +566,13 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
             _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
+        size_t align = context->arg_types[i]->alignment;
+        if (align < 8)
+            align = 8;
+        if (align > max_align)
+            max_align = align;
+
         if (!is_passed_by_reference(context->arg_types[i])) {
-            size_t align = context->arg_types[i]->alignment;
-            if (align < 8)
-                align = 8;
-            if (align > max_align)
-                max_align = align;
             saved_args_data_size = _infix_align_up(saved_args_data_size, align);
             saved_args_data_size += context->arg_types[i]->size;
         }
@@ -588,24 +597,23 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
         return INFIX_ERROR_LAYOUT_FAILED;
     }
 
-    // The total allocation for the stack frame must be 16-byte aligned.
-    // When we enter the function, RSP is 8-byte aligned (after call).
-    // After 'push rbp', RSP is 16-byte aligned.
-    // After 'push rsi', 'push rdi', RSP is 16-byte aligned (2 * 8 = 16).
-    // After 'and rsp, -16', RSP is 16-byte aligned.
-    // So 'total_stack_alloc' must be a multiple of 16 to keep it aligned for the dispatcher call.
-    layout->total_stack_alloc = _infix_align_up(total_local_space, 16);
+    // The total allocation for the stack frame must be aligned to the maximum required alignment.
+    layout->total_stack_alloc = (uint32_t)_infix_align_up(total_local_space, max_align);
 
     // Define the layout of our local stack variables relative to RSP after allocation.
     // [ shadow space (32) | return_buffer | gpr_save | xmm_save | args_array | (padding) | saved_args_data ]
-    layout->return_buffer_offset = SHADOW_SPACE;
-    layout->gpr_save_area_offset = layout->return_buffer_offset + (int32_t)return_size;
-    layout->xmm_save_area_offset = layout->gpr_save_area_offset + (int32_t)gpr_reg_save_area_size;
-    layout->args_array_offset = layout->xmm_save_area_offset + (int32_t)xmm_reg_save_area_size;
+    layout->return_buffer_offset = (int32_t)_infix_align_up(SHADOW_SPACE, max_align);
+    layout->gpr_save_area_offset = layout->return_buffer_offset + (int32_t)_infix_align_up(return_size, max_align);
+    layout->xmm_save_area_offset =
+        layout->gpr_save_area_offset + (int32_t)_infix_align_up(gpr_reg_save_area_size, max_align);
+    layout->args_array_offset =
+        layout->xmm_save_area_offset + (int32_t)_infix_align_up(xmm_reg_save_area_size, max_align);
 
     // Ensure proper alignment for the saved arguments area.
     layout->saved_args_offset =
         (int32_t)_infix_align_up((size_t)(layout->args_array_offset + args_array_size), max_align);
+
+    layout->max_align = (uint32_t)max_align;
 
     *out_layout = layout;
     return INFIX_SUCCESS;
@@ -633,9 +641,9 @@ static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_r
     emit_push_reg(buf, RSI_REG);
     emit_push_reg(buf, RDI_REG);
 
-    // FORCE 16-BYTE ALIGNMENT.
-    // AND RSP, -16 (48 83 E4 F0)
-    EMIT_BYTES(buf, 0x48, 0x83, 0xE4, 0xF0);
+    // FORCE ALIGNMENT.
+    // AND RSP, -max_align
+    emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
 
     // Allocate all local stack space calculated in the prepare stage. This includes
     // space for register save areas, the return buffer, args_array, and shadow space.
@@ -990,7 +998,7 @@ static infix_status generate_direct_forward_prologue_win_x64(code_buffer * buf,
 
     // FORCE 16-BYTE ALIGNMENT.
     // AND RSP, -16 (48 83 E4 F0)
-    EMIT_BYTES(buf, 0x48, 0x83, 0xE4, 0xF0);
+    emit_and_reg_imm8(buf, RSP_REG, -16);
 
     // The direct CIF is called with (ret_ptr, lang_args) in RCX, RDX.
     emit_mov_reg_reg(buf, R13_REG, RCX_REG);  // r13 = ret_ptr

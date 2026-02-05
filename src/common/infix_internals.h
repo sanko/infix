@@ -288,6 +288,7 @@ typedef struct {
     size_t num_stack_args;       /**< The number of arguments passed on the stack. */
     size_t num_args;             /**< The total number of arguments. */
     void * target_fn;            /**< The target function address. */
+    uint32_t max_align;          /**< Maximum required alignment for any argument or the stack. */
 } infix_call_frame_layout;
 /**
  * @struct infix_reverse_call_frame_layout
@@ -303,6 +304,7 @@ typedef struct {
     int32_t saved_args_offset;    /**< Stack offset for the area where argument data is stored/marshalled. */
     int32_t gpr_save_area_offset; /**< (Win x64) Stack offset for saving non-volatile GPRs. */
     int32_t xmm_save_area_offset; /**< (Win x64) Stack offset for saving non-volatile XMMs. */
+    uint32_t max_align;           /**< Maximum required alignment for any argument or the stack. */
 } infix_reverse_call_frame_layout;
 /**
  * @brief Defines the ABI-specific implementation interface for forward trampolines.

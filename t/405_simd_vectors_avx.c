@@ -41,9 +41,12 @@ void v8f_add_handler(infix_reverse_t * ctx, void * ret, void ** args) {
 }
 
 void execute_v8f_callback(v8f (*cb)(v8f, v8f)) {
+    note("Setting up vectors a and b");
     v8f a = v8f_set(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f);
     v8f b = v8f_set(10.0f, 20.0f, 30.0f, 40.0f, 50.0f, 60.0f, 70.0f, 80.0f);
+    note("Calling JIT-compiled callback");
     v8f result = cb(a, b);
+    note("Callback returned successfully");
     bool pass = true;
     for (int i = 0; i < 8; i++) {
         float expected = (float)(i + 1) + (float)((i + 1) * 10);

@@ -866,6 +866,17 @@ INFIX_INTERNAL void emit_sub_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t i
 }
 /**
  * @internal
+ * @brief Emits `and r64, imm8` to perform a bitwise AND with a sign-extended 8-bit immediate.
+ * @details Opcode format: REX.W 83 /4 ib
+ */
+INFIX_INTERNAL void emit_and_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm) {
+    emit_rex_prefix(buf, 1, 0, 0, reg >= R8_REG);
+    emit_byte(buf, 0x83);
+    emit_modrm(buf, 3, 4, reg % 8);  // mod=11, reg=/4 for AND
+    emit_byte(buf, (uint8_t)imm);
+}
+/**
+ * @internal
  * @brief Emits `add r/m64, imm8` (sign-extended) to a GPR.
  * @details Opcode format: REX.W + 83 /0 ib
  */

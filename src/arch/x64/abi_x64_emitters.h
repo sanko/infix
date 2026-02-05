@@ -115,6 +115,8 @@ INFIX_INTERNAL void emit_add_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm
 INFIX_INTERNAL void emit_add_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm);
 /** @internal @brief Emits `sub r64, imm32` to subtract a 32-bit immediate from a GPR. */
 INFIX_INTERNAL void emit_sub_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm);
+/** @internal @brief Emits `and r64, imm8` to perform a bitwise AND with a sign-extended 8-bit immediate. */
+INFIX_INTERNAL void emit_and_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm);
 /** @internal @brief Emits `dec r64` to decrement a 64-bit register by 1. */
 INFIX_INTERNAL void emit_dec_reg(code_buffer * buf, x64_gpr reg);
 

@@ -66,52 +66,6 @@ $config{is_windows} = ( $^O =~ /MSWin32|msys|cygwin/i );
 # Base CFLAGS that will be modified by ABI forcing or other options
 my @base_cflags;
 
-# Enable verbose/debug mode if requested
-if ( $opts{verbose} ) {
-    print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
-    push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
-}
-
-# Environment Detection
-$config{arch} = 'x64';
-my $host_arch_raw = '';
-if ( $config{is_windows} ) {
-    if ( $ENV{PROCESSOR_IDENTIFIER} =~ m[ARM]i ) {
-        $config{arch} = 'arm64';
-        $host_arch_raw = 'arm64';
-    }
-    else {
-        $config{arch} = 'x64';
-        $host_arch_raw = 'x86_64';
-    }
-}
-else {
-    $host_arch_raw = `uname -m`;
-    chomp $host_arch_raw;
-    $config{arch} = $host_arch_raw;
-    $config{arch} = 'arm64' if $config{arch} eq 'arm64'  || $config{arch} eq 'aarch64' || $config{arch} eq 'evbarm';
-    $config{arch} = 'x64'   if $config{arch} eq 'x86_64' || $config{arch} eq 'amd64';
-}
-die "Could not determine architecture for $^O" unless $config{arch};
-
-# ABI Forcing
-if ( $opts{abi} ) {
-    my $forced_abi = lc( $opts{abi} );
-    print "User is forcing ABI to: $forced_abi (for code generation logic only)\n";
-    if ( $forced_abi eq 'windows_x64' ) {
-        push @base_cflags, '-DINFIX_FORCE_ABI_WINDOWS_X64';
-    }
-    elsif ( $forced_abi eq 'sysv_x64' ) {
-        push @base_cflags, '-DINFIX_FORCE_ABI_SYSV_X64';
-    }
-    elsif ( $forced_abi eq 'aapcs64' ) {
-        push @base_cflags, '-DINFIX_FORCE_ABI_AAPCS64';
-    }
-    else {
-        die "Error: Unknown ABI '$forced_abi'. Supported values are: windows_x64, sysv_x64, aapcs64.";
-    }
-}
-
 # Compiler Selection
 my %valid_compilers = map { $_ => 1 } qw[msvc gcc egcc clang];
 my $compiler_arg    = $opts{cc} || '';
@@ -124,6 +78,55 @@ $config{compiler}
         'gcc' );
 if ( $is_fuzz_build && ( $config{compiler} ne 'clang' && $config{compiler} ne 'gcc' && $config{compiler} ne 'egcc' ) ) {
     die "Error: Fuzzing requires the 'clang' compiler for libFuzzer support, or 'gcc'/'egcc' for AFL++ support.";
+}
+
+# Environment Detection
+$config{arch} = 'x64';
+my $host_arch_raw = '';
+if ( $config{is_windows} ) {
+
+    # On Windows, environment variables can be misleading due to emulation.
+    # Try to ask the compiler for its default target.
+    my $cc = ( $config{compiler} && $config{compiler} eq 'msvc' ) ? 'cl' : ( $opts{cc} || 'gcc' );
+    if ( $config{compiler} && $config{compiler} ne 'msvc' && command_exists($cc) ) {
+        my $dump = `$cc -dumpmachine 2>&1`;
+        if ( $dump =~ /aarch64|arm64/i ) {
+            $config{arch} = 'arm64';
+            $host_arch_raw = 'arm64';
+        }
+        elsif ( $dump =~ /x86_64|amd64|i686|i386/i ) {
+            $config{arch} = 'x64';
+            $host_arch_raw = 'x86_64';
+        }
+    }
+
+    # Fallback to environment variables if compiler check was inconclusive
+    if ( !$host_arch_raw ) {
+        if ( ( $ENV{PROCESSOR_IDENTIFIER} || '' ) =~ m[ARM]i || ( $ENV{PROCESSOR_ARCHITECTURE} || '' ) =~ /ARM64/i ) {
+            $config{arch} = 'arm64';
+            $host_arch_raw = 'arm64';
+        }
+        else {
+            $config{arch} = 'x64';
+            $host_arch_raw = 'x86_64';
+        }
+    }
+}
+else {
+    $host_arch_raw = `uname -m`;
+    chomp $host_arch_raw;
+    $config{arch} = $host_arch_raw;
+    $config{arch} = 'arm64' if $config{arch} eq 'arm64' || $config{arch} eq 'aarch64' || $config{arch} eq 'evbarm';
+
+    # Solaris 'uname -m' returns 'i86pc' for x86/x64 hardware
+    $config{arch} = 'x64' if $config{arch} eq 'x86_64' || $config{arch} eq 'amd64' || $config{arch} eq 'i86pc';
+}
+die "Could not determine architecture for $^O" unless $config{arch};
+
+# Enable verbose/debug mode if requested
+if ( $opts{verbose} ) {
+    print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
+    push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
 }
 
 # Configure Build
@@ -155,8 +158,8 @@ else {    # GCC or Clang
 
     # Symbol Visibility: Hide everything by default.
     # Only functions marked INFIX_API in infix.h will be exported.
-    push @{ $config{cflags} },   '-fvisibility=hidden';
-    push @{ $config{cxxflags} }, '-fvisibility=hidden';
+    # push @{ $config{cflags} },   '-fvisibility=hidden';
+    # push @{ $config{cxxflags} }, '-fvisibility=hidden';
     $config{ldflags} = [];
     if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch_raw !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
         print "ARM64 cross-compilation detected for clang. Adding --target flag.\n";
@@ -500,6 +503,30 @@ sub create_shared_library {
     return $output_path;
 }
 
+sub get_simd_flags {
+    my ( $config, $src_content ) = @_;
+    my @flags;
+    if ( $config->{arch} eq 'x64' ) {
+        if ( $config->{compiler} eq 'msvc' ) {
+
+            # Only enable AVX2 if the test mentions AVX or large vectors
+            if ( $src_content && $src_content =~ /_mm256|_mm512/ ) {
+                push @flags, '-arch:AVX2';
+            }
+        }
+        else {
+            # GCC/Clang
+            push @flags, '-msse2';    # Baseline for x86-64
+            if ($src_content) {
+                if ( $src_content =~ /_mm256/ ) {
+                    push @flags, '-mavx', '-mavx2';
+                }
+            }
+        }
+    }
+    return @flags;
+}
+
 sub compile_and_run_tests {
     my ( $config, $obj_suffix, $test_names_ref, $is_coverage ) = @_;
     if ($is_coverage) {
@@ -539,30 +566,9 @@ sub compile_and_run_tests {
 
         # Create a copy of the main cflags to modify locally for this test.
         my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
-
-        # Add architecture-specific flags to enable SIMD instruction sets required by vector tests.
-        if ( $config{arch} eq 'x64' ) {
-            if ( $config{compiler} eq 'msvc' ) {
-
-                # For MSVC, /arch:AVX512 is the most inclusive flag.
-                push @local_cflags, '-arch:AVX512';
-            }
-            else {
-                # For GCC/Clang, explicitly enable all vector extensions we want to test.
-                push @local_cflags, '-msse2', '-mavx2', '-mavx512f';
-            }
-        }
-        elsif ( $config{arch} eq 'arm64' ) {
-            if ( $config{compiler} eq 'gcc' || $config{compiler} eq 'clang' ) {
-
-                # For GCC/Clang on ARM, NEON is baseline and needs no flag.
-                # We do NOT enable SVE (-march=armv8-a+sve) by default because it causes
-                # SIGILL on hardware that doesn't support it (like standard QEMU).
-                # User must supply --cflags="-march=armv8-a+sve" to enable SVE testing.
-            }
-
-            # MSVC on ARM64 enables NEON/SVE by default, no flag needed.
-        }
+        my $src_content  = do { local $/; open my $fh, '<', $test_file; <$fh> };
+        my @simd_flags   = get_simd_flags( $config, $src_content );
+        push @local_cflags, @simd_flags;
         if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );
@@ -706,6 +712,9 @@ sub run_coverage_gcov {
 
         # Use the original config with coverage flags for compiling the test itself.
         my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+        my $src_content  = do { local $/; open my $fh, '<', $test_file; <$fh> };
+        my @simd_flags   = get_simd_flags( $config, $src_content );
+        push @local_cflags, @simd_flags;
         if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to coverage build for regression test.\n";
             push @source_files, File::Spec->catfile( 'fuzz', 'fuzz_helpers.c' );

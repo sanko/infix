@@ -909,15 +909,19 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-    // The total allocation for the stack frame must be 16-byte aligned.
-    layout->total_stack_alloc = (total_local_space + 15) & ~15;
+    // The total allocation for the stack frame must be aligned to the maximum required alignment.
+    layout->total_stack_alloc = (uint32_t)_infix_align_up(total_local_space, max_align);
+
     // Local variables are accessed via negative offsets from the frame pointer (RBP).
     // The layout is [ return_buffer | args_array | (padding) | saved_args_data ]
     layout->return_buffer_offset = -(int32_t)layout->total_stack_alloc;
     layout->args_array_offset = layout->return_buffer_offset + (int32_t)return_size;
 
     // Align the start of the saved data area
-    layout->saved_args_offset = _infix_align_up(layout->args_array_offset + args_array_size, max_align);
+    layout->saved_args_offset =
+        (int32_t)_infix_align_up((size_t)(layout->args_array_offset + args_array_size), max_align);
+    layout->max_align = (uint32_t)max_align;
+
     *out_layout = layout;
     return INFIX_SUCCESS;
 }
@@ -931,8 +935,13 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
  * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
-    emit_push_reg(buf, RBP_REG);                                  // push rbp
-    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);                      // mov rbp, rsp
+    emit_push_reg(buf, RBP_REG);              // push rbp
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);  // mov rbp, rsp
+
+    // FORCE ALIGNMENT.
+    // AND RSP, -max_align
+    emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
+
     emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);  // Allocate our calculated space.
     return INFIX_SUCCESS;
 }
