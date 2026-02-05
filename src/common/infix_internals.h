@@ -151,6 +151,7 @@ struct infix_arena_t {
  */
 typedef struct _infix_registry_entry_t {
     const char * name;                     /**< The registered name of the type. */
+    uint64_t hash;                         /**< The pre-calculated djb2 hash of the name. */
     infix_type * type;                     /**< A pointer to the canonical `infix_type` object. */
     bool is_forward_declaration;           /**< `true` if this is just a forward declaration (`@Name;`). */
     struct _infix_registry_entry_t * next; /**< The next entry in the hash bucket chain. */

@@ -86,10 +86,11 @@ static uint64_t _registry_hash_string(const char * str) {
 static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, const char * name) {
     if (!registry || !name)
         return nullptr;
-    size_t index = _registry_hash_string(name) % registry->num_buckets;
+    uint64_t hash = _registry_hash_string(name);
+    size_t index = hash % registry->num_buckets;
     // Traverse the linked list (chain) at the computed bucket index.
     for (_infix_registry_entry_t * current = registry->buckets[index]; current; current = current->next)
-        if (strcmp(current->name, name) == 0)
+        if (current->hash == hash && strcmp(current->name, name) == 0)
             return current;
     return nullptr;
 }
@@ -123,9 +124,8 @@ static void _registry_rehash(infix_registry_t * registry) {
         while (entry) {
             _infix_registry_entry_t * next_entry = entry->next;  // Save next pointer
 
-            // Calculate new index
-            uint64_t hash = _registry_hash_string(entry->name);
-            size_t new_index = hash % new_num_buckets;
+            // Use the pre-calculated hash
+            size_t new_index = entry->hash % new_num_buckets;
 
             // Insert into new bucket (prepend)
             entry->next = new_buckets[new_index];
@@ -159,7 +159,8 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
     if (registry->num_items * 4 > registry->num_buckets * 3)
         _registry_rehash(registry);
 
-    size_t index = _registry_hash_string(name) % registry->num_buckets;
+    uint64_t hash = _registry_hash_string(name);
+    size_t index = hash % registry->num_buckets;
     _infix_registry_entry_t * new_entry =
         infix_arena_alloc(registry->arena, sizeof(_infix_registry_entry_t), _Alignof(_infix_registry_entry_t));
     if (!new_entry) {
@@ -174,6 +175,7 @@ static _infix_registry_entry_t * _registry_insert(infix_registry_t * registry, c
     }
     infix_memcpy((void *)name_copy, name, name_len);
     new_entry->name = name_copy;
+    new_entry->hash = hash;
     new_entry->type = nullptr;
     new_entry->is_forward_declaration = false;
     // Prepend to the linked list in the bucket.
