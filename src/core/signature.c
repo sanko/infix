@@ -45,19 +45,6 @@
 extern INFIX_TLS const char * g_infix_last_signature_context;
 /** @internal A safeguard against stack overflows from malicious or deeply nested signatures (e.g., `{{{{...}}}}`). */
 #define MAX_RECURSION_DEPTH 32
-/**
- * @internal
- * @struct parser_state
- * @brief Holds the complete state of the recursive descent parser during a single parse operation.
- */
-typedef struct {
-    const char * p;        /**< The current read position (cursor) in the signature string. */
-    const char * start;    /**< The beginning of the signature string, used for calculating error positions. */
-    infix_arena_t * arena; /**< The temporary arena for allocating the raw, unresolved type graph. */
-    int depth;             /**< The current recursion depth, to prevent stack overflows. */
-} parser_state;
-// Forward Declarations for Mutually Recursive Parser Functions
-static infix_type * parse_type(parser_state * state);
 static infix_status parse_function_signature_details(parser_state * state,
                                                      infix_type ** out_ret_type,
                                                      infix_function_argument ** out_args,
@@ -70,15 +57,17 @@ static infix_status parse_function_signature_details(parser_state * state,
  * @param[in,out] state The current parser state.
  * @param[in] code The error code to set.
  */
-static void set_parser_error(parser_state * state, infix_error_code_t code) {
+INFIX_INTERNAL void _infix_set_parser_error(parser_state * state, infix_error_code_t code) {
     _infix_set_error(INFIX_CATEGORY_PARSER, code, (size_t)(state->p - state->start));
 }
+INFIX_INTERNAL void skip_whitespace(parser_state * state);
+
 /**
  * @internal
  * @brief Advances the parser's cursor past any whitespace or C-style line comments.
  * @param[in,out] state The parser state to modify.
  */
-static void skip_whitespace(parser_state * state) {
+INFIX_INTERNAL void skip_whitespace(parser_state * state) {
     while (true) {
         while (isspace((unsigned char)*state->p))
             state->p++;
@@ -105,13 +94,13 @@ static bool parse_size_t(parser_state * state, size_t * out_val) {
     // Check for no conversion (end==start) OR overflow (ERANGE)
     if (end == start || errno == ERANGE) {
         // Use INTEGER_OVERFLOW code for range errors
-        set_parser_error(state, errno == ERANGE ? INFIX_CODE_INTEGER_OVERFLOW : INFIX_CODE_UNEXPECTED_TOKEN);
+        _infix_set_parser_error(state, errno == ERANGE ? INFIX_CODE_INTEGER_OVERFLOW : INFIX_CODE_UNEXPECTED_TOKEN);
         return false;
     }
 
     // Check for truncation if size_t is smaller than unsigned long long (e.g. 32-bit builds)
     if (val > SIZE_MAX) {
-        set_parser_error(state, INFIX_CODE_INTEGER_OVERFLOW);
+        _infix_set_parser_error(state, INFIX_CODE_INTEGER_OVERFLOW);
         return false;
     }
     *out_val = (size_t)val;
@@ -267,7 +256,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
             // Disallow an empty member definition like `name,` without a type.
             if (name && (*state->p == ',' || *state->p == end_char)) {
                 state->p = p_before_member + strlen(name);  // Position error at end of name
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                 return nullptr;
             }
             infix_type * member_type = parse_type(state);
@@ -275,7 +264,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 return nullptr;
             // Structs and unions cannot have `void` members.
             if (member_type->category == INFIX_TYPE_VOID) {
-                set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
+                _infix_set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
                 return nullptr;
             }
 
@@ -290,7 +279,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 if (!parse_size_t(state, &width_val))
                     return nullptr;  // Error set by parse_size_t
                 if (width_val > 255) {
-                    set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
+                    _infix_set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
                     return nullptr;
                 }
                 bit_width = (uint8_t)width_val;
@@ -326,7 +315,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 skip_whitespace(state);
                 // A trailing comma like `{int,}` is a syntax error.
                 if (*state->p == end_char) {
-                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                     return nullptr;
                 }
             }
@@ -334,10 +323,10 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                 break;
             else {  // Unexpected token (e.g., missing comma).
                 if (*state->p == '\0') {
-                    set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+                    _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
                     return nullptr;
                 }
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                 return nullptr;
             }
         }
@@ -369,12 +358,12 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
  */
 static infix_type * parse_aggregate(parser_state * state, char start_char, char end_char) {
     if (state->depth >= MAX_RECURSION_DEPTH) {
-        set_parser_error(state, INFIX_CODE_RECURSION_DEPTH_EXCEEDED);
+        _infix_set_parser_error(state, INFIX_CODE_RECURSION_DEPTH_EXCEEDED);
         return nullptr;
     }
     state->depth++;
     if (*state->p != start_char) {
-        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+        _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
         state->depth--;
         return nullptr;
     }
@@ -387,7 +376,7 @@ static infix_type * parse_aggregate(parser_state * state, char start_char, char 
         return nullptr;
     }
     if (*state->p != end_char) {
-        set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+        _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
         state->depth--;
         return nullptr;
     }
@@ -417,7 +406,7 @@ static infix_type * parse_packed_struct(parser_state * state) {
             if (!parse_size_t(state, &alignment))
                 return nullptr;
             if (*state->p != ':') {
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                 return nullptr;
             }
             state->p++;
@@ -425,7 +414,7 @@ static infix_type * parse_packed_struct(parser_state * state) {
     }
     skip_whitespace(state);
     if (*state->p != '{') {
-        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+        _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
         return nullptr;
     }
     state->p++;
@@ -434,7 +423,7 @@ static infix_type * parse_packed_struct(parser_state * state) {
     if (!members && infix_get_last_error().code != INFIX_CODE_SUCCESS)
         return nullptr;
     if (*state->p != '}') {
-        set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+        _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
         return nullptr;
     }
     state->p++;
@@ -464,7 +453,7 @@ static infix_type * parse_packed_struct(parser_state * state) {
  * @param[in,out] state The parser state.
  * @return A pointer to the static `infix_type` for the primitive, or `nullptr` if no keyword is matched.
  */
-static infix_type * parse_primitive(parser_state * state) {
+INFIX_INTERNAL infix_type * parse_primitive(parser_state * state) {
     if (consume_keyword(state, "sint8") || consume_keyword(state, "int8"))
         return infix_type_create_primitive(INFIX_PRIMITIVE_SINT8);
     if (consume_keyword(state, "uint8"))
@@ -591,9 +580,9 @@ static infix_type * parse_primitive(parser_state * state) {
  * @param[in,out] state The parser state.
  * @return A pointer to the parsed `infix_type`, or `nullptr` on failure.
  */
-static infix_type * parse_type(parser_state * state) {
+INFIX_INTERNAL infix_type * parse_type(parser_state * state) {
     if (state->depth >= MAX_RECURSION_DEPTH) {
-        set_parser_error(state, INFIX_CODE_RECURSION_DEPTH_EXCEEDED);
+        _infix_set_parser_error(state, INFIX_CODE_RECURSION_DEPTH_EXCEEDED);
         return nullptr;
     }
     state->depth++;
@@ -606,7 +595,7 @@ static infix_type * parse_type(parser_state * state) {
         state->p++;
         const char * name = parse_identifier(state);
         if (!name) {
-            set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+            _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
             state->depth--;
             return nullptr;
         }
@@ -663,7 +652,7 @@ static infix_type * parse_type(parser_state * state) {
             }
             skip_whitespace(state);
             if (*state->p != ')') {
-                set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+                _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
                 result_type = nullptr;
             }
             else
@@ -688,7 +677,7 @@ static infix_type * parse_type(parser_state * state) {
 
         skip_whitespace(state);
         if (*state->p != ':') {
-            set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+            _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
             state->depth--;
             return nullptr;
         }
@@ -700,13 +689,13 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         if (element_type->category == INFIX_TYPE_VOID) {  // An array of `void` is illegal in C.
-            set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
+            _infix_set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
             state->depth--;
             return nullptr;
         }
         skip_whitespace(state);
         if (*state->p != ']') {
-            set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+            _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
             state->depth--;
             return nullptr;
         }
@@ -732,7 +721,7 @@ static infix_type * parse_type(parser_state * state) {
         skip_whitespace(state);
         infix_type * underlying_type = parse_type(state);
         if (!underlying_type || underlying_type->category != INFIX_TYPE_PRIMITIVE) {
-            set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
+            _infix_set_parser_error(state, INFIX_CODE_INVALID_MEMBER_TYPE);
             state->depth--;
             return nullptr;
         }
@@ -749,7 +738,7 @@ static infix_type * parse_type(parser_state * state) {
         }
         skip_whitespace(state);
         if (*state->p != ']') {
-            set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+            _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
             state->depth--;
             return nullptr;
         }
@@ -766,7 +755,7 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         if (*state->p != ':') {
-            set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+            _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
             state->depth--;
             return nullptr;
         }
@@ -777,7 +766,7 @@ static infix_type * parse_type(parser_state * state) {
             return nullptr;
         }
         if (*state->p != ']') {
-            set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+            _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
             state->depth--;
             return nullptr;
         }
@@ -792,9 +781,9 @@ static infix_type * parse_type(parser_state * state) {
             if (infix_get_last_error().code == INFIX_CODE_SUCCESS) {
                 state->p = p_before_type;
                 if (isalpha((unsigned char)*state->p) || *state->p == '_')
-                    set_parser_error(state, INFIX_CODE_INVALID_KEYWORD);
+                    _infix_set_parser_error(state, INFIX_CODE_INVALID_KEYWORD);
                 else
-                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
             }
         }
     }
@@ -823,7 +812,7 @@ static infix_status parse_function_signature_details(parser_state * state,
                                                      size_t * out_num_args,
                                                      size_t * out_num_fixed_args) {
     if (*state->p != '(') {
-        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+        _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     state->p++;
@@ -866,12 +855,12 @@ static infix_status parse_function_signature_details(parser_state * state,
                 state->p++;
                 skip_whitespace(state);
                 if (*state->p == ')' || *state->p == ';') {  // Trailing comma error.
-                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                     return INFIX_ERROR_INVALID_ARGUMENT;
                 }
             }
             else if (*state->p != ')' && *state->p != ';') {
-                set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                 return INFIX_ERROR_INVALID_ARGUMENT;
             }
             else
@@ -912,12 +901,12 @@ static infix_status parse_function_signature_details(parser_state * state,
                     state->p++;
                     skip_whitespace(state);
                     if (*state->p == ')') {  // Trailing comma error.
-                        set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                        _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                         return INFIX_ERROR_INVALID_ARGUMENT;
                     }
                 }
                 else if (*state->p != ')') {
-                    set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    _infix_set_parser_error(state, INFIX_CODE_UNEXPECTED_TOKEN);
                     return INFIX_ERROR_INVALID_ARGUMENT;
                 }
                 else
@@ -927,14 +916,14 @@ static infix_status parse_function_signature_details(parser_state * state,
     }
     skip_whitespace(state);
     if (*state->p != ')') {
-        set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
+        _infix_set_parser_error(state, INFIX_CODE_UNTERMINATED_AGGREGATE);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     state->p++;
     // Parse Return Type
     skip_whitespace(state);
     if (state->p[0] != '-' || state->p[1] != '>') {
-        set_parser_error(state, INFIX_CODE_MISSING_RETURN_TYPE);
+        _infix_set_parser_error(state, INFIX_CODE_MISSING_RETURN_TYPE);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
     state->p += 2;
@@ -998,7 +987,7 @@ c23_nodiscard infix_status _infix_parse_type_internal(infix_type ** out_type,
         skip_whitespace(&state);
         // After successfully parsing a type, ensure there is no trailing junk.
         if (state.p[0] != '\0') {
-            set_parser_error(&state, INFIX_CODE_UNEXPECTED_TOKEN);
+            _infix_set_parser_error(&state, INFIX_CODE_UNEXPECTED_TOKEN);
             type = nullptr;
         }
     }

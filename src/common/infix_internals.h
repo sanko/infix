@@ -171,12 +171,19 @@ struct infix_registry_t {
     _infix_registry_entry_t ** buckets; /**< The array of hash table buckets (linked list heads). */
 };
 /**
+ * @struct parser_state
+ * @brief Holds the complete state of the recursive descent parser during a single parse operation.
+ */
+typedef struct {
+    const char * p;        /**< The current read position (cursor) in the signature string. */
+    const char * start;    /**< The beginning of the signature string, used for calculating error positions. */
+    infix_arena_t * arena; /**< The temporary arena for allocating the raw, unresolved type graph. */
+    int depth;             /**< The current recursion depth, to prevent stack overflows. */
+} parser_state;
+
+/**
  * @struct code_buffer
  * @brief A dynamic buffer for staged machine code generation.
- * @details This structure is used during the JIT compilation process. ABI-specific
- * emitters append instruction bytes to this buffer. It automatically grows as needed,
- * allocating memory from a temporary arena that is destroyed after the final
- * code is copied to executable memory.
  */
 typedef struct {
     uint8_t * code;        /**< A pointer to the code buffer, allocated from the arena. */
@@ -518,6 +525,11 @@ INFIX_INTERNAL void _infix_set_system_error(infix_error_category_t category,
  * API function to ensure that a prior error from an unrelated call is not accidentally returned.
  */
 INFIX_INTERNAL void _infix_clear_error(void);
+INFIX_INTERNAL void skip_whitespace(parser_state * state);
+INFIX_INTERNAL void _infix_set_parser_error(parser_state * state, infix_error_code_t code);
+INFIX_INTERNAL infix_type * parse_type(parser_state * state);
+INFIX_INTERNAL infix_type * parse_primitive(parser_state * state);
+
 /**
  * @brief Recalculates the layout of a fully resolved type graph.
  * @details Located in `src/core/types.c`. This is the "Layout" stage of the data pipeline.

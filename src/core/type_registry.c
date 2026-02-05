@@ -480,6 +480,8 @@ static void _registry_parser_skip_whitespace(_registry_parser_state_t * state) {
 static char * _registry_parser_parse_name(_registry_parser_state_t * state, char * buffer, size_t buf_size) {
     _registry_parser_skip_whitespace(state);
     const char * name_start = state->p;
+    if (!isalpha((unsigned char)*name_start) && *name_start != '_')
+        return nullptr;
     while (isalnum((unsigned char)*state->p) || *state->p == '_' || *state->p == ':') {
         if (*state->p == ':' && state->p[1] != ':')
             break;  // Handle single colon as non-identifier char.
@@ -655,31 +657,78 @@ INFIX_API c23_nodiscard infix_status infix_register_types(infix_registry_t * reg
         if (*state.p == ';')
             state.p++;
     }
+
+    // Use a single temporary arena for ALL definitions in this batch to reduce malloc pressure.
+    infix_arena_t * parser_arena = infix_arena_create(65536);
+    if (!parser_arena) {
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        final_status = INFIX_ERROR_ALLOCATION_FAILED;
+        goto cleanup;
+    }
+
     // Pass 2: Parse the bodies of all found definitions into the registry.
     for (size_t i = 0; i < num_defs_found; ++i) {
         _infix_registry_entry_t * entry = defs_found[i].entry;
-        // Make a temporary, null-terminated copy of the definition body substring.
-        char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
-        if (!body_copy) {
-            _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
-            final_status = INFIX_ERROR_ALLOCATION_FAILED;
-            goto cleanup;
+
+        // FAST-PATH: Check if the definition body is just a single primitive keyword.
+        // This avoids the overhead of the recursive-descent parser for simple aliases.
+        infix_type * fast_primitive = nullptr;
+        char body_buffer[64];
+        if (defs_found[i].def_body_len > 0 && defs_found[i].def_body_len < sizeof(body_buffer)) {
+            infix_memcpy(body_buffer, defs_found[i].def_body_start, defs_found[i].def_body_len);
+            body_buffer[defs_found[i].def_body_len] = '\0';
+
+            // Use a temporary parser state for parse_primitive.
+            parser_state fast_state = {.p = body_buffer, .start = body_buffer, .arena = parser_arena, .depth = 0};
+            fast_primitive = parse_primitive(&fast_state);
+
+            // Ensure no trailing junk even in fast-path.
+            if (fast_primitive) {
+                skip_whitespace(&fast_state);
+                if (*fast_state.p != '\0')
+                    fast_primitive = nullptr;
+            }
         }
-        infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
-        body_copy[defs_found[i].def_body_len] = '\0';
-        // "Parse" step: parse into a temporary arena.
+
         infix_type * raw_type = nullptr;
-        infix_arena_t * parser_arena = nullptr;
-        infix_status status = _infix_parse_type_internal(&raw_type, &parser_arena, body_copy);
-        infix_free(body_copy);
-        if (status != INFIX_SUCCESS) {
-            // Adjust the error position to be relative to the full definition string.
-            infix_error_details_t err = infix_get_last_error();
-            _infix_set_error(err.category, err.code, (defs_found[i].def_body_start - definitions) + err.position);
-            final_status = INFIX_ERROR_INVALID_ARGUMENT;
-            infix_arena_destroy(parser_arena);
-            goto cleanup;
+        if (fast_primitive) {
+            raw_type = fast_primitive;
         }
+        else {
+            // SLOW-PATH: Fall back to full signature parser.
+            // Make a temporary, null-terminated copy of the definition body substring.
+            char * body_copy = infix_malloc(defs_found[i].def_body_len + 1);
+            if (!body_copy) {
+                _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+                final_status = INFIX_ERROR_ALLOCATION_FAILED;
+                infix_arena_destroy(parser_arena);
+                goto cleanup;
+            }
+            infix_memcpy(body_copy, defs_found[i].def_body_start, defs_found[i].def_body_len);
+            body_copy[defs_found[i].def_body_len] = '\0';
+
+            parser_state state = {.p = body_copy, .start = body_copy, .arena = parser_arena, .depth = 0};
+            raw_type = parse_type(&state);
+
+            if (raw_type) {
+                skip_whitespace(&state);
+                if (*state.p != '\0') {
+                    _infix_set_parser_error(&state, INFIX_CODE_UNEXPECTED_TOKEN);
+                    raw_type = nullptr;
+                }
+            }
+
+            if (!raw_type) {
+                infix_error_details_t err = infix_get_last_error();
+                _infix_set_error(err.category, err.code, (defs_found[i].def_body_start - definitions) + err.position);
+                final_status = INFIX_ERROR_INVALID_ARGUMENT;
+                infix_free(body_copy);
+                infix_arena_destroy(parser_arena);
+                goto cleanup;
+            }
+            infix_free(body_copy);
+        }
+
         const infix_type * type_to_alias = raw_type;
         // If the RHS is another named type (e.g., @MyAlias = @ExistingType),
         // we need to resolve it first to get the actual type we're aliasing.
@@ -713,11 +762,10 @@ INFIX_API c23_nodiscard infix_status infix_register_types(infix_registry_t * reg
         else  // Dynamic type: deep copy.
             new_def = _copy_type_graph_to_arena(registry->arena, type_to_alias);
 
-        infix_arena_destroy(parser_arena);  // The temporary raw_type is no longer needed.
-
         if (!new_def) {
             _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
             final_status = INFIX_ERROR_ALLOCATION_FAILED;
+            infix_arena_destroy(parser_arena);
             goto cleanup;
         }
 
@@ -740,6 +788,9 @@ INFIX_API c23_nodiscard infix_status infix_register_types(infix_registry_t * reg
         entry->type->name = entry->name;
         entry->is_forward_declaration = false;
     }
+
+    infix_arena_destroy(parser_arena);
+
     // Pass 3: Resolve and layout all the newly defined types.
     for (size_t i = 0; i < num_defs_found; ++i) {
         _infix_registry_entry_t * entry = defs_found[i].entry;
