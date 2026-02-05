@@ -154,10 +154,11 @@ const infix_direct_forward_abi_spec g_sysv_x64_direct_forward_spec = {
  * @param[in,out] classes An array of two `arg_class_t` that is updated during classification.
  * @param depth The current recursion depth (to prevent stack overflow on malicious input).
  * @param field_count A counter to prevent DoS from excessively complex types.
+ * @param is_bitfield True if the current member is a bitfield.
  * @return `true` if a condition forcing MEMORY classification is found, `false` otherwise.
  */
 static bool classify_recursive(
-    const infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count) {
+    const infix_type * type, size_t offset, arg_class_t classes[2], int depth, size_t * field_count, bool is_bitfield) {
     // A recursive call can be made with a NULL type (e.g., from a malformed array from fuzzer).
     if (type == nullptr)
         return false;  // Terminate recusion path.
@@ -166,9 +167,10 @@ static bool classify_recursive(
         classes[0] = MEMORY;
         return true;
     }
-    // The ABI requires natural alignment. If a fuzzer creates a type with an unaligned
-    // member, it must be passed in memory. A zero alignment would cause a crash.
-    if (type->alignment != 0 && offset % type->alignment != 0) {
+    // The ABI requires natural alignment for standard members.
+    // Bitfields are an exception: they are allowed to be unaligned relative to their
+    // base type's alignment, as long as they stay within their storage unit.
+    if (!is_bitfield && type->alignment != 0 && offset % type->alignment != 0) {
         classes[0] = MEMORY;
         return true;
     }
@@ -219,7 +221,8 @@ static bool classify_recursive(
         if (type->meta.array_info.element_type->size == 0) {
             if (type->meta.array_info.num_elements > 0)
                 // Classify the zero-sized element just once.
-                return classify_recursive(type->meta.array_info.element_type, offset, classes, depth + 1, field_count);
+                return classify_recursive(
+                    type->meta.array_info.element_type, offset, classes, depth + 1, field_count, false);
             return false;  // An empty array of zero-sized structs has no effect on classification.
         }
         for (size_t i = 0; i < type->meta.array_info.num_elements; ++i) {
@@ -234,7 +237,8 @@ static bool classify_recursive(
             // the recursion tree for large arrays.
             if (element_offset >= 16)
                 break;
-            if (classify_recursive(type->meta.array_info.element_type, element_offset, classes, depth + 1, field_count))
+            if (classify_recursive(
+                    type->meta.array_info.element_type, element_offset, classes, depth + 1, field_count, false))
                 return true;  // Propagate unaligned discovery up the call stack
         }
         return false;
@@ -247,10 +251,10 @@ static bool classify_recursive(
             return false;
         // A complex number is just like a struct { base_type real; base_type imag; }
         // So we classify the first element at offset 0.
-        if (classify_recursive(base, offset, classes, depth + 1, field_count))
+        if (classify_recursive(base, offset, classes, depth + 1, field_count, false))
             return true;  // Propagate unaligned discovery
         // And the second element at offset + size of the base.
-        if (classify_recursive(base, offset + base->size, classes, depth + 1, field_count))
+        if (classify_recursive(base, offset + base->size, classes, depth + 1, field_count, false))
             return true;  // Propagate unaligned discovery
         return false;
     }
@@ -280,7 +284,7 @@ static bool classify_recursive(
             // it cannot influence register classification, so we can skip it.
             if (member_offset >= 16)
                 continue;
-            if (classify_recursive(member->type, member_offset, classes, depth + 1, field_count))
+            if (classify_recursive(member->type, member_offset, classes, depth + 1, field_count, member->is_bitfield))
                 return true;  // Propagate unaligned discovery
         }
         return false;
@@ -311,8 +315,8 @@ static void classify_aggregate_sysv(const infix_type * type, arg_class_t classes
     }
     // Run the recursive classification. If it returns true, an unaligned
     // field was found, and the class is already set to MEMORY. We can stop.
-    size_t field_count = 0;                                       // Initialize the counter for this aggregate.
-    if (classify_recursive(type, 0, classes, 0, &field_count)) {  // Pass counter to initial call
+    size_t field_count = 0;                                              // Initialize the counter for this aggregate.
+    if (classify_recursive(type, 0, classes, 0, &field_count, false)) {  // Pass counter to initial call
         *num_classes = 1;
         return;
     }

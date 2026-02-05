@@ -219,57 +219,60 @@ INFIX_API infix_struct_member infix_type_create_bitfield_member(const char * nam
  */
 static bool _layout_struct(infix_type * type) {
     size_t current_byte_offset = 0;
-    uint8_t current_bit_offset = 0;  // 0-7 bits used in the current byte
+    size_t current_unit_offset = 0;
+    size_t current_unit_size = 0;
+    uint32_t current_unit_bits_used = 0;
     size_t max_alignment = 1;
+    bool in_bitfield = false;
 
     for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
         infix_struct_member * member = &type->meta.aggregate_info.members[i];
+        infix_type * mtype = member->type;
 
-        // 1. Handle Flexible Array Members (FAM)
-        if (member->type->category == INFIX_TYPE_ARRAY && member->type->meta.array_info.is_flexible) {
-            // Flush any pending bits to the next byte
-            if (current_bit_offset > 0) {
-                if (current_byte_offset == SIZE_MAX) {
+        if (member->is_bitfield) {
+            size_t align = mtype->alignment;
+            if (align == 0)
+                align = 1;
+            if (align > max_alignment && !type->meta.aggregate_info.is_packed)
+                max_alignment = align;
+
+            // Zero-width bitfield or type mismatch or doesn't fit -> start new unit
+            if (member->bit_width == 0 || !in_bitfield || mtype->size != current_unit_size ||
+                current_unit_bits_used + member->bit_width > mtype->size * 8) {
+
+                // Align to start of new unit
+                size_t start = _infix_align_up(current_byte_offset, align);
+                if (start < current_byte_offset) {
                     _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
                     return false;
                 }
-                current_byte_offset++;
-                current_bit_offset = 0;
+
+                current_unit_offset = start;
+                current_unit_size = mtype->size;
+                current_unit_bits_used = 0;
+                in_bitfield = true;
+
+                current_byte_offset = current_unit_offset;
             }
 
-            // FAM aligns according to its element type.
-            size_t member_align = member->type->alignment;
-            if (member_align == 0)
-                member_align = 1;
+            member->offset = current_unit_offset + (current_unit_bits_used / 8);
+            member->bit_offset = (uint8_t)(current_unit_bits_used % 8);
+            current_unit_bits_used += member->bit_width;
 
-            size_t aligned = _infix_align_up(current_byte_offset, member_align);
-            if (aligned < current_byte_offset) {
-                _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-                return false;
-            }
-            current_byte_offset = aligned;
-            member->offset = current_byte_offset;
-
-            if (member_align > max_alignment)
-                max_alignment = member_align;
-            continue;  // FAM logic done
+            size_t bytes_used = (current_unit_bits_used + 7) / 8;
+            if (current_unit_offset + bytes_used > current_byte_offset)
+                current_byte_offset = current_unit_offset + bytes_used;
         }
-
-        // 2. Handle Bitfields
-        if (member->is_bitfield) {
-            // Zero-width bitfield: force alignment to the next boundary of the declared type.
-            if (member->bit_width == 0) {
-                if (current_bit_offset > 0) {
-                    if (current_byte_offset == SIZE_MAX) {
-                        _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-                        return false;
-                    }
-                    current_byte_offset++;
-                    current_bit_offset = 0;
-                }
-                size_t align = member->type->alignment;
+        else {
+            // 1. Handle Flexible Array Members (FAM)
+            if (mtype->category == INFIX_TYPE_ARRAY && mtype->meta.array_info.is_flexible) {
+                in_bitfield = false;
+                size_t align = mtype->alignment;
                 if (align == 0)
                     align = 1;
+
+                if (align > max_alignment && !type->meta.aggregate_info.is_packed)
+                    max_alignment = align;
 
                 size_t aligned = _infix_align_up(current_byte_offset, align);
                 if (aligned < current_byte_offset) {
@@ -279,88 +282,36 @@ static bool _layout_struct(infix_type * type) {
                 current_byte_offset = aligned;
                 member->offset = current_byte_offset;
                 member->bit_offset = 0;
-
-                if (align > max_alignment)
-                    max_alignment = align;
                 continue;
             }
 
-            // Standard Bitfield
-            // Simplified System V packing: pack into current byte if it fits.
-            if (current_bit_offset + member->bit_width > 8) {
-                // Overflow: move to start of next byte
-                if (current_byte_offset == SIZE_MAX) {
-                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-                    return false;
-                }
-                current_byte_offset++;
-                current_bit_offset = 0;
-            }
-
-            member->offset = current_byte_offset;
-            member->bit_offset = current_bit_offset;
-            current_bit_offset += member->bit_width;
-
-            // If we filled the byte exactly, advance to next byte
-            if (current_bit_offset == 8) {
-                if (current_byte_offset == SIZE_MAX) {
-                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-                    return false;
-                }
-                current_byte_offset++;
-                current_bit_offset = 0;
-            }
-
-            // Update struct alignment. Bitfields typically impose the alignment of their base type.
-            size_t align = member->type->alignment;
+            // 2. Standard Member
+            in_bitfield = false;
+            size_t align = mtype->alignment;
             if (align == 0)
                 align = 1;
-            if (align > max_alignment)
+
+            if (align > max_alignment && !type->meta.aggregate_info.is_packed)
                 max_alignment = align;
-        }
-        else {
-            // 3. Standard Member
 
-            // Flush bits first
-            if (current_bit_offset > 0) {
-                if (current_byte_offset == SIZE_MAX) {
-                    _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
-                    return false;
-                }
-                current_byte_offset++;
-                current_bit_offset = 0;
-            }
-
-            size_t member_align = member->type->alignment;
-            if (member_align == 0)
-                member_align = 1;
-
-            if (member_align > max_alignment)
-                max_alignment = member_align;
-
-            size_t aligned = _infix_align_up(current_byte_offset, member_align);
+            size_t aligned = _infix_align_up(current_byte_offset, align);
             if (aligned < current_byte_offset) {
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
                 return false;
             }
             current_byte_offset = aligned;
             member->offset = current_byte_offset;
+            member->bit_offset = 0;
 
-            if (current_byte_offset > SIZE_MAX - member->type->size) {
+            if (current_byte_offset > SIZE_MAX - mtype->size) {
                 _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INTEGER_OVERFLOW, 0);
                 return false;
             }
-            current_byte_offset += member->type->size;
+            current_byte_offset += mtype->size;
         }
     }
 
-    // Final flush
-    if (current_bit_offset > 0)
-        current_byte_offset++;
-
-    // If it is packed, the alignment is explicitly determined by the user (defaulting to 1
-    // if not specified in the syntax). We must respect this value absolutely, ignoring
-    // the natural alignment of members.
+    // If it is packed, the alignment is explicitly determined by the user.
     if (type->meta.aggregate_info.is_packed)
         max_alignment = type->alignment;
 
