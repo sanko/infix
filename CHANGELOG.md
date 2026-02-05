@@ -5,6 +5,21 @@ All notable changes to `infix` will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added support for receiving bitfield structs in reverse call trampolines.
+
+### Changed
+
+- Move to a pre-calculated hash field in `_infix_registry_entry_t`. Lookups and rehashing now use this stored hash, significantly reducing string hashing overhead during type resolution and registry scaling.
+
+### Fixed
+
+- Rewrote `_layout_struct` in `src/core/types.c` to correctly handle bitfields larger than 8 bits and ensures `bit_offset` is always within the correct byte, matching standard C (well, GNU) compiler packing behavior.
+- Fixed a bug in the SysV recursive classifier that was incorrectly applying strict natural alignment checks to bitfield members. This was causing structs containing bitfields to be unnecessarily passed on the stack instead of in registers.
+
 ## [0.1.4] - 2026-01-17
 
 This release focuses on SIMD vector support and critical platform-specific stability fixes for macOS (both Intel and Apple Silicon), and improving internal code hygiene.
