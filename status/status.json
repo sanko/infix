@@ -1,45 +1,45 @@
 {
-"dragonflybsd-x86_64-gcc": "👎🏽 failing"
+"dragonflybsd-x86_64-gcc": "👍🏽 passing"
 ,
 "freebsd-aarch64-clang": "👍🏽 passing"
 ,
 "freebsd-aarch64-gcc": "👍🏽 passing"
 ,
-"freebsd-x86_64-clang": "👎🏽 failing"
+"freebsd-x86_64-clang": "👍🏽 passing"
 ,
-"freebsd-x86_64-gcc": "👎🏽 failing"
+"freebsd-x86_64-gcc": "👍🏽 passing"
 ,
 "macos-aarch64-clang": "👍🏽 passing"
 ,
 "macos-aarch64-gcc": "👍🏽 passing"
 ,
-"macos-x86_64-clang": "👎🏽 failing"
+"macos-x86_64-clang": "👍🏽 passing"
 ,
-"macos-x86_64-gcc": "👎🏽 failing"
+"macos-x86_64-gcc": "👍🏽 passing"
 ,
 "netbsd-aarch64-gcc": "👍🏽 passing"
 ,
-"netbsd-x86_64-gcc": "👎🏽 failing"
+"netbsd-x86_64-gcc": "👍🏽 passing"
 ,
-"omnios-x86_64-gcc": "👎🏽 failing"
+"omnios-x86_64-gcc": "👍🏽 passing"
 ,
 "openbsd-aarch64-clang": "👍🏽 passing"
 ,
 "openbsd-aarch64-egcc": "👍🏽 passing"
 ,
-"openbsd-x86_64-clang": "👎🏽 failing"
+"openbsd-x86_64-clang": "👍🏽 passing"
 ,
-"openbsd-x86_64-egcc": "👎🏽 failing"
+"openbsd-x86_64-egcc": "👍🏽 passing"
 ,
-"solaris-x86_64-gcc": "👎🏽 failing"
+"solaris-x86_64-gcc": "👍🏽 passing"
 ,
 "ubuntu-aarch64-clang": "👍🏽 passing"
 ,
 "ubuntu-aarch64-gcc": "👍🏽 passing"
 ,
-"ubuntu-x86_64-clang": "👎🏽 failing"
+"ubuntu-x86_64-clang": "👍🏽 passing"
 ,
-"ubuntu-x86_64-gcc": "👎🏽 failing"
+"ubuntu-x86_64-gcc": "👍🏽 passing"
 ,
 "windows-aarch64-clang": "👍🏽 passing"
 ,
