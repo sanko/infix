@@ -258,6 +258,17 @@ static bool classify_recursive(
             return true;  // Propagate unaligned discovery
         return false;
     }
+    if (type->category == INFIX_TYPE_VECTOR) {
+        (*field_count)++;
+        size_t num_eightbytes = (type->size + 7) / 8;
+        for (size_t i = 0; i < num_eightbytes && (offset / 8 + i) < 2; ++i) {
+            // Merging rule: if an eightbyte contains both SSE and INTEGER parts, it is INTEGER.
+            // If it's NO_CLASS, it becomes SSE.
+            if (classes[offset / 8 + i] == NO_CLASS)
+                classes[offset / 8 + i] = SSE;
+        }
+        return false;
+    }
     if (type->category == INFIX_TYPE_STRUCT || type->category == INFIX_TYPE_UNION) {
         // A generated type can have num_members > 0 but a NULL members pointer.
         // This is invalid and must be passed in memory.
@@ -872,19 +883,27 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
     size_t return_size = (context->return_type->size + 15) & ~15;
     size_t args_array_size = (context->num_args * sizeof(void *) + 15) & ~15;
     size_t saved_args_data_size = 0;
+    size_t max_align = 16;  // Start with 16 for stack safety
     for (size_t i = 0; i < context->num_args; ++i) {
         // Security: Reject excessively large types before they reach the code generator.
         if (context->arg_types[i]->size > INFIX_MAX_ARG_SIZE) {
             *out_layout = nullptr;
             return INFIX_ERROR_LAYOUT_FAILED;
         }
-        saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
+        size_t align = context->arg_types[i]->alignment;
+        if (align < 8)
+            align = 8;
+        if (align > max_align)
+            max_align = align;
+
+        saved_args_data_size = _infix_align_up(saved_args_data_size, align);
+        saved_args_data_size += context->arg_types[i]->size;
     }
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-    size_t total_local_space = return_size + args_array_size + saved_args_data_size;
+    size_t total_local_space = return_size + args_array_size + saved_args_data_size + max_align;
     // Safety check against allocating too much stack.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
         *out_layout = nullptr;
@@ -893,10 +912,12 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
     // The total allocation for the stack frame must be 16-byte aligned.
     layout->total_stack_alloc = (total_local_space + 15) & ~15;
     // Local variables are accessed via negative offsets from the frame pointer (RBP).
-    // The layout is [ return_buffer | args_array | saved_args_data ]
+    // The layout is [ return_buffer | args_array | (padding) | saved_args_data ]
     layout->return_buffer_offset = -(int32_t)layout->total_stack_alloc;
-    layout->args_array_offset = layout->return_buffer_offset + return_size;
-    layout->saved_args_offset = layout->args_array_offset + args_array_size;
+    layout->args_array_offset = layout->return_buffer_offset + (int32_t)return_size;
+
+    // Align the start of the saved data area
+    layout->saved_args_offset = _infix_align_up(layout->args_array_offset + args_array_size, max_align);
     *out_layout = layout;
     return INFIX_SUCCESS;
 }
@@ -953,8 +974,9 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     // Stack arguments passed by the caller start at [rbp + 16].
     size_t stack_arg_offset = 16;
     for (size_t i = 0; i < context->num_args; i++) {
-        int32_t arg_save_loc = layout->saved_args_offset + current_saved_data_offset;
         infix_type * current_type = context->arg_types[i];
+        current_saved_data_offset = _infix_align_up(current_saved_data_offset, current_type->alignment);
+        int32_t arg_save_loc = layout->saved_args_offset + current_saved_data_offset;
 
         // Correct classification logic for vectors/primitives vs aggregates
         arg_class_t classes[2] = {NO_CLASS, NO_CLASS};
@@ -986,9 +1008,15 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
         else if (num_classes == 1) {
             if (classes[0] == SSE)
                 if (xmm_idx < NUM_XMM_ARGS) {
-                    // Use 128-bit move for vectors to prevent truncation
-                    if (current_type->category == INFIX_TYPE_VECTOR && current_type->size == 16)
-                        emit_movups_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                    // Use appropriate width move for vectors to prevent truncation
+                    if (current_type->category == INFIX_TYPE_VECTOR) {
+                        if (current_type->size == 64)
+                            emit_vmovupd_mem_zmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                        else if (current_type->size == 32)
+                            emit_vmovupd_mem_ymm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                        else  // size 16 or other
+                            emit_movups_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                    }
                     else if (is_float(current_type))
                         emit_movss_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
                     else
@@ -1026,7 +1054,7 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
         }
         emit_lea_reg_mem(buf, RAX_REG, RBP_REG, arg_save_loc);
         emit_mov_mem_reg(buf, RBP_REG, layout->args_array_offset + i * sizeof(void *), RAX_REG);
-        current_saved_data_offset += (current_type->size + 15) & ~15;
+        current_saved_data_offset += current_type->size;
     }
     return INFIX_SUCCESS;
 }
@@ -1360,6 +1388,12 @@ static infix_status generate_direct_forward_argument_moves_sysv_x64(code_buffer 
         case ARG_LOCATION_XMM:
             if (is_float(arg_layout->type))
                 emit_cvtsd2ss_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            else if (arg_layout->type->category == INFIX_TYPE_VECTOR && arg_layout->type->size == 32)
+                emit_vmovupd_ymm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            else if (arg_layout->type->category == INFIX_TYPE_VECTOR && arg_layout->type->size == 64)
+                emit_vmovupd_zmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
+            else if (arg_layout->type->category == INFIX_TYPE_VECTOR)
+                emit_movups_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
             else
                 emit_movsd_xmm_mem(buf, XMM_ARGS[arg_layout->location.reg_index], RSP_REG, temp_offset);
             break;

@@ -15,7 +15,13 @@
 #include "common/infix_config.h"
 #include "common/infix_internals.h"
 #include <infix/infix.h>
+#include <math.h>
 #include <string.h>
+
+#if defined(__x86_64__) || defined(_M_X64)
+#include <immintrin.h>
+typedef __m128d v2d;
+#endif
 
 //
 typedef struct {
@@ -83,6 +89,10 @@ static int execute_callback(IntFunc func, int value) {
     return -1;
 }
 
+#if defined(__x86_64__) || defined(_M_X64)
+static v2d vector_add_128(v2d a, v2d b) { return _mm_add_pd(a, b); }
+#endif
+
 // A simple tagged union to simulate a dynamic language object (like an SV* or PyObject*).
 typedef enum {
     MOCK_TYPE_INT,
@@ -91,7 +101,8 @@ typedef enum {
     MOCK_TYPE_POINT,
     MOCK_TYPE_STRING,
     MOCK_TYPE_LINE,
-    MOCK_TYPE_FUNC
+    MOCK_TYPE_FUNC,
+    MOCK_TYPE_VECTOR
 } MockObjectType;
 typedef struct MockObject {
     MockObjectType type;
@@ -102,6 +113,9 @@ typedef struct MockObject {
         const char * s;
         struct MockObject * fields;  // For structs, points to an array of field objects
         void * func_ptr;             // For function pointers
+#if defined(__x86_64__) || defined(_M_X64)
+        v2d v;
+#endif
     } value;
 } MockObject;
 
@@ -142,6 +156,15 @@ static void mock_marshaller_point(void * source_obj, void * dest_buffer, const i
     }
 }
 
+#if defined(__x86_64__) || defined(_M_X64)
+static void mock_marshaller_v2d(void * source_obj, void * dest_buffer, const infix_type * type) {
+    (void)type;
+    MockObject * obj = (MockObject *)source_obj;
+    if (obj && obj->type == MOCK_TYPE_VECTOR)
+        memcpy(dest_buffer, &obj->value.v, sizeof(v2d));
+}
+#endif
+
 static void mock_writeback_point(void * source_obj, void * c_data_ptr, const infix_type * type) {
     (void)type;
     MockObject * obj = (MockObject *)source_obj;
@@ -181,7 +204,7 @@ static infix_direct_value_t mock_marshaller_func_ptr(void * source_obj) {
 static int mock_c_callback(int a) { return a * a; }
 
 TEST {
-    plan(9);
+    plan(10);
 
     infix_registry_t * reg = infix_registry_create();
     ok(infix_register_types(reg,
@@ -448,6 +471,41 @@ TEST {
         infix_forward_destroy(trampoline);
     };
 
+    subtest("Test SIMD vectors with direct marshalling") {
+#if defined(__x86_64__) || defined(_M_X64)
+        plan(4);
+        infix_type * double_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
+        infix_type * vec_type = NULL;
+        infix_status status = infix_type_create_vector(reg->arena, &vec_type, double_type, 2);
+        ok(status == INFIX_SUCCESS, "Created vector type (2x double)");
+
+        infix_direct_arg_handler_t handlers[2] = {{.aggregate_marshaller = &mock_marshaller_v2d},
+                                                  {.aggregate_marshaller = &mock_marshaller_v2d}};
+
+        infix_forward_t * trampoline = NULL;
+        status = infix_forward_create_direct(
+            &trampoline, "(v[2:double], v[2:double]) -> v[2:double]", (void *)&vector_add_128, handlers, reg);
+        ok(status == INFIX_SUCCESS, "Created direct trampoline for vector_add_128");
+
+        MockObject mock_v1 = {.type = MOCK_TYPE_VECTOR, .value.v = _mm_set_pd(20.0, 10.0)};
+        MockObject mock_v2 = {.type = MOCK_TYPE_VECTOR, .value.v = _mm_set_pd(22.0, 32.0)};
+        void * lang_args[] = {&mock_v1, &mock_v2};
+        v2d result;
+
+        infix_direct_cif_func cif = infix_forward_get_direct_code(trampoline);
+        ok(cif != NULL, "Got CIF pointer for vector_add_128");
+        cif(&result, lang_args);
+
+        double * d = (double *)&result;
+        ok(fabs(d[0] - 42.0) < 1e-9 && fabs(d[1] - 42.0) < 1e-9,
+           "Vector addition result correct (Got [%f, %f])",
+           d[0],
+           d[1]);
+        infix_forward_destroy(trampoline);
+#else
+        skip(1, "Test is only for x64");
+#endif
+    };
     infix_registry_destroy(reg);
     done();
 }

@@ -178,9 +178,10 @@ static bool is_passed_by_reference(const infix_type * type) {
         return true;
 
     // Windows x64 ABI:
-    // All vector types are passed by reference (pointer to memory) in standard calls.
+    // 128-bit vectors (__m128) are passed by reference in some environments (like MinGW GCC).
+    // Vectors of 256 bits or 512 bits are always passed by reference.
     if (type->category == INFIX_TYPE_VECTOR)
-        return true;
+        return type->size >= 16;
 
     return type->size != 1 && type->size != 2 && type->size != 4 && type->size != 8;
 }
@@ -545,44 +546,66 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
     // Calculate space needed for each component, ensuring 16-byte alignment for safety.
     size_t return_size = (context->return_type->size + 15) & ~15;
     size_t args_array_size = context->num_args * sizeof(void *);
+
+    size_t gpr_reg_save_area_size = NUM_GPR_ARGS * 8;
+    size_t xmm_reg_save_area_size = NUM_XMM_ARGS * 64;  // Reserve 64 bytes for each XMM/YMM/ZMM
+
     size_t saved_args_data_size = 0;
+    size_t max_align = 16;
     for (size_t i = 0; i < context->num_args; ++i) {
         if (context->arg_types[i] == nullptr) {
             *out_layout = nullptr;
-            // Set error for an illegal type in an aggregate (a NULL type pointer).
             _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_INVALID_MEMBER_TYPE, 0);
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
-        if (!is_passed_by_reference(context->arg_types[i]))
-            saved_args_data_size += (context->arg_types[i]->size + 15) & ~15;
+        if (!is_passed_by_reference(context->arg_types[i])) {
+            size_t align = context->arg_types[i]->alignment;
+            if (align < 8)
+                align = 8;
+            if (align > max_align)
+                max_align = align;
+            saved_args_data_size = _infix_align_up(saved_args_data_size, align);
+            saved_args_data_size += context->arg_types[i]->size;
+        }
     }
     // Security: Check against excessively large argument data size.
     if (saved_args_data_size > INFIX_MAX_ARG_SIZE) {
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-    size_t gpr_reg_save_area_size = NUM_GPR_ARGS * 8;
-    size_t xmm_reg_save_area_size = NUM_XMM_ARGS * 16;
+
     // The total space needed includes all local data plus the shadow space for the call to the C dispatcher.
     size_t total_local_space = return_size + args_array_size + saved_args_data_size + gpr_reg_save_area_size +
         xmm_reg_save_area_size + SHADOW_SPACE;
+
+    // Add max_align to account for potential internal padding
+    total_local_space += max_align;
+
     // Prevent integer overflow from fuzzer-provided types that are impractically large by ensuring the total required
     // stack space is within a safe limit.
     if (total_local_space > INFIX_MAX_STACK_ALLOC) {
         *out_layout = nullptr;
         return INFIX_ERROR_LAYOUT_FAILED;
     }
-    // The total allocation for the stack frame must be 16-byte aligned.
-    layout->total_stack_alloc = (total_local_space + 15) & ~15;
-    // Define the layout of our local stack variables relative to RSP after allocation.
-    // [ shadow space | return_buffer | gpr_save | xmm_save | args_array | saved_args_data ]
-    layout->return_buffer_offset = SHADOW_SPACE;
-    layout->gpr_save_area_offset = layout->return_buffer_offset + return_size;
-    layout->xmm_save_area_offset = layout->gpr_save_area_offset + gpr_reg_save_area_size;
-    layout->args_array_offset = layout->xmm_save_area_offset + xmm_reg_save_area_size;
 
-    // Ensure 16-byte alignment for the saved arguments area.
-    layout->saved_args_offset = (layout->args_array_offset + args_array_size + 15) & ~15;
+    // The total allocation for the stack frame must be 16-byte aligned.
+    // When we enter the function, RSP is 8-byte aligned (after call).
+    // After 'push rbp', RSP is 16-byte aligned.
+    // After 'push rsi', 'push rdi', RSP is 16-byte aligned (2 * 8 = 16).
+    // After 'and rsp, -16', RSP is 16-byte aligned.
+    // So 'total_stack_alloc' must be a multiple of 16 to keep it aligned for the dispatcher call.
+    layout->total_stack_alloc = _infix_align_up(total_local_space, 16);
+
+    // Define the layout of our local stack variables relative to RSP after allocation.
+    // [ shadow space (32) | return_buffer | gpr_save | xmm_save | args_array | (padding) | saved_args_data ]
+    layout->return_buffer_offset = SHADOW_SPACE;
+    layout->gpr_save_area_offset = layout->return_buffer_offset + (int32_t)return_size;
+    layout->xmm_save_area_offset = layout->gpr_save_area_offset + (int32_t)gpr_reg_save_area_size;
+    layout->args_array_offset = layout->xmm_save_area_offset + (int32_t)xmm_reg_save_area_size;
+
+    // Ensure proper alignment for the saved arguments area.
+    layout->saved_args_offset =
+        (int32_t)_infix_align_up((size_t)(layout->args_array_offset + args_array_size), max_align);
 
     *out_layout = layout;
     return INFIX_SUCCESS;
@@ -648,18 +671,22 @@ static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_r
 static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * buf,
                                                                   infix_reverse_call_frame_layout * layout,
                                                                   infix_reverse_t * context) {
-    // Step 1: Save all potential incoming argument registers to our local stack
+    // Step 1: Save all potential incoming argument registers to our local stack.
+    // Use 64-byte offsets to support AVX-512 in the stack layout, but save only 128-bits for now to be safe.
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 0 * 8, RCX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 1 * 8, RDX_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 2 * 8, R8_REG);
     emit_mov_mem_reg(buf, RSP_REG, layout->gpr_save_area_offset + 3 * 8, R9_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 0 * 16, XMM0_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 1 * 16, XMM1_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 16, XMM2_REG);
-    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 16, XMM3_REG);
+
+    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 0 * 64, XMM0_REG);
+    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 1 * 64, XMM1_REG);
+    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 2 * 64, XMM2_REG);
+    emit_movups_mem_xmm(buf, RSP_REG, layout->xmm_save_area_offset + 3 * 64, XMM3_REG);
+
     // Step 2: Populate the `args_array` with pointers to the argument data
     size_t arg_pos_offset = return_value_is_by_reference(context->return_type) ? 1 : 0;
     size_t stack_slot_offset = 0;  // Tracks arguments on the caller's stack.
+    size_t current_saved_data_offset = 0;
     for (size_t i = 0; i < context->num_args; i++) {
         infix_type * current_type = context->arg_types[i];
         bool is_fp = is_float(current_type) || is_double(current_type) ||
@@ -667,39 +694,60 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
         bool passed_by_ref = is_passed_by_reference(current_type);
         size_t arg_pos = i + arg_pos_offset;
         bool is_variadic_arg = (i >= context->num_fixed_args);
+
+        int32_t arg_save_loc;
+        if (!passed_by_ref) {
+            current_saved_data_offset = _infix_align_up(current_saved_data_offset, current_type->alignment);
+            arg_save_loc = layout->saved_args_offset + (int32_t)current_saved_data_offset;
+        }
+
         if (arg_pos < 4) {
-            // Argument was passed in a register. We need a pointer to its saved copy.
-            int32_t source_offset;
-            bool use_xmm = is_fp && !is_variadic_arg && !passed_by_ref;
-            if (use_xmm)
-                source_offset = layout->xmm_save_area_offset + arg_pos * 16;
-            else
-                source_offset = layout->gpr_save_area_offset + arg_pos * 8;
-            if (passed_by_ref)
-                // The value in the GPR save area IS the pointer we need. Load it directly.
-                emit_mov_reg_mem(buf, RAX_REG, RSP_REG, source_offset);
-            else
-                // The value is the data itself. Get a pointer TO the saved data.
-                emit_lea_reg_mem(buf, RAX_REG, RSP_REG, source_offset);
+            // Argument was passed in a register.
+            if (passed_by_ref) {
+                // The value in the GPR save area IS the pointer we need. Load it directly into RAX.
+                emit_mov_reg_mem(buf, RAX_REG, RSP_REG, layout->gpr_save_area_offset + (int32_t)arg_pos * 8);
+            }
+            else {
+                // We must copy the value from the reg-save area to its unique aligned slot in saved_args_data.
+                int32_t reg_source_offset;
+                bool use_xmm = is_fp && !is_variadic_arg;
+                if (use_xmm) {
+                    reg_source_offset = layout->xmm_save_area_offset + (int32_t)arg_pos * 64;
+                    if (current_type->category == INFIX_TYPE_VECTOR) {
+                        // Use 128-bit move for vectors
+                        emit_movups_xmm_mem(buf, XMM15_REG, RSP_REG, reg_source_offset);
+                        emit_movups_mem_xmm(buf, RSP_REG, arg_save_loc, XMM15_REG);
+                    }
+                    else {
+                        if (is_float(current_type))
+                            emit_movss_xmm_mem(buf, XMM15_REG, RSP_REG, reg_source_offset);
+                        else
+                            emit_movsd_xmm_mem(buf, XMM15_REG, RSP_REG, reg_source_offset);
+                        emit_movsd_mem_xmm(buf, RSP_REG, arg_save_loc, XMM15_REG);
+                    }
+                }
+                else {
+                    reg_source_offset = layout->gpr_save_area_offset + (int32_t)arg_pos * 8;
+                    emit_mov_reg_mem(buf, RAX_REG, RSP_REG, reg_source_offset);
+                    emit_mov_mem_reg(buf, RSP_REG, arg_save_loc, RAX_REG);
+                }
+                emit_lea_reg_mem(buf, RAX_REG, RSP_REG, arg_save_loc);
+            }
             // Store the final pointer into the args_array.
-            emit_mov_mem_reg(buf, RSP_REG, layout->args_array_offset + i * sizeof(void *), RAX_REG);
+            emit_mov_mem_reg(buf, RSP_REG, layout->args_array_offset + (int32_t)i * sizeof(void *), RAX_REG);
         }
         else {
             // Argument was passed on the caller's stack.
-            // After our prologue, caller stack args start at [rbp + 16 (ret addr + old rbp) + 32 (shadow space)].
-            int32_t caller_stack_offset = 16 + SHADOW_SPACE + (stack_slot_offset * 8);
+            int32_t caller_stack_offset = 16 + SHADOW_SPACE + (int32_t)(stack_slot_offset * 8);
             if (passed_by_ref)
-                // The value on the stack IS the pointer we need. Load it.
                 emit_mov_reg_mem(buf, RAX_REG, RBP_REG, caller_stack_offset);
             else
-                // The value on the stack is the data. Get a pointer TO it.
                 emit_lea_reg_mem(buf, RAX_REG, RBP_REG, caller_stack_offset);
-            // Store the final pointer into the args_array.
-            emit_mov_mem_reg(buf, RSP_REG, layout->args_array_offset + i * sizeof(void *), RAX_REG);
-            // Advance our offset into the caller's stack frame for the next argument.
-            size_t size_on_stack = (passed_by_ref) ? 8 : current_type->size;
-            stack_slot_offset += (size_on_stack + 7) / 8;
+            emit_mov_mem_reg(buf, RSP_REG, layout->args_array_offset + (int32_t)i * sizeof(void *), RAX_REG);
+            stack_slot_offset += (passed_by_ref ? 8 : (current_type->size + 7)) / 8;
         }
+        if (!passed_by_ref)
+            current_saved_data_offset += current_type->size;
     }
     return INFIX_SUCCESS;
 }
@@ -868,7 +916,7 @@ static infix_status prepare_direct_forward_call_frame_win_x64(infix_arena_t * ar
         }
 
         // Determine final ABI location.
-        bool is_fp = is_float(type) || is_double(type);
+        bool is_fp = is_float(type) || is_double(type) || (type->category == INFIX_TYPE_VECTOR);
         bool by_ref =
             is_passed_by_reference(type) || (type->category == INFIX_TYPE_POINTER && handlers[i].aggregate_marshaller);
 

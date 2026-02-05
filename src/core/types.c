@@ -578,9 +578,9 @@ INFIX_API c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * ar
     type->meta.vector_info.element_type = element_type;
     type->meta.vector_info.num_elements = num_elements;
     type->size = element_type->size * num_elements;
-    // Vector alignment is typically its total size, up to a platform-specific maximum (e.g., 16 on x64).
-    // This is a simplification; the ABI-specific classifiers will handle the true alignment rules.
-    type->alignment = type->size > 8 ? 16 : type->size;
+    // Vector alignment is its total size.
+    // This ensures __m128 is 16-byte aligned, __m256 is 32-byte, and __m512 is 64-byte.
+    type->alignment = type->size;
     *out_type = type;
     return INFIX_SUCCESS;
 }
