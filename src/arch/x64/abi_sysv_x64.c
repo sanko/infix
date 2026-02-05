@@ -1199,7 +1199,11 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                 classify_aggregate_sysv(context->return_type, classes, &num_classes);
             if (num_classes >= 1) {  // First eightbyte
                 if (classes[0] == SSE) {
-                    if (is_float(context->return_type))
+                    if (is_float16(context->return_type)) {
+                        emit_movzx_reg64_mem16(buf, RAX_REG, RBP_REG, layout->return_buffer_offset);
+                        emit_movq_xmm_gpr(buf, XMM0_REG, RAX_REG);
+                    }
+                    else if (is_float(context->return_type))
                         emit_movss_xmm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);
                     else if (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 32)
                         emit_vmovupd_ymm_mem(buf, XMM0_REG, RBP_REG, layout->return_buffer_offset);

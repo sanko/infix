@@ -1146,6 +1146,8 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
         else if (is_long_double(context->return_type) ||
                  (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 16))
             emit_arm64_ldr_q_imm(buf, V0_REG, SP_REG, layout->return_buffer_offset);
+        else if (is_float16(context->return_type))
+            emit_arm64_ldr_vpr(buf, 2, V0_REG, SP_REG, layout->return_buffer_offset);
         else if (is_float(context->return_type) || is_double(context->return_type))
             emit_arm64_ldr_vpr(buf, is_double(context->return_type), V0_REG, SP_REG, layout->return_buffer_offset);
         else {

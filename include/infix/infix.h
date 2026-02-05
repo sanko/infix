@@ -1346,6 +1346,7 @@ typedef enum {
     INFIX_CODE_UNKNOWN,          /**< An unspecified error occurred. */
     INFIX_CODE_NULL_POINTER,     /**< A required pointer argument was NULL. */
     INFIX_CODE_MISSING_REGISTRY, /**< A type registry was required but not provided. */
+    INFIX_CODE_NATIVE_EXCEPTION, /**< A native exception (C++/SEH) was thrown during execution. */
 
     // Allocation Codes (100-199)
     INFIX_CODE_OUT_OF_MEMORY = 100,       /**< A call to `malloc`, `calloc`, etc. failed. */

@@ -114,6 +114,8 @@ static const char * _get_error_message_for_code(infix_error_code_t code) {
         return "A required pointer argument was NULL";
     case INFIX_CODE_MISSING_REGISTRY:
         return "A type registry was required but not provided";
+    case INFIX_CODE_NATIVE_EXCEPTION:
+        return "A native exception was thrown across the FFI boundary";
     case INFIX_CODE_OUT_OF_MEMORY:
         return "Out of memory";
     case INFIX_CODE_EXECUTABLE_MEMORY_FAILURE:

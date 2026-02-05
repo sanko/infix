@@ -192,7 +192,7 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Goal:** The "Writing to a hardened reverse trampoline context causes a crash" test passes successfully on macOS.
     *   **Possible Roadblocks:** This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems.
 
-- [ ] **Add Half-Precision Floating-Point (`float16_t`) Support**
+- [x] **Add Half-Precision Floating-Point (`float16_t`) Support**
     *   **Context:** `_Float16` is increasingly important for machine learning and GPU-related tasks.
     *   **Idea:** Add a new primitive type. The ABI rules are simple: `_Float16` arguments are promoted to `float` and passed in standard floating-point registers.
     *   **Goal:** The library correctly handles `float16_t` arguments and return values.

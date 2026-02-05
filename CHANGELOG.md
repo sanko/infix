@@ -9,18 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for half-precision floating-point (`float16_t`).
+- Implemented Structured Exception Handling (SEH) for Windows x64 for C++ exception propagation through trampolines.
 - Added support for 256-bit (AVX) and 512-bit (AVX-512) vectors in the System V ABI.
 - Added support for receiving bitfield structs in reverse call trampolines.
-- Added `t/405_simd_vectors_avx.c` and `t/406_simd_forward.c` to the test suite.
+- Added `t/405_simd_vectors_avx.c`, `t/406_simd_forward.c`, and `t/407_float16.c` to the test suite.
 
 ### Changed
 
+- Updated `infix_executable_make_executable` and internal layout structures to track trampoline prologue sizes, necessary for SEH registration.
+- Explicitly enabled 16-byte stack alignment in Windows x64 trampolines to ensure SIMD compatibility.
 - Updated `infix_type_create_vector` to use the vector's full size for its natural alignment (e.g., 32-byte alignment for `__m256`).
 - Refined the Windows x64 ABI to pass all vector types by reference (pointer in GPR). This ensures compatibility with MSVC which expects even 128-bit vectors to be passed via pointer in many scenarios, while still returning them by value in `XMM0`.
 - Move to a pre-calculated hash field in `_infix_registry_entry_t`. Lookups and rehashing now use this stored hash, significantly reducing string hashing overhead during type resolution and registry scaling.
 
 ### Fixed
 
+- Corrected a performance issue on x64 by adding `vzeroupper` calls in epilogues when AVX instructions are potentially used, avoiding transition penalties.
+- Fixed bitfield parsing logic to correctly handle colons in namespaces vs bitfield widths.
 - Fixed missing support for 256-bit and 512-bit vectors in System V reverse trampolines.
 - Rewrote `_layout_struct` in `src/core/types.c` to correctly handle bitfields larger than 8 bits and ensures `bit_offset` is always within the correct byte, matching standard C (well, GNU) compiler packing behavior.
 - Fixed a bug in the SysV recursive classifier that was incorrectly applying strict natural alignment checks to bitfield members. This was causing structs containing bitfields to be unnecessarily passed on the stack instead of in registers.

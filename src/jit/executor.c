@@ -519,8 +519,8 @@ void infix_executable_free(infix_executable_t exec) {
  * @return `true` on success, `false` on failure.
  */
 c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
-                                                    infix_executable_category_t category,
-                                                    uint32_t prologue_size) {
+                                                    c23_maybe_unused infix_executable_category_t category,
+                                                    c23_maybe_unused uint32_t prologue_size) {
     if (exec->rw_ptr == nullptr || exec->size == 0)
         return false;
 
