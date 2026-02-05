@@ -893,7 +893,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         bool is_from_stack = false;
 
         bool expect_in_vpr =
-            is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+            is_float16(type) || is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI disables HFA rules for variadic functions; floats go to GPRs.
         if (context->is_variadic)
@@ -1137,7 +1137,7 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
             size_t num_elements = context->return_type->size / base->size;
             for (size_t i = 0; i < num_elements; ++i) {
                 emit_arm64_ldr_vpr(buf,
-                                   is_double(base),
+                                   base->size,
                                    VPR_ARGS[i],
                                    SP_REG,
                                    (int32_t)(layout->return_buffer_offset + i * base->size));  // Explicit cast
@@ -1149,7 +1149,7 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
         else if (is_float16(context->return_type))
             emit_arm64_ldr_vpr(buf, 2, V0_REG, SP_REG, layout->return_buffer_offset);
         else if (is_float(context->return_type) || is_double(context->return_type))
-            emit_arm64_ldr_vpr(buf, is_double(context->return_type), V0_REG, SP_REG, layout->return_buffer_offset);
+            emit_arm64_ldr_vpr(buf, context->return_type->size, V0_REG, SP_REG, layout->return_buffer_offset);
         else {
             // Integer, pointer, or small struct returned in GPRs.
             emit_arm64_ldr_imm(buf, true, X0_REG, SP_REG, layout->return_buffer_offset);
@@ -1431,7 +1431,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                     is_hfa(arg_layout->type, &base);
                     for (uint8_t j = 0; j < arg_layout->location.num_regs; ++j) {
                         emit_arm64_ldr_vpr(buf,
-                                           is_double(base),
+                                           base->size,
                                            VPR_ARGS[arg_layout->location.reg_index + j],
                                            SP_REG,
                                            my_scratch_offset + (int32_t)(j * base->size));
@@ -1458,7 +1458,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 if (is_float(arg_layout->type)) {
                     // 1. Load 64-bit double from scratch into D-reg (use dest reg as temp)
                     arm64_vpr dest_v = VPR_ARGS[arg_layout->location.reg_index];
-                    emit_arm64_ldr_vpr(buf, true, dest_v, SP_REG, my_scratch_offset);
+                    emit_arm64_ldr_vpr(buf, 8, dest_v, SP_REG, my_scratch_offset);
 
                     // 2. FCVT S, D (Double to Single)
                     // Opcode: 0x1e624000 | (Rn << 5) | Rd.
@@ -1469,7 +1469,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 else {
                     // Load directly (double)
                     emit_arm64_ldr_vpr(buf,
-                                       is_double(arg_layout->type),
+                                       8,
                                        VPR_ARGS[arg_layout->location.reg_index],
                                        SP_REG,
                                        my_scratch_offset);
