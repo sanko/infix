@@ -93,13 +93,12 @@ typedef struct _UNWIND_INFO {
 #elif defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_AARCH64)
 #pragma pack(push, 1)
 typedef struct _UNWIND_INFO_ARM64 {
-    uint32_t Version : 3;
-    uint32_t Flags : 5;
+    uint32_t FunctionLength : 18;
+    uint32_t Version : 2;
     uint32_t X : 1;
     uint32_t E : 1;
     uint32_t EpilogueCount : 5;
     uint32_t CodeWords : 5;
-    uint32_t Reserved : 12;
 } UNWIND_INFO_ARM64;
 #pragma pack(pop)
 #define INFIX_SEH_METADATA_SIZE 256
@@ -537,16 +536,15 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
     uint8_t * metadata_base = (uint8_t *)exec->rw_ptr + exec->size;
 
     // 1. RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
+    // On ARM64, we use two entries: one for the function and a sentinel for the end.
     RUNTIME_FUNCTION * rf = (RUNTIME_FUNCTION *)_infix_align_up((size_t)metadata_base, 4);
 
     // 2. UNWIND_INFO (XDATA) - Follows PDATA.
-    UNWIND_INFO_ARM64 * ui = (UNWIND_INFO_ARM64 *)_infix_align_up((size_t)(rf + 1), 4);
+    UNWIND_INFO_ARM64 * ui = (UNWIND_INFO_ARM64 *)_infix_align_up((size_t)(rf + 2), 4);
 
+    ui->FunctionLength = (uint32_t)(exec->size / 4);
     ui->Version = 0;
-    ui->Flags = 0;
-    if (category == INFIX_EXECUTABLE_SAFE_FORWARD)
-        ui->Flags |= 1;  // UNW_Flag_EHandler
-    ui->X = 0;
+    ui->X = (category == INFIX_EXECUTABLE_SAFE_FORWARD);
     ui->E = 0;
     ui->EpilogueCount = 1;
 
@@ -590,16 +588,19 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
     DWORD64 base_address = (DWORD64)exec->rx_ptr & ~0xFFFF;
     DWORD rva_offset = (DWORD)((uint8_t *)exec->rx_ptr - (uint8_t *)base_address);
 
-    rf->BeginAddress = rva_offset;
-    rf->EndAddress = rva_offset + (DWORD)exec->size;
-    rf->UnwindData = rva_offset + (DWORD)((uint8_t *)ui - (uint8_t *)exec->rx_ptr);
+    rf[0].BeginAddress = rva_offset;
+    rf[0].UnwindData = rva_offset + (DWORD)((uint8_t *)ui - (uint8_t *)exec->rx_ptr);
 
-    if (ui->Flags & 1) {
+    // Sentinel entry defines the end of the previous function
+    rf[1].BeginAddress = rva_offset + (DWORD)exec->size;
+    rf[1].UnwindData = 0;
+
+    if (ui->X) {
         exception_handler_ptr[0] = rva_offset + (uint32_t)(stub - (uint8_t *)exec->rx_ptr);
         exception_handler_ptr[1] = epilogue_offset;
     }
 
-    if (RtlAddFunctionTable(rf, 1, base_address)) {
+    if (RtlAddFunctionTable(rf, 2, base_address)) {
         exec->seh_registration = rf;
         INFIX_DEBUG_PRINTF(
             "Registered SEH PDATA at %p (XDATA at %p, Stub at %p) for JIT code at %p", rf, ui, stub, exec->rx_ptr);
@@ -791,27 +792,31 @@ static void _infix_register_eh_frame_arm64(infix_executable_t * exec, infix_exec
         *p++ = 29;  // def_cfa_register r29
     }
     else {
-        // stp x29, x30, [sp, #-16]!; mov x29, sp; stp x19, x20, ...; stp x21, x22, ...
+        // stp x29, x30, [sp, #-16]!; stp x19, x20, ...; stp x21, x22, ...; mov x29, sp
         *p++ = 0x41;  // after stp x29, x30
         *p++ = 0x0e;
         *p++ = 16;
         *p++ = 0x9d;
-        *p++ = 2;
+        *p++ = 2;  // x29 at CFA - 16
         *p++ = 0x9e;
-        *p++ = 1;
+        *p++ = 1;     // x30 at CFA - 8
+        *p++ = 0x41;  // after stp x19, x20
+        *p++ = 0x0e;
+        *p++ = 32;
+        *p++ = 0x93;
+        *p++ = 4;  // x19 at CFA - 32
+        *p++ = 0x94;
+        *p++ = 3;     // x20 at CFA - 24
+        *p++ = 0x41;  // after stp x21, x22
+        *p++ = 0x0e;
+        *p++ = 48;
+        *p++ = 0x95;
+        *p++ = 6;  // x21 at CFA - 48
+        *p++ = 0x96;
+        *p++ = 5;     // x22 at CFA - 40
         *p++ = 0x41;  // after mov x29, sp
         *p++ = 0x0d;
-        *p++ = 29;
-        *p++ = 0x41;  // after stp x19, x20
-        *p++ = 0x93;
-        *p++ = 4;  // offset r19, 4 (CFA - 32)
-        *p++ = 0x94;
-        *p++ = 3;     // offset r20, 3 (CFA - 24)
-        *p++ = 0x41;  // after stp x21, x22
-        *p++ = 0x95;
-        *p++ = 6;  // offset r21, 6 (CFA - 48)
-        *p++ = 0x96;
-        *p++ = 5;  // offset r22, 5 (CFA - 40)
+        *p++ = 29;  // def_cfa_register x29 (offset remains 48)
     }
 
     while ((size_t)(p - eh) < (cie_size + fde_size))
