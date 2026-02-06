@@ -572,6 +572,9 @@ sub compile_and_run_tests {
 
         # Create a copy of the main cflags to modify locally for this test.
         my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+        if ( $test_file =~ /870_cpp_compat/ ) {
+            push @local_cflags, '-fexceptions' unless $config->{compiler} eq 'msvc';
+        }
         my $src_content  = do { local $/; open my $fh, '<', $test_file; <$fh> };
         my @simd_flags   = get_simd_flags( $config, $src_content );
         push @local_cflags, @simd_flags;
@@ -718,6 +721,9 @@ sub run_coverage_gcov {
 
         # Use the original config with coverage flags for compiling the test itself.
         my @local_cflags = $is_cpp ? @{ $config->{cxxflags} } : @{ $config->{cflags} };
+        if ( $test_file =~ /870_cpp_compat/ ) {
+            push @local_cflags, '-fexceptions' unless $config->{compiler} eq 'msvc';
+        }
         my $src_content  = do { local $/; open my $fh, '<', $test_file; <$fh> };
         my @simd_flags   = get_simd_flags( $config, $src_content );
         push @local_cflags, @simd_flags;
