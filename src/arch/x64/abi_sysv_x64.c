@@ -1037,8 +1037,10 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
                             emit_vmovupd_mem_zmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
                         else if (current_type->size == 32)
                             emit_vmovupd_mem_ymm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
-                        else  // size 16 or other
+                        else if (current_type->size == 16)
                             emit_movups_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
+                        else // size 8 (or other small vector)
+                            emit_movsd_mem_xmm(buf, RBP_REG, arg_save_loc, XMM_ARGS[xmm_idx++]);
                     }
                     else if (is_float16(current_type)) {
                         // movd eax, xmm_reg ; mov [rbp + arg_save_loc], ax
