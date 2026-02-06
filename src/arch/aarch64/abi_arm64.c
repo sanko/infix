@@ -892,8 +892,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         bool is_pass_by_ref = (type->size > 16) && !is_variadic_arg;
         bool is_from_stack = false;
 
-        bool expect_in_vpr =
-            is_float16(type) || is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+        bool expect_in_vpr = is_float16(type) || is_float(type) || is_double(type) || is_long_double(type) ||
+            type->category == INFIX_TYPE_VECTOR;
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI disables HFA rules for variadic functions; floats go to GPRs.
         if (context->is_variadic)
@@ -1148,7 +1148,8 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
             emit_arm64_ldr_q_imm(buf, V0_REG, SP_REG, layout->return_buffer_offset);
         else if (is_float16(context->return_type))
             emit_arm64_ldr_vpr(buf, 2, V0_REG, SP_REG, layout->return_buffer_offset);
-        else if (is_float(context->return_type) || is_double(context->return_type))
+        else if (is_float(context->return_type) || is_double(context->return_type) ||
+                 (is_long_double(context->return_type) && context->return_type->size == 8))
             emit_arm64_ldr_vpr(buf, context->return_type->size, V0_REG, SP_REG, layout->return_buffer_offset);
         else {
             // Integer, pointer, or small struct returned in GPRs.
@@ -1419,11 +1420,8 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 break;
             case ARG_LOCATION_VPR:
                 // Structs by value in VPR
-                emit_arm64_ldr_vpr(buf,
-                                   arg_layout->type->size > 4,
-                                   VPR_ARGS[arg_layout->location.reg_index],
-                                   SP_REG,
-                                   my_scratch_offset);
+                emit_arm64_ldr_vpr(
+                    buf, arg_layout->type->size, VPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
                 break;
             case ARG_LOCATION_VPR_HFA:
                 {
@@ -1468,11 +1466,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 }
                 else {
                     // Load directly (double)
-                    emit_arm64_ldr_vpr(buf,
-                                       8,
-                                       VPR_ARGS[arg_layout->location.reg_index],
-                                       SP_REG,
-                                       my_scratch_offset);
+                    emit_arm64_ldr_vpr(buf, 8, VPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
                 }
             }
             else if (arg_layout->location.type == ARG_LOCATION_STACK) {
@@ -1507,21 +1501,24 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
     // 1. Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         const infix_type * hfa_base = nullptr;
-        if (is_long_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
+        if ((is_long_double(ret_type) && ret_type->size == 16) ||
+            (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
             emit_arm64_str_q_imm(buf, V0_REG, X20_REG, 0);
         else if (is_hfa(ret_type, &hfa_base)) {
             size_t num_elements = ret_type->size / hfa_base->size;
             for (size_t i = 0; i < num_elements; ++i)
                 emit_arm64_str_vpr(buf,
-                                   is_double(hfa_base),
+                                   hfa_base->size,
                                    VPR_ARGS[i],
                                    X20_REG,
                                    (int32_t)(i * hfa_base->size));  // Explicit cast
         }
+        else if (is_float16(ret_type))
+            emit_arm64_str_vpr(buf, 2, V0_REG, X20_REG, 0);
         else if (is_float(ret_type))
-            emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);
+            emit_arm64_str_vpr(buf, 4, V0_REG, X20_REG, 0);
         else if (is_double(ret_type))
-            emit_arm64_str_vpr(buf, true, V0_REG, X20_REG, 0);
+            emit_arm64_str_vpr(buf, 8, V0_REG, X20_REG, 0);
         else {
             // Integer, pointer, or small aggregate return.
             switch (ret_type->size) {

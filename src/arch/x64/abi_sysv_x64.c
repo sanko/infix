@@ -1505,7 +1505,11 @@ static infix_status generate_direct_forward_epilogue_sysv_x64(code_buffer * buf,
 
             if (num_classes == 1) {
                 if (classes[0] == SSE) {
-                    if (is_float(ret_type))
+                    if (is_float16(ret_type)) {
+                        emit_movq_gpr_xmm(buf, RAX_REG, XMM0_REG);
+                        emit_mov_mem_reg16(buf, R13_REG, 0, RAX_REG);
+                    }
+                    else if (is_float(ret_type))
                         emit_movss_mem_xmm(buf, R13_REG, 0, XMM0_REG);
                     else if (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 32)
                         emit_vmovupd_mem_ymm(buf, R13_REG, 0, XMM0_REG);

@@ -44,7 +44,7 @@
 // This file performs many safe conversions from size_t to int32_t for instruction
 // offsets. The library's internal limits (INFIX_MAX_STACK_ALLOC) ensure these
 // conversions do not lose data. We disable the warning to produce a clean build.
-#ifdef _MSC_VER
+#if defined(INFIX_COMPILER_MSVC)
 #pragma warning(push)
 #pragma warning(disable : 4267)  // conversion from 'size_t' to 'int32_t'
 #endif
@@ -146,8 +146,8 @@ static bool return_value_is_by_reference(const infix_type * type) {
     if (type->category == INFIX_TYPE_VECTOR) {
 // Windows x64 ABI (MSVC and Clang) returns ALL vectors in registers (XMM0, YMM0, ZMM0).
 // However, MinGW GCC diverges for __m256 and __m512, returning them via hidden pointer.
-// We target specifically MinGW GCC by checking for __GNUC__ and excluding __clang__.
-#if defined(__GNUC__) && !defined(__clang__) && (defined(__MINGW32__) || defined(__MINGW64__))
+// We target specifically MinGW GCC by checking for INFIX_COMPILER_GCC and excluding INFIX_COMPILER_CLANG.
+#if defined(INFIX_COMPILER_GCC) && !defined(INFIX_COMPILER_CLANG) && defined(INFIX_ENV_MINGW)
         if (type->size > 16)
             return true;
 #endif

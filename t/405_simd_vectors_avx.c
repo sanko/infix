@@ -17,7 +17,7 @@
 #include <immintrin.h>
 
 #if defined(__AVX__)
-// --- AVX (256-bit) ---
+// AVX (256-bit)
 typedef __m256 v8f;
 
 void v8f_add_handler(infix_reverse_t * ctx, void * ret, void ** args) {

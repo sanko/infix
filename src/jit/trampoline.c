@@ -319,7 +319,8 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
                                                infix_type ** arg_types,
                                                size_t num_args,
                                                size_t num_fixed_args,
-                                               void * target_fn) {
+                                               void * target_fn,
+                                               bool is_safe) {
     if (out_trampoline == nullptr || return_type == nullptr || (arg_types == nullptr && num_args > 0)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -414,6 +415,7 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
     handle->num_args = num_args;
     handle->num_fixed_args = num_fixed_args;
     handle->target_fn = target_fn;
+    handle->is_safe = is_safe;
     // Allocate and finalize executable memory.
     handle->exec = infix_executable_alloc(buf.size);
     if (handle->exec.rw_ptr == nullptr) {
@@ -421,7 +423,8 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
         goto cleanup;
     }
     infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(&handle->exec, INFIX_EXECUTABLE_FORWARD, layout->prologue_size)) {
+    if (!infix_executable_make_executable(
+            &handle->exec, is_safe ? INFIX_EXECUTABLE_SAFE_FORWARD : INFIX_EXECUTABLE_FORWARD, layout->prologue_size)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -602,7 +605,7 @@ INFIX_API c23_nodiscard infix_status infix_forward_create_manual(infix_forward_t
     // types are assumed to be managed by the user.
     _infix_clear_error();
     return _infix_forward_create_impl(
-        out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, target_function);
+        out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, target_function, false);
 }
 /**
  * @brief Creates an unbound forward trampoline from `infix_type` objects (Manual API).
@@ -624,7 +627,7 @@ INFIX_API c23_nodiscard infix_status infix_forward_create_unbound_manual(infix_f
                                                                          size_t num_fixed_args) {
     _infix_clear_error();
     return _infix_forward_create_impl(
-        out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, nullptr);
+        out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, nullptr, false);
 }
 /**
  * @brief Destroys a forward trampoline and frees all associated memory.
@@ -990,7 +993,40 @@ INFIX_API c23_nodiscard infix_status infix_forward_create_in_arena(infix_forward
     }
     // Call the core internal implementation with the parsed types.
     status = _infix_forward_create_impl(
-        out_trampoline, target_arena, ret_type, arg_types, num_args, num_fixed, target_function);
+        out_trampoline, target_arena, ret_type, arg_types, num_args, num_fixed, target_function, false);
+    infix_arena_destroy(arena);
+    return status;
+}
+INFIX_API c23_nodiscard infix_status infix_forward_create_safe(infix_forward_t ** out_trampoline,
+                                                               const char * signature,
+                                                               void * target_function,
+                                                               infix_registry_t * registry) {
+    _infix_clear_error();
+    if (!signature || !target_function) {
+        _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
+    infix_arena_t * arena = nullptr;
+    infix_type * ret_type = nullptr;
+    infix_function_argument * args = nullptr;
+    size_t num_args = 0, num_fixed = 0;
+    infix_status status = infix_signature_parse(signature, &arena, &ret_type, &args, &num_args, &num_fixed, registry);
+    if (status != INFIX_SUCCESS) {
+        infix_arena_destroy(arena);
+        return status;
+    }
+    infix_type ** arg_types =
+        (num_args > 0) ? infix_arena_alloc(arena, sizeof(infix_type *) * num_args, _Alignof(infix_type *)) : nullptr;
+    if (num_args > 0 && !arg_types) {
+        infix_arena_destroy(arena);
+        _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
+        return INFIX_ERROR_ALLOCATION_FAILED;
+    }
+    for (size_t i = 0; i < num_args; ++i)
+        arg_types[i] = args[i].type;
+
+    status = _infix_forward_create_impl(
+        out_trampoline, NULL, ret_type, arg_types, num_args, num_fixed, target_function, true);
     infix_arena_destroy(arena);
     return status;
 }

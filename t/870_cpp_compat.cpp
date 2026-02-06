@@ -40,6 +40,7 @@
 #define _XOPEN_SOURCE 700
 #endif
 
+#include "common/infix_config.h"
 #include <cwctype>
 #include <infix/infix.h>
 #include <iostream>
@@ -88,8 +89,9 @@ TEST {
     }
     subtest("C++ Exception Propagation") {
         plan(2);
-#if defined(_WIN32) && defined(_M_X64)
-        // Exception unwinding through JIT code is now supported on Windows x64.
+#if (defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_X64)) || \
+    (defined(INFIX_OS_LINUX) && (defined(INFIX_ARCH_X64) || defined(INFIX_ARCH_AARCH64)))
+        // Exception unwinding through JIT code is now supported on Windows x64 and Linux (x64/ARM64).
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create(&trampoline, "()->void", (void *)throw_exception_func, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline created for exception thrower");

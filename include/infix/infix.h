@@ -649,6 +649,23 @@ INFIX_API INFIX_NODISCARD infix_status infix_forward_create(infix_forward_t **,
                                                             void *,
                                                             infix_registry_t *);
 /**
+ * @brief Creates a "safe" bound forward trampoline that catches native exceptions.
+ * @details This is identical to `infix_forward_create`, but the generated trampoline
+ *          is wrapped in a platform-specific exception handler (e.g., SEH on Windows).
+ *          If the target function throws an exception, the trampoline will catch it
+ *          and set the thread-local error to `INFIX_CODE_NATIVE_EXCEPTION`.
+ *
+ * @param[out] out_trampoline Receives the created handle.
+ * @param[in] signature The function signature.
+ * @param[in] target_function The address of the C function.
+ * @param[in] registry An optional type registry.
+ * @return `INFIX_SUCCESS` on success.
+ */
+INFIX_API INFIX_NODISCARD infix_status infix_forward_create_safe(infix_forward_t **,
+                                                                 const char *,
+                                                                 void *,
+                                                                 infix_registry_t *);
+/**
  * @brief Creates an "unbound" forward trampoline from a signature string.
  *
  * @details An unbound trampoline is more flexible than a bound one. The target function

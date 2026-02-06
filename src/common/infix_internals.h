@@ -58,7 +58,8 @@ typedef struct {
     HANDLE handle;           /**< The handle from `VirtualAlloc`, needed for `VirtualFree`. */
     void * seh_registration; /**< (Windows x64) Opaque handle from `RtlAddFunctionTable`. */
 #else
-    int shm_fd; /**< The file descriptor for shared memory on dual-mapping POSIX systems. -1 otherwise. */
+    int shm_fd;          /**< The file descriptor for shared memory on dual-mapping POSIX systems. -1 otherwise. */
+    void * eh_frame_ptr; /**< (POSIX) Pointer to the registered .eh_frame data. */
 #endif
     void * rx_ptr; /**< The read-execute memory address. This is the callable function pointer. */
     void * rw_ptr; /**< The read-write memory address. The JIT compiler writes machine code here. */
@@ -97,6 +98,7 @@ struct infix_forward_t {
     size_t num_fixed_args;     /**< The number of non-variadic arguments. */
     void * target_fn;          /**< The target C function pointer (for bound trampolines), or `nullptr` for unbound. */
     bool is_direct_trampoline; /**< If true, this is a high-performance direct marshalling trampoline. */
+    bool is_safe;              /**< If true, the trampoline wraps the call in an exception handler. */
 };
 /**
  * @brief A function pointer to the universal C dispatcher for reverse calls.
@@ -674,6 +676,7 @@ INFIX_INTERNAL c23_nodiscard infix_executable_t infix_executable_alloc(size_t si
 INFIX_INTERNAL void infix_executable_free(infix_executable_t exec);
 typedef enum {
     INFIX_EXECUTABLE_FORWARD,
+    INFIX_EXECUTABLE_SAFE_FORWARD,
     INFIX_EXECUTABLE_REVERSE,
     INFIX_EXECUTABLE_DIRECT
 } infix_executable_category_t;
