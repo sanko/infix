@@ -498,11 +498,11 @@ static void _infix_register_seh_windows_x64(infix_executable_t * exec,
  *          and a Frame Description Entry (FDE) that match the stack behavior
  *          of our trampolines (standard RBP-based frame).
  */
-static void _infix_register_eh_frame_linux_x64(infix_executable_t * exec) {
+static void _infix_register_eh_frame_linux_x64(infix_executable_t * exec, infix_executable_category_t category) {
     // Simplified .eh_frame layout: [ CIE | FDE | Terminator ]
     const size_t cie_size = 32;
-    const size_t fde_size = 48;
-    const size_t total_size = cie_size + fde_size + 4;  // +4 for null terminator
+    const size_t fde_size = 64;
+    const size_t total_size = cie_size + fde_size + 4; // +4 for null terminator
 
     uint8_t * eh = infix_malloc(total_size);
     if (!eh)
@@ -511,53 +511,86 @@ static void _infix_register_eh_frame_linux_x64(infix_executable_t * exec) {
 
     uint8_t * p = eh;
 
-    // CIE (Common Information Entry)
+    // CIE
     *(uint32_t *)p = (uint32_t)(cie_size - 4);
-    p += 4;  // length
+    p += 4;
     *(uint32_t *)p = 0;
-    p += 4;       // cie_id (0)
+    p += 4;
     *p++ = 1;     // version
-    *p++ = '\0';  // augmentation string ("")
-    *p++ = 1;     // code_alignment_factor
-    *p++ = 0x78;  // data_alignment_factor (-8 in SLEB128)
-    *p++ = 16;    // return_address_register (16 = rip on x64)
+    *p++ = '\0';  // augmentation
+    *p++ = 1;     // code align
+    *p++ = 0x78;  // data align (-8)
+    *p++ = 16;    // ret reg (rip)
 
-    // CIE Instructions
+    // Initial state: CFA = rsp + 8, rip at CFA - 8
     *p++ = 0x0c;
     *p++ = 0x07;
-    *p++ = 0x08;  // DW_CFA_def_cfa rsp, 8
+    *p++ = 0x08;
     *p++ = 0x90;
-    *p++ = 0x01;  // DW_CFA_offset rip, 1 (rip is at CFA - 8)
-    // Padding
+    *p++ = 0x01;
     while ((size_t)(p - eh) < cie_size)
         *p++ = 0;
 
-    // FDE (Frame Description Entry)
+    // FDE
     uint8_t * fde_start = eh + cie_size;
     p = fde_start;
     *(uint32_t *)p = (uint32_t)(fde_size - 4);
-    p += 4;  // length
+    p += 4;
     *(uint32_t *)p = (uint32_t)(p - eh);
-    p += 4;  // cie_pointer (back-offset)
+    p += 4;  // back-offset
 
     *(void **)p = exec->rx_ptr;
-    p += 8;  // pc_begin (absolute)
+    p += 8;
     *(uint64_t *)p = (uint64_t)exec->size;
-    p += 8;  // pc_range (absolute)
+    p += 8;
+    *p++ = 0;  // aug data len
 
-    // FDE Instructions: match our trampoline prologue (push rbp; mov rbp, rsp)
-    *p++ = 0x41;  // DW_CFA_advance_loc 1 (after push rbp)
-    *p++ = 0x0e;
-    *p++ = 16;  // DW_CFA_def_cfa_offset 16
-    *p++ = 0x86;
-    *p++ = 0x02;  // DW_CFA_offset rbp, 2 (rbp is at CFA - 16)
-    *p++ = 0x43;  // DW_CFA_advance_loc 3 (after mov rbp, rsp)
-    *p++ = 0x0d;
-    *p++ = 0x06;  // DW_CFA_def_cfa_register rbp (CFA is now rbp + 16)
+    // Instructions:
+    if (category == INFIX_EXECUTABLE_REVERSE) {
+        // push rbp; mov rbp, rsp; push rsi; push rdi
+        *p++ = 0x41;  // loc +1 (after push rbp)
+        *p++ = 0x0e;
+        *p++ = 16;  // def_cfa_offset 16
+        *p++ = 0x86;
+        *p++ = 0x02;  // offset rbp (6), 2
+        *p++ = 0x43;  // loc +3 (after mov rbp, rsp)
+        *p++ = 0x0d;
+        *p++ = 0x06;  // def_cfa_register rbp (6)
+        *p++ = 0x41;  // loc +1 (after push rsi)
+        *p++ = 0x84;
+        *p++ = 0x03;  // offset rsi (4), 3
+        *p++ = 0x41;  // loc +1 (after push rdi)
+        *p++ = 0x85;
+        *p++ = 0x04;  // offset rdi (5), 4
+    }
+    else {
+        // push rbp; mov rbp, rsp; push r12; push r13; push r14; push r15
+        *p++ = 0x41;  // loc +1 (after push rbp)
+        *p++ = 0x0e;
+        *p++ = 16;  // def_cfa_offset 16
+        *p++ = 0x86;
+        *p++ = 0x02;  // offset rbp (6), 2
+        *p++ = 0x43;  // loc +3 (after mov rbp, rsp)
+        *p++ = 0x0d;
+        *p++ = 0x06;  // def_cfa_register rbp (6)
+        *p++ = 0x42;  // loc +2 (after push r12)
+        *p++ = 0x8c;
+        *p++ = 0x03;  // offset r12, 3
+        *p++ = 0x42;  // loc +2 (after push r13)
+        *p++ = 0x8d;
+        *p++ = 0x04;  // offset r13, 4
+        *p++ = 0x42;  // loc +2 (after push r14)
+        *p++ = 0x8e;
+        *p++ = 0x05;  // offset r14, 5
+        *p++ = 0x42;  // loc +2 (after push r15)
+        *p++ = 0x8f;
+        *p++ = 0x06;  // offset r15, 6
+    }
 
-    // Padding and terminator already zeroed.
+    while ((size_t)(p - eh) < (cie_size + fde_size))
+        *p++ = 0;
+    *(uint32_t *)p = 0;  // Terminator
 
-    // Register the frame with the runtime.
     extern void __register_frame(void *);
     pthread_mutex_lock(&g_dwarf_mutex);
     __register_frame(eh);
@@ -575,10 +608,10 @@ static void _infix_register_eh_frame_linux_x64(infix_executable_t * exec) {
  *          and a Frame Description Entry (FDE) that match the stack behavior
  *          of our ARM64 trampolines.
  */
-static void _infix_register_eh_frame_arm64(infix_executable_t * exec) {
+static void _infix_register_eh_frame_arm64(infix_executable_t * exec, infix_executable_category_t category) {
     // Simplified .eh_frame layout: [ CIE | FDE | Terminator ]
     const size_t cie_size = 32;
-    const size_t fde_size = 48;
+    const size_t fde_size = 64;
     const size_t total_size = cie_size + fde_size + 4;  // +4 for null terminator
 
     uint8_t * eh = infix_malloc(total_size);
@@ -595,7 +628,7 @@ static void _infix_register_eh_frame_arm64(infix_executable_t * exec) {
     p += 4;       // cie_id (0)
     *p++ = 1;     // version
     *p++ = '\0';  // augmentation string ("")
-    *p++ = 1;     // code_alignment_factor
+    *p++ = 4;     // code_alignment_factor (AArch64 instructions are 4 bytes)
     *p++ = 0x78;  // data_alignment_factor (-8 in SLEB128)
     *p++ = 30;    // return_address_register (30 = lr on arm64)
 
@@ -604,11 +637,6 @@ static void _infix_register_eh_frame_arm64(infix_executable_t * exec) {
     *p++ = 0x0c;
     *p++ = 31;
     *p++ = 0;
-    // DW_CFA_offset lr, 0
-    *p++ = 0x9e;
-    *p++ = 0;
-
-    // Padding
     while ((size_t)(p - eh) < cie_size)
         *p++ = 0;
 
@@ -623,24 +651,50 @@ static void _infix_register_eh_frame_arm64(infix_executable_t * exec) {
     *(void **)p = exec->rx_ptr;
     p += 8;  // pc_begin (absolute)
     *(uint64_t *)p = (uint64_t)exec->size;
-    p += 8;  // pc_range (absolute)
+    p += 8;    // pc_range (absolute)
+    *p++ = 0;  // aug data len
 
-    // FDE Instructions: match `stp x29, x30, [sp, #-16]!; mov x29, sp`
-    // After `stp x29, x30, [sp, #-16]!`
-    *p++ = 0x41;  // DW_CFA_advance_loc 1 (4 bytes)
-    *p++ = 0x0e;
-    *p++ = 16;  // DW_CFA_def_cfa_offset 16
-    *p++ = 0x9d;
-    *p++ = 2;  // DW_CFA_offset r29, 2 (at CFA - 16)
-    *p++ = 0x9e;
-    *p++ = 1;  // DW_CFA_offset r30, 1 (at CFA - 8)
+    // Instructions: match our trampoline prologue
+    if (category == INFIX_EXECUTABLE_REVERSE) {
+        // stp x29, x30, [sp, #-16]!; mov x29, sp
+        *p++ = 0x41;  // loc +1 (4 bytes, after stp)
+        *p++ = 0x0e;
+        *p++ = 16;  // def_cfa_offset 16
+        *p++ = 0x9d;
+        *p++ = 2;  // offset r29 (x29), 2 (CFA - 16)
+        *p++ = 0x9e;
+        *p++ = 1;     // offset r30 (x30/lr), 1 (CFA - 8)
+        *p++ = 0x41;  // loc +1 (4 bytes, after mov)
+        *p++ = 0x0d;
+        *p++ = 29;  // def_cfa_register r29
+    }
+    else {
+        // stp x29, x30, [sp, #-16]!; mov x29, sp; stp x19, x20, ...; stp x21, x22, ...
+        *p++ = 0x41;  // after stp x29, x30
+        *p++ = 0x0e;
+        *p++ = 16;
+        *p++ = 0x9d;
+        *p++ = 2;
+        *p++ = 0x9e;
+        *p++ = 1;
+        *p++ = 0x41;  // after mov x29, sp
+        *p++ = 0x0d;
+        *p++ = 29;
+        *p++ = 0x41;  // after stp x19, x20
+        *p++ = 0x93;
+        *p++ = 4;  // offset r19, 4 (CFA - 32)
+        *p++ = 0x94;
+        *p++ = 3;     // offset r20, 3 (CFA - 24)
+        *p++ = 0x41;  // after stp x21, x22
+        *p++ = 0x95;
+        *p++ = 6;  // offset r21, 6 (CFA - 48)
+        *p++ = 0x96;
+        *p++ = 5;  // offset r22, 5 (CFA - 40)
+    }
 
-    // After `mov x29, sp`
-    *p++ = 0x41;  // DW_CFA_advance_loc 1 (4 bytes)
-    *p++ = 0x0d;
-    *p++ = 29;  // DW_CFA_def_cfa_register r29 (CFA is now r29 + 16)
-
-    // Padding and terminator already zeroed.
+    while ((size_t)(p - eh) < (cie_size + fde_size))
+        *p++ = 0;
+    *(uint32_t *)p = 0;  // Terminator
 
     // Register the frame with the runtime.
     extern void __register_frame(void *);
@@ -792,9 +846,9 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
     // Dual-mapping POSIX (Linux, FreeBSD).
     // The RX mapping is already executable.
 #if defined(INFIX_OS_LINUX) && defined(INFIX_ARCH_X64)
-    _infix_register_eh_frame_linux_x64(exec);
+    _infix_register_eh_frame_linux_x64(exec, category);
 #elif defined(INFIX_OS_LINUX) && defined(INFIX_ARCH_AARCH64)
-    _infix_register_eh_frame_arm64(exec);
+    _infix_register_eh_frame_arm64(exec, category);
 #endif
     // SECURITY CRITICAL: We MUST unmap the RW view now. If we leave it mapped,
     // an attacker with a heap disclosure could find it and overwrite the JIT code,
