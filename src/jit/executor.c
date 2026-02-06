@@ -88,7 +88,7 @@ typedef struct _UNWIND_INFO {
     UNWIND_CODE UnwindCode[1];  // Variable length array
 } UNWIND_INFO;
 
-// We reserve 256 bytes at the end of every JIT block for SEH metadata.
+// We reserve 512 bytes at the end of every JIT block for SEH metadata.
 #define INFIX_SEH_METADATA_SIZE 256
 #elif defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_AARCH64)
 #pragma pack(push, 1)
@@ -396,7 +396,7 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
  */
 static EXCEPTION_DISPOSITION _infix_seh_personality_routine(PEXCEPTION_RECORD ExceptionRecord,
                                                             void * EstablisherFrame,
-                                                            PCONTEXT ContextRecord,
+                                                            c23_maybe_unused PCONTEXT ContextRecord,
                                                             void * DispatcherContext) {
     PDISPATCHER_CONTEXT dc = (PDISPATCHER_CONTEXT)DispatcherContext;
 
@@ -413,7 +413,7 @@ static EXCEPTION_DISPOSITION _infix_seh_personality_routine(PEXCEPTION_RECORD Ex
     void * target_ip = (void *)(dc->ImageBase + epilogue_offset);
 
     // 3. Perform a non-local unwind to the epilogue.
-    RtlUnwindEx(EstablisherFrame, target_ip, ExceptionRecord, nullptr, ContextRecord, dc->HistoryTable);
+    RtlUnwind(EstablisherFrame, target_ip, ExceptionRecord, nullptr);
 
     return ExceptionContinueSearch;  // Unreachable
 }
@@ -541,6 +541,7 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
 
     // 2. UNWIND_INFO (XDATA) - Follows PDATA.
     UNWIND_INFO_ARM64 * ui = (UNWIND_INFO_ARM64 *)_infix_align_up((size_t)(rf + 2), 4);
+    infix_memset(ui, 0, sizeof(UNWIND_INFO_ARM64));
 
     ui->FunctionLength = (uint32_t)(exec->size / 4);
     ui->Version = 0;
@@ -570,12 +571,23 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
 
     ui->CodeWords = (code_idx + 3) / 4;
 
-    // Personality Routine Stub
-    uint32_t * epilogue_info = (uint32_t *)_infix_align_up((size_t)(unwind_codes + ui->CodeWords * 4), 4);
-    epilogue_info[0] = (epilogue_offset / 4);  // Epilogue Start Index (instructions)
+    // On ARM64, if X=1, the Exception Handler RVA and Handler Data follow the epilogue scopes
+    // and unwind codes.
+    // XDATA layout: [Header] [Epilogue Scopes] [Unwind Codes] [Padding] [Handler RVA] [Handler Data]
 
-    uint32_t * exception_handler_ptr = epilogue_info + 1;
-    uint8_t * stub = (uint8_t *)_infix_align_up((size_t)(exception_handler_ptr + 2), 16);
+    uint32_t * epilogue_scopes = (uint32_t *)(ui + 1);
+    // Each epilogue scope is 4 bytes. We have ui->EpilogueCount of them.
+    epilogue_scopes[0] = (epilogue_offset / 4);  // Epilogue Start Index (instructions)
+
+    uint8_t * unwind_codes_ptr = (uint8_t *)(epilogue_scopes + ui->EpilogueCount);
+    // Clear and then copy the codes
+    infix_memset(unwind_codes_ptr, 0, ui->CodeWords * 4);
+    infix_memcpy(unwind_codes_ptr, unwind_codes, code_idx);
+
+    // Handler info must follow unwind codes (which are already padded to 4 bytes by ui->CodeWords).
+    uint32_t * handler_info_ptr = (uint32_t *)(unwind_codes_ptr + ui->CodeWords * 4);
+
+    uint8_t * stub = (uint8_t *)_infix_align_up((size_t)(handler_info_ptr + 2), 16);
 
     // stub:
     // ldr x9, personality_addr
@@ -596,8 +608,10 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
     rf[1].UnwindData = 0;
 
     if (ui->X) {
-        exception_handler_ptr[0] = rva_offset + (uint32_t)(stub - (uint8_t *)exec->rx_ptr);
-        exception_handler_ptr[1] = epilogue_offset;
+        // According to the spec, the Exception Handler RVA and Handler Data
+        // are located at the end of the XDATA, which is 4-byte aligned.
+        handler_info_ptr[0] = rva_offset + (uint32_t)(stub - (uint8_t *)exec->rx_ptr);
+        handler_info_ptr[1] = epilogue_offset;
     }
 
     if (RtlAddFunctionTable(rf, 2, base_address)) {

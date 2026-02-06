@@ -575,8 +575,8 @@ sub compile_and_run_tests {
         if ( $test_file =~ /870_cpp_compat/ ) {
             push @local_cflags, '-fexceptions' unless $config->{compiler} eq 'msvc';
         }
-        my $src_content  = do { local $/; open my $fh, '<', $test_file; <$fh> };
-        my @simd_flags   = get_simd_flags( $config, $src_content );
+        my $src_content = do { local $/; open my $fh, '<', $test_file; <$fh> };
+        my @simd_flags  = get_simd_flags( $config, $src_content );
         push @local_cflags, @simd_flags;
         if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to build for regression test.\n";
@@ -724,8 +724,8 @@ sub run_coverage_gcov {
         if ( $test_file =~ /870_cpp_compat/ ) {
             push @local_cflags, '-fexceptions' unless $config->{compiler} eq 'msvc';
         }
-        my $src_content  = do { local $/; open my $fh, '<', $test_file; <$fh> };
-        my @simd_flags   = get_simd_flags( $config, $src_content );
+        my $src_content = do { local $/; open my $fh, '<', $test_file; <$fh> };
+        my @simd_flags  = get_simd_flags( $config, $src_content );
         push @local_cflags, @simd_flags;
         if ( $test_file =~ /850_regression_cases\.c$/ ) {
             print "# INFO: Adding fuzz_helpers.c to coverage build for regression test.\n";
