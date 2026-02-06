@@ -199,3 +199,11 @@ Once the library compiles for your new target, the final and most important step
 -   Pay special attention to the results of tests `101_by_value.c`, `102_by_reference.c`, and `402_variadic_functions.c`, as these are the most likely to reveal subtle ABI implementation errors.
 -   Run the memory stress tests under Valgrind (if available on the target) to check for leaks.
 -   If possible, run the fuzzing harnesses on the new target to shake out edge cases.
+
+## Step 6: Exception Handling Support (Optional but Recommended)
+
+To support transparent exception propagation and Safe Boundaries, you must provide the platform's unwinding metadata.
+
+*   **For Windows x64:** Ensure your prologue is standard (`push rbp; mov rbp, rsp`) and populate the `RUNTIME_FUNCTION` and `UNWIND_INFO` structures in `executor.c`.
+*   **For ELF/DWARF (Linux/macOS):** You must generate `.eh_frame` records (CIE and FDE) that describe your trampoline's stack frame. See the existing implementations in `executor.c` for examples.
+*   **Safe Boundaries:** Implementing `infix_forward_create_safe` requires a platform-specific personality routine that can intercept exceptions and redirect execution to the trampoline's epilogue.

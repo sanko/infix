@@ -439,12 +439,15 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout) {
     // `stp x29, x30, [sp, #-16]!` : Push Frame Pointer and Link Register to the stack, pre-decrementing SP.
     emit_arm64_stp_pre_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, -16);
-    // `mov x29, sp` : Establish the new Frame Pointer.
-    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
     // `stp x19, x20, [sp, #-16]!` : Save callee-saved registers that we will use for our context.
     emit_arm64_stp_pre_index(buf, true, X19_REG, X20_REG, SP_REG, -16);
     // `stp x21, x22, [sp, #-16]!`
     emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);
+    // `mov x29, sp` : Establish the new Frame Pointer after all registers are pushed.
+    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
+
+    layout->prologue_size = (uint32_t)buf->size;
+
     // Move the trampoline's own arguments into these now-safe callee-saved registers.
     if (layout->target_fn == nullptr) {  // Unbound trampoline args: (target_fn, ret_ptr, args_ptr) in X0, X1, X2.
         emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0 (x19 will hold target_fn)
@@ -666,6 +669,7 @@ static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
 static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
                                                     infix_call_frame_layout * layout,
                                                     infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     // If the function returns a value and it wasn't returned via hidden pointer...
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         // ...copy the result from the appropriate return register(s) into the user's return buffer (pointer in X20).
@@ -716,9 +720,11 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
             }
         }
     }
-    // Deallocate stack space allocated for stack arguments.
-    if (layout->total_stack_alloc > 0)
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);  // add sp, sp, #...
+    // Deallocate stack space and restore registers.
+    // X29 was set to SP after all pushes.
+    // mov sp, x29
+    emit_arm64_mov_reg(buf, true, SP_REG, X29_FP_REG);
+
     emit_arm64_ldp_post_index(buf, true, X21_REG, X22_REG, SP_REG, 16);        // ldp x21, x22, [sp], #16
     emit_arm64_ldp_post_index(buf, true, X19_REG, X20_REG, SP_REG, 16);        // ldp x19, x20, [sp], #16
     emit_arm64_ldp_post_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, 16);  // ldp x29, x30, [sp], #16
@@ -839,7 +845,10 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
     size_t current_saved_data_offset = 0;
 
     // Arguments passed on the caller's stack start at offset 16 from our new frame pointer (X29).
-    // [fp] = old fp (8 bytes), [fp+8] = lr (8 bytes). Args start at [fp+16].
+    // X29 was established after pushing X29, X30, X19, X20, X21, X22.
+    // [X29]    -> saved X29
+    // [X29+8]  -> saved X30 (LR)
+    // [X29+16] -> caller's first stack argument
     size_t caller_stack_offset = 16;
 
     for (size_t i = 0; i < context->num_args; ++i) {
@@ -1245,12 +1254,11 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
 static infix_status generate_direct_forward_prologue_arm64(code_buffer * buf, infix_direct_call_frame_layout * layout) {
     // Standard prologue: save FP/LR, set up new FP.
     emit_arm64_stp_pre_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, -16);
-    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
-
     // Save callee-saved registers for our context.
     // X19: target_fn, X20: ret_ptr, X21: lang_args array
     emit_arm64_stp_pre_index(buf, true, X19_REG, X20_REG, SP_REG, -16);
     emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);  // X22 as scratch
+    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
 
     // The direct CIF is called with (ret_ptr, lang_args) in X0, X1.
     emit_arm64_mov_reg(buf, true, X20_REG, X0_REG);  // x20 = ret_ptr
@@ -1498,6 +1506,7 @@ static infix_status generate_direct_forward_call_instruction_arm64(code_buffer *
 static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
                                                            infix_direct_call_frame_layout * layout,
                                                            infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     // 1. Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         const infix_type * hfa_base = nullptr;
@@ -1628,8 +1637,11 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
     }
 
     // 3. Standard Epilogue
-    if (layout->total_stack_alloc > 0)
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);
+    // Restore stack pointer to the saved registers area.
+    // X29 was set to SP after all pushes.
+    // mov sp, x29
+    emit_arm64_mov_reg(buf, true, SP_REG, X29_FP_REG);
+
     emit_arm64_ldp_post_index(buf, true, X21_REG, X22_REG, SP_REG, 16);
     emit_arm64_ldp_post_index(buf, true, X19_REG, X20_REG, SP_REG, 16);
     emit_arm64_ldp_post_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, 16);

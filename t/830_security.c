@@ -55,6 +55,19 @@
 int dummy_target_func(int a) { return a * 10; }
 void dummy_handler_func(void) {}
 
+void crashing_target_func(void) {
+#if defined(_WIN32)
+    // volatile to prevent compiler optimization
+    volatile int * p = nullptr;
+    *p = 42;
+#else
+    // On POSIX, we can't easily catch synchronous signals like SIGSEGV with this mechanism yet
+    // unless we implement sigsetjmp/siglongjmp in the personality routine (which we haven't for POSIX).
+    // So this test is currently Windows-centric for SEH.
+    kill(getpid(), SIGILL);
+#endif
+}
+
 /**
  * @internal
  * @brief (Windows) Helper function to run a test that is expected to crash in a child process.
@@ -144,11 +157,26 @@ TEST {
                 exit(2);
             rt->user_data = nullptr;
         }
+        else if (strcmp(child_test_name, "safe_forward") == 0) {
+            infix_forward_t * t = nullptr;
+            infix_status status = infix_forward_create_safe(&t, "() -> void", (void *)crashing_target_func, nullptr);
+            if (status != INFIX_SUCCESS) {
+                fprintf(stderr, "infix_forward_create_safe failed with status %d\n", (int)status);
+                exit(2);
+            }
+            infix_cif_func f = infix_forward_get_code(t);
+            f(nullptr, nullptr);
+            infix_error_details_t err = infix_get_last_error();
+            if (err.code == INFIX_CODE_NATIVE_EXCEPTION)
+                exit(0);  // Success!
+            fprintf(stderr, "Failed to catch exception. Error code: %d, Message: %s\n", (int)err.code, err.message);
+            exit(3);  // Failed to catch
+        }
         exit(1);
     }
 #endif
 
-    plan(4);
+    plan(5);
 
     subtest("Guard pages prevent use-after-free") {
         plan(3);
@@ -278,6 +306,42 @@ TEST {
         }
 #else
         skip(1, "Write protection test not supported on this platform.");
+#endif
+    }
+
+    subtest("Safe Exception Boundary (Windows SEH)") {
+        plan(1);
+#if defined(_WIN32)
+        // For safe_forward, success is exiting with 0.
+        SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", "safe_forward");
+        char exe_path[MAX_PATH];
+        GetModuleFileName(nullptr, exe_path, MAX_PATH);
+        STARTUPINFOA si;
+        PROCESS_INFORMATION pi;
+        ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        ZeroMemory(&pi, sizeof(pi));
+        si.dwFlags |= STARTF_USESTDHANDLES;
+        si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+        si.hStdOutput = CreateFileA("NUL", GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+
+        if (CreateProcessA(exe_path, nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi)) {
+            WaitForSingleObject(pi.hProcess, INFINITE);
+            DWORD exit_code;
+            GetExitCodeProcess(pi.hProcess, &exit_code);
+            if (exit_code != 0)
+                note("Child process exited with code: 0x%08lX", (unsigned long)exit_code);
+            ok(exit_code == 0, "Child process caught exception and exited with 0.");
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
+        }
+        else {
+            fail("CreateProcess failed.");
+        }
+        SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", nullptr);
+#else
+        skip(1, "Safe boundary test only implemented for Windows SEH currently.");
 #endif
     }
 

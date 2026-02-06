@@ -9,15 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for half-precision floating-point (`float16_t`).
+- Added support for half-precision floating-point (`float16`).
+- Implemented C++ exception propagation through JIT frames on Linux (x86-64 and ARM64) using manual DWARF `.eh_frame` generation and `__register_frame`.
 - Implemented Structured Exception Handling (SEH) for Windows x64 for C++ exception propagation through trampolines.
+- Added `infix_forward_create_safe` API to establish an exception boundary that catches native exceptions and returns a dedicated error code (`INFIX_CODE_NATIVE_EXCEPTION`).
 - Added support for 256-bit (AVX) and 512-bit (AVX-512) vectors in the System V ABI.
 - Added support for receiving bitfield structs in reverse call trampolines.
 - Added `t/405_simd_vectors_avx.c`, `t/406_simd_forward.c`, and `t/407_float16.c` to the test suite.
 
 ### Changed
 
-- Updated `infix_executable_make_executable` and internal layout structures to track trampoline prologue sizes, necessary for SEH registration.
+- Unified platform and compiler detection macros into a consistent `INFIX_*` namespace (e.g., `INFIX_OS_LINUX`, `INFIX_ARCH_X64`, `INFIX_COMPILER_GCC`) throughout the codebase.
+- Updated `infix_executable_make_executable` and internal layout structures to track trampoline prologue sizes, necessary for SEH and DWARF registration.
 - Explicitly enabled 16-byte stack alignment in Windows x64 trampolines to ensure SIMD compatibility.
 - Updated `infix_type_create_vector` to use the vector's full size for its natural alignment (e.g., 32-byte alignment for `__m256`).
 - Refined the Windows x64 ABI to pass all vector types by reference (pointer in GPR). This ensures compatibility with MSVC which expects even 128-bit vectors to be passed via pointer in many scenarios, while still returning them by value in `XMM0`.
@@ -25,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Critical Fix:** Corrected an ARM64 bug in `emit_arm64_ldr_vpr` and `emit_arm64_str_vpr` where boolean conditions were being passed instead of actual byte sizes, causing data truncation for floating-point values in the direct marshalling path.
 - Corrected a performance issue on x64 by adding `vzeroupper` calls in epilogues when AVX instructions are potentially used, avoiding transition penalties.
 - Fixed bitfield parsing logic to correctly handle colons in namespaces vs bitfield widths.
 - Fixed missing support for 256-bit and 512-bit vectors in System V reverse trampolines.

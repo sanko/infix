@@ -315,13 +315,13 @@ static infix_status prepare_forward_call_frame_win_x64(infix_arena_t * arena,
  * @return `INFIX_SUCCESS` on successful code generation.
  */
 static infix_status generate_forward_prologue_win_x64(code_buffer * buf, infix_call_frame_layout * layout) {
-    emit_push_reg(buf, RBP_REG);              // push rbp
-    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);  // mov rbp, rsp
+    emit_push_reg(buf, RBP_REG);  // push rbp
     // Save callee-saved registers we will use to hold our context.
-    emit_push_reg(buf, R12_REG);  // push r12 (will hold target function address)
-    emit_push_reg(buf, R13_REG);  // push r13 (will hold return value pointer)
-    emit_push_reg(buf, R14_REG);  // push r14 (will hold argument pointers array)
-    emit_push_reg(buf, R15_REG);  // push r15 (will be a scratch register for data moves)
+    emit_push_reg(buf, R12_REG);              // push r12 (will hold target function address)
+    emit_push_reg(buf, R13_REG);              // push r13 (will hold return value pointer)
+    emit_push_reg(buf, R14_REG);              // push r14 (will hold argument pointers array)
+    emit_push_reg(buf, R15_REG);              // push r15 (will be a scratch register for data moves)
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);  // mov rbp, rsp
 
     layout->prologue_size = (uint32_t)buf->size;
 
@@ -509,6 +509,7 @@ static infix_status generate_forward_call_instruction_win_x64(code_buffer * buf,
 static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
                                                       infix_call_frame_layout * layout,
                                                       infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     // R13 holds the pointer to the FFI return buffer.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         if (is_float16(ret_type)) {
@@ -554,9 +555,9 @@ static infix_status generate_forward_epilogue_win_x64(code_buffer * buf,
         emit_vzeroupper(buf);
 
     // Restore stack pointer to the saved registers area.
-    // 4 registers pushed (R12, R13, R14, R15) relative to RBP.
-    // LEA RSP, [RBP - 32]
-    emit_lea_reg_mem(buf, RSP_REG, RBP_REG, -32);
+    // RBP was set to RSP after all pushes.
+    // mov rsp, rbp
+    emit_mov_reg_reg(buf, RSP_REG, RBP_REG);
 
     // Restore callee-saved registers and return.
     emit_pop_reg(buf, R15_REG);
@@ -674,10 +675,10 @@ static infix_status prepare_reverse_call_frame_win_x64(infix_arena_t * arena,
 static infix_status generate_reverse_prologue_win_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
     // Standard function prologue to establish a stack frame.
     emit_push_reg(buf, RBP_REG);
-    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
     // Save callee-saved registers that we might use as scratch registers.
     emit_push_reg(buf, RSI_REG);
     emit_push_reg(buf, RDI_REG);
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
 
     layout->prologue_size = (uint32_t)buf->size;
 
@@ -820,11 +821,14 @@ static infix_status generate_reverse_argument_marshalling_win_x64(code_buffer * 
         }
         else {
             // Argument was passed on the caller's stack.
-            // [RBP] -> Saved RBP
-            // [RBP+8] -> Return Address
-            // [RBP+16..47] -> Shadow Space (32 bytes)
-            // [RBP+48..] -> Stack arguments
-            int32_t caller_stack_offset = 16 + SHADOW_SPACE + (int32_t)(stack_slot_offset * 8);
+            // RBP points to saved RDI.
+            // [RBP] -> Saved RDI
+            // [RBP+8] -> Saved RSI
+            // [RBP+16] -> Saved RBP
+            // [RBP+24] -> Return Address
+            // [RBP+32..63] -> Shadow Space (32 bytes)
+            // [RBP+64..] -> Stack arguments
+            int32_t caller_stack_offset = 32 + SHADOW_SPACE + (int32_t)(stack_slot_offset * 8);
             if (passed_by_ref)
                 emit_mov_reg_mem(buf, RAX_REG, RBP_REG, caller_stack_offset);
             else
@@ -951,10 +955,9 @@ static infix_status generate_reverse_epilogue_win_x64(code_buffer * buf,
         }
     }
     // Restore stack pointer to the saved registers area.
-    // 2 registers pushed (RSI, RDI) = 16 bytes.
-    // We pushed RSI then RDI AFTER mov rbp, rsp.
-    // So RSI is at RBP-8, RDI is at RBP-16.
-    emit_lea_reg_mem(buf, RSP_REG, RBP_REG, -16);
+    // RBP was set to RSP after all pushes.
+    // mov rsp, rbp
+    emit_mov_reg_reg(buf, RSP_REG, RBP_REG);
 
     emit_pop_reg(buf, RDI_REG);
     emit_pop_reg(buf, RSI_REG);
@@ -1089,12 +1092,12 @@ static infix_status prepare_direct_forward_call_frame_win_x64(infix_arena_t * ar
 static infix_status generate_direct_forward_prologue_win_x64(code_buffer * buf,
                                                              infix_direct_call_frame_layout * layout) {
     emit_push_reg(buf, RBP_REG);
-    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
     // Save callee-saved registers we will use for our context.
     emit_push_reg(buf, R12_REG);  // Will hold scratch data
     emit_push_reg(buf, R13_REG);  // Will hold return value pointer
     emit_push_reg(buf, R14_REG);  // Will hold language objects array pointer
     emit_push_reg(buf, R15_REG);  // Will hold target function address
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
 
     layout->prologue_size = (uint32_t)buf->size;
 
@@ -1242,6 +1245,7 @@ static infix_status generate_direct_forward_call_instruction_win_x64(code_buffer
 static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
                                                              infix_direct_call_frame_layout * layout,
                                                              infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     // 1. Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         if (is_float16(ret_type)) {
@@ -1322,9 +1326,9 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
         emit_vzeroupper(buf);
 
     // Restore stack pointer to the saved registers area.
-    // 4 registers pushed (R12, R13, R14, R15) = 32 bytes.
-    // LEA RSP, [RBP - 32]
-    emit_lea_reg_mem(buf, RSP_REG, RBP_REG, -32);
+    // RBP was set to RSP after all pushes.
+    // mov rsp, rbp
+    emit_mov_reg_reg(buf, RSP_REG, RBP_REG);
 
     emit_pop_reg(buf, R15_REG);
     emit_pop_reg(buf, R14_REG);

@@ -85,12 +85,24 @@ typedef struct _UNWIND_INFO {
     uint8_t CountOfCodes;
     uint8_t FrameRegister : 4;
     uint8_t FrameOffset : 4;
-    UNWIND_CODE UnwindCode[10];
-    uint32_t ExceptionHandler;  // Offset to handler (if Flags & UNW_FLAG_EHANDLER)
+    UNWIND_CODE UnwindCode[1];  // Variable length array
 } UNWIND_INFO;
 
-// We reserve 128 bytes at the end of every JIT block for SEH metadata.
-#define INFIX_SEH_METADATA_SIZE 128
+// We reserve 256 bytes at the end of every JIT block for SEH metadata.
+#define INFIX_SEH_METADATA_SIZE 256
+#elif defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_AARCH64)
+#pragma pack(push, 1)
+typedef struct _UNWIND_INFO_ARM64 {
+    uint32_t Version : 3;
+    uint32_t Flags : 5;
+    uint32_t X : 1;
+    uint32_t E : 1;
+    uint32_t EpilogueCount : 5;
+    uint32_t CodeWords : 5;
+    uint32_t Reserved : 12;
+} UNWIND_INFO_ARM64;
+#pragma pack(pop)
+#define INFIX_SEH_METADATA_SIZE 256
 #else
 #define INFIX_SEH_METADATA_SIZE 0
 #endif
@@ -277,7 +289,7 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         return exec;
 
 #if defined(INFIX_OS_WINDOWS)
-    // Add headroom for SEH metadata on Windows x64.
+    // Add headroom for SEH metadata on Windows.
     size_t total_size = size + INFIX_SEH_METADATA_SIZE;
 
     // Windows: Single-mapping W^X. Allocate as RW, later change to RX via VirtualProtect.
@@ -372,50 +384,54 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
     return exec;
 }
 
-#if defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_X64)
+#if defined(INFIX_OS_WINDOWS)
 /**
  * @internal
- * @brief The personality routine for safe trampolines on Windows x64.
+ * @brief The personality routine for safe trampolines on Windows.
  *
  * @details This function is called by the Windows unwinder when an exception
  * occurs within a safe trampoline or its callees. It catches the exception,
  * sets the `INFIX_CODE_NATIVE_EXCEPTION` error, and redirects execution to
- * the trampoline's epilogue to return gracefully to the caller.
+ * the trampoline's epilogue by modifying the instruction pointer in the
+ * current context record and continuing execution.
  */
 static EXCEPTION_DISPOSITION _infix_seh_personality_routine(PEXCEPTION_RECORD ExceptionRecord,
                                                             void * EstablisherFrame,
                                                             PCONTEXT ContextRecord,
                                                             void * DispatcherContext) {
-    (void)ExceptionRecord;
-    (void)EstablisherFrame;
-    (void)ContextRecord;
-    (void)DispatcherContext;
+    PDISPATCHER_CONTEXT dc = (PDISPATCHER_CONTEXT)DispatcherContext;
+
+    // If we are already unwinding, don't do anything.
+    if (ExceptionRecord->ExceptionFlags & (EXCEPTION_UNWINDING | EXCEPTION_EXIT_UNWIND))
+        return ExceptionContinueSearch;
 
     // 1. Set the thread-local error.
     _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_NATIVE_EXCEPTION, 0);
 
-    // 2. Redirect execution to the epilogue.
-    // The epilogue starts after the 'call' instruction.
-    // We can find its address from the UNWIND_INFO if we were more complex,
-    // but for now, we'll assume the trampoline was set up to return safely.
-    // A robust implementation would use DispatcherContext->ImageBase + ...
+    // 2. Retrieve the target epilogue IP from our HandlerData.
+    // The HandlerData points to the 4-byte epilogue offset we stored in UNWIND_INFO.
+    uint32_t epilogue_offset = *(uint32_t *)dc->HandlerData;
+    void * target_ip = (void *)(dc->ImageBase + epilogue_offset);
 
-    // To properly "catch", we need to tell the unwinder we've handled it.
-    // This is a minimal stub. A full implementation would perform a "non-local goto".
-    return ExceptionContinueSearch;  // Placeholder: still bubbles up for now until full landing pad logic is added.
+    // 3. Perform a non-local unwind to the epilogue.
+    RtlUnwindEx(EstablisherFrame, target_ip, ExceptionRecord, nullptr, ContextRecord, dc->HistoryTable);
+
+    return ExceptionContinueSearch;  // Unreachable
 }
 
+#if defined(INFIX_ARCH_X64)
 // Internal: Populates and registers SEH metadata for a Windows x64 JIT block.
 static void _infix_register_seh_windows_x64(infix_executable_t * exec,
                                             infix_executable_category_t category,
-                                            uint32_t prologue_size) {
+                                            uint32_t prologue_size,
+                                            uint32_t epilogue_offset) {
     // metadata_ptr starts after the machine code.
     uint8_t * metadata_base = (uint8_t *)exec->rw_ptr + exec->size;
 
-    // RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
+    // 1. RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
     RUNTIME_FUNCTION * rf = (RUNTIME_FUNCTION *)_infix_align_up((size_t)metadata_base, 4);
 
-    // UNWIND_INFO (XDATA) - Follows PDATA.
+    // 2. UNWIND_INFO (XDATA) - Follows PDATA.
     UNWIND_INFO * ui = (UNWIND_INFO *)_infix_align_up((size_t)(rf + 1), 2);
 
     ui->Version = 1;
@@ -427,69 +443,175 @@ static void _infix_register_seh_windows_x64(infix_executable_t * exec,
     ui->SizeOfPrologue = (uint8_t)prologue_size;
 
     if (category == INFIX_EXECUTABLE_REVERSE) {
-        // Reverse Trampoline: push rbp, mov rbp, rsp, push rsi, push rdi, and rsp -mask, [sub rsp, alloc]
+        // Reverse Trampoline: push rbp, push rsi, push rdi, mov rbp, rsp, and rsp -mask, [sub rsp, alloc]
         ui->CountOfCodes = 4;
-        ui->UnwindCode[0].CodeOffset = 6;
-        ui->UnwindCode[0].UnwindOp = UWOP_PUSH_NONVOL;
-        ui->UnwindCode[0].OpInfo = 7;  // RDI
+        ui->UnwindCode[0].CodeOffset = 6;  // After mov rbp, rsp
+        ui->UnwindCode[0].UnwindOp = UWOP_SET_FPREG;
+        ui->UnwindCode[0].OpInfo = 0;
 
-        ui->UnwindCode[1].CodeOffset = 5;
+        ui->UnwindCode[1].CodeOffset = 3;  // After push rdi
         ui->UnwindCode[1].UnwindOp = UWOP_PUSH_NONVOL;
-        ui->UnwindCode[1].OpInfo = 6;  // RSI
+        ui->UnwindCode[1].OpInfo = 7;  // RDI
 
-        ui->UnwindCode[2].CodeOffset = 4;  // After mov rbp, rsp
-        ui->UnwindCode[2].UnwindOp = UWOP_SET_FPREG;
-        ui->UnwindCode[2].OpInfo = 0;
+        ui->UnwindCode[2].CodeOffset = 2;  // After push rsi
+        ui->UnwindCode[2].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[2].OpInfo = 6;  // RSI
 
         ui->UnwindCode[3].CodeOffset = 1;  // After push rbp
         ui->UnwindCode[3].UnwindOp = UWOP_PUSH_NONVOL;
         ui->UnwindCode[3].OpInfo = 5;  // RBP
     }
     else {
-        // Forward or Direct Trampoline: push rbp, mov rbp, rsp, push r12-r15, and rsp -16, [sub rsp, alloc]
+        // Forward or Direct Trampoline: push rbp, push r12-r15, mov rbp, rsp, and rsp -16, [sub rsp, alloc]
         ui->CountOfCodes = 6;
         // Opcodes in reverse order:
-        ui->UnwindCode[0].CodeOffset = 12;
-        ui->UnwindCode[0].UnwindOp = UWOP_PUSH_NONVOL;
-        ui->UnwindCode[0].OpInfo = 15;  // R15
+        ui->UnwindCode[0].CodeOffset = 12;  // After mov rbp, rsp
+        ui->UnwindCode[0].UnwindOp = UWOP_SET_FPREG;
+        ui->UnwindCode[0].OpInfo = 0;
 
-        ui->UnwindCode[1].CodeOffset = 10;
+        ui->UnwindCode[1].CodeOffset = 9;  // After push r15
         ui->UnwindCode[1].UnwindOp = UWOP_PUSH_NONVOL;
-        ui->UnwindCode[1].OpInfo = 14;  // R14
+        ui->UnwindCode[1].OpInfo = 15;  // R15
 
-        ui->UnwindCode[2].CodeOffset = 8;
+        ui->UnwindCode[2].CodeOffset = 7;  // After push r14
         ui->UnwindCode[2].UnwindOp = UWOP_PUSH_NONVOL;
-        ui->UnwindCode[2].OpInfo = 13;  // R13
+        ui->UnwindCode[2].OpInfo = 14;  // R14
 
-        ui->UnwindCode[3].CodeOffset = 6;
+        ui->UnwindCode[3].CodeOffset = 5;  // After push r13
         ui->UnwindCode[3].UnwindOp = UWOP_PUSH_NONVOL;
-        ui->UnwindCode[3].OpInfo = 12;  // R12
+        ui->UnwindCode[3].OpInfo = 13;  // R13
 
-        ui->UnwindCode[4].CodeOffset = 4;  // After mov rbp, rsp
-        ui->UnwindCode[4].UnwindOp = UWOP_SET_FPREG;
-        ui->UnwindCode[4].OpInfo = 0;
+        ui->UnwindCode[4].CodeOffset = 3;  // After push r12
+        ui->UnwindCode[4].UnwindOp = UWOP_PUSH_NONVOL;
+        ui->UnwindCode[4].OpInfo = 12;  // R12
 
         ui->UnwindCode[5].CodeOffset = 1;  // After push rbp
         ui->UnwindCode[5].UnwindOp = UWOP_PUSH_NONVOL;
         ui->UnwindCode[5].OpInfo = 5;  // RBP
     }
 
-    rf->BeginAddress = 0;  // Relative to BaseAddress (rx_ptr)
-    rf->EndAddress = (DWORD)exec->size;
-    rf->UnwindData = (DWORD)((uint8_t *)ui - (uint8_t *)exec->rx_ptr);
+    // 3. Personality Routine Stub - Follows UNWIND_INFO.
+    // The ExceptionHandler field is at offset: 4 + ((CountOfCodes + 1) & ~1) * 2
+    uint32_t * eh_field_ptr = (uint32_t *)&ui->UnwindCode[(ui->CountOfCodes + 1) & ~1];
+
+    // Position the stub AFTER the ExceptionHandler RVA and HandlerData (8 bytes total).
+    uint8_t * stub = (uint8_t *)_infix_align_up((size_t)(eh_field_ptr + 2), 16);
+
+    stub[0] = 0x48;
+    stub[1] = 0xB8;  // mov rax, imm64
+    *(uint64_t *)(stub + 2) = (uint64_t)_infix_seh_personality_routine;
+    stub[10] = 0xFF;
+    stub[11] = 0xE0;  // jmp rax
+
+    // BaseAddress should be 64KB aligned for maximum compatibility.
+    DWORD64 base_address = (DWORD64)exec->rx_ptr & ~0xFFFF;
+    DWORD rva_offset = (DWORD)((uint8_t *)exec->rx_ptr - (uint8_t *)base_address);
+
+    rf->BeginAddress = rva_offset;  // Relative to BaseAddress
+    // EndAddress covers the entire code block.
+    rf->EndAddress = rva_offset + (DWORD)exec->size;
+    rf->UnwindData = rva_offset + (DWORD)((uint8_t *)ui - (uint8_t *)exec->rx_ptr);
 
     if (ui->Flags & UNW_FLAG_EHANDLER) {
-        // The ExceptionHandler field follows the UnwindCode array.
-        // It's a 32-bit offset relative to the ImageBase (rx_ptr).
-        ui->ExceptionHandler = (uint32_t)((uint8_t *)_infix_seh_personality_routine - (uint8_t *)exec->rx_ptr);
+        // ExceptionHandler RVA points to our absolute jump stub.
+        eh_field_ptr[0] = rva_offset + (uint32_t)(stub - (uint8_t *)exec->rx_ptr);
+        // HandlerData field stores our target epilogue offset.
+        eh_field_ptr[1] = epilogue_offset;
     }
 
-    if (RtlAddFunctionTable(rf, 1, (DWORD64)exec->rx_ptr)) {
+    if (RtlAddFunctionTable(rf, 1, base_address)) {
         exec->seh_registration = rf;
-        INFIX_DEBUG_PRINTF("Registered SEH PDATA at %p (XDATA at %p) for JIT code at %p", rf, ui, exec->rx_ptr);
+        INFIX_DEBUG_PRINTF(
+            "Registered SEH PDATA at %p (XDATA at %p, Stub at %p) for JIT code at %p", rf, ui, stub, exec->rx_ptr);
+    }
+    else {
+        fprintf(stderr, "infix: RtlAddFunctionTable failed! GetLastError=%lu\n", GetLastError());
     }
 }
-#elif defined(INFIX_OS_LINUX) && defined(INFIX_ARCH_X64)
+#elif defined(INFIX_ARCH_AARCH64)
+// Internal: Populates and registers SEH metadata for a Windows ARM64 JIT block.
+static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
+                                              infix_executable_category_t category,
+                                              uint32_t prologue_size,
+                                              uint32_t epilogue_offset) {
+    uint8_t * metadata_base = (uint8_t *)exec->rw_ptr + exec->size;
+
+    // 1. RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
+    RUNTIME_FUNCTION * rf = (RUNTIME_FUNCTION *)_infix_align_up((size_t)metadata_base, 4);
+
+    // 2. UNWIND_INFO (XDATA) - Follows PDATA.
+    UNWIND_INFO_ARM64 * ui = (UNWIND_INFO_ARM64 *)_infix_align_up((size_t)(rf + 1), 4);
+
+    ui->Version = 0;
+    ui->Flags = 0;
+    if (category == INFIX_EXECUTABLE_SAFE_FORWARD)
+        ui->Flags |= 1;  // UNW_Flag_EHandler
+    ui->X = 0;
+    ui->E = 0;
+    ui->EpilogueCount = 1;
+
+    uint8_t * unwind_codes = (uint8_t *)(ui + 1);
+    uint32_t code_idx = 0;
+
+    if (category == INFIX_EXECUTABLE_REVERSE) {
+        // Reverse Prologue: stp x29, x30, [sp, #-16]!; mov x29, sp; sub sp, sp, #alloc
+        // Opcodes in REVERSE order:
+        unwind_codes[code_idx++] = 0xE1;  // mov x29, sp
+        unwind_codes[code_idx++] = 0xC8;  // stp x29, x30, [sp, #-16]!
+        unwind_codes[code_idx++] = 0xE4;  // end
+    }
+    else {
+        // Forward or Direct Prologue: stp x29, x30, [sp, #-16]!; stp x19, x20, ...; stp x21, x22, ...; mov x29, sp; sub
+        // sp, sp, #alloc
+        unwind_codes[code_idx++] = 0xE1;  // mov x29, sp
+        unwind_codes[code_idx++] = 0xD4;  // stp x21, x22, [sp, #-16]!
+        unwind_codes[code_idx++] = 0xD2;  // stp x19, x20, [sp, #-16]!
+        unwind_codes[code_idx++] = 0xC8;  // stp x29, x30, [sp, #-16]!
+        unwind_codes[code_idx++] = 0xE4;  // end
+    }
+
+    ui->CodeWords = (code_idx + 3) / 4;
+
+    // Personality Routine Stub
+    uint32_t * epilogue_info = (uint32_t *)_infix_align_up((size_t)(unwind_codes + ui->CodeWords * 4), 4);
+    epilogue_info[0] = (epilogue_offset / 4);  // Epilogue Start Index (instructions)
+
+    uint32_t * exception_handler_ptr = epilogue_info + 1;
+    uint8_t * stub = (uint8_t *)_infix_align_up((size_t)(exception_handler_ptr + 2), 16);
+
+    // stub:
+    // ldr x9, personality_addr
+    // br x9
+    // personality_addr: .quad _infix_seh_personality_routine
+    *(uint32_t *)stub = 0x58000049;        // ldr x9, #8
+    *(uint32_t *)(stub + 4) = 0xD61F0120;  // br x9
+    *(uint64_t *)(stub + 8) = (uint64_t)_infix_seh_personality_routine;
+
+    DWORD64 base_address = (DWORD64)exec->rx_ptr & ~0xFFFF;
+    DWORD rva_offset = (DWORD)((uint8_t *)exec->rx_ptr - (uint8_t *)base_address);
+
+    rf->BeginAddress = rva_offset;
+    rf->EndAddress = rva_offset + (DWORD)exec->size;
+    rf->UnwindData = rva_offset + (DWORD)((uint8_t *)ui - (uint8_t *)exec->rx_ptr);
+
+    if (ui->Flags & 1) {
+        exception_handler_ptr[0] = rva_offset + (uint32_t)(stub - (uint8_t *)exec->rx_ptr);
+        exception_handler_ptr[1] = epilogue_offset;
+    }
+
+    if (RtlAddFunctionTable(rf, 1, base_address)) {
+        exec->seh_registration = rf;
+        INFIX_DEBUG_PRINTF(
+            "Registered SEH PDATA at %p (XDATA at %p, Stub at %p) for JIT code at %p", rf, ui, stub, exec->rx_ptr);
+    }
+    else {
+        fprintf(stderr, "infix: RtlAddFunctionTable failed! GetLastError=%lu\n", GetLastError());
+    }
+}
+#endif
+#endif
+
+#if defined(INFIX_OS_LINUX) && defined(INFIX_ARCH_X64)
 /**
  * @internal
  * @brief Registers DWARF unwind information for a JIT-compiled block on Linux x64.
@@ -502,7 +624,7 @@ static void _infix_register_eh_frame_linux_x64(infix_executable_t * exec, infix_
     // Simplified .eh_frame layout: [ CIE | FDE | Terminator ]
     const size_t cie_size = 32;
     const size_t fde_size = 64;
-    const size_t total_size = cie_size + fde_size + 4; // +4 for null terminator
+    const size_t total_size = cie_size + fde_size + 4;  // +4 for null terminator
 
     uint8_t * eh = infix_malloc(total_size);
     if (!eh)
@@ -723,7 +845,7 @@ void infix_executable_free(infix_executable_t exec) {
     if (exec.size == 0)
         return;
 #if defined(INFIX_OS_WINDOWS)
-#if defined(INFIX_ARCH_X64)
+#if defined(INFIX_ARCH_X64) || defined(INFIX_ARCH_AARCH64)
     if (exec.seh_registration)
         RtlDeleteFunctionTable((PRUNTIME_FUNCTION)exec.seh_registration);
 #endif
@@ -786,7 +908,8 @@ void infix_executable_free(infix_executable_t exec) {
  */
 c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
                                                     c23_maybe_unused infix_executable_category_t category,
-                                                    c23_maybe_unused uint32_t prologue_size) {
+                                                    c23_maybe_unused uint32_t prologue_size,
+                                                    c23_maybe_unused uint32_t epilogue_offset) {
     if (exec->rw_ptr == nullptr || exec->size == 0)
         return false;
 
@@ -810,9 +933,11 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
 
     bool result = false;
 #if defined(INFIX_OS_WINDOWS)
-    // On Windows x64, we register SEH unwind info before making the memory executable.
+    // On Windows, we register SEH unwind info before making the memory executable.
 #if defined(INFIX_ARCH_X64)
-    _infix_register_seh_windows_x64(exec, category, prologue_size);
+    _infix_register_seh_windows_x64(exec, category, prologue_size, epilogue_offset);
+#elif defined(INFIX_ARCH_AARCH64)
+    _infix_register_seh_windows_arm64(exec, category, prologue_size, epilogue_offset);
 #endif
     // Finalize permissions to Read+Execute.
     // We include the SEH metadata in the protected region.

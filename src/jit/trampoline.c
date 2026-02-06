@@ -423,8 +423,10 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
         goto cleanup;
     }
     infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(
-            &handle->exec, is_safe ? INFIX_EXECUTABLE_SAFE_FORWARD : INFIX_EXECUTABLE_FORWARD, layout->prologue_size)) {
+    if (!infix_executable_make_executable(&handle->exec,
+                                          is_safe ? INFIX_EXECUTABLE_SAFE_FORWARD : INFIX_EXECUTABLE_FORWARD,
+                                          layout->prologue_size,
+                                          layout->epilogue_offset)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -562,7 +564,8 @@ static infix_status _infix_forward_create_direct_impl(infix_forward_t ** out_tra
         goto cleanup;
     }
     infix_memcpy(handle->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(&handle->exec, INFIX_EXECUTABLE_DIRECT, layout->prologue_size)) {
+    if (!infix_executable_make_executable(
+            &handle->exec, INFIX_EXECUTABLE_DIRECT, layout->prologue_size, layout->epilogue_offset)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }
@@ -813,7 +816,7 @@ static infix_status _infix_reverse_create_internal(infix_reverse_t ** out_contex
         goto cleanup;
     }
     infix_memcpy(context->exec.rw_ptr, buf.code, buf.size);
-    if (!infix_executable_make_executable(&context->exec, INFIX_EXECUTABLE_REVERSE, layout->prologue_size)) {
+    if (!infix_executable_make_executable(&context->exec, INFIX_EXECUTABLE_REVERSE, layout->prologue_size, 0)) {
         status = INFIX_ERROR_PROTECTION_FAILED;
         goto cleanup;
     }

@@ -293,6 +293,7 @@ typedef struct {
     void * target_fn;            /**< The target function address. */
     uint32_t max_align;          /**< Maximum required alignment for any argument or the stack. */
     uint32_t prologue_size;      /**< Size of the generated prologue in bytes. */
+    uint32_t epilogue_offset;    /**< Offset from the start of the JIT block to the epilogue. */
 } infix_call_frame_layout;
 /**
  * @struct infix_reverse_call_frame_layout
@@ -471,6 +472,7 @@ typedef struct {
     bool return_value_in_memory;     ///< `true` if the return value uses a hidden pointer argument.
     infix_direct_arg_layout * args;  ///< An array of layout info for each argument.
     uint32_t prologue_size;          ///< Size of the generated prologue in bytes.
+    uint32_t epilogue_offset;        ///< Offset from the start of the JIT block to the epilogue.
 } infix_direct_call_frame_layout;
 
 /**
@@ -693,7 +695,8 @@ typedef enum {
  */
 INFIX_INTERNAL c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
                                                                    infix_executable_category_t category,
-                                                                   uint32_t prologue_size);
+                                                                   uint32_t prologue_size,
+                                                                   uint32_t epilogue_offset);
 /**
  * @brief Allocates a block of standard memory for later protection.
  * @details Located in `src/jit/executor.c`. This is used to allocate the memory

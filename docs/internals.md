@@ -227,7 +227,33 @@ The library implements defense-in-depth against malicious or malformed inputs at
 
 ---
 
-## 4. ABI Internals
+## 4. Exception Handling Boundaries
+
+A unique challenge for a JIT-based FFI is how to handle exceptions (like C++ `throw` or Windows SEH) that occur within a native function called via a trampoline. Without proper metadata, the system unwinder cannot walk through the JIT-compiled frames, often leading to immediate process termination (`std::terminate`).
+
+`infix` implements two levels of exception support to ensure robustness.
+
+### 4.1 Exception Propagation (Transparent Unwinding)
+
+By default, `infix` trampolines are designed to be "transparent" to the system unwinder. This means if a native function throws an exception, it can bubble up through the JIT frame and be caught by a C++ `try/catch` block in the caller's code.
+
+*   **Windows x64:** `infix` generates a standard prologue (`push rbp; mov rbp, rsp`) and correct `UNWIND_INFO` structures for every trampoline. These are registered with the kernel via `RtlAddFunctionTable`.
+*   **Linux (x64 & ARM64):** `infix` manually constructs DWARF `.eh_frame` records (CIE and FDE) in memory and registers them with the runtime using `__register_frame`. These records describe the trampoline's stack setup (e.g., RBP-based frames), allowing `libgcc_s` or `libc++` to safely traverse them.
+
+### 4.2 Safe Boundaries (`infix_forward_create_safe`)
+
+For environments that cannot use C++ `try/catch` (like plain C or high-level language runtimes), `infix` provides a "Safe" trampoline API. A safe trampoline establishes a hard boundary at the FFI call:
+
+1.  **Catching:** It registers a platform-native exception handler.
+    *   **Windows x64:** A "Personality Routine" is registered in the `UNWIND_INFO`. Because JIT memory may be more than 2GB away from the library's static code, `infix` emits a **64-bit absolute jump stub** within the JIT block's metadata to reach the library's real personality routine.
+2.  **Mapping:** If an exception occurs, the handler catches it, sets the thread-local error to `INFIX_CODE_NATIVE_EXCEPTION`, and redirects execution to the trampoline's epilogue using `RtlUnwindEx`.
+3.  **Reporting:** The FFI call returns gracefully to the caller, who can then check `infix_get_last_error()` to detect that an exception was caught.
+
+This prevents a crash in the native library from taking down the entire host process.
+
+---
+
+## 5. ABI Internals
 
 This section provides a low-level comparison of the ABIs supported by `infix`.
 

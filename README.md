@@ -13,6 +13,7 @@ It's designed to be the simplest way to add a dynamic Foreign Function Interface
 *   **Direct Marshalling API:** Build high-performance language bindings where the JIT compiler calls your object-unboxing functions directly, bypassing intermediate buffers.
 *   **Simple Integration:** Add a single C file and a header directory to your project to get started. No complex dependencies.
 *   **Type Registry:** Define, reuse, and link complex, recursive, and mutually-dependent structs by name.
+*   **Safe Exception Boundaries:** Catch C++ and hardware exceptions (SEH) from native code to prevent host process crashes.
 *   **Security-First Design:** Hardened against vulnerabilities with Write XOR Execute (W^X) memory, guard pages, and fuzz testing.
 *   **High Performance:** A Just-in-Time (JIT) compiler generates optimized machine code trampolines, making calls nearly as fast as a direct C call after the initial setup.
 
@@ -93,6 +94,33 @@ void run_qsort_example() {
     // `numbers` is now sorted: [1, 2, 3, 4, 5]
 
     infix_reverse_destroy(context);
+}
+```
+
+## Safe Exception Boundaries
+
+`infix` can establish a "safe boundary" around FFI calls to catch C++ or SEH exceptions that occur in native code, preventing them from crashing your process.
+
+```c
+#include <infix/infix.h>
+
+void run_safe_example(void* crashing_func) {
+    infix_forward_t* trampoline = NULL;
+    // Create a "safe" trampoline.
+    infix_forward_create_safe(&trampoline, "() -> void", crashing_func, NULL);
+
+    infix_cif_func cif = infix_forward_get_code(trampoline);
+    
+    // Call the function. If it throws a C++ exception, it will be caught.
+    cif(NULL, NULL);
+
+    // Check for exceptions.
+    infix_error_details_t err = infix_get_last_error();
+    if (err.code == INFIX_CODE_NATIVE_EXCEPTION) {
+        printf("Caught an exception from native code: %s\n", err.message);
+    }
+
+    infix_forward_destroy(trampoline);
 }
 ```
 

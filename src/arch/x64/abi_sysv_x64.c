@@ -768,6 +768,7 @@ static infix_status generate_forward_call_instruction_sysv_x64(code_buffer * buf
 static infix_status generate_forward_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_call_frame_layout * layout,
                                                        infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     // Handle Return Value
     // If the function returns something and it wasn't via a hidden pointer...
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
@@ -1478,6 +1479,7 @@ static infix_status generate_direct_forward_call_instruction_sysv_x64(code_buffe
 static infix_status generate_direct_forward_epilogue_sysv_x64(code_buffer * buf,
                                                               infix_direct_call_frame_layout * layout,
                                                               infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         // Use full ABI classification for return values
         if (is_long_double(ret_type))
