@@ -139,6 +139,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3af1080ceceea1dc05bee200422c60d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaa6369c0100c1b6488bd093099310d2" id="r_afaa6369c0100c1b6488bd093099310d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#afaa6369c0100c1b6488bd093099310d2">is_direct_trampoline</a></td></tr>
 <tr class="separator:afaa6369c0100c1b6488bd093099310d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fc0071d6121124cabd4426cf3b5b79c" id="r_a9fc0071d6121124cabd4426cf3b5b79c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#a9fc0071d6121124cabd4426cf3b5b79c">is_safe</a></td></tr>
+<tr class="separator:a9fc0071d6121124cabd4426cf3b5b79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f9307241cfd8a409784a138590b7518" id="r_a9f9307241cfd8a409784a138590b7518"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#a9f9307241cfd8a409784a138590b7518">ref_count</a></td></tr>
+<tr class="separator:a9f9307241cfd8a409784a138590b7518"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecbdbb10b4b5977f30c8defbe578e2c5" id="r_aecbdbb10b4b5977f30c8defbe578e2c5"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__forward__t.html#aecbdbb10b4b5977f30c8defbe578e2c5">signature</a></td></tr>
+<tr class="separator:aecbdbb10b4b5977f30c8defbe578e2c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Internal definition of a forward trampoline handle. </p>
@@ -219,6 +225,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9fc0071d6121124cabd4426cf3b5b79c" name="a9fc0071d6121124cabd4426cf3b5b79c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fc0071d6121124cabd4426cf3b5b79c">&#9670;&#160;</a></span>is_safe</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool infix_forward_t::is_safe</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If true, the trampoline wraps the call in an exception handler. </p>
+
+</div>
+</div>
 <a id="a4c8616d2a2cebca1bd8d353f5243d2b4" name="a4c8616d2a2cebca1bd8d353f5243d2b4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c8616d2a2cebca1bd8d353f5243d2b4">&#9670;&#160;</a></span>num_args</h2>
 
@@ -249,6 +270,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9f9307241cfd8a409784a138590b7518" name="a9f9307241cfd8a409784a138590b7518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f9307241cfd8a409784a138590b7518">&#9670;&#160;</a></span>ref_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t infix_forward_t::ref_count</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Reference count for deduplication and shared ownership. </p>
+
+</div>
+</div>
 <a id="a96a63bb1f08d8a6c33f26453f9d55c28" name="a96a63bb1f08d8a6c33f26453f9d55c28"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96a63bb1f08d8a6c33f26453f9d55c28">&#9670;&#160;</a></span>return_type</h2>
 
@@ -261,6 +297,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>A deep copy of the function's return type. </p>
+
+</div>
+</div>
+<a id="aecbdbb10b4b5977f30c8defbe578e2c5" name="aecbdbb10b4b5977f30c8defbe578e2c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecbdbb10b4b5977f30c8defbe578e2c5">&#9670;&#160;</a></span>signature</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* infix_forward_t::signature</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The normalized signature string used to create this trampoline. </p>
 
 </div>
 </div>

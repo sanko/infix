@@ -105,8 +105,8 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
   <div class="headertitle"><div class="title">Project Roadmap: infix FFI</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md257"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
-<h1><a class="anchor" id="autotoc_md258"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md272"></a> This document outlines the planned development goals for the infix FFI library, categorized by priority. Each item includes the context for why it's important, the proposed idea, a clear definition of what "done" looks like, and potential challenges.</p>
+<h1><a class="anchor" id="autotoc_md273"></a>
 High Priority: Foundation &amp; Stability</h1>
 <p><em>These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.</em></p>
 <ul>
@@ -196,7 +196,7 @@ High Priority: Foundation &amp; Stability</h1>
 </b></b></li>
 </ul>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md259"></a>
+<h1><a class="anchor" id="autotoc_md274"></a>
 Medium Priority: Expansion &amp; Optimization</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>Once the foundation is solid, these tasks focus on adding major new capabilities, improving performance, and expanding test coverage.</em></b></b></p>
@@ -240,7 +240,7 @@ Medium Priority: Expansion &amp; Optimization</h1>
 </ul>
 <p></b></b></p>
 <p><b><b></b></b></p>
-<h1><a class="anchor" id="autotoc_md260"></a>
+<h1><a class="anchor" id="autotoc_md275"></a>
 Low Priority: Advanced Features &amp; Polish</h1>
 <p><b><b></b></b></p>
 <p><b><b><em>These items are valuable but less critical. They can be addressed over time to round out the library's feature set.</em></b></b></p>
@@ -350,7 +350,7 @@ Low Priority: Advanced Features &amp; Polish</h1>
 <li><b>Possible Roadblocks:</b> This may require deep knowledge of macOS virtual memory and could be more complex than on other POSIX systems.</li>
 </ul>
 </li>
-<li>[ ] <b>Add Half-Precision Floating-Point (<code>float16_t</code>) Support**<ul>
+<li>[x] <b>Add Half-Precision Floating-Point (<code>float16_t</code>) Support**<ul>
 <li><b>Context:</b> <code>_Float16</code> is increasingly important for machine learning and GPU-related tasks.</li>
 <li><b>Idea:</b> Add a new primitive type. The ABI rules are simple: <code>_Float16</code> arguments are promoted to <code>float</code> and passed in standard floating-point registers.</li>
 <li><b>Goal:</b> The library correctly handles <code>float16_t</code> arguments and return values.</li>
@@ -363,7 +363,55 @@ Low Priority: Advanced Features &amp; Polish</h1>
 <li><b>Possible Roadblocks:</b> Monumental implementation effort. Likely out of scope for the current library</li>
 </ul>
 </li>
-<li>[x] <b>Typedef System</b> </li>
+<li>[x] <b>Typedef System</b></li>
+</ul>
+<p></b></b></p>
+<p><b><b></b></b></p>
+<h1><a class="anchor" id="autotoc_md276"></a>
+High Priority: Foundation &amp; Stability</h1>
+<p><b><b></b></b></p>
+<p><b><b><em>These tasks focus on critical infrastructure, core reliability, and essential C language feature completeness. They must be addressed before major new features are added.</em></b></b></p>
+<p><b><b></p><ul>
+<li>[x] <b>Complete the SEH "Safe" Boundary (Windows x64)</b><ul>
+<li><b>Context:</b> The current <code>_infix_seh_personality_routine</code> in <code><a class="el" href="executor_8c.html" title="Implements platform-specific memory management for JIT code and execution.">executor.c</a></code> is a placeholder that still bubbles exceptions up. To truly support "safe" trampolines, it must perform a non-local goto to the trampoline's epilogue.</li>
+<li><b>Idea:</b> Implement the redirect logic using <code>RtlUnwindEx</code> or by manually modifying <code>ContextRecord-&gt;Rip</code> to point to a landing pad/epilogue and returning <code>ExceptionContinueSearch</code> or <code>ExceptionContinueExecution</code> as appropriate to stop the search.</li>
+<li><b>Goal:</b> <code>infix_forward_create_safe</code> can successfully catch a C++ or SEH exception in a called function and return a controlled <code>INFIX_CODE_NATIVE_EXCEPTION</code> error instead of crashing the process.</li>
+</ul>
+</li>
+<li>[x] <b>Refine Registry Hash Table Growth in Arenas</b><ul>
+<li><b>Context:</b> <code>_registry_rehash</code> currently "leaks" the old bucket array within the registry's arena when resizing. While arenas are freed as a unit, a long-lived registry that grows significantly can waste substantial memory.</li>
+<li><b>Idea:</b> Switch the <code>buckets</code> array to use <code>infix_malloc</code>/<code>infix_realloc</code> instead of arena allocation, or implement an arena "checkpoint/rollback" mechanism to reclaim the old array if it was the most recent allocation.</li>
+<li><b>Goal:</b> Memory usage for large, frequently-growing registries is optimized, preventing unnecessary memory pressure in long-running processes.</li>
+</ul>
+</li>
+<li>[x] <b>Deepen Mangling Dialect Support (Itanium &amp; MSVC)</b><ul>
+<li><b>Context:</b> The current C++ mangling implementations are simplified and do not handle complex features like substitution (Itanium) or type back-references (MSVC).</li>
+<li><b>Idea:</b><ol type="1">
+<li><b>Itanium:</b> Implement the substitution dictionary (<code>S_</code>, <code>St</code>, etc.) to compress repeated types and namespaces.</li>
+<li><b>MSVC:</b> Implement type back-references (<code>0-9</code>) for previously encountered types in the signature.</li>
+</ol>
+</li>
+<li><b>Goal:</b> <code>infix_type_print</code> and <code>infix_function_print</code> produce mangled strings that exactly match those generated by standard C++ compilers, ensuring 100% compatibility with existing native libraries and linkers.</li>
+</ul>
+</li>
+<li>[x] <b>Harden Instruction Cache Invalidation on ARM64</b><ul>
+<li><b>Context:</b> <code>__builtin___clear_cache</code> may be insufficient or a no-op on some restrictive ARM64 Linux kernels or diverse hardware revisions.</li>
+<li><b>Idea:</b> Add an explicit fallback to the <code>sys_icache_invalidate</code> syscall (syscall 259) or similar platform-specific mechanisms to ensure instruction cache consistency across all supported ARM64 environments.</li>
+<li><b>Goal:</b> JITed code is 100% reliable on all ARM64 revisions, including those with unconventional cache hierarchies.</li>
+</ul>
+</li>
+<li>[x] <b>Implement Trampoline Deduplication (Caching)</b><ul>
+<li><b>Context:</b> Repeatedly creating trampolines for the same signature/target function pair wastes executable memory and JIT compilation time.</li>
+<li><b>Idea:</b> Introduce a global or context-local cache (hash map) that stores created <code><a class="el" href="structinfix__forward__t.html" title="Internal definition of a forward trampoline handle.">infix_forward_t</a></code> handles keyed by a hash of their signature and target address. Use reference counting to manage shared handle lifetimes.</li>
+<li><b>Goal:</b> Multiple calls to <code>infix_forward_create</code> with the same parameters return the same shared handle, significantly reducing memory overhead and initialization time in complex applications.</li>
+</ul>
+</li>
+<li>[x] <b>Security: Hardened "Sanity Check" Marshalling</b><ul>
+<li><b>Context:</b> The <code>direct_marshalling</code> API calls user-provided functions. A bug in a user's marshaller (e.g., misaligned stack, clobbered registers) can cause hard-to-debug crashes.</li>
+<li><b>Idea:</b> Implement a "Sanity Mode" (enabled via build flag) where the JIT engine emits extra instructions before and after marshaller calls to verify stack pointer (<code>rsp</code>) balance and alignment.</li>
+<li><b>Goal:</b> Developers can catch buggy marshaller implementations early during development via controlled assertions instead of chasing random segmentation faults in native code. </li>
+</ul>
+</li>
 </ul>
 <p></b></b></p>
 </div></div><!-- contents -->

@@ -148,6 +148,9 @@ Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="010__registry__scaling_8c.html">010_registry_scaling.c</a></td></tr>
 <tr class="memdesc:010__registry__scaling_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for the registry's hash table auto-scaling (rehashing). <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="011__bitfields_8c.html">011_bitfields.c</a></td></tr>
+<tr class="memdesc:011__bitfields_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for bitfield support in structs. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="101__by__value_8c.html">101_by_value.c</a></td></tr>
 <tr class="memdesc:101__by__value_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for passing and returning aggregates and vectors by value. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,6 +184,9 @@ Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="304__reverse__call__types_8c.html">304_reverse_call_types.c</a></td></tr>
 <tr class="memdesc:304__reverse__call__types_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test to explicitly compare the "Callback" vs. "Closure" reverse trampoline APIs. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="305__bitfields__reverse_8c.html">305_bitfields_reverse.c</a></td></tr>
+<tr class="memdesc:305__bitfields__reverse_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for receiving bitfield structs in reverse trampolines (callbacks). <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="401__large__stack_8c.html">401_large_stack.c</a></td></tr>
 <tr class="memdesc:401__large__stack_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for FFI calls with a large number of arguments passed on the stack. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +198,15 @@ Files</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="404__simd__vectors_8c.html">404_simd_vectors.c</a></td></tr>
 <tr class="memdesc:404__simd__vectors_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for SIMD vector argument passing and return values. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="405__simd__vectors__avx_8c.html">405_simd_vectors_avx.c</a></td></tr>
+<tr class="memdesc:405__simd__vectors__avx_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for 256-bit (AVX) SIMD vector support. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="406__simd__forward_8c.html">406_simd_forward.c</a></td></tr>
+<tr class="memdesc:406__simd__forward_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for forward SIMD vector calls. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="407__float16_8c.html">407_float16.c</a></td></tr>
+<tr class="memdesc:407__float16_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for half-precision floating-point (float16_t) support. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html">501_direct_marshalling.c</a></td></tr>
 <tr class="memdesc:501__direct__marshalling_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test suite for the high-performance direct marshalling API. <br /></td></tr>
@@ -234,8 +249,14 @@ Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="901__call__overhead_8c.html">901_call_overhead.c</a></td></tr>
 <tr class="memdesc:901__call__overhead_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A micro-benchmark to measure the performance overhead of an FFI call. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="902__cache__deduplication_8c.html">902_cache_deduplication.c</a></td></tr>
+<tr class="memdesc:902__cache__deduplication_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit test for the trampoline deduplication (caching) system. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="903__generation__benchmark_8c.html">903_generation_benchmark.c</a></td></tr>
 <tr class="memdesc:903__generation__benchmark_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A micro-benchmark to measure the performance of trampoline generation. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="904__registry__benchmark_8c.html">904_registry_benchmark.c</a></td></tr>
+<tr class="memdesc:904__registry__benchmark_8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measures the performance of infix_register_types with many definitions. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

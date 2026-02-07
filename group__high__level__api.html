@@ -184,6 +184,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf82cdf348e2e3ad7d851422b1bf648d2" id="r_gaf82cdf348e2e3ad7d851422b1bf648d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gaf82cdf348e2e3ad7d851422b1bf648d2">infix_forward_create</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
 <tr class="memdesc:gaf82cdf348e2e3ad7d851422b1bf648d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a "bound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:gaf82cdf348e2e3ad7d851422b1bf648d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6cce27e4637fed5d1d59f3ca8c358726" id="r_ga6cce27e4637fed5d1d59f3ca8c358726"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#ga6cce27e4637fed5d1d59f3ca8c358726">infix_forward_create_safe</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, void *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
+<tr class="memdesc:ga6cce27e4637fed5d1d59f3ca8c358726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a "safe" bound forward trampoline that catches native exceptions.  <br /></td></tr>
+<tr class="separator:ga6cce27e4637fed5d1d59f3ca8c358726"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf3c415d12f6fbd10a431eda3fb29cc54" id="r_gaf3c415d12f6fbd10a431eda3fb29cc54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__high__level__api.html#gaf3c415d12f6fbd10a431eda3fb29cc54">infix_forward_create_unbound</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **, const char *, <a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *)</td></tr>
 <tr class="memdesc:gaf3c415d12f6fbd10a431eda3fb29cc54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an "unbound" forward trampoline from a signature string.  <br /></td></tr>
 <tr class="separator:gaf3c415d12f6fbd10a431eda3fb29cc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -665,13 +668,13 @@ Variables</h2></td></tr>
 <div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:61</div></div>
 <div class="ttc" id="a202__in__structs_8c_html_a0ad795b9f107bb50006cfa54f5671f2e"><div class="ttname"><a href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a></div><div class="ttdeci">void * args[]</div><div class="ttdef"><b>Definition</b> 202_in_structs.c:59</div></div>
 <div class="ttc" id="aCh04__ThreadSafety_8c_html_a876d849a2f1867b8b2be9881f4a191d5"><div class="ttname"><a href="Ch04__ThreadSafety_8c.html#a876d849a2f1867b8b2be9881f4a191d5">add</a></div><div class="ttdeci">static int add(int a, int b)</div><div class="ttdef"><b>Definition</b> Ch04_ThreadSafety.c:25</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:417</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">Enumerates the possible status codes returned by infix API functions.</div><div class="ttdef"><b>Definition</b> infix.h:433</div></div>
-<div class="ttc" id="agroup__high__level__api_html_gaf82cdf348e2e3ad7d851422b1bf648d2"><div class="ttname"><a href="group__high__level__api.html#gaf82cdf348e2e3ad7d851422b1bf648d2">infix_forward_create</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:997</div></div>
-<div class="ttc" id="agroup__high__level__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdef"><b>Definition</b> infix.h:434</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga3042690c20cccd4137f134154bd62e1a"><div class="ttname"><a href="group__high__level__api.html#ga3042690c20cccd4137f134154bd62e1a">infix_cif_func</a></div><div class="ttdeci">void(* infix_cif_func)(void *, void **)</div><div class="ttdoc">A function pointer type for a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:418</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga8643667be6ea1ef9269c2e46d8f11ff7"><div class="ttname"><a href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a></div><div class="ttdeci">infix_status</div><div class="ttdoc">Enumerates the possible status codes returned by infix API functions.</div><div class="ttdef"><b>Definition</b> infix.h:434</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gaf82cdf348e2e3ad7d851422b1bf648d2"><div class="ttname"><a href="group__high__level__api.html#gaf82cdf348e2e3ad7d851422b1bf648d2">infix_forward_create</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_forward_create(infix_forward_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a &quot;bound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:1100</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da"><div class="ttname"><a href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7ae50c34a24362f9364b4b20ef29d259da">INFIX_SUCCESS</a></div><div class="ttdeci">@ INFIX_SUCCESS</div><div class="ttdef"><b>Definition</b> infix.h:435</div></div>
 <div class="ttc" id="agroup__introspection__api_html_gadd3de59c407a1ec1894823834a12cb96"><div class="ttname"><a href="group__introspection__api.html#gadd3de59c407a1ec1894823834a12cb96">infix_forward_get_code</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_cif_func infix_forward_get_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from a bound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:283</div></div>
-<div class="ttc" id="agroup__manual__api_html_ga99eb42f542d16a38b1d9c3686991823d"><div class="ttname"><a href="group__manual__api.html#ga99eb42f542d16a38b1d9c3686991823d">infix_forward_destroy</a></div><div class="ttdeci">INFIX_API void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Destroys a forward trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:636</div></div>
-<div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:88</div></div>
+<div class="ttc" id="agroup__manual__api_html_ga99eb42f542d16a38b1d9c3686991823d"><div class="ttname"><a href="group__manual__api.html#ga99eb42f542d16a38b1d9c3686991823d">infix_forward_destroy</a></div><div class="ttdeci">INFIX_API void infix_forward_destroy(infix_forward_t *)</div><div class="ttdoc">Destroys a forward trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:716</div></div>
+<div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:90</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -727,6 +730,59 @@ Variables</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">target_arena</td><td>The arena to use for the trampoline's internal metadata. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The signature string of the target function. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">target_function</td><td>The address of the C function to be called. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga6cce27e4637fed5d1d59f3ca8c358726" name="ga6cce27e4637fed5d1d59f3ca8c358726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6cce27e4637fed5d1d59f3ca8c358726">&#9670;&#160;</a></span>infix_forward_create_safe()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a> infix_forward_create_safe </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structinfix__forward__t.html">infix_forward_t</a> **&#160;</td>
+          <td class="paramname"><em>out_trampoline</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>signature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>target_function</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structinfix__registry__t.html">infix_registry_t</a> *&#160;</td>
+          <td class="paramname"><em>registry</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a "safe" bound forward trampoline that catches native exceptions. </p>
+<p>This is identical to <code>infix_forward_create</code>, but the generated trampoline is wrapped in a platform-specific exception handler (e.g., SEH on Windows). If the target function throws an exception, the trampoline will catch it and set the thread-local error to <code>INFIX_CODE_NATIVE_EXCEPTION</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_trampoline</td><td>Receives the created handle. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">signature</td><td>The function signature. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">target_function</td><td>The address of the C function. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">registry</td><td>An optional type registry. </td></tr>
   </table>
   </dd>
@@ -802,8 +858,8 @@ Variables</h2></td></tr>
 <div class="line">cif((<span class="keywordtype">void</span>*)subtract, &amp;result, <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>); <span class="comment">// result is 5</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#ga99eb42f542d16a38b1d9c3686991823d">infix_forward_destroy</a>(trampoline);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga48f7ee868576f525269902fc953887bd"><div class="ttname"><a href="group__high__level__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *, void *, void **)</div><div class="ttdoc">A function pointer type for an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:408</div></div>
-<div class="ttc" id="agroup__high__level__api_html_gaf3c415d12f6fbd10a431eda3fb29cc54"><div class="ttname"><a href="group__high__level__api.html#gaf3c415d12f6fbd10a431eda3fb29cc54">infix_forward_create_unbound</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Creates an &quot;unbound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:1003</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga48f7ee868576f525269902fc953887bd"><div class="ttname"><a href="group__high__level__api.html#ga48f7ee868576f525269902fc953887bd">infix_unbound_cif_func</a></div><div class="ttdeci">void(* infix_unbound_cif_func)(void *, void *, void **)</div><div class="ttdoc">A function pointer type for an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> infix.h:409</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gaf3c415d12f6fbd10a431eda3fb29cc54"><div class="ttname"><a href="group__high__level__api.html#gaf3c415d12f6fbd10a431eda3fb29cc54">infix_forward_create_unbound</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_forward_create_unbound(infix_forward_t **, const char *, infix_registry_t *)</div><div class="ttdoc">Creates an &quot;unbound&quot; forward trampoline from a signature string.</div><div class="ttdef"><b>Definition</b> trampoline.c:1106</div></div>
 <div class="ttc" id="agroup__introspection__api_html_gabb070dd132ee2505586e617a967d9ee2"><div class="ttname"><a href="group__introspection__api.html#gabb070dd132ee2505586e617a967d9ee2">infix_forward_get_unbound_code</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_unbound_cif_func infix_forward_get_unbound_code(infix_forward_t *)</div><div class="ttdoc">Gets the callable function pointer from an unbound forward trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:278</div></div>
 </div><!-- fragment --> 
 </div>
@@ -859,30 +915,30 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>INFIX_SUCCESS</code> on success. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The caller is responsible for destroying the handle with <code>infix_reverse_destroy</code>.</dd></dl>
-<div class="fragment"><div class="line"><span class="comment">// 1. Define the type-safe C handler function.</span></div>
+<div class="fragment"><div class="line"><span class="comment">// Define the type-safe C handler function.</span></div>
 <div class="line"><span class="comment">// Its signature must match &quot;(int, int)-&gt;int&quot;.</span></div>
 <div class="line"><span class="keywordtype">int</span> my_handler(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) {</div>
 <div class="line">    <span class="keywordflow">return</span> a * b;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 2. Create the reverse trampoline.</span></div>
+<div class="line"><span class="comment">// Create the reverse trampoline.</span></div>
 <div class="line"><a class="code hl_struct" href="structinfix__reverse__t.html">infix_reverse_t</a>* ctx = NULL;</div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837">infix_reverse_create_callback</a>(&amp;ctx, <span class="stringliteral">&quot;(int,int)-&gt;int&quot;</span>, (<span class="keywordtype">void</span>*)my_handler, NULL);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 3. Get the JIT-compiled C function pointer.</span></div>
+<div class="line"><span class="comment">// Get the JIT-compiled C function pointer.</span></div>
 <div class="line"><span class="keyword">typedef</span> int (*my_func_ptr_t)(int, int);</div>
 <div class="line">my_func_ptr_t func_ptr = (my_func_ptr_t)<a class="code hl_function" href="group__introspection__api.html#ga6cf6e4358b81b828d6054470aaaae80f">infix_reverse_get_code</a>(ctx);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 4. Pass this `func_ptr` to some C library that expects a callback.</span></div>
+<div class="line"><span class="comment">// Pass this `func_ptr` to some C library that expects a callback.</span></div>
 <div class="line"><span class="comment">// some_c_library_function(func_ptr);</span></div>
 <div class="line"><span class="comment">// When the library calls func_ptr(5, 10), `my_handler` will be invoked</span></div>
 <div class="line"><span class="comment">// and will return 50.</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#ga05ccd7be42743b64276e2b5b6247422a">infix_reverse_destroy</a>(ctx);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga532ee465ac7af787e8022c115b7bb837"><div class="ttname"><a href="group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837">infix_reverse_create_callback</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1052</div></div>
-<div class="ttc" id="agroup__introspection__api_html_ga6cf6e4358b81b828d6054470aaaae80f"><div class="ttname"><a href="group__introspection__api.html#ga6cf6e4358b81b828d6054470aaaae80f">infix_reverse_get_code</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:902</div></div>
-<div class="ttc" id="agroup__manual__api_html_ga05ccd7be42743b64276e2b5b6247422a"><div class="ttname"><a href="group__manual__api.html#ga05ccd7be42743b64276e2b5b6247422a">infix_reverse_destroy</a></div><div class="ttdeci">INFIX_API void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:884</div></div>
-<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:114</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga532ee465ac7af787e8022c115b7bb837"><div class="ttname"><a href="group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837">infix_reverse_create_callback</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1155</div></div>
+<div class="ttc" id="agroup__introspection__api_html_ga6cf6e4358b81b828d6054470aaaae80f"><div class="ttname"><a href="group__introspection__api.html#ga6cf6e4358b81b828d6054470aaaae80f">infix_reverse_get_code</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD void * infix_reverse_get_code(const infix_reverse_t *)</div><div class="ttdoc">Gets the native, callable C function pointer from a reverse trampoline.</div><div class="ttdef"><b>Definition</b> trampoline.c:972</div></div>
+<div class="ttc" id="agroup__manual__api_html_ga05ccd7be42743b64276e2b5b6247422a"><div class="ttname"><a href="group__manual__api.html#ga05ccd7be42743b64276e2b5b6247422a">infix_reverse_destroy</a></div><div class="ttdeci">INFIX_API void infix_reverse_destroy(infix_reverse_t *)</div><div class="ttdoc">Destroys a reverse trampoline and frees all associated memory.</div><div class="ttdef"><b>Definition</b> trampoline.c:954</div></div>
+<div class="ttc" id="astructinfix__reverse__t_html"><div class="ttname"><a href="structinfix__reverse__t.html">infix_reverse_t</a></div><div class="ttdoc">Internal definition of a reverse trampoline (callback/closure) handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:119</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -950,7 +1006,7 @@ Variables</h2></td></tr>
 <div class="line">    <span class="keywordtype">int</span> call_count;</div>
 <div class="line">} my_state_t;</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 1. Define the generic closure handler.</span></div>
+<div class="line"><span class="comment">// Define the generic closure handler.</span></div>
 <div class="line"><span class="keywordtype">void</span> my_closure_handler(<a class="code hl_struct" href="structinfix__reverse__t.html">infix_context_t</a>* ctx, <span class="keywordtype">void</span>* ret_val, <span class="keywordtype">void</span>** <a class="code hl_variable" href="202__in__structs_8c.html#a0ad795b9f107bb50006cfa54f5671f2e">args</a>) {</div>
 <div class="line">    <span class="comment">// Retrieve our state.</span></div>
 <div class="line">    my_state_t* state = (my_state_t*)<a class="code hl_function" href="group__introspection__api.html#gafefe4701b38b4590680485017cbe0c2a">infix_reverse_get_user_data</a>(ctx);</div>
@@ -965,21 +1021,21 @@ Variables</h2></td></tr>
 <div class="line">    memcpy(ret_val, &amp;result, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 2. Create the state and the closure.</span></div>
+<div class="line"><span class="comment">// Create the state and the closure.</span></div>
 <div class="line">my_state_t my_state = { .call_count = 0 };</div>
 <div class="line"><a class="code hl_struct" href="structinfix__reverse__t.html">infix_reverse_t</a>* ctx = NULL;</div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga81de5c1bd8f7fdd19081125469122346">infix_reverse_create_closure</a>(&amp;ctx, <span class="stringliteral">&quot;(int,int)-&gt;int&quot;</span>, my_closure_handler, &amp;my_state, NULL);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 3. Get the JIT-compiled C function pointer.</span></div>
+<div class="line"><span class="comment">// Get the JIT-compiled C function pointer.</span></div>
 <div class="line">int (*func_ptr)(int, int) = <a class="code hl_function" href="group__introspection__api.html#ga6cf6e4358b81b828d6054470aaaae80f">infix_reverse_get_code</a>(ctx);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// 4. Pass the func_ptr to C code.</span></div>
+<div class="line"><span class="comment">// Pass the func_ptr to C code.</span></div>
 <div class="line"><span class="keywordtype">int</span> result1 = func_ptr(10, 5); <span class="comment">// result1 is (10+5)*1 = 15</span></div>
 <div class="line"><span class="keywordtype">int</span> result2 = func_ptr(2, 3);  <span class="comment">// result2 is (2+3)*2 = 10</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_function" href="group__manual__api.html#ga05ccd7be42743b64276e2b5b6247422a">infix_reverse_destroy</a>(ctx);</div>
-<div class="ttc" id="agroup__high__level__api_html_ga81de5c1bd8f7fdd19081125469122346"><div class="ttname"><a href="group__high__level__api.html#ga81de5c1bd8f7fdd19081125469122346">infix_reverse_create_closure</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_closure(infix_reverse_t **, const char *, infix_closure_handler_fn, void *, infix_registry_t *)</div><div class="ttdoc">Creates a generic reverse trampoline (closure) for stateful callbacks.</div><div class="ttdef"><b>Definition</b> trampoline.c:1080</div></div>
-<div class="ttc" id="agroup__introspection__api_html_gafefe4701b38b4590680485017cbe0c2a"><div class="ttname"><a href="group__introspection__api.html#gafefe4701b38b4590680485017cbe0c2a">infix_reverse_get_user_data</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Gets the user-provided data pointer from a closure context.</div><div class="ttdef"><b>Definition</b> trampoline.c:912</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga81de5c1bd8f7fdd19081125469122346"><div class="ttname"><a href="group__high__level__api.html#ga81de5c1bd8f7fdd19081125469122346">infix_reverse_create_closure</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_closure(infix_reverse_t **, const char *, infix_closure_handler_fn, void *, infix_registry_t *)</div><div class="ttdoc">Creates a generic reverse trampoline (closure) for stateful callbacks.</div><div class="ttdef"><b>Definition</b> trampoline.c:1183</div></div>
+<div class="ttc" id="agroup__introspection__api_html_gafefe4701b38b4590680485017cbe0c2a"><div class="ttname"><a href="group__introspection__api.html#gafefe4701b38b4590680485017cbe0c2a">infix_reverse_get_user_data</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD void * infix_reverse_get_user_data(const infix_reverse_t *)</div><div class="ttdoc">Gets the user-provided data pointer from a closure context.</div><div class="ttdef"><b>Definition</b> trampoline.c:982</div></div>
 </div><!-- fragment --> 
 </div>
 </div>

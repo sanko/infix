@@ -1,19 +1,21 @@
 <map id="t/005_layouts.c" name="t/005_layouts.c">
-<area shape="rect" id="Node000001" title="Unit test for the Manual API&#39;s struct and union layout calculations." alt="" coords="194,5,315,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="17,79,191,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,33,142,75,140,70,229,28"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="97,152,191,177"/>
-<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="251,32,232,66,205,106,169,144,165,141,201,102,227,63,246,30"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="208,225,283,251"/>
-<area shape="poly" id="edge10_Node000001_Node000005" title=" " alt="" coords="257,31,249,211,244,211,252,31"/>
-<area shape="rect" id="Node000007" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="318,79,485,104"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="279,28,366,70,364,75,277,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,103,133,139,128,141,108,106"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,88,251"/>
-<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="102,105,59,213,54,211,97,103"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="133,102,169,122,205,150,226,180,240,211,235,213,221,183,201,154,166,126,130,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="130,180,75,219,72,215,127,175"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="162,175,219,215,216,219,159,180"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="113,225,183,251"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="147,178,149,212,144,212,142,178"/>
+<area shape="rect" id="Node000001" title="Unit test for the Manual API&#39;s struct and union layout calculations." alt="" coords="94,5,215,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="130,79,305,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,29,200,66,196,70,163,33"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="87,152,182,177"/>
+<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="147,32,133,53,121,79,120,110,127,138,122,140,114,110,116,78,128,51,143,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,225,80,251"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="144,33,100,82,75,116,56,153,48,183,45,212,40,212,43,182,51,151,71,113,95,79,140,29"/>
+<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="329,79,495,104"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="197,28,358,72,357,78,195,33"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="206,152,375,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,102,271,140,267,144,228,106"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="206,106,160,145,157,141,202,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="288,225,371,251"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="306,100,352,118,373,132,390,151,396,169,390,188,376,204,360,219,357,215,373,201,385,185,390,169,386,153,370,136,350,122,304,105"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="165,107,119,125,97,138,78,154,60,182,50,213,44,211,55,180,74,150,94,133,117,120,164,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="167,175,286,218,284,223,165,180"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="122,179,70,219,67,215,118,175"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="105,225,175,251"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="138,177,141,212,135,212,133,178"/>
 </map>

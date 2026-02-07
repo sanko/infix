@@ -1,24 +1,25 @@
 <map id="t/821_threading_bare.c" name="t/821_threading_bare.c">
-<area shape="rect" id="Node000001" title="A minimal, dependency&#45;free version of the thread&#45;safety stress test." alt="" coords="209,5,380,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="31,79,206,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="267,33,161,76,159,71,265,28"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="159,152,254,177"/>
-<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="289,33,223,142,218,139,285,30"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="29,225,112,251"/>
-<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="209,29,152,36,96,47,49,62,32,71,20,80,12,96,8,113,15,149,33,184,53,213,49,216,28,187,10,151,3,113,7,94,16,77,29,66,47,57,95,42,151,31,208,23"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="255,225,326,251"/>
-<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="297,31,293,211,288,211,291,31"/>
-<area shape="rect" id="Node000007" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="332,79,502,104"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="315,28,386,69,384,74,313,33"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="526,79,593,104"/>
-<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="338,28,513,75,512,80,336,33"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="618,79,702,104"/>
-<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="356,28,604,76,603,81,355,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,102,183,141,179,145,131,106"/>
-<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="117,105,81,213,76,211,112,104"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="149,225,224,251"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="123,103,133,137,149,176,171,213,167,216,144,179,128,138,118,105"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="186,180,106,221,103,217,183,175"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="205,178,196,213,191,211,200,177"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="221,175,268,214,264,218,218,179"/>
+<area shape="rect" id="Node000001" title="A minimal, dependency&#45;free version of the thread&#45;safety stress test." alt="" coords="300,5,471,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="173,79,347,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="366,33,294,74,291,69,364,28"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="25,152,194,177"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="300,29,229,46,194,61,162,81,136,109,120,140,115,138,132,106,158,77,191,56,227,41,299,24"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="321,152,415,177"/>
+<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="386,31,374,139,368,138,381,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="191,225,273,251"/>
+<area shape="poly" id="edge11_Node000001_Node000005" title=" " alt="" coords="300,23,224,32,143,54,105,71,69,93,39,120,14,153,8,174,14,190,29,204,53,214,114,228,177,233,176,238,113,233,51,219,26,208,9,193,3,174,10,151,35,116,66,88,102,66,141,49,223,27,299,18"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="413,225,483,251"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="392,30,430,151,445,211,440,213,425,153,387,32"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="491,79,557,104"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="409,28,490,70,488,75,406,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="582,79,666,104"/>
+<area shape="poly" id="edge14_Node000001_Node000009" title=" " alt="" coords="424,28,573,72,571,77,423,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="237,106,147,148,145,144,235,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="279,102,340,142,337,147,276,106"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="260,105,239,212,234,211,255,104"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="308,225,383,251"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="269,103,310,176,333,212,328,215,306,179,264,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="347,180,267,221,265,217,345,175"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="367,178,356,213,351,211,362,177"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="383,175,426,214,423,218,379,179"/>
 </map>

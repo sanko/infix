@@ -136,6 +136,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a9ef75114c4d6509fc935d31159be9971" id="r_a9ef75114c4d6509fc935d31159be9971"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__direct__arg__layout.html">infix_direct_arg_layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__direct__call__frame__layout.html#a9ef75114c4d6509fc935d31159be9971">args</a></td></tr>
 <tr class="memdesc:a9ef75114c4d6509fc935d31159be9971"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array of layout info for each argument.  <br /></td></tr>
 <tr class="separator:a9ef75114c4d6509fc935d31159be9971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a763d5fa64839f7926d63b846749da18a" id="r_a763d5fa64839f7926d63b846749da18a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__direct__call__frame__layout.html#a763d5fa64839f7926d63b846749da18a">prologue_size</a></td></tr>
+<tr class="memdesc:a763d5fa64839f7926d63b846749da18a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the generated prologue in bytes.  <br /></td></tr>
+<tr class="separator:a763d5fa64839f7926d63b846749da18a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a133782f5a656c1d756f3041ecc3b589c" id="r_a133782f5a656c1d756f3041ecc3b589c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__direct__call__frame__layout.html#a133782f5a656c1d756f3041ecc3b589c">epilogue_offset</a></td></tr>
+<tr class="memdesc:a133782f5a656c1d756f3041ecc3b589c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset from the start of the JIT block to the epilogue.  <br /></td></tr>
+<tr class="separator:a133782f5a656c1d756f3041ecc3b589c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A complete layout blueprint for a direct marshalling forward call frame. </p>
@@ -157,6 +163,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a133782f5a656c1d756f3041ecc3b589c" name="a133782f5a656c1d756f3041ecc3b589c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a133782f5a656c1d756f3041ecc3b589c">&#9670;&#160;</a></span>epilogue_offset</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t infix_direct_call_frame_layout::epilogue_offset</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Offset from the start of the JIT block to the epilogue. </p>
+
+</div>
+</div>
 <a id="accb03862c7e0fbd50173917c69503896" name="accb03862c7e0fbd50173917c69503896"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#accb03862c7e0fbd50173917c69503896">&#9670;&#160;</a></span>num_args</h2>
 
@@ -170,6 +192,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The total number of arguments. </p>
+
+</div>
+</div>
+<a id="a763d5fa64839f7926d63b846749da18a" name="a763d5fa64839f7926d63b846749da18a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a763d5fa64839f7926d63b846749da18a">&#9670;&#160;</a></span>prologue_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t infix_direct_call_frame_layout::prologue_size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Size of the generated prologue in bytes. </p>
 
 </div>
 </div>

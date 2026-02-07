@@ -139,6 +139,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac54ff0be4865e88a0ba2ae9cb6b8920d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5eaab27cc161e119694a4508341acf20" id="r_a5eaab27cc161e119694a4508341acf20"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a5eaab27cc161e119694a4508341acf20">target_fn</a></td></tr>
 <tr class="separator:a5eaab27cc161e119694a4508341acf20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addd8071f0e5ec3a91e1f0a64a99c9eca" id="r_addd8071f0e5ec3a91e1f0a64a99c9eca"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#addd8071f0e5ec3a91e1f0a64a99c9eca">max_align</a></td></tr>
+<tr class="separator:addd8071f0e5ec3a91e1f0a64a99c9eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac54af72a33bcf843e59e4c4414c6a623" id="r_ac54af72a33bcf843e59e4c4414c6a623"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#ac54af72a33bcf843e59e4c4414c6a623">prologue_size</a></td></tr>
+<tr class="separator:ac54af72a33bcf843e59e4c4414c6a623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a617bbf5ccae0edc278b9b52d461b831d" id="r_a617bbf5ccae0edc278b9b52d461b831d"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__call__frame__layout.html#a617bbf5ccae0edc278b9b52d461b831d">epilogue_offset</a></td></tr>
+<tr class="separator:a617bbf5ccae0edc278b9b52d461b831d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A complete layout blueprint for a forward call frame. </p>
@@ -159,6 +165,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a617bbf5ccae0edc278b9b52d461b831d" name="a617bbf5ccae0edc278b9b52d461b831d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a617bbf5ccae0edc278b9b52d461b831d">&#9670;&#160;</a></span>epilogue_offset</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t infix_call_frame_layout::epilogue_offset</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Offset from the start of the JIT block to the epilogue. </p>
+
+</div>
+</div>
 <a id="a1660ea186713ad11e2c373116f1ec2b6" name="a1660ea186713ad11e2c373116f1ec2b6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1660ea186713ad11e2c373116f1ec2b6">&#9670;&#160;</a></span>is_variadic</h2>
 
@@ -171,6 +192,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p><code>true</code> if the function is variadic. </p>
+
+</div>
+</div>
+<a id="addd8071f0e5ec3a91e1f0a64a99c9eca" name="addd8071f0e5ec3a91e1f0a64a99c9eca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addd8071f0e5ec3a91e1f0a64a99c9eca">&#9670;&#160;</a></span>max_align</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t infix_call_frame_layout::max_align</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum required alignment for any argument or the stack. </p>
 
 </div>
 </div>
@@ -231,6 +267,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>The number of XMMs used for arguments. </p>
+
+</div>
+</div>
+<a id="ac54af72a33bcf843e59e4c4414c6a623" name="ac54af72a33bcf843e59e4c4414c6a623"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac54af72a33bcf843e59e4c4414c6a623">&#9670;&#160;</a></span>prologue_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t infix_call_frame_layout::prologue_size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Size of the generated prologue in bytes. </p>
 
 </div>
 </div>

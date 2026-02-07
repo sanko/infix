@@ -1,18 +1,19 @@
 <map id="src/common/platform.h" name="src/common/platform.h">
-<area shape="rect" id="Node000001" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="185,5,359,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="54,79,229,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,33,176,74,173,70,250,28"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="200,225,283,251"/>
-<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="273,31,247,212,242,211,268,31"/>
-<area shape="rect" id="Node000007" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="310,79,479,104"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="293,28,364,69,362,74,290,33"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="89,152,183,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="143,105,141,139,135,138,138,104"/>
-<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="155,103,197,150,232,211,228,214,192,154,151,106"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="5,225,80,251"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="127,106,102,127,78,154,62,183,52,213,47,211,57,181,74,150,98,123,123,102"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="154,175,214,215,212,220,151,180"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="123,179,70,219,67,215,119,175"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="105,225,175,251"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="139,178,141,212,136,212,134,178"/>
+<area shape="rect" id="Node000001" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="169,5,344,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="169,79,344,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,31,259,65,254,65,254,31"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,152,175,177"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="233,33,196,53,158,81,129,111,107,142,102,139,125,108,155,77,194,49,231,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="363,225,446,251"/>
+<area shape="poly" id="edge10_Node000001_Node000005" title=" " alt="" coords="287,28,323,48,357,77,379,110,393,146,406,211,400,212,388,148,374,112,353,80,320,52,284,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,106,131,149,129,144,229,102"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="251,152,345,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="266,103,287,139,282,141,261,106"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="285,102,322,122,359,150,382,181,397,211,393,214,377,183,355,154,319,126,283,106"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="169,225,243,251"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="255,105,217,213,212,212,250,104"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="317,175,377,215,374,220,314,180"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="285,179,233,219,230,215,282,175"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="268,225,339,251"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="302,177,304,212,299,212,296,178"/>
 </map>

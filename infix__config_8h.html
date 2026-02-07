@@ -127,6 +127,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ae3d32fd45b8b48968091b55a8a6ca817" id="r_ae3d32fd45b8b48968091b55a8a6ca817"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#ae3d32fd45b8b48968091b55a8a6ca817">INFIX_TRAMPOLINE_HEADROOM</a>&#160;&#160;&#160;128</td></tr>
 <tr class="memdesc:ae3d32fd45b8b48968091b55a8a6ca817"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra bytes to allocate in a trampoline's private arena.  <br /></td></tr>
 <tr class="separator:ae3d32fd45b8b48968091b55a8a6ca817"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9e8f39163b8120951772fffd8798fbf" id="r_aa9e8f39163b8120951772fffd8798fbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#aa9e8f39163b8120951772fffd8798fbf">INFIX_SANITY_CHECK_ENABLE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:aa9e8f39163b8120951772fffd8798fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">If defined and non-zero, the JIT will emit extra instructions to verify stack consistency around user-provided marshaller calls.  <br /></td></tr>
+<tr class="separator:aa9e8f39163b8120951772fffd8798fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a280d05886c0cb71aa83c4ab137b8415e" id="r_a280d05886c0cb71aa83c4ab137b8415e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a></td></tr>
 <tr class="memdesc:a280d05886c0cb71aa83c4ab137b8415e"><td class="mdescLeft">&#160;</td><td class="mdescRight">When compiling with -fvisibility=hidden, we use this to explicitly mark internal-but-shared functions as hidden.  <br /></td></tr>
 <tr class="separator:a280d05886c0cb71aa83c4ab137b8415e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,6 +188,22 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>When compiling with -fvisibility=hidden, we use this to explicitly mark internal-but-shared functions as hidden. </p>
+
+</div>
+</div>
+<a id="aa9e8f39163b8120951772fffd8798fbf" name="aa9e8f39163b8120951772fffd8798fbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9e8f39163b8120951772fffd8798fbf">&#9670;&#160;</a></span>INFIX_SANITY_CHECK_ENABLE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INFIX_SANITY_CHECK_ENABLE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If defined and non-zero, the JIT will emit extra instructions to verify stack consistency around user-provided marshaller calls. </p>
 
 </div>
 </div>

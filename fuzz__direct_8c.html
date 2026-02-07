@@ -165,10 +165,11 @@ Functions</h2></td></tr>
 <div class="line">        <span class="keywordtype">size_t</span> len = <span class="keyword">sizeof</span>(lit) - 1; \</div>
 <div class="line">        if (remain &lt; len)             \</div>
 <div class="line">            <span class="keywordflow">goto</span> sig_done;            \</div>
-<div class="line">        memcpy(p, lit, len);          \</div>
-<div class="line">        p += len;                     \</div>
+<div class="line">        memcpy(<a class="code hl_variable" href="904__registry__benchmark_8c.html#aaa1ebe818ec1c763a776cc580551f3e6">p</a>, lit, len);          \</div>
+<div class="line">        <a class="code hl_variable" href="904__registry__benchmark_8c.html#aaa1ebe818ec1c763a776cc580551f3e6">p</a> += len;                     \</div>
 <div class="line">        remain -= len;                \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="a904__registry__benchmark_8c_html_aaa1ebe818ec1c763a776cc580551f3e6"><div class="ttname"><a href="904__registry__benchmark_8c.html#aaa1ebe818ec1c763a776cc580551f3e6">p</a></div><div class="ttdeci">char * p</div><div class="ttdef"><b>Definition</b> 904_registry_benchmark.c:25</div></div>
 </div><!-- fragment -->
 </div>
 </div>

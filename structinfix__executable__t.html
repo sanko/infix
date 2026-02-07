@@ -118,6 +118,8 @@ $(document).ready(function(){initNavTree('structinfix__executable__t.html',''); 
 Public Attributes</h2></td></tr>
 <tr class="memitem:abd89b86632cccfa6669bb07537c2c11f" id="r_abd89b86632cccfa6669bb07537c2c11f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#abd89b86632cccfa6669bb07537c2c11f">shm_fd</a></td></tr>
 <tr class="separator:abd89b86632cccfa6669bb07537c2c11f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86a40ab5c8bab9eeccedd01e8fe28a70" id="r_a86a40ab5c8bab9eeccedd01e8fe28a70"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#a86a40ab5c8bab9eeccedd01e8fe28a70">eh_frame_ptr</a></td></tr>
+<tr class="separator:a86a40ab5c8bab9eeccedd01e8fe28a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50e15399f44c62193a85a674ae393b3f" id="r_a50e15399f44c62193a85a674ae393b3f"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#a50e15399f44c62193a85a674ae393b3f">rx_ptr</a></td></tr>
 <tr class="separator:a50e15399f44c62193a85a674ae393b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f12e7fb581ebd3b2b8c7c771aa8902b" id="r_a2f12e7fb581ebd3b2b8c7c771aa8902b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__executable__t.html#a2f12e7fb581ebd3b2b8c7c771aa8902b">rw_ptr</a></td></tr>
@@ -133,6 +135,21 @@ Public Attributes</h2></td></tr>
 <li><b>Dual-Mapping W^X (Linux/BSD):</b> A single underlying shared memory object is mapped into the process's address space twice: once as Read-Write (<code>rw_ptr</code>) and once as Read-Execute (<code>rx_ptr</code>). The pointers have different virtual addresses but point to the same physical memory. This is required on systems with stricter W^X enforcement. </li>
 </ol>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a86a40ab5c8bab9eeccedd01e8fe28a70" name="a86a40ab5c8bab9eeccedd01e8fe28a70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86a40ab5c8bab9eeccedd01e8fe28a70">&#9670;&#160;</a></span>eh_frame_ptr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* infix_executable_t::eh_frame_ptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>(POSIX) Pointer to the registered .eh_frame data. </p>
+
+</div>
+</div>
 <a id="a2f12e7fb581ebd3b2b8c7c771aa8902b" name="a2f12e7fb581ebd3b2b8c7c771aa8902b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2f12e7fb581ebd3b2b8c7c771aa8902b">&#9670;&#160;</a></span>rw_ptr</h2>
 

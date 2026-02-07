@@ -123,6 +123,8 @@ Collaboration diagram for _infix_registry_entry_t:</div>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a47809e7062a374f100926aa1f7d33228" id="r_a47809e7062a374f100926aa1f7d33228"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__infix__registry__entry__t.html#a47809e7062a374f100926aa1f7d33228">name</a></td></tr>
 <tr class="separator:a47809e7062a374f100926aa1f7d33228"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c97b1de8a9c296a65b337269463c4eb" id="r_a4c97b1de8a9c296a65b337269463c4eb"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__infix__registry__entry__t.html#a4c97b1de8a9c296a65b337269463c4eb">hash</a></td></tr>
+<tr class="separator:a4c97b1de8a9c296a65b337269463c4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5337bf58d6fcd7fa8b08a9ac483c6702" id="r_a5337bf58d6fcd7fa8b08a9ac483c6702"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__infix__registry__entry__t.html#a5337bf58d6fcd7fa8b08a9ac483c6702">type</a></td></tr>
 <tr class="separator:a5337bf58d6fcd7fa8b08a9ac483c6702"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a393ed36b69638cf2a3f786b0b4a2c77b" id="r_a393ed36b69638cf2a3f786b0b4a2c77b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__infix__registry__entry__t.html#a393ed36b69638cf2a3f786b0b4a2c77b">is_forward_declaration</a></td></tr>
@@ -134,6 +136,21 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>A single entry in the registry's hash table. </p>
 <p>This is a node in a singly-linked list used for chaining in the event of a hash collision. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a4c97b1de8a9c296a65b337269463c4eb" name="a4c97b1de8a9c296a65b337269463c4eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c97b1de8a9c296a65b337269463c4eb">&#9670;&#160;</a></span>hash</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t _infix_registry_entry_t::hash</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The pre-calculated djb2 hash of the name. </p>
+
+</div>
+</div>
 <a id="a393ed36b69638cf2a3f786b0b4a2c77b" name="a393ed36b69638cf2a3f786b0b4a2c77b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a393ed36b69638cf2a3f786b0b4a2c77b">&#9670;&#160;</a></span>is_forward_declaration</h2>
 

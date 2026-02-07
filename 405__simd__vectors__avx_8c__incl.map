@@ -1,0 +1,32 @@
+<map id="t/405_simd_vectors_avx.c" name="t/405_simd_vectors_avx.c">
+<area shape="rect" id="Node000001" title="Unit test for 256&#45;bit (AVX) SIMD vector support." alt="" coords="402,5,551,45"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="71,167,245,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="402,34,330,41,254,53,189,71,165,82,149,95,143,108,142,123,149,153,143,154,136,123,138,106,145,92,162,78,187,66,253,48,329,36,402,28"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="321,240,491,265"/>
+<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="495,44,513,79,518,99,515,119,499,154,477,185,432,233,428,229,473,182,494,151,510,118,513,99,508,80,490,47"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="25,240,120,265"/>
+<area shape="poly" id="edge15_Node000001_Node000004" title=" " alt="" coords="402,31,341,37,273,49,201,68,134,96,108,110,88,124,74,142,60,168,57,182,57,198,64,227,59,228,52,198,52,182,56,166,69,139,85,120,105,106,132,91,200,63,271,43,341,32,402,26"/>
+<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="333,93,500,119"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="464,47,436,84,432,81,460,44"/>
+<area shape="rect" id="Node000009" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="159,93,309,119"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="419,48,283,92,282,86,418,43"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="576,93,644,119"/>
+<area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="510,43,580,84,577,89,507,48"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="669,93,735,119"/>
+<area shape="poly" id="edge17_Node000001_Node000011" title=" " alt="" coords="532,43,657,86,655,91,530,48"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="760,93,831,119"/>
+<area shape="poly" id="edge18_Node000001_Node000012" title=" " alt="" coords="552,42,747,90,746,95,551,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="199,189,353,234,352,239,197,195"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="146,194,99,233,95,229,143,190"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="199,313,282,339"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="167,191,230,300,225,303,162,194"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="101,313,175,339"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="159,193,144,300,139,299,154,192"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="101,263,202,305,200,310,99,268"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="85,264,120,301,116,305,81,267"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,313,76,339"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="70,267,54,302,49,300,65,265"/>
+<area shape="poly" id="edge12_Node000009_Node000002" title=" " alt="" coords="224,121,182,159,179,155,220,117"/>
+<area shape="poly" id="edge13_Node000009_Node000003" title=" " alt="" coords="250,117,383,229,380,233,246,121"/>
+<area shape="poly" id="edge14_Node000009_Node000005" title=" " alt="" coords="243,118,253,140,261,166,264,203,262,240,250,301,245,300,257,239,259,203,255,167,248,141,238,120"/>
+</map>

@@ -105,8 +105,8 @@ $(document).ready(function(){initNavTree('md_docs_2INSTALL.html',''); initResiza
   <div class="headertitle"><div class="title">Building and Integrating infix</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md157"></a> This guide shows you how to build the <code>infix</code> library and add it to your C projects.</p>
-<h1><a class="anchor" id="autotoc_md158"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md163"></a> This guide shows you how to build the <code>infix</code> library and add it to your C projects.</p>
+<h1><a class="anchor" id="autotoc_md164"></a>
 Prerequisites</h1>
 <p>You will need a C17-compatible compiler:</p><ul>
 <li>GCC 8+</li>
@@ -120,7 +120,7 @@ Prerequisites</h1>
 <li>Make (GNU or NMake)</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md160"></a>
+<h1><a class="anchor" id="autotoc_md166"></a>
 1. The Easiest Way: Add &lt;tt&gt;infix&lt;/tt&gt; Directly to Your Project</h1>
 <p>The simplest way to use <code>infix</code> is to compile it directly into your project. This "unity build" approach requires no separate build steps and allows for better compiler optimizations.</p>
 <ol type="1">
@@ -131,12 +131,12 @@ Prerequisites</h1>
 <blockquote class="doxtable">
 <p>&zwj;That's it. Your project will now build with the <code>infix</code> library compiled directly in. </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md161"></a>
+<h1><a class="anchor" id="autotoc_md167"></a>
 &lt;/blockquote&gt;</h1>
-<h1><a class="anchor" id="autotoc_md162"></a>
+<h1><a class="anchor" id="autotoc_md168"></a>
 2. Building &lt;tt&gt;infix&lt;/tt&gt; as a Standalone Library (Optional)</h1>
 <p>If you prefer to build <code>infix</code> as a separate static library (<code>.a</code> or <code>.lib</code>) for system-wide installation or use with tools like <code>pkg-config</code>, follow the instructions for your preferred build system.</p>
-<h2><a class="anchor" id="autotoc_md163"></a>
+<h2><a class="anchor" id="autotoc_md169"></a>
 Using perl (Recommended)</h2>
 <p>I personally use the perl based build script to develop, test, and fuzz <code>infix</code>. From the root of the <code>infix</code> project:</p>
 <div class="fragment"><div class="line"># Build the library</div>
@@ -144,7 +144,7 @@ Using perl (Recommended)</h2>
 <div class="line"> </div>
 <div class="line"># Run tests</div>
 <div class="line">perl build.pl test</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md164"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md170"></a>
 Using xmake</h2>
 <p>xmake provides an equally simple, cross-platform build experience. From the root of the <code>infix</code> project:</p>
 <div class="fragment"><div class="line"># Build the library</div>
@@ -152,7 +152,7 @@ Using xmake</h2>
 <div class="line"> </div>
 <div class="line"># Run tests</div>
 <div class="line">xmake test</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md165"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md171"></a>
 Using CMake</h2>
 <p>CMake can generate native build files for your environment (e.g., Makefiles, Visual Studio solutions).</p>
 <div class="fragment"><div class="line"># Configure the project in a &#39;build&#39; directory</div>
@@ -167,13 +167,13 @@ Using CMake</h2>
 <div class="line"># Install the library and headers (may require sudo)</div>
 <div class="line">cmake --install build</div>
 </div><!-- fragment --><p>To install to a custom location, use <code>-DCMAKE_INSTALL_PREFIX=/path/to/install</code> during the configure step.</p>
-<h2><a class="anchor" id="autotoc_md166"></a>
+<h2><a class="anchor" id="autotoc_md172"></a>
 Using Makefiles</h2>
 <p><b>GNU Make (Linux, macOS):</b> </p><div class="fragment"><div class="line">make</div>
 <div class="line">make test</div>
 <div class="line">sudo make install</div>
 </div><!-- fragment --><p><b>NMake (Windows with MSVC):</b> Open a Developer Command Prompt and run: </p><div class="fragment"><div class="line">nmake /f Makefile.win</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md167"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md173"></a>
 Symbol Visibility</h2>
 <p>When building <code>infix</code> as a shared library (DLL/.so), you must ensure that only the public API is exported.</p>
 <p><b>Windows (DLL):</b></p><ul>
@@ -183,14 +183,14 @@ Symbol Visibility</h2>
 <p><b>Linux/macOS:</b> All public functions are marked with <code>INFIX_API</code> (default visibility). Internal functions are marked with <code>INFIX_INTERNAL</code> (hidden visibility). The provided build scripts automatically set <code>-fvisibility=hidden</code> to ensure <code>INFIX_INTERNAL</code> works as intended.</p>
 <p><b>Static Library:</b> Do not define <code>INFIX_BUILDING_DLL</code> or <code>INFIX_USING_DLL</code>. This is the default.</p>
 <p>The provided build scripts (perl, xmake, CMake, Makefiles) handle these definitions automatically when you select a shared library build.</p>
-<h2><a class="anchor" id="autotoc_md168"></a>
+<h2><a class="anchor" id="autotoc_md174"></a>
 Advanced Methods</h2>
 <p>For minimal environments or direct embedding, you can compile the library manually. The Perl-based builder is also available for advanced development tasks. For details, see the original <code><a class="el" href="INSTALL_8md.html">INSTALL.md</a></code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md170"></a>
+<h1><a class="anchor" id="autotoc_md176"></a>
 3. Linking Against a Pre-Built Library</h1>
 <p>Once <code>infix</code> is built and installed, you can link it into your application.</p>
-<h2><a class="anchor" id="autotoc_md171"></a>
+<h2><a class="anchor" id="autotoc_md177"></a>
 Using CMake with &lt;tt&gt;find_package&lt;/tt&gt;</h2>
 <p>If you installed <code>infix</code> to a standard or custom location, you can use <code>find_package</code> in your <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line"># Find the installed infix library.</div>
@@ -200,7 +200,7 @@ Using CMake with &lt;tt&gt;find_package&lt;/tt&gt;</h2>
 <div class="line"> </div>
 <div class="line"># Link your application against the imported target.</div>
 <div class="line">target_link_libraries(my_app PRIVATE infix::infix)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md172"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md178"></a>
 Using pkg-config</h2>
 <p>A <code>infix.pc</code> file is generated for use with <code>pkg-config</code>, which is useful in Makefiles or autotools projects.</p>
 <div class="fragment"><div class="line">CFLAGS = `pkg-config --cflags infix`</div>
@@ -208,7 +208,7 @@ Using pkg-config</h2>
 <div class="line"> </div>
 <div class="line">my_app: main.c</div>
 <div class="line">    $(CC) -o my_app main.c $(CFLAGS) $(LIBS)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md173"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md179"></a>
 Using xmake</h2>
 <p>If you are using xmake for your project, you can add <code>infix</code> as a dependency in your <code>xmake.lua</code>.</p>
 <div class="fragment"><div class="line">-- Tell xmake where to find the infix project</div>
@@ -219,7 +219,7 @@ Using xmake</h2>
 <div class="line">    set_kind(&quot;binary&quot;)</div>
 <div class="line">    add_files(&quot;src/*.c&quot;)</div>
 <div class="line">    add_deps(&quot;infix&quot;)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md174"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md180"></a>
 Example: Visual Studio Code Configuration</h2>
 <p>If you've added the <code>infix</code> source to a subdirectory (e.g., <code>libs/infix</code>), you can configure VS Code's IntelliSense and build tasks.</p>
 <p>**<code>.vscode/c_cpp_properties.json</code>** (for IntelliSense) </p><div class="fragment"><div class="line">{</div>

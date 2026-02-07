@@ -1,15 +1,18 @@
 var signature_8c =
 [
-    [ "parser_state", "structparser__state.html", "structparser__state" ],
     [ "printer_state", "structprinter__state.html", "structprinter__state" ],
     [ "MAX_RECURSION_DEPTH", "signature_8c.html#a4e3b689e9483994cfcd85954cba23338", null ],
+    [ "_add_itanium_sub", "signature_8c.html#a01dffcbceb792ab2adf596e2c4734e0e", null ],
+    [ "_find_itanium_sub", "signature_8c.html#a52a94cc62134c8f2a788f4c9a1368b8c", null ],
     [ "_infix_parse_type_internal", "signature_8c.html#a7452e1dd72e4d81a19b91ebff91b8840", null ],
+    [ "_infix_set_parser_error", "signature_8c.html#a9f64c14e867cb62c8bb582078fd1005e", null ],
     [ "_infix_type_print_body_only", "signature_8c.html#a318cbbcc66e97bc549fea21d23a9ac4d", null ],
     [ "_infix_type_print_body_only_recursive", "signature_8c.html#a2e5af7bab951a6f564a809ba05609783", null ],
     [ "_infix_type_print_itanium_recursive", "signature_8c.html#adff9bc326df1c7da3561c4630e30d1b6", null ],
     [ "_infix_type_print_msvc_recursive", "signature_8c.html#aecd926b99dafd36103620c5371bf9ae2", null ],
     [ "_infix_type_print_signature_recursive", "signature_8c.html#ae14dc307e72c05042cfa259c92fb09ce", null ],
     [ "_print", "signature_8c.html#a0188b3a9e1088b2e82af548e7e8037a4", null ],
+    [ "_print_itanium_sub", "signature_8c.html#a8c666a121263fef0b9ed65616b6d70c3", null ],
     [ "consume_keyword", "signature_8c.html#aa5348733033b9920a7e2e5556bfe4cb6", null ],
     [ "infix_function_print", "group__introspection__api.html#ga6c98231c9b9f94b31632d5bc612eaa67", null ],
     [ "infix_registry_print", "group__registry__introspection__api.html#gab2b884dff3e1a0fc071ca5b5ce5d2ad5", null ],
@@ -23,10 +26,9 @@ var signature_8c =
     [ "parse_identifier", "signature_8c.html#adbab920440865a783ba3b73543044bcc", null ],
     [ "parse_optional_name_prefix", "signature_8c.html#ae31a1a70ae5ff501e06e6a6588bb6879", null ],
     [ "parse_packed_struct", "signature_8c.html#ac0d360721bd7d641c08dd9e3022835de", null ],
-    [ "parse_primitive", "signature_8c.html#a7a7e10149bdc3a02d9069f61a6a489f7", null ],
+    [ "parse_primitive", "signature_8c.html#a3d6168244f72744161cf68accded8e5a", null ],
     [ "parse_size_t", "signature_8c.html#a6fe23e8692ddb7237f762369a9782f68", null ],
-    [ "parse_type", "signature_8c.html#abc89f75d8a90e79bc8bfc32678594c6c", null ],
-    [ "set_parser_error", "signature_8c.html#a7487ff25b05bd0c29659902bfdd75828", null ],
-    [ "skip_whitespace", "signature_8c.html#aec8176eec4752cc7bb8193876ef20456", null ],
+    [ "parse_type", "signature_8c.html#add023a757fc45d03b2327a0ac966913d", null ],
+    [ "skip_whitespace", "signature_8c.html#a6017a8051c171d51a0411a48174f422f", null ],
     [ "g_infix_last_signature_context", "signature_8c.html#aebc75fad28db1e2a75eca6df7305c4e1", null ]
 ];

@@ -6,13 +6,16 @@ var abi__x64__emitters_8c =
     [ "REX_X", "abi__x64__emitters_8c.html#a69282ddcab54bd0904efa0a7ac5db584", null ],
     [ "emit_add_reg_imm32", "abi__x64__emitters_8c.html#a9d6eba0bd0b9947639b16f643c42776f", null ],
     [ "emit_add_reg_imm8", "abi__x64__emitters_8c.html#ae4922d136aa69e68ebb58ea2a3b585b3", null ],
+    [ "emit_and_reg_imm8", "abi__x64__emitters_8c.html#aa28d7d3c2c938f9308754bda3cc03eac", null ],
     [ "emit_call_reg", "abi__x64__emitters_8c.html#a59ac2fe8d76da32b6865994769117bb7", null ],
+    [ "emit_cmp_reg_reg", "abi__x64__emitters_8c.html#a96f5778f9490daf08f37fb36a1dad57c", null ],
     [ "emit_cvtsd2ss_xmm_mem", "abi__x64__emitters_8c.html#a8aed664a6f32f079cd17a58280877e66", null ],
     [ "emit_cvtsd2ss_xmm_xmm", "abi__x64__emitters_8c.html#a0c130e1f820e0c6674bdb54fc7297574", null ],
     [ "emit_dec_reg", "abi__x64__emitters_8c.html#a05540ee7d754daed3b36f4c5302841b6", null ],
     [ "emit_evex_prefix", "abi__x64__emitters_8c.html#a681c4c03ce4b849c2635a16c832e928f", null ],
     [ "emit_fldt_mem", "abi__x64__emitters_8c.html#a54b76681f2c0f95f9314d50276313b04", null ],
     [ "emit_fstpt_mem", "abi__x64__emitters_8c.html#ac1f99b720aedf744ea987873f8e33639", null ],
+    [ "emit_je_short", "abi__x64__emitters_8c.html#a1d5b2ca107d5d40f8adc97fb35554285", null ],
     [ "emit_jmp_reg", "abi__x64__emitters_8c.html#aafcbc7d1c6f7856a4b577b65edf5d7ee", null ],
     [ "emit_jnz_short", "abi__x64__emitters_8c.html#aa4244ae3356cb30d4cf8b18c095d0551", null ],
     [ "emit_lea_reg_mem", "abi__x64__emitters_8c.html#ac3f940552563920c8ef5fa33b8f49fdc", null ],
@@ -53,5 +56,6 @@ var abi__x64__emitters_8c =
     [ "emit_vmovupd_mem_ymm", "abi__x64__emitters_8c.html#adb2621b8e261696fd85a53c51c56772b", null ],
     [ "emit_vmovupd_mem_zmm", "abi__x64__emitters_8c.html#ae762858607df68f3f169f6b40c71a9bb", null ],
     [ "emit_vmovupd_ymm_mem", "abi__x64__emitters_8c.html#a717ddaad8e9f653cc5c1a8d9cd29d956", null ],
-    [ "emit_vmovupd_zmm_mem", "abi__x64__emitters_8c.html#a036e44b6bef2db7677296f8ffa4eb4d0", null ]
+    [ "emit_vmovupd_zmm_mem", "abi__x64__emitters_8c.html#a036e44b6bef2db7677296f8ffa4eb4d0", null ],
+    [ "emit_vzeroupper", "abi__x64__emitters_8c.html#a822f529207393e17435eddd7c839fcc8", null ]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visited_5fnode_5ft_0',['visited_node_t',['../trampoline_8c.html#a06320c0ecea4184c99fba3760dbd67db',1,'trampoline.c']]]
+  ['small_5fbf_5ffn_0',['small_bf_fn',['../305__bitfields__reverse_8c.html#a9a6f3bada44147b2d0e98de5c5a3bb79',1,'305_bitfields_reverse.c']]]
 ];

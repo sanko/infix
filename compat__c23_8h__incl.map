@@ -1,13 +1,15 @@
 <map id="src/common/compat_c23.h" name="src/common/compat_c23.h">
-<area shape="rect" id="Node000001" title="Provides forward compatibility macros for C23 features." alt="" coords="49,5,247,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="101,79,195,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,31,151,65,145,65,145,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,88,177"/>
-<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="136,33,114,54,91,80,73,111,59,140,54,138,68,108,87,77,110,50,132,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="208,152,283,177"/>
-<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="164,29,187,50,210,77,227,108,240,138,235,140,223,110,206,80,183,54,161,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,106,76,146,73,142,130,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="165,102,220,141,217,146,162,106"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="113,152,183,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="151,104,151,138,145,138,145,104"/>
+<area shape="rect" id="Node000001" title="Provides forward compatibility macros for C23 features." alt="" coords="157,5,354,31"/>
+<area shape="rect" id="Node000002" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,79,175,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,33,131,76,128,71,228,28"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="251,79,345,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,30,286,66,282,68,260,32"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="155,152,238,177"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="253,32,209,140,204,138,248,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="358,152,433,177"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="287,28,324,48,360,77,379,107,391,138,386,140,375,109,356,80,321,52,284,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="283,106,226,146,223,142,280,102"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="315,102,370,141,367,146,312,106"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="263,152,333,177"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="301,104,301,138,295,138,295,104"/>
 </map>

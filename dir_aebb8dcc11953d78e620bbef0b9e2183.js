@@ -1,6 +1,7 @@
 var dir_aebb8dcc11953d78e620bbef0b9e2183 =
 [
     [ "arena.c", "arena_8c.html", "arena_8c" ],
+    [ "cache.c", "cache_8c.html", "cache_8c" ],
     [ "error.c", "error_8c.html", "error_8c" ],
     [ "loader.c", "loader_8c.html", "loader_8c" ],
     [ "platform.c", "platform_8c.html", "platform_8c" ],

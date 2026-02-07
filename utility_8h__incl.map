@@ -1,16 +1,18 @@
 <map id="src/common/utility.h" name="src/common/utility.h">
-<area shape="rect" id="Node000001" title="A header for conditionally compiled debugging utilities." alt="" coords="135,5,289,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="62,79,237,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,33,171,70,167,66,200,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="208,225,283,251"/>
-<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="224,30,240,51,252,78,258,114,260,151,253,212,248,212,254,150,253,115,247,79,235,54,220,33"/>
-<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="97,152,191,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="151,105,149,139,143,138,146,104"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,88,251"/>
-<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="135,106,110,127,86,154,69,183,57,213,52,211,64,181,82,150,106,123,131,102"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="164,102,185,124,206,150,224,182,238,212,233,214,220,184,202,154,181,127,160,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="130,180,75,219,72,215,127,175"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="162,175,219,215,216,219,159,180"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="113,225,183,251"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="147,178,149,212,144,212,142,178"/>
+<area shape="rect" id="Node000001" title="A header for conditionally compiled debugging utilities." alt="" coords="289,5,443,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="211,79,385,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="357,33,321,70,317,67,353,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="366,225,441,251"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="377,30,390,51,401,78,407,114,410,151,409,212,403,212,405,151,402,115,395,79,385,54,372,32"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,152,175,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,107,138,150,136,145,264,101"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="251,152,345,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="301,104,301,138,295,138,295,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="163,225,246,251"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="286,106,263,127,242,153,226,183,214,213,209,211,221,181,237,151,259,123,282,102"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="314,102,337,124,360,150,380,181,395,211,390,214,375,184,356,154,333,127,310,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="285,179,232,219,229,215,281,175"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="316,175,376,215,374,220,313,180"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="271,225,341,251"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="302,177,306,212,301,212,297,178"/>
 </map>

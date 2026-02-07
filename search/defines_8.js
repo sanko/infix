@@ -9,10 +9,16 @@ var searchData=
   ['infix_5fmax_5falignment_6',['INFIX_MAX_ALIGNMENT',['../types_8c.html#a62476bfe9b6b891ebb674f3e8e10f30e',1,'types.c']]],
   ['infix_5fmax_5farg_5fsize_7',['INFIX_MAX_ARG_SIZE',['../infix__internals_8h.html#ad07873963febd6f5771434e5b88f10a3',1,'infix_internals.h']]],
   ['infix_5fmax_5fstack_5falloc_8',['INFIX_MAX_STACK_ALLOC',['../infix__internals_8h.html#a6bfc1314bf9f1265d233766af7544cab',1,'infix_internals.h']]],
-  ['infix_5frealloc_9',['infix_realloc',['../811__fault__injection_8c.html#a84d15b7c77d469bf3e41faaa8a74b629',1,'infix_realloc:&#160;811_fault_injection.c'],['../840__arena__allocator_8c.html#a84d15b7c77d469bf3e41faaa8a74b629',1,'infix_realloc:&#160;840_arena_allocator.c']]],
-  ['infix_5ftls_10',['INFIX_TLS',['../error_8c.html#ae538a6110237ff5067c6d0746fa04f33',1,'error.c']]],
-  ['infix_5ftrampoline_5fheadroom_11',['INFIX_TRAMPOLINE_HEADROOM',['../infix__config_8h.html#ae3d32fd45b8b48968091b55a8a6ca817',1,'infix_config.h']]],
-  ['infix_5ftype_5finit_12',['INFIX_TYPE_INIT',['../types_8c.html#a50bb65efbb034d9151d0ac0fcfdf583f',1,'types.c']]],
-  ['initial_5fregistry_5fbuckets_13',['INITIAL_REGISTRY_BUCKETS',['../type__registry_8c.html#a4b82c5f5c89861fc1bb702865e1deaea',1,'type_registry.c']]],
-  ['iterations_5fper_5fthread_14',['iterations_per_thread',['../820__threading__helgrind_8c.html#a6a3c7d4a3a7ff9df5289e524f9c524af',1,'ITERATIONS_PER_THREAD:&#160;820_threading_helgrind.c'],['../821__threading__bare_8c.html#a6a3c7d4a3a7ff9df5289e524f9c524af',1,'ITERATIONS_PER_THREAD:&#160;821_threading_bare.c']]]
+  ['infix_5fmutex_5fdestroy_9',['INFIX_MUTEX_DESTROY',['../infix__internals_8h.html#ac9a6b9fbaf29170935b2a0d4cd582500',1,'infix_internals.h']]],
+  ['infix_5fmutex_5finitializer_10',['INFIX_MUTEX_INITIALIZER',['../infix__internals_8h.html#a88bea214c492440972d64429b7e572be',1,'infix_internals.h']]],
+  ['infix_5fmutex_5flock_11',['INFIX_MUTEX_LOCK',['../infix__internals_8h.html#ac8dcc95c5eec8226d9b62ef0352e4d98',1,'infix_internals.h']]],
+  ['infix_5fmutex_5funlock_12',['INFIX_MUTEX_UNLOCK',['../infix__internals_8h.html#a8f1c87db7de81e82b68d4c96ccabf753',1,'infix_internals.h']]],
+  ['infix_5frealloc_13',['infix_realloc',['../811__fault__injection_8c.html#a84d15b7c77d469bf3e41faaa8a74b629',1,'infix_realloc:&#160;811_fault_injection.c'],['../840__arena__allocator_8c.html#a84d15b7c77d469bf3e41faaa8a74b629',1,'infix_realloc:&#160;840_arena_allocator.c']]],
+  ['infix_5fsanity_5fcheck_5fenable_14',['INFIX_SANITY_CHECK_ENABLE',['../infix__config_8h.html#aa9e8f39163b8120951772fffd8798fbf',1,'infix_config.h']]],
+  ['infix_5fseh_5fmetadata_5fsize_15',['INFIX_SEH_METADATA_SIZE',['../executor_8c.html#a8e295e66b895d129362b4cf61441cc1f',1,'executor.c']]],
+  ['infix_5ftls_16',['INFIX_TLS',['../error_8c.html#ae538a6110237ff5067c6d0746fa04f33',1,'error.c']]],
+  ['infix_5ftrampoline_5fheadroom_17',['INFIX_TRAMPOLINE_HEADROOM',['../infix__config_8h.html#ae3d32fd45b8b48968091b55a8a6ca817',1,'infix_config.h']]],
+  ['infix_5ftype_5finit_18',['INFIX_TYPE_INIT',['../types_8c.html#a50bb65efbb034d9151d0ac0fcfdf583f',1,'types.c']]],
+  ['initial_5fregistry_5fbuckets_19',['INITIAL_REGISTRY_BUCKETS',['../type__registry_8c.html#a4b82c5f5c89861fc1bb702865e1deaea',1,'type_registry.c']]],
+  ['iterations_5fper_5fthread_20',['iterations_per_thread',['../820__threading__helgrind_8c.html#a6a3c7d4a3a7ff9df5289e524f9c524af',1,'ITERATIONS_PER_THREAD:&#160;820_threading_helgrind.c'],['../821__threading__bare_8c.html#a6a3c7d4a3a7ff9df5289e524f9c524af',1,'ITERATIONS_PER_THREAD:&#160;821_threading_bare.c']]]
 ];

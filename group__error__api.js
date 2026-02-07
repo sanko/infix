@@ -19,6 +19,7 @@ var group__error__api =
       [ "INFIX_CODE_UNKNOWN", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a9c81c9fdfd7a9e7536b68e60f60b6e35", null ],
       [ "INFIX_CODE_NULL_POINTER", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ac589aa0f25520f4a943c229184d3cc69", null ],
       [ "INFIX_CODE_MISSING_REGISTRY", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a65401a62d70e3181342e2824c161de95", null ],
+      [ "INFIX_CODE_NATIVE_EXCEPTION", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70abcc8776e0635bc870b5ab8221f1e556f", null ],
       [ "INFIX_CODE_OUT_OF_MEMORY", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ad23174064850ac25c853a5c89b65a7e1", null ],
       [ "INFIX_CODE_EXECUTABLE_MEMORY_FAILURE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a9b7de5365a8889be77bad6967a9e207a", null ],
       [ "INFIX_CODE_PROTECTION_FAILURE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a0ba98bef98d27ed698e1cf2f7b540a74", null ],

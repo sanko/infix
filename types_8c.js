@@ -50,6 +50,7 @@ var types_8c =
     [ "_infix_type_bool", "types_8c.html#a3ec67f3e683aba1996915bd7ff1af8be", null ],
     [ "_infix_type_double", "types_8c.html#a30d11b17f5c5992179d02154d0e15f6d", null ],
     [ "_infix_type_float", "types_8c.html#a46b21843b97bcc5e94f1a12a4a4ed3fb", null ],
+    [ "_infix_type_float16", "types_8c.html#ac99a479f61bd9f8c96f09abbd771d07a", null ],
     [ "_infix_type_long_double", "types_8c.html#a7775aa24cb03037eb46055c8d73755d7", null ],
     [ "_infix_type_pointer", "types_8c.html#a7d6608657c7d7270c1c0f8c20f634821", null ],
     [ "_infix_type_sint128", "types_8c.html#a24fb8d3894b615e755ad17f0fb7541d7", null ],

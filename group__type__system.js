@@ -71,6 +71,7 @@ var group__type__system =
       [ "INFIX_PRIMITIVE_SINT64", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a280935aadc7c1b5e9b600b57ae69cb4c", null ],
       [ "INFIX_PRIMITIVE_UINT128", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a8b4b3ec95d67ce45d16fc23f76a5b70c", null ],
       [ "INFIX_PRIMITIVE_SINT128", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044acec5dcd8e99467cfb3abca3ca11030dd", null ],
+      [ "INFIX_PRIMITIVE_FLOAT16", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044ac1ea07627adbfd7b79739ca64ef7d162", null ],
       [ "INFIX_PRIMITIVE_FLOAT", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a0e4c9fb28050878e4bfcf8a738e010c1", null ],
       [ "INFIX_PRIMITIVE_DOUBLE", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3", null ],
       [ "INFIX_PRIMITIVE_LONG_DOUBLE", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a0a8557d1a563a8981c0d1267c3e1f884", null ]

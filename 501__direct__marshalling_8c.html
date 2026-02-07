@@ -120,6 +120,7 @@ $(document).ready(function(){initNavTree('501__direct__marshalling_8c.html','');
 <code>#include &quot;<a class="el" href="infix__config_8h_source.html">common/infix_config.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="infix__internals_8h_source.html">common/infix_internals.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="infix_8h_source.html">infix/infix.h</a>&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for 501_direct_marshalling.c:</div>
@@ -162,6 +163,7 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fa5928aff8e39a6b1d9686c5876d30948b">MOCK_TYPE_STRING</a>
 , <a class="el" href="501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fa754cea0c4923ebdf722d5e91a0991b01">MOCK_TYPE_LINE</a>
 , <a class="el" href="501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190faab2ce8406680015528ad228fd9d57e01">MOCK_TYPE_FUNC</a>
+, <a class="el" href="501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fa8d6fe1013b5d12a744c075428cd05a04">MOCK_TYPE_VECTOR</a>
 <br />
  }</td></tr>
 <tr class="separator:a53f01a87b5f63e76be1374c29f0b190f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,7 +172,7 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:abf805158fc0836021372203d9c31f043" id="r_abf805158fc0836021372203d9c31f043"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPoint.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#abf805158fc0836021372203d9c31f043">add_points</a> (<a class="el" href="structPoint.html">Point</a> p1, <a class="el" href="structPoint.html">Point</a> p2, int dummy_arg)</td></tr>
 <tr class="separator:abf805158fc0836021372203d9c31f043"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdf7dc99a27c88422beba41fa94afde0" id="r_abdf7dc99a27c88422beba41fa94afde0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#abdf7dc99a27c88422beba41fa94afde0">move_point</a> (<a class="el" href="structPoint.html">Point</a> *p, int32_t dx, int32_t dy)</td></tr>
+<tr class="memitem:abdf7dc99a27c88422beba41fa94afde0" id="r_abdf7dc99a27c88422beba41fa94afde0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#abdf7dc99a27c88422beba41fa94afde0">move_point</a> (<a class="el" href="structPoint.html">Point</a> *<a class="el" href="904__registry__benchmark_8c.html#aaa1ebe818ec1c763a776cc580551f3e6">p</a>, int32_t dx, int32_t dy)</td></tr>
 <tr class="separator:abdf7dc99a27c88422beba41fa94afde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa089625f788ea2a1183bfaee63e42e08" id="r_aa089625f788ea2a1183bfaee63e42e08"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#aa089625f788ea2a1183bfaee63e42e08">sum_mixed_types</a> (double a, int b, float c, int d, double e, int f, float g)</td></tr>
 <tr class="separator:aa089625f788ea2a1183bfaee63e42e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,6 +222,8 @@ Functions</h2></td></tr>
 <tr class="separator:a58ccd153d3a094729c96dbd717e07350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc9d1aede863ee53c34dd4fef3a322b" id="r_aefc9d1aede863ee53c34dd4fef3a322b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#aefc9d1aede863ee53c34dd4fef3a322b">subtest</a> (&quot;Test function pointer arguments&quot;)</td></tr>
 <tr class="separator:aefc9d1aede863ee53c34dd4fef3a322b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa668139059b6003e076538ded9eab74" id="r_aaa668139059b6003e076538ded9eab74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#aaa668139059b6003e076538ded9eab74">subtest</a> (&quot;Test SIMD vectors with direct marshalling&quot;)</td></tr>
+<tr class="separator:aaa668139059b6003e076538ded9eab74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af94ea97d56591d95bcc2cd5f4c2aa994" id="r_af94ea97d56591d95bcc2cd5f4c2aa994"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#af94ea97d56591d95bcc2cd5f4c2aa994">infix_registry_destroy</a> (<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:af94ea97d56591d95bcc2cd5f4c2aa994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4152c13a06d002f268af780c0433c3a" id="r_af4152c13a06d002f268af780c0433c3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#af4152c13a06d002f268af780c0433c3a">done</a> ()</td></tr>
@@ -299,6 +303,7 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a53f01a87b5f63e76be1374c29f0b190fa5928aff8e39a6b1d9686c5876d30948b" name="a53f01a87b5f63e76be1374c29f0b190fa5928aff8e39a6b1d9686c5876d30948b"></a>MOCK_TYPE_STRING&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a53f01a87b5f63e76be1374c29f0b190fa754cea0c4923ebdf722d5e91a0991b01" name="a53f01a87b5f63e76be1374c29f0b190fa754cea0c4923ebdf722d5e91a0991b01"></a>MOCK_TYPE_LINE&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a53f01a87b5f63e76be1374c29f0b190faab2ce8406680015528ad228fd9d57e01" name="a53f01a87b5f63e76be1374c29f0b190faab2ce8406680015528ad228fd9d57e01"></a>MOCK_TYPE_FUNC&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a53f01a87b5f63e76be1374c29f0b190fa8d6fe1013b5d12a744c075428cd05a04" name="a53f01a87b5f63e76be1374c29f0b190fa8d6fe1013b5d12a744c075428cd05a04"></a>MOCK_TYPE_VECTOR&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -848,7 +853,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a6a00bfaca1914793c8cd4501f21eb0d0" name="a6a00bfaca1914793c8cd4501f21eb0d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a00bfaca1914793c8cd4501f21eb0d0">&#9670;&#160;</a></span>subtest() <span class="overload">[1/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a00bfaca1914793c8cd4501f21eb0d0">&#9670;&#160;</a></span>subtest() <span class="overload">[1/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -866,7 +871,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a58ccd153d3a094729c96dbd717e07350" name="a58ccd153d3a094729c96dbd717e07350"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58ccd153d3a094729c96dbd717e07350">&#9670;&#160;</a></span>subtest() <span class="overload">[2/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a58ccd153d3a094729c96dbd717e07350">&#9670;&#160;</a></span>subtest() <span class="overload">[2/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -884,7 +889,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aefc9d1aede863ee53c34dd4fef3a322b" name="aefc9d1aede863ee53c34dd4fef3a322b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefc9d1aede863ee53c34dd4fef3a322b">&#9670;&#160;</a></span>subtest() <span class="overload">[3/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aefc9d1aede863ee53c34dd4fef3a322b">&#9670;&#160;</a></span>subtest() <span class="overload">[3/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -902,7 +907,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ac9e81f82a43126d1188ceef5d50b4ee3" name="ac9e81f82a43126d1188ceef5d50b4ee3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9e81f82a43126d1188ceef5d50b4ee3">&#9670;&#160;</a></span>subtest() <span class="overload">[4/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9e81f82a43126d1188ceef5d50b4ee3">&#9670;&#160;</a></span>subtest() <span class="overload">[4/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -920,7 +925,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aa5053e77edad9f95c25b5498b4e383e5" name="aa5053e77edad9f95c25b5498b4e383e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5053e77edad9f95c25b5498b4e383e5">&#9670;&#160;</a></span>subtest() <span class="overload">[5/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5053e77edad9f95c25b5498b4e383e5">&#9670;&#160;</a></span>subtest() <span class="overload">[5/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -938,7 +943,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aac2fb6386b59ac79a257139869607fd3" name="aac2fb6386b59ac79a257139869607fd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac2fb6386b59ac79a257139869607fd3">&#9670;&#160;</a></span>subtest() <span class="overload">[6/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aac2fb6386b59ac79a257139869607fd3">&#9670;&#160;</a></span>subtest() <span class="overload">[6/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -955,8 +960,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="aaa668139059b6003e076538ded9eab74" name="aaa668139059b6003e076538ded9eab74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa668139059b6003e076538ded9eab74">&#9670;&#160;</a></span>subtest() <span class="overload">[7/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subtest </td>
+          <td>(</td>
+          <td class="paramtype">&quot;Test SIMD vectors with direct marshalling&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9f90d22b2257a83b0737bc5861a790ba" name="a9f90d22b2257a83b0737bc5861a790ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f90d22b2257a83b0737bc5861a790ba">&#9670;&#160;</a></span>subtest() <span class="overload">[7/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f90d22b2257a83b0737bc5861a790ba">&#9670;&#160;</a></span>subtest() <span class="overload">[8/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -974,7 +997,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aadbe46f947e9ad3d30aca6cdee11e6c4" name="aadbe46f947e9ad3d30aca6cdee11e6c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadbe46f947e9ad3d30aca6cdee11e6c4">&#9670;&#160;</a></span>subtest() <span class="overload">[8/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aadbe46f947e9ad3d30aca6cdee11e6c4">&#9670;&#160;</a></span>subtest() <span class="overload">[9/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1168,7 +1191,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(9)</div>
+<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(10)</div>
 <div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:192</div></div>
 </div><!-- fragment -->
 </div>

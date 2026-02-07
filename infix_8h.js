@@ -47,6 +47,7 @@ var infix_8h =
       [ "INFIX_CODE_UNKNOWN", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a9c81c9fdfd7a9e7536b68e60f60b6e35", null ],
       [ "INFIX_CODE_NULL_POINTER", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ac589aa0f25520f4a943c229184d3cc69", null ],
       [ "INFIX_CODE_MISSING_REGISTRY", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a65401a62d70e3181342e2824c161de95", null ],
+      [ "INFIX_CODE_NATIVE_EXCEPTION", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70abcc8776e0635bc870b5ab8221f1e556f", null ],
       [ "INFIX_CODE_OUT_OF_MEMORY", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ad23174064850ac25c853a5c89b65a7e1", null ],
       [ "INFIX_CODE_EXECUTABLE_MEMORY_FAILURE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a9b7de5365a8889be77bad6967a9e207a", null ],
       [ "INFIX_CODE_PROTECTION_FAILURE", "group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70a0ba98bef98d27ed698e1cf2f7b540a74", null ],
@@ -80,6 +81,7 @@ var infix_8h =
       [ "INFIX_PRIMITIVE_SINT64", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a280935aadc7c1b5e9b600b57ae69cb4c", null ],
       [ "INFIX_PRIMITIVE_UINT128", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a8b4b3ec95d67ce45d16fc23f76a5b70c", null ],
       [ "INFIX_PRIMITIVE_SINT128", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044acec5dcd8e99467cfb3abca3ca11030dd", null ],
+      [ "INFIX_PRIMITIVE_FLOAT16", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044ac1ea07627adbfd7b79739ca64ef7d162", null ],
       [ "INFIX_PRIMITIVE_FLOAT", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a0e4c9fb28050878e4bfcf8a738e010c1", null ],
       [ "INFIX_PRIMITIVE_DOUBLE", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a164ca591153f83361c4ea8dd2a5c57f3", null ],
       [ "INFIX_PRIMITIVE_LONG_DOUBLE", "group__type__system.html#gga2cd7b00c1f2606249654a8e8b7cbc044a0a8557d1a563a8981c0d1267c3e1f884", null ]
@@ -119,6 +121,7 @@ var infix_8h =
     [ "infix_forward_create_direct", "group__direct__marshalling__api.html#gab17fd59a6911f44237f38661a630ebfc", null ],
     [ "infix_forward_create_in_arena", "group__high__level__api.html#ga8968ef07b76dfafd9f63371e77259799", null ],
     [ "infix_forward_create_manual", "group__manual__api.html#ga40abd9291fbdb2a2c7c2d8eacb495867", null ],
+    [ "infix_forward_create_safe", "group__high__level__api.html#ga6cce27e4637fed5d1d59f3ca8c358726", null ],
     [ "infix_forward_create_unbound", "group__high__level__api.html#gaf3c415d12f6fbd10a431eda3fb29cc54", null ],
     [ "infix_forward_create_unbound_manual", "group__manual__api.html#ga586118d8fe9831dd4e94ca119d874c98", null ],
     [ "infix_forward_destroy", "group__manual__api.html#ga99eb42f542d16a38b1d9c3686991823d", null ],

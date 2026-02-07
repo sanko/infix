@@ -14,7 +14,8 @@ var 501__direct__marshalling_8c =
       [ "MOCK_TYPE_POINT", "501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fab50391deacf01731e286ae1c00017bdd", null ],
       [ "MOCK_TYPE_STRING", "501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fa5928aff8e39a6b1d9686c5876d30948b", null ],
       [ "MOCK_TYPE_LINE", "501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fa754cea0c4923ebdf722d5e91a0991b01", null ],
-      [ "MOCK_TYPE_FUNC", "501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190faab2ce8406680015528ad228fd9d57e01", null ]
+      [ "MOCK_TYPE_FUNC", "501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190faab2ce8406680015528ad228fd9d57e01", null ],
+      [ "MOCK_TYPE_VECTOR", "501__direct__marshalling_8c.html#a53f01a87b5f63e76be1374c29f0b190fa8d6fe1013b5d12a744c075428cd05a04", null ]
     ] ],
     [ "add_points", "501__direct__marshalling_8c.html#abf805158fc0836021372203d9c31f043", null ],
     [ "check_string", "501__direct__marshalling_8c.html#a63812e0a9657fa675cce507b2393b0ac", null ],
@@ -39,6 +40,7 @@ var 501__direct__marshalling_8c =
     [ "subtest", "501__direct__marshalling_8c.html#ac9e81f82a43126d1188ceef5d50b4ee3", null ],
     [ "subtest", "501__direct__marshalling_8c.html#aa5053e77edad9f95c25b5498b4e383e5", null ],
     [ "subtest", "501__direct__marshalling_8c.html#aac2fb6386b59ac79a257139869607fd3", null ],
+    [ "subtest", "501__direct__marshalling_8c.html#aaa668139059b6003e076538ded9eab74", null ],
     [ "subtest", "501__direct__marshalling_8c.html#a9f90d22b2257a83b0737bc5861a790ba", null ],
     [ "subtest", "501__direct__marshalling_8c.html#aadbe46f947e9ad3d30aca6cdee11e6c4", null ],
     [ "sum_mixed_types", "501__direct__marshalling_8c.html#aa089625f788ea2a1183bfaee63e42e08", null ],
