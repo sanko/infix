@@ -68,19 +68,37 @@ void crashing_target_func(void) {
 #endif
 }
 
+#if INFIX_SANITY_CHECK_ENABLE
+// Malicious marshaller that deliberately clobbers the stack.
+// Used to test INFIX_SANITY_CHECK_ENABLE.
+#if defined(INFIX_ARCH_X64) && !defined(INFIX_COMPILER_MSVC)
+static void clobber_stack(void) { __asm__ volatile("push %rax"); }
+#elif defined(INFIX_ARCH_AARCH64)
+static void clobber_stack(void) { __asm__ volatile("sub sp, sp, #16"); }
+#else
+static void clobber_stack(void) {}
+#endif
+
+static double malicious_marshaller(void * obj) {
+    (void)obj;
+    clobber_stack();
+    return 1.0;
+}
+#endif
+
 /**
  * @internal
  * @brief (Windows) Helper function to run a test that is expected to crash in a child process.
  * @details This function re-launches the current executable with a special environment
  *          variable set. The child process detects this variable and runs the specific
  *          crash-inducing code. The parent process waits for the child to exit and
- *          checks its exit code to confirm that it crashed as expected (specifically
- *          with an access violation).
+ *          checks its exit code to confirm that it crashed as expected.
  * @param test_name The name of the test to run in the child process.
- * @return `true` if the child process crashed with an access violation, `false` otherwise.
+ * @param expected_code The expected exit/exception code.
+ * @return `true` if the child process exited with the expected code, `false` otherwise.
  */
 #if defined(_WIN32)
-static bool run_crash_test_as_child(const char * test_name) {
+static bool run_crash_test_as_child(const char * test_name, DWORD expected_code) {
     char exe_path[MAX_PATH];
     if (GetModuleFileName(nullptr, exe_path, MAX_PATH) == 0) {
         fail("GetModuleFileName() failed.");
@@ -111,7 +129,11 @@ static bool run_crash_test_as_child(const char * test_name) {
     if (si.hStdOutput != INVALID_HANDLE_VALUE)
         CloseHandle(si.hStdOutput);
     SetEnvironmentVariable("INFIX_CRASH_TEST_CHILD", nullptr);
-    return exit_code == EXCEPTION_ACCESS_VIOLATION;
+    if (exit_code != expected_code)
+        note("Child process exited with 0x%08lX (Expected: 0x%08lX)",
+             (unsigned long)exit_code,
+             (unsigned long)expected_code);
+    return exit_code == expected_code;
 }
 #endif
 
@@ -124,6 +146,7 @@ TEST {
             infix_status status = infix_forward_create_unbound(&t, "(int32)->int32", nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
+            _infix_cache_remove(t);
             infix_unbound_cif_func f = infix_forward_get_unbound_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
@@ -135,6 +158,7 @@ TEST {
             infix_status status = infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func, nullptr);
             if (status != INFIX_SUCCESS)
                 exit(2);
+            _infix_cache_remove(t);
             infix_cif_func f = infix_forward_get_code(t);
             infix_forward_destroy(t);
             int a = 5, r = 0;
@@ -142,6 +166,7 @@ TEST {
             f(&r, aa);
         }
         else if (strcmp(child_test_name, "reverse_uaf") == 0) {
+            _infix_cache_clear();
             infix_reverse_t * rt = nullptr;
             infix_status status = infix_reverse_create_callback(&rt, "()->void", (void *)dummy_handler_func, nullptr);
             if (status != INFIX_SUCCESS)
@@ -172,11 +197,27 @@ TEST {
             fprintf(stderr, "Failed to catch exception. Error code: %d, Message: %s\n", (int)err.code, err.message);
             exit(3);  // Failed to catch
         }
+#if INFIX_SANITY_CHECK_ENABLE
+        else if (strcmp(child_test_name, "sanity_clobber") == 0) {
+            infix_forward_t * t = nullptr;
+            infix_direct_arg_handler_t handler = {0};
+            handler.scalar_marshaller = (infix_marshaller_fn)malicious_marshaller;
+            infix_status s =
+                infix_forward_create_direct(&t, "(double) -> void", (void *)dummy_handler_func, &handler, nullptr);
+            if (s != INFIX_SUCCESS)
+                exit(2);
+            infix_direct_cif_func f = infix_forward_get_direct_code(t);
+            double val = 42.0;
+            void * args[] = {&val};
+            f(nullptr, args);  // Should crash here if sanity check is enabled
+            exit(0);           // Failed to crash!
+        }
+#endif
         exit(1);
     }
 #endif
 
-    plan(5);
+    plan(6);
 
     subtest("Guard pages prevent use-after-free") {
         plan(3);
@@ -184,7 +225,8 @@ TEST {
         subtest("Calling a freed UNBOUND FORWARD trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
-            ok(run_crash_test_as_child("forward_uaf_unbound"), "Child process crashed as expected.");
+            ok(run_crash_test_as_child("forward_uaf_unbound", EXCEPTION_ACCESS_VIOLATION),
+               "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
             if (pid == -1) {
@@ -196,6 +238,7 @@ TEST {
                 if (status != INFIX_SUCCESS)
                     exit(2);
                 infix_unbound_cif_func dangling_ptr = infix_forward_get_unbound_code(trampoline);
+                _infix_cache_remove(trampoline);
                 infix_forward_destroy(trampoline);
 
                 int arg = 5, result = 0;
@@ -219,7 +262,8 @@ TEST {
         subtest("Calling a freed BOUND FORWARD trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
-            ok(run_crash_test_as_child("forward_uaf_bound"), "Child process crashed as expected.");
+            ok(run_crash_test_as_child("forward_uaf_bound", EXCEPTION_ACCESS_VIOLATION),
+               "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
             if (pid == -1) {
@@ -230,6 +274,7 @@ TEST {
                 if (infix_forward_create(&t, "(int32)->int32", (void *)dummy_target_func, nullptr) != INFIX_SUCCESS)
                     exit(2);
                 infix_cif_func f = infix_forward_get_code(t);
+                _infix_cache_remove(t);
                 infix_forward_destroy(t);
 
                 int a = 5, r = 0;
@@ -248,7 +293,8 @@ TEST {
         subtest("Calling a freed REVERSE trampoline causes a crash") {
             plan(1);
 #if defined(_WIN32)
-            ok(run_crash_test_as_child("reverse_uaf"), "Child process crashed as expected.");
+            ok(run_crash_test_as_child("reverse_uaf", EXCEPTION_ACCESS_VIOLATION),
+               "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
             pid_t pid = fork();
             if (pid == -1) {
@@ -283,7 +329,7 @@ TEST {
 #if defined(INFIX_OS_MACOS)
         skip(1, "Read-only context hardening disabled on macOS for stability.");
 #elif defined(_WIN32)
-        ok(run_crash_test_as_child("write_harden"), "Child process crashed as expected.");
+        ok(run_crash_test_as_child("write_harden", EXCEPTION_ACCESS_VIOLATION), "Child process crashed as expected.");
 #elif defined(INFIX_ENV_POSIX)
         pid_t pid = fork();
         if (pid == -1) {
@@ -409,6 +455,48 @@ TEST {
             infix_executable_free(exec);
 #else
         skip(1, "Test is only for specific POSIX platforms that use the dual-mapping strategy.");
+#endif
+    }
+
+    subtest("Marshaller stack sanity check") {
+#if !INFIX_SANITY_CHECK_ENABLE
+        skip_all("Sanity check not enabled in this build.");
+#elif defined(INFIX_COMPILER_MSVC) && defined(INFIX_ARCH_X64)
+        skip_all("MSVC x64 does not support inline assembly for stack clobbering.");
+#else
+        plan(1);
+#if defined(_WIN32)
+        // On Windows x64, stack clobbering might trigger STATUS_STACK_OVERFLOW (0xC00000FD)
+        // due to misalignment or other checks, or STATUS_ILLEGAL_INSTRUCTION (0xC000001D) from UD2.
+        DWORD exit_code = 0;
+        bool crashed = run_crash_test_as_child("sanity_clobber", 0xC000001D);
+        if (!crashed)
+            crashed = run_crash_test_as_child("sanity_clobber", 0xC00000FD);
+        ok(crashed, "Child process crashed as expected on stack clobber.");
+#elif defined(INFIX_ENV_POSIX)
+        pid_t pid = fork();
+        if (pid == 0) {
+            infix_forward_t * t = nullptr;
+            infix_direct_arg_handler_t handler = {0};
+            handler.scalar_marshaller = (infix_marshaller_fn)malicious_marshaller;
+            infix_status s =
+                infix_forward_create_direct(&t, "(double) -> void", (void *)dummy_handler_func, &handler, nullptr);
+            if (s != INFIX_SUCCESS)
+                exit(2);
+            infix_direct_cif_func f = infix_forward_get_direct_code(t);
+            double val = 42.0;
+            void * args[] = {&val};
+            f(nullptr, args);
+            exit(0);
+        }
+        else {
+            int wstatus;
+            waitpid(pid, &wstatus, 0);
+            ok(WIFSIGNALED(wstatus), "Child crashed as expected on stack clobber.");
+        }
+#else
+        skip(1, "Sanity check test not supported on this platform.");
+#endif
 #endif
     }
 }

@@ -958,6 +958,16 @@ INFIX_INTERNAL void emit_call_reg(code_buffer * buf, x64_gpr reg) {
 INFIX_INTERNAL void emit_ret(code_buffer * buf) { emit_byte(buf, 0xC3); }
 /**
  * @internal
+ * @brief Emits `cmp r64, r64` to compare two registers.
+ * @details Opcode format: REX.W + 39 /r
+ */
+INFIX_INTERNAL void emit_cmp_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2) {
+    emit_rex_prefix(buf, 1, reg2 >= R8_REG, 0, reg1 >= R8_REG);
+    emit_byte(buf, 0x39);
+    emit_modrm(buf, 3, reg2 % 8, reg1 % 8);
+}
+/**
+ * @internal
  * @brief Emits `test r64, r64` to test if a register is zero.
  * @details Opcode format: REX.W + 85 /r
  */
@@ -972,6 +982,12 @@ INFIX_INTERNAL void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr r
  * @details Opcode format: 75 rel8
  */
 INFIX_INTERNAL void emit_jnz_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x75, (uint8_t)offset); }
+/**
+ * @internal
+ * @brief Emits `je rel8` for a short conditional jump if equal.
+ * @details Opcode format: 74 rel8
+ */
+INFIX_INTERNAL void emit_je_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x74, (uint8_t)offset); }
 /**
  * @internal
  * @brief Emits a `jmp r64` instruction.

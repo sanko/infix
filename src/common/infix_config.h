@@ -201,6 +201,15 @@ typedef ptrdiff_t ssize_t;
 #define INFIX_TRAMPOLINE_HEADROOM 128
 
 /**
+ * @def INFIX_SANITY_CHECK_ENABLE
+ * @brief If defined and non-zero, the JIT will emit extra instructions to verify
+ *        stack consistency around user-provided marshaller calls.
+ */
+#ifndef INFIX_SANITY_CHECK_ENABLE
+#define INFIX_SANITY_CHECK_ENABLE 0
+#endif
+
+/**
  * @def INFIX_INTERNAL
  * @brief When compiling with -fvisibility=hidden, we use this to explicitly mark internal-but-shared functions as
  * hidden.

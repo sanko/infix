@@ -133,8 +133,12 @@ INFIX_INTERNAL void emit_call_reg(code_buffer * buf, x64_gpr reg);
 INFIX_INTERNAL void emit_ret(code_buffer * buf);
 /** @internal @brief Emits `test r64, r64` to test if a register is zero. */
 INFIX_INTERNAL void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2);
+/** @internal @brief Emits `cmp r64, r64` to compare two registers. */
+INFIX_INTERNAL void emit_cmp_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2);
 /** @internal @brief Emits `jnz rel8` for a short conditional jump if not zero. */
 INFIX_INTERNAL void emit_jnz_short(code_buffer * buf, int8_t offset);
+/** @internal @brief Emits `je rel8` for a short conditional jump if equal. */
+INFIX_INTERNAL void emit_je_short(code_buffer * buf, int8_t offset);
 /** @internal @brief Emits `jmp r64` to jump to an address in a register. */
 INFIX_INTERNAL void emit_jmp_reg(code_buffer * buf, x64_gpr reg);
 /** @internal @brief Emits `ud2`, an undefined instruction that causes an invalid opcode exception. */

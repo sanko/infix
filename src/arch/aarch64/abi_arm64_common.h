@@ -127,6 +127,30 @@ typedef enum {
 } arm64_vpr;
 /**
  * @internal
+ * @enum arm64_cond
+ * @brief Enumerates the ARM64 condition codes for conditional branches.
+ */
+typedef enum {
+    A64_COND_EQ = 0x0,  ///< Equal
+    A64_COND_NE = 0x1,  ///< Not Equal
+    A64_COND_CS = 0x2,  ///< Carry Set (Higher or Same, unsigned)
+    A64_COND_HS = 0x2,
+    A64_COND_CC = 0x3,  ///< Carry Clear (Lower, unsigned)
+    A64_COND_LO = 0x3,
+    A64_COND_MI = 0x4,  ///< Minus (Negative)
+    A64_COND_PL = 0x5,  ///< Plus (Positive or Zero)
+    A64_COND_VS = 0x6,  ///< Overflow
+    A64_COND_VC = 0x7,  ///< No Overflow
+    A64_COND_HI = 0x8,  ///< Higher (Unsigned)
+    A64_COND_LS = 0x9,  ///< Lower or Same (Unsigned)
+    A64_COND_GE = 0xA,  ///< Greater or Equal (Signed)
+    A64_COND_LT = 0xB,  ///< Less Than (Signed)
+    A64_COND_GT = 0xC,  ///< Greater Than (Signed)
+    A64_COND_LE = 0xD,  ///< Less Than or Equal (Signed)
+    A64_COND_AL = 0xE,  ///< Always
+} arm64_cond;
+/**
+ * @internal
  * @defgroup aarch64_opcodes AArch64 Instruction Opcodes and Bitfields
  * @brief Defines for the bit-level encoding of AArch64 instructions.
  * @details These constants represent the fixed bit patterns for various instruction

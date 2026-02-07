@@ -1140,7 +1140,15 @@ static infix_status generate_direct_forward_argument_moves_win_x64(code_buffer *
 
             if (arg_layout->handler->scalar_marshaller) {
                 emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
+#if INFIX_SANITY_CHECK_ENABLE
+                emit_mov_reg_reg(buf, R12_REG, RSP_REG);  // Save RSP to non-volatile R12
+#endif
                 emit_call_reg(buf, R10_REG);  // Result is now in RAX or XMM0.
+#if INFIX_SANITY_CHECK_ENABLE
+                emit_cmp_reg_reg(buf, R12_REG, RSP_REG);  // Verify RSP balance
+                emit_je_short(buf, 2);
+                emit_ud2(buf);  // Crash if marshaller clobbered the stack
+#endif
 
                 emit_mov_mem_reg(buf, RSP_REG, temp_offset, RAX_REG);
             }
@@ -1151,7 +1159,15 @@ static infix_status generate_direct_forward_argument_moves_win_x64(code_buffer *
                 // Arg 3 (R8): The infix_type*.
                 emit_mov_reg_imm64(buf, R8_REG, (uint64_t)arg_layout->type);
                 emit_mov_reg_imm64(buf, R10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
+#if INFIX_SANITY_CHECK_ENABLE
+                emit_mov_reg_reg(buf, R12_REG, RSP_REG);
+#endif
                 emit_call_reg(buf, R10_REG);
+#if INFIX_SANITY_CHECK_ENABLE
+                emit_cmp_reg_reg(buf, R12_REG, RSP_REG);
+                emit_je_short(buf, 2);
+                emit_ud2(buf);
+#endif
             }
         }
     }

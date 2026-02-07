@@ -596,6 +596,22 @@ INFIX_INTERNAL void emit_arm64_sub_imm(
     code_buffer * buf, bool is64, bool set_flags, arm64_gpr dest, arm64_gpr base, uint32_t imm) {
     emit_arm64_arith_imm(buf, true, is64, set_flags, dest, base, imm);
 }
+/**
+ * @internal
+ * @brief Emits `CMP <Xn|Wn>, <Xm|Wm>` instruction (alias for SUBS <Xd>, <Xn>, <Xm> with XZR destination).
+ * @details Opcode (64-bit): 11101011...
+ */
+INFIX_INTERNAL void emit_arm64_cmp_reg_reg(code_buffer * buf, bool is64, arm64_gpr reg1, arm64_gpr reg2) {
+    if (buf->error)
+        return;
+    // SUBS <Xd>, <Xn>, <Xm> { , <shift> #<amount> }
+    // We use Rd = 31 (XZR), shift = 0.
+    uint32_t instr = (is64 ? A64_SF_64BIT : A64_SF_32BIT) | 0x6B000000;
+    instr |= (uint32_t)(reg2 & 0x1F) << 16;  // Rm
+    instr |= (uint32_t)(reg1 & 0x1F) << 5;   // Rn
+    instr |= 31U;                            // Rd = XZR (zero register)
+    emit_int32(buf, instr);
+}
 // Control Flow Emitters
 /*
  * Implementation for emit_arm64_blr_reg (Branch with Link to Register).
@@ -614,6 +630,27 @@ INFIX_INTERNAL void emit_arm64_blr_reg(code_buffer * buf, arm64_gpr reg) {
 INFIX_INTERNAL void emit_arm64_ret(code_buffer * buf, arm64_gpr reg) {
     uint32_t instr = 0xD65F0000;
     instr |= (uint32_t)(reg & 0x1F) << 5;
+    emit_int32(buf, instr);
+}
+/**
+ * @internal
+ * @brief Emits a `B.<cond>` (Branch Conditionally) instruction.
+ * @details Assembly: `B.<cond> #imm`.
+ *
+ *          Opcode: 01010100...
+ *
+ * @param offset A signed byte offset from the current instruction, which must be a multiple of 4.
+ */
+INFIX_INTERNAL void emit_arm64_b_cond(code_buffer * buf, arm64_cond cond, int32_t offset) {
+    if (buf->error)
+        return;
+    // Offset is encoded as a 19-bit immediate, scaled by 4 bytes.
+    if (offset % 4 != 0 || (offset / 4) < -262144 || (offset / 4) > 262143) {
+        buf->error = true;
+        return;
+    }
+    uint32_t instr = 0x54000000 | ((uint32_t)cond & 0xF);
+    instr |= ((uint32_t)(offset / 4) & 0x7FFFF) << 5;
     emit_int32(buf, instr);
 }
 /**

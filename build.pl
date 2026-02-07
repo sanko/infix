@@ -16,7 +16,7 @@ $|++;
 
 # Argument Parsing
 my %opts;
-GetOptions( \%opts, qw[cc|compiler=s cflags=s h|help codecov=s abi=s verbose|v examples shared] );
+GetOptions( \%opts, qw[cc|compiler=s cflags=s h|help codecov=s abi=s verbose|v examples shared sanity] );
 show_help() if $opts{help};
 my $command       = lc( shift @ARGV || 'build' );
 my @test_names    = @ARGV;
@@ -226,7 +226,8 @@ if ( $command eq 'clean' ) {
 }
 elsif ( $command eq 'build' ) {
     push @{ $config{cflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1'       if $opts{verbose};
+    push @{ $config{cflags} }, '-DINFIX_SANITY_CHECK_ENABLE=1' if $opts{sanity};
     my $lib_path = create_static_library( \%config, $obj_suffix );
     print "\nStatic library '$lib_path' built successfully.\n";
     if ( $opts{shared} ) {
@@ -244,7 +245,9 @@ elsif ( $command eq 'examples' ) {
 elsif ( $command eq 'test' || $command eq 'coverage' ) {
     push @{ $config{cflags} },   '-DDBLTAP_ENABLE=1';
     push @{ $config{cxxflags} }, '-DDBLTAP_ENABLE=1';
-    push @{ $config{cflags} },   '-DINFIX_DEBUG_ENABLED=1' if $opts{verbose};
+    push @{ $config{cflags} },   '-DINFIX_DEBUG_ENABLED=1'       if $opts{verbose};
+    push @{ $config{cflags} },   '-DINFIX_SANITY_CHECK_ENABLE=1' if $opts{sanity};
+    push @{ $config{cxxflags} }, '-DINFIX_SANITY_CHECK_ENABLE=1' if $opts{sanity};
     $final_status = compile_and_run_tests( \%config, $obj_suffix, \@test_names, $is_coverage_build );
 }
 elsif ( $command eq 'memtest' ) {
@@ -346,6 +349,7 @@ sub show_help {
       --codecov=<s>         Specify a Codecov token to upload coverage results (or use CODECOV_TOKEN env var).
       --examples            Build all cookbook examples (used with 'build' command).
       --shared              Build the shared library (DLL/.so) in addition to the static library.
+      --sanity              Enable internal stack sanity checks during JIT code generation.
       -v, --verbose         Enable verbose debug output from the library by compiling with -DINFIX_DEBUG_ENABLED=1.
       -h, --help            Show this help message.
     END_HELP

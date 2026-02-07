@@ -1346,13 +1346,29 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
             emit_arm64_load_u64_immediate(buf, X2_REG, (uint64_t)arg_layout->type);
             // Call
             emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_mov_reg(buf, true, X22_REG, SP_REG);
+#endif
             emit_arm64_blr_reg(buf, X10_REG);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_cmp_reg_reg(buf, true, X22_REG, SP_REG);
+            emit_arm64_b_cond(buf, A64_COND_EQ, 8);
+            emit_arm64_brk(buf, 0);
+#endif
             // Data is now in [SP + my_scratch_offset].
         }
         else if (arg_layout->handler->scalar_marshaller) {
             // Call
             emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_mov_reg(buf, true, X22_REG, SP_REG);
+#endif
             emit_arm64_blr_reg(buf, X10_REG);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_cmp_reg_reg(buf, true, X22_REG, SP_REG);
+            emit_arm64_b_cond(buf, A64_COND_EQ, 8);
+            emit_arm64_brk(buf, 0);
+#endif
             // Result in X0. Save to scratch slot.
             emit_arm64_str_imm(buf, true, X0_REG, SP_REG, my_scratch_offset);
         }
