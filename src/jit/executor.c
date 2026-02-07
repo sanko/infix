@@ -945,6 +945,25 @@ c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
         g_macos_apis.sys_icache_invalidate(exec->rw_ptr, exec->size);
     else
         __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);
+#elif defined(INFIX_ARCH_AARCH64)
+    // Robust manual cache clearing for AArch64 Linux/BSD.
+    // We clean the D-cache to point of unification and invalidate the I-cache.
+    uintptr_t start = (uintptr_t)exec->rw_ptr;
+    uintptr_t end = start + exec->size;
+    uintptr_t ctr_el0;
+    __asm__ __volatile__("mrs %0, ctr_el0" : "=r"(ctr_el0));
+
+    // D-cache line size is in bits [19:16] as log2 of number of words.
+    uintptr_t d_line_size = 4 << ((ctr_el0 >> 16) & 0xf);
+    for (uintptr_t addr = start & ~(d_line_size - 1); addr < end; addr += d_line_size)
+        __asm__ __volatile__("dc cvau, %0" ::"r"(addr) : "memory");
+    __asm__ __volatile__("dsb ish" ::: "memory");
+
+    // I-cache line size is in bits [3:0] as log2 of number of words.
+    uintptr_t i_line_size = 4 << (ctr_el0 & 0xf);
+    for (uintptr_t addr = start & ~(i_line_size - 1); addr < end; addr += i_line_size)
+        __asm__ __volatile__("ic ivau, %0" ::"r"(addr) : "memory");
+    __asm__ __volatile__("dsb ish\n\tisb" ::: "memory");
 #else
     // Use the GCC/Clang built-in for other platforms.
     __builtin___clear_cache((char *)exec->rw_ptr, (char *)exec->rw_ptr + exec->size);

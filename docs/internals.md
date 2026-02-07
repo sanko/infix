@@ -237,15 +237,15 @@ A unique challenge for a JIT-based FFI is how to handle exceptions (like C++ `th
 
 By default, `infix` trampolines are designed to be "transparent" to the system unwinder. This means if a native function throws an exception, it can bubble up through the JIT frame and be caught by a C++ `try/catch` block in the caller's code.
 
-*   **Windows x64:** `infix` generates a standard prologue (`push rbp; mov rbp, rsp`) and correct `UNWIND_INFO` structures for every trampoline. These are registered with the kernel via `RtlAddFunctionTable`.
-*   **Linux (x64 & ARM64):** `infix` manually constructs DWARF `.eh_frame` records (CIE and FDE) in memory and registers them with the runtime using `__register_frame`. These records describe the trampoline's stack setup (e.g., RBP-based frames), allowing `libgcc_s` or `libc++` to safely traverse them.
+*   **Windows (x64 & ARM64):** `infix` generates standard prologues and correct `UNWIND_INFO` structures for every trampoline. These are registered with the kernel via `RtlAddFunctionTable`. Note that ARM64 requires a sentinel entry in the function table.
+*   **Linux (x64 & ARM64):** `infix` manually constructs DWARF `.eh_frame` records (CIE and FDE) in memory and registers them with the runtime using `__register_frame`.
 
 ### 4.2 Safe Boundaries (`infix_forward_create_safe`)
 
 For environments that cannot use C++ `try/catch` (like plain C or high-level language runtimes), `infix` provides a "Safe" trampoline API. A safe trampoline establishes a hard boundary at the FFI call:
 
 1.  **Catching:** It registers a platform-native exception handler.
-    *   **Windows x64:** A "Personality Routine" is registered in the `UNWIND_INFO`. Because JIT memory may be more than 2GB away from the library's static code, `infix` emits a **64-bit absolute jump stub** within the JIT block's metadata to reach the library's real personality routine.
+    *   **Windows (x64 & ARM64):** A "Personality Routine" is registered in the `UNWIND_INFO`. Because JIT memory may be more than 2GB away from the library's static code, `infix` emits an absolute jump stub within the JIT block's metadata to reach the library's real personality routine.
 2.  **Mapping:** If an exception occurs, the handler catches it, sets the thread-local error to `INFIX_CODE_NATIVE_EXCEPTION`, and redirects execution to the trampoline's epilogue using `RtlUnwindEx`.
 3.  **Reporting:** The FFI call returns gracefully to the caller, who can then check `infix_get_last_error()` to detect that an exception was caught.
 
