@@ -42,32 +42,13 @@
 #include <stddef.h>
 // Check if INFIX_DEBUG_ENABLED is defined and set to a non-zero value.
 #if defined(INFIX_DEBUG_ENABLED) && INFIX_DEBUG_ENABLED
-// The double_tap framework is only included if both debug mode AND the main
-// test harness toggle are enabled. This allows for debug builds of non-test executables.
-#if defined(DBLTAP_ENABLE)
-#include "common/double_tap.h"
-/**
- * @internal
- * @def INFIX_DEBUG_PRINTF(...)
- * @brief A macro for printing formatted debug messages during a debug build with the test harness.
- * @details In debug builds where `double_tap.h` is active, this macro wraps the `note()`
- *          macro, integrating debug output from the library's internals cleanly into the
- *          TAP-formatted test logs.
- * @example
- * ```c
- * INFIX_DEBUG_PRINTF("Processing type %d with size %zu", type->id, type->size);
- * ```
- */
-#define INFIX_DEBUG_PRINTF(...) note("INFIX_DEBUG: " __VA_ARGS__)
-#else
 #include <stdio.h>
 /**
  * @internal
  * @def INFIX_DEBUG_PRINTF(...)
- * @brief A macro for printing formatted debug messages (printf fallback).
- * @details In debug builds where the `double_tap.h` harness is *not* active (e.g., when
- *          building a standalone example program), this macro falls back to a standard
- *          `printf`, ensuring that debug messages are still visible.
+ * @brief A macro for printing formatted debug messages during a debug build.
+ * @details This macro falls back to a standard `printf`, ensuring that debug messages are still visible.
+ *          We use a '#' prefix to ensure these messages are treated as comments by TAP consumers.
  */
 #define INFIX_DEBUG_PRINTF(...)                \
     do {                                       \
@@ -75,7 +56,7 @@
         printf("\n");                          \
         fflush(stdout);                        \
     } while (0)
-#endif  // DBLTAP_ENABLE
+
 /**
  * @internal
  * @brief Declares the function prototype for `infix_dump_hex` for use in debug builds.

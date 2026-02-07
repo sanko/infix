@@ -37,13 +37,13 @@ TEST {
     plan(4);
     subtest("int(int, int)") {
         plan(4);
-        // 1. Define the signature programmatically using the Manual API.
+        // Define the signature programmatically using the Manual API.
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_type * arg_types[] = {infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),
                                     infix_type_create_primitive(INFIX_PRIMITIVE_SINT32)};
         int a = 10, b = 25;
         void * args[] = {&a, &b};
-        // 2. Test the unbound trampoline.
+        // Test the unbound trampoline.
         infix_forward_t * unbound_t = nullptr;
         ok(infix_forward_create_unbound_manual(&unbound_t, ret_type, arg_types, 2, 2) == INFIX_SUCCESS,
            "Unbound created");
@@ -52,7 +52,7 @@ TEST {
         unbound_cif((void *)add_ints, &unbound_result, args);
         ok(unbound_result == 35, "Unbound call correct");
         infix_forward_destroy(unbound_t);
-        // 3. Test the bound trampoline.
+        // Test the bound trampoline.
         infix_forward_t * bound_t = nullptr;
         ok(infix_forward_create_manual(&bound_t, ret_type, arg_types, 2, 2, (void *)add_ints) == INFIX_SUCCESS,
            "Bound created");

@@ -47,6 +47,18 @@ infix_status infix_forward_create(
 );
 ```
 
+#### `infix_forward_create_safe`
+Creates a "bound" forward trampoline wrapped in a platform-native exception handler. This is identical to `infix_forward_create`, but if the target C function throws a hardware exception (SEH on Windows) or a C++ exception, it will be caught. The call will return gracefully, and the thread-local error will be set to `INFIX_CODE_NATIVE_EXCEPTION`.
+
+```c
+infix_status infix_forward_create_safe(
+    infix_forward_t** out_trampoline,
+    const char* signature,
+    void* target_function,
+    infix_registry_t* registry
+);
+```
+
 #### `infix_forward_create_unbound`
 Creates a more flexible "unbound" trampoline for a given signature. The target function is provided at call time, allowing you to reuse one trampoline for multiple functions with the same signature. Like `infix_forward_create`, this function creates a private arena for the trampoline.
 

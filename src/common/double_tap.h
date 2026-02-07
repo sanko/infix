@@ -78,7 +78,7 @@ extern "C" {
 #define TAP_ATOMIC_INIT(val) = val
 #elif defined(__GNUC__) || defined(__clang__)
 #define TAP_ATOMIC_SIZE_T size_t
-#define TAP_ATOMIC_FETCH_ADD(ptr, val) __sync_fetch_and_add(ptr, val)
+#define TAP_ATOMIC_FETCH_ADD(ptr, val) __atomic_fetch_add(ptr, (size_t)(val), __ATOMIC_SEQ_CST)
 #define TAP_ATOMIC_INIT(val) = val
 #else
 // Fallback for older compilers without atomics support. This is not thread-safe.
@@ -102,7 +102,7 @@ extern "C" {
 #elif defined(_WIN32) && defined(__clang__)
 // Clang on Windows
 #define TAP_THREAD_LOCAL __declspec(thread)
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) || defined(__clang__)
 // GCC (including MinGW) and Clang on *nix
 #define TAP_THREAD_LOCAL __thread
 #elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L && !defined(__STDC_NO_THREADS__)
@@ -529,13 +529,12 @@ int main(void) {
     tap_init();
     test_body();
     int result = tap_done();
-#if defined(__OpenBSD__) || (defined(_WIN32) && defined(__clang__))
-    // OpenBSD with Clang profiling runtime has a known issue where atexit handlers
-    // related to TLS or profiling can segfault. We bypass standard exit cleanup
-    // to avoid this false positive failure.
-    _exit(result);
-#else
+#if defined(_WIN32) && !defined(__clang__)
     return result;
+#else
+    // Use _exit() to bypass standard atexit() cleanup which can segfault on some
+    // platforms when TLS or coverage profiling is involved.
+    _exit(result);
 #endif
 }
 #endif  // DBLTAP_ENABLE && DBLTAP_IMPLEMENTATION

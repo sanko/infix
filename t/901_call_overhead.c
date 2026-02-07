@@ -49,7 +49,7 @@ TEST {
     diag("infix Call Overhead Benchmark");
     diag("Iterations: %d", BENCHMARK_ITERATIONS);
     diag("Target function: int(int, int)");
-    // 1. Baseline: Direct C Call
+    // Baseline: Direct C Call
     start = clock();
     for (int i = 0; i < BENCHMARK_ITERATIONS; ++i)
         accumulator += add_for_benchmark(i, i + 1);

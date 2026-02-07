@@ -130,17 +130,17 @@ INFIX_API c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t s
         if (block->error)
             return nullptr;
 
-        // 1. Calculate current absolute address
+        // Calculate current absolute address
         uintptr_t current_ptr = (uintptr_t)(block->buffer + block->current_offset);
 
-        // 2. Calculate aligned address
+        // Calculate aligned address
         // (x + align - 1) & ~(align - 1)
         uintptr_t aligned_ptr = (current_ptr + (alignment - 1)) & ~(alignment - 1);
 
-        // 3. Calculate padding needed
+        // Calculate padding needed
         size_t padding = (size_t)(aligned_ptr - current_ptr);
 
-        // 4. Calculate total space required in this block
+        // Calculate total space required in this block
         size_t total_needed = size + padding;
 
         // Check if fits in current block
@@ -150,7 +150,7 @@ INFIX_API c23_nodiscard void * infix_arena_alloc(infix_arena_t * arena, size_t s
             return ret;
         }
 
-        // 5. Allocation failed in current block. Check next or create new.
+        // Allocation failed in current block. Check next or create new.
         if (block->next_block) {
             block = block->next_block;
             continue;

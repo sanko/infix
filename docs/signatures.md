@@ -45,6 +45,7 @@ These keywords represent standard C types whose size can vary by platform. They 
 | `longlong`      | `long long`          | 64 bits             | A signed integer of at least 64 bits.                                       |
 | `ulonglong`     | `unsigned long long` | 64 bits             | An unsigned integer of at least 64 bits.                                    |
 | `float`         | `float`              | 32 bits             | A 32-bit single-precision floating-point number.                            |
+| `half`          | `_Float16`, `__fp16` | 16 bits             | A 16-bit half-precision floating-point number.                              |
 | `double`        | `double`             | 64 bits             | A 64-bit double-precision floating-point number.                            |
 | `longdouble`    | `long double`        | Varies              | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.  |
 | `size_t`        | `size_t`             | 32 or 64 bits       | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
@@ -61,6 +62,7 @@ For maximum portability and control, these keywords guarantee the size of the ty
 | `sint32`, `uint32`    | `int32_t`, `uint32_t` | 32 bits  | Explicitly-sized 32-bit signed/unsigned integers. |
 | `sint64`, `uint64`    | `int64_t`, `uint64_t` | 64 bits  | Explicitly-sized 64-bit signed/unsigned integers. |
 | `sint128`, `uint128`  | `__int128_t`          | 128 bits | 128-bit integers (GCC/Clang extension).           |
+| `float16`             | `_Float16`            | 16 bits  | An explicit alias for a 16-bit half-precision float. |
 | `float32`             | `float`               | 32 bits  | An explicit alias for a 32-bit float.             |
 | `float64`             | `double`              | 64 bits  | An explicit alias for a 64-bit float.             |
 | `char8_t`             | `char8_t`             | 8 bits   | An explicit alias for an 8-bit unsigned integer (UTF-8 character unit).  |
@@ -118,6 +120,7 @@ These syntax elements allow you to build complex types from simpler ones.
 | `*((int, int) -> int)`                    | A pointer to a function that takes two `int`s and returns an `int`.             |
 | `{@Point, callback:*((int)->void)}`       | A struct with a named type `@Point` and a function pointer field.               |
 | `c[float]`                                | A C `float _Complex` number.                                                    |
+| `float16`                                 | A 16-bit half-precision floating-point number.                                  |
 | `v[4:float]`                              | A 128-bit SIMD vector of four 32-bit floats (e.g., `__m128` on x86, `float32x4_t` on ARM NEON). |
 | `v[8:double]`                             | A 512-bit SIMD vector of eight 64-bit doubles (e.g., `__m512d` on x86 AVX-512). |
 | `m256d`                                   | An alias for `v[4:double]`, an AVX vector of 4 `double`s (`__m256d`).           |

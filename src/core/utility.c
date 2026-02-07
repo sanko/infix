@@ -127,7 +127,7 @@ print_line:
  * @param title The line number.
  */
 void infix_dump_state(const char * file, int line) {
-#if defined(__x86_64__) || defined(_M_X64)
+#if defined(INFIX_ARCH_X64)
     printf("# Dumping x64 Register State at %s:%d\n", file, line);
     volatile unsigned long long stack_dump[16];
     register long long rsp __asm__("rsp");
@@ -163,7 +163,7 @@ void infix_dump_state(const char * file, int line) {
     printf("# Stack Dump (128 bytes) ---\n");
     for (int i = 0; i < 16; i += 2)
         printf("%016llx: %016llx %016llx\n", rsp + i * 8, stack_dump[i], stack_dump[i + 1]);
-#elif defined(__aarch64__) || defined(_M_ARM64)
+#elif defined(INFIX_ARCH_AARCH64)
     printf("# Dumping AArch64 Register State at %s:%d\n", file, line);
     volatile unsigned long long stack_dump[16];
     register long long sp __asm__("sp");

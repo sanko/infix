@@ -225,15 +225,15 @@ static bool is_hfa(const infix_type * type, const infix_type ** out_base_type) {
     // HFAs cannot be excessively large.
     if (type->size == 0 || type->size > 64)  // Max HFA size is 4 * sizeof(double) = 32 on standard, 4*16=64 on others
         return false;
-    // 1. Find the base float/double type of the first primitive element.
+    // Find the base float/double type of the first primitive element.
     const infix_type * base = get_hfa_base_type(type);
     if (base == nullptr)
         return false;
-    // 2. Check that the total size is a multiple of the base type, with 1 to 4 elements.
+    // Check that the total size is a multiple of the base type, with 1 to 4 elements.
     size_t num_elements = type->size / base->size;
     if (num_elements < 1 || num_elements > 4 || type->size != num_elements * base->size)
         return false;
-    // 3. Verify that ALL members recursively conform to this single base type.
+    // Verify that ALL members recursively conform to this single base type.
     size_t field_count = 0;
     if (!is_hfa_recursive_check(type, base, &field_count))
         return false;
@@ -329,8 +329,8 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
             continue;  // Argument classified, proceed to the next one.
         }
 #endif
-        bool pass_fp_in_vpr =
-            is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+        bool pass_fp_in_vpr = is_float16(type) || is_float(type) || is_double(type) || is_long_double(type) ||
+            type->category == INFIX_TYPE_VECTOR;
         const infix_type * hfa_base_type = nullptr;
         bool is_hfa_candidate = is_hfa(type, &hfa_base_type);
 #if defined(INFIX_OS_WINDOWS)
@@ -439,12 +439,15 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
 static infix_status generate_forward_prologue_arm64(code_buffer * buf, infix_call_frame_layout * layout) {
     // `stp x29, x30, [sp, #-16]!` : Push Frame Pointer and Link Register to the stack, pre-decrementing SP.
     emit_arm64_stp_pre_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, -16);
-    // `mov x29, sp` : Establish the new Frame Pointer.
-    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
     // `stp x19, x20, [sp, #-16]!` : Save callee-saved registers that we will use for our context.
     emit_arm64_stp_pre_index(buf, true, X19_REG, X20_REG, SP_REG, -16);
     // `stp x21, x22, [sp, #-16]!`
     emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);
+    // `mov x29, sp` : Establish the new Frame Pointer after all registers are pushed.
+    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
+
+    layout->prologue_size = (uint32_t)buf->size;
+
     // Move the trampoline's own arguments into these now-safe callee-saved registers.
     if (layout->target_fn == nullptr) {  // Unbound trampoline args: (target_fn, ret_ptr, args_ptr) in X0, X1, X2.
         emit_arm64_mov_reg(buf, true, X19_REG, X0_REG);  // mov x19, x0 (x19 will hold target_fn)
@@ -549,11 +552,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
             if ((is_long_double(type) && type->size == 16) || (type->category == INFIX_TYPE_VECTOR && type->size == 16))
                 emit_arm64_ldr_q_imm(buf, VPR_ARGS[loc->reg_index], X9_REG, 0);  // ldr qN, [x9] (128-bit load)
             else
-                emit_arm64_ldr_vpr(buf,
-                                   is_double(type) || is_long_double(type),
-                                   VPR_ARGS[loc->reg_index],
-                                   X9_REG,
-                                   0);  // ldr dN/sN, [x9]
+                emit_arm64_ldr_vpr(buf, type->size, VPR_ARGS[loc->reg_index], X9_REG, 0);
             break;
         case ARG_LOCATION_VPR_HFA:
             {
@@ -561,7 +560,7 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                 is_hfa(type, &base);
                 for (uint32_t j = 0; j < loc->num_regs; ++j)
                     emit_arm64_ldr_vpr(
-                        buf, is_double(base), VPR_ARGS[loc->reg_index + j], X9_REG, (int32_t)(j * base->size));
+                        buf, base->size, VPR_ARGS[loc->reg_index + j], X9_REG, (int32_t)(j * base->size));
                 break;
             }
         case ARG_LOCATION_STACK:
@@ -574,12 +573,12 @@ static infix_status generate_forward_argument_moves_arm64(code_buffer * buf,
                     if (type->category == INFIX_TYPE_PRIMITIVE || type->category == INFIX_TYPE_POINTER) {
                         if (is_float(type) || is_double(type)) {
                             // Floats are promoted to doubles.
-                            emit_arm64_ldr_vpr(buf, true, V16_REG, X9_REG, 0);  // Load as double
+                            emit_arm64_ldr_vpr(buf, 8, V16_REG, X9_REG, 0);  // Load as double
                             if (loc->stack_offset < (unsigned)max_imm_offset)
-                                emit_arm64_str_vpr(buf, true, V16_REG, SP_REG, loc->stack_offset);
+                                emit_arm64_str_vpr(buf, 8, V16_REG, SP_REG, loc->stack_offset);
                             else {
                                 emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, loc->stack_offset);
-                                emit_arm64_str_vpr(buf, true, V16_REG, X10_REG, 0);
+                                emit_arm64_str_vpr(buf, 8, V16_REG, X10_REG, 0);
                             }
                         }
                         else {  // Integer and pointer types
@@ -670,6 +669,7 @@ static infix_status generate_forward_call_instruction_arm64(code_buffer * buf,
 static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
                                                     infix_call_frame_layout * layout,
                                                     infix_type * ret_type) {
+    layout->epilogue_offset = (uint32_t)buf->size;
     // If the function returns a value and it wasn't returned via hidden pointer...
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         // ...copy the result from the appropriate return register(s) into the user's return buffer (pointer in X20).
@@ -684,16 +684,18 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
             size_t num_elements = ret_type->size / hfa_base->size;
             for (size_t i = 0; i < num_elements; ++i)
                 emit_arm64_str_vpr(buf,
-                                   is_double(hfa_base),
+                                   hfa_base->size,
                                    VPR_ARGS[i],
                                    X20_REG,
                                    (int32_t)(i * hfa_base->size));  // Explicit cast
         }
+        else if (is_float16(ret_type))
+            emit_arm64_str_vpr(buf, 2, V0_REG, X20_REG, 0);  // str h0, [x20]
         else if (is_float(ret_type))
-            emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);  // str s0, [x20]
+            emit_arm64_str_vpr(buf, 4, V0_REG, X20_REG, 0);  // str s0, [x20]
         // Handle standard double OR 8-byte long double (macOS)
         else if (is_double(ret_type) || (is_long_double(ret_type) && ret_type->size == 8))
-            emit_arm64_str_vpr(buf, true, V0_REG, X20_REG, 0);  // str d0, [x20]
+            emit_arm64_str_vpr(buf, 8, V0_REG, X20_REG, 0);  // str d0, [x20]
         else {
             // Integer, pointer, or small aggregate return.
             switch (ret_type->size) {
@@ -718,9 +720,11 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
             }
         }
     }
-    // Deallocate stack space allocated for stack arguments.
-    if (layout->total_stack_alloc > 0)
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);  // add sp, sp, #...
+    // Deallocate stack space and restore registers.
+    // X29 was set to SP after all pushes.
+    // mov sp, x29
+    emit_arm64_mov_reg(buf, true, SP_REG, X29_FP_REG);
+
     emit_arm64_ldp_post_index(buf, true, X21_REG, X22_REG, SP_REG, 16);        // ldp x21, x22, [sp], #16
     emit_arm64_ldp_post_index(buf, true, X19_REG, X20_REG, SP_REG, 16);        // ldp x19, x20, [sp], #16
     emit_arm64_ldp_post_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, 16);  // ldp x29, x30, [sp], #16
@@ -841,7 +845,10 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
     size_t current_saved_data_offset = 0;
 
     // Arguments passed on the caller's stack start at offset 16 from our new frame pointer (X29).
-    // [fp] = old fp (8 bytes), [fp+8] = lr (8 bytes). Args start at [fp+16].
+    // X29 was established after pushing X29, X30, X19, X20, X21, X22.
+    // [X29]    -> saved X29
+    // [X29+8]  -> saved X30 (LR)
+    // [X29+16] -> caller's first stack argument
     size_t caller_stack_offset = 16;
 
     for (size_t i = 0; i < context->num_args; ++i) {
@@ -894,8 +901,8 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         bool is_pass_by_ref = (type->size > 16) && !is_variadic_arg;
         bool is_from_stack = false;
 
-        bool expect_in_vpr =
-            is_float(type) || is_double(type) || is_long_double(type) || type->category == INFIX_TYPE_VECTOR;
+        bool expect_in_vpr = is_float16(type) || is_float(type) || is_double(type) || is_long_double(type) ||
+            type->category == INFIX_TYPE_VECTOR;
 #if defined(INFIX_OS_WINDOWS)
         // Windows on ARM ABI disables HFA rules for variadic functions; floats go to GPRs.
         if (context->is_variadic)
@@ -937,14 +944,14 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
             // Homogeneous Floating-point Aggregate
             size_t num_elements = type->size / hfa_base_type->size;
             if (vpr_idx + num_elements <= NUM_VPR_ARGS) {
-                const int scale = is_double(hfa_base_type) ? 8 : 4;
+                const int scale = (int)hfa_base_type->size;
                 for (size_t j = 0; j < num_elements; ++j) {
                     int32_t dest_offset = arg_save_loc + (int32_t)(j * hfa_base_type->size);
                     if (dest_offset >= 0 && ((unsigned)dest_offset / scale) <= 0xFFF && (dest_offset % scale == 0))
-                        emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
+                        emit_arm64_str_vpr(buf, hfa_base_type->size, VPR_ARGS[vpr_idx++], SP_REG, dest_offset);
                     else {
                         emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, dest_offset);
-                        emit_arm64_str_vpr(buf, is_double(hfa_base_type), VPR_ARGS[vpr_idx++], X10_REG, 0);
+                        emit_arm64_str_vpr(buf, hfa_base_type->size, VPR_ARGS[vpr_idx++], X10_REG, 0);
                     }
                 }
             }
@@ -955,7 +962,7 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
         else if (expect_in_vpr) {
             // Single FP/Vector argument
             if (vpr_idx < NUM_VPR_ARGS) {
-                // Determine width: 128-bit (Quad), 64-bit (Double), or 32-bit (Single).
+                // Determine width: 128-bit (Quad), 64-bit (Double), 32-bit (Single), or 16-bit (Half).
                 // On macOS ARM64, long double is 8 bytes, so we must check size == 16.
                 bool is_128bit = (type->size == 16);
 
@@ -974,17 +981,16 @@ static infix_status generate_reverse_argument_marshalling_arm64(code_buffer * bu
                     }
                 }
                 else {
-                    // Use STR Dn (64-bit) or STR Sn (32-bit)
-                    // Note: macOS long double (8 bytes) falls into 'is_double' path here via size check/alias logic
-                    const int scale = (is_double(type) || is_long_double(type)) ? 8 : 4;
-                    bool is_64bit = (scale == 8);
+                    // Use STR Hn (16-bit), STR Sn (32-bit), or STR Dn (64-bit)
+                    // Note: macOS long double (8 bytes) falls into path here via size check/alias logic
+                    const int scale = (int)type->size;
 
                     if (arg_save_loc >= 0 && ((unsigned)arg_save_loc / scale) <= 0xFFF && (arg_save_loc % scale == 0)) {
-                        emit_arm64_str_vpr(buf, is_64bit, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
+                        emit_arm64_str_vpr(buf, type->size, VPR_ARGS[vpr_idx++], SP_REG, arg_save_loc);
                     }
                     else {
                         emit_arm64_add_imm(buf, true, false, X10_REG, SP_REG, arg_save_loc);
-                        emit_arm64_str_vpr(buf, is_64bit, VPR_ARGS[vpr_idx++], X10_REG, 0);
+                        emit_arm64_str_vpr(buf, type->size, VPR_ARGS[vpr_idx++], X10_REG, 0);
                     }
                 }
             }
@@ -1140,7 +1146,7 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
             size_t num_elements = context->return_type->size / base->size;
             for (size_t i = 0; i < num_elements; ++i) {
                 emit_arm64_ldr_vpr(buf,
-                                   is_double(base),
+                                   base->size,
                                    VPR_ARGS[i],
                                    SP_REG,
                                    (int32_t)(layout->return_buffer_offset + i * base->size));  // Explicit cast
@@ -1149,8 +1155,11 @@ static infix_status generate_reverse_epilogue_arm64(code_buffer * buf,
         else if (is_long_double(context->return_type) ||
                  (context->return_type->category == INFIX_TYPE_VECTOR && context->return_type->size == 16))
             emit_arm64_ldr_q_imm(buf, V0_REG, SP_REG, layout->return_buffer_offset);
-        else if (is_float(context->return_type) || is_double(context->return_type))
-            emit_arm64_ldr_vpr(buf, is_double(context->return_type), V0_REG, SP_REG, layout->return_buffer_offset);
+        else if (is_float16(context->return_type))
+            emit_arm64_ldr_vpr(buf, 2, V0_REG, SP_REG, layout->return_buffer_offset);
+        else if (is_float(context->return_type) || is_double(context->return_type) ||
+                 (is_long_double(context->return_type) && context->return_type->size == 8))
+            emit_arm64_ldr_vpr(buf, context->return_type->size, V0_REG, SP_REG, layout->return_buffer_offset);
         else {
             // Integer, pointer, or small struct returned in GPRs.
             emit_arm64_ldr_imm(buf, true, X0_REG, SP_REG, layout->return_buffer_offset);
@@ -1180,14 +1189,14 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
                                                             size_t num_args,
                                                             infix_direct_arg_handler_t * handlers,
                                                             void * target_fn) {
-    // 1. Reuse the standard classification logic.
+    // Reuse the standard classification logic.
     infix_call_frame_layout * standard_layout = nullptr;
     infix_status status =
         prepare_forward_call_frame_arm64(arena, &standard_layout, ret_type, arg_types, num_args, num_args, target_fn);
     if (status != INFIX_SUCCESS)
         return status;
 
-    // 2. Create the new direct layout and copy basic info.
+    // Create the new direct layout and copy basic info.
     infix_direct_call_frame_layout * layout =
         infix_arena_calloc(arena, 1, sizeof(infix_direct_call_frame_layout), _Alignof(infix_direct_call_frame_layout));
     if (!layout)
@@ -1202,7 +1211,7 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
     layout->target_fn = target_fn;
     layout->return_value_in_memory = standard_layout->return_value_in_memory;
 
-    // 3. Calculate scratch space needed on the stack.
+    // Calculate scratch space needed on the stack.
     // Note: We do NOT store the scratch offset in layout->args[i].location.stack_offset,
     // because that field is needed for the *outgoing* ABI stack offset.
     // Instead, we just calculate the total size here, and recalculate the offsets
@@ -1245,12 +1254,11 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
 static infix_status generate_direct_forward_prologue_arm64(code_buffer * buf, infix_direct_call_frame_layout * layout) {
     // Standard prologue: save FP/LR, set up new FP.
     emit_arm64_stp_pre_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, -16);
-    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
-
     // Save callee-saved registers for our context.
     // X19: target_fn, X20: ret_ptr, X21: lang_args array
     emit_arm64_stp_pre_index(buf, true, X19_REG, X20_REG, SP_REG, -16);
     emit_arm64_stp_pre_index(buf, true, X21_REG, X22_REG, SP_REG, -16);  // X22 as scratch
+    emit_arm64_mov_reg(buf, true, X29_FP_REG, SP_REG);
 
     // The direct CIF is called with (ret_ptr, lang_args) in X0, X1.
     emit_arm64_mov_reg(buf, true, X20_REG, X0_REG);  // x20 = ret_ptr
@@ -1338,13 +1346,29 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
             emit_arm64_load_u64_immediate(buf, X2_REG, (uint64_t)arg_layout->type);
             // Call
             emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->aggregate_marshaller);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_mov_reg(buf, true, X22_REG, SP_REG);
+#endif
             emit_arm64_blr_reg(buf, X10_REG);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_cmp_reg_reg(buf, true, X22_REG, SP_REG);
+            emit_arm64_b_cond(buf, A64_COND_EQ, 8);
+            emit_arm64_brk(buf, 0);
+#endif
             // Data is now in [SP + my_scratch_offset].
         }
         else if (arg_layout->handler->scalar_marshaller) {
             // Call
             emit_arm64_load_u64_immediate(buf, X10_REG, (uint64_t)arg_layout->handler->scalar_marshaller);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_mov_reg(buf, true, X22_REG, SP_REG);
+#endif
             emit_arm64_blr_reg(buf, X10_REG);
+#if INFIX_SANITY_CHECK_ENABLE
+            emit_arm64_cmp_reg_reg(buf, true, X22_REG, SP_REG);
+            emit_arm64_b_cond(buf, A64_COND_EQ, 8);
+            emit_arm64_brk(buf, 0);
+#endif
             // Result in X0. Save to scratch slot.
             emit_arm64_str_imm(buf, true, X0_REG, SP_REG, my_scratch_offset);
         }
@@ -1420,11 +1444,8 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 break;
             case ARG_LOCATION_VPR:
                 // Structs by value in VPR
-                emit_arm64_ldr_vpr(buf,
-                                   arg_layout->type->size > 4,
-                                   VPR_ARGS[arg_layout->location.reg_index],
-                                   SP_REG,
-                                   my_scratch_offset);
+                emit_arm64_ldr_vpr(
+                    buf, arg_layout->type->size, VPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
                 break;
             case ARG_LOCATION_VPR_HFA:
                 {
@@ -1432,7 +1453,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                     is_hfa(arg_layout->type, &base);
                     for (uint8_t j = 0; j < arg_layout->location.num_regs; ++j) {
                         emit_arm64_ldr_vpr(buf,
-                                           is_double(base),
+                                           base->size,
                                            VPR_ARGS[arg_layout->location.reg_index + j],
                                            SP_REG,
                                            my_scratch_offset + (int32_t)(j * base->size));
@@ -1457,11 +1478,11 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
             }
             else if (arg_layout->location.type == ARG_LOCATION_VPR) {
                 if (is_float(arg_layout->type)) {
-                    // 1. Load 64-bit double from scratch into D-reg (use dest reg as temp)
+                    // Load 64-bit double from scratch into D-reg (use dest reg as temp)
                     arm64_vpr dest_v = VPR_ARGS[arg_layout->location.reg_index];
-                    emit_arm64_ldr_vpr(buf, true, dest_v, SP_REG, my_scratch_offset);
+                    emit_arm64_ldr_vpr(buf, 8, dest_v, SP_REG, my_scratch_offset);
 
-                    // 2. FCVT S, D (Double to Single)
+                    // FCVT S, D (Double to Single)
                     // Opcode: 0x1e624000 | (Rn << 5) | Rd.
                     // Rn=dest_v, Rd=dest_v (in place conversion)
                     uint32_t fcvt = 0x1e624000 | ((dest_v & 0x1F) << 5) | (dest_v & 0x1F);
@@ -1469,11 +1490,7 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
                 }
                 else {
                     // Load directly (double)
-                    emit_arm64_ldr_vpr(buf,
-                                       is_double(arg_layout->type),
-                                       VPR_ARGS[arg_layout->location.reg_index],
-                                       SP_REG,
-                                       my_scratch_offset);
+                    emit_arm64_ldr_vpr(buf, 8, VPR_ARGS[arg_layout->location.reg_index], SP_REG, my_scratch_offset);
                 }
             }
             else if (arg_layout->location.type == ARG_LOCATION_STACK) {
@@ -1505,24 +1522,28 @@ static infix_status generate_direct_forward_call_instruction_arm64(code_buffer *
 static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
                                                            infix_direct_call_frame_layout * layout,
                                                            infix_type * ret_type) {
-    // 1. Handle C function's return value.
+    layout->epilogue_offset = (uint32_t)buf->size;
+    // Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         const infix_type * hfa_base = nullptr;
-        if (is_long_double(ret_type) || (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
+        if ((is_long_double(ret_type) && ret_type->size == 16) ||
+            (ret_type->category == INFIX_TYPE_VECTOR && ret_type->size == 16))
             emit_arm64_str_q_imm(buf, V0_REG, X20_REG, 0);
         else if (is_hfa(ret_type, &hfa_base)) {
             size_t num_elements = ret_type->size / hfa_base->size;
             for (size_t i = 0; i < num_elements; ++i)
                 emit_arm64_str_vpr(buf,
-                                   is_double(hfa_base),
+                                   hfa_base->size,
                                    VPR_ARGS[i],
                                    X20_REG,
                                    (int32_t)(i * hfa_base->size));  // Explicit cast
         }
+        else if (is_float16(ret_type))
+            emit_arm64_str_vpr(buf, 2, V0_REG, X20_REG, 0);
         else if (is_float(ret_type))
-            emit_arm64_str_vpr(buf, false, V0_REG, X20_REG, 0);
+            emit_arm64_str_vpr(buf, 4, V0_REG, X20_REG, 0);
         else if (is_double(ret_type))
-            emit_arm64_str_vpr(buf, true, V0_REG, X20_REG, 0);
+            emit_arm64_str_vpr(buf, 8, V0_REG, X20_REG, 0);
         else {
             // Integer, pointer, or small aggregate return.
             switch (ret_type->size) {
@@ -1563,7 +1584,7 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
         standard_alloc_size = (stack_offset + 15) & ~15;
     }
 
-    // 2. Call Write-Back Handlers
+    // Call Write-Back Handlers
     size_t epilogue_scratch_offset = 0;  // Track offset locally to ensure consistency
 
     for (size_t i = 0; i < layout->num_args; ++i) {
@@ -1631,9 +1652,12 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
         }
     }
 
-    // 3. Standard Epilogue
-    if (layout->total_stack_alloc > 0)
-        emit_arm64_add_imm(buf, true, false, SP_REG, SP_REG, (uint32_t)layout->total_stack_alloc);
+    // Standard Epilogue
+    // Restore stack pointer to the saved registers area.
+    // X29 was set to SP after all pushes.
+    // mov sp, x29
+    emit_arm64_mov_reg(buf, true, SP_REG, X29_FP_REG);
+
     emit_arm64_ldp_post_index(buf, true, X21_REG, X22_REG, SP_REG, 16);
     emit_arm64_ldp_post_index(buf, true, X19_REG, X20_REG, SP_REG, 16);
     emit_arm64_ldp_post_index(buf, true, X29_FP_REG, X30_LR_REG, SP_REG, 16);

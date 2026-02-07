@@ -9,14 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for half-precision floating-point (`float16`).
+- Implemented C++ exception propagation through JIT frames on Linux (x86-64 and ARM64) using manual DWARF `.eh_frame` generation and `__register_frame`.
+- Implemented Structured Exception Handling (SEH) for Windows x64 and ARM64 for C++ exception propagation through trampolines.
+- Added `infix_forward_create_safe` API to establish an exception boundary that catches native exceptions and returns a dedicated error code (`INFIX_CODE_NATIVE_EXCEPTION`).
+- Added support for 256-bit (AVX) and 512-bit (AVX-512) vectors in the System V ABI.
 - Added support for receiving bitfield structs in reverse call trampolines.
+- Added trampoline caching. Identical signatures and targets now share the same JIT-compiled code and metadata via internal reference counting, significantly reducing memory overhead and initialization time.
+- Added a new opt-in build mode (`--sanity`) that emits extra JIT instructions to verify stack pointer consistency around user-provided marshaller calls, making it easier to debug corrupting language bindings.
+- Added `t/405_simd_vectors_avx.c`, `t/406_simd_forward.c`, `t/407_float16.c`, and `t/902_cache_deduplication.c` to the test suite.
 
 ### Changed
 
+- Unified platform and compiler detection macros into a consistent `INFIX_*` namespace (e.g., `INFIX_OS_LINUX`, `INFIX_ARCH_X64`, `INFIX_COMPILER_GCC`) throughout the codebase.
+- Updated `infix_executable_make_executable` and internal layout structures to track trampoline prologue sizes, necessary for SEH and DWARF registration.
+- Explicitly enabled 16-byte stack alignment in Windows x64 trampolines to ensure SIMD compatibility.
+- Updated `infix_type_create_vector` to use the vector's full size for its natural alignment (e.g., 32-byte alignment for `__m256`).
+- Refined the Windows x64 ABI to pass all vector types by reference (pointer in GPR). This ensures compatibility with MSVC which expects even 128-bit vectors to be passed via pointer in many scenarios, while still returning them by value in `XMM0`.
 - Move to a pre-calculated hash field in `_infix_registry_entry_t`. Lookups and rehashing now use this stored hash, significantly reducing string hashing overhead during type resolution and registry scaling.
+- Optimized Type Registry memory management: Internal hash table buckets are now heap-allocated and freed during rehashes, preventing memory "leaks" within the registry's arena.
+- Improve C++ Mangling Support:
+    - Itanium (GCC/Clang): Implemented full substitution support (`S_`, `S0_`, etc.) for complex or repeated types.
+    - MSVC: Implemented type back-references (`0-9`) for parameter lists.
 
 ### Fixed
 
+- Corrected an ARM64 bug in `emit_arm64_ldr_vpr` and `emit_arm64_str_vpr` where boolean conditions were being passed instead of actual byte sizes, causing data truncation for floating-point values in the direct marshalling path.
+- Fixed MSVC ARM: SEH XDATA layout to follow the architecture's specification exactly, enabling reliable exception handling on Windows on ARM.
+- Hardened instruction cache invalidation on ARM64 Linux/BSD with a robust manual fallback using assembly (`dc cvau`, `ic ivau`, etc.), ensuring generated code is immediately visible to the CPU.
+- Fixed the DWARF `.eh_frame` generation for ARM64 Linux `FORWARD` trampolines, correcting the instruction sequence and offsets to enable reliable C++ exception propagation.
+- Corrected a performance issue on x64 by adding `vzeroupper` calls in epilogues when AVX instructions are potentially used, avoiding transition penalties.
+- Fixed bitfield parsing logic to correctly handle colons in namespaces vs bitfield widths.
+- Fixed missing support for 256-bit and 512-bit vectors in System V reverse trampolines.
 - Rewrote `_layout_struct` in `src/core/types.c` to correctly handle bitfields larger than 8 bits and ensures `bit_offset` is always within the correct byte, matching standard C (well, GNU) compiler packing behavior.
 - Fixed a bug in the SysV recursive classifier that was incorrectly applying strict natural alignment checks to bitfield members. This was causing structs containing bitfields to be unnecessarily passed on the stack instead of in registers.
 

@@ -62,10 +62,10 @@ INFIX_INTERNAL void emit_arm64_stp_pre_index(
 INFIX_INTERNAL void emit_arm64_ldp_post_index(
     code_buffer * buf, bool is64, arm64_gpr dest1, arm64_gpr dest2, arm64_gpr base, int32_t offset);
 // Memory <-> VPR (SIMD/FP) Emitters
-/** @internal @brief Emits `LDR <St|Dt>, [<Xn|SP>, #imm]` to load a 32/64-bit FP value from memory. */
-INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, bool is64, arm64_vpr dest, arm64_gpr base, int32_t offset);
-/** @internal @brief Emits `STR <St|Dt>, [<Xn|SP>, #imm]` to store a 32/64-bit FP value to memory. */
-INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, bool is64, arm64_vpr src, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `LDR <Ht|St|Dt>, [<Xn|SP>, #imm]` to load a 16/32/64-bit FP value from memory. */
+INFIX_INTERNAL void emit_arm64_ldr_vpr(code_buffer * buf, size_t size, arm64_vpr dest, arm64_gpr base, int32_t offset);
+/** @internal @brief Emits `STR <Ht|St|Dt>, [<Xn|SP>, #imm]` to store a 16/32/64-bit FP value to memory. */
+INFIX_INTERNAL void emit_arm64_str_vpr(code_buffer * buf, size_t size, arm64_vpr src, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `LDR <Qt>, [<Xn|SP>, #imm]` for a 128-bit load into a SIMD&FP register. */
 INFIX_INTERNAL void emit_arm64_ldr_q_imm(code_buffer * buf, arm64_vpr dest, arm64_gpr base, int32_t offset);
 /** @internal @brief Emits `STR <Qt>, [<Xn|SP>, #imm]` for a 128-bit store from a SIMD&FP register. */
@@ -77,11 +77,15 @@ INFIX_INTERNAL void emit_arm64_add_imm(
 /** @internal @brief Emits `SUB(S) <Xd|Wd>, <Xn|Wn>, #imm` to subtract an immediate from a GPR. */
 INFIX_INTERNAL void emit_arm64_sub_imm(
     code_buffer * buf, bool is64, bool set_flags, arm64_gpr dest, arm64_gpr base, uint32_t imm);
+/** @internal @brief Emits `CMP <Xn|Wn>, <Xm|Wm>` to compare two registers. */
+INFIX_INTERNAL void emit_arm64_cmp_reg_reg(code_buffer * buf, bool is64, arm64_gpr reg1, arm64_gpr reg2);
 // Control Flow Emitters
 /** @internal @brief Emits `BLR <Xn>` to branch with link to a register. */
 INFIX_INTERNAL void emit_arm64_blr_reg(code_buffer * buf, arm64_gpr reg);
 /** @internal @brief Emits `RET [Xn]` to return from a function (defaults to `RET X30`). */
 INFIX_INTERNAL void emit_arm64_ret(code_buffer * buf, arm64_gpr reg);
+/** @internal @brief Emits `B.<cond> #imm` for a conditional branch. */
+INFIX_INTERNAL void emit_arm64_b_cond(code_buffer * buf, arm64_cond cond, int32_t offset);
 /** @internal @brief Emits `CBNZ <Xt>, #imm` to compare and branch if register is not zero. */
 INFIX_INTERNAL void emit_arm64_cbnz(code_buffer * buf, bool is64, arm64_gpr reg, int32_t offset);
 /** @internal @brief Emits `BRK #imm` to cause a software breakpoint exception. */

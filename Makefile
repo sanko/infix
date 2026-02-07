@@ -42,7 +42,7 @@ LIB_CFLAGS   := $(BASE_CFLAGS) $(LIB_INC_DIRS)
 # Vector-specific flags for tests
 VECTOR_FLAGS :=
 ifeq ($(findstring x86_64,$(ARCH)),x86_64)
-    VECTOR_FLAGS := -msse2 -mavx2 -mavx512f
+    VECTOR_FLAGS := -msse2 -mavx2
 endif
 ifeq ($(findstring aarch64,$(ARCH)),aarch64)
     VECTOR_FLAGS := -march=armv8-a+sve

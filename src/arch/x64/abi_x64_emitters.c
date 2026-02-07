@@ -687,6 +687,17 @@ INFIX_INTERNAL void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, i
 }
 /**
  * @internal
+ * @brief Emits `vzeroupper` to clear the upper bits of all YMM/ZMM registers.
+ * @details Opcode format: VEX.128.0F.77
+ */
+INFIX_INTERNAL void emit_vzeroupper(code_buffer * buf) {
+    // VEX.128.0F.77 (C5 F8 77)
+    // L=0 (128-bit), p=0 (no prefix), m-mmmm=1 (0F map), vvvv=1111 (none)
+    emit_vex_prefix(buf, 0, 0, 0, 1, 0, 0, 0, 0);
+    emit_byte(buf, 0x77);
+}
+/**
+ * @internal
  * @brief Emits `cvtsd2ss xmm1, xmm2/m64` to convert a double to a float.
  * @details Opcode format: F2 0F 5A /r
  */
@@ -866,6 +877,17 @@ INFIX_INTERNAL void emit_sub_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t i
 }
 /**
  * @internal
+ * @brief Emits `and r64, imm8` to perform a bitwise AND with a sign-extended 8-bit immediate.
+ * @details Opcode format: REX.W 83 /4 ib
+ */
+INFIX_INTERNAL void emit_and_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm) {
+    emit_rex_prefix(buf, 1, 0, 0, reg >= R8_REG);
+    emit_byte(buf, 0x83);
+    emit_modrm(buf, 3, 4, reg % 8);  // mod=11, reg=/4 for AND
+    emit_byte(buf, (uint8_t)imm);
+}
+/**
+ * @internal
  * @brief Emits `add r/m64, imm8` (sign-extended) to a GPR.
  * @details Opcode format: REX.W + 83 /0 ib
  */
@@ -936,6 +958,16 @@ INFIX_INTERNAL void emit_call_reg(code_buffer * buf, x64_gpr reg) {
 INFIX_INTERNAL void emit_ret(code_buffer * buf) { emit_byte(buf, 0xC3); }
 /**
  * @internal
+ * @brief Emits `cmp r64, r64` to compare two registers.
+ * @details Opcode format: REX.W + 39 /r
+ */
+INFIX_INTERNAL void emit_cmp_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2) {
+    emit_rex_prefix(buf, 1, reg2 >= R8_REG, 0, reg1 >= R8_REG);
+    emit_byte(buf, 0x39);
+    emit_modrm(buf, 3, reg2 % 8, reg1 % 8);
+}
+/**
+ * @internal
  * @brief Emits `test r64, r64` to test if a register is zero.
  * @details Opcode format: REX.W + 85 /r
  */
@@ -950,6 +982,12 @@ INFIX_INTERNAL void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr r
  * @details Opcode format: 75 rel8
  */
 INFIX_INTERNAL void emit_jnz_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x75, (uint8_t)offset); }
+/**
+ * @internal
+ * @brief Emits `je rel8` for a short conditional jump if equal.
+ * @details Opcode format: 74 rel8
+ */
+INFIX_INTERNAL void emit_je_short(code_buffer * buf, int8_t offset) { EMIT_BYTES(buf, 0x74, (uint8_t)offset); }
 /**
  * @internal
  * @brief Emits a `jmp r64` instruction.

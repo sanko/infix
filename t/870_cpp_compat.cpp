@@ -40,6 +40,7 @@
 #define _XOPEN_SOURCE 700
 #endif
 
+#include "common/infix_config.h"
 #include <cwctype>
 #include <infix/infix.h>
 #include <iostream>
@@ -88,10 +89,9 @@ TEST {
     }
     subtest("C++ Exception Propagation") {
         plan(2);
-        // Exception unwinding through JIT code requires platform-specific metadata
-        // (PDATA/XDATA on Windows, .eh_frame/DWARF on Linux/macOS) which is not yet implemented.
-        skip(2, "Exception unwinding through JIT code is not yet supported on any platform.");
-#if 0
+#if (defined(INFIX_OS_WINDOWS) && defined(INFIX_ARCH_X64)) || \
+    (defined(INFIX_OS_LINUX) && (defined(INFIX_ARCH_X64) || defined(INFIX_ARCH_AARCH64)))
+        // Exception unwinding through JIT code is now supported on Windows x64 and Linux (x64/ARM64).
         infix_forward_t * trampoline = nullptr;
         infix_status status = infix_forward_create(&trampoline, "()->void", (void *)throw_exception_func, nullptr);
         ok(status == INFIX_SUCCESS, "Trampoline created for exception thrower");
@@ -116,6 +116,10 @@ TEST {
         else
             skip(1, "Test skipped");
         infix_forward_destroy(trampoline);
+#else
+        // Exception unwinding through JIT code requires platform-specific metadata
+        // (.eh_frame/DWARF on Linux/macOS) which is not yet implemented.
+        skip(2, "Exception unwinding through JIT code is not yet supported on this platform.");
 #endif
     }
 }

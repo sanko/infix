@@ -92,9 +92,10 @@ This guide provides practical, real-world examples to help you solve common FFI 
       - [The `infix` Approach](#the-infix-approach-2)
    + [Analysis and Takeaways](#analysis-and-takeaways)
 * [Chapter 11: Building Language Bindings](#chapter-11-building-language-bindings)
-   + [The Four Pillars of a Language Binding](#the-four-pillars-of-a-language-binding)
-   + [Recipe: Porting a Python Binding from `dyncall` to `infix`](#recipe-porting-a-python-binding-from-dyncall-to-infix)
 * [Chapter 12: High-Performance Language Bindings (Direct Marshalling)](#chapter-12-high-performance-language-bindings-direct-marshalling)
+* [Chapter 13: Handling Exceptions and Errors](#chapter-13-handling-exceptions-and-errors)
+   + [Recipe: Establishing a Safe Exception Boundary](#recipe-establishing-a-safe-exception-boundary)
+   + [Recipe: Catching C++ Exceptions from Plain C](#recipe-catching-c-exceptions-from-plain-c)
 
 ---
 
@@ -1911,3 +1912,57 @@ MyLangObject* args[] = { point_obj, int_obj };
 infix_direct_cif_func cif = infix_forward_get_direct_code(trampoline);
 cif(NULL, (void**)args);
 ```
+
+---
+
+## Chapter 13: Handling Exceptions and Errors
+
+### Recipe: Establishing a Safe Exception Boundary
+
+**Problem**: You are calling a native function that might throw a C++ exception or trigger a Windows SEH error (like an access violation). You need to prevent this exception from crashing your entire process.
+
+**Solution**: Use `infix_forward_create_safe`. This API generates a trampoline that wraps the native call in a platform-specific exception handler. If an exception occurs, it is caught, and the call returns gracefully with a specific error code.
+
+```c
+// 1. Create a "safe" trampoline.
+infix_forward_t* trampoline = NULL;
+infix_forward_create_safe(&trampoline, "() -> void", (void*)risky_cpp_function, NULL);
+
+// 2. Call the function as usual.
+infix_cif_func cif = infix_forward_get_code(trampoline);
+cif(NULL, NULL);
+
+// 3. Check if an exception was caught.
+infix_error_details_t err = infix_get_last_error();
+if (err.code == INFIX_CODE_NATIVE_EXCEPTION) {
+    fprintf(stderr, "Safe boundary caught an exception: %s\n", err.message);
+    // On Windows, err.system_error_code may contain the SEH exception code.
+}
+```
+
+### Recipe: Catching C++ Exceptions from Plain C
+
+**Problem**: You are using `infix` in a pure C application (or a high-level language runtime) and need to handle exceptions thrown by a C++ library.
+
+**Solution**: This is the primary use case for Safe Boundaries. Because C does not have `try/catch`, you cannot catch C++ exceptions directly. By using `infix_forward_create_safe`, you delegate the "catching" to the JIT-compiled trampoline, which then maps the C++ exception into a standard C error state that you can check using the `infix` error API.
+
+```c
+// This C code can safely call a C++ function that throws.
+void call_cpp_from_c(void* cpp_func_ptr) {
+    infix_forward_t* t = NULL;
+    // Create a boundary that catches C++ exceptions.
+    infix_forward_create_safe(&t, "(int) -> int", cpp_func_ptr, NULL);
+
+    int val = 42, result;
+    infix_forward_get_code(t)(&result, (void*[]){ &val });
+
+    // Detect and handle the C++ exception.
+    infix_error_details_t err = infix_get_last_error();
+    if (err.code == INFIX_CODE_NATIVE_EXCEPTION) {
+        fprintf(stderr, "The C++ library threw an exception: %s\n", err.message);
+    } else {
+        printf("Call succeeded, result = %d\n", result);
+    }
+}
+```
+

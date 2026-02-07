@@ -44,18 +44,18 @@
 
 // Use a portable mechanism for thread-local storage (TLS).
 // The order of checks is critical for cross-platform compatibility.
-#if defined(__OpenBSD__)
+#if defined(INFIX_OS_OPENBSD)
 // OpenBSD has known issues with TLS cleanup in some linking scenarios (segfault on exit).
-// We disable TLS entirely on this platform to ensure stability, at the cost of thread-safety.
+// Disable TLS entirely on this platform to ensure stability, at the cost of thread-safety.
 #define INFIX_TLS
-#elif defined(_MSC_VER)
+#elif defined(INFIX_COMPILER_MSVC)
 // Microsoft Visual C++
 #define INFIX_TLS __declspec(thread)
-#elif defined(_WIN32) && defined(__clang__)
+#elif defined(INFIX_OS_WINDOWS) && defined(INFIX_COMPILER_CLANG)
 // Clang on Windows: check if behaving like MSVC or GCC.
 // If using MSVC codegen/headers, use declspec.
 #define INFIX_TLS __declspec(thread)
-#elif defined(__GNUC__)
+#elif defined(INFIX_COMPILER_GCC)
 // MinGW (GCC on Windows) and standard GCC/Clang on *nix.
 // MinGW prefers __thread or _Thread_local over __declspec(thread).
 #define INFIX_TLS __thread
@@ -69,7 +69,7 @@
 #endif
 
 // A portable macro for safe string copying to prevent buffer overflows.
-#if defined(_MSC_VER)
+#if defined(INFIX_COMPILER_MSVC)
 #define _INFIX_SAFE_STRNCPY(dest, src, count) strncpy_s(dest, sizeof(dest), src, count)
 #else
 #define _INFIX_SAFE_STRNCPY(dest, src, count) \
@@ -114,6 +114,8 @@ static const char * _get_error_message_for_code(infix_error_code_t code) {
         return "A required pointer argument was NULL";
     case INFIX_CODE_MISSING_REGISTRY:
         return "A type registry was required but not provided";
+    case INFIX_CODE_NATIVE_EXCEPTION:
+        return "A native exception was thrown across the FFI boundary";
     case INFIX_CODE_OUT_OF_MEMORY:
         return "Out of memory";
     case INFIX_CODE_EXECUTABLE_MEMORY_FAILURE:

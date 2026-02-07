@@ -41,7 +41,7 @@ void dummy_stress_handler_rev(StressObject obj) { (void)obj; }
 TEST {
     plan(1);
     subtest("Memory leak stress test (happy path)") {
-        plan(STRESS_ITERATIONS);
+        plan(1);
         note("Running %d create/destroy cycles. Success requires a clean Valgrind/ASan report.", STRESS_ITERATIONS);
         for (int i = 0; i < STRESS_ITERATIONS; ++i) {
             infix_arena_t * arena = infix_arena_create(8192);
@@ -92,7 +92,7 @@ TEST {
             }
             infix_reverse_destroy(reverse_trampoline);
             infix_arena_destroy(arena);
-            pass("Iteration %d completed", i + 1);
         }
+        ok(1, "Completed %d iterations successfully", STRESS_ITERATIONS);
     }
 }

@@ -252,6 +252,7 @@ typedef enum {
     INFIX_PRIMITIVE_SINT64,     /**< `int64_t`. */
     INFIX_PRIMITIVE_UINT128,    /**< `__uint128_t` (GCC/Clang extension). */
     INFIX_PRIMITIVE_SINT128,    /**< `__int128_t` (GCC/Clang extension). */
+    INFIX_PRIMITIVE_FLOAT16,    /**< `_Float16` (C23 / GCC/Clang extension). */
     INFIX_PRIMITIVE_FLOAT,      /**< `float`. */
     INFIX_PRIMITIVE_DOUBLE,     /**< `double`. */
     INFIX_PRIMITIVE_LONG_DOUBLE /**< `long double`. */
@@ -648,6 +649,23 @@ INFIX_API INFIX_NODISCARD infix_status infix_forward_create(infix_forward_t **,
                                                             void *,
                                                             infix_registry_t *);
 /**
+ * @brief Creates a "safe" bound forward trampoline that catches native exceptions.
+ * @details This is identical to `infix_forward_create`, but the generated trampoline
+ *          is wrapped in a platform-specific exception handler (e.g., SEH on Windows).
+ *          If the target function throws an exception, the trampoline will catch it
+ *          and set the thread-local error to `INFIX_CODE_NATIVE_EXCEPTION`.
+ *
+ * @param[out] out_trampoline Receives the created handle.
+ * @param[in] signature The function signature.
+ * @param[in] target_function The address of the C function.
+ * @param[in] registry An optional type registry.
+ * @return `INFIX_SUCCESS` on success.
+ */
+INFIX_API INFIX_NODISCARD infix_status infix_forward_create_safe(infix_forward_t **,
+                                                                 const char *,
+                                                                 void *,
+                                                                 infix_registry_t *);
+/**
  * @brief Creates an "unbound" forward trampoline from a signature string.
  *
  * @details An unbound trampoline is more flexible than a bound one. The target function
@@ -726,21 +744,21 @@ infix_forward_create_in_arena(infix_forward_t **, infix_arena_t *, const char *,
  * @note The caller is responsible for destroying the handle with `infix_reverse_destroy`.
  *
  * @code
- * // 1. Define the type-safe C handler function.
+ * // Define the type-safe C handler function.
  * // Its signature must match "(int, int)->int".
  * int my_handler(int a, int b) {
  *     return a * b;
  * }
  *
- * // 2. Create the reverse trampoline.
+ * // Create the reverse trampoline.
  * infix_reverse_t* ctx = NULL;
  * infix_reverse_create_callback(&ctx, "(int,int)->int", (void*)my_handler, NULL);
  *
- * // 3. Get the JIT-compiled C function pointer.
+ * // Get the JIT-compiled C function pointer.
  * typedef int (*my_func_ptr_t)(int, int);
  * my_func_ptr_t func_ptr = (my_func_ptr_t)infix_reverse_get_code(ctx);
  *
- * // 4. Pass this `func_ptr` to some C library that expects a callback.
+ * // Pass this `func_ptr` to some C library that expects a callback.
  * // some_c_library_function(func_ptr);
  * // When the library calls func_ptr(5, 10), `my_handler` will be invoked
  * // and will return 50.
@@ -781,7 +799,7 @@ INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_rever
  *     int call_count;
  * } my_state_t;
  *
- * // 1. Define the generic closure handler.
+ * // Define the generic closure handler.
  * void my_closure_handler(infix_context_t* ctx, void* ret_val, void** args) {
  *     // Retrieve our state.
  *     my_state_t* state = (my_state_t*)infix_reverse_get_user_data(ctx);
@@ -796,15 +814,15 @@ INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_rever
  *     memcpy(ret_val, &result, sizeof(int));
  * }
  *
- * // 2. Create the state and the closure.
+ * // Create the state and the closure.
  * my_state_t my_state = { .call_count = 0 };
  * infix_reverse_t* ctx = NULL;
  * infix_reverse_create_closure(&ctx, "(int,int)->int", my_closure_handler, &my_state, NULL);
  *
- * // 3. Get the JIT-compiled C function pointer.
+ * // Get the JIT-compiled C function pointer.
  * int (*func_ptr)(int, int) = infix_reverse_get_code(ctx);
  *
- * // 4. Pass the func_ptr to C code.
+ * // Pass the func_ptr to C code.
  * int result1 = func_ptr(10, 5); // result1 is (10+5)*1 = 15
  * int result2 = func_ptr(2, 3);  // result2 is (2+3)*2 = 10
  *
@@ -1345,6 +1363,7 @@ typedef enum {
     INFIX_CODE_UNKNOWN,          /**< An unspecified error occurred. */
     INFIX_CODE_NULL_POINTER,     /**< A required pointer argument was NULL. */
     INFIX_CODE_MISSING_REGISTRY, /**< A type registry was required but not provided. */
+    INFIX_CODE_NATIVE_EXCEPTION, /**< A native exception (C++/SEH) was thrown during execution. */
 
     // Allocation Codes (100-199)
     INFIX_CODE_OUT_OF_MEMORY = 100,       /**< A call to `malloc`, `calloc`, etc. failed. */

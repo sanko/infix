@@ -87,6 +87,8 @@ INFIX_INTERNAL void emit_vmovupd_zmm_mem(code_buffer * buf, x64_xmm dest, x64_gp
 INFIX_INTERNAL void emit_vmovupd_mem_zmm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
 /** @internal @brief Emits `vmovupd [base + offset], ymm` to store a 256-bit unaligned value (AVX). */
 INFIX_INTERNAL void emit_vmovupd_mem_ymm(code_buffer * buf, x64_gpr dest_base, int32_t offset, x64_xmm src);
+/** @internal @brief Emits `vzeroupper` to clear the upper bits of all YMM/ZMM registers. */
+INFIX_INTERNAL void emit_vzeroupper(code_buffer * buf);
 /** @internal @brief Emits `cvtsd2ss xmm1, xmm2/m64` to convert a double to a float. */
 INFIX_INTERNAL void emit_cvtsd2ss_xmm_xmm(code_buffer * buf, x64_xmm dest, x64_xmm src);
 /** @brief Emits `movaps xmm1, xmm2/m128` to move 128 bits between XMM registers. */
@@ -115,6 +117,8 @@ INFIX_INTERNAL void emit_add_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm
 INFIX_INTERNAL void emit_add_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm);
 /** @internal @brief Emits `sub r64, imm32` to subtract a 32-bit immediate from a GPR. */
 INFIX_INTERNAL void emit_sub_reg_imm32(code_buffer * buf, x64_gpr reg, int32_t imm);
+/** @internal @brief Emits `and r64, imm8` to perform a bitwise AND with a sign-extended 8-bit immediate. */
+INFIX_INTERNAL void emit_and_reg_imm8(code_buffer * buf, x64_gpr reg, int8_t imm);
 /** @internal @brief Emits `dec r64` to decrement a 64-bit register by 1. */
 INFIX_INTERNAL void emit_dec_reg(code_buffer * buf, x64_gpr reg);
 
@@ -129,8 +133,12 @@ INFIX_INTERNAL void emit_call_reg(code_buffer * buf, x64_gpr reg);
 INFIX_INTERNAL void emit_ret(code_buffer * buf);
 /** @internal @brief Emits `test r64, r64` to test if a register is zero. */
 INFIX_INTERNAL void emit_test_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2);
+/** @internal @brief Emits `cmp r64, r64` to compare two registers. */
+INFIX_INTERNAL void emit_cmp_reg_reg(code_buffer * buf, x64_gpr reg1, x64_gpr reg2);
 /** @internal @brief Emits `jnz rel8` for a short conditional jump if not zero. */
 INFIX_INTERNAL void emit_jnz_short(code_buffer * buf, int8_t offset);
+/** @internal @brief Emits `je rel8` for a short conditional jump if equal. */
+INFIX_INTERNAL void emit_je_short(code_buffer * buf, int8_t offset);
 /** @internal @brief Emits `jmp r64` to jump to an address in a register. */
 INFIX_INTERNAL void emit_jmp_reg(code_buffer * buf, x64_gpr reg);
 /** @internal @brief Emits `ud2`, an undefined instruction that causes an invalid opcode exception. */

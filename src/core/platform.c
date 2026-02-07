@@ -36,17 +36,17 @@ INFIX_API INFIX_NODISCARD infix_version_t infix_get_version(void) {
 }
 
 #if defined(INFIX_ARCH_X64)
-#if defined(_MSC_VER)
+#if defined(INFIX_COMPILER_MSVC)
 #include <intrin.h>
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
 #include <cpuid.h>
 #endif
 
 // Helper to execute XGETBV and return XCR0
 static uint64_t _infix_xgetbv(void) {
-#if defined(_MSC_VER)
+#if defined(INFIX_COMPILER_MSVC)
     return _xgetbv(_XCR_XFEATURE_ENABLED_MASK);
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
     uint32_t eax, edx;
     __asm__ __volatile__("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
     return ((uint64_t)edx << 32) | eax;
@@ -65,31 +65,31 @@ static uint64_t _infix_xgetbv(void) {
 #endif
 
 #if defined(INFIX_ARCH_AARCH64) && defined(__has_include)
-#if __has_include(<sys/auxv.h>) && defined(__linux__)
+#if __has_include(<sys/auxv.h>) && defined(INFIX_OS_LINUX)
 #include <sys/auxv.h>
 #ifndef HWCAP_SVE
 #define HWCAP_SVE (1 << 22)
 #endif
-#elif __has_include(<sys/sysctl.h>) && defined(__APPLE__)
+#elif __has_include(<sys/sysctl.h>) && defined(INFIX_OS_MACOS)
 #include <sys/sysctl.h>
 #endif
 #endif
 
 #if defined(INFIX_ARCH_X64)
 bool infix_cpu_has_avx2(void) {
-    // 1. Check CPUID for OSXSAVE bit (ECX bit 27 of leaf 1)
+    // Check CPUID for OSXSAVE bit (ECX bit 27 of leaf 1)
     // If this is 0, we can't use XGETBV.
     bool osxsave = false;
     bool avx2_hardware = false;
 
-#if defined(_MSC_VER)
+#if defined(INFIX_COMPILER_MSVC)
     int cpuInfo[4];
     __cpuid(cpuInfo, 1);
     osxsave = (cpuInfo[2] & (1 << 27)) != 0;
 
     __cpuidex(cpuInfo, 7, 0);
     avx2_hardware = (cpuInfo[1] & (1 << 5)) != 0;
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
     unsigned int eax, ebx, ecx, edx;
     __cpuid(1, eax, ebx, ecx, edx);
     osxsave = (ecx & (1 << 27)) != 0;
@@ -113,14 +113,14 @@ bool infix_cpu_has_avx512f(void) {
     bool osxsave = false;
     bool avx512f_hardware = false;
 
-#if defined(_MSC_VER)
+#if defined(INFIX_COMPILER_MSVC)
     int cpuInfo[4];
     __cpuid(cpuInfo, 1);
     osxsave = (cpuInfo[2] & (1 << 27)) != 0;
 
     __cpuidex(cpuInfo, 7, 0);
     avx512f_hardware = (cpuInfo[1] & (1 << 16)) != 0;
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
     unsigned int eax, ebx, ecx, edx;
     __cpuid(1, eax, ebx, ecx, edx);
     osxsave = (ecx & (1 << 27)) != 0;
@@ -144,9 +144,9 @@ bool infix_cpu_has_avx512f(void) {
 
 #if defined(INFIX_ARCH_AARCH64)
 bool infix_cpu_has_sve(void) {
-#if defined(__linux__) && defined(HWCAP_SVE)
+#if defined(INFIX_OS_LINUX) && defined(HWCAP_SVE)
     return (getauxval(AT_HWCAP) & HWCAP_SVE) != 0;
-#elif defined(__APPLE__)
+#elif defined(INFIX_OS_MACOS)
     int sve_present = 0;
     size_t size = sizeof(sve_present);
     if (sysctlbyname("hw.optional.arm.FEAT_SVE", &sve_present, &size, NULL, 0) == 0)

@@ -105,7 +105,7 @@ static void FuzzTest(fuzzer_input in) {
     if (!registry || !trampoline_arena || !registry_arena)
         goto cleanup;
 
-    // 1. Generate a pool of base types and register them.
+    // Generate a pool of base types and register them.
     infix_type * base_type_pool[MAX_TYPES_IN_POOL] = {0};
     int base_type_count = 0;
     char def_buffer[256];
@@ -129,7 +129,7 @@ static void FuzzTest(fuzzer_input in) {
     if (base_type_count == 0)
         goto cleanup;
 
-    // 2. Generate a second pool of types that can reference the named types.
+    // Generate a second pool of types that can reference the named types.
     infix_type * final_type_pool[MAX_TYPES_IN_POOL] = {0};
     int final_type_count = 0;
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
@@ -141,11 +141,11 @@ static void FuzzTest(fuzzer_input in) {
                 snprintf(def_buffer, sizeof(def_buffer), "@FuzzType%d", name_idx % base_type_count);
                 infix_type * raw_type = NULL;
                 infix_arena_t * temp_parser_arena = NULL;
-                // 1. Parse into a new temporary arena.
+                // Parse into a new temporary arena.
                 if (_infix_parse_type_internal(&raw_type, &temp_parser_arena, def_buffer) == INFIX_SUCCESS)
-                    // 2. Copy the result from the temporary arena into our main trampoline arena.
+                    // Copy the result from the temporary arena into our main trampoline arena.
                     final_type_pool[i] = _copy_type_graph_to_arena(trampoline_arena, raw_type);
-                // 3. Always destroy the temporary arena created by the parser.
+                // Always destroy the temporary arena created by the parser.
                 infix_arena_destroy(temp_parser_arena);
             }
         }
@@ -159,7 +159,7 @@ static void FuzzTest(fuzzer_input in) {
     if (final_type_count == 0)
         goto cleanup;
 
-    // 3. Construct a random function signature.
+    // Construct a random function signature.
     uint8_t arg_count_byte;
     if (consume_uint8_t(&in, &arg_count_byte)) {
         size_t num_args = arg_count_byte % MAX_ARGS_IN_SIGNATURE;
@@ -174,7 +174,7 @@ static void FuzzTest(fuzzer_input in) {
             for (size_t i = 0; i < num_args; ++i)
                 (void)_infix_resolve_type_graph_inplace(&arg_types[i], registry);
 
-            // 4. Exercise all trampoline creation functions.
+            // Exercise all trampoline creation functions.
             infix_forward_t * t1 = NULL;
             if (infix_forward_create_unbound_manual(&t1, return_type, arg_types, num_args, num_fixed_args) !=
                 INFIX_SUCCESS) {

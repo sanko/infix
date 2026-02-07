@@ -115,6 +115,15 @@ static infix_type _infix_type_uint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_UINT128,
 /** @internal Static singleton for the `__int128_t` primitive type (GCC/Clang only). */
 static infix_type _infix_type_sint128 = INFIX_TYPE_INIT(INFIX_PRIMITIVE_SINT128, __int128_t);
 #endif
+/** @internal Static singleton for the `_Float16` primitive type. */
+static infix_type _infix_type_float16 = {.name = nullptr,
+                                         .category = INFIX_TYPE_PRIMITIVE,
+                                         .size = 2,
+                                         .alignment = 2,
+                                         .is_arena_allocated = false,
+                                         .arena = nullptr,
+                                         .source_offset = 0,
+                                         .meta.primitive_id = INFIX_PRIMITIVE_FLOAT16};
 /** @internal Static singleton for the `float` primitive type. */
 static infix_type _infix_type_float = INFIX_TYPE_INIT(INFIX_PRIMITIVE_FLOAT, float);
 /** @internal Static singleton for the `double` primitive type. */
@@ -158,6 +167,8 @@ INFIX_API c23_nodiscard infix_type * infix_type_create_primitive(infix_primitive
     case INFIX_PRIMITIVE_SINT128:
         return &_infix_type_sint128;
 #endif
+    case INFIX_PRIMITIVE_FLOAT16:
+        return &_infix_type_float16;
     case INFIX_PRIMITIVE_FLOAT:
         return &_infix_type_float;
     case INFIX_PRIMITIVE_DOUBLE:
@@ -264,7 +275,7 @@ static bool _layout_struct(infix_type * type) {
                 current_byte_offset = current_unit_offset + bytes_used;
         }
         else {
-            // 1. Handle Flexible Array Members (FAM)
+            // Handle Flexible Array Members (FAM)
             if (mtype->category == INFIX_TYPE_ARRAY && mtype->meta.array_info.is_flexible) {
                 in_bitfield = false;
                 size_t align = mtype->alignment;
@@ -285,7 +296,7 @@ static bool _layout_struct(infix_type * type) {
                 continue;
             }
 
-            // 2. Standard Member
+            // Standard Member
             in_bitfield = false;
             size_t align = mtype->alignment;
             if (align == 0)
@@ -578,9 +589,9 @@ INFIX_API c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * ar
     type->meta.vector_info.element_type = element_type;
     type->meta.vector_info.num_elements = num_elements;
     type->size = element_type->size * num_elements;
-    // Vector alignment is typically its total size, up to a platform-specific maximum (e.g., 16 on x64).
-    // This is a simplification; the ABI-specific classifiers will handle the true alignment rules.
-    type->alignment = type->size > 8 ? 16 : type->size;
+    // Vector alignment is its total size.
+    // This ensures __m128 is 16-byte aligned, __m256 is 32-byte, and __m512 is 64-byte.
+    type->alignment = type->size;
     *out_type = type;
     return INFIX_SUCCESS;
 }

@@ -47,7 +47,7 @@ void execute_complex_callback(complex_double_t (*func_ptr)(complex_double_t, com
 TEST {
     plan(4);
     infix_arena_t * arena = infix_arena_create(4096);
-    // 1. Create the `infix_type` for `double _Complex`.
+    // Create the `infix_type` for `double _Complex`.
     infix_type * complex_double_type = NULL;
     infix_status status =
         infix_type_create_complex(arena, &complex_double_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE));

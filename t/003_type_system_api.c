@@ -44,7 +44,7 @@ TEST {
     subtest("infix_type_create_struct API validation") {
         plan(3);
         infix_arena_t * arena = infix_arena_create(4096);
-        // 1. Create a struct type programmatically that mirrors `TestStruct`.
+        // Create a struct type programmatically that mirrors `TestStruct`.
         infix_struct_member * members =
             infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
         members[0] =
@@ -53,7 +53,7 @@ TEST {
             infix_type_create_member("b", infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), offsetof(TestStruct, b));
         infix_type * struct_type = nullptr;
         infix_status status = infix_type_create_struct(arena, &struct_type, members, 2);
-        // 2. Verify that creation succeeded and the layout matches the compiler's layout.
+        // Verify that creation succeeded and the layout matches the compiler's layout.
         if (ok(status == INFIX_SUCCESS && struct_type != nullptr, "Successfully created a valid struct type")) {
             diag("Expected size: %llu, alignment: %llu",
                  (unsigned long long)sizeof(TestStruct),
@@ -66,7 +66,7 @@ TEST {
         }
         else
             skip(1, "Cannot verify layout due to creation failure");
-        // 3. Test API hardening: ensure it rejects invalid input (e.g., a null member type).
+        // Test API hardening: ensure it rejects invalid input (e.g., a null member type).
         infix_struct_member * bad_members =
             infix_arena_alloc(arena, sizeof(infix_struct_member), _Alignof(infix_struct_member));
         bad_members[0] = infix_type_create_member("bad", nullptr, 0);

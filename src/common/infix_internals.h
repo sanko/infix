@@ -55,9 +55,11 @@
  */
 typedef struct {
 #if defined(INFIX_OS_WINDOWS)
-    HANDLE handle; /**< The handle from `VirtualAlloc`, needed for `VirtualFree`. */
+    HANDLE handle;           /**< The handle from `VirtualAlloc`, needed for `VirtualFree`. */
+    void * seh_registration; /**< (Windows x64) Opaque handle from `RtlAddFunctionTable`. */
 #else
-    int shm_fd; /**< The file descriptor for shared memory on dual-mapping POSIX systems. -1 otherwise. */
+    int shm_fd;          /**< The file descriptor for shared memory on dual-mapping POSIX systems. -1 otherwise. */
+    void * eh_frame_ptr; /**< (POSIX) Pointer to the registered .eh_frame data. */
 #endif
     void * rx_ptr; /**< The read-execute memory address. This is the callable function pointer. */
     void * rw_ptr; /**< The read-write memory address. The JIT compiler writes machine code here. */
@@ -96,6 +98,9 @@ struct infix_forward_t {
     size_t num_fixed_args;     /**< The number of non-variadic arguments. */
     void * target_fn;          /**< The target C function pointer (for bound trampolines), or `nullptr` for unbound. */
     bool is_direct_trampoline; /**< If true, this is a high-performance direct marshalling trampoline. */
+    bool is_safe;              /**< If true, the trampoline wraps the call in an exception handler. */
+    size_t ref_count;          /**< Reference count for deduplication and shared ownership. */
+    char * signature;          /**< The normalized signature string used to create this trampoline. */
 };
 /**
  * @brief A function pointer to the universal C dispatcher for reverse calls.
@@ -143,6 +148,23 @@ struct infix_arena_t {
     struct infix_arena_t * next_block; /**< A pointer to the next block in the chain, if this one is full. */
     size_t block_size;                 /**< The size of this specific block's buffer, for chained arenas. */
 };
+// Mutex Abstraction for Internal Synchronization
+#if defined(INFIX_OS_WINDOWS)
+#include <windows.h>
+typedef SRWLOCK infix_mutex_t;
+#define INFIX_MUTEX_INITIALIZER SRWLOCK_INIT
+#define INFIX_MUTEX_LOCK(m) AcquireSRWLockExclusive(m)
+#define INFIX_MUTEX_UNLOCK(m) ReleaseSRWLockExclusive(m)
+#define INFIX_MUTEX_DESTROY(m) ((void)0)
+#else
+#include <pthread.h>
+typedef pthread_mutex_t infix_mutex_t;
+#define INFIX_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#define INFIX_MUTEX_LOCK(m) pthread_mutex_lock(m)
+#define INFIX_MUTEX_UNLOCK(m) pthread_mutex_unlock(m)
+#define INFIX_MUTEX_DESTROY(m) pthread_mutex_destroy(m)
+#endif
+
 /**
  * @struct _infix_registry_entry_t
  * @brief A single entry in the registry's hash table.
@@ -160,23 +182,30 @@ typedef struct _infix_registry_entry_t {
  * @struct infix_registry_t
  * @brief Internal definition of a named type registry.
  * @details Implemented as a hash table with separate chaining for collision resolution.
- * All memory for the table, its entries, and the canonical `infix_type` objects
- * it stores are owned by a single arena for simple lifecycle management.
+ * The canonical `infix_type` objects and entry metadata are owned by a single arena,
+ * while the internal bucket array is heap-allocated to allow for efficient resizing.
  */
 struct infix_registry_t {
     infix_arena_t * arena;              /**< The arena that owns all type metadata and entry structs. */
     bool is_external_arena;             /**< True if the arena is user-provided and should not be freed. */
     size_t num_buckets;                 /**< The number of buckets in the hash table. */
     size_t num_items;                   /**< The total number of items in the registry. */
-    _infix_registry_entry_t ** buckets; /**< The array of hash table buckets (linked list heads). */
+    _infix_registry_entry_t ** buckets; /**< The array of hash table buckets (heap-allocated). */
 };
+/**
+ * @struct parser_state
+ * @brief Holds the complete state of the recursive descent parser during a single parse operation.
+ */
+typedef struct {
+    const char * p;        /**< The current read position (cursor) in the signature string. */
+    const char * start;    /**< The beginning of the signature string, used for calculating error positions. */
+    infix_arena_t * arena; /**< The temporary arena for allocating the raw, unresolved type graph. */
+    int depth;             /**< The current recursion depth, to prevent stack overflows. */
+} parser_state;
+
 /**
  * @struct code_buffer
  * @brief A dynamic buffer for staged machine code generation.
- * @details This structure is used during the JIT compilation process. ABI-specific
- * emitters append instruction bytes to this buffer. It automatically grows as needed,
- * allocating memory from a temporary arena that is destroyed after the final
- * code is copied to executable memory.
  */
 typedef struct {
     uint8_t * code;        /**< A pointer to the code buffer, allocated from the arena. */
@@ -281,6 +310,9 @@ typedef struct {
     size_t num_stack_args;       /**< The number of arguments passed on the stack. */
     size_t num_args;             /**< The total number of arguments. */
     void * target_fn;            /**< The target function address. */
+    uint32_t max_align;          /**< Maximum required alignment for any argument or the stack. */
+    uint32_t prologue_size;      /**< Size of the generated prologue in bytes. */
+    uint32_t epilogue_offset;    /**< Offset from the start of the JIT block to the epilogue. */
 } infix_call_frame_layout;
 /**
  * @struct infix_reverse_call_frame_layout
@@ -296,6 +328,8 @@ typedef struct {
     int32_t saved_args_offset;    /**< Stack offset for the area where argument data is stored/marshalled. */
     int32_t gpr_save_area_offset; /**< (Win x64) Stack offset for saving non-volatile GPRs. */
     int32_t xmm_save_area_offset; /**< (Win x64) Stack offset for saving non-volatile XMMs. */
+    uint32_t max_align;           /**< Maximum required alignment for any argument or the stack. */
+    uint32_t prologue_size;       /**< Size of the generated prologue in bytes. */
 } infix_reverse_call_frame_layout;
 /**
  * @brief Defines the ABI-specific implementation interface for forward trampolines.
@@ -456,6 +490,8 @@ typedef struct {
     void * target_fn;                ///< The target C function address.
     bool return_value_in_memory;     ///< `true` if the return value uses a hidden pointer argument.
     infix_direct_arg_layout * args;  ///< An array of layout info for each argument.
+    uint32_t prologue_size;          ///< Size of the generated prologue in bytes.
+    uint32_t epilogue_offset;        ///< Offset from the start of the JIT block to the epilogue.
 } infix_direct_call_frame_layout;
 
 /**
@@ -518,6 +554,11 @@ INFIX_INTERNAL void _infix_set_system_error(infix_error_category_t category,
  * API function to ensure that a prior error from an unrelated call is not accidentally returned.
  */
 INFIX_INTERNAL void _infix_clear_error(void);
+INFIX_INTERNAL void skip_whitespace(parser_state * state);
+INFIX_INTERNAL void _infix_set_parser_error(parser_state * state, infix_error_code_t code);
+INFIX_INTERNAL infix_type * parse_type(parser_state * state);
+INFIX_INTERNAL infix_type * parse_primitive(parser_state * state);
+
 /**
  * @brief Recalculates the layout of a fully resolved type graph.
  * @details Located in `src/core/types.c`. This is the "Layout" stage of the data pipeline.
@@ -654,15 +695,27 @@ INFIX_INTERNAL c23_nodiscard infix_executable_t infix_executable_alloc(size_t si
  * @param exec The handle to the memory block to free.
  */
 INFIX_INTERNAL void infix_executable_free(infix_executable_t exec);
+typedef enum {
+    INFIX_EXECUTABLE_FORWARD,
+    INFIX_EXECUTABLE_SAFE_FORWARD,
+    INFIX_EXECUTABLE_REVERSE,
+    INFIX_EXECUTABLE_DIRECT
+} infix_executable_category_t;
+
 /**
  * @brief Makes a block of JIT memory executable, completing the W^X process.
  * @details Located in `src/jit/executor.c`. For single-map platforms, this calls
  * `VirtualProtect` or `mprotect`. For dual-map platforms, this is a no-op. It
  * also handles instruction cache flushing on relevant architectures like AArch64.
  * @param exec The handle to the memory block to make executable.
+ * @param prologue_size The size of the generated prologue in bytes.
+ * @param category The type of trampoline being finalized.
  * @return `true` on success, `false` on failure.
  */
-INFIX_INTERNAL c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec);
+INFIX_INTERNAL c23_nodiscard bool infix_executable_make_executable(infix_executable_t * exec,
+                                                                   infix_executable_category_t category,
+                                                                   uint32_t prologue_size,
+                                                                   uint32_t epilogue_offset);
 /**
  * @brief Allocates a block of standard memory for later protection.
  * @details Located in `src/jit/executor.c`. This is used to allocate the memory
@@ -697,6 +750,7 @@ INFIX_INTERNAL c23_nodiscard bool infix_protected_make_readonly(infix_protected_
 INFIX_INTERNAL void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context,
                                                              void * return_value_ptr,
                                                              void ** args_array);
+
 // Utility Macros & Inlines
 /** @brief Appends a sequence of bytes (e.g., an instruction opcode) to a code buffer. */
 #define EMIT_BYTES(buf, ...)                             \
@@ -714,7 +768,15 @@ static inline size_t _infix_align_up(size_t value, size_t alignment) {
     return (value + alignment - 1) & ~(alignment - 1);
 }
 /**
- * @brief A fast inline check to determine if an `infix_type` is a `float`.
+ * @brief A fast inline check to determine if an `infix_type` is a half-precision float (`float16`).
+ * @param type The type to check.
+ * @return `true` if the type is a float16 primitive.
+ */
+static inline bool is_float16(const infix_type * type) {
+    return type->category == INFIX_TYPE_PRIMITIVE && type->meta.primitive_id == INFIX_PRIMITIVE_FLOAT16;
+}
+/**
+ * @brief A fast inline check to determine if an `infix_type` is a `float` (32-bit).
  * @param type The type to check.
  * @return `true` if the type is a float primitive.
  */
@@ -743,4 +805,15 @@ static inline bool is_long_double(const infix_type * type) {
 #elif defined(INFIX_ABI_AAPCS64)
 #include "arch/aarch64/abi_arm64_emitters.h"
 #endif
+
+// Trampoline Caching
+INFIX_INTERNAL infix_forward_t * _infix_cache_lookup(const char * signature, void * target_fn, bool is_safe);
+INFIX_INTERNAL void _infix_cache_insert(infix_forward_t * trampoline);
+INFIX_INTERNAL bool _infix_cache_remove(infix_forward_t * trampoline);
+INFIX_INTERNAL void _infix_cache_release(infix_forward_t * trampoline);
+INFIX_INTERNAL void _infix_cache_clear(void);
+
+// Internal Cleanup
+INFIX_INTERNAL void _infix_forward_destroy_internal(infix_forward_t * trampoline);
+
 /** @endinternal */

@@ -74,7 +74,7 @@ static void FuzzTest(fuzzer_input in) {
     if (!type_arena)
         return;
 
-    // 1. Generate a pool of random types based on the input data.
+    // Generate a pool of random types based on the input data.
     for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
         size_t total_fields = 0;
         infix_type * new_type = generate_random_type(type_arena, &in, 0, &total_fields);
@@ -88,7 +88,7 @@ static void FuzzTest(fuzzer_input in) {
     if (type_count == 0)
         goto cleanup;
 
-    // 2. Construct a random function signature from the type pool.
+    // Construct a random function signature from the type pool.
     uint8_t arg_count_byte;
     if (consume_uint8_t(&in, &arg_count_byte)) {
         size_t num_args = arg_count_byte % MAX_ARGS_IN_SIGNATURE;
@@ -107,7 +107,7 @@ static void FuzzTest(fuzzer_input in) {
         for (size_t i = 0; i < num_args; ++i)
             arg_types[i] = type_pool[i % type_count];
 
-        // 3. Exercise the ABI classification functions with the random signature.
+        // Exercise the ABI classification functions with the random signature.
         // Test the forward call classifier.
         const infix_forward_abi_spec * fwd_spec = get_current_forward_abi_spec();
         if (fwd_spec) {

@@ -35,6 +35,7 @@
  * @internal
  */
 #pragma once
+#include "common/infix_config.h"
 #include <infix/infix.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -61,7 +62,7 @@
  * compile-time assertions throughout the codebase.
  */
 #if !defined(__cplusplus) && \
-    ((defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || (defined(_MSC_VER) && _MSC_VER >= 1900))
+    ((defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || (defined(INFIX_COMPILER_MSVC) && _MSC_VER >= 1900))
 #include <assert.h>
 #ifndef static_assert
 #define static_assert(cond, msg) _Static_assert(cond, msg)
@@ -105,9 +106,9 @@
  */
 #if COMPAT_HAS_C_ATTRIBUTE(deprecated)
 #define c23_deprecated [[deprecated]]
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
 #define c23_deprecated __attribute__((deprecated))
-#elif defined(_MSC_VER)
+#elif defined(INFIX_COMPILER_MSVC)
 #define c23_deprecated __declspec(deprecated)
 #else
 #define c23_deprecated
@@ -128,7 +129,7 @@
  */
 #if COMPAT_HAS_C_ATTRIBUTE(fallthrough)
 #define c23_fallthrough [[fallthrough]]
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
 #define c23_fallthrough __attribute__((fallthrough))
 #else
 #define c23_fallthrough
@@ -149,7 +150,7 @@
  */
 #if COMPAT_HAS_C_ATTRIBUTE(maybe_unused)
 #define c23_maybe_unused [[maybe_unused]]
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)
 #define c23_maybe_unused __attribute__((unused))
 #else
 #define c23_maybe_unused

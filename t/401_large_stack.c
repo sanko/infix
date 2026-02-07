@@ -56,7 +56,6 @@ double sum_max_reg_doubles(double a1,
                            double a8
 #endif
 ) {
-    note("sum_max_reg_doubles called.");
     return a1 + a2 + a3 + a4
 #if MAX_REG_DOUBLES > 4
         + a5 + a6 + a7 + a8
@@ -77,7 +76,6 @@ double sum_one_stack_double(double a1,
                             double a9
 #endif
 ) {
-    note("sum_one_stack_double called.");
     return a1 + a2 + a3 + a4 + a5
 #if MAX_REG_DOUBLES > 4
         + a6 + a7 + a8 + a9
@@ -94,25 +92,16 @@ double sum_one_stack_double(double a1,
         LIST10(ARG, 7), LIST10(ARG, 8), LIST10(ARG, 9)
 #define ARGS_100_TO_499 LIST100(ARG, 1), LIST100(ARG, 2), LIST100(ARG, 3), LIST100(ARG, 4)
 #define ARGS_500_TO_519 LIST10(ARG, 50), LIST10(ARG, 51)
-double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) {
-    diag("Inside large_stack_callee");
-    diag("Received arg0: %.1f (expected 0.0)", arg0);
-    diag("Received arg519: %.1f (expected 519.0)", arg519);
-    return arg0 + arg519;
-}
-/** @brief A type-safe handler for a reverse call with mixed register and stack arguments. */
+double large_stack_callee(ARGS_0_TO_99, ARGS_100_TO_499, ARGS_500_TO_519) { return arg0 + arg519; }
 int many_args_callback_handler(int a, double b, int c, const char * d, Point e, float f) {
     // On most ABIs, 'a', 'b', 'c', 'd' will be in registers.
     // 'e' and 'f' will be on the stack.
-    subtest("Inside many_args_callback_handler") {
-        plan(6);
-        ok(a == 10, "Arg 1 (int) is correct");
-        ok(fabs(b - 20.2) < 0.001, "Arg 2 (double) is correct");
-        ok(c == -30, "Arg 3 (int) is correct");
-        ok(strcmp(d, "arg4") == 0, "Arg 4 (char*) is correct");
-        ok(fabs(e.x - 5.5) < 0.001 && fabs(e.y - 6.6) < 0.001, "Arg 5 (Point) is correct (Stack Arg)");
-        ok(fabs(f - 7.7f) < 0.001, "Arg 6 (float) is correct (Stack Arg)");
-    };
+    ok(a == 10, "Arg 1 (int) is correct");
+    ok(fabs(b - 20.2) < 0.001, "Arg 2 (double) is correct");
+    ok(c == -30, "Arg 3 (int) is correct");
+    ok(strcmp(d, "arg4") == 0, "Arg 4 (char*) is correct");
+    ok(fabs(e.x - 5.5) < 0.001 && fabs(e.y - 6.6) < 0.001, "Arg 5 (Point) is correct (Stack Arg)");
+    ok(fabs(f - 7.7f) < 0.001, "Arg 6 (float) is correct (Stack Arg)");
     return a + c;
 }
 /** @brief A C harness to call the JIT-compiled reverse trampoline. */
@@ -126,6 +115,7 @@ TEST {
     subtest("Forward calls with register and stack arguments") {
         plan(3);
         subtest("Call with max register arguments") {
+
             plan(2);
             infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
             infix_type * arg_types[MAX_REG_DOUBLES];
@@ -185,15 +175,12 @@ TEST {
             static infix_type * arg_types[NUM_LARGE_ARGS];
             static double arg_values[NUM_LARGE_ARGS];
             static void * args[NUM_LARGE_ARGS];
-            diag("Preparing %d arguments for large stack test...", NUM_LARGE_ARGS);
             for (int i = 0; i < NUM_LARGE_ARGS; i++) {
                 arg_types[i] = infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE);
                 arg_values[i] = (double)i;
                 args[i] = &arg_values[i];
             }
-            diag("Finished preparing arguments.");
-            double expected_result = arg_values[0] + arg_values[519];
-            diag("Expected result (arg0 + arg519): %.1f", expected_result);
+            volatile double expected_result = arg_values[0] + arg_values[519];
             infix_forward_t * trampoline = nullptr;
             infix_status status =
                 infix_forward_create_unbound_manual(&trampoline,
@@ -202,11 +189,10 @@ TEST {
                                                     NUM_LARGE_ARGS,
                                                     NUM_LARGE_ARGS);
             ok(status == INFIX_SUCCESS, "Trampoline for large stack created");
-            diag("status: %d", status);
-            double result = 0.0;
+            volatile double result = 0.0;
             if (trampoline) {
                 infix_unbound_cif_func cif = infix_forward_get_unbound_code(trampoline);
-                cif((void *)large_stack_callee, &result, args);
+                cif((void *)large_stack_callee, (void *)&result, args);
                 ok(fabs(result - expected_result) < 0.001,
                    "Large stack call returned correct sum (got %.1f, expected %.1f)",
                    result,
@@ -218,7 +204,7 @@ TEST {
         }
     }
     subtest("Reverse call (callback) with stack arguments") {
-        plan(4);
+        plan(9);
         infix_arena_t * arena = infix_arena_create(4096);
         infix_type * ret_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
         infix_struct_member * point_members =
