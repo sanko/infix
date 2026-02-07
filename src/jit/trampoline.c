@@ -336,20 +336,63 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
             return INFIX_ERROR_INVALID_ARGUMENT;
         }
     }
-    const infix_forward_abi_spec * spec = get_current_forward_abi_spec();
-    if (spec == nullptr) {
-        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNSUPPORTED_ABI, 0);
-        return INFIX_ERROR_UNSUPPORTED_ABI;
-    }
+
     infix_status status = INFIX_SUCCESS;
     infix_call_frame_layout * layout = nullptr;
     infix_forward_t * handle = nullptr;
+
     // Use a temporary arena for all intermediate allocations during code generation.
     infix_arena_t * temp_arena = infix_arena_create(65536);
     if (!temp_arena) {
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
+
+    // --- Cache Lookup Stage ---
+    // Generate a canonical signature for deduplication.
+    char canonical_sig[8192];
+    infix_status sig_status = INFIX_SUCCESS;
+    {
+        // Construct a temporary argument array for the printer.
+        infix_function_argument * tmp_args = nullptr;
+        if (num_args > 0) {
+            tmp_args =
+                infix_arena_alloc(temp_arena, sizeof(infix_function_argument) * num_args, _Alignof(infix_type *));
+            if (!tmp_args) {
+                status = INFIX_ERROR_ALLOCATION_FAILED;
+                goto cleanup;
+            }
+            for (size_t i = 0; i < num_args; ++i) {
+                tmp_args[i].type = arg_types[i];
+                tmp_args[i].name = nullptr;
+            }
+        }
+        sig_status = infix_function_print(canonical_sig,
+                                          sizeof(canonical_sig),
+                                          "func",
+                                          return_type,
+                                          tmp_args,
+                                          num_args,
+                                          num_fixed_args,
+                                          INFIX_DIALECT_SIGNATURE);
+    }
+
+    if (sig_status == INFIX_SUCCESS) {
+        infix_forward_t * cached = _infix_cache_lookup(canonical_sig, target_fn, is_safe);
+        if (cached) {
+            *out_trampoline = cached;
+            status = INFIX_SUCCESS;
+            goto cleanup;
+        }
+    }
+
+    const infix_forward_abi_spec * spec = get_current_forward_abi_spec();
+    if (spec == nullptr) {
+        _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_UNSUPPORTED_ABI, 0);
+        status = INFIX_ERROR_UNSUPPORTED_ABI;
+        goto cleanup;
+    }
+
     code_buffer buf;
     code_buffer_init(&buf, temp_arena);
     // JIT Compilation Pipeline
@@ -416,6 +459,16 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
     handle->num_fixed_args = num_fixed_args;
     handle->target_fn = target_fn;
     handle->is_safe = is_safe;
+    handle->ref_count = 1;
+
+    // Save the canonical signature for the cache key.
+    if (sig_status == INFIX_SUCCESS) {
+        size_t sig_len = strlen(canonical_sig) + 1;
+        handle->signature = infix_arena_alloc(handle->arena, sig_len, 1);
+        if (handle->signature)
+            infix_memcpy(handle->signature, canonical_sig, sig_len);
+    }
+
     // Allocate and finalize executable memory.
     handle->exec = infix_executable_alloc(buf.size);
     if (handle->exec.rw_ptr == nullptr) {
@@ -432,6 +485,11 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
     }
     infix_dump_hex(handle->exec.rx_ptr, handle->exec.size, "Forward Trampoline Machine Code");
     *out_trampoline = handle;
+
+    // Cache the newly created trampoline.
+    if (handle->signature)
+        _infix_cache_insert(handle);
+
 cleanup:
     // If any step failed, ensure the partially created handle is fully destroyed.
     if (status != INFIX_SUCCESS && handle != nullptr)
@@ -633,16 +691,13 @@ INFIX_API c23_nodiscard infix_status infix_forward_create_unbound_manual(infix_f
         out_trampoline, nullptr, return_type, arg_types, num_args, num_fixed_args, nullptr, false);
 }
 /**
- * @brief Destroys a forward trampoline and frees all associated memory.
- * @details This function safely releases all resources owned by the trampoline,
- * including its JIT-compiled executable code and its private memory arena which
- * stores the deep-copied type information.
- * @param[in] trampoline The trampoline to destroy. Safe to call with `nullptr`.
+ * @internal
+ * @brief Internal implementation of forward trampoline destruction.
  */
-INFIX_API void infix_forward_destroy(infix_forward_t * trampoline) {
+void _infix_forward_destroy_internal(infix_forward_t * trampoline) {
     if (trampoline == nullptr)
         return;
-    // Destroying the private arena frees all deep-copied type metadata.
+    // Destroying the private arena frees all deep-copied type metadata and the signature string.
     if (trampoline->arena && !trampoline->is_external_arena)
         infix_arena_destroy(trampoline->arena);
     // Free the JIT-compiled executable code.
@@ -650,6 +705,15 @@ INFIX_API void infix_forward_destroy(infix_forward_t * trampoline) {
     // Free the handle struct itself.
     infix_free(trampoline);
 }
+
+/**
+ * @brief Destroys a forward trampoline and frees all associated memory.
+ * @details This function safely releases all resources owned by the trampoline,
+ * including its JIT-compiled executable code and its private memory arena which
+ * stores the deep-copied type information.
+ * @param[in] trampoline The trampoline to destroy. Safe to call with `nullptr`.
+ */
+INFIX_API void infix_forward_destroy(infix_forward_t * trampoline) { _infix_cache_release(trampoline); }
 // Reverse Trampoline API Implementation
 /**
  * @internal
