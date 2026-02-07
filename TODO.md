@@ -214,12 +214,12 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** Implement the redirect logic using `RtlUnwindEx` or by manually modifying `ContextRecord->Rip` to point to a landing pad/epilogue and returning `ExceptionContinueSearch` or `ExceptionContinueExecution` as appropriate to stop the search.
     *   **Goal:** `infix_forward_create_safe` can successfully catch a C++ or SEH exception in a called function and return a controlled `INFIX_CODE_NATIVE_EXCEPTION` error instead of crashing the process.
 
-- [ ] **Refine Registry Hash Table Growth in Arenas**
+- [x] **Refine Registry Hash Table Growth in Arenas**
     *   **Context:** `_registry_rehash` currently "leaks" the old bucket array within the registry's arena when resizing. While arenas are freed as a unit, a long-lived registry that grows significantly can waste substantial memory.
     *   **Idea:** Switch the `buckets` array to use `infix_malloc`/`infix_realloc` instead of arena allocation, or implement an arena "checkpoint/rollback" mechanism to reclaim the old array if it was the most recent allocation.
     *   **Goal:** Memory usage for large, frequently-growing registries is optimized, preventing unnecessary memory pressure in long-running processes.
 
-- [ ] **Deepen Mangling Dialect Support (Itanium & MSVC)**
+- [x] **Deepen Mangling Dialect Support (Itanium & MSVC)**
     *   **Context:** The current C++ mangling implementations are simplified and do not handle complex features like substitution (Itanium) or type back-references (MSVC).
     *   **Idea:**
         1.  **Itanium:** Implement the substitution dictionary (`S_`, `St`, etc.) to compress repeated types and namespaces.
@@ -231,12 +231,12 @@ This document outlines the planned development goals for the infix FFI library, 
     *   **Idea:** Add an explicit fallback to the `sys_icache_invalidate` syscall (syscall 259) or similar platform-specific mechanisms to ensure instruction cache consistency across all supported ARM64 environments.
     *   **Goal:** JITed code is 100% reliable on all ARM64 revisions, including those with unconventional cache hierarchies.
 
-- [ ] **Implement Trampoline Deduplication (Caching)**
+- [x] **Implement Trampoline Deduplication (Caching)**
     *   **Context:** Repeatedly creating trampolines for the same signature/target function pair wastes executable memory and JIT compilation time.
     *   **Idea:** Introduce a global or context-local cache (hash map) that stores created `infix_forward_t` handles keyed by a hash of their signature and target address. Use reference counting to manage shared handle lifetimes.
     *   **Goal:** Multiple calls to `infix_forward_create` with the same parameters return the same shared handle, significantly reducing memory overhead and initialization time in complex applications.
 
-- [ ] **Security: Hardened "Sanity Check" Marshalling**
+- [x] **Security: Hardened "Sanity Check" Marshalling**
     *   **Context:** The `direct_marshalling` API calls user-provided functions. A bug in a user's marshaller (e.g., misaligned stack, clobbered registers) can cause hard-to-debug crashes.
     *   **Idea:** Implement a "Sanity Mode" (enabled via build flag) where the JIT engine emits extra instructions before and after marshaller calls to verify stack pointer (`rsp`) balance and alignment.
     *   **Goal:** Developers can catch buggy marshaller implementations early during development via controlled assertions instead of chasing random segmentation faults in native code.
