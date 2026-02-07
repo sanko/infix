@@ -99,18 +99,14 @@ static _infix_registry_entry_t * _registry_lookup(infix_registry_t * registry, c
  * @internal
  * @brief Expands the registry's hash table and redistributes existing entries.
  * @details This is triggered when the load factor exceeds 0.75 to maintain O(1) lookup performance.
- *          The new bucket array is allocated from the registry's arena.
+ *          The new bucket array is allocated using `infix_calloc` and the old one is freed.
  */
 static void _registry_rehash(infix_registry_t * registry) {
     // Roughly double the size. Keep it odd to slightly help with distribution.
     size_t new_num_buckets = registry->num_buckets * 2 + 1;
 
-    // Allocate new buckets from the arena.
-    // Note: The old bucket array remains allocated in the arena (leak within arena),
-    // but this is an acceptable trade-off for the simplicity of arena management
-    // and the fact that registries usually grow during initialization and persist.
-    _infix_registry_entry_t ** new_buckets = infix_arena_calloc(
-        registry->arena, new_num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
+    // Allocate new buckets from the heap.
+    _infix_registry_entry_t ** new_buckets = infix_calloc(new_num_buckets, sizeof(_infix_registry_entry_t *));
 
     if (!new_buckets) {
         // If allocation fails, we simply return and continue using the existing buckets.
@@ -135,7 +131,8 @@ static void _registry_rehash(infix_registry_t * registry) {
         }
     }
 
-    // Update the registry to use the new table.
+    // Update the registry to use the new table and free the old one.
+    infix_free(registry->buckets);
     registry->buckets = new_buckets;
     registry->num_buckets = new_num_buckets;
 }
@@ -211,8 +208,7 @@ INFIX_API c23_nodiscard infix_registry_t * infix_registry_create(void) {
     }
     registry->is_external_arena = false;  // Mark that this arena is owned by the registry.
     registry->num_buckets = INITIAL_REGISTRY_BUCKETS;
-    registry->buckets = infix_arena_calloc(
-        registry->arena, registry->num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
+    registry->buckets = infix_calloc(registry->num_buckets, sizeof(_infix_registry_entry_t *));
     if (!registry->buckets) {
         infix_arena_destroy(registry->arena);
         infix_free(registry);
@@ -248,8 +244,7 @@ INFIX_API c23_nodiscard infix_registry_t * infix_registry_create_in_arena(infix_
     registry->arena = arena;
     registry->is_external_arena = true;  // Mark the arena as user-owned
     registry->num_buckets = INITIAL_REGISTRY_BUCKETS;
-    registry->buckets = infix_arena_calloc(
-        registry->arena, registry->num_buckets, sizeof(_infix_registry_entry_t *), _Alignof(_infix_registry_entry_t *));
+    registry->buckets = infix_calloc(registry->num_buckets, sizeof(_infix_registry_entry_t *));
     if (!registry->buckets) {
         infix_free(registry);
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
@@ -315,6 +310,8 @@ INFIX_API void infix_registry_destroy(infix_registry_t * registry) {
     // Only destroy the arena if it was created internally by `infix_registry_create`.
     if (!registry->is_external_arena)
         infix_arena_destroy(registry->arena);
+    // Free the bucket array which is now allocated from the heap.
+    infix_free(registry->buckets);
     // Always free the registry struct itself.
     infix_free(registry);
 }

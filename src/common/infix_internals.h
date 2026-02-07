@@ -99,6 +99,8 @@ struct infix_forward_t {
     void * target_fn;          /**< The target C function pointer (for bound trampolines), or `nullptr` for unbound. */
     bool is_direct_trampoline; /**< If true, this is a high-performance direct marshalling trampoline. */
     bool is_safe;              /**< If true, the trampoline wraps the call in an exception handler. */
+    size_t ref_count;          /**< Reference count for deduplication and shared ownership. */
+    char * signature;          /**< The normalized signature string used to create this trampoline. */
 };
 /**
  * @brief A function pointer to the universal C dispatcher for reverse calls.
@@ -146,6 +148,23 @@ struct infix_arena_t {
     struct infix_arena_t * next_block; /**< A pointer to the next block in the chain, if this one is full. */
     size_t block_size;                 /**< The size of this specific block's buffer, for chained arenas. */
 };
+// Mutex Abstraction for Internal Synchronization
+#if defined(INFIX_OS_WINDOWS)
+#include <windows.h>
+typedef SRWLOCK infix_mutex_t;
+#define INFIX_MUTEX_INITIALIZER SRWLOCK_INIT
+#define INFIX_MUTEX_LOCK(m) AcquireSRWLockExclusive(m)
+#define INFIX_MUTEX_UNLOCK(m) ReleaseSRWLockExclusive(m)
+#define INFIX_MUTEX_DESTROY(m) ((void)0)
+#else
+#include <pthread.h>
+typedef pthread_mutex_t infix_mutex_t;
+#define INFIX_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#define INFIX_MUTEX_LOCK(m) pthread_mutex_lock(m)
+#define INFIX_MUTEX_UNLOCK(m) pthread_mutex_unlock(m)
+#define INFIX_MUTEX_DESTROY(m) pthread_mutex_destroy(m)
+#endif
+
 /**
  * @struct _infix_registry_entry_t
  * @brief A single entry in the registry's hash table.
@@ -163,15 +182,15 @@ typedef struct _infix_registry_entry_t {
  * @struct infix_registry_t
  * @brief Internal definition of a named type registry.
  * @details Implemented as a hash table with separate chaining for collision resolution.
- * All memory for the table, its entries, and the canonical `infix_type` objects
- * it stores are owned by a single arena for simple lifecycle management.
+ * The canonical `infix_type` objects and entry metadata are owned by a single arena,
+ * while the internal bucket array is heap-allocated to allow for efficient resizing.
  */
 struct infix_registry_t {
     infix_arena_t * arena;              /**< The arena that owns all type metadata and entry structs. */
     bool is_external_arena;             /**< True if the arena is user-provided and should not be freed. */
     size_t num_buckets;                 /**< The number of buckets in the hash table. */
     size_t num_items;                   /**< The total number of items in the registry. */
-    _infix_registry_entry_t ** buckets; /**< The array of hash table buckets (linked list heads). */
+    _infix_registry_entry_t ** buckets; /**< The array of hash table buckets (heap-allocated). */
 };
 /**
  * @struct parser_state
@@ -786,4 +805,15 @@ static inline bool is_long_double(const infix_type * type) {
 #elif defined(INFIX_ABI_AAPCS64)
 #include "arch/aarch64/abi_arm64_emitters.h"
 #endif
+
+// Trampoline Caching
+INFIX_INTERNAL infix_forward_t * _infix_cache_lookup(const char * signature, void * target_fn, bool is_safe);
+INFIX_INTERNAL void _infix_cache_insert(infix_forward_t * trampoline);
+INFIX_INTERNAL bool _infix_cache_remove(infix_forward_t * trampoline);
+INFIX_INTERNAL void _infix_cache_release(infix_forward_t * trampoline);
+INFIX_INTERNAL void _infix_cache_clear(void);
+
+// Internal Cleanup
+INFIX_INTERNAL void _infix_forward_destroy_internal(infix_forward_t * trampoline);
+
 /** @endinternal */
