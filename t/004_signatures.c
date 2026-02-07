@@ -398,7 +398,7 @@ TEST {
     }
 
     subtest("Mangling") {
-        plan(7);
+        plan(9);
 
         infix_registry_t * registry = infix_registry_create();
         // Check return value to satisfy c23_nodiscard
@@ -466,6 +466,22 @@ TEST {
             // MSVC: ?Func@Inner@Outer@@YAXHN@Z
             CHECK_FUNC_MANGLING(
                 "(int, double)->void", "Outer::Inner::Func", INFIX_DIALECT_MSVC_MANGLING, "?Func@Inner@Outer@@YAXHN@Z");
+        }
+
+        subtest("Itanium Substitutions") {
+            plan(1);
+            // void func(@MyStruct, @MyStruct)
+            // Itanium: _Z4func8MyStructS_
+            CHECK_FUNC_MANGLING(
+                "(@MyStruct, @MyStruct)->void", "func", INFIX_DIALECT_ITANIUM_MANGLING, "_Z4func8MyStructS_");
+        }
+
+        subtest("MSVC Back-references") {
+            plan(1);
+            // void func(@MyStruct, @MyStruct)
+            // MSVC: ?func@@YAXUMyStruct@@0@Z
+            CHECK_FUNC_MANGLING(
+                "(@MyStruct, @MyStruct)->void", "func", INFIX_DIALECT_MSVC_MANGLING, "?func@@YAXUMyStruct@@0@Z");
         }
 
         infix_registry_destroy(registry);

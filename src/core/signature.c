@@ -1165,6 +1165,12 @@ typedef struct {
     char * p;            /**< The current write position in the output buffer. */
     size_t remaining;    /**< The number of bytes remaining in the buffer. */
     infix_status status; /**< The current status, set to an error if the buffer is too small. */
+    // Itanium mangling state
+    const void * itanium_subs[64]; /**< Dictionary of substitutable components. */
+    size_t itanium_sub_count;      /**< Number of components in the dictionary. */
+    // MSVC mangling state
+    const infix_type * msvc_types[10]; /**< First 10 encountered types for back-referencing. */
+    size_t msvc_type_count;            /**< Number of types encountered. */
 } printer_state;
 /**
  * @internal
@@ -1193,6 +1199,48 @@ static void _print(printer_state * state, const char * fmt, ...) {
 static void _infix_type_print_signature_recursive(printer_state * state, const infix_type * type);
 static void _infix_type_print_itanium_recursive(printer_state * state, const infix_type * type);
 static void _infix_type_print_msvc_recursive(printer_state * state, const infix_type * type);
+
+// Itanium Mangling Helpers
+static bool _find_itanium_sub(printer_state * state, const void * component, size_t * index) {
+    for (size_t i = 0; i < state->itanium_sub_count; i++) {
+        if (state->itanium_subs[i] == component) {
+            *index = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+static void _add_itanium_sub(printer_state * state, const void * component) {
+    if (state->itanium_sub_count < 64)
+        state->itanium_subs[state->itanium_sub_count++] = component;
+}
+
+static void _print_itanium_sub(printer_state * state, size_t index) {
+    if (index == 0) {
+        _print(state, "S_");
+    }
+    else {
+        index--;  // S0_ is index 1
+        _print(state, "S");
+        if (index == 0) {
+            _print(state, "0");
+        }
+        else {
+            char buf[16];
+            int pos = 0;
+            size_t val = index;
+            while (val > 0) {
+                int digit = val % 36;
+                buf[pos++] = (digit < 10) ? (char)('0' + digit) : (char)('A' + digit - 10);
+                val /= 36;
+            }
+            while (pos > 0)
+                _print(state, "%c", buf[--pos]);
+        }
+        _print(state, "_");
+    }
+}
 
 /**
  * @internal
@@ -1409,6 +1457,15 @@ static void _infix_type_print_itanium_recursive(printer_state * state, const inf
             state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
     }
+
+    size_t sub_index;
+    bool is_builtin = (type->category == INFIX_TYPE_VOID || type->category == INFIX_TYPE_PRIMITIVE);
+
+    if (!is_builtin && _find_itanium_sub(state, type, &sub_index)) {
+        _print_itanium_sub(state, sub_index);
+        return;
+    }
+
     switch (type->category) {
     case INFIX_TYPE_VOID:
         _print(state, "v");
@@ -1416,6 +1473,7 @@ static void _infix_type_print_itanium_recursive(printer_state * state, const inf
     case INFIX_TYPE_POINTER:
         _print(state, "P");
         _infix_type_print_itanium_recursive(state, type->meta.pointer_info.pointee_type);
+        _add_itanium_sub(state, type);
         break;
     case INFIX_TYPE_PRIMITIVE:
         switch (type->meta.primitive_id) {
@@ -1471,6 +1529,7 @@ static void _infix_type_print_itanium_recursive(printer_state * state, const inf
             const char * name = type->meta.named_reference.name;
             size_t len = strlen(name);
             _print(state, "%zu%s", len, name);
+            _add_itanium_sub(state, type);
         }
         break;
     case INFIX_TYPE_STRUCT:
@@ -1514,12 +1573,23 @@ static void _infix_type_print_itanium_recursive(printer_state * state, const inf
                 size_t len = strlen(type->name);
                 _print(state, "%zu%s", len, type->name);
             }
+            _add_itanium_sub(state, type);
         }
         else {
             // Mangling for anonymous structs isn't standardized.
             // Emitting 'void' as a safe placeholder for "unknown type".
             _print(state, "v");
         }
+        break;
+    case INFIX_TYPE_COMPLEX:
+        _print(state, "C");
+        _infix_type_print_itanium_recursive(state, type->meta.complex_info.base_type);
+        _add_itanium_sub(state, type);
+        break;
+    case INFIX_TYPE_VECTOR:
+        _print(state, "Dv%zu_", type->size / type->meta.vector_info.element_type->size);
+        _infix_type_print_itanium_recursive(state, type->meta.vector_info.element_type);
+        _add_itanium_sub(state, type);
         break;
     default:
         // Fallback for types that don't map cleanly to Itanium mangling
@@ -1539,6 +1609,22 @@ static void _infix_type_print_msvc_recursive(printer_state * state, const infix_
             state->status = INFIX_ERROR_INVALID_ARGUMENT;
         return;
     }
+
+    // Check for type back-references (0-9)
+    // MSVC only back-references complex types or pointers to them.
+    bool can_backref =
+        (type->category == INFIX_TYPE_POINTER || type->category == INFIX_TYPE_STRUCT ||
+         type->category == INFIX_TYPE_UNION || type->category == INFIX_TYPE_ENUM || type->name != nullptr);
+
+    if (can_backref) {
+        for (size_t i = 0; i < state->msvc_type_count; i++) {
+            if (state->msvc_types[i] == type) {
+                _print(state, "%zu", i);
+                return;
+            }
+        }
+    }
+
     // Handle named types (Struct/Union/Enum or aliases)
     if (type->name) {
         // MSVC encoding:
@@ -1590,59 +1676,15 @@ static void _infix_type_print_msvc_recursive(printer_state * state, const infix_
         else {
             _print(state, "%c%s@@", prefix, type->name);
         }
+
+        if (can_backref && state->msvc_type_count < 10)
+            state->msvc_types[state->msvc_type_count++] = type;
         return;
     }
 
     switch (type->category) {
     case INFIX_TYPE_VOID:
         _print(state, "X");
-        break;
-    case INFIX_TYPE_PRIMITIVE:
-        switch (type->meta.primitive_id) {
-        case INFIX_PRIMITIVE_BOOL:
-            _print(state, "_N");
-            break;
-        case INFIX_PRIMITIVE_SINT8:
-            _print(state, "C");
-            break;  // signed char
-        case INFIX_PRIMITIVE_UINT8:
-            _print(state, "E");
-            break;  // unsigned char
-        case INFIX_PRIMITIVE_SINT16:
-            _print(state, "F");
-            break;  // short
-        case INFIX_PRIMITIVE_UINT16:
-            _print(state, "G");
-            break;  // unsigned short
-        case INFIX_PRIMITIVE_SINT32:
-            _print(state, "H");
-            break;  // int
-        case INFIX_PRIMITIVE_UINT32:
-            _print(state, "I");
-            break;  // unsigned int
-        case INFIX_PRIMITIVE_SINT64:
-            _print(state, "_J");
-            break;  // __int64
-        case INFIX_PRIMITIVE_UINT64:
-            _print(state, "_K");
-            break;  // unsigned __int64
-        case INFIX_PRIMITIVE_FLOAT16:
-            _print(state, "_T");
-            break;  // half-precision float (__half)
-        case INFIX_PRIMITIVE_FLOAT:
-            _print(state, "M");
-            break;
-        case INFIX_PRIMITIVE_DOUBLE:
-            _print(state, "N");
-            break;
-        // MSVC typically maps long double to double (N), but distinct type O exists
-        case INFIX_PRIMITIVE_LONG_DOUBLE:
-            _print(state, "O");
-            break;
-        default:
-            _print(state, "?");
-            break;
-        }
         break;
     case INFIX_TYPE_POINTER:
         // Standard MSVC pointer encoding for x64:
@@ -1652,6 +1694,8 @@ static void _infix_type_print_msvc_recursive(printer_state * state, const infix_
         // Then the pointee type.
         _print(state, "PEA");
         _infix_type_print_msvc_recursive(state, type->meta.pointer_info.pointee_type);
+        if (can_backref && state->msvc_type_count < 10)
+            state->msvc_types[state->msvc_type_count++] = type;
         break;
     case INFIX_TYPE_REVERSE_TRAMPOLINE:  // Function Pointer
         // P6 = Pointer to Function
@@ -1666,14 +1710,77 @@ static void _infix_type_print_msvc_recursive(printer_state * state, const infix_
             for (size_t i = 0; i < type->meta.func_ptr_info.num_args; ++i)
                 _infix_type_print_msvc_recursive(state, type->meta.func_ptr_info.args[i].type);
         _print(state, "@Z");
+        if (can_backref && state->msvc_type_count < 10)
+            state->msvc_types[state->msvc_type_count++] = type;
+        break;
+    case INFIX_TYPE_PRIMITIVE:
+        switch (type->meta.primitive_id) {
+        case INFIX_PRIMITIVE_BOOL:
+            _print(state, "_N");
+            break;
+        case INFIX_PRIMITIVE_SINT8:
+            _print(state, "C");
+            break;
+        case INFIX_PRIMITIVE_UINT8:
+            _print(state, "E");
+            break;
+        case INFIX_PRIMITIVE_SINT16:
+            _print(state, "F");
+            break;
+        case INFIX_PRIMITIVE_UINT16:
+            _print(state, "G");
+            break;
+        case INFIX_PRIMITIVE_SINT32:
+            _print(state, "H");
+            break;
+        case INFIX_PRIMITIVE_UINT32:
+            _print(state, "I");
+            break;
+        case INFIX_PRIMITIVE_SINT64:
+            _print(state, "_J");
+            break;
+        case INFIX_PRIMITIVE_UINT64:
+            _print(state, "_K");
+            break;
+        case INFIX_PRIMITIVE_SINT128:
+            _print(state, "_L");
+            break;
+        case INFIX_PRIMITIVE_UINT128:
+            _print(state, "_M");
+            break;
+        case INFIX_PRIMITIVE_FLOAT16:
+            _print(state, "_T");
+            break;
+        case INFIX_PRIMITIVE_FLOAT:
+            _print(state, "M");
+            break;
+        case INFIX_PRIMITIVE_DOUBLE:
+            _print(state, "N");
+            break;
+        case INFIX_PRIMITIVE_LONG_DOUBLE:
+            _print(state, "O");
+            break;
+        }
+        break;
+    case INFIX_TYPE_COMPLEX:
+        // MSVC doesn't have a built-in complex type, it uses structs.
+        _print(state, "U_Complex@@");
+        if (can_backref && state->msvc_type_count < 10)
+            state->msvc_types[state->msvc_type_count++] = type;
+        break;
+    case INFIX_TYPE_VECTOR:
+        _print(state, "T__m%zu@@", type->size * 8);
+        if (can_backref && state->msvc_type_count < 10)
+            state->msvc_types[state->msvc_type_count++] = type;
         break;
     case INFIX_TYPE_NAMED_REFERENCE:
         // Unresolved references, treat as Struct for mangling purposes.
         _print(state, "U%s@@", type->meta.named_reference.name);
+        if (can_backref && state->msvc_type_count < 10)
+            state->msvc_types[state->msvc_type_count++] = type;
         break;
     default:
-        // Arrays, function pointers, etc. are complex. Fallback.
-        _print(state, "?");
+        _print(state, "X");
         break;
     }
 }
@@ -1835,7 +1942,7 @@ c23_nodiscard infix_status _infix_type_print_body_only(char * buffer,
                                                        infix_print_dialect_t dialect) {
     if (!buffer || buffer_size == 0 || !type || dialect != INFIX_DIALECT_SIGNATURE)
         return INFIX_ERROR_INVALID_ARGUMENT;
-    printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    printer_state state = {buffer, buffer_size, INFIX_SUCCESS, {0}, 0, {0}, 0};
     *buffer = '\0';
     _infix_type_print_body_only_recursive(&state, type);
     if (state.remaining > 0)
@@ -1861,7 +1968,7 @@ INFIX_API c23_nodiscard infix_status infix_type_print(char * buffer,
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-    printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    printer_state state = {buffer, buffer_size, INFIX_SUCCESS, {0}, 0, {0}, 0};
     *buffer = '\0';
     if (dialect == INFIX_DIALECT_SIGNATURE)
         _infix_type_print_signature_recursive(&state, type);
@@ -1912,7 +2019,7 @@ INFIX_API c23_nodiscard infix_status infix_function_print(char * buffer,
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
     }
-    printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    printer_state state = {buffer, buffer_size, INFIX_SUCCESS, {0}, 0, {0}, 0};
     *buffer = '\0';
     if (dialect == INFIX_DIALECT_SIGNATURE) {
         (void)function_name;  // Unused
@@ -2062,7 +2169,7 @@ INFIX_API c23_nodiscard infix_status infix_function_print(char * buffer,
 c23_nodiscard infix_status infix_registry_print(char * buffer, size_t buffer_size, const infix_registry_t * registry) {
     if (!buffer || buffer_size == 0 || !registry)
         return INFIX_ERROR_INVALID_ARGUMENT;
-    printer_state state = {buffer, buffer_size, INFIX_SUCCESS};
+    printer_state state = {buffer, buffer_size, INFIX_SUCCESS, {0}, 0, {0}, 0};
     *state.p = '\0';
     // Iterate through all buckets and their chains.
     for (size_t i = 0; i < registry->num_buckets; ++i) {
