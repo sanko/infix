@@ -61,7 +61,7 @@ static void FuzzTest(fuzzer_input in) {
     if (!arena)
         return;
 
-    // 1. Generate Random Types
+    // Generate Random Types
     size_t total_fields = 0;
 
     // Return Type
@@ -93,7 +93,7 @@ static void FuzzTest(fuzzer_input in) {
             goto cleanup;
         }
 
-        // 2. Assign Dummy Handlers based on type
+        // Assign Dummy Handlers based on type
         uint8_t handler_choice;
         if (!consume_uint8_t(&in, &handler_choice))
             handler_choice = 0;
@@ -111,7 +111,7 @@ static void FuzzTest(fuzzer_input in) {
             handlers[i].writeback_handler = &dummy_writeback;
     }
 
-    // 3. Call the API under test
+    // Call the API under test
     // Build signature string safely.
     char signature[4096];
     char * p = signature;
@@ -153,7 +153,7 @@ sig_done:
     // Ensure null termination (infix_type_print might have failed or we jumped out)
     signature[sizeof(signature) - 1] = '\0';
 
-    // 4. Trigger Compilation
+    // Trigger Compilation
     infix_forward_t * trampoline = NULL;
     infix_status status = infix_forward_create_direct(&trampoline,
                                                       signature,
@@ -162,7 +162,7 @@ sig_done:
                                                       NULL  // No registry needed, types are anonymous in signature
     );
 
-    // 5. Cleanup
+    // Cleanup
     if (status == INFIX_SUCCESS)
         infix_forward_destroy(trampoline);
 

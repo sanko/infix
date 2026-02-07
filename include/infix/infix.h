@@ -744,21 +744,21 @@ infix_forward_create_in_arena(infix_forward_t **, infix_arena_t *, const char *,
  * @note The caller is responsible for destroying the handle with `infix_reverse_destroy`.
  *
  * @code
- * // 1. Define the type-safe C handler function.
+ * // Define the type-safe C handler function.
  * // Its signature must match "(int, int)->int".
  * int my_handler(int a, int b) {
  *     return a * b;
  * }
  *
- * // 2. Create the reverse trampoline.
+ * // Create the reverse trampoline.
  * infix_reverse_t* ctx = NULL;
  * infix_reverse_create_callback(&ctx, "(int,int)->int", (void*)my_handler, NULL);
  *
- * // 3. Get the JIT-compiled C function pointer.
+ * // Get the JIT-compiled C function pointer.
  * typedef int (*my_func_ptr_t)(int, int);
  * my_func_ptr_t func_ptr = (my_func_ptr_t)infix_reverse_get_code(ctx);
  *
- * // 4. Pass this `func_ptr` to some C library that expects a callback.
+ * // Pass this `func_ptr` to some C library that expects a callback.
  * // some_c_library_function(func_ptr);
  * // When the library calls func_ptr(5, 10), `my_handler` will be invoked
  * // and will return 50.
@@ -799,7 +799,7 @@ INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_rever
  *     int call_count;
  * } my_state_t;
  *
- * // 1. Define the generic closure handler.
+ * // Define the generic closure handler.
  * void my_closure_handler(infix_context_t* ctx, void* ret_val, void** args) {
  *     // Retrieve our state.
  *     my_state_t* state = (my_state_t*)infix_reverse_get_user_data(ctx);
@@ -814,15 +814,15 @@ INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_rever
  *     memcpy(ret_val, &result, sizeof(int));
  * }
  *
- * // 2. Create the state and the closure.
+ * // Create the state and the closure.
  * my_state_t my_state = { .call_count = 0 };
  * infix_reverse_t* ctx = NULL;
  * infix_reverse_create_closure(&ctx, "(int,int)->int", my_closure_handler, &my_state, NULL);
  *
- * // 3. Get the JIT-compiled C function pointer.
+ * // Get the JIT-compiled C function pointer.
  * int (*func_ptr)(int, int) = infix_reverse_get_code(ctx);
  *
- * // 4. Pass the func_ptr to C code.
+ * // Pass the func_ptr to C code.
  * int result1 = func_ptr(10, 5); // result1 is (10+5)*1 = 15
  * int result2 = func_ptr(2, 3);  // result2 is (2+3)*2 = 10
  *

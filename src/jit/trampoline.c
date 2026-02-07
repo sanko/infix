@@ -396,7 +396,7 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
     code_buffer buf;
     code_buffer_init(&buf, temp_arena);
     // JIT Compilation Pipeline
-    // 1. Prepare: Classify arguments and create the layout blueprint.
+    // Prepare: Classify arguments and create the layout blueprint.
     status = spec->prepare_forward_call_frame(
         temp_arena, &layout, return_type, arg_types, num_args, num_fixed_args, target_fn);
     if (status != INFIX_SUCCESS)
@@ -529,7 +529,7 @@ static infix_status _infix_forward_create_direct_impl(infix_forward_t ** out_tra
                                                       size_t num_args,
                                                       void * target_fn,
                                                       infix_direct_arg_handler_t * handlers) {
-    // 1. Validation and Setup
+    // Validation and Setup
     if (!out_trampoline || !return_type || (!arg_types && num_args > 0) || !target_fn || !handlers) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;

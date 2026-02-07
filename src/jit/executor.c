@@ -404,15 +404,15 @@ static EXCEPTION_DISPOSITION _infix_seh_personality_routine(PEXCEPTION_RECORD Ex
     if (ExceptionRecord->ExceptionFlags & (EXCEPTION_UNWINDING | EXCEPTION_EXIT_UNWIND))
         return ExceptionContinueSearch;
 
-    // 1. Set the thread-local error.
+    // Set the thread-local error.
     _infix_set_error(INFIX_CATEGORY_ABI, INFIX_CODE_NATIVE_EXCEPTION, 0);
 
-    // 2. Retrieve the target epilogue IP from our HandlerData.
+    // Retrieve the target epilogue IP from our HandlerData.
     // The HandlerData points to the 4-byte epilogue offset we stored in UNWIND_INFO.
     uint32_t epilogue_offset = *(uint32_t *)dc->HandlerData;
     void * target_ip = (void *)(dc->ImageBase + epilogue_offset);
 
-    // 3. Perform a non-local unwind to the epilogue.
+    // Perform a non-local unwind to the epilogue.
     RtlUnwind(EstablisherFrame, target_ip, ExceptionRecord, nullptr);
 
     return ExceptionContinueSearch;  // Unreachable
@@ -427,10 +427,10 @@ static void _infix_register_seh_windows_x64(infix_executable_t * exec,
     // metadata_ptr starts after the machine code.
     uint8_t * metadata_base = (uint8_t *)exec->rw_ptr + exec->size;
 
-    // 1. RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
+    // RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
     RUNTIME_FUNCTION * rf = (RUNTIME_FUNCTION *)_infix_align_up((size_t)metadata_base, 4);
 
-    // 2. UNWIND_INFO (XDATA) - Follows PDATA.
+    // UNWIND_INFO (XDATA) - Follows PDATA.
     UNWIND_INFO * ui = (UNWIND_INFO *)_infix_align_up((size_t)(rf + 1), 2);
 
     ui->Version = 1;
@@ -535,11 +535,11 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
                                               uint32_t epilogue_offset) {
     uint8_t * metadata_base = (uint8_t *)exec->rw_ptr + exec->size;
 
-    // 1. RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
+    // RUNTIME_FUNCTION (PDATA) - Must be 4-byte aligned.
     // On ARM64, we use two entries: one for the function and a sentinel for the end.
     RUNTIME_FUNCTION * rf = (RUNTIME_FUNCTION *)_infix_align_up((size_t)metadata_base, 4);
 
-    // 2. UNWIND_INFO (XDATA) - Follows PDATA.
+    // UNWIND_INFO (XDATA) - Follows PDATA.
     UNWIND_INFO_ARM64 * ui = (UNWIND_INFO_ARM64 *)_infix_align_up((size_t)(rf + 2), 4);
     infix_memset(ui, 0, sizeof(UNWIND_INFO_ARM64));
 

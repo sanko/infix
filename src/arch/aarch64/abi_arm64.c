@@ -225,15 +225,15 @@ static bool is_hfa(const infix_type * type, const infix_type ** out_base_type) {
     // HFAs cannot be excessively large.
     if (type->size == 0 || type->size > 64)  // Max HFA size is 4 * sizeof(double) = 32 on standard, 4*16=64 on others
         return false;
-    // 1. Find the base float/double type of the first primitive element.
+    // Find the base float/double type of the first primitive element.
     const infix_type * base = get_hfa_base_type(type);
     if (base == nullptr)
         return false;
-    // 2. Check that the total size is a multiple of the base type, with 1 to 4 elements.
+    // Check that the total size is a multiple of the base type, with 1 to 4 elements.
     size_t num_elements = type->size / base->size;
     if (num_elements < 1 || num_elements > 4 || type->size != num_elements * base->size)
         return false;
-    // 3. Verify that ALL members recursively conform to this single base type.
+    // Verify that ALL members recursively conform to this single base type.
     size_t field_count = 0;
     if (!is_hfa_recursive_check(type, base, &field_count))
         return false;
@@ -1189,14 +1189,14 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
                                                             size_t num_args,
                                                             infix_direct_arg_handler_t * handlers,
                                                             void * target_fn) {
-    // 1. Reuse the standard classification logic.
+    // Reuse the standard classification logic.
     infix_call_frame_layout * standard_layout = nullptr;
     infix_status status =
         prepare_forward_call_frame_arm64(arena, &standard_layout, ret_type, arg_types, num_args, num_args, target_fn);
     if (status != INFIX_SUCCESS)
         return status;
 
-    // 2. Create the new direct layout and copy basic info.
+    // Create the new direct layout and copy basic info.
     infix_direct_call_frame_layout * layout =
         infix_arena_calloc(arena, 1, sizeof(infix_direct_call_frame_layout), _Alignof(infix_direct_call_frame_layout));
     if (!layout)
@@ -1211,7 +1211,7 @@ static infix_status prepare_direct_forward_call_frame_arm64(infix_arena_t * aren
     layout->target_fn = target_fn;
     layout->return_value_in_memory = standard_layout->return_value_in_memory;
 
-    // 3. Calculate scratch space needed on the stack.
+    // Calculate scratch space needed on the stack.
     // Note: We do NOT store the scratch offset in layout->args[i].location.stack_offset,
     // because that field is needed for the *outgoing* ABI stack offset.
     // Instead, we just calculate the total size here, and recalculate the offsets
@@ -1478,11 +1478,11 @@ static infix_status generate_direct_forward_argument_moves_arm64(code_buffer * b
             }
             else if (arg_layout->location.type == ARG_LOCATION_VPR) {
                 if (is_float(arg_layout->type)) {
-                    // 1. Load 64-bit double from scratch into D-reg (use dest reg as temp)
+                    // Load 64-bit double from scratch into D-reg (use dest reg as temp)
                     arm64_vpr dest_v = VPR_ARGS[arg_layout->location.reg_index];
                     emit_arm64_ldr_vpr(buf, 8, dest_v, SP_REG, my_scratch_offset);
 
-                    // 2. FCVT S, D (Double to Single)
+                    // FCVT S, D (Double to Single)
                     // Opcode: 0x1e624000 | (Rn << 5) | Rd.
                     // Rn=dest_v, Rd=dest_v (in place conversion)
                     uint32_t fcvt = 0x1e624000 | ((dest_v & 0x1F) << 5) | (dest_v & 0x1F);
@@ -1523,7 +1523,7 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
                                                            infix_direct_call_frame_layout * layout,
                                                            infix_type * ret_type) {
     layout->epilogue_offset = (uint32_t)buf->size;
-    // 1. Handle C function's return value.
+    // Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         const infix_type * hfa_base = nullptr;
         if ((is_long_double(ret_type) && ret_type->size == 16) ||
@@ -1584,7 +1584,7 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
         standard_alloc_size = (stack_offset + 15) & ~15;
     }
 
-    // 2. Call Write-Back Handlers
+    // Call Write-Back Handlers
     size_t epilogue_scratch_offset = 0;  // Track offset locally to ensure consistency
 
     for (size_t i = 0; i < layout->num_args; ++i) {
@@ -1652,7 +1652,7 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
         }
     }
 
-    // 3. Standard Epilogue
+    // Standard Epilogue
     // Restore stack pointer to the saved registers area.
     // X29 was set to SP after all pushes.
     // mov sp, x29

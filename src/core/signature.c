@@ -1029,7 +1029,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
                                                      infix_registry_t * registry) {
     _infix_clear_error();
     g_infix_last_signature_context = signature;  // Set context for rich error reporting.
-    // 1. "Parse" stage: Create a raw, unresolved type graph in a temporary arena.
+    // "Parse" stage: Create a raw, unresolved type graph in a temporary arena.
     infix_type * raw_type = nullptr;
     infix_arena_t * parser_arena = nullptr;
     infix_status status = _infix_parse_type_internal(&raw_type, &parser_arena, signature);
@@ -1042,7 +1042,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    // 2. "Copy" stage: Deep copy the raw graph into the final arena.
+    // "Copy" stage: Deep copy the raw graph into the final arena.
     infix_type * final_type = _copy_type_graph_to_arena(*out_arena, raw_type);
     infix_arena_destroy(parser_arena);  // The temporary graph is no longer needed.
     if (!final_type) {
@@ -1051,7 +1051,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
         _infix_set_error(INFIX_CATEGORY_ALLOCATION, INFIX_CODE_OUT_OF_MEMORY, 0);
         return INFIX_ERROR_ALLOCATION_FAILED;
     }
-    // 3. "Resolve" stage: Replace all named references (`@Name`) with concrete types.
+    // "Resolve" stage: Replace all named references (`@Name`) with concrete types.
     status = _infix_resolve_type_graph_inplace(&final_type, registry);
     if (status != INFIX_SUCCESS) {
         infix_arena_destroy(*out_arena);
@@ -1059,7 +1059,7 @@ c23_nodiscard infix_status infix_type_from_signature(infix_type ** out_type,
         *out_type = nullptr;
     }
     else {
-        // 4. "Layout" stage: Calculate the final size, alignment, and member offsets.
+        // "Layout" stage: Calculate the final size, alignment, and member offsets.
         _infix_type_recalculate_layout(final_type);
         *out_type = final_type;
     }

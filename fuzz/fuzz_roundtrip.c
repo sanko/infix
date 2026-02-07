@@ -50,7 +50,7 @@ static void FuzzTest(fuzzer_input in) {
     if (!arena)
         return;
 
-    // 1. Generate Random Type
+    // Generate Random Type
     size_t total_fields = 0;
     infix_type * type_a = generate_random_type(arena, &in, 0, &total_fields);
 
@@ -60,7 +60,7 @@ static void FuzzTest(fuzzer_input in) {
         return;
     }
 
-    // 2. Print to String A (Serialize)
+    // Print to String A (Serialize)
     // We use a generous buffer. If the type is too complex for this buffer,
     // infix_type_print returns an error, which is a valid outcome, not a crash.
     char buffer_a[4096];
@@ -73,7 +73,7 @@ static void FuzzTest(fuzzer_input in) {
         return;
     }
 
-    // 3. Parse String A to Type B (Deserialize)
+    // Parse String A to Type B (Deserialize)
     infix_type * type_b = NULL;
     infix_arena_t * arena_b = NULL;
 
@@ -115,7 +115,7 @@ static void FuzzTest(fuzzer_input in) {
         abort();
     }
 
-    // 4. Print Type B to String B (Reserialize)
+    // Print Type B to String B (Reserialize)
     char buffer_b[4096];
     infix_status status_print_b = infix_type_print(buffer_b, sizeof(buffer_b), type_b, INFIX_DIALECT_SIGNATURE);
 
@@ -124,7 +124,7 @@ static void FuzzTest(fuzzer_input in) {
         abort();
     }
 
-    // 5. Verify Consistency
+    // Verify Consistency
     // The canonical string representation must be identical.
     if (strcmp(buffer_a, buffer_b) != 0) {
         fprintf(stderr, "FATAL: Round-trip mismatch!\n");

@@ -1262,7 +1262,7 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
                                                              infix_direct_call_frame_layout * layout,
                                                              infix_type * ret_type) {
     layout->epilogue_offset = (uint32_t)buf->size;
-    // 1. Handle C function's return value.
+    // Handle C function's return value.
     if (ret_type->category != INFIX_TYPE_VOID && !layout->return_value_in_memory) {
         if (is_float16(ret_type)) {
             // Half-precision is returned in the low 16 bits of XMM0.
@@ -1303,7 +1303,7 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
         }
     }
 
-    // 2. Call Write-Back Handlers
+    // Call Write-Back Handlers
     for (size_t i = 0; i < layout->num_args; ++i) {
         const infix_direct_arg_layout * arg_layout = &layout->args[i];
         if (arg_layout->handler->writeback_handler) {
@@ -1327,7 +1327,7 @@ static infix_status generate_direct_forward_epilogue_win_x64(code_buffer * buf,
         }
     }
 
-    // 3. Safe Epilogue
+    // Safe Epilogue
     // If AVX was potentially used, clear the upper bits of YMM registers.
     // Note: We'll add max_align to direct layout in the next step.
     // For now, let's assume if any arg was a vector, we might have used AVX.

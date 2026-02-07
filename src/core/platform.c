@@ -77,7 +77,7 @@ static uint64_t _infix_xgetbv(void) {
 
 #if defined(INFIX_ARCH_X64)
 bool infix_cpu_has_avx2(void) {
-    // 1. Check CPUID for OSXSAVE bit (ECX bit 27 of leaf 1)
+    // Check CPUID for OSXSAVE bit (ECX bit 27 of leaf 1)
     // If this is 0, we can't use XGETBV.
     bool osxsave = false;
     bool avx2_hardware = false;

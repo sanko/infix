@@ -51,7 +51,7 @@ Number return_number_union(int selector) {
 TEST {
     plan(3);
     infix_arena_t * arena = infix_arena_create(4096);
-    // 1. Create the `infix_type` for the `Number` union programmatically.
+    // Create the `infix_type` for the `Number` union programmatically.
     infix_struct_member * members =
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
     members[0] =

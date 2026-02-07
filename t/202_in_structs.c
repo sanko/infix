@@ -39,7 +39,7 @@ int process_pointer_struct(PointerStruct ps) {
 }
 TEST {
     plan(5);
-    // 1. Programmatically create the `infix_type` for `PointerStruct`.
+    // Programmatically create the `infix_type` for `PointerStruct`.
     infix_arena_t * arena = infix_arena_create(4096);
     infix_struct_member * members =
         infix_arena_alloc(arena, sizeof(infix_struct_member) * 2, _Alignof(infix_struct_member));
@@ -51,13 +51,13 @@ TEST {
         infix_arena_destroy(arena);
         return;
     }
-    // 2. Set up the arguments.
+    // Set up the arguments.
     infix_type * return_type = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
     int value_to_point_to = 500;
     const char * string_to_point_to = "Hello Pointers";
     PointerStruct struct_instance = {&value_to_point_to, string_to_point_to};
     void * args[] = {&struct_instance};
-    // 3. Test unbound trampoline.
+    // Test unbound trampoline.
     infix_forward_t * unbound_t = nullptr;
     ok(infix_forward_create_unbound_manual(&unbound_t, return_type, &struct_type, 1, 1) == INFIX_SUCCESS,
        "Unbound created");
@@ -65,7 +65,7 @@ TEST {
     infix_unbound_cif_func unbound_cif = infix_forward_get_unbound_code(unbound_t);
     unbound_cif((void *)process_pointer_struct, &unbound_result, args);
     ok(unbound_result == 550, "Unbound call correct");
-    // 4. Test bound trampoline.
+    // Test bound trampoline.
     infix_forward_t * bound_t = nullptr;
     ok(infix_forward_create_manual(&bound_t, return_type, &struct_type, 1, 1, (void *)process_pointer_struct) ==
            INFIX_SUCCESS,

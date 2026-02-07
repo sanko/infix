@@ -35,7 +35,7 @@ TEST {
         int count = 200;
         char buffer[64];
 
-        // 1. Insert items individually
+        // Insert items individually
         for (int i = 0; i < count; ++i) {
             snprintf(buffer, sizeof(buffer), "@Type%d = int;", i);
             if (infix_register_types(reg, buffer) != INFIX_SUCCESS)
@@ -44,7 +44,7 @@ TEST {
 
         pass("Registered %d types (forced multiple rehashes)", count);
 
-        // 2. Verify all items exist via lookup
+        // Verify all items exist via lookup
         bool all_found = true;
         for (int i = 0; i < count; ++i) {
             snprintf(buffer, sizeof(buffer), "Type%d", i);
@@ -64,7 +64,7 @@ TEST {
         }
         ok(all_found, "All %d types found via lookup after rehashes", count);
 
-        // 3. Verify iterator counts match
+        // Verify iterator counts match
         int iter_count = 0;
         infix_registry_iterator_t it = infix_registry_iterator_begin(reg);
         while (infix_registry_iterator_next(&it))

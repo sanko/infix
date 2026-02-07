@@ -275,7 +275,7 @@ static bool _layout_struct(infix_type * type) {
                 current_byte_offset = current_unit_offset + bytes_used;
         }
         else {
-            // 1. Handle Flexible Array Members (FAM)
+            // Handle Flexible Array Members (FAM)
             if (mtype->category == INFIX_TYPE_ARRAY && mtype->meta.array_info.is_flexible) {
                 in_bitfield = false;
                 size_t align = mtype->alignment;
@@ -296,7 +296,7 @@ static bool _layout_struct(infix_type * type) {
                 continue;
             }
 
-            // 2. Standard Member
+            // Standard Member
             in_bitfield = false;
             size_t align = mtype->alignment;
             if (align == 0)
