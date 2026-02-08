@@ -5,6 +5,16 @@ All notable changes to `infix` will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added `TARGET_DIRECT_TRAMPOLINE_GENERATOR` to the regression tester in `t/850_regression_cases.c` to support debugging and preventing regressions in the direct marshalling pipeline.
+
+### Fixed
+
+- Fixed a memory leak in `_infix_forward_create_direct_impl` where the `ref_count` of the newly created trampoline handle was not being initialized. This caused the handle to never be freed during destruction as the library incorrectly assumed other references existed.
+
 ## [0.1.5] - 2026-02-06
 
 This release expands platform stability. Focus was on SEH and DWARF unwinding, float16 and AVX-512 vector types.
