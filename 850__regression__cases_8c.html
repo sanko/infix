@@ -140,6 +140,7 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a069f203eb4bd59c4b6e646ea3cef8c26" id="r_a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26">fuzzer_target_t</a> { <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3">TARGET_TYPE_GENERATOR</a>
 , <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883">TARGET_SIGNATURE_PARSER</a>
 , <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a">TARGET_TRAMPOLINE_GENERATOR</a>
+, <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a">TARGET_DIRECT_TRAMPOLINE_GENERATOR</a>
  }</td></tr>
 <tr class="separator:a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -147,6 +148,14 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ab0ce6fb1160ee0e1ea988c69ed613d18" id="r_ab0ce6fb1160ee0e1ea988c69ed613d18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#ab0ce6fb1160ee0e1ea988c69ed613d18">dummy_reg_handler</a> (void)</td></tr>
 <tr class="separator:ab0ce6fb1160ee0e1ea988c69ed613d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef80ac448127ca9b3f74cd83a2b97709" id="r_aef80ac448127ca9b3f74cd83a2b97709"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="unioninfix__direct__value__t.html">infix_direct_value_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#aef80ac448127ca9b3f74cd83a2b97709">dummy_scalar_marshaller</a> (void *src)</td></tr>
+<tr class="separator:aef80ac448127ca9b3f74cd83a2b97709"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d1cccceee863e55223f3605dcbe6473" id="r_a9d1cccceee863e55223f3605dcbe6473"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a9d1cccceee863e55223f3605dcbe6473">dummy_agg_marshaller</a> (void *src, void *dest, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="separator:a9d1cccceee863e55223f3605dcbe6473"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa56de1f8a44ac54935c3bbfa03a26998" id="r_aa56de1f8a44ac54935c3bbfa03a26998"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#aa56de1f8a44ac54935c3bbfa03a26998">dummy_writeback</a> (void *src, void *c_data, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="separator:aa56de1f8a44ac54935c3bbfa03a26998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9faca12e9d62ca2c652483143b2892a3" id="r_a9faca12e9d62ca2c652483143b2892a3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a9faca12e9d62ca2c652483143b2892a3">dummy_target_func</a> (void)</td></tr>
+<tr class="separator:a9faca12e9d62ca2c652483143b2892a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3709e3cfe232ebcc3a4c43e821850687" id="r_a3709e3cfe232ebcc3a4c43e821850687"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a3709e3cfe232ebcc3a4c43e821850687">run_regression_case</a> (const <a class="el" href="structregression__test__case__t.html">regression_test_case_t</a> *test)</td></tr>
 <tr class="separator:a3709e3cfe232ebcc3a4c43e821850687"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22f9d9559015dcf5a4b8f35e3490da67" id="r_a22f9d9559015dcf5a4b8f35e3490da67"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a22f9d9559015dcf5a4b8f35e3490da67">plan</a> (num_tests)</td></tr>
@@ -201,11 +210,54 @@ Variables</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3" name="a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3"></a>TARGET_TYPE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883" name="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883"></a>TARGET_SIGNATURE_PARSER&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a" name="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a"></a>TARGET_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a" name="a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a"></a>TARGET_DIRECT_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a9d1cccceee863e55223f3605dcbe6473" name="a9d1cccceee863e55223f3605dcbe6473"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d1cccceee863e55223f3605dcbe6473">&#9670;&#160;</a></span>dummy_agg_marshaller()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void dummy_agg_marshaller </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab0ce6fb1160ee0e1ea988c69ed613d18" name="ab0ce6fb1160ee0e1ea988c69ed613d18"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0ce6fb1160ee0e1ea988c69ed613d18">&#9670;&#160;</a></span>dummy_reg_handler()</h2>
 
@@ -220,6 +272,100 @@ Variables</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef80ac448127ca9b3f74cd83a2b97709" name="aef80ac448127ca9b3f74cd83a2b97709"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef80ac448127ca9b3f74cd83a2b97709">&#9670;&#160;</a></span>dummy_scalar_marshaller()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="unioninfix__direct__value__t.html">infix_direct_value_t</a> dummy_scalar_marshaller </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9faca12e9d62ca2c652483143b2892a3" name="a9faca12e9d62ca2c652483143b2892a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9faca12e9d62ca2c652483143b2892a3">&#9670;&#160;</a></span>dummy_target_func()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void dummy_target_func </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa56de1f8a44ac54935c3bbfa03a26998" name="aa56de1f8a44ac54935c3bbfa03a26998"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa56de1f8a44ac54935c3bbfa03a26998">&#9670;&#160;</a></span>dummy_writeback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void dummy_writeback </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>c_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -321,7 +467,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="keywordtype">size_t</span> num_tests = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>[0])</div>
-<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:38</div></div>
+<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:60</div></div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['3_200_201_203_20a_202025_2012_2019_0',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...v0.1.3&quot; &gt;0.1.3&lt;/a&gt; - 2025-12-19',['../md_CHANGELOG.html#autotoc_md255',1,'']]],
+  ['3_200_201_203_20a_202025_2012_2019_0',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...v0.1.3&quot; &gt;0.1.3&lt;/a&gt; - 2025-12-19',['../md_CHANGELOG.html#autotoc_md258',1,'']]],
   ['3_201_20write_20xor_20execute_20w_20x_1',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md196',1,'']]],
   ['3_202_20guard_20pages_20and_20read_20only_20contexts_2',['3.2 Guard Pages and Read-Only Contexts',['../md_docs_2internals.html#autotoc_md197',1,'']]],
   ['3_203_20macos_20jit_20hardening_20and_20the_20entitlement_20fallback_3',['3.3 macOS JIT Hardening and the Entitlement Fallback',['../md_docs_2internals.html#autotoc_md198',1,'']]],
@@ -10,10 +10,10 @@ var searchData=
   ['3_20introspection_20api_7',['3. Introspection API',['../md_docs_2API.html#autotoc_md37',1,'']]],
   ['3_20linking_20against_20a_20pre_20built_20library_8',['3. Linking Against a Pre-Built Library',['../md_docs_2INSTALL.html#autotoc_md176',1,'']]],
   ['3_20our_20solution_3a_20a_20human_20first_20signature_20system_9',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md226',1,'']]],
-  ['3_20read_20only_20context_20hardening_10',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md284',1,'']]],
+  ['3_20read_20only_20context_20hardening_10',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md287',1,'']]],
   ['3_20security_20features_20deep_20dive_11',['3. Security Features Deep Dive',['../md_docs_2internals.html#autotoc_md195',1,'']]],
   ['3_20syntax_20showcase_12',['2.3 Syntax Showcase',['../md_docs_2signatures.html#autotoc_md233',1,'']]],
-  ['3_20v0_201_204_200_201_204_20a_202026_2001_2017_13',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.3...v0.1.4&quot; &gt;0.1.4&lt;/a&gt; - 2026-01-17',['../md_CHANGELOG.html#autotoc_md251',1,'']]],
+  ['3_20v0_201_204_200_201_204_20a_202026_2001_2017_13',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.3...v0.1.4&quot; &gt;0.1.4&lt;/a&gt; - 2026-01-17',['../md_CHANGELOG.html#autotoc_md254',1,'']]],
   ['301_5fprimitives_2ec_14',['301_primitives.c',['../301__primitives_8c.html',1,'']]],
   ['302_5faggregates_2ec_15',['302_aggregates.c',['../302__aggregates_8c.html',1,'']]],
   ['303_5fadvanced_2ec_16',['303_advanced.c',['../303__advanced_8c.html',1,'']]],

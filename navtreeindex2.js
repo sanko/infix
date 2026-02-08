@@ -1,6 +1,11 @@
 var NAVTREEINDEX2 =
 {
-"850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894":[12,0,5,39,7],
+"850__regression__cases_8c.html#a9d1cccceee863e55223f3605dcbe6473":[12,0,5,39,3],
+"850__regression__cases_8c.html#a9faca12e9d62ca2c652483143b2892a3":[12,0,5,39,6],
+"850__regression__cases_8c.html#aa56de1f8a44ac54935c3bbfa03a26998":[12,0,5,39,7],
+"850__regression__cases_8c.html#ab0ce6fb1160ee0e1ea988c69ed613d18":[12,0,5,39,4],
+"850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894":[12,0,5,39,11],
+"850__regression__cases_8c.html#aef80ac448127ca9b3f74cd83a2b97709":[12,0,5,39,5],
 "851__lifecycle__regression_8c.html":[12,0,5,40],
 "851__lifecycle__regression_8c.html#a1655e4adfda95660042d34619eb61845":[12,0,5,40,0],
 "851__lifecycle__regression_8c.html#a1c901e3edf503f668952251bc86c20c9":[12,0,5,40,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX2 =
 "Ch08__ManualAPI_8c.html":[12,0,1,0,40],
 "Ch08__ManualAPI_8c.html#a1bb4e785b012854b459e46f6aa7761f9":[12,0,1,0,40,2],
 "Ch08__ManualAPI_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4":[12,0,1,0,40,1],
-"Ch08__SharedArena_8c.html":[12,0,1,0,41],
-"Ch08__SharedArena_8c.html#a30360096e7307117d125c5efab5c7b90":[12,0,1,0,41,2],
-"Ch08__SharedArena_8c.html#a840291bc02cba5474a4cb46a9b9566fe":[12,0,1,0,41,4],
-"Ch08__SharedArena_8c.html#aafb83a566800082a69c5237ce83013bf":[12,0,1,0,41,3],
-"Ch09__ErrorReporting_8c.html":[12,0,1,0,42],
-"Ch09__ErrorReporting_8c.html#a1c2de9e778ecea9c22ab04e96f53df3d":[12,0,1,0,42,1]
+"Ch08__SharedArena_8c.html":[12,0,1,0,41]
 };

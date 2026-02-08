@@ -13,10 +13,10 @@ var searchData=
   ['ok_10',['ok',['../501__direct__marshalling_8c.html#ab0612357232526083b8d2dddc1e27b14',1,'ok(infix_register_types(reg, &quot;@Point = { x: double, y: double };&quot; &quot;@Line = { start: @Point, end: @Point };&quot; &quot;@Empty = {};&quot; &quot;@IntFunc = (int)-&gt;int;&quot;)==INFIX_SUCCESS, &quot;Successfully registered all test types&quot;):&#160;501_direct_marshalling.c'],['../202__in__structs_8c.html#a174053e67b86029e7ca202ff79079f92',1,'ok(bound_result==550, &quot;Bound call correct&quot;):&#160;202_in_structs.c'],['../202__in__structs_8c.html#a058e4209ac6ae408eff75a9893f9f9cd',1,'ok(infix_forward_create_manual(&amp;bound_t, return_type, &amp;struct_type, 1, 1,(void *) process_pointer_struct)==INFIX_SUCCESS, &quot;Bound created&quot;):&#160;202_in_structs.c'],['../202__in__structs_8c.html#a19c44ea5fe85ed18a39c7781c4a5d07e',1,'ok(unbound_result==550, &quot;Unbound call correct&quot;):&#160;202_in_structs.c'],['../202__in__structs_8c.html#a3a1b4aca5407326b0e3afbdfa4a45dfe',1,'ok(infix_forward_create_unbound_manual(&amp;unbound_t, return_type, &amp;struct_type, 1, 1)==INFIX_SUCCESS, &quot;Unbound created&quot;):&#160;202_in_structs.c'],['../double__tap_8h.html#a1eb6cb8997bc0bbff7c765afb5c67d79',1,'ok:&#160;double_tap.h']]],
   ['on_20apple_20silicon_11',['The Challenge: Hardened Runtimes on Apple Silicon',['../md_docs_2internals.html#autotoc_md199',1,'']]],
   ['one_5fstack_5fdouble_12',['ONE_STACK_DOUBLE',['../401__large__stack_8c.html#aade27249ba136699f108174289e538fc',1,'401_large_stack.c']]],
-  ['only_20context_20hardening_13',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md284',1,'']]],
+  ['only_20context_20hardening_13',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md287',1,'']]],
   ['only_20contexts_14',['3.2 Guard Pages and Read-Only Contexts',['../md_docs_2internals.html#autotoc_md197',1,'']]],
   ['opaque_20pointers_20incomplete_20types_15',['Recipe: Working with Opaque Pointers (Incomplete Types)',['../md_docs_2cookbook.html#autotoc_md62',1,'']]],
-  ['optimization_16',['Medium Priority: Expansion &amp; Optimization',['../md_TODO.html#autotoc_md274',1,'']]],
+  ['optimization_16',['Medium Priority: Expansion &amp; Optimization',['../md_TODO.html#autotoc_md277',1,'']]],
   ['optimization_3a_20arena_20resetting_20for_20hot_20loops_17',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md132',1,'']]],
   ['optimizing_20memory_20with_20a_20shared_20arena_18',['Recipe: Optimizing Memory with a Shared Arena',['../md_docs_2cookbook.html#autotoc_md129',1,'']]],
   ['optional_19',['2. Building &lt;tt&gt;infix&lt;/tt&gt; as a Standalone Library (Optional)',['../md_docs_2INSTALL.html#autotoc_md168',1,'']]],
@@ -26,6 +26,6 @@ var searchData=
   ['other_20systems_23',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md245',1,'']]],
   ['our_20solution_3a_20a_20human_20first_20signature_20system_24',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md226',1,'']]],
   ['out_20parameters_25',['Recipe: Working with &quot;Out&quot; Parameters',['../md_docs_2cookbook.html#autotoc_md61',1,'']]],
-  ['overflows_26',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md285',1,'']]],
+  ['overflows_26',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md288',1,'']]],
   ['overview_27',['2. Architectural Overview',['../md_docs_2internals.html#autotoc_md190',1,'']]]
 ];
