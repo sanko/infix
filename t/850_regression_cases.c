@@ -28,7 +28,29 @@
 // Dummy handler for trampoline generation tests
 void dummy_reg_handler(void) {}
 
-typedef enum { TARGET_TYPE_GENERATOR, TARGET_SIGNATURE_PARSER, TARGET_TRAMPOLINE_GENERATOR } fuzzer_target_t;
+// Dummy Handlers for Direct Marshalling (Addresses needed for JIT generation)
+static infix_direct_value_t dummy_scalar_marshaller(void * src) {
+    (void)src;
+    return (infix_direct_value_t){0};
+}
+static void dummy_agg_marshaller(void * src, void * dest, const infix_type * type) {
+    (void)src;
+    (void)dest;
+    (void)type;
+}
+static void dummy_writeback(void * src, void * c_data, const infix_type * type) {
+    (void)src;
+    (void)c_data;
+    (void)type;
+}
+static void dummy_target_func(void) {}
+
+typedef enum {
+    TARGET_TYPE_GENERATOR,
+    TARGET_SIGNATURE_PARSER,
+    TARGET_TRAMPOLINE_GENERATOR,
+    TARGET_DIRECT_TRAMPOLINE_GENERATOR
+} fuzzer_target_t;
 typedef struct {
     const char * name;
     const char * b64_input;
@@ -150,6 +172,10 @@ static const regression_test_case_t regression_tests[] = {
      .b64_input = "/////wMDAwMDAwMDAwMDAwMDIgADA///////////////Cyoq+Q==",
      .target = TARGET_SIGNATURE_PARSER,
      .expected_status = INFIX_ERROR_INVALID_ARGUMENT},  // Expect parser error (Integer Overflow)
+    {.name = "Leak in direct trampoline due to uninitialized ref_count",
+     .b64_input = "CQEAJA==",
+     .target = TARGET_DIRECT_TRAMPOLINE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
 };
 
 static void run_regression_case(const regression_test_case_t * test) {
@@ -237,6 +263,89 @@ static void run_regression_case(const regression_test_case_t * test) {
                test->expected_status,
                fwd_status,
                rev_status);
+            infix_arena_destroy(arena);
+        }
+        else if (test->target == TARGET_DIRECT_TRAMPOLINE_GENERATOR) {
+            fuzzer_input in = {(const uint8_t *)data, data_size};
+            infix_arena_t * arena = infix_arena_create(65536);
+            if (!arena) {
+                fail("Failed to create arena for direct trampoline test.");
+                free(data);
+                return;
+            }
+            size_t total_fields = 0;
+            infix_type * ret_type = generate_random_type(arena, &in, 0, &total_fields);
+            if (!ret_type)
+                ret_type = infix_type_create_void();
+
+            uint8_t arg_count_byte;
+            if (!consume_uint8_t(&in, &arg_count_byte))
+                arg_count_byte = 0;
+
+            size_t num_args = arg_count_byte % MAX_ARGS_IN_SIGNATURE;
+            infix_type ** arg_types = (infix_type **)calloc(num_args, sizeof(infix_type *));
+            infix_direct_arg_handler_t * handlers =
+                (infix_direct_arg_handler_t *)calloc(num_args, sizeof(infix_direct_arg_handler_t));
+
+            for (size_t i = 0; i < num_args; ++i) {
+                arg_types[i] = generate_random_type(arena, &in, 0, &total_fields);
+                if (!arg_types[i])
+                    arg_types[i] = infix_type_create_primitive(INFIX_PRIMITIVE_SINT32);
+
+                uint8_t handler_choice;
+                if (!consume_uint8_t(&in, &handler_choice))
+                    handler_choice = 0;
+
+                if (arg_types[i]->category == INFIX_TYPE_STRUCT || arg_types[i]->category == INFIX_TYPE_UNION ||
+                    arg_types[i]->category == INFIX_TYPE_ARRAY || arg_types[i]->category == INFIX_TYPE_COMPLEX) {
+                    handlers[i].aggregate_marshaller = &dummy_agg_marshaller;
+                }
+                else
+                    handlers[i].scalar_marshaller = &dummy_scalar_marshaller;
+
+                if (arg_types[i]->category == INFIX_TYPE_POINTER && (handler_choice % 2 == 0))
+                    handlers[i].writeback_handler = &dummy_writeback;
+            }
+
+            char signature[4096] = {0};
+            char * p = signature;
+            size_t remain = sizeof(signature) - 1;
+
+            if (remain >= 1) {
+                *p++ = '(';
+                remain--;
+            }
+            for (size_t i = 0; i < num_args; ++i) {
+                if (i > 0 && remain >= 1) {
+                    *p++ = ',';
+                    remain--;
+                }
+                (void)infix_type_print(p, remain + 1, arg_types[i], INFIX_DIALECT_SIGNATURE);
+                size_t len = strlen(p);
+                p += len;
+                remain -= len;
+            }
+            if (remain >= 3) {
+                memcpy(p, ")->", 3);
+                p += 3;
+                remain -= 3;
+            }
+            (void)infix_type_print(p, remain + 1, ret_type, INFIX_DIALECT_SIGNATURE);
+
+            infix_forward_t * trampoline = NULL;
+            infix_status status =
+                infix_forward_create_direct(&trampoline, signature, (void *)&dummy_target_func, handlers, NULL);
+
+            if (status == INFIX_SUCCESS)
+                infix_forward_destroy(trampoline);
+
+            ok(status == test->expected_status,
+               "Direct trampoline generator returned expected status %d (Got: %d)",
+               test->expected_status,
+               status);
+
+            free(arg_types);
+            free(handlers);
             infix_arena_destroy(arena);
         }
         free(data);
