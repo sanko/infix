@@ -614,6 +614,7 @@ static infix_status _infix_forward_create_direct_impl(infix_forward_t ** out_tra
     handle->num_args = num_args;
     handle->num_fixed_args = num_args;  // Direct trampolines are always fixed-arity.
     handle->target_fn = target_fn;
+    handle->ref_count = 1;
 
     // 4. Allocate and Finalize Executable Memory
     handle->exec = infix_executable_alloc(buf.size);
