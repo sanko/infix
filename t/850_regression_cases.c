@@ -320,17 +320,22 @@ static void run_regression_case(const regression_test_case_t * test) {
                     *p++ = ',';
                     remain--;
                 }
-                (void)infix_type_print(p, remain + 1, arg_types[i], INFIX_DIALECT_SIGNATURE);
-                size_t len = strlen(p);
-                p += len;
-                remain -= len;
+                if (infix_type_print(p, remain + 1, arg_types[i], INFIX_DIALECT_SIGNATURE) == INFIX_SUCCESS) {
+                    size_t len = strlen(p);
+                    p += len;
+                    remain -= len;
+                }
             }
             if (remain >= 3) {
                 memcpy(p, ")->", 3);
                 p += 3;
                 remain -= 3;
             }
-            (void)infix_type_print(p, remain + 1, ret_type, INFIX_DIALECT_SIGNATURE);
+            if (infix_type_print(p, remain + 1, ret_type, INFIX_DIALECT_SIGNATURE) == INFIX_SUCCESS) {
+                size_t len = strlen(p);
+                p += len;
+                remain -= len;
+            }
 
             infix_forward_t * trampoline = NULL;
             infix_status status =
