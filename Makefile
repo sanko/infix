@@ -74,7 +74,7 @@ else
     ifeq ($(LRT_FLAG),-lrt)
         $(info Linker check: -lrt is required and will be added.)
     endif
-    LDFLAGS      := -lpthread $(LRT_FLAG) -ldl
+    LDFLAGS      := -lpthread $(LRT_FLAG) -ldl -lm
     LIB_TARGET   := libinfix.a
     CLEAN_CMD    := rm -f
     EXPORT_FLAGS := -rdynamic
@@ -115,7 +115,7 @@ shared: libinfix.$(SO_EXT)
 test: $(TEST_TARGETS)
 	@echo
 	@echo "--> Running All Tests"
-	@$(PERL) -e 'my $$failures = 0; foreach my $$exe (@ARGV) { print "  > Running $$exe\n"; my $$exit_code = system(".\\" . $$exe); if ($$exit_code != 0) { print "FAILURE: $$exe failed.\n"; $$failures++; } } if ($$failures > 0) { print "\nSUMMARY: $$failures test(s) failed.\n"; exit 1; } else { print "\nAll tests passed.\n"; }' $(TEST_TARGETS)
+	@$(PERL) -e 'my $$failures = 0; foreach my $$exe (@ARGV) { print "  > Running $$exe\n"; my $$exit_code = system("./" . $$exe); if ($$exit_code != 0) { print "FAILURE: $$exe failed.\n"; $$failures++; } } if ($$failures > 0) { print "\nSUMMARY: $$failures test(s) failed.\n"; exit 1; } else { print "\nAll tests passed.\n"; }' $(TEST_TARGETS)
 
 # Rule to build the static library
 $(LIB_TARGET): $(LIB_OBJS)

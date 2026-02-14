@@ -487,7 +487,10 @@ static infix_status _infix_forward_create_impl(infix_forward_t ** out_trampoline
     *out_trampoline = handle;
 
     // Cache the newly created trampoline.
-    if (handle->signature)
+    // We ONLY cache if we own the arena. If the user provided an external arena,
+    // they control the lifetime, and we can't guarantee the signature string
+    // (which is in that arena) will remain valid as long as the cache entry exists.
+    if (handle->signature && !handle->is_external_arena)
         _infix_cache_insert(handle);
 
 cleanup:

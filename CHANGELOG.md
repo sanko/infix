@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a memory leak in `_infix_forward_create_direct_impl` where the `ref_count` of the newly created trampoline handle was not being initialized. This caused the handle to never be freed during destruction as the library incorrectly assumed other references existed.
+- Trampolines allocated in a user-managed "shared arena" were being added to the internal global cache. When the user destroyed the arena, the cache retained dangling pointers to the trampoline signatures.
 
 ## [0.1.5] - 2026-02-06
 
