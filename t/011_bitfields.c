@@ -35,7 +35,7 @@ TEST {
     plan(1);
     subtest("Basic Bitfields") {
         plan(8);
-        infix_arena_t * arena = infix_arena_create(2048);
+        infix_arena_t * arena = NULL;
 
         // signature: "{a: uint32:3, b: uint32:5, c: uint32:8, d: uint32:1}"
         const char * sig = "{a: uint32:3, b: uint32:5, c: uint32:8, d: uint32:1}";

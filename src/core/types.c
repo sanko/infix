@@ -393,6 +393,7 @@ static infix_status _create_aggregate_setup(infix_arena_t * arena,
 c23_nodiscard infix_status infix_type_create_pointer_to(infix_arena_t * arena,
                                                         infix_type ** out_type,
                                                         infix_type * pointee_type) {
+    _infix_clear_error();
     if (!out_type || !pointee_type) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -424,6 +425,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_array(infix_arena_t * are
                                                              infix_type ** out_type,
                                                              infix_type * element_type,
                                                              size_t num_elements) {
+    _infix_clear_error();
     if (out_type == nullptr || element_type == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -461,6 +463,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_array(infix_arena_t * are
 INFIX_API c23_nodiscard infix_status infix_type_create_flexible_array(infix_arena_t * arena,
                                                                       infix_type ** out_type,
                                                                       infix_type * element_type) {
+    _infix_clear_error();
     if (out_type == nullptr || element_type == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -504,6 +507,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_flexible_array(infix_aren
 INFIX_API c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * arena,
                                                             infix_type ** out_type,
                                                             infix_type * underlying_type) {
+    _infix_clear_error();
     if (out_type == nullptr || underlying_type == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -538,6 +542,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_enum(infix_arena_t * aren
 INFIX_API c23_nodiscard infix_status infix_type_create_complex(infix_arena_t * arena,
                                                                infix_type ** out_type,
                                                                infix_type * base_type) {
+    _infix_clear_error();
     if (out_type == nullptr || base_type == nullptr || (!is_float(base_type) && !is_double(base_type))) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -569,6 +574,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_vector(infix_arena_t * ar
                                                               infix_type ** out_type,
                                                               infix_type * element_type,
                                                               size_t num_elements) {
+    _infix_clear_error();
     if (out_type == nullptr || element_type == nullptr || element_type->category != INFIX_TYPE_PRIMITIVE) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -607,6 +613,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_union(infix_arena_t * are
                                                              infix_type ** out_type,
                                                              infix_struct_member * members,
                                                              size_t num_members) {
+    _infix_clear_error();
     infix_type * type = nullptr;
     infix_struct_member * arena_members = nullptr;
     infix_status status = _create_aggregate_setup(arena, &type, &arena_members, members, num_members);
@@ -715,6 +722,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena
                                                                      size_t alignment,
                                                                      infix_struct_member * members,
                                                                      size_t num_members) {
+    _infix_clear_error();
     if (out_type == nullptr || (num_members > 0 && members == nullptr)) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
@@ -770,6 +778,7 @@ INFIX_API c23_nodiscard infix_status infix_type_create_named_reference(infix_are
                                                                        infix_type ** out_type,
                                                                        const char * name,
                                                                        infix_aggregate_category_t agg_cat) {
+    _infix_clear_error();
     if (out_type == nullptr || name == nullptr) {
         _infix_set_error(INFIX_CATEGORY_GENERAL, INFIX_CODE_NULL_POINTER, 0);
         return INFIX_ERROR_INVALID_ARGUMENT;
