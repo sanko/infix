@@ -282,7 +282,7 @@ var NAVTREE =
       [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md241", null ]
     ] ],
     [ "Changelog", "md_CHANGELOG.html", [
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.4...HEAD\"", "md_CHANGELOG.html#autotoc_md247", [
+      [ "[0.1.6] - 2026-02-14", "md_CHANGELOG.html#autotoc_md247", [
         [ "Added", "md_CHANGELOG.html#autotoc_md248", null ],
         [ "Fixed", "md_CHANGELOG.html#autotoc_md249", null ]
       ] ],
