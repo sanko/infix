@@ -50,6 +50,7 @@ These keywords represent standard C types whose size can vary by platform. They 
 | `longdouble`    | `long double`        | Varies              | 80-bit (x86), 128-bit (AArch64), or 64-bit (MSVC) float. Use with caution.  |
 | `size_t`        | `size_t`             | 32 or 64 bits       | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
 | `ssize_t`       | `ssize_t`            | 32 or 64 bits       | **Platform-dependent.** 32 bits on 64-bit Windows, 64 bits on Linux/macOS.  |
+| `wchar_t`       | `wchar_t`            | 16 or 32 bits       | **Platform-dependent.** 16 bits on 32-bit Windows, 64 bits on Linux/macOS.  |
 
 #### Tier 2: Explicit Fixed-Width Types (Recommended)
 
@@ -142,6 +143,17 @@ These syntax elements allow you to build complex types from simpler ones.
 `infix` supports C++-style namespaces and nested scopes using the `::` operator. This is used in the Type Registry to define types that live within a namespace, and it is recognized by the C++ mangling dialects to generate correct ABI-compliant symbols.
 
 *   **Example:** `@Graphics::Math::Vector3`
+
+### 2.6 Built-in Aliases vs. Registry Aliases
+
+While most custom names in `infix` require a Registry (`@Name`), certain built-in aliases are handled natively by the parser to preserve their semantic meaning for FFI marshallers.
+
+*   **Registry Aliases (`@MyType`):** Require an `infix_registry_t`. These are deep-copied and resolved during the resolution stage.
+*   **Built-in Aliases (`wchar_t`, `size_t`, etc.):** These resolve directly to `PRIMITIVE` types but **retain their name**.
+
+#### Why this matters for Strings
+
+In C, a `wchar_t[]` and an `int32_t[]` might look identical in memory on Linux (both are arrays of 4-byte integers). However, by using the keyword `wchar_t`, `infix` preserves that name in the metadata. High-level languages (like Perl or Python) can use `infix_type_get_name()` to see the string "wchar_t" and automatically treat the buffer as a string instead of a list of numbers.
 
 ---
 

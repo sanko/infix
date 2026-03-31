@@ -182,7 +182,7 @@ TEST {
         infix_registry_destroy(registry);
     }
     subtest("Semantic Aliases for Non-Aggregate Types") {
-        plan(10);
+        plan(11);
         note("Verifies that aliases for primitives and pointers preserve their name for introspection.");
         infix_registry_t * registry = infix_registry_create();
         const char * defs = "@MyInt = int32; @MyHandle = *void; @MyPoint = {double, double}; @MyPointAlias = @MyPoint;";
@@ -223,6 +223,28 @@ TEST {
         infix_arena_destroy(arena2);
         infix_arena_destroy(arena3);
         infix_registry_destroy(registry);
+
+        subtest("Named Primitives vs Registry Aliases") {
+            plan(5);
+            infix_registry_t * registry = infix_registry_create();
+            const char * defs = "@MyInt = int;";
+            ok(infix_register_types(registry, defs) == INFIX_SUCCESS, "Registered aliases for int");
+
+            infix_type * type = NULL;
+            infix_arena_t * arena = NULL;
+
+            // Registry Alias: should have a name and be a STRUCT/PRIMITIVE depending on resolution
+            ok(infix_type_from_signature(&type, &arena, "@MyInt", registry) == INFIX_SUCCESS, "Parse @MyInt");
+            ok(strcmp(infix_type_get_name(type), "MyInt") == 0, "Registry alias name preserved");
+            infix_arena_destroy(arena);
+
+            // Primitive Alias: should have a name natively now
+            ok(infix_type_from_signature(&type, &arena, "wchar_t", NULL) == INFIX_SUCCESS, "Parse wchar_t");
+            ok(strcmp(infix_type_get_name(type), "wchar_t") == 0, "Primitive alias 'wchar_t' name preserved natively");
+            infix_arena_destroy(arena);
+
+            infix_registry_destroy(registry);
+        }
     }
 
     subtest("Cloning a populated registry") {

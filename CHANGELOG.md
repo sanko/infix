@@ -5,6 +5,13 @@ All notable changes to `infix` will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2026-03-30
+
+### Changed
+
+- The string parser now preserves names for character-specific primitives (`wchar_t`, `char16_t`, `char32_t`, and `char8_t`). This prevents semantic erasure where these types were previously indistinguishable from raw integers.
+- Updated `infix_type_get_name()` to return the alias name for these specific primitives, enabling high-level marshallers to correctly identify string buffers without relying on fragile `sizeof()` heuristics.
+
 ## [0.1.6] - 2026-02-14
 
 ### Added
