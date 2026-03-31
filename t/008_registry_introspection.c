@@ -28,7 +28,7 @@
 #include <string.h>
 
 TEST {
-    plan(3);
+    plan(4);
     // Setup: Create a registry with a mix of types.
     infix_registry_t * registry = infix_registry_create();
     if (!registry)
@@ -102,5 +102,21 @@ TEST {
            "`lookup_type` returns correct type for @Point");
         ok(infix_registry_lookup_type(registry, "FwdOnly") == NULL, "`lookup_type` returns NULL for fwd-declaration");
     }
+    subtest("Registry Print with Named Primitives") {
+        plan(3);
+        infix_registry_t * reg = infix_registry_create();
+        ok(infix_register_types(reg, "@StringNode = { text: [32:wchar_t] };") == INFIX_SUCCESS,
+           "Registered StringNode");
+
+        char buf[256];
+        infix_status s = infix_registry_print(buf, sizeof(buf), reg);
+        if (ok(s == INFIX_SUCCESS, "Registry print succeeds")) {
+            // The output should contain WChar, NOT @WChar
+            ok(strstr(buf, "{text:[32:wchar_t]}") != NULL, "Registry dump uses native primitive name 'wchar_t'");
+        }
+
+        infix_registry_destroy(reg);
+    }
+
     infix_registry_destroy(registry);
 }

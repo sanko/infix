@@ -381,7 +381,7 @@ TEST {
         infix_registry_destroy(registry);
     }
     subtest("Round trip") {
-        plan(7);
+        plan(11);
         test_print_roundtrip("int", "sint32");
         test_print_roundtrip("*[10:{int,float}]", "*[10:{sint32,float}]");
         test_print_roundtrip("<*void, double>", NULL);
@@ -389,6 +389,10 @@ TEST {
         test_print_roundtrip("{<int,char>, *char}", "{<sint32,sint8>,*sint8}");
         test_print_roundtrip("e:longlong", "e:sint64");
         test_print_roundtrip("v[4:float]", NULL);
+        test_print_roundtrip("wchar_t", "wchar_t");  // Should NOT print as @wchar_t
+        test_print_roundtrip("char16_t", "char16_t");
+        test_print_roundtrip("char32_t", "char32_t");
+        test_print_roundtrip("[16:wchar_t]", "[16:wchar_t]");
     }
     subtest("Round trip with named fields") {
         plan(3);

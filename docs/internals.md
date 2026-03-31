@@ -270,7 +270,7 @@ This section provides a low-level comparison of the ABIs supported by `infix`.
 
 ---
 
-## 5. Maintainer's Debugging Guide
+## 6. Maintainer's Debugging Guide
 
 ### Method 1: Static Analysis with `infix_dump_hex`
 The simplest way to see what the JIT is producing is to enable `INFIX_DEBUG_ENABLED=1` in your build. This will trigger a hexdump of the generated machine code after every trampoline creation.

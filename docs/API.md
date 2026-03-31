@@ -239,6 +239,11 @@ These functions work for both `infix_forward_t*` and `infix_reverse_t*` handles.
 
 *   `infix_status infix_type_from_signature(...)`: Parses a signature string into a detailed `infix_type` graph.
 *   `const char* infix_type_get_name(const infix_type* type)`: Returns the semantic alias of a type (e.g., "MyInt"), or `NULL` if anonymous.
+  *   **For Registry Types:** Returns the name used in the registry (e.g., "MyStruct").
+  *   **For Built-in Aliases:** Returns the specific keyword used in the signature (e.g., "wchar_t", "char16_t", "size_t").
+  *   **For Raw Primitives:** Returns `NULL` for standard types like `sint32` or `double`.
+
+ **Usage Note:** This is the recommended way to detect if an array should be marshalled as a string. Check if the element type's name is "wchar_t" or "char16_t" rather than checking its size.
 *   `infix_type_category infix_type_get_category(const infix_type* type)`: Returns the fundamental category (e.g., `INFIX_TYPE_STRUCT`).
 *   `size_t infix_type_get_size(const infix_type* type)`: Returns the size of the type in bytes.
 *   `size_t infix_type_get_alignment(const infix_type* type)`: Returns the alignment requirement in bytes.

@@ -1230,7 +1230,12 @@ size_t _infix_estimate_graph_size(infix_arena_t * temp_arena, const infix_type *
 INFIX_API c23_nodiscard const char * infix_type_get_name(const infix_type * type) {
     if (type == nullptr)
         return nullptr;
-    return type->name;
+    if (type->name)
+        return type->name;
+    // Add this check so Affix can inspect unresolved types!
+    if (type->category == INFIX_TYPE_NAMED_REFERENCE)
+        return type->meta.named_reference.name;
+    return nullptr;
 }
 /**
  * @brief Gets the fundamental category of a type.
