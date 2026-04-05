@@ -242,7 +242,7 @@ var NAVTREE =
         [ "4.2 Safe Boundaries (<tt>infix_forward_create_safe</tt>)", "md_docs_2internals.html#autotoc_md206", null ]
       ] ],
       [ "5. ABI Internals", "md_docs_2internals.html#autotoc_md208", null ],
-      [ "5. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md210", [
+      [ "6. Maintainer's Debugging Guide", "md_docs_2internals.html#autotoc_md210", [
         [ "Method 1: Static Analysis with <tt>infix_dump_hex</tt>", "md_docs_2internals.html#autotoc_md211", null ],
         [ "Method 2: Live Debugging with GDB/LLDB", "md_docs_2internals.html#autotoc_md212", null ],
         [ "Useful Tools", "md_docs_2internals.html#autotoc_md213", null ]
@@ -273,68 +273,74 @@ var NAVTREE =
         [ "2.3 Syntax Showcase", "md_docs_2signatures.html#autotoc_md233", [
           [ "2.4 Bitfields and Flexible Arrays", "md_docs_2signatures.html#autotoc_md234", null ]
         ] ],
-        [ "2.5 Scope and Namespaces", "md_docs_2signatures.html#autotoc_md235", null ]
+        [ "2.5 Scope and Namespaces", "md_docs_2signatures.html#autotoc_md235", null ],
+        [ "2.6 Built-in Aliases vs. Registry Aliases", "md_docs_2signatures.html#autotoc_md236", [
+          [ "Why this matters for Strings", "md_docs_2signatures.html#autotoc_md237", null ]
+        ] ]
       ] ],
-      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md237", [
-        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md238", null ],
-        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md239", null ]
+      [ "Part 3: The Named Type Registry", "md_docs_2signatures.html#autotoc_md239", [
+        [ "Defining Types (<tt>infix_register_types</tt>)", "md_docs_2signatures.html#autotoc_md240", null ],
+        [ "Using Named Types", "md_docs_2signatures.html#autotoc_md241", null ]
       ] ],
-      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md241", null ]
+      [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md243", null ]
     ] ],
     [ "Changelog", "md_CHANGELOG.html", [
-      [ "[0.1.6] - 2026-02-14", "md_CHANGELOG.html#autotoc_md247", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md248", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md249", null ]
+      [ "[0.1.7] - 2026-03-30", "md_CHANGELOG.html#autotoc_md249", [
+        [ "Changed", "md_CHANGELOG.html#autotoc_md250", null ]
       ] ],
-      [ "[0.1.5] - 2026-02-06", "md_CHANGELOG.html#autotoc_md250", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md251", null ],
-        [ "Changed", "md_CHANGELOG.html#autotoc_md252", null ],
+      [ "[0.1.6] - 2026-02-14", "md_CHANGELOG.html#autotoc_md251", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md252", null ],
         [ "Fixed", "md_CHANGELOG.html#autotoc_md253", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.3...v0.1.4\" >0.1.4</a> - 2026-01-17", "md_CHANGELOG.html#autotoc_md254", [
+      [ "[0.1.5] - 2026-02-06", "md_CHANGELOG.html#autotoc_md254", [
         [ "Added", "md_CHANGELOG.html#autotoc_md255", null ],
         [ "Changed", "md_CHANGELOG.html#autotoc_md256", null ],
         [ "Fixed", "md_CHANGELOG.html#autotoc_md257", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.2...v0.1.3\" >0.1.3</a> - 2025-12-19", "md_CHANGELOG.html#autotoc_md258", [
-        [ "Changed", "md_CHANGELOG.html#autotoc_md259", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md260", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.3...v0.1.4\" >0.1.4</a> - 2026-01-17", "md_CHANGELOG.html#autotoc_md258", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md259", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md260", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md261", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.1...v0.1.2\" >0.1.2</a> - 2025-11-26", "md_CHANGELOG.html#autotoc_md261", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md262", null ],
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.2...v0.1.3\" >0.1.3</a> - 2025-12-19", "md_CHANGELOG.html#autotoc_md262", [
         [ "Changed", "md_CHANGELOG.html#autotoc_md263", null ],
         [ "Fixed", "md_CHANGELOG.html#autotoc_md264", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...v0.1.1\" >0.1.1</a> - 2025-11-01", "md_CHANGELOG.html#autotoc_md265", [
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.1...v0.1.2\" >0.1.2</a> - 2025-11-26", "md_CHANGELOG.html#autotoc_md265", [
         [ "Added", "md_CHANGELOG.html#autotoc_md266", null ],
         [ "Changed", "md_CHANGELOG.html#autotoc_md267", null ],
         [ "Fixed", "md_CHANGELOG.html#autotoc_md268", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/releases/tag/v0.1.0\" >0.1.0</a> - 2025-10-27", "md_CHANGELOG.html#autotoc_md269", [
-        [ "Initial Public Release", "md_CHANGELOG.html#autotoc_md270", null ],
-        [ "Added", "md_CHANGELOG.html#autotoc_md271", [
-          [ "Security & Hardening", "md_CHANGELOG.html#autotoc_md272", null ],
-          [ "Performance & Memory Management", "md_CHANGELOG.html#autotoc_md273", null ],
-          [ "Platform Support", "md_CHANGELOG.html#autotoc_md274", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...v0.1.1\" >0.1.1</a> - 2025-11-01", "md_CHANGELOG.html#autotoc_md269", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md270", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md271", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md272", null ]
+      ] ],
+      [ "<a href=\"https://github.com/sanko/infix/releases/tag/v0.1.0\" >0.1.0</a> - 2025-10-27", "md_CHANGELOG.html#autotoc_md273", [
+        [ "Initial Public Release", "md_CHANGELOG.html#autotoc_md274", null ],
+        [ "Added", "md_CHANGELOG.html#autotoc_md275", [
+          [ "Security & Hardening", "md_CHANGELOG.html#autotoc_md276", null ],
+          [ "Performance & Memory Management", "md_CHANGELOG.html#autotoc_md277", null ],
+          [ "Platform Support", "md_CHANGELOG.html#autotoc_md278", null ]
         ] ]
       ] ]
     ] ],
     [ "Project Roadmap: infix FFI", "md_TODO.html", [
-      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md276", null ],
-      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md277", null ],
-      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md278", null ],
-      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md279", null ]
+      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md280", null ],
+      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md281", null ],
+      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md282", null ],
+      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md283", null ]
     ] ],
     [ "Security Policy", "md_SECURITY.html", [
-      [ "Supported Versions", "md_SECURITY.html#autotoc_md281", null ],
-      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md282", null ],
-      [ "Security Model", "md_SECURITY.html#autotoc_md283", [
-        [ "Mitigations", "md_SECURITY.html#autotoc_md284", [
-          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md285", null ],
-          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md286", null ],
-          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md287", null ],
-          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md288", null ],
-          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md289", null ]
+      [ "Supported Versions", "md_SECURITY.html#autotoc_md285", null ],
+      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md286", null ],
+      [ "Security Model", "md_SECURITY.html#autotoc_md287", [
+        [ "Mitigations", "md_SECURITY.html#autotoc_md288", [
+          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md289", null ],
+          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md290", null ],
+          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md291", null ],
+          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md292", null ],
+          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md293", null ]
         ] ]
       ] ]
     ] ],
@@ -365,16 +371,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "001__primitives_8c.html",
-"302__aggregates_8c.html#a00d523cc1f77764fd08e85011a003599",
-"850__regression__cases_8c.html#a9d1cccceee863e55223f3605dcbe6473",
-"Ch08__SharedArena_8c.html#a30360096e7307117d125c5efab5c7b90",
-"abi__sysv__x64_8c.html#ac48198ff4dd197fdda9d3a8682af6ea8",
-"double__tap_8h.html#a1cf5990a750112f555ca38cadef37398",
-"group__error__api.html#ggaf83a0f846497c5e67af7577b047ba815a1a4d2e5257fca2f092c13c6c5421c7a2",
-"group__type__system.html#ga87f7f727ca49b7e814dff08b441cbd85",
-"infix__internals_8h.html#ab4939fc6fa391d43ffbf5220ad1e2cb8",
-"md_docs_2porting.html#autotoc_md217",
-"structinfix__error__details__t.html"
+"302__aggregates_8c.html",
+"850__regression__cases_8c.html#a67c1cbb549407d754fe1894f74b40c3e",
+"Ch08__SharedArena_8c.html",
+"abi__sysv__x64_8c.html#abce30af3054b896adb3dd7040027a727",
+"double__tap_8h.html#a000b950ad68ead8ceb24148f0151ef9d",
+"group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ad23174064850ac25c853a5c89b65a7e1",
+"group__type__system.html#ga7ae858c5c8d9fc138d31c0be4421dcdb",
+"infix__internals_8h.html#ab44e698d3d035f746bd5be98c8c5d30c",
+"md_docs_2porting.html",
+"structinfix__direct__forward__abi__spec.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

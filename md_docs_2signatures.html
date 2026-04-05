@@ -169,7 +169,9 @@ Tier 1: Abstract C Types</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><code>size_t</code>   </td><td class="markdownTableBodyLeft"><code>size_t</code>   </td><td class="markdownTableBodyLeft">32 or 64 bits   </td><td class="markdownTableBodyLeft"><b>Platform-dependent.</b> 32 bits on 64-bit Windows, 64 bits on Linux/macOS.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><code>ssize_t</code>   </td><td class="markdownTableBodyLeft"><code>ssize_t</code>   </td><td class="markdownTableBodyLeft">32 or 64 bits   </td><td class="markdownTableBodyLeft"><b>Platform-dependent.</b> 32 bits on 64-bit Windows, 64 bits on Linux/macOS.   </td></tr>
+<td class="markdownTableBodyLeft"><code>ssize_t</code>   </td><td class="markdownTableBodyLeft"><code>ssize_t</code>   </td><td class="markdownTableBodyLeft">32 or 64 bits   </td><td class="markdownTableBodyLeft"><b>Platform-dependent.</b> 32 bits on 64-bit Windows, 64 bits on Linux/macOS.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><code>wchar_t</code>   </td><td class="markdownTableBodyLeft"><code>wchar_t</code>   </td><td class="markdownTableBodyLeft">16 or 32 bits   </td><td class="markdownTableBodyLeft"><b>Platform-dependent.</b> 16 bits on 32-bit Windows, 64 bits on Linux/macOS.   </td></tr>
 </table>
 <h3><a class="anchor" id="autotoc_md230"></a>
 Tier 2: Explicit Fixed-Width Types (Recommended)</h3>
@@ -317,11 +319,21 @@ Tier 3: SIMD Vector Aliases</h3>
 <ul>
 <li><b>Example:</b> <code>@Graphics::Math::Vector3</code></li>
 </ul>
+<h2><a class="anchor" id="autotoc_md236"></a>
+2.6 Built-in Aliases vs. Registry Aliases</h2>
+<p>While most custom names in <code>infix</code> require a Registry (<code>@Name</code>), certain built-in aliases are handled natively by the parser to preserve their semantic meaning for FFI marshallers.</p>
+<ul>
+<li>**Registry Aliases (<code>@MyType</code>):** Require an <code><a class="el" href="structinfix__registry__t.html" title="Internal definition of a named type registry.">infix_registry_t</a></code>. These are deep-copied and resolved during the resolution stage.</li>
+<li>**Built-in Aliases (<code>wchar_t</code>, <code>size_t</code>, etc.):** These resolve directly to <code>PRIMITIVE</code> types but <b>retain their name</b>.</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md237"></a>
+Why this matters for Strings</h3>
+<p>In C, a <code>wchar_t[]</code> and an <code>int32_t[]</code> might look identical in memory on Linux (both are arrays of 4-byte integers). However, by using the keyword <code>wchar_t</code>, <code>infix</code> preserves that name in the metadata. High-level languages (like Perl or Python) can use <code><a class="el" href="group__type__system.html#gaa34520b3888b00a7d32c694a00911acf" title="Gets the semantic alias of a type, if one exists.">infix_type_get_name()</a></code> to see the string "wchar_t" and automatically treat the buffer as a string instead of a list of numbers.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md237"></a>
+<h1><a class="anchor" id="autotoc_md239"></a>
 Part 3: The Named Type Registry</h1>
 <p>The registry is the key to managing complexity in large FFI projects. It provides a central, reusable, and readable way to define and use structs, unions, and type aliases.</p>
-<h2><a class="anchor" id="autotoc_md238"></a>
+<h2><a class="anchor" id="autotoc_md240"></a>
 Defining Types (&lt;tt&gt;infix_register_types&lt;/tt&gt;)</h2>
 <p>You populate a registry by passing a string of semicolon-separated definitions. The parser is robust and handles forward declarations and out-of-order definitions automatically.</p>
 <p><b>Syntax:</b> <code>@TypeName = &lt;TypeDefinition&gt;;</code></p>
@@ -354,7 +366,7 @@ Defining Types (&lt;tt&gt;infix_register_types&lt;/tt&gt;)</h2>
 <div class="ttc" id="agroup__registry__api_html_gabc173ceb38459e181fb2e9c724da9a92"><div class="ttname"><a href="group__registry__api.html#gabc173ceb38459e181fb2e9c724da9a92">infix_registry_create</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_registry_t * infix_registry_create(void)</div><div class="ttdoc">Creates a new, empty named type registry.</div><div class="ttdef"><b>Definition</b> type_registry.c:196</div></div>
 <div class="ttc" id="astructinfix__registry__t_html"><div class="ttname"><a href="structinfix__registry__t.html">infix_registry_t</a></div><div class="ttdoc">Internal definition of a named type registry.</div><div class="ttdef"><b>Definition</b> infix_internals.h:188</div></div>
 </div><!-- fragment --><p><b>Rule:</b> Redefining a type that already exists in a registry is an error. Once a name is defined, it is immutable for the lifetime of the registry.</p>
-<h2><a class="anchor" id="autotoc_md239"></a>
+<h2><a class="anchor" id="autotoc_md241"></a>
 Using Named Types</h2>
 <p>Once registered, you can use named types in any signature string by passing the registry handle to the FFI creation function. This works for simple aliases as well as complex structs.</p>
 <div class="fragment"><div class="line"><span class="comment">// Using the registry from the example above:</span></div>
@@ -366,12 +378,12 @@ Using Named Types</h2>
 <div class="ttc" id="astructinfix__forward__t_html"><div class="ttname"><a href="structinfix__forward__t.html">infix_forward_t</a></div><div class="ttdoc">Internal definition of a forward trampoline handle.</div><div class="ttdef"><b>Definition</b> infix_internals.h:90</div></div>
 </div><!-- fragment --><p>When you inspect a type created from an alias (e.g., <code>@UserID</code>), you can retrieve its semantic name using <code><a class="el" href="group__type__system.html#gaa34520b3888b00a7d32c694a00911acf" title="Gets the semantic alias of a type, if one exists.">infix_type_get_name()</a></code> while still accessing its underlying structural properties (size, alignment, category).</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md241"></a>
+<h1><a class="anchor" id="autotoc_md243"></a>
 Part 4: Technical Specification</h1>
-<h3><a class="anchor" id="autotoc_md242"></a>
+<h3><a class="anchor" id="autotoc_md244"></a>
 4.1 Whitespace and Comments</h3>
 <p>Insignificant whitespace (spaces, tabs, newlines) is permitted between any two tokens and should be ignored. Comments begin with a hash symbol (<code>#</code>) and continue to the end of the line.</p>
-<h3><a class="anchor" id="autotoc_md243"></a>
+<h3><a class="anchor" id="autotoc_md245"></a>
 4.2 EBNF Grammar</h3>
 <p>This Extended Backus-Naur Form grammar formally defines the signature format.</p>
 <div class="fragment"><div class="line">signature           ::= function_type | value_type</div>
@@ -410,14 +422,14 @@ Part 4: Technical Specification</h1>
 <div class="line"> </div>
 <div class="line">Identifier          ::= ([a-zA-Z_] [a-zA-Z0-9_]*) ( &#39;::&#39; [a-zA-Z_] [a-zA-Z0-9_]* )*</div>
 <div class="line">Integer             ::= [0-9]+</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md244"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md246"></a>
 4.3 Design Rationale: Why This Syntax?</h3>
 <ol type="1">
 <li><b>Readability over Brevity:</b> The two-tier type system (<code>int</code> vs. <code>int32</code>) directly maps to developer intent ("portability" vs. "specific layout").</li>
 <li><b>Unambiguous Grammar:</b> Using a pure prefix for pointers (<code>*</code>) and clear delimiters for all other composites (<code>[]</code>, <code>{}</code>, <code>&lt;&gt;</code>) eliminates ambiguity and allows for simple, linear parsing.</li>
 <li><b>Consistency:</b> The <code>c[...]</code> and <code>v[...]</code> syntax for complex and vector types creates a consistent "family" of specialized numeric constructors.</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md245"></a>
+<h3><a class="anchor" id="autotoc_md247"></a>
 4.4 Comparison with Other Systems</h3>
 <ul>
 <li><b>vs. Itanium C++ ABI:</b> Itanium is a "write-only" format designed for linkers. <code>infix</code> signatures are designed for humans to read and write. The library includes built-in "dialects" to transform these human-readable strings into standard C++ mangled symbols. This allows developers to resolve C++ functions dynamically without manually calculating complex mangled names.</li>

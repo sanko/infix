@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['4_200_201_204_20a_202026_2001_2017_0',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.3...v0.1.4&quot; &gt;0.1.4&lt;/a&gt; - 2026-01-17',['../md_CHANGELOG.html#autotoc_md254',1,'']]],
+  ['4_200_201_204_20a_202026_2001_2017_0',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.3...v0.1.4&quot; &gt;0.1.4&lt;/a&gt; - 2026-01-17',['../md_CHANGELOG.html#autotoc_md258',1,'']]],
   ['4_201_20exception_20propagation_20transparent_20unwinding_1',['4.1 Exception Propagation (Transparent Unwinding)',['../md_docs_2internals.html#autotoc_md205',1,'']]],
-  ['4_201_20whitespace_20and_20comments_2',['4.1 Whitespace and Comments',['../md_docs_2signatures.html#autotoc_md242',1,'']]],
-  ['4_202_20ebnf_20grammar_3',['4.2 EBNF Grammar',['../md_docs_2signatures.html#autotoc_md243',1,'']]],
+  ['4_201_20whitespace_20and_20comments_2',['4.1 Whitespace and Comments',['../md_docs_2signatures.html#autotoc_md244',1,'']]],
+  ['4_202_20ebnf_20grammar_3',['4.2 EBNF Grammar',['../md_docs_2signatures.html#autotoc_md245',1,'']]],
   ['4_202_20safe_20boundaries_20tt_20infix_5fforward_5fcreate_5fsafe_20tt_4',['4.2 Safe Boundaries (&lt;tt&gt;infix_forward_create_safe&lt;/tt&gt;)',['../md_docs_2internals.html#autotoc_md206',1,'']]],
-  ['4_203_20design_20rationale_3a_20why_20this_20syntax_5',['4.3 Design Rationale: Why This Syntax?',['../md_docs_2signatures.html#autotoc_md244',1,'']]],
-  ['4_204_20comparison_20with_20other_20systems_6',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md245',1,'']]],
-  ['4_20api_20hardening_20against_20integer_20overflows_7',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md288',1,'']]],
+  ['4_203_20design_20rationale_3a_20why_20this_20syntax_5',['4.3 Design Rationale: Why This Syntax?',['../md_docs_2signatures.html#autotoc_md246',1,'']]],
+  ['4_204_20comparison_20with_20other_20systems_6',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md247',1,'']]],
+  ['4_20api_20hardening_20against_20integer_20overflows_7',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md292',1,'']]],
   ['4_20bitfields_20and_20flexible_20arrays_8',['2.4 Bitfields and Flexible Arrays',['../md_docs_2signatures.html#autotoc_md234',1,'']]],
   ['4_20exception_20handling_20boundaries_9',['4. Exception Handling Boundaries',['../md_docs_2internals.html#autotoc_md204',1,'']]],
   ['4_20fuzz_20testing_10',['3.4 Fuzz Testing',['../md_docs_2internals.html#autotoc_md201',1,'']]],
@@ -21,5 +21,5 @@ var searchData=
   ['407_5ffloat16_2ec_18',['407_float16.c',['../407__float16_8c.html',1,'']]],
   ['4_3a_20advanced_20techniques_19',['Chapter 4: Advanced Techniques',['../md_docs_2cookbook.html#autotoc_md88',1,'']]],
   ['4_3a_20integrate_20the_20new_20abi_20',['Step 4: Integrate the New ABI',['../md_docs_2porting.html#autotoc_md219',1,'']]],
-  ['4_3a_20technical_20specification_21',['Part 4: Technical Specification',['../md_docs_2signatures.html#autotoc_md241',1,'']]]
+  ['4_3a_20technical_20specification_21',['Part 4: Technical Specification',['../md_docs_2signatures.html#autotoc_md243',1,'']]]
 ];

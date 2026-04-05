@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"Ch08__SharedArena_8c.html":[12,0,1,0,41],
 "Ch08__SharedArena_8c.html#a30360096e7307117d125c5efab5c7b90":[12,0,1,0,41,2],
 "Ch08__SharedArena_8c.html#a840291bc02cba5474a4cb46a9b9566fe":[12,0,1,0,41,4],
 "Ch08__SharedArena_8c.html#aafb83a566800082a69c5237ce83013bf":[12,0,1,0,41,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "abi__sysv__x64_8c.html#a8ee6ef7830bf472d90445dea8547b1be":[12,0,4,0,1,0,2],
 "abi__sysv__x64_8c.html#a9a9c5631a392e90b54b2a12019b11da6":[12,0,4,0,1,0,11],
 "abi__sysv__x64_8c.html#ab89d2499cec859d3ec6ba1cc0dda6f50":[12,0,4,0,1,0,18],
-"abi__sysv__x64_8c.html#ab916a9f71c392dbac1fec7f1b95c3657":[12,0,4,0,1,0,12],
-"abi__sysv__x64_8c.html#abce30af3054b896adb3dd7040027a727":[12,0,4,0,1,0,5]
+"abi__sysv__x64_8c.html#ab916a9f71c392dbac1fec7f1b95c3657":[12,0,4,0,1,0,12]
 };

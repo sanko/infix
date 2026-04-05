@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"structinfix__direct__forward__abi__spec.html":[11,0,27],
+"structinfix__direct__forward__abi__spec.html#a12a82b8414f0e5250d82ab5b00142c3f":[11,0,27,1],
+"structinfix__direct__forward__abi__spec.html#a9f01e9dd8366ea2ab0054b22af9544fc":[11,0,27,0],
+"structinfix__direct__forward__abi__spec.html#aa4abcd9872d45cae6689ab0ba3f85610":[11,0,27,4],
+"structinfix__direct__forward__abi__spec.html#ade59982fd5336dbd921107535305b0bd":[11,0,27,2],
+"structinfix__direct__forward__abi__spec.html#affecd25a38822e259a36b0c5ce5d7882":[11,0,27,3],
 "structinfix__error__details__t.html":[10,1,7,0],
 "structinfix__executable__t.html":[11,0,30],
 "structinfix__executable__t.html#a0fb7198de8f0b15b94a5b526c9f07c92":[11,0,30,4],
@@ -26,9 +32,9 @@ var NAVTREEINDEX10 =
 "structinfix__forward__t.html#acf87f9e48e9727e7c5432869aa9672b7":[11,0,32,0],
 "structinfix__forward__t.html#aecbdbb10b4b5977f30c8defbe578e2c5":[11,0,32,10],
 "structinfix__forward__t.html#afaa6369c0100c1b6488bd093099310d2":[11,0,32,3],
+"structinfix__function__argument__t.html":[10,1,6,0,2],
 "structinfix__function__argument__t.html":[10,1,5,0,2],
 "structinfix__function__argument__t.html":[10,1,0,2],
-"structinfix__function__argument__t.html":[10,1,6,0,2],
 "structinfix__library__t.html":[11,0,34],
 "structinfix__library__t.html#a3d2ae557db22eb7a00afe5e0f8e97ca6":[11,0,34,0],
 "structinfix__protected__t.html":[11,0,35],

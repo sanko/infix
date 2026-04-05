@@ -28,7 +28,7 @@ var searchData=
   ['bitfieldstructoverflow_25',['BitfieldStructOverflow',['../structBitfieldStructOverflow.html',1,'']]],
   ['bitfieldstructzerowidth_26',['BitfieldStructZeroWidth',['../structBitfieldStructZeroWidth.html',1,'']]],
   ['block_5fsize_27',['block_size',['../structinfix__arena__t.html#a6ea01f82489e1c51e744ed4e40333acc',1,'infix_arena_t']]],
-  ['blockquote_28',['blockquote',['../md_docs_2cookbook.html#autotoc_md123',1,'&lt;/blockquote&gt;'],['../md_docs_2INSTALL.html#autotoc_md167',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md117',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md95',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md87',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md83',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md80',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md78',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md63',1,'&lt;/blockquote&gt;']]],
+  ['blockquote_28',['blockquote',['../md_docs_2cookbook.html#autotoc_md117',1,'&lt;/blockquote&gt;'],['../md_docs_2INSTALL.html#autotoc_md167',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md123',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md95',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md87',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md83',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md80',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md78',1,'&lt;/blockquote&gt;'],['../md_docs_2cookbook.html#autotoc_md63',1,'&lt;/blockquote&gt;']]],
   ['bound_5fcif_29',['bound_cif',['../202__in__structs_8c.html#a1ec1b473015a48043ec831413cd04eb8',1,'bound_cif:&#160;202_in_structs.c'],['../901__call__overhead_8c.html#a1ec1b473015a48043ec831413cd04eb8',1,'bound_cif:&#160;901_call_overhead.c']]],
   ['bound_5fns_30',['bound_ns',['../901__call__overhead_8c.html#a8c00e10e354a6c5a7759581e3ac956a7',1,'901_call_overhead.c']]],
   ['bound_5fresult_31',['bound_result',['../202__in__structs_8c.html#a01588550c9a130fe9706ef3335716f7a',1,'202_in_structs.c']]],
@@ -47,8 +47,9 @@ var searchData=
   ['building_20and_20integrating_20infix_44',['Building and Integrating infix',['../md_docs_2INSTALL.html',1,'']]],
   ['building_20language_20bindings_45',['Chapter 11: Building Language Bindings',['../md_docs_2cookbook.html#autotoc_md155',1,'']]],
   ['building_20tt_20infix_20tt_20as_20a_20standalone_20library_20optional_46',['2. Building &lt;tt&gt;infix&lt;/tt&gt; as a Standalone Library (Optional)',['../md_docs_2INSTALL.html#autotoc_md168',1,'']]],
-  ['built_20library_47',['3. Linking Against a Pre-Built Library',['../md_docs_2INSTALL.html#autotoc_md176',1,'']]],
-  ['but_20recommended_48',['Step 6: Exception Handling Support (Optional but Recommended)',['../md_docs_2porting.html#autotoc_md221',1,'']]],
-  ['by_20reference_49',['Recipe: Large Structs Passed by Reference',['../md_docs_2cookbook.html#autotoc_md67',1,'']]],
-  ['by_20value_50',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md65',1,'']]]
+  ['built_20in_20aliases_20vs_20registry_20aliases_47',['2.6 Built-in Aliases vs. Registry Aliases',['../md_docs_2signatures.html#autotoc_md236',1,'']]],
+  ['built_20library_48',['3. Linking Against a Pre-Built Library',['../md_docs_2INSTALL.html#autotoc_md176',1,'']]],
+  ['but_20recommended_49',['Step 6: Exception Handling Support (Optional but Recommended)',['../md_docs_2porting.html#autotoc_md221',1,'']]],
+  ['by_20reference_50',['Recipe: Large Structs Passed by Reference',['../md_docs_2cookbook.html#autotoc_md67',1,'']]],
+  ['by_20value_51',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md65',1,'']]]
 ];
