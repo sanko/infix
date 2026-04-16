@@ -82,12 +82,12 @@ typedef struct pulse_vm {
 
 typedef struct {
     size_t length;
-    uint64_t data[1];
+    uint64_t data[8];
 } pulse_array_t;
 
 typedef struct {
     size_t length;
-    char data[1];
+    char data[32];
 } pulse_string_t;
 
 typedef struct {
@@ -98,12 +98,12 @@ typedef struct {
 typedef struct {
     size_t capacity;
     size_t count;
-    hash_entry_t entries[1];
+    hash_entry_t entries[8];
 } pulse_hash_t;
 
 typedef struct {
     size_t count;
-    uint64_t values[1];
+    uint64_t values[8];
 } pulse_tuple_t;
 
 #if defined(_MSC_VER)
@@ -113,7 +113,7 @@ typedef struct {
 #endif
 
 /* ============================================================================
- * Support Functions (Allocation & OS Helpers)
+ * Support Functions
  * ============================================================================ */
 
 static void * alloc_executable(size_t size) {
@@ -176,10 +176,6 @@ static void gc_collect(pulse_vm_t* vm) {
     vm->top = (size_t)(next_top - vm->from_space);
 }
 
-/* ============================================================================
- * JIT Script Helpers (Called by Pulse Machine Code)
- * ============================================================================ */
-
 static pulse_string_t* pulse_string_concat(pulse_vm_t* vm, pulse_string_t* a, pulse_string_t* b) {
     size_t new_len = a->length + b->length;
     pulse_string_t* s = (pulse_string_t*)gc_alloc(vm, sizeof(pulse_string_t) + new_len, TAG_STRING);
@@ -201,7 +197,6 @@ static uint64_t pulse_hash_get(pulse_hash_t* h, const char* key) {
 
 typedef uint64_t (*emit_test_fn_0)(void);
 typedef uint64_t (*emit_test_fn_2)(uint64_t, uint64_t);
-
 static uint64_t return_72(void) { return 72; }
 
 static emit_context_t * create_test_context(void) {
@@ -229,7 +224,7 @@ static void mock_ffi_handler(infix_reverse_t* ctx, void* ret, void** args) {
 }
 
 /* ============================================================================
- * Feature 16: Virtual Register Allocator
+ * Register Allocator Implementation
  * ============================================================================ */
 
 #define MAX_VREGS 32
@@ -299,37 +294,71 @@ static emit_register_t pulse_vreg_alloc(emit_context_t* ctx, pulse_allocator_t* 
 }
 
 /* ============================================================================
- * Feature 19: Intermediate Representation (IR)
+ * High-Level Compiler Logic
  * ============================================================================ */
 
-typedef enum { P_OP_LOAD_IMM, P_OP_ADD, P_OP_RET } pulse_op_t;
-typedef struct { pulse_op_t op; int dest_vreg; int src_a; int src_b; uint64_t imm; } pulse_insn_t;
+typedef enum { P_OP_LOAD_IMM, P_OP_ADD, P_OP_RET, P_OP_JMP } pulse_op_t;
+typedef struct { pulse_op_t op; int dest_vreg; int src_a; int src_b; uint64_t imm; const char* target; } pulse_insn_t;
+
+typedef struct pulse_block {
+    const char* label;
+    pulse_insn_t insns[8];
+    size_t count;
+} pulse_block_t;
+
+#ifdef _WIN32
+static const emit_register_t ABI_ARGS[4] = { EMIT_REG_RCX, EMIT_REG_RDX, EMIT_REG_R8, EMIT_REG_R9 };
+#define ABI_COUNT 4
+#else
+static const emit_register_t ABI_ARGS[6] = { EMIT_REG_RDI, EMIT_REG_RSI, EMIT_REG_RDX, EMIT_REG_RCX, EMIT_REG_R8, EMIT_REG_R9 };
+#define ABI_COUNT 6
+#endif
+
+static void pulse_emit_call(emit_context_t* ctx, pulse_allocator_t* alloc, void* target, int* arg_vregs, size_t num_args) {
+    int overflow = (int)num_args - ABI_COUNT;
+    if (overflow < 0) overflow = 0;
+    size_t padding = (overflow * 8);
+#ifdef _WIN32
+    padding += 32;
+#endif
+    if (padding > 0) emit_math_sub_imm(ctx, EMIT_REG_RSP, (int32_t)padding);
+    for (size_t i = 0; i < num_args && i < ABI_COUNT; i++) {
+        emit_register_t phys = pulse_vreg_alloc(ctx, alloc, arg_vregs[i]);
+        if (phys != ABI_ARGS[i]) emit_math_mov_reg(ctx, ABI_ARGS[i], phys);
+    }
+    for (size_t i = ABI_COUNT; i < num_args; i++) {
+        emit_register_t phys = pulse_vreg_alloc(ctx, alloc, arg_vregs[i]);
+        emit_math_store_reg(ctx, EMIT_REG_RSP, (int32_t)((i - ABI_COUNT) * 8), phys);
+    }
+    emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)target);
+    emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
+    if (padding > 0) emit_math_add_imm(ctx, EMIT_REG_RSP, (int32_t)padding);
+}
 
 static void pulse_select_instructions(emit_context_t* ctx, pulse_allocator_t* alloc, pulse_insn_t* stream, size_t count) {
     for (size_t i = 0; i < count; i++) {
         pulse_insn_t* in = &stream[i];
         switch (in->op) {
-            case P_OP_LOAD_IMM: {
-                emit_register_t pr = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
-                emit_math_mov_imm(ctx, pr, in->imm);
-                break;
-            }
+            case P_OP_LOAD_IMM: emit_math_mov_imm(ctx, pulse_vreg_alloc(ctx, alloc, in->dest_vreg), in->imm); break;
             case P_OP_ADD: {
-                emit_register_t p_dest = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
-                emit_register_t p_a    = pulse_vreg_alloc(ctx, alloc, in->src_a);
-                emit_register_t p_b    = pulse_vreg_alloc(ctx, alloc, in->src_b);
-                if (p_dest != p_a) emit_math_mov_reg(ctx, p_dest, p_a);
-                emit_math_add(ctx, p_dest, p_b);
-                break;
+                emit_register_t d = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
+                emit_register_t a = pulse_vreg_alloc(ctx, alloc, in->src_a);
+                emit_register_t b = pulse_vreg_alloc(ctx, alloc, in->src_b);
+                if (d != a) emit_math_mov_reg(ctx, d, a);
+                emit_math_add(ctx, d, b); break;
             }
             case P_OP_RET: {
-                emit_register_t p_src = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
-                if (p_src != EMIT_REG_RAX) emit_math_mov_reg(ctx, EMIT_REG_RAX, p_src);
-                emit_math_ret(ctx);
-                break;
+                emit_register_t s = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
+                if (s != EMIT_REG_RAX) emit_math_mov_reg(ctx, EMIT_REG_RAX, s);
+                emit_math_ret(ctx); break;
             }
+            case P_OP_JMP: emit_math_jmp(ctx, in->target); break;
         }
     }
+}
+
+static void pulse_compile_block(emit_context_t* ctx, pulse_allocator_t* alloc, pulse_block_t* block) {
+    pulse_select_instructions(ctx, alloc, block->insns, block->count);
 }
 
 /* ============================================================================
@@ -337,7 +366,7 @@ static void pulse_select_instructions(emit_context_t* ctx, pulse_allocator_t* al
  * ============================================================================ */
 
 TEST {
-    plan(24);
+    plan(26);
 
     subtest("Context lifecycle") {
         plan(4);
@@ -544,9 +573,11 @@ TEST {
             ok(1, "Pattern match logic emitted");
             volatile uint64_t* obj_ptr_gv = (uint64_t*)mem;
             emit_test_fn_0 fn = (emit_test_fn_0)((uint8_t*)mem + data_sz);
+
             union { gc_header_t head; uint64_t raw[3]; } mock_array, mock_object;
             memset(&mock_array, 0, sizeof(mock_array)); memset(&mock_object, 0, sizeof(mock_object));
             mock_array.head.tag = TAG_ARRAY; mock_object.head.tag = TAG_OBJECT;
+
             *obj_ptr_gv = (uintptr_t)&mock_array.raw[2];
             ok(fn() == 1, "Matched array tag correctly");
             *obj_ptr_gv = (uintptr_t)&mock_object.raw[2];
@@ -669,17 +700,14 @@ TEST {
         for(size_t i=0; i < hlen + 1; i++) emit_emit_u8(ctx, (uint8_t)hello[i]);
         uint64_t dsz; emit_get_offset(ctx, &dsz);
         setup_test_section(ctx);
-
 #ifdef _WIN32
         HMODULE k32 = GetModuleHandleA("kernel32.dll");
         void* wfa = (void*)GetProcAddress(k32, "WriteFile");
         void* gsh = (void*)GetProcAddress(k32, "GetStdHandle");
         static DWORD written_count = 0;
-
-        emit_math_mov_imm(ctx, EMIT_REG_RCX, (uint64_t)-12); /* STD_ERROR_HANDLE */
+        emit_math_mov_imm(ctx, EMIT_REG_RCX, (uint64_t)-12);
         emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)gsh);
         emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
-
         emit_math_mov_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX);
         emit_math_mov_imm(ctx, EMIT_REG_R8, hlen);
         emit_math_mov_imm(ctx, EMIT_REG_R9, (uintptr_t)&written_count);
@@ -687,14 +715,14 @@ TEST {
         emit_math_mov_imm(ctx, EMIT_REG_RAX, 0);
         emit_math_store_reg(ctx, EMIT_REG_RSP, 32, EMIT_REG_RAX);
         emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)wfa);
-        emit_math_mov_imm(ctx, EMIT_REG_R12, 0x0); /* Placeholder */
+        emit_math_mov_imm(ctx, EMIT_REG_R12, 0x0);
         emit_math_mov_reg(ctx, EMIT_REG_RDX, EMIT_REG_R12);
         emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
         emit_math_add_imm(ctx, EMIT_REG_RSP, 48);
 #else
         emit_math_mov_imm(ctx, EMIT_REG_RAX, 1);
-        emit_math_mov_imm(ctx, EMIT_REG_RDI, 2); /* STDERR */
-        emit_math_mov_imm(ctx, EMIT_REG_RSI, 0); /* Placeholder */
+        emit_math_mov_imm(ctx, EMIT_REG_RDI, 2);
+        emit_math_mov_imm(ctx, EMIT_REG_RSI, 0);
         emit_math_mov_imm(ctx, EMIT_REG_RDX, hlen);
         emit_emit_u8(ctx, 0x0F); emit_emit_u8(ctx, 0x05);
 #endif
@@ -732,21 +760,17 @@ TEST {
         pulse_allocator_t alloc; allocator_init(&alloc);
         emit_math_prologue(ctx);
         emit_math_sub_imm(ctx, EMIT_REG_RSP, 64);
-
         emit_register_t pr0 = pulse_vreg_alloc(ctx, &alloc, 0); emit_math_mov_imm(ctx, pr0, 10);
         emit_register_t pr1 = pulse_vreg_alloc(ctx, &alloc, 1); emit_math_mov_imm(ctx, pr1, 20);
         emit_register_t pr2 = pulse_vreg_alloc(ctx, &alloc, 2); emit_math_mov_imm(ctx, pr2, 30);
         emit_register_t pr3 = pulse_vreg_alloc(ctx, &alloc, 3); emit_math_mov_imm(ctx, pr3, 40);
-
         emit_register_t r_v0 = pulse_vreg_alloc(ctx, &alloc, 0);
         emit_register_t r_v1 = pulse_vreg_alloc(ctx, &alloc, 1); emit_math_add(ctx, r_v0, r_v1); pulse_vreg_free(&alloc, 1);
         emit_register_t r_v2 = pulse_vreg_alloc(ctx, &alloc, 2); emit_math_add(ctx, r_v0, r_v2); pulse_vreg_free(&alloc, 2);
         emit_register_t r_v3 = pulse_vreg_alloc(ctx, &alloc, 3); emit_math_add(ctx, r_v0, r_v3); pulse_vreg_free(&alloc, 3);
-
         if (r_v0 != EMIT_REG_RAX) emit_math_mov_reg(ctx, EMIT_REG_RAX, r_v0);
         emit_math_add_imm(ctx, EMIT_REG_RSP, 64);
         emit_math_epilogue(ctx);
-
         const uint8_t* code; size_t sz;
         emit_get_binary(ctx, &code, &sz);
         void* mem = NULL;
@@ -870,9 +894,9 @@ TEST {
     subtest("Feature 21: String Concatenation") {
         plan(2);
         pulse_vm_t* vm = vm_create(4096);
-        pulse_string_t* s1 = gc_alloc(vm, sizeof(pulse_string_t) + 8, TAG_STRING);
+        pulse_string_t* s1 = (pulse_string_t*)gc_alloc(vm, sizeof(pulse_string_t) + 8, TAG_STRING);
         s1->length = 5; memcpy(s1->data, "Hello", 5);
-        pulse_string_t* s2 = gc_alloc(vm, sizeof(pulse_string_t) + 8, TAG_STRING);
+        pulse_string_t* s2 = (pulse_string_t*)gc_alloc(vm, sizeof(pulse_string_t) + 8, TAG_STRING);
         s2->length = 6; memcpy(s2->data, " World", 6);
         pulse_string_t* res = pulse_string_concat(vm, s1, s2);
         ok(strcmp(res->data, "Hello World") == 0, "C-side concat functional");
@@ -897,5 +921,64 @@ TEST {
         }
         emit_destroy(ctx);
         free(vm->from_space); free(vm->to_space); free(vm);
+    }
+
+    subtest("Feature 22/23: Call Orchestration") {
+        plan(2);
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        pulse_allocator_t alloc; allocator_init(&alloc);
+        int args[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+        emit_math_prologue(ctx);
+        for (int i = 0; i < 8; i++) {
+            emit_register_t p = pulse_vreg_alloc(ctx, &alloc, i);
+            emit_math_mov_imm(ctx, p, i + 1);
+        }
+        pulse_emit_call(ctx, &alloc, (void*)return_72, args, 8);
+        emit_math_epilogue(ctx);
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            ok(1, "ABI Orchestrator generated code");
+            emit_test_fn_0 fn = (emit_test_fn_0)mem;
+            ok(fn() == 72, "ABI-compliant call executed correctly");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
+    }
+
+    subtest("Feature 24: Basic Blocks & CFG") {
+        plan(2);
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        pulse_allocator_t alloc; allocator_init(&alloc);
+
+        pulse_block_t b_entry = { .label = "b_entry", .count = 2 };
+        b_entry.insns[0] = (pulse_insn_t){ .op = P_OP_LOAD_IMM, .dest_vreg = 0, .imm = 50 };
+        b_entry.insns[1] = (pulse_insn_t){ .op = P_OP_JMP,      .target = "b_exit" };
+
+        pulse_block_t b_exit = { .label = "b_exit", .count = 2 };
+        b_exit.insns[0] = (pulse_insn_t){ .op = P_OP_LOAD_IMM, .dest_vreg = 1, .imm = 50 };
+        b_exit.insns[1] = (pulse_insn_t){ .op = P_OP_ADD,      .dest_vreg = 0, .src_a = 0, .src_b = 1 };
+
+        pulse_compile_block(ctx, &alloc, &b_entry);
+        pulse_compile_block(ctx, &alloc, &b_exit);
+
+        /* The final 'ret' */
+        emit_register_t r = pulse_vreg_alloc(ctx, &alloc, 0);
+        if (r != EMIT_REG_RAX) emit_math_mov_reg(ctx, EMIT_REG_RAX, r);
+        emit_math_ret(ctx);
+
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            ok(1, "CFG Block structure generated");
+            emit_test_fn_0 fn = (emit_test_fn_0)mem;
+            ok(fn() == 100, "Block-based execution successfully crossed jumps");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
     }
 }
