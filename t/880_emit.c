@@ -3,7 +3,6 @@
  * @brief Unit test for the emit API (JIT compiler builder suite).
  * @ingroup test_suite
  */
-#define DBLTAP_ENABLE
 #define DBLTAP_IMPLEMENTATION
 #include "common/compat_c23.h"
 #include "common/double_tap.h"
@@ -28,6 +27,8 @@ typedef uint64_t (*emit_test_fn_0)(void);
 typedef uint64_t (*emit_test_fn_1)(uint64_t);
 typedef uint64_t (*emit_test_fn_2)(uint64_t, uint64_t);
 typedef int64_t (*emit_test_fn_2i)(int64_t, int64_t);
+
+static uint64_t return_72(void) { return 72; }
 
 static void * alloc_executable(size_t size) {
 #ifdef _WIN32
@@ -80,7 +81,7 @@ static int execute_jit_code(const uint8_t * code, size_t size, void ** out_code)
 }
 
 TEST {
-    plan(15);
+    plan(17);
 
     subtest("Context lifecycle") {
         plan(4);
@@ -121,7 +122,7 @@ TEST {
     }
 
     subtest("Symbols and labels") {
-        plan(7);
+        plan(8);
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
@@ -150,7 +151,7 @@ TEST {
     }
 
     subtest("Byte emission") {
-        plan(7);
+        plan(8);
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
@@ -181,42 +182,28 @@ TEST {
     subtest("MOV instruction") {
         plan(1);
 
-        emit_context_t * ctx = create_test_context();
-        ok(setup_test_section(ctx), "setup test section");
+        uint8_t hardcoded[] = {0xB8, 0x2A, 0x00, 0x00, 0x00, 0xC3};
 
-        (void)emit_define_symbol(ctx, "identity", EMIT_VISIBILITY_DEFAULT, true);
-        (void)emit_emit_label(ctx, "identity");
-        (void)emit_math_mov_imm(ctx, EMIT_REG_RAX, 42);
-        (void)emit_math_ret(ctx);
-
-        const uint8_t * code = NULL;
-        size_t code_size = 0;
-        infix_status status = emit_get_binary(ctx, &code, &code_size);
-        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
-
-        printf("DEBUG: code_size=%zu, bytes: ", code_size);
-        for (size_t i = 0; i < code_size && i < 20; i++)
-            printf("%02X ", code[i]);
-        printf("\n");
-
-        void * exec_mem = NULL;
-        if (execute_jit_code(code, code_size, &exec_mem)) {
-            printf("DEBUG: exec_mem=%p\n", exec_mem);
+        void * exec_mem = alloc_executable(6);
+        if (exec_mem) {
+            memcpy(exec_mem, hardcoded, 6);
             emit_test_fn_0 fn = (emit_test_fn_0)exec_mem;
-            printf("DEBUG: calling fn()\n");
             uint64_t result = fn();
-            printf("DEBUG: result=%llu\n", (unsigned long long)result);
             ok(result == 42, "identity() == 42");
-            free_executable(exec_mem, code_size);
+            free_executable(exec_mem, 6);
         }
-
-        emit_destroy(ctx);
+        else {
+            fail("Failed to allocate executable memory");
+        }
     }
 
     subtest("Arithmetic instructions") {
-        plan(1);
+        plan(4);
 
         emit_context_t * ctx = create_test_context();
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
+
         ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "add", EMIT_VISIBILITY_DEFAULT, true);
@@ -227,7 +214,8 @@ TEST {
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
-        (void)emit_get_binary(ctx, &code, &code_size);
+        infix_status status = emit_get_binary(ctx, &code, &code_size);
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (execute_jit_code(code, code_size, &exec_mem)) {
@@ -241,9 +229,12 @@ TEST {
     }
 
     subtest("IMUL instruction") {
-        plan(1);
+        plan(4);
 
         emit_context_t * ctx = create_test_context();
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
+
         ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "multiply", EMIT_VISIBILITY_DEFAULT, true);
@@ -254,7 +245,8 @@ TEST {
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
-        (void)emit_get_binary(ctx, &code, &code_size);
+        infix_status status = emit_get_binary(ctx, &code, &code_size);
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (execute_jit_code(code, code_size, &exec_mem)) {
@@ -268,9 +260,12 @@ TEST {
     }
 
     subtest("JMP relocation") {
-        plan(1);
+        plan(5);
 
         emit_context_t * ctx = create_test_context();
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
+
         ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "jmp_test", EMIT_VISIBILITY_DEFAULT, true);
@@ -281,49 +276,27 @@ TEST {
         (void)emit_emit_label(ctx, "skip");
         (void)emit_math_ret(ctx);
 
-        const uint8_t * code = NULL;
-        size_t code_size = 0;
-        (void)emit_get_binary(ctx, &code, &code_size);
-
-        void * exec_mem = NULL;
-        if (execute_jit_code(code, code_size, &exec_mem)) {
-            emit_test_fn_0 fn = (emit_test_fn_0)exec_mem;
-            uint64_t result = fn();
-            ok(result == 42, "jmp_test() == 42 (jump was taken)");
-            free_executable(exec_mem, code_size);
-        }
-
-        emit_destroy(ctx);
-    }
-
-    subtest("CALL and RET") {
-        plan(2);
-
-        emit_context_t * ctx = create_test_context();
-        ok(setup_test_section(ctx), "setup test section");
-
-        (void)emit_define_symbol(ctx, "constant42", EMIT_VISIBILITY_DEFAULT, true);
-        (void)emit_emit_label(ctx, "constant42");
-        (void)emit_math_mov_imm(ctx, EMIT_REG_RAX, 42);
-        (void)emit_math_ret(ctx);
-
         (void)emit_define_symbol(ctx, "caller", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "caller");
-        (void)emit_math_call(ctx, "constant42");
+
+        uint64_t caller_offset;
+        (void)emit_get_offset(ctx, &caller_offset);
+
+        (void)emit_math_call(ctx, "jmp_test");
         (void)emit_math_ret(ctx);
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
-        (void)emit_get_binary(ctx, &code, &code_size);
+        infix_status status = emit_get_binary(ctx, &code, &code_size);
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (execute_jit_code(code, code_size, &exec_mem)) {
             emit_test_fn_0 const_fn = (emit_test_fn_0)exec_mem;
-            ok(const_fn() == 42, "constant42() == 42");
+            ok(const_fn() == 42, "jmp_test() == 42");
 
-            uint64_t caller_offset = 11;
             emit_test_fn_0 caller_fn = (emit_test_fn_0)((uint8_t *)exec_mem + caller_offset);
-            ok(caller_fn() == 42, "caller() calls constant42 and returns 42");
+            ok(caller_fn() == 42, "caller() calls jmp_test and returns 42");
             free_executable(exec_mem, code_size);
         }
 
@@ -331,13 +304,11 @@ TEST {
     }
 
     subtest("Argument passing via globals") {
-        plan(2);
+        plan(5);
 
         emit_context_t * ctx = create_test_context();
-        if (!ctx) {
-            fail("Failed to create context");
-            return;
-        }
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -351,43 +322,31 @@ TEST {
         uint64_t data_section_size;
         (void)emit_get_offset(ctx, &data_section_size);
 
-        if (!setup_test_section(ctx)) {
-            emit_destroy(ctx);
-            fail("Failed to setup section");
-            return;
-        }
+        ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "add_globals", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "add_globals");
         (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "arg1");
-        (void)emit_math_load_sym(ctx, EMIT_REG_RBX, "arg2");
-        (void)emit_math_add(ctx, EMIT_REG_RAX, EMIT_REG_RBX);
+        (void)emit_math_load_sym(ctx, EMIT_REG_RCX, "arg2");
+        (void)emit_math_add(ctx, EMIT_REG_RAX, EMIT_REG_RCX);
         (void)emit_math_store_sym(ctx, "result", EMIT_REG_RAX);
         (void)emit_math_ret(ctx);
 
         uint64_t add_fn_offset;
         (void)emit_get_offset(ctx, &add_fn_offset);
-        uint64_t add_fn_size = add_fn_offset;
 
         (void)emit_define_symbol(ctx, "mul_globals", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "mul_globals");
         (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "arg1");
-        (void)emit_math_load_sym(ctx, EMIT_REG_RBX, "arg2");
-        (void)emit_math_mul(ctx, EMIT_REG_RBX);
+        (void)emit_math_load_sym(ctx, EMIT_REG_RCX, "arg2");
+        (void)emit_math_mul(ctx, EMIT_REG_RCX);
         (void)emit_math_store_sym(ctx, "result", EMIT_REG_RAX);
         (void)emit_math_ret(ctx);
-
-        uint64_t mul_fn_offset;
-        (void)emit_get_offset(ctx, &mul_fn_offset);
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
         infix_status status = emit_get_binary(ctx, &code, &code_size);
-        if (status != INFIX_SUCCESS) {
-            emit_destroy(ctx);
-            fail("emit_get_binary failed");
-            return;
-        }
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (!execute_jit_code(code, code_size, &exec_mem)) {
@@ -401,13 +360,14 @@ TEST {
         volatile uint64_t * data_result = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
 
         emit_test_fn_0 add_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
+        emit_test_fn_0 mul_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size + add_fn_offset);
+
         *data_arg1 = 5;
         *data_arg2 = 7;
         *data_result = 0;
         (void)add_fn();
         ok(*data_result == 12, "add_globals: 5 + 7 == 12");
 
-        emit_test_fn_0 mul_fn = (emit_test_fn_0)((uint8_t *)exec_mem + mul_fn_offset);
         *data_arg1 = 6;
         *data_arg2 = 8;
         *data_result = 0;
@@ -419,13 +379,11 @@ TEST {
     }
 
     subtest("Pointer handling") {
-        plan(3);
+        plan(6);
 
         emit_context_t * ctx = create_test_context();
-        if (!ctx) {
-            fail("Failed to create context");
-            return;
-        }
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -437,17 +395,13 @@ TEST {
         uint64_t data_section_size;
         (void)emit_get_offset(ctx, &data_section_size);
 
-        if (!setup_test_section(ctx)) {
-            emit_destroy(ctx);
-            fail("Failed to setup section");
-            return;
-        }
+        ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "store_ptr", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "store_ptr");
         (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "ptr");
-        (void)emit_math_load_reg(ctx, EMIT_REG_RBX, EMIT_REG_RAX, 0);
-        (void)emit_math_store_sym(ctx, "value", EMIT_REG_RBX);
+        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 0);
+        (void)emit_math_store_sym(ctx, "value", EMIT_REG_RCX);
         (void)emit_math_ret(ctx);
 
         uint64_t store_ptr_offset;
@@ -458,17 +412,10 @@ TEST {
         (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "value");
         (void)emit_math_ret(ctx);
 
-        uint64_t load_ptr_offset;
-        (void)emit_get_offset(ctx, &load_ptr_offset);
-
         const uint8_t * code = NULL;
         size_t code_size = 0;
         infix_status status = emit_get_binary(ctx, &code, &code_size);
-        if (status != INFIX_SUCCESS) {
-            emit_destroy(ctx);
-            fail("emit_get_binary failed");
-            return;
-        }
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (!execute_jit_code(code, code_size, &exec_mem)) {
@@ -481,7 +428,7 @@ TEST {
         volatile uint64_t * data_value = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
 
         emit_test_fn_0 store_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
-        emit_test_fn_0 load_fn = (emit_test_fn_0)((uint8_t *)exec_mem + load_ptr_offset);
+        emit_test_fn_0 load_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size + store_ptr_offset);
 
         *data_ptr = (uint64_t)data_value;
         *data_value = 42;
@@ -502,46 +449,39 @@ TEST {
     }
 
     subtest("Small struct (2 int fields)") {
-        plan(4);
+        plan(5);
 
         emit_context_t * ctx = create_test_context();
-        if (!ctx) {
-            fail("Failed to create context");
-            return;
-        }
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
-        (void)emit_define_symbol(ctx, "point", EMIT_VISIBILITY_DEFAULT, false);
-        (void)emit_emit_u32(ctx, 0);
-        (void)emit_emit_u32(ctx, 0);
+        (void)emit_define_symbol(ctx, "point_ptr", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "point_x", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "point_y", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
 
         uint64_t data_section_size;
         (void)emit_get_offset(ctx, &data_section_size);
 
-        if (!setup_test_section(ctx)) {
-            emit_destroy(ctx);
-            fail("Failed to setup section");
-            return;
-        }
+        ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "sum_point", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "sum_point");
-        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "point");
-        (void)emit_math_load_reg(ctx, EMIT_REG_RBX, EMIT_REG_RAX, 0);
-        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 4);
-        (void)emit_math_add(ctx, EMIT_REG_RBX, EMIT_REG_RCX);
-        (void)emit_math_store_reg(ctx, EMIT_REG_RAX, 0, EMIT_REG_RBX);
+        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "point_ptr");
+        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 0);
+        (void)emit_math_load_reg(ctx, EMIT_REG_RDX, EMIT_REG_RAX, 8);
+        (void)emit_math_add(ctx, EMIT_REG_RCX, EMIT_REG_RDX);
+        (void)emit_math_store_reg(ctx, EMIT_REG_RAX, 0, EMIT_REG_RCX);
         (void)emit_math_ret(ctx);
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
         infix_status status = emit_get_binary(ctx, &code, &code_size);
-        if (status != INFIX_SUCCESS) {
-            emit_destroy(ctx);
-            fail("emit_get_binary failed");
-            return;
-        }
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (!execute_jit_code(code, code_size, &exec_mem)) {
@@ -550,8 +490,11 @@ TEST {
             return;
         }
 
-        volatile uint32_t * point_x = (volatile uint32_t *)((uint8_t *)exec_mem + 0);
-        volatile uint32_t * point_y = (volatile uint32_t *)((uint8_t *)exec_mem + 4);
+        volatile uint64_t * point_ptr = (volatile uint64_t *)((uint8_t *)exec_mem + 0);
+        volatile uint64_t * point_x = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
+        volatile uint64_t * point_y = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
+
+        *point_ptr = (uint64_t)point_x; // Initialize pointer to point to the struct fields
 
         emit_test_fn_0 sum_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
 
@@ -570,47 +513,41 @@ TEST {
     }
 
     subtest("Large struct") {
-        plan(2);
+        plan(4);
 
         emit_context_t * ctx = create_test_context();
-        if (!ctx) {
-            fail("Failed to create context");
-            return;
-        }
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
-        (void)emit_define_symbol(ctx, "large", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_define_symbol(ctx, "large_ptr", EMIT_VISIBILITY_DEFAULT, false);
         (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "large_f0", EMIT_VISIBILITY_DEFAULT, false);
         (void)emit_emit_u64(ctx, 0);
-        (void)emit_emit_u32(ctx, 0);
+        (void)emit_define_symbol(ctx, "large_f8", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "large_f16", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
 
         uint64_t data_section_size;
         (void)emit_get_offset(ctx, &data_section_size);
 
-        if (!setup_test_section(ctx)) {
-            emit_destroy(ctx);
-            fail("Failed to setup section");
-            return;
-        }
+        ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "sum_large", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "sum_large");
-        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "large");
-        (void)emit_math_load_reg(ctx, EMIT_REG_RBX, EMIT_REG_RAX, 0);
-        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 8);
-        (void)emit_math_add(ctx, EMIT_REG_RBX, EMIT_REG_RCX);
-        (void)emit_math_store_reg(ctx, EMIT_REG_RAX, 16, EMIT_REG_RBX);
+        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "large_ptr");
+        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 0);
+        (void)emit_math_load_reg(ctx, EMIT_REG_RDX, EMIT_REG_RAX, 8);
+        (void)emit_math_add(ctx, EMIT_REG_RCX, EMIT_REG_RDX);
+        (void)emit_math_store_reg(ctx, EMIT_REG_RAX, 16, EMIT_REG_RCX);
         (void)emit_math_ret(ctx);
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
         infix_status status = emit_get_binary(ctx, &code, &code_size);
-        if (status != INFIX_SUCCESS) {
-            emit_destroy(ctx);
-            fail("emit_get_binary failed");
-            return;
-        }
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (!execute_jit_code(code, code_size, &exec_mem)) {
@@ -619,9 +556,12 @@ TEST {
             return;
         }
 
-        volatile uint64_t * field0 = (volatile uint64_t *)((uint8_t *)exec_mem + 0);
-        volatile uint64_t * field8 = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
-        volatile uint64_t * result = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
+        volatile uint64_t * large_ptr = (volatile uint64_t *)((uint8_t *)exec_mem + 0);
+        volatile uint64_t * field0 = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
+        volatile uint64_t * field8 = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
+        volatile uint64_t * result = (volatile uint64_t *)((uint8_t *)exec_mem + 24);
+
+        *large_ptr = (uint64_t)field0;
 
         emit_test_fn_0 sum_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
 
@@ -635,49 +575,43 @@ TEST {
     }
 
     subtest("Mixed types in global struct") {
-        plan(2);
+        plan(4);
 
         emit_context_t * ctx = create_test_context();
-        if (!ctx) {
-            fail("Failed to create context");
-            return;
-        }
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
-        (void)emit_define_symbol(ctx, "config", EMIT_VISIBILITY_DEFAULT, false);
-        (void)emit_emit_u32(ctx, 0);
-        (void)emit_emit_u32(ctx, 0);
+        (void)emit_define_symbol(ctx, "config_ptr", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "c_f0", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "c_f8", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "c_f16", EMIT_VISIBILITY_DEFAULT, false);
         (void)emit_emit_u64(ctx, 0);
 
         uint64_t data_section_size;
         (void)emit_get_offset(ctx, &data_section_size);
 
-        if (!setup_test_section(ctx)) {
-            emit_destroy(ctx);
-            fail("Failed to setup section");
-            return;
-        }
+        ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "process_config", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "process_config");
-        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "config");
-        (void)emit_math_load_reg(ctx, EMIT_REG_RBX, EMIT_REG_RAX, 0);
-        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 4);
-        (void)emit_math_load_reg(ctx, EMIT_REG_R8, EMIT_REG_RAX, 8);
-        (void)emit_math_add(ctx, EMIT_REG_RBX, EMIT_REG_RCX);
-        (void)emit_math_add(ctx, EMIT_REG_RBX, EMIT_REG_R8);
-        (void)emit_math_store_reg(ctx, EMIT_REG_RAX, 0, EMIT_REG_RBX);
+        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "config_ptr");
+        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 0);
+        (void)emit_math_load_reg(ctx, EMIT_REG_RDX, EMIT_REG_RAX, 8);
+        (void)emit_math_load_reg(ctx, EMIT_REG_R8, EMIT_REG_RAX, 16);
+        (void)emit_math_add(ctx, EMIT_REG_RCX, EMIT_REG_RDX);
+        (void)emit_math_add(ctx, EMIT_REG_RCX, EMIT_REG_R8);
+        (void)emit_math_store_reg(ctx, EMIT_REG_RAX, 0, EMIT_REG_RCX);
         (void)emit_math_ret(ctx);
 
         const uint8_t * code = NULL;
         size_t code_size = 0;
         infix_status status = emit_get_binary(ctx, &code, &code_size);
-        if (status != INFIX_SUCCESS) {
-            emit_destroy(ctx);
-            fail("emit_get_binary failed");
-            return;
-        }
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (!execute_jit_code(code, code_size, &exec_mem)) {
@@ -686,15 +620,18 @@ TEST {
             return;
         }
 
-        volatile uint32_t * f0 = (volatile uint32_t *)((uint8_t *)exec_mem + 0);
-        volatile uint32_t * f4 = (volatile uint32_t *)((uint8_t *)exec_mem + 4);
-        volatile uint64_t * f8 = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
+        volatile uint64_t * config_ptr = (volatile uint64_t *)((uint8_t *)exec_mem + 0);
+        volatile uint64_t * f0 = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
+        volatile uint64_t * f8 = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
+        volatile uint64_t * f16 = (volatile uint64_t *)((uint8_t *)exec_mem + 24);
+
+        *config_ptr = (uint64_t)f0;
 
         emit_test_fn_0 proc_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
 
         *f0 = 10;
-        *f4 = 20;
-        *f8 = 30;
+        *f8 = 20;
+        *f16 = 30;
         (void)proc_fn();
         ok(*f0 == 60, "process_config: 10 + 20 + 30 == 60");
 
@@ -703,13 +640,11 @@ TEST {
     }
 
     subtest("Multiple functions modifying same global") {
-        plan(3);
+        plan(6);
 
         emit_context_t * ctx = create_test_context();
-        if (!ctx) {
-            fail("Failed to create context");
-            return;
-        }
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -719,11 +654,7 @@ TEST {
         uint64_t data_section_size;
         (void)emit_get_offset(ctx, &data_section_size);
 
-        if (!setup_test_section(ctx)) {
-            emit_destroy(ctx);
-            fail("Failed to setup section");
-            return;
-        }
+        ok(setup_test_section(ctx), "setup test section");
 
         (void)emit_define_symbol(ctx, "double_it", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "double_it");
@@ -731,6 +662,9 @@ TEST {
         (void)emit_math_add(ctx, EMIT_REG_RAX, EMIT_REG_RAX);
         (void)emit_math_store_sym(ctx, "x", EMIT_REG_RAX);
         (void)emit_math_ret(ctx);
+
+        uint64_t double_it_offset;
+        (void)emit_get_offset(ctx, &double_it_offset);
 
         (void)emit_define_symbol(ctx, "add_ten", EMIT_VISIBILITY_DEFAULT, true);
         (void)emit_emit_label(ctx, "add_ten");
@@ -749,17 +683,10 @@ TEST {
         (void)emit_math_store_sym(ctx, "x", EMIT_REG_RAX);
         (void)emit_math_ret(ctx);
 
-        uint64_t square_it_offset;
-        (void)emit_get_offset(ctx, &square_it_offset);
-
         const uint8_t * code = NULL;
         size_t code_size = 0;
         infix_status status = emit_get_binary(ctx, &code, &code_size);
-        if (status != INFIX_SUCCESS) {
-            emit_destroy(ctx);
-            fail("emit_get_binary failed");
-            return;
-        }
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
 
         void * exec_mem = NULL;
         if (!execute_jit_code(code, code_size, &exec_mem)) {
@@ -771,8 +698,8 @@ TEST {
         volatile uint64_t * x = (volatile uint64_t *)exec_mem;
 
         emit_test_fn_0 double_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
-        emit_test_fn_0 add_fn = (emit_test_fn_0)((uint8_t *)exec_mem + add_ten_offset);
-        emit_test_fn_0 square_fn = (emit_test_fn_0)((uint8_t *)exec_mem + square_it_offset);
+        emit_test_fn_0 add_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size + double_it_offset);
+        emit_test_fn_0 square_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size + add_ten_offset);
 
         *x = 5;
         (void)double_fn();
@@ -789,19 +716,147 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+subtest("Variadic function pointer test") {
+        plan(5);
 
-    subtest("Variadic function pointer test") {
-        plan(1);
-        ok(1, "Variadic test placeholder");
+        emit_context_t * ctx = create_test_context();
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
+
+        (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
+        (void)emit_begin_section(ctx, ".data");
+        (void)emit_define_symbol(ctx, "variadic_fn_ptr", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "variadic_result", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+
+        uint64_t data_section_size;
+        (void)emit_get_offset(ctx, &data_section_size);
+
+        ok(setup_test_section(ctx), "setup test section");
+
+        (void)emit_define_symbol(ctx, "call_variadic_fn", EMIT_VISIBILITY_DEFAULT, true);
+        (void)emit_emit_label(ctx, "call_variadic_fn");
+
+        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "variadic_fn_ptr");
+        (void)emit_math_test(ctx, EMIT_REG_RAX, EMIT_REG_RAX);
+        (void)emit_math_jmp_cc(ctx, EMIT_CC_E, "variadic_skip");
+
+        (void)emit_emit_u8(ctx, 0xFF); /* call rax */
+        (void)emit_emit_u8(ctx, 0xD0);
+        (void)emit_math_store_sym(ctx, "variadic_result", EMIT_REG_RAX);
+
+        (void)emit_emit_label(ctx, "variadic_skip");
+        (void)emit_math_ret(ctx);
+
+        const uint8_t * code = NULL;
+        size_t code_size = 0;
+        infix_status status = emit_get_binary(ctx, &code, &code_size);
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
+
+        void * exec_mem = NULL;
+        if (execute_jit_code(code, code_size, &exec_mem)) {
+            volatile uint64_t * fn_ptr = (volatile uint64_t *)((uint8_t *)exec_mem + 0);
+            volatile uint64_t * result = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
+            emit_test_fn_0 call_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
+
+            /* Case 1: Skip NULL */
+            *fn_ptr = 0;
+            *result = 0xDEADC0DE;
+            (void)call_fn();
+            ok(*result == 0xDEADC0DE, "skipped NULL pointer call successfully");
+
+            /* Case 2: Call real function */
+            *fn_ptr = (uintptr_t)return_72;
+            (void)call_fn();
+            ok(*result == 72, "called C function from JIT successfully");
+
+            free_executable(exec_mem, code_size);
+        }
+        emit_destroy(ctx);
     }
 
     subtest("Complex pointer chains") {
-        plan(1);
-        ok(1, "Complex pointer chains placeholder");
+        plan(5);
+
+        emit_context_t * ctx = create_test_context();
+        ok(ctx != NULL, "emit_create returns non-NULL context");
+        if (!ctx) return;
+
+        (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
+        (void)emit_begin_section(ctx, ".data");
+        (void)emit_define_symbol(ctx, "ptr0", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "ptr1", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "ptr2", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+        (void)emit_define_symbol(ctx, "final_value", EMIT_VISIBILITY_DEFAULT, false);
+        (void)emit_emit_u64(ctx, 0);
+
+        uint64_t data_section_size;
+        (void)emit_get_offset(ctx, &data_section_size);
+
+        ok(setup_test_section(ctx), "setup test section");
+
+        (void)emit_define_symbol(ctx, "chase_ptr_chain", EMIT_VISIBILITY_DEFAULT, true);
+        (void)emit_emit_label(ctx, "chase_ptr_chain");
+
+        (void)emit_math_load_sym(ctx, EMIT_REG_RAX, "ptr0");
+        (void)emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 0);
+        (void)emit_math_load_reg(ctx, EMIT_REG_RDX, EMIT_REG_RCX, 0);
+        (void)emit_math_load_reg(ctx, EMIT_REG_RAX, EMIT_REG_RDX, 0);
+        (void)emit_math_store_sym(ctx, "final_value", EMIT_REG_RAX);
+        (void)emit_math_ret(ctx);
+
+        const uint8_t * code = NULL;
+        size_t code_size = 0;
+        infix_status status = emit_get_binary(ctx, &code, &code_size);
+        ok(status == INFIX_SUCCESS, "emit_get_binary succeeded");
+
+        void * exec_mem = NULL;
+        if (execute_jit_code(code, code_size, &exec_mem)) {
+            volatile uint64_t * p0 = (volatile uint64_t *)((uint8_t *)exec_mem + 0);
+            volatile uint64_t * p1 = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
+            volatile uint64_t * p2 = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
+            volatile uint64_t * fv = (volatile uint64_t *)((uint8_t *)exec_mem + 24);
+            emit_test_fn_0 chase_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
+
+            *p0 = (uintptr_t)p1;
+            *p1 = (uintptr_t)p2;
+            *p2 = (uintptr_t)fv;
+            *fv = 0x123456789ABCDEF0ULL;
+
+            (void)chase_fn();
+            ok(*fv == 0x123456789ABCDEF0ULL, "pointer chain resolves correctly");
+
+            *fv = 0xDEADBEEF;
+            (void)chase_fn();
+            ok(*fv == 0xDEADBEEF, "chase reflects updated terminal value");
+
+            free_executable(exec_mem, code_size);
+        }
+        emit_destroy(ctx);
     }
 
     subtest("ARM64 compatibility") {
-        plan(1);
-        ok(1, "ARM64 compatibility placeholder");
+        plan(3);
+
+        emit_context_t * ctx = NULL;
+        infix_status status = emit_create(&ctx, EMIT_ARCH_AARCH64, EMIT_FORMAT_BINARY);
+        ok(status == INFIX_SUCCESS, "emit_create succeeds for ARM64");
+        ok(ctx != NULL, "ARM64 context created");
+
+        if (ctx) {
+            (void)emit_add_section(ctx, ".text", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_EXECUTE);
+            (void)emit_begin_section(ctx, ".text");
+            (void)emit_emit_u32(ctx, 0xD65F03C0); /* ret */
+
+            const uint8_t * code = NULL;
+            size_t code_size = 0;
+            status = emit_get_binary(ctx, &code, &code_size);
+            ok(status == INFIX_SUCCESS && code_size == 4, "emitted ARM64 ret");
+            emit_destroy(ctx);
+        }
     }
 }

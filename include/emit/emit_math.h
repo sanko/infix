@@ -85,6 +85,8 @@ INFIX_API infix_status emit_math_test(emit_context_t * ctx, emit_register_t a, e
 INFIX_API infix_status emit_math_jmp(emit_context_t * ctx, const char * label);
 INFIX_API infix_status emit_math_jmp_cc(emit_context_t * ctx, emit_cc_t cc, const char * label);
 INFIX_API infix_status emit_math_call(emit_context_t * ctx, const char * name);
+INFIX_API infix_status emit_math_prologue(emit_context_t * ctx);
+INFIX_API infix_status emit_math_epilogue(emit_context_t * ctx);
 INFIX_API infix_status emit_math_ret(emit_context_t * ctx);
 
 INFIX_API infix_status emit_math_push(emit_context_t * ctx, emit_register_t reg);
