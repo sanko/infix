@@ -11,6 +11,7 @@
  * @brief Implementation of the emit API for generating machine code.
  */
 #define INFIX_BUILDING
+#include "common/compat_c23.h"
 #include "emit/emit.h"
 #include "emit_internals.h"
 #include <stdio.h>
@@ -319,8 +320,11 @@ INFIX_API infix_status emit_align(emit_context_t * ctx, uint64_t alignment) {
     uint64_t aligned = (current + alignment - 1) & ~(alignment - 1);
     uint64_t padding = aligned - current;
 
-    for (uint64_t i = 0; i < padding; i++)
-        (void)emit_emit_u8(ctx, 0x90);
+    for (uint64_t i = 0; i < padding; i++) {
+        infix_status status = emit_emit_u8(ctx, 0x90);
+        if (status != INFIX_SUCCESS)
+            return status;
+    }
 
     return INFIX_SUCCESS;
 }
@@ -350,7 +354,7 @@ INFIX_API infix_status __attribute__((warn_unused_result)) emit_add_relocation(
     return INFIX_SUCCESS;
 }
 
-static void write_raw_binary(emit_context_t * ctx, uint8_t * buffer, uint64_t total_size) {
+static void write_raw_binary(emit_context_t * ctx, uint8_t * buffer, c23_maybe_unused uint64_t total_size) {
     emit_section_t ** secs = malloc(ctx->section_count * sizeof(emit_section_t *));
     if (!secs)
         return;
@@ -447,12 +451,16 @@ infix_status _emit_resolve_relocations(emit_context_t * ctx) {
 void _emit_arch_nop(emit_context_t * ctx, uint8_t size) {
     switch (ctx->arch) {
     case EMIT_ARCH_X86_64:
-        for (uint8_t i = 0; i < size; i++)
-            (void)emit_emit_u8(ctx, 0x90);
+        for (uint8_t i = 0; i < size; i++) {
+            infix_status status = emit_emit_u8(ctx, 0x90);
+            (void)status;
+        }
         break;
-    case EMIT_ARCH_AARCH64:
-        (void)emit_emit_u32(ctx, 0xD503201F);
+    case EMIT_ARCH_AARCH64: {
+        infix_status status = emit_emit_u32(ctx, 0xD503201F);
+        (void)status;
         break;
+    }
     default:
         break;
     }
@@ -461,12 +469,18 @@ void _emit_arch_nop(emit_context_t * ctx, uint8_t size) {
 infix_status _emit_arch_align(emit_context_t * ctx, uint64_t alignment) {
     switch (ctx->arch) {
     case EMIT_ARCH_X86_64:
-        for (uint64_t i = 0; i < alignment; i++)
-            (void)emit_emit_u8(ctx, 0x90);
+        for (uint64_t i = 0; i < alignment; i++) {
+            infix_status status = emit_emit_u8(ctx, 0x90);
+            if (status != INFIX_SUCCESS)
+                return status;
+        }
         break;
     case EMIT_ARCH_AARCH64:
-        for (uint64_t i = 0; i < alignment; i++)
-            (void)emit_emit_u32(ctx, 0xD503201F);
+        for (uint64_t i = 0; i < alignment; i++) {
+            infix_status status = emit_emit_u32(ctx, 0xD503201F);
+            if (status != INFIX_SUCCESS)
+                return status;
+        }
         break;
     default:
         break;

@@ -3,6 +3,7 @@
  * @brief Code generator for Infix language - generates bytecode
  */
 
+#include "common/compat_c23.h"
 #include "compiler/infix_lang.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -117,7 +118,7 @@ static void emit_instruction(codegen_t * cg, opcode_t op, int arg, int line) {
     cg->current_function->line_count++;
 }
 
-static void emit_load_constant(codegen_t * cg, int64_t value, int line) {
+static c23_maybe_unused void emit_load_constant(codegen_t * cg, int64_t value, int line) {
     // Add to constants pool
     constant_t * c = (constant_t *)calloc(1, sizeof(constant_t));
     c->type.kind = TYPE_INT;
@@ -355,8 +356,8 @@ static void compile_statement(codegen_t * cg, ast_node_t * node) {
 
     case AST_IF_STMT:
         {
-            int * jumps = (int *)malloc(sizeof(int) * 16);
-            int jump_count = 0;
+            c23_maybe_unused int * jumps = (int *)malloc(sizeof(int) * 16);
+            c23_maybe_unused int jump_count = 0;
 
             compile_expression(cg, node->if_stmt.condition);
             int else_jump = cg->instruction_count;
@@ -378,7 +379,7 @@ static void compile_statement(codegen_t * cg, ast_node_t * node) {
             ast_node_t * elif = node->if_stmt.elif_list;
             while (elif) {
                 compile_expression(cg, elif->if_stmt.condition);
-                int elif_jump = cg->instruction_count;
+                c23_maybe_unused int elif_jump = cg->instruction_count;
                 emit_instruction(cg, OP_JUMP_IF_FALSE, 0, node->line);
                 compile_block(cg, elif->if_stmt.then_branch);
                 emit_instruction(cg, OP_JUMP, end_jump, node->line);
@@ -484,7 +485,7 @@ static void compile_statement(codegen_t * cg, ast_node_t * node) {
 
     case AST_TRY_STMT:
         {
-            int try_start = cg->instruction_count;
+            c23_maybe_unused int try_start = cg->instruction_count;
             compile_block(cg, node->try_stmt.try_block);
             int try_end = cg->instruction_count;
 
@@ -791,7 +792,7 @@ vm_object_t * vm_execute(vm_t * vm, function_t * entry) {
         case OP_JUMP:
             {
                 int32_t offset = *(int32_t *)ip;
-                ip = (uint8_t *)offset;  // TODO: properly resolve jump targets
+                ip = (uint8_t *)(uintptr_t)offset;  // TODO: properly resolve jump targets
                 break;
             }
 
@@ -800,7 +801,7 @@ vm_object_t * vm_execute(vm_t * vm, function_t * entry) {
                 int64_t val = pop_int(vm);
                 if (val) {
                     int32_t offset = *(int32_t *)ip;
-                    ip = (uint8_t *)offset;
+                    ip = (uint8_t *)(uintptr_t)offset;
                 }
                 else {
                     ip += 4;
@@ -813,7 +814,7 @@ vm_object_t * vm_execute(vm_t * vm, function_t * entry) {
                 int64_t val = pop_int(vm);
                 if (!val) {
                     int32_t offset = *(int32_t *)ip;
-                    ip = (uint8_t *)offset;
+                    ip = (uint8_t *)(uintptr_t)offset;
                 }
                 else {
                     ip += 4;
@@ -851,7 +852,7 @@ vm_object_t * vm_execute(vm_t * vm, function_t * entry) {
                 int64_t idx = pop_int(vm);
                 vm_object_t * arr = *(vm_object_t **)(vm->stack_top - sizeof(vm_object_t *) - sizeof(int64_t));
                 int64_t val = pop_int(vm);
-                if (arr && arr->type.kind == TYPE_ARRAY && idx >= 0 && idx < arr->array.count)
+                if (arr && arr->type.kind == TYPE_ARRAY && idx >= 0 && (size_t)idx < arr->array.count)
                     arr->array.data[idx] = val;
                 break;
             }
@@ -905,7 +906,7 @@ bool infix_compile(infix_compiler_t * compiler, const char * source) {
     sema_t * sema = sema_create();
     codegen_t * cg = codegen_create(sema);
 
-    function_t * entry = codegen_compile(cg, ast);
+    c23_maybe_unused function_t * entry = codegen_compile(cg, ast);
 
     if (codegen_had_error(cg)) {
         fprintf(stderr, "Codegen error: %s\n", codegen_get_error(cg));

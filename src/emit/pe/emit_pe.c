@@ -10,12 +10,13 @@
  * @file emit_pe.c
  * @brief PE binary format support for emit system.
  */
+#include "common/compat_c23.h"
 #include "emit/emit.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static void write_optional_header(emit_context_t * ctx, uint64_t code_size) {
+static c23_maybe_unused void write_optional_header(emit_context_t * ctx, uint64_t code_size) {
     (void)ctx;
     (void)code_size;
 }

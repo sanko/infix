@@ -10,12 +10,13 @@
  * @file emit_elf.c
  * @brief ELF binary format support for emit system.
  */
+#include "common/compat_c23.h"
 #include "emit/emit.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static void elf_write_section_header(const char * name, uint64_t size, uint64_t offset) {
+static c23_maybe_unused void elf_write_section_header(const char * name, uint64_t size, uint64_t offset) {
     (void)name;
     (void)size;
     (void)offset;
