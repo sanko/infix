@@ -43,6 +43,18 @@ INFIX_API infix_status emit_math_mov_imm(emit_context_t * ctx, emit_register_t d
     return INFIX_SUCCESS;
 }
 
+INFIX_API infix_status emit_math_mov_reg(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
+    _infix_clear_error();
+    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+
+    if (ctx->arch == EMIT_ARCH_X86_64) {
+        /* mov r64, r64 -> Opcode 0x89 with ModRM bits 11 (register mode) */
+        emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest));
+        (void)emit_emit_u8(ctx, 0x89);
+        (void)emit_emit_u8(ctx, 0xC0 | ((src & 0x07) << 3) | (dest & 0x07));
+    }
+    return INFIX_SUCCESS;
+}
 INFIX_API infix_status emit_math_add(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
     if (!ctx) {

@@ -60,6 +60,7 @@ typedef enum {
 } emit_register_t;
 
 INFIX_API infix_status emit_math_mov_imm(emit_context_t * ctx, emit_register_t dest, uint64_t imm);
+INFIX_API infix_status emit_math_mov_reg(emit_context_t * ctx, emit_register_t dest, emit_register_t src);
 INFIX_API infix_status emit_math_add(emit_context_t * ctx, emit_register_t dest, emit_register_t src);
 INFIX_API infix_status emit_math_add_imm(emit_context_t * ctx, emit_register_t dest, int32_t imm);
 INFIX_API infix_status emit_math_sub(emit_context_t * ctx, emit_register_t dest, emit_register_t src);
