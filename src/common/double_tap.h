@@ -530,7 +530,7 @@ int main(void) {
     test_body();
     int result = tap_done();
 #if defined(_WIN32) && !defined(__clang__)
-    return result;
+    _exit(result);
 #else
     // Use _exit() to bypass standard atexit() cleanup which can segfault on some
     // platforms when TLS or coverage profiling is involved.
