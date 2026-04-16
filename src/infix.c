@@ -85,3 +85,8 @@
 //     This must be last, as it depends on all other components and includes the
 //     final ABI- and architecture-specific C files itself.
 #include "jit/trampoline.c"
+
+// 13. Infix Language Compiler (optional, for embedding scripting)
+#include "compiler/codegen.c"
+#include "compiler/lexer.c"
+#include "compiler/parser.c"
