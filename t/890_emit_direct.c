@@ -29,7 +29,7 @@ typedef pthread_t pulse_thread_h;
 #endif
 
 /* ============================================================================
- * Pulse Runtime Environment
+ * Pulse Runtime Environment (C Implementation)
  * ============================================================================ */
 
 #define TAG_PRIMITIVE 0
@@ -40,6 +40,7 @@ typedef pthread_t pulse_thread_h;
 #define TAG_THREAD    7
 #define TAG_TUPLE     8
 #define TAG_STRING    9
+#define TAG_HASH      10
 
 #define PULSE_STACK_SIZE (64 * 1024)
 
@@ -85,6 +86,22 @@ typedef struct {
 } pulse_array_t;
 
 typedef struct {
+    size_t length;
+    char data[1];
+} pulse_string_t;
+
+typedef struct {
+    char* key;
+    uint64_t value;
+} hash_entry_t;
+
+typedef struct {
+    size_t capacity;
+    size_t count;
+    hash_entry_t entries[1];
+} pulse_hash_t;
+
+typedef struct {
     size_t count;
     uint64_t values[1];
 } pulse_tuple_t;
@@ -96,7 +113,7 @@ typedef struct {
 #endif
 
 /* ============================================================================
- * Support Functions
+ * Support Functions (Allocation & OS Helpers)
  * ============================================================================ */
 
 static void * alloc_executable(size_t size) {
@@ -159,7 +176,32 @@ static void gc_collect(pulse_vm_t* vm) {
     vm->top = (size_t)(next_top - vm->from_space);
 }
 
+/* ============================================================================
+ * JIT Script Helpers (Called by Pulse Machine Code)
+ * ============================================================================ */
+
+static pulse_string_t* pulse_string_concat(pulse_vm_t* vm, pulse_string_t* a, pulse_string_t* b) {
+    size_t new_len = a->length + b->length;
+    pulse_string_t* s = (pulse_string_t*)gc_alloc(vm, sizeof(pulse_string_t) + new_len, TAG_STRING);
+    s->length = new_len;
+    memcpy(s->data, a->data, a->length);
+    memcpy(s->data + a->length, b->data, b->length);
+    s->data[new_len] = '\0';
+    return s;
+}
+
+static uint64_t pulse_hash_get(pulse_hash_t* h, const char* key) {
+    for (size_t i = 0; i < h->capacity; i++) {
+        if (h->entries[i].key && strcmp(h->entries[i].key, key) == 0) {
+            return h->entries[i].value;
+        }
+    }
+    return 0;
+}
+
 typedef uint64_t (*emit_test_fn_0)(void);
+typedef uint64_t (*emit_test_fn_2)(uint64_t, uint64_t);
+
 static uint64_t return_72(void) { return 72; }
 
 static emit_context_t * create_test_context(void) {
@@ -187,11 +229,115 @@ static void mock_ffi_handler(infix_reverse_t* ctx, void* ret, void** args) {
 }
 
 /* ============================================================================
+ * Feature 16: Virtual Register Allocator
+ * ============================================================================ */
+
+#define MAX_VREGS 32
+#define PHYS_POOL_SIZE 3
+
+typedef enum { VREG_FREE, VREG_IN_PHYS, VREG_SPILLED } vreg_state_t;
+
+typedef struct {
+    vreg_state_t state;
+    emit_register_t phys_reg;
+    int32_t stack_offset;
+} vreg_info_t;
+
+typedef struct {
+    vreg_info_t vregs[MAX_VREGS];
+    emit_register_t pool[PHYS_POOL_SIZE];
+    bool phys_busy[PHYS_POOL_SIZE];
+    int next_spill_victim;
+} pulse_allocator_t;
+
+static void allocator_init(pulse_allocator_t* alloc) {
+    memset(alloc, 0, sizeof(pulse_allocator_t));
+    alloc->pool[0] = EMIT_REG_RAX;
+    alloc->pool[1] = EMIT_REG_RCX;
+    alloc->pool[2] = EMIT_REG_RDX;
+}
+
+static void pulse_vreg_free(pulse_allocator_t* alloc, int v_id) {
+    if (alloc->vregs[v_id].state == VREG_IN_PHYS) {
+        for (int i = 0; i < PHYS_POOL_SIZE; i++) {
+            if (alloc->pool[i] == alloc->vregs[v_id].phys_reg) {
+                alloc->phys_busy[i] = false;
+                break;
+            }
+        }
+    }
+    alloc->vregs[v_id].state = VREG_FREE;
+}
+
+static emit_register_t pulse_vreg_alloc(emit_context_t* ctx, pulse_allocator_t* alloc, int v_id) {
+    if (alloc->vregs[v_id].state == VREG_IN_PHYS) return alloc->vregs[v_id].phys_reg;
+    bool was_spilled = (alloc->vregs[v_id].state == VREG_SPILLED);
+    int p_idx = -1;
+    for (int i = 0; i < PHYS_POOL_SIZE; i++) {
+        if (!alloc->phys_busy[i]) { p_idx = i; break; }
+    }
+    if (p_idx == -1) {
+        p_idx = alloc->next_spill_victim;
+        alloc->next_spill_victim = (alloc->next_spill_victim + 1) % PHYS_POOL_SIZE;
+        int v_victim = -1;
+        for (int i = 0; i < MAX_VREGS; i++) {
+            if (alloc->vregs[i].state == VREG_IN_PHYS && alloc->vregs[i].phys_reg == alloc->pool[p_idx]) {
+                v_victim = i; break;
+            }
+        }
+        alloc->vregs[v_victim].stack_offset = -((v_victim + 1) * 8);
+        emit_math_store_reg(ctx, EMIT_REG_RBP, alloc->vregs[v_victim].stack_offset, alloc->pool[p_idx]);
+        alloc->vregs[v_victim].state = VREG_SPILLED;
+    }
+    alloc->phys_busy[p_idx] = true;
+    alloc->vregs[v_id].state = VREG_IN_PHYS;
+    alloc->vregs[v_id].phys_reg = alloc->pool[p_idx];
+    if (was_spilled) {
+        emit_math_load_reg(ctx, alloc->vregs[v_id].phys_reg, EMIT_REG_RBP, alloc->vregs[v_id].stack_offset);
+    }
+    return alloc->vregs[v_id].phys_reg;
+}
+
+/* ============================================================================
+ * Feature 19: Intermediate Representation (IR)
+ * ============================================================================ */
+
+typedef enum { P_OP_LOAD_IMM, P_OP_ADD, P_OP_RET } pulse_op_t;
+typedef struct { pulse_op_t op; int dest_vreg; int src_a; int src_b; uint64_t imm; } pulse_insn_t;
+
+static void pulse_select_instructions(emit_context_t* ctx, pulse_allocator_t* alloc, pulse_insn_t* stream, size_t count) {
+    for (size_t i = 0; i < count; i++) {
+        pulse_insn_t* in = &stream[i];
+        switch (in->op) {
+            case P_OP_LOAD_IMM: {
+                emit_register_t pr = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
+                emit_math_mov_imm(ctx, pr, in->imm);
+                break;
+            }
+            case P_OP_ADD: {
+                emit_register_t p_dest = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
+                emit_register_t p_a    = pulse_vreg_alloc(ctx, alloc, in->src_a);
+                emit_register_t p_b    = pulse_vreg_alloc(ctx, alloc, in->src_b);
+                if (p_dest != p_a) emit_math_mov_reg(ctx, p_dest, p_a);
+                emit_math_add(ctx, p_dest, p_b);
+                break;
+            }
+            case P_OP_RET: {
+                emit_register_t p_src = pulse_vreg_alloc(ctx, alloc, in->dest_vreg);
+                if (p_src != EMIT_REG_RAX) emit_math_mov_reg(ctx, EMIT_REG_RAX, p_src);
+                emit_math_ret(ctx);
+                break;
+            }
+        }
+    }
+}
+
+/* ============================================================================
  * TEST SUITE
  * ============================================================================ */
 
 TEST {
-    plan(18);
+    plan(24);
 
     subtest("Context lifecycle") {
         plan(4);
@@ -286,13 +432,11 @@ TEST {
         emit_define_symbol(ctx, "link", EMIT_VISIBILITY_DEFAULT, false); emit_emit_u64(ctx, 0);
         uint64_t data_sz; emit_get_offset(ctx, &data_sz);
         setup_test_section(ctx);
-
         emit_math_load_sym(ctx, EMIT_REG_RAX, "ptr0");
         emit_math_load_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX, 0);
         emit_math_load_reg(ctx, EMIT_REG_RAX, EMIT_REG_RCX, 0);
         emit_math_store_sym(ctx, "val", EMIT_REG_RAX);
         emit_math_ret(ctx);
-
         const uint8_t * code = NULL; size_t sz = 0;
         emit_get_binary(ctx, &code, &sz);
         void * mem = NULL;
@@ -300,9 +444,7 @@ TEST {
             volatile uint64_t * p_ptr0 = (uint64_t*)mem;
             volatile uint64_t * p_val   = (uint64_t*)((uint8_t*)mem + 8);
             volatile uint64_t * p_link  = (uint64_t*)((uint8_t*)mem + 16);
-            *p_ptr0 = (uintptr_t)p_link;
-            *p_link = (uintptr_t)p_val;
-            *p_val  = 0x12345;
+            *p_ptr0 = (uintptr_t)p_link; *p_link = (uintptr_t)p_val; *p_val = 0x12345;
             ((emit_test_fn_0)((uint8_t*)mem + data_sz))();
             ok(*p_val == 0x12345, "Terminal value preserved");
             ok(1, "Complex chain followed");
@@ -402,14 +544,9 @@ TEST {
             ok(1, "Pattern match logic emitted");
             volatile uint64_t* obj_ptr_gv = (uint64_t*)mem;
             emit_test_fn_0 fn = (emit_test_fn_0)((uint8_t*)mem + data_sz);
-
-            /* Correctly typed union to prevent strict-aliasing issues */
             union { gc_header_t head; uint64_t raw[3]; } mock_array, mock_object;
-            memset(&mock_array, 0, sizeof(mock_array));
-            memset(&mock_object, 0, sizeof(mock_object));
-            mock_array.head.tag = TAG_ARRAY;
-            mock_object.head.tag = TAG_OBJECT;
-
+            memset(&mock_array, 0, sizeof(mock_array)); memset(&mock_object, 0, sizeof(mock_object));
+            mock_array.head.tag = TAG_ARRAY; mock_object.head.tag = TAG_OBJECT;
             *obj_ptr_gv = (uintptr_t)&mock_array.raw[2];
             ok(fn() == 1, "Matched array tag correctly");
             *obj_ptr_gv = (uintptr_t)&mock_object.raw[2];
@@ -514,8 +651,7 @@ TEST {
         if (execute_jit_code(code, sz, &mem)) {
             ok(1, "Closure logic emitted");
             volatile uint64_t* p_env = (uint64_t*)mem;
-            uint64_t closed_val = 55;
-            *p_env = (uintptr_t)&closed_val;
+            uint64_t closed_val = 55; *p_env = (uintptr_t)&closed_val;
             emit_test_fn_0 fn = (emit_test_fn_0)((uint8_t*)mem + data_sz);
             ok(fn() == 155, "Closure accessed environment");
             free_executable(mem, sz);
@@ -529,8 +665,7 @@ TEST {
         emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         emit_begin_section(ctx, ".data");
         emit_define_symbol(ctx, "msg", EMIT_VISIBILITY_DEFAULT, false);
-        const char* hello = "Pulse JIT IO\n";
-        size_t hlen = strlen(hello);
+        const char* hello = "Pulse JIT IO\n"; size_t hlen = strlen(hello);
         for(size_t i=0; i < hlen + 1; i++) emit_emit_u8(ctx, (uint8_t)hello[i]);
         uint64_t dsz; emit_get_offset(ctx, &dsz);
         setup_test_section(ctx);
@@ -539,84 +674,228 @@ TEST {
         HMODULE k32 = GetModuleHandleA("kernel32.dll");
         void* wfa = (void*)GetProcAddress(k32, "WriteFile");
         void* gsh = (void*)GetProcAddress(k32, "GetStdHandle");
-
-        /* written_bytes must be a valid pointer to memory */
         static DWORD written_count = 0;
 
-        /* 1. Get stdout handle -> RCX = GetStdHandle(-11) */
-        emit_math_mov_imm(ctx, EMIT_REG_RCX, (uint64_t)-11);
+        emit_math_mov_imm(ctx, EMIT_REG_RCX, (uint64_t)-12); /* STD_ERROR_HANDLE */
         emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)gsh);
         emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
 
-        /* 2. Setup WriteFile(handle, buf_addr, len, written_addr, NULL) */
-        emit_math_mov_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX);   // handle
-
-        /* Buffer address must be absolute for this test */
-        const uint8_t* code_tmp; size_t sz_tmp;
-        emit_get_binary(ctx, &code_tmp, &sz_tmp); // preview addresses if possible
-
-        /* Note: For JIT simplicity, we'll calculate absolute msg addr in execution block */
-        emit_math_mov_imm(ctx, EMIT_REG_R8, hlen);           // len
+        emit_math_mov_reg(ctx, EMIT_REG_RCX, EMIT_REG_RAX);
+        emit_math_mov_imm(ctx, EMIT_REG_R8, hlen);
         emit_math_mov_imm(ctx, EMIT_REG_R9, (uintptr_t)&written_count);
-
         emit_math_sub_imm(ctx, EMIT_REG_RSP, 48);
-
-        /* Set 5th arg (NULL) at [RSP + 32] */
         emit_math_mov_imm(ctx, EMIT_REG_RAX, 0);
         emit_math_store_reg(ctx, EMIT_REG_RSP, 32, EMIT_REG_RAX);
-
-        /* Load absolute WriteFile address */
         emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)wfa);
-
-        /* Use R12 to store the calculated message address to be loaded later */
-        emit_math_mov_imm(ctx, EMIT_REG_R12, 0x0); // Placeholder
-
-        /* Actual Call */
-        emit_math_mov_reg(ctx, EMIT_REG_RDX, EMIT_REG_R12); // Real buffer addr
+        emit_math_mov_imm(ctx, EMIT_REG_R12, 0x0); /* Placeholder */
+        emit_math_mov_reg(ctx, EMIT_REG_RDX, EMIT_REG_R12);
         emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
-
         emit_math_add_imm(ctx, EMIT_REG_RSP, 48);
 #else
         emit_math_mov_imm(ctx, EMIT_REG_RAX, 1);
-        emit_math_mov_imm(ctx, EMIT_REG_RDI, 1);
-        /* Logic for POSIX LEA placeholder */
-        emit_math_mov_imm(ctx, EMIT_REG_RSI, 0);
+        emit_math_mov_imm(ctx, EMIT_REG_RDI, 2); /* STDERR */
+        emit_math_mov_imm(ctx, EMIT_REG_RSI, 0); /* Placeholder */
         emit_math_mov_imm(ctx, EMIT_REG_RDX, hlen);
         emit_emit_u8(ctx, 0x0F); emit_emit_u8(ctx, 0x05);
 #endif
         emit_math_ret(ctx);
-
         const uint8_t* code; size_t sz;
         emit_get_binary(ctx, &code, &sz);
         void* mem = NULL;
         if (execute_jit_code(code, sz, &mem)) {
             ok(1, "Manual IO JIT generated");
-
-            /* PATCH absolute message address into the JIT code */
             uintptr_t msg_addr = (uintptr_t)mem;
 #ifdef _WIN32
-            /* Find the placeholder for R12 (the 'mov r12, 0' instruction) */
             for(size_t i=0; i < sz-8; i++) {
                 if (((uint8_t*)mem)[i] == 0x49 && ((uint8_t*)mem)[i+1] == 0xBC) {
-                    *(uintptr_t*)((uint8_t*)mem + i + 2) = msg_addr;
-                    break;
+                    *(uintptr_t*)((uint8_t*)mem + i + 2) = msg_addr; break;
                 }
             }
 #else
-            /* Find placeholder for RSI */
             for(size_t i=0; i < sz-8; i++) {
                 if (((uint8_t*)mem)[i] == 0x48 && ((uint8_t*)mem)[i+1] == 0xBE) {
-                    *(uintptr_t*)((uint8_t*)mem + i + 2) = msg_addr;
-                    break;
+                    *(uintptr_t*)((uint8_t*)mem + i + 2) = msg_addr; break;
                 }
             }
 #endif
-
             emit_test_fn_0 fn = (emit_test_fn_0)((uint8_t*)mem + dsz);
-            uint64_t result = fn();
-            ok(result != 0, "Manual IO execution returned success code");
+            ok(fn() != 0, "Manual IO returned success");
             free_executable(mem, sz);
         }
         emit_destroy(ctx);
+    }
+
+    subtest("Feature 16: Virtual Register Allocator & Spilling") {
+        plan(3);
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        pulse_allocator_t alloc; allocator_init(&alloc);
+        emit_math_prologue(ctx);
+        emit_math_sub_imm(ctx, EMIT_REG_RSP, 64);
+
+        emit_register_t pr0 = pulse_vreg_alloc(ctx, &alloc, 0); emit_math_mov_imm(ctx, pr0, 10);
+        emit_register_t pr1 = pulse_vreg_alloc(ctx, &alloc, 1); emit_math_mov_imm(ctx, pr1, 20);
+        emit_register_t pr2 = pulse_vreg_alloc(ctx, &alloc, 2); emit_math_mov_imm(ctx, pr2, 30);
+        emit_register_t pr3 = pulse_vreg_alloc(ctx, &alloc, 3); emit_math_mov_imm(ctx, pr3, 40);
+
+        emit_register_t r_v0 = pulse_vreg_alloc(ctx, &alloc, 0);
+        emit_register_t r_v1 = pulse_vreg_alloc(ctx, &alloc, 1); emit_math_add(ctx, r_v0, r_v1); pulse_vreg_free(&alloc, 1);
+        emit_register_t r_v2 = pulse_vreg_alloc(ctx, &alloc, 2); emit_math_add(ctx, r_v0, r_v2); pulse_vreg_free(&alloc, 2);
+        emit_register_t r_v3 = pulse_vreg_alloc(ctx, &alloc, 3); emit_math_add(ctx, r_v0, r_v3); pulse_vreg_free(&alloc, 3);
+
+        if (r_v0 != EMIT_REG_RAX) emit_math_mov_reg(ctx, EMIT_REG_RAX, r_v0);
+        emit_math_add_imm(ctx, EMIT_REG_RSP, 64);
+        emit_math_epilogue(ctx);
+
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            ok(1, "Spill-capable JIT generated");
+            emit_test_fn_0 fn = (emit_test_fn_0)mem;
+            ok(fn() == 100, "Spill and reload worked");
+            ok(alloc.vregs[0].stack_offset != 0, "Spill verified");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
+    }
+
+    subtest("Feature 17: Leaf Function Optimization") {
+        plan(3);
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        emit_define_symbol(ctx, "std_fn", EMIT_VISIBILITY_DEFAULT, true);
+        emit_emit_label(ctx, "std_fn");
+        uint64_t std_start; emit_get_offset(ctx, &std_start);
+        emit_math_prologue(ctx);
+        emit_math_mov_imm(ctx, EMIT_REG_RAX, 100);
+        emit_math_epilogue(ctx);
+        uint64_t std_end; emit_get_offset(ctx, &std_end);
+        emit_define_symbol(ctx, "leaf_fn", EMIT_VISIBILITY_DEFAULT, true);
+        emit_emit_label(ctx, "leaf_fn");
+        uint64_t leaf_start; emit_get_offset(ctx, &leaf_start);
+        emit_math_mov_imm(ctx, EMIT_REG_RAX, 100);
+        emit_math_ret(ctx);
+        uint64_t leaf_end; emit_get_offset(ctx, &leaf_end);
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            emit_test_fn_0 fn_std = (emit_test_fn_0)((uint8_t*)mem + std_start);
+            emit_test_fn_0 fn_leaf = (emit_test_fn_0)((uint8_t*)mem + leaf_start);
+            ok(fn_std() == 100, "Standard function ok");
+            ok(fn_leaf() == 100, "Leaf function ok");
+            ok((leaf_end - leaf_start) < (std_end - std_start), "Leaf function smaller");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
+    }
+
+    subtest("Feature 18: Tail Call Optimization (TCO)") {
+        plan(2);
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        emit_define_symbol(ctx, "countdown", EMIT_VISIBILITY_DEFAULT, true);
+        emit_emit_label(ctx, "countdown");
+        emit_math_cmp_imm(ctx, EMIT_REG_RCX, 0);
+        emit_math_jmp_cc(ctx, EMIT_CC_E, "done");
+        emit_math_sub_imm(ctx, EMIT_REG_RCX, 1);
+        emit_math_add_imm(ctx, EMIT_REG_RDX, 1);
+        emit_math_jmp(ctx, "countdown");
+        emit_emit_label(ctx, "done");
+        emit_math_mov_reg(ctx, EMIT_REG_RAX, EMIT_REG_RDX);
+        emit_math_ret(ctx);
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            ok(1, "TCO JIT generated");
+            emit_test_fn_2 fn = (emit_test_fn_2)mem;
+            ok(fn(100, 0) == 100, "TCO recursion correct");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
+    }
+
+    subtest("Feature 19: Architecture-Agnostic IR & Selection") {
+        plan(2);
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        pulse_allocator_t alloc; allocator_init(&alloc);
+        pulse_insn_t program[4] = {
+            { .op = P_OP_LOAD_IMM, .dest_vreg = 0, .imm = 10 },
+            { .op = P_OP_LOAD_IMM, .dest_vreg = 1, .imm = 20 },
+            { .op = P_OP_ADD,      .dest_vreg = 2, .src_a = 0, .src_b = 1 },
+            { .op = P_OP_RET,      .dest_vreg = 2 }
+        };
+        pulse_select_instructions(ctx, &alloc, program, 4);
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            ok(1, "IR Selector valid");
+            emit_test_fn_0 fn = (emit_test_fn_0)mem;
+            ok(fn() == 30, "IR execution result correct");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
+    }
+
+    subtest("Feature 20: Hashes (Dictionaries)") {
+        plan(2);
+        pulse_hash_t* h = malloc(sizeof(pulse_hash_t) + (sizeof(hash_entry_t) * 4));
+        h->capacity = 4; h->count = 1;
+        h->entries[0].key = "secret"; h->entries[0].value = 9876;
+        ok(pulse_hash_get(h, "secret") == 9876, "C-side hash functional");
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)pulse_hash_get);
+        emit_math_mov_imm(ctx, EMIT_REG_RCX, (uintptr_t)h);
+        emit_math_mov_imm(ctx, EMIT_REG_RDX, (uintptr_t)"secret");
+        emit_math_sub_imm(ctx, EMIT_REG_RSP, 32);
+        emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
+        emit_math_add_imm(ctx, EMIT_REG_RSP, 32);
+        emit_math_ret(ctx);
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            emit_test_fn_0 fn = (emit_test_fn_0)mem;
+            ok(fn() == 9876, "JIT hash lookup functional");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx); free(h);
+    }
+
+    subtest("Feature 21: String Concatenation") {
+        plan(2);
+        pulse_vm_t* vm = vm_create(4096);
+        pulse_string_t* s1 = gc_alloc(vm, sizeof(pulse_string_t) + 8, TAG_STRING);
+        s1->length = 5; memcpy(s1->data, "Hello", 5);
+        pulse_string_t* s2 = gc_alloc(vm, sizeof(pulse_string_t) + 8, TAG_STRING);
+        s2->length = 6; memcpy(s2->data, " World", 6);
+        pulse_string_t* res = pulse_string_concat(vm, s1, s2);
+        ok(strcmp(res->data, "Hello World") == 0, "C-side concat functional");
+        emit_context_t* ctx = create_test_context();
+        setup_test_section(ctx);
+        emit_math_mov_imm(ctx, EMIT_REG_RAX, (uintptr_t)pulse_string_concat);
+        emit_math_mov_imm(ctx, EMIT_REG_RCX, (uintptr_t)vm);
+        emit_math_mov_imm(ctx, EMIT_REG_RDX, (uintptr_t)s1);
+        emit_math_mov_imm(ctx, EMIT_REG_R8, (uintptr_t)s2);
+        emit_math_sub_imm(ctx, EMIT_REG_RSP, 32);
+        emit_emit_u8(ctx, 0xFF); emit_emit_u8(ctx, 0xD0);
+        emit_math_add_imm(ctx, EMIT_REG_RSP, 32);
+        emit_math_ret(ctx);
+        const uint8_t* code; size_t sz;
+        emit_get_binary(ctx, &code, &sz);
+        void* mem = NULL;
+        if (execute_jit_code(code, sz, &mem)) {
+            emit_test_fn_0 fn = (emit_test_fn_0)mem;
+            pulse_string_t* jit_res = (pulse_string_t*)fn();
+            ok(strcmp(jit_res->data, "Hello World") == 0, "JIT concat functional");
+            free_executable(mem, sz);
+        }
+        emit_destroy(ctx);
+        free(vm->from_space); free(vm->to_space); free(vm);
     }
 }
