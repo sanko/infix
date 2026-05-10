@@ -49,7 +49,7 @@
 ,
 "windows-x86_64-clang": "👍🏽 passing"
 ,
-"windows-x86_64-gcc": "👍🏽 passing"
+"windows-x86_64-gcc": "👎🏽 failing"
 ,
 "windows-x86_64-msvc": "👍🏽 passing"
 }

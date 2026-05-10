@@ -26,5 +26,5 @@
 | **windows** | `aarch64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `msvc` | ✅ success |
 | **windows** | `x86_64` | `clang` | ✅ success |
-| **windows** | `x86_64` | `gcc` | ✅ success |
+| **windows** | `x86_64` | `gcc` | ❌ failure |
 | **windows** | `x86_64` | `msvc` | ✅ success |
