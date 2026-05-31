@@ -36,6 +36,7 @@
  */
 #include "common/infix_internals.h"
 #include "common/utility.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -321,6 +322,8 @@ c23_nodiscard infix_executable_t infix_executable_alloc(size_t size) {
         flags |= MAP_JIT;
 #endif  // INFIX_OS_MACOS
     code = mmap(nullptr, size, PROT_READ | PROT_WRITE, flags, -1, 0);
+    if (code != MAP_FAILED)
+        assert(((uintptr_t)code % sysconf(_SC_PAGESIZE)) == 0);
 #if defined(INFIX_OS_MACOS)
     if (code != MAP_FAILED && g_use_secure_jit_path) {
         // Switch thread to Write mode. enabled=0 means Write allowed.

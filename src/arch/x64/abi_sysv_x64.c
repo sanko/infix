@@ -948,14 +948,29 @@ static infix_status prepare_reverse_call_frame_sysv_x64(infix_arena_t * arena,
  * @return `INFIX_SUCCESS`.
  */
 static infix_status generate_reverse_prologue_sysv_x64(code_buffer * buf, infix_reverse_call_frame_layout * layout) {
-    emit_push_reg(buf, RBP_REG);              // push rbp
-    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);  // mov rbp, rsp
+    // Save all volatile registers to preserve ABI integrity for the caller.
+    emit_push_reg(buf, RAX_REG);
+    emit_push_reg(buf, RCX_REG);
+    emit_push_reg(buf, RDX_REG);
+    emit_push_reg(buf, RSI_REG);
+    emit_push_reg(buf, RDI_REG);
+    emit_push_reg(buf, R8_REG);
+    emit_push_reg(buf, R9_REG);
+    emit_push_reg(buf, R10_REG);
+    emit_push_reg(buf, R11_REG);
 
-    // FORCE ALIGNMENT.
-    // AND RSP, -max_align
-    emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
+    // Save original RSP (at this point, the stack is 16-byte aligned from call)
+    // We use RBP as our frame pointer to save the original RSP.
+    emit_push_reg(buf, RBP_REG);
+    emit_mov_reg_reg(buf, RBP_REG, RSP_REG);
 
-    emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);  // Allocate our calculated space.
+    // Align the stack (max_align ensures alignment for arguments)
+    if (layout->max_align > 0)
+        emit_and_reg_imm8(buf, RSP_REG, (int8_t)-(int8_t)layout->max_align);
+
+    // Allocate space
+    emit_sub_reg_imm32(buf, RSP_REG, layout->total_stack_alloc);
+
     return INFIX_SUCCESS;
 }
 /**
@@ -993,8 +1008,9 @@ static infix_status generate_reverse_argument_marshalling_sysv_x64(code_buffer *
     // If the return value is passed by reference, save the pointer from RDI.
     if (return_in_memory)
         emit_mov_mem_reg(buf, RBP_REG, layout->return_buffer_offset, GPR_ARGS[gpr_idx++]);  // mov [rbp + offset], rdi
-    // Stack arguments passed by the caller start at [rbp + 16].
-    size_t stack_arg_offset = 16;
+    // Stack arguments passed by the caller start after the saved registers and return address.
+    // 11 pushed registers + 1 return address = 12 slots * 8 bytes = 96.
+    size_t stack_arg_offset = 96;
     for (size_t i = 0; i < context->num_args; i++) {
         infix_type * current_type = context->arg_types[i];
         current_saved_data_offset = _infix_align_up(current_saved_data_offset, current_type->alignment);
@@ -1161,6 +1177,9 @@ static infix_status generate_reverse_dispatcher_call_sysv_x64(code_buffer * buf,
 static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                                                        infix_reverse_call_frame_layout * layout,
                                                        infix_reverse_t * context) {
+    bool returns_in_rax = false;
+    bool returns_in_rdx = false;
+
     if (context->return_type->category != INFIX_TYPE_VOID) {
         // Correctly determine if the return value uses a hidden pointer by performing a full ABI classification.
         bool return_in_memory = false;
@@ -1176,10 +1195,34 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
                 classify_aggregate_sysv(ret_type, ret_classes, &num_ret_classes);
                 if (num_ret_classes > 0 && ret_classes[0] == MEMORY)
                     return_in_memory = true;
+                else {
+                    if (num_ret_classes >= 1 && ret_classes[0] == INTEGER)
+                        returns_in_rax = true;
+                    if (num_ret_classes >= 2 && ret_classes[1] == INTEGER)
+                        returns_in_rdx = true;
+                }
             }
         }
-        if (is_long_double(ret_type))
-            return_in_memory = false;
+        else if (is_long_double(ret_type)) {
+            // long double returns on FPU stack.
+        }
+        else if (context->return_type->category == INFIX_TYPE_VECTOR &&
+                 (context->return_type->size == 16 || context->return_type->size == 32 ||
+                  context->return_type->size == 64)) {
+            // Vectors return in XMM/YMM/ZMM registers.
+        }
+        else {
+            // Primitives.
+            returns_in_rax = true;
+            if (ret_type->size > 8)
+                returns_in_rdx = true;
+        }
+
+        if (return_in_memory) {
+            returns_in_rax = true;  // The hidden pointer must be returned in RAX.
+            returns_in_rdx = false;
+        }
+
         // Now, handle the return value based on the correct classification.
         if (is_long_double(context->return_type))
             emit_fldt_mem(buf, RBP_REG, layout->return_buffer_offset);
@@ -1233,8 +1276,34 @@ static infix_status generate_reverse_epilogue_sysv_x64(code_buffer * buf,
         }
     }
     // Standard function epilogue: tear down stack frame and return.
+    // Restore RSP from RBP, which points to the saved register area.
     emit_mov_reg_reg(buf, RSP_REG, RBP_REG);
     emit_pop_reg(buf, RBP_REG);
+
+    // Restore all saved registers.
+    // If a register is used for a return value, we MUST NOT pop the *original*
+    // value into it, as that would overwrite the return value.
+    // We must skip it in the stack.
+
+    emit_pop_reg(buf, R11_REG);
+    emit_pop_reg(buf, R10_REG);
+    emit_pop_reg(buf, R9_REG);
+    emit_pop_reg(buf, R8_REG);
+    emit_pop_reg(buf, RDI_REG);
+    emit_pop_reg(buf, RSI_REG);
+
+    if (returns_in_rdx)
+        emit_add_reg_imm8(buf, RSP_REG, 8);  // Skip saved RDX
+    else
+        emit_pop_reg(buf, RDX_REG);
+
+    emit_pop_reg(buf, RCX_REG);
+
+    if (returns_in_rax)
+        emit_add_reg_imm8(buf, RSP_REG, 8);  // Skip saved RAX
+    else
+        emit_pop_reg(buf, RAX_REG);
+
     emit_ret(buf);
     return INFIX_SUCCESS;
 }
