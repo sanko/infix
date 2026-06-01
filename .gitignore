@@ -51,3 +51,7 @@ t/*
 !t/*.c
 !t/*.cpp
 !t/*.h
+
+result-*
+*.result
+status-files/*

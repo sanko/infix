@@ -156,7 +156,7 @@ This document outlines the planned development goals for the infix FFI library, 
                 - https://www.lurklurk.org/concordance.html (Linux vs. FreeBSD)
                 - https://alfonsosiciliano.gitlab.io/posts/2023-08-28-freebsd-15-system-calls.html
 
-- [ ] **Add Exception Handling Boundary**
+- [x] **Add Exception Handling Boundary**
     *   **Context:** An unhandled C++ or SEH exception that crosses the FFI boundary will crash the program. A robust library should provide a way to handle this.
     *   **Idea:** Create a `infix_forward_create_safe` function where the JIT code wraps the native call in a `try...catch` or `__try...__except` block.
     *   **Goal:** If a native function throws an exception, the trampoline catches it, returns `INFIX_ERROR_NATIVE_EXCEPTION`, and the program does not crash.

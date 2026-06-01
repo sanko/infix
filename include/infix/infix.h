@@ -130,7 +130,8 @@
  *
  * This is aliased as `c23_nodiscard` in `compat_c23.h`.
  */
-#if _INFIX_HAS_C_ATTRIBUTE(nodiscard) && !defined(__GNUC__) && !defined(__clang__)
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ > 201710L && _INFIX_HAS_C_ATTRIBUTE(nodiscard) && \
+    !defined(__GNUC__) && !defined(__clang__)
 #define INFIX_NODISCARD [[nodiscard]]
 #elif defined(__GNUC__) || defined(__clang__)
 #define INFIX_NODISCARD __attribute__((warn_unused_result))

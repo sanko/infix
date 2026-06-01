@@ -5,6 +5,17 @@ All notable changes to `infix` will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+This release fixes RAX register preservation in x64 reverse trampolines.
+
+### Fixed
+
+- RAX register is now saved and restored in the Windows x64 reverse trampoline epilogue for void functions, preventing clobber of the return value register.
+- SysV x64 reverse trampoline now handles `ARG_LOCATION_GPR_REFERENCE` for aggregates >16 bytes passed by reference.
+- Corrected handling of aggregates classified as `MEMORY` during reverse trampoline calls in SysV. The `stack_arg_offset` was adjusted from 24 to 16, and `MEMORY`-class arguments now correctly set `is_from_stack = true`.
+- Minor correctness adjustments for aggregate argument classification in reverse trampolines on Windows.
+
 ## [0.1.7] - 2026-03-30
 
 ### Changed
@@ -256,7 +267,10 @@ Everything. It's brand new.
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
-[unreleased]: https://github.com/sanko/infix/compare/v0.1.4...HEAD
+[0.1.8]: https://github.com/sanko/infix/compare/v0.1.7...v0.1.8
+[0.1.7]: https://github.com/sanko/infix/compare/v0.1.6...v0.1.7
+[0.1.6]: https://github.com/sanko/infix/compare/v0.1.5...v0.1.6
+[0.1.5]: https://github.com/sanko/infix/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/sanko/infix/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sanko/infix/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sanko/infix/compare/v0.1.1...v0.1.2
