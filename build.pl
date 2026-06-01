@@ -921,14 +921,25 @@ sub upload_to_codecov {
     else {
         my @cov_files;
         my $project_root = abs_path( $FindBin::Bin );
+        if ( $^O eq 'cygwin' ) {
+            chomp( my $win_root = `cygpath -m "$project_root" 2>/dev/null` );
+            $project_root = $win_root if $win_root;
+        }
         find(
             sub {
                 return unless /\.gcov$/;
                 open my $fh, '<', $_ or return;
                 my $source_line = <$fh>;
                 close $fh;
-                if ( $source_line && $source_line =~ /Source:\Q$project_root\E/ ) {
-                    push @cov_files, $File::Find::name;
+                if ( $source_line && $source_line =~ /^Source:\s*(.+)$/ ) {
+                    my $source_path = $1;
+                    $source_path =~ s/^\s+|\s+$//g;
+                    $source_path =~ s/\\/\//g;
+                    my $normalized_root = $project_root;
+                    $normalized_root =~ s/\\/\//g;
+                    if ( $source_path =~ /^\Q$normalized_root\E/i ) {
+                        push @cov_files, $File::Find::name;
+                    }
                 }
             },
             '.'
