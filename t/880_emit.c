@@ -19,6 +19,9 @@
 #include <windows.h>
 #else
 #include <sys/mman.h>
+#ifndef MAP_ANONYMOUS
+#define MAP_ANONYMOUS MAP_ANON
+#endif
 #endif
 
 #define EMIT_TEST_SECTION ".text"
@@ -202,7 +205,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         ok(setup_test_section(ctx), "setup test section");
 
@@ -233,7 +237,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         ok(setup_test_section(ctx), "setup test section");
 
@@ -264,7 +269,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         ok(setup_test_section(ctx), "setup test section");
 
@@ -308,7 +314,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -383,7 +390,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -453,7 +461,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -494,7 +503,7 @@ TEST {
         volatile uint64_t * point_x = (volatile uint64_t *)((uint8_t *)exec_mem + 8);
         volatile uint64_t * point_y = (volatile uint64_t *)((uint8_t *)exec_mem + 16);
 
-        *point_ptr = (uint64_t)point_x; // Initialize pointer to point to the struct fields
+        *point_ptr = (uint64_t)point_x;  // Initialize pointer to point to the struct fields
 
         emit_test_fn_0 sum_fn = (emit_test_fn_0)((uint8_t *)exec_mem + data_section_size);
 
@@ -517,7 +526,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -579,7 +589,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -644,7 +655,8 @@ TEST {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -716,12 +728,13 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
-subtest("Variadic function pointer test") {
+    subtest("Variadic function pointer test") {
         plan(5);
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");
@@ -781,7 +794,8 @@ subtest("Variadic function pointer test") {
 
         emit_context_t * ctx = create_test_context();
         ok(ctx != NULL, "emit_create returns non-NULL context");
-        if (!ctx) return;
+        if (!ctx)
+            return;
 
         (void)emit_add_section(ctx, ".data", EMIT_SECTION_FLAG_ALLOC | EMIT_SECTION_FLAG_WRITE);
         (void)emit_begin_section(ctx, ".data");

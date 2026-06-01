@@ -119,7 +119,7 @@ typedef struct {
         double float_val;
         char * string_val;
     };
-} token_t;
+} infix_token_t;
 
 typedef struct {
     const char * source;
@@ -127,14 +127,14 @@ typedef struct {
     size_t position;
     int line;
     int column;
-    token_t current_token;
-    token_t previous_token;
+    infix_token_t current_token;
+    infix_token_t previous_token;
 } lexer_t;
 
 lexer_t * lexer_create(const char * source);
 void lexer_destroy(lexer_t * lexer);
-token_t lexer_next_token(lexer_t * lexer);
-token_t lexer_peek(lexer_t * lexer);
+infix_token_t lexer_next_token(lexer_t * lexer);
+infix_token_t lexer_peek(lexer_t * lexer);
 bool lexer_match(lexer_t * lexer, token_type_t type);
 bool lexer_expect(lexer_t * lexer, token_type_t type, const char * error_msg);
 
@@ -406,8 +406,8 @@ void ast_free_tree(ast_node_t * root);
 
 typedef struct {
     lexer_t * lexer;
-    token_t current;
-    token_t previous;
+    infix_token_t current;
+    infix_token_t previous;
     bool had_error;
     char error_message[256];
 } parser_t;

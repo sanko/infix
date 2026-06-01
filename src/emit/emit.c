@@ -11,8 +11,8 @@
  * @brief Implementation of the emit API for generating machine code.
  */
 #define INFIX_BUILDING
-#include "common/compat_c23.h"
 #include "emit/emit.h"
+#include "common/compat_c23.h"
 #include "emit_internals.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -279,7 +279,7 @@ static infix_status emit_emit_bytes(emit_context_t * ctx, const void * data, siz
     return INFIX_SUCCESS;
 }
 
-INFIX_API infix_status __attribute__((warn_unused_result)) emit_emit_u8(emit_context_t * ctx, uint8_t byte) {
+INFIX_API INFIX_NODISCARD infix_status emit_emit_u8(emit_context_t * ctx, uint8_t byte) {
     return emit_emit_bytes(ctx, &byte, 1);
 }
 
@@ -288,7 +288,7 @@ INFIX_API infix_status emit_emit_u16(emit_context_t * ctx, uint16_t value) {
     return emit_emit_bytes(ctx, bytes, 2);
 }
 
-INFIX_API infix_status __attribute__((warn_unused_result)) emit_emit_u32(emit_context_t * ctx, uint32_t value) {
+INFIX_API INFIX_NODISCARD infix_status emit_emit_u32(emit_context_t * ctx, uint32_t value) {
     uint8_t bytes[4] = {(uint8_t)(value & 0xFF),
                         (uint8_t)((value >> 8) & 0xFF),
                         (uint8_t)((value >> 16) & 0xFF),
@@ -329,7 +329,7 @@ INFIX_API infix_status emit_align(emit_context_t * ctx, uint64_t alignment) {
     return INFIX_SUCCESS;
 }
 
-INFIX_API infix_status __attribute__((warn_unused_result)) emit_add_relocation(
+INFIX_API INFIX_NODISCARD infix_status emit_add_relocation(
     emit_context_t * ctx, const char * name, uint64_t offset, uint8_t size, uint8_t inst_size) {
     _infix_clear_error();
     if (!ctx || !name) {
@@ -456,11 +456,12 @@ void _emit_arch_nop(emit_context_t * ctx, uint8_t size) {
             (void)status;
         }
         break;
-    case EMIT_ARCH_AARCH64: {
-        infix_status status = emit_emit_u32(ctx, 0xD503201F);
-        (void)status;
-        break;
-    }
+    case EMIT_ARCH_AARCH64:
+        {
+            infix_status status = emit_emit_u32(ctx, 0xD503201F);
+            (void)status;
+            break;
+        }
     default:
         break;
     }

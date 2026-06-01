@@ -1136,6 +1136,20 @@ c23_nodiscard bool infix_protected_make_readonly(infix_protected_t prot) {
  * @param args_array A pointer to the `void**` array of argument pointers.
  */
 void infix_internal_dispatch_callback_fn_impl(infix_reverse_t * context, void * return_value_ptr, void ** args_array) {
+    fprintf(stderr,
+            "REVERSE_DISPATCH: context=%p ret=%p args=%p num_args=%zu\n",
+            (void *)context,
+            return_value_ptr,
+            (void *)args_array,
+            context->num_args);
+    if (args_array) {
+        for (size_t i = 0; i < context->num_args; i++) {
+            fprintf(stderr, "  args[%zu] = %p", i, args_array[i]);
+            if (args_array[i])
+                fprintf(stderr, " (val32: %d %d)", ((int *)args_array[i])[0], ((int *)args_array[i])[1]);
+            fprintf(stderr, "\n");
+        }
+    }
     INFIX_DEBUG_PRINTF("Dispatching reverse call. Context: %p, User Fn: %p, ret=%p, args=%p",
                        (void *)context,
                        context->user_callback_fn,

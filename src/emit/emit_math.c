@@ -16,7 +16,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#define EMIT_CHECK(x) do { infix_status _s = (x); if (_s != INFIX_SUCCESS) return _s; } while(0)
+#define EMIT_CHECK(x)            \
+    do {                         \
+        infix_status _s = (x);   \
+        if (_s != INFIX_SUCCESS) \
+            return _s;           \
+    } while (0)
 
 #define EMIT_REG_NEEDS_REX(reg) ((reg) >= 8)
 
@@ -30,7 +35,8 @@ static infix_status emit_x86_rex(emit_context_t * ctx, bool w, bool r, bool x, b
 
 INFIX_API infix_status emit_math_mov_imm(emit_context_t * ctx, emit_register_t dest, uint64_t imm) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0xB8 | (dest & 0x07)));
@@ -51,7 +57,8 @@ INFIX_API infix_status emit_math_movq_gpr_xmm(emit_context_t * ctx, emit_registe
 }
 INFIX_API infix_status emit_math_mov_reg(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x89));
@@ -62,7 +69,8 @@ INFIX_API infix_status emit_math_mov_reg(emit_context_t * ctx, emit_register_t d
 
 INFIX_API infix_status emit_math_add(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x01));
@@ -73,7 +81,8 @@ INFIX_API infix_status emit_math_add(emit_context_t * ctx, emit_register_t dest,
 
 INFIX_API infix_status emit_math_add_imm(emit_context_t * ctx, emit_register_t dest, int32_t imm) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x81));
@@ -85,7 +94,8 @@ INFIX_API infix_status emit_math_add_imm(emit_context_t * ctx, emit_register_t d
 
 INFIX_API infix_status emit_math_sub(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x29));
@@ -96,7 +106,8 @@ INFIX_API infix_status emit_math_sub(emit_context_t * ctx, emit_register_t dest,
 
 INFIX_API infix_status emit_math_sub_imm(emit_context_t * ctx, emit_register_t dest, int32_t imm) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x81));
@@ -108,7 +119,8 @@ INFIX_API infix_status emit_math_sub_imm(emit_context_t * ctx, emit_register_t d
 
 INFIX_API infix_status emit_math_mul(emit_context_t * ctx, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(src)));
         EMIT_CHECK(emit_emit_u8(ctx, 0xF7));
@@ -119,14 +131,16 @@ INFIX_API infix_status emit_math_mul(emit_context_t * ctx, emit_register_t src) 
 
 INFIX_API infix_status emit_math_imul_imm(emit_context_t * ctx, emit_register_t dest, int32_t imm) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(dest), false, EMIT_REG_NEEDS_REX(dest)));
         if (imm >= -128 && imm <= 127) {
             EMIT_CHECK(emit_emit_u8(ctx, 0x6B));
             EMIT_CHECK(emit_emit_u8(ctx, 0xC0 | ((dest & 0x07) << 3) | (dest & 0x07)));
             EMIT_CHECK(emit_emit_u8(ctx, (uint8_t)imm));
-        } else {
+        }
+        else {
             EMIT_CHECK(emit_emit_u8(ctx, 0x69));
             EMIT_CHECK(emit_emit_u8(ctx, 0xC0 | ((dest & 0x07) << 3) | (dest & 0x07)));
             EMIT_CHECK(emit_emit_u32(ctx, (uint32_t)imm));
@@ -137,7 +151,8 @@ INFIX_API infix_status emit_math_imul_imm(emit_context_t * ctx, emit_register_t 
 
 INFIX_API infix_status emit_math_and(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x21));
@@ -148,7 +163,8 @@ INFIX_API infix_status emit_math_and(emit_context_t * ctx, emit_register_t dest,
 
 INFIX_API infix_status emit_math_or(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x09));
@@ -159,7 +175,8 @@ INFIX_API infix_status emit_math_or(emit_context_t * ctx, emit_register_t dest, 
 
 INFIX_API infix_status emit_math_xor(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x31));
@@ -170,7 +187,8 @@ INFIX_API infix_status emit_math_xor(emit_context_t * ctx, emit_register_t dest,
 
 INFIX_API infix_status emit_math_not(emit_context_t * ctx, emit_register_t reg) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(reg)));
         EMIT_CHECK(emit_emit_u8(ctx, 0xF7));
@@ -181,7 +199,8 @@ INFIX_API infix_status emit_math_not(emit_context_t * ctx, emit_register_t reg) 
 
 INFIX_API infix_status emit_math_neg(emit_context_t * ctx, emit_register_t reg) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(reg)));
         EMIT_CHECK(emit_emit_u8(ctx, 0xF7));
@@ -192,9 +211,11 @@ INFIX_API infix_status emit_math_neg(emit_context_t * ctx, emit_register_t reg) 
 
 INFIX_API infix_status emit_math_shl(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
-        if (src != EMIT_REG_RCX) return INFIX_ERROR_INVALID_ARGUMENT;
+        if (src != EMIT_REG_RCX)
+            return INFIX_ERROR_INVALID_ARGUMENT;
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0xD3));
         EMIT_CHECK(emit_emit_u8(ctx, 0xE0 | (dest & 0x07)));
@@ -204,9 +225,11 @@ INFIX_API infix_status emit_math_shl(emit_context_t * ctx, emit_register_t dest,
 
 INFIX_API infix_status emit_math_shr(emit_context_t * ctx, emit_register_t dest, emit_register_t src) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
-        if (src != EMIT_REG_RCX) return INFIX_ERROR_INVALID_ARGUMENT;
+        if (src != EMIT_REG_RCX)
+            return INFIX_ERROR_INVALID_ARGUMENT;
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(dest)));
         EMIT_CHECK(emit_emit_u8(ctx, 0xD3));
         EMIT_CHECK(emit_emit_u8(ctx, 0xE8 | (dest & 0x07)));
@@ -216,7 +239,8 @@ INFIX_API infix_status emit_math_shr(emit_context_t * ctx, emit_register_t dest,
 
 INFIX_API infix_status emit_math_cmp(emit_context_t * ctx, emit_register_t a, emit_register_t b) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(b), false, EMIT_REG_NEEDS_REX(a)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x39));
@@ -227,7 +251,8 @@ INFIX_API infix_status emit_math_cmp(emit_context_t * ctx, emit_register_t a, em
 
 INFIX_API infix_status emit_math_cmp_imm(emit_context_t * ctx, emit_register_t reg, int32_t imm) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, false, false, EMIT_REG_NEEDS_REX(reg)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x81));
@@ -239,7 +264,8 @@ INFIX_API infix_status emit_math_cmp_imm(emit_context_t * ctx, emit_register_t r
 
 INFIX_API infix_status emit_math_test(emit_context_t * ctx, emit_register_t a, emit_register_t b) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(b), false, EMIT_REG_NEEDS_REX(a)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x85));
@@ -249,13 +275,12 @@ INFIX_API infix_status emit_math_test(emit_context_t * ctx, emit_register_t a, e
 }
 
 static const uint8_t x86_jcc_opcodes[16] = {
-    0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
-    0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F
-};
+    0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F};
 
 INFIX_API infix_status emit_math_jmp(emit_context_t * ctx, const char * label) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         uint64_t jump_offset = ctx->current_section->size;
         EMIT_CHECK(emit_emit_u8(ctx, 0xE9));
@@ -267,7 +292,8 @@ INFIX_API infix_status emit_math_jmp(emit_context_t * ctx, const char * label) {
 
 INFIX_API infix_status emit_math_jmp_cc(emit_context_t * ctx, emit_cc_t cc, const char * label) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         uint64_t jump_offset = ctx->current_section->size;
         EMIT_CHECK(emit_emit_u8(ctx, 0x0F));
@@ -280,7 +306,8 @@ INFIX_API infix_status emit_math_jmp_cc(emit_context_t * ctx, emit_cc_t cc, cons
 
 INFIX_API infix_status emit_math_call(emit_context_t * ctx, const char * name) {
     _infix_clear_error();
-    if (!ctx) return INFIX_ERROR_INVALID_ARGUMENT;
+    if (!ctx)
+        return INFIX_ERROR_INVALID_ARGUMENT;
     if (ctx->arch == EMIT_ARCH_X86_64) {
         uint64_t call_offset = ctx->current_section->size;
         EMIT_CHECK(emit_emit_u8(ctx, 0xE8));
@@ -309,7 +336,8 @@ INFIX_API infix_status emit_math_epilogue(emit_context_t * ctx) {
 }
 
 INFIX_API infix_status emit_math_ret(emit_context_t * ctx) {
-    if (ctx->arch == EMIT_ARCH_X86_64) EMIT_CHECK(emit_emit_u8(ctx, 0xC3));
+    if (ctx->arch == EMIT_ARCH_X86_64)
+        EMIT_CHECK(emit_emit_u8(ctx, 0xC3));
     return INFIX_SUCCESS;
 }
 
@@ -329,28 +357,40 @@ INFIX_API infix_status emit_math_pop(emit_context_t * ctx, emit_register_t reg) 
     return INFIX_SUCCESS;
 }
 
-INFIX_API infix_status emit_math_load_reg(emit_context_t * ctx, emit_register_t dest, emit_register_t base, int32_t offset) {
+INFIX_API infix_status emit_math_load_reg(emit_context_t * ctx,
+                                          emit_register_t dest,
+                                          emit_register_t base,
+                                          int32_t offset) {
     if (ctx->arch == EMIT_ARCH_X86_64) {
         uint8_t mod = (offset == 0 && (base & 0x07) != 5) ? 0x00 : ((offset >= -128 && offset <= 127) ? 0x40 : 0x80);
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(dest), false, EMIT_REG_NEEDS_REX(base)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x8B));
         EMIT_CHECK(emit_emit_u8(ctx, mod | ((dest & 0x07) << 3) | (base & 0x07)));
-        if ((base & 0x07) == 4) EMIT_CHECK(emit_emit_u8(ctx, 0x24));
-        if (mod == 0x40) EMIT_CHECK(emit_emit_u8(ctx, (uint8_t)offset));
-        else if (mod == 0x80) EMIT_CHECK(emit_emit_u32(ctx, (uint32_t)offset));
+        if ((base & 0x07) == 4)
+            EMIT_CHECK(emit_emit_u8(ctx, 0x24));
+        if (mod == 0x40)
+            EMIT_CHECK(emit_emit_u8(ctx, (uint8_t)offset));
+        else if (mod == 0x80)
+            EMIT_CHECK(emit_emit_u32(ctx, (uint32_t)offset));
     }
     return INFIX_SUCCESS;
 }
 
-INFIX_API infix_status emit_math_store_reg(emit_context_t * ctx, emit_register_t base, int32_t offset, emit_register_t src) {
+INFIX_API infix_status emit_math_store_reg(emit_context_t * ctx,
+                                           emit_register_t base,
+                                           int32_t offset,
+                                           emit_register_t src) {
     if (ctx->arch == EMIT_ARCH_X86_64) {
         uint8_t mod = (offset == 0 && (base & 0x07) != 5) ? 0x00 : ((offset >= -128 && offset <= 127) ? 0x40 : 0x80);
         EMIT_CHECK(emit_x86_rex(ctx, true, EMIT_REG_NEEDS_REX(src), false, EMIT_REG_NEEDS_REX(base)));
         EMIT_CHECK(emit_emit_u8(ctx, 0x89));
         EMIT_CHECK(emit_emit_u8(ctx, mod | ((src & 0x07) << 3) | (base & 0x07)));
-        if ((base & 0x07) == 4) EMIT_CHECK(emit_emit_u8(ctx, 0x24));
-        if (mod == 0x40) EMIT_CHECK(emit_emit_u8(ctx, (uint8_t)offset));
-        else if (mod == 0x80) EMIT_CHECK(emit_emit_u32(ctx, (uint32_t)offset));
+        if ((base & 0x07) == 4)
+            EMIT_CHECK(emit_emit_u8(ctx, 0x24));
+        if (mod == 0x40)
+            EMIT_CHECK(emit_emit_u8(ctx, (uint8_t)offset));
+        else if (mod == 0x80)
+            EMIT_CHECK(emit_emit_u32(ctx, (uint32_t)offset));
     }
     return INFIX_SUCCESS;
 }

@@ -11,8 +11,8 @@ lexer_t * lexer_create(const char * source) {
 
 void lexer_destroy(lexer_t * lexer) { (void)lexer; }
 
-token_t lexer_next_token(lexer_t * lexer) {
+infix_token_t lexer_next_token(lexer_t * lexer) {
     (void)lexer;
-    token_t tok = {TOKEN_EOF, NULL, 0, 0, {0}};
+    infix_token_t tok = {TOKEN_EOF, NULL, 0, 0, {0}};
     return tok;
 }
