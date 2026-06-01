@@ -173,6 +173,8 @@ else {    # GCC or Clang
         push @{ $config{ldflags} },  "--target=$target_triple";
     }
     if ($is_coverage_build) {
+        push @{ $config{cflags} },   '-DDBLTAP_USE_GCOV_FLUSH';
+        push @{ $config{cxxflags} }, '-DDBLTAP_USE_GCOV_FLUSH';
         if ( $config{compiler} eq 'clang' ) {
             push @{ $config{cflags} },   '--coverage';
             push @{ $config{cxxflags} }, '--coverage';
@@ -745,6 +747,13 @@ sub run_coverage_gcov {
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }
     print "\nGenerating .gcov reports...\n";
+    print "# DEBUG: CWD is " . cwd() . "\n";
+    opendir(my $dh, $cov_obj_dir) or warn "# DEBUG: Cannot opendir $cov_obj_dir: $!";
+    if ($dh) {
+        my @entries = grep { !/^\.\.?$/ } readdir($dh);
+        closedir $dh;
+        print "# DEBUG: $cov_obj_dir contains: " . join(', ', @entries) . "\n";
+    }
     my $gcov_cmd    = 'gcov';
     my $gcov_binary = 'gcov';
     if ( $config->{compiler} eq 'clang' ) {
@@ -782,23 +791,33 @@ sub run_coverage_gcov {
         # Consolidate all .gcda files into the object directory before running gcov.
         my @gcda_files;
         find( sub { push @gcda_files, $File::Find::name if /\.gcda$/ }, '.' );
+        print "# DEBUG: Found " . scalar(@gcda_files) . " .gcda files: " . join(', ', @gcda_files) . "\n";
         for my $gcda_file (@gcda_files) {
             my $basename = basename($gcda_file);
             move( $gcda_file, File::Spec->catfile( $cov_obj_dir, $basename ) ) or warn "Could not move $gcda_file to $cov_obj_dir: $!";
         }
         my $original_dir = cwd();
         chdir($cov_obj_dir) or die "Cannot chdir to $cov_obj_dir: $!";
+        print "# DEBUG: Running gcov from " . cwd() . "\n";
+        opendir(my $dh2, '.') or warn "# DEBUG: Cannot opendir $cov_obj_dir: $!";
+        if ($dh2) {
+            my @files = grep { !/^\.\.?$/ } readdir($dh2);
+            closedir $dh2;
+            print "# DEBUG: $cov_obj_dir contents before gcov: " . join(', ', @files) . "\n";
+        }
         for my $src ( @{ $config->{sources} } ) {
 
             # Run gcov from inside the object directory. It will find .gcno and .gcda files
             # in the CWD and generate the .c.gcov file here.
             my $null_device = $config->{is_windows} ? 'NUL' : '/dev/null';
-            system "$gcov_cmd @{[abs_path($src)]} >$null_device 2>&1";
+            my $gcov_exit = system "$gcov_cmd -o . @{[abs_path($src)]} >$null_device 2>&1";
+            print "# DEBUG: gcov exit code: $gcov_exit\n";
         }
 
         # Move the generated reports back to the project root for Codecov.
         my @gcov_files;
         find( sub { push @gcov_files, $File::Find::name if /\.gcov$/ }, '.' );
+        print "# DEBUG: Found " . scalar(@gcov_files) . " .gcov files after gcov\n";
         for my $gcov_file (@gcov_files) {
             move( $gcov_file, $original_dir ) or warn "Could not move $gcov_file to $original_dir: $!";
         }
@@ -883,7 +902,8 @@ sub upload_to_codecov {
     my @cmd         = ( $uploader, 'upload-process', '--verbose', '-t', $token, '-Z' );
     my $upload_name = join( '-', $config->{compiler}, $config->{arch}, $^O );
     push @cmd, '-n',            $upload_name;
-    push @cmd, '-F',            $_ for ( $config->{compiler}, $config->{arch}, $^O );
+    push @cmd, '--flag',        $upload_name;
+    push @cmd, '--root',        abs_path( $FindBin::Bin );
     push @cmd, '--sha',         $git_info{commit_sha}  if $git_info{commit_sha};
     push @cmd, '--slug',        $git_info{slug}        if $git_info{slug};
     push @cmd, '--git-service', $git_info{git_service} if $git_info{git_service};
@@ -900,7 +920,19 @@ sub upload_to_codecov {
     }
     else {
         my @cov_files;
-        find( sub { push @cov_files, $File::Find::name if /\.gcov$/ }, '.' );
+        my $project_root = abs_path( $FindBin::Bin );
+        find(
+            sub {
+                return unless /\.gcov$/;
+                open my $fh, '<', $_ or return;
+                my $source_line = <$fh>;
+                close $fh;
+                if ( $source_line && $source_line =~ /Source:\Q$project_root\E/ ) {
+                    push @cov_files, $File::Find::name;
+                }
+            },
+            '.'
+        );
         if (@cov_files) {
             push @cmd, '-f', $_ for @cov_files;
             print "# INFO: Found " . scalar(@cov_files) . " .gcov files to upload.\n";
