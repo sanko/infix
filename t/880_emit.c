@@ -20,7 +20,11 @@
 #else
 #include <sys/mman.h>
 #ifndef MAP_ANONYMOUS
-#define MAP_ANONYMOUS MAP_ANON
+#  ifdef MAP_ANON
+#    define MAP_ANONYMOUS MAP_ANON
+#  else
+#    define MAP_ANONYMOUS 0x1000
+#  endif
 #endif
 // macOS on Apple Silicon requires MAP_JIT for mmap with PROT_EXEC
 #ifndef MAP_JIT
