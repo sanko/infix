@@ -174,9 +174,9 @@ else {    # GCC or Clang
     }
     if ($is_coverage_build) {
         if ( $config{compiler} eq 'clang' ) {
-            push @{ $config{cflags} },   '-fprofile-instr-generate', '-fcoverage-mapping';
-            push @{ $config{cxxflags} }, '-fprofile-instr-generate', '-fcoverage-mapping';
-            push @{ $config{ldflags} },  '-fprofile-instr-generate', '-fcoverage-mapping';
+            push @{ $config{cflags} },   '--coverage';
+            push @{ $config{cxxflags} }, '--coverage';
+            push @{ $config{ldflags} },  '--coverage';
             #
             if ( $^O eq 'openbsd' ) {
 
@@ -745,8 +745,19 @@ sub run_coverage_gcov {
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }
     print "\nGenerating .gcov reports...\n";
-    my $gcov_cmd = 'gcov';
-    if ( ( $^O eq 'freebsd' || $^O eq 'openbsd' ) && $config->{compiler} =~ /gcc/ ) {
+    my $gcov_cmd    = 'gcov';
+    my $gcov_binary = 'gcov';
+    if ( $config->{compiler} eq 'clang' ) {
+        if ( command_exists('llvm-cov') ) {
+            $gcov_cmd    = 'llvm-cov gcov';
+            $gcov_binary = 'llvm-cov';
+            print "# INFO: Using llvm-cov gcov for Clang coverage.\n";
+        }
+        else {
+            warn "# WARNING: llvm-cov not found for Clang. Trying gcov...\n";
+        }
+    }
+    if ( $gcov_binary eq 'gcov' && ( $^O eq 'freebsd' || $^O eq 'openbsd' ) && $config->{compiler} =~ /gcc/ ) {
 
         # Find the gcov version that matches the GCC version (e.g., gcov13)
         my $gcc_ver = `$config->{cc} -dumpversion`;
@@ -761,11 +772,12 @@ sub run_coverage_gcov {
             }
         }
         if ( command_exists($versioned_gcov) ) {
-            $gcov_cmd = $versioned_gcov;
+            $gcov_cmd    = $versioned_gcov;
+            $gcov_binary = $versioned_gcov;
             print "# INFO: Using versioned gcov: $gcov_cmd\n";
         }
     }
-    if ( command_exists($gcov_cmd) ) {
+    if ( command_exists($gcov_binary) ) {
 
         # Consolidate all .gcda files into the object directory before running gcov.
         my @gcda_files;
@@ -879,19 +891,23 @@ sub upload_to_codecov {
 
     if ( $config->{compiler} eq 'msvc' ) {
         $report_file = File::Spec->catfile( $config->{coverage_dir}, 'coverage.xml' );
-    }
-    elsif ( $config->{compiler} eq 'clang' ) {
-        $report_file = File::Spec->catfile( $config->{coverage_dir}, 'coverage.lcov' );
-    }
-    if ( defined $report_file && -f $report_file ) {
-        push @cmd, '-f', $report_file;
-    }
-    elsif ( $config->{compiler} eq 'gcc' ) {
-        print "# INFO: No single report file for GCC, letting uploader find .gcov files.\n";
+        if ( -f $report_file ) {
+            push @cmd, '-f', $report_file;
+        }
+        else {
+            warn "# WARNING: MSVC coverage report not found at '$report_file'.\n";
+        }
     }
     else {
-        warn "# WARNING: Coverage report not found. Skipping Codecov upload.\n";
-        return;
+        my @cov_files;
+        find( sub { push @cov_files, $File::Find::name if /\.gcov$/ }, '.' );
+        if (@cov_files) {
+            push @cmd, '-f', $_ for @cov_files;
+            print "# INFO: Found " . scalar(@cov_files) . " .gcov files to upload.\n";
+        }
+        else {
+            print "# INFO: No .gcov files found, letting uploader auto-discover.\n";
+        }
     }
     if ( run_command(@cmd) == 0 ) {
         print "\nCoverage upload completed successfully.\n";
