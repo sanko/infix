@@ -37,6 +37,10 @@
 ,
 "ubuntu-aarch64-gcc": "👍🏽 passing"
 ,
+"ubuntu-riscv64-clang": "👎🏽 failing"
+,
+"ubuntu-riscv64-gcc": "👎🏽 failing"
+,
 "ubuntu-x86_64-clang": "👍🏽 passing"
 ,
 "ubuntu-x86_64-gcc": "👍🏽 passing"
