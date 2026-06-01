@@ -329,8 +329,8 @@ INFIX_API infix_status emit_align(emit_context_t * ctx, uint64_t alignment) {
     return INFIX_SUCCESS;
 }
 
-INFIX_API INFIX_NODISCARD infix_status emit_add_relocation(
-    emit_context_t * ctx, const char * name, uint64_t offset, uint8_t size, uint8_t inst_size) {
+INFIX_API INFIX_NODISCARD infix_status
+emit_add_relocation(emit_context_t * ctx, const char * name, uint64_t offset, uint8_t size, uint8_t inst_size) {
     _infix_clear_error();
     if (!ctx || !name) {
         _infix_set_error(INFIX_CATEGORY_PARSER, INFIX_CODE_INVALID_KEYWORD, 0);

@@ -22,6 +22,10 @@
 #ifndef MAP_ANONYMOUS
 #define MAP_ANONYMOUS MAP_ANON
 #endif
+// macOS on Apple Silicon requires MAP_JIT for mmap with PROT_EXEC
+#ifndef MAP_JIT
+#define MAP_JIT 0
+#endif
 #endif
 
 #define EMIT_TEST_SECTION ".text"
@@ -40,7 +44,7 @@ static void * alloc_executable(size_t size) {
         return NULL;
     return mem;
 #else
-    void * mem = mmap(NULL, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    void * mem = mmap(NULL, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS | MAP_JIT, -1, 0);
     if (mem == MAP_FAILED)
         return NULL;
     return mem;
@@ -182,6 +186,7 @@ TEST {
         emit_destroy(ctx);
     }
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("MOV instruction") {
         plan(1);
 
@@ -199,7 +204,11 @@ TEST {
             fail("Failed to allocate executable memory");
         }
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Arithmetic instructions") {
         plan(4);
 
@@ -231,7 +240,11 @@ TEST {
 
         emit_destroy(ctx);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("IMUL instruction") {
         plan(4);
 
@@ -263,7 +276,11 @@ TEST {
 
         emit_destroy(ctx);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("JMP relocation") {
         plan(5);
 
@@ -308,7 +325,11 @@ TEST {
 
         emit_destroy(ctx);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Argument passing via globals") {
         plan(5);
 
@@ -384,7 +405,11 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Pointer handling") {
         plan(6);
 
@@ -455,7 +480,11 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Small struct (2 int fields)") {
         plan(5);
 
@@ -520,7 +549,11 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Large struct") {
         plan(4);
 
@@ -583,7 +616,11 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Mixed types in global struct") {
         plan(4);
 
@@ -649,7 +686,11 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Multiple functions modifying same global") {
         plan(6);
 
@@ -728,6 +769,11 @@ TEST {
         emit_destroy(ctx);
         free_executable(exec_mem, code_size);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
+
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Variadic function pointer test") {
         plan(5);
 
@@ -788,7 +834,11 @@ TEST {
         }
         emit_destroy(ctx);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
+#if defined(__x86_64__) || defined(_M_X64)
     subtest("Complex pointer chains") {
         plan(5);
 
@@ -852,6 +902,9 @@ TEST {
         }
         emit_destroy(ctx);
     }
+#else
+    skip(1, "x86-64 JIT execution tests require x86-64");
+#endif
 
     subtest("ARM64 compatibility") {
         plan(3);
