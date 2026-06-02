@@ -77,7 +77,7 @@ $config{compiler}
         command_exists('egcc') ? 'egcc' :
         'gcc' );
 if ( $is_fuzz_build && ( $config{compiler} ne 'clang' && $config{compiler} ne 'gcc' && $config{compiler} ne 'egcc' ) ) {
-    die "Error: Fuzzing requires the 'clang' compiler for libFuzzer support, or 'gcc'/'egcc' for AFL++ support.";
+    die q[Error: Fuzzing requires the 'clang' compiler for libFuzzer support, or 'gcc'/'egcc' for AFL++ support.];
 }
 
 # Environment Detection
@@ -124,12 +124,12 @@ else {
     # Solaris 'uname -m' returns 'i86pc' for x86/x64 hardware
     $config{arch} = 'x64' if $config{arch} eq 'x86_64' || $config{arch} eq 'amd64' || $config{arch} eq 'i86pc';
 }
-die "Could not determine architecture for $^O" unless $config{arch};
+die 'Could not determine architecture for ' . $^O unless $config{arch};
 $config{host_arch} = $host_arch;
 
 # Enable verbose/debug mode if requested
 if ( $opts{verbose} ) {
-    print "# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.\n";
+    say '# Verbose mode enabled. Compiling with INFIX_DEBUG_ENABLED.';
     push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
 }
 
@@ -156,7 +156,7 @@ if ( $config{compiler} eq 'msvc' ) {
 else {    # GCC or Clang
     $config{cc}  = $config{compiler};
     $config{cxx} = ( $config{compiler} eq 'clang' ) ? 'clang++' : ( $config{compiler} eq 'egcc' ) ? 'eg++' : 'g++';
-    my @include_flags = map { "-I" . File::Spec->catfile($_) } @{ $config{include_dirs} };
+    my @include_flags = map { '-I' . File::Spec->catfile($_) } @{ $config{include_dirs} };
     $config{cflags}   = [ @base_cflags, '-std=c11',   '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
     $config{cxxflags} = [ @base_cflags, '-std=c++17', '-Wall', '-Wextra', '-g', '-O2', @include_flags ];
 
@@ -166,11 +166,11 @@ else {    # GCC or Clang
     # push @{ $config{cxxflags} }, '-fvisibility=hidden';
     $config{ldflags} = [];
     if ( $config{compiler} eq 'clang' && $config{arch} eq 'arm64' && $host_arch !~ /arm64|aarch64|evbarm/ && !$opts{abi} ) {
-        print "ARM64 cross-compilation detected for clang. Adding --target flag.\n";
+        say 'ARM64 cross-compilation detected for clang. Adding --target flag.';
         my $target_triple = $config{is_windows} ? 'aarch64-pc-windows-msvc' : 'aarch64-linux-gnu';
-        push @{ $config{cflags} },   "--target=$target_triple";
-        push @{ $config{cxxflags} }, "--target=$target_triple";
-        push @{ $config{ldflags} },  "--target=$target_triple";
+        push @{ $config{cflags} },   '--target=' . $target_triple;
+        push @{ $config{cxxflags} }, '--target=' . $target_triple;
+        push @{ $config{ldflags} },  '--target=' . $target_triple;
     }
     if ($is_coverage_build) {
         push @{ $config{cflags} },   '-DDBLTAP_USE_GCOV_FLUSH';
@@ -210,7 +210,7 @@ else {    # GCC or Clang
         chomp $libgcc;
         if ( $libgcc ne 'libgcc_s.so.1' && -e $libgcc ) {
             my $dir = dirname($libgcc);
-            push @{ $config{ldflags} }, "-Wl,-rpath,$dir";
+            push @{ $config{ldflags} }, '-Wl,-rpath,' . $dir;
         }
     }
     if ( !( $config{is_windows} && $config{compiler} eq 'clang' ) ) {
@@ -220,10 +220,10 @@ else {    # GCC or Clang
 push @{ $config{cflags} }, $opts{cflags} if $opts{cflags};
 
 # Command Dispatch
-print "Detected: OS=$^O, Arch=$config{arch}, Using Compiler=$config{compiler}\n";
+say "Detected: OS=$^O, Arch=$config{arch}, Using Compiler=$config{compiler}";
 my $final_status = 0;
 if ( $command eq 'clean' ) {
-    print "Cleaning build artifacts...\n";
+    say 'Cleaning build artifacts...';
     clean(%config);
 }
 elsif ( $command eq 'build' ) {
@@ -231,10 +231,10 @@ elsif ( $command eq 'build' ) {
     push @{ $config{cflags} }, '-DINFIX_DEBUG_ENABLED=1'       if $opts{verbose};
     push @{ $config{cflags} }, '-DINFIX_SANITY_CHECK_ENABLE=1' if $opts{sanity};
     my $lib_path = create_static_library( \%config, $obj_suffix );
-    print "\nStatic library '$lib_path' built successfully.\n";
+    say "\nStatic library '$lib_path' built successfully.";
     if ( $opts{shared} ) {
         my $shared_lib_path = create_shared_library( \%config, $obj_suffix, $infix_version );
-        print "Shared library '$shared_lib_path' built successfully.\n" if $shared_lib_path;
+        say "Shared library '$shared_lib_path' built successfully." if $shared_lib_path;
     }
     if ( $opts{examples} ) {
         build_examples( \%config, $obj_suffix, $lib_path );
@@ -295,10 +295,10 @@ else {
     exit 1;
 }
 if ( $final_status == 0 ) {
-    print "\nBuild successful.\n";
+    say "\nBuild successful.";
 }
 else {
-    print "\nBuild FAILED.\n";
+    say "\nBuild FAILED.";
 }
 exit $final_status;
 
@@ -322,7 +322,7 @@ sub clean {
     unlink @artifacts if @artifacts;
     find( sub { /\.gc(da|no|ov)$/i && -f $_ && unlink $_ }, '.' );
     find( sub { /\.profraw$/i      && -f $_ && unlink $_ }, '.' );
-    print "Clean finished.\n";
+    say 'Clean finished.';
 }
 
 sub show_help {
@@ -377,16 +377,14 @@ sub get_test_files {
         }
     }
     else { @tests = @all_files; }
-    die "No test files were found in 't/'." unless @tests;
+    die q[No test files were found in 't/'.] unless @tests;
     return sort @tests;
 }
 
 sub compile_objects {
     my ( $config, $obj_suffix, $custom_lib_dir ) = @_;
     my $output_dir = $custom_lib_dir || '';
-    print "Compiling library object files";
-    print " into '$output_dir'" if $output_dir;
-    print "...\n";
+    say 'Compiling library object files' . ( $output_dir ? " into '$output_dir'" : '' ) . '...';
     my @all_sources = ( @{ $config->{sources} } );
     my @obj_files;
     for my $src (@all_sources) {
@@ -450,7 +448,7 @@ sub create_shared_library {
         $shared_config{cflags} = [ @{ $config->{cflags} }, '-fPIC' ];
     }
     push @{ $shared_config{cflags} }, '-DINFIX_BUILDING_DLL';
-    print "Compiling shared library objects...\n";
+    say 'Compiling shared library objects...';
     my @obj_files = compile_objects( \%shared_config, $obj_suffix, $obj_dir );
     return unless @obj_files;
     my $lib_name = $config->{lib_name};
@@ -746,13 +744,13 @@ sub run_coverage_gcov {
         run_command( $compiler, @local_cflags, '-o', $exe_path, @source_files, @lib_obj_files, @{ $config->{ldflags} } );
         if ( run_command($exe_path) != 0 ) { $failed_tests++; }
     }
-    print "\nGenerating .gcov reports...\n";
-    print "# DEBUG: CWD is " . cwd() . "\n";
-    opendir(my $dh, $cov_obj_dir) or warn "# DEBUG: Cannot opendir $cov_obj_dir: $!";
+    say "\nGenerating .gcov reports...";
+    say '# DEBUG: CWD is ' . cwd();
+    opendir( my $dh, $cov_obj_dir ) or warn "# DEBUG: Cannot opendir $cov_obj_dir: $!";
     if ($dh) {
         my @entries = grep { !/^\.\.?$/ } readdir($dh);
         closedir $dh;
-        print "# DEBUG: $cov_obj_dir contains: " . join(', ', @entries) . "\n";
+        say "# DEBUG: $cov_obj_dir contains: " . join( ', ', @entries );
     }
     my $gcov_cmd    = 'gcov';
     my $gcov_binary = 'gcov';
@@ -791,33 +789,33 @@ sub run_coverage_gcov {
         # Consolidate all .gcda files into the object directory before running gcov.
         my @gcda_files;
         find( sub { push @gcda_files, $File::Find::name if /\.gcda$/ }, '.' );
-        print "# DEBUG: Found " . scalar(@gcda_files) . " .gcda files: " . join(', ', @gcda_files) . "\n";
+        say '# DEBUG: Found ' . scalar(@gcda_files) . ' .gcda files: ' . join( ', ', @gcda_files );
         for my $gcda_file (@gcda_files) {
             my $basename = basename($gcda_file);
             move( $gcda_file, File::Spec->catfile( $cov_obj_dir, $basename ) ) or warn "Could not move $gcda_file to $cov_obj_dir: $!";
         }
         my $original_dir = cwd();
         chdir($cov_obj_dir) or die "Cannot chdir to $cov_obj_dir: $!";
-        print "# DEBUG: Running gcov from " . cwd() . "\n";
-        opendir(my $dh2, '.') or warn "# DEBUG: Cannot opendir $cov_obj_dir: $!";
+        say '# DEBUG: Running gcov from ' . cwd();
+        opendir( my $dh2, '.' ) or warn "# DEBUG: Cannot opendir $cov_obj_dir: $!";
         if ($dh2) {
             my @files = grep { !/^\.\.?$/ } readdir($dh2);
             closedir $dh2;
-            print "# DEBUG: $cov_obj_dir contents before gcov: " . join(', ', @files) . "\n";
+            say "# DEBUG: $cov_obj_dir contents before gcov: " . join( ', ', @files );
         }
         for my $src ( @{ $config->{sources} } ) {
 
             # Run gcov from inside the object directory. It will find .gcno and .gcda files
             # in the CWD and generate the .c.gcov file here.
             my $null_device = $config->{is_windows} ? 'NUL' : '/dev/null';
-            my $gcov_exit = system "$gcov_cmd -o . @{[abs_path($src)]} >$null_device 2>&1";
-            print "# DEBUG: gcov exit code: $gcov_exit\n";
+            my $gcov_exit   = system "$gcov_cmd -o . @{[abs_path($src)]} >$null_device 2>&1";
+            say '# DEBUG: gcov exit code: ' . $gcov_exit;
         }
 
         # Move the generated reports back to the project root for Codecov.
         my @gcov_files;
         find( sub { push @gcov_files, $File::Find::name if /\.gcov$/ }, '.' );
-        print "# DEBUG: Found " . scalar(@gcov_files) . " .gcov files after gcov\n";
+        say '# DEBUG: Found ' . scalar(@gcov_files) . ' .gcov files after gcov';
         for my $gcov_file (@gcov_files) {
             move( $gcov_file, $original_dir ) or warn "Could not move $gcov_file to $original_dir: $!";
         }
@@ -903,7 +901,7 @@ sub upload_to_codecov {
     my $upload_name = join( '-', $config->{compiler}, $config->{arch}, $^O );
     push @cmd, '-n',            $upload_name;
     push @cmd, '--flag',        $upload_name;
-    push @cmd, '--root',        abs_path( $FindBin::Bin );
+    push @cmd, '--root',        abs_path($FindBin::Bin);
     push @cmd, '--sha',         $git_info{commit_sha}  if $git_info{commit_sha};
     push @cmd, '--slug',        $git_info{slug}        if $git_info{slug};
     push @cmd, '--git-service', $git_info{git_service} if $git_info{git_service};
@@ -920,7 +918,7 @@ sub upload_to_codecov {
     }
     else {
         my @cov_files;
-        my $project_root = abs_path( $FindBin::Bin );
+        my $project_root = abs_path($FindBin::Bin);
         if ( $^O eq 'cygwin' ) {
             chomp( my $win_root = `cygpath -m "$project_root" 2>/dev/null` );
             $project_root = $win_root if $win_root;

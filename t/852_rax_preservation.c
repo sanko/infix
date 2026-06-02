@@ -62,7 +62,10 @@ TEST {
                 : "rax", "rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10", "r11");
 
             // Since the trampoline returns void, it SHOULD be returning the original RAX value.
-            ok(rax_after == rax_val, "RAX value preserved (Got 0x%llx, expected 0x%llx)", (unsigned long long)rax_after, (unsigned long long)rax_val);
+            ok(rax_after == rax_val,
+               "RAX value preserved (Got 0x%llx, expected 0x%llx)",
+               (unsigned long long)rax_after,
+               (unsigned long long)rax_val);
         }
         infix_reverse_destroy(ctx);
     }
