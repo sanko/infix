@@ -132,7 +132,7 @@ $(document).ready(function(){initNavTree('compat__c23_8h_source.html',''); initR
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="compat__c23_8h.html#a375e33770fc0a906c61d85025ab11b70">   86</a></span><span class="preprocessor">#define COMPAT_HAS_C_ATTRIBUTE(x) 0</span></div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">   92</a></span><span class="preprocessor">#define c23_nodiscard INFIX_NODISCARD</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="preprocessor">#if COMPAT_HAS_C_ATTRIBUTE(deprecated)</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="preprocessor">#if defined(__STDC_VERSION__) &amp;&amp; __STDC_VERSION__ &gt; 201710L &amp;&amp; COMPAT_HAS_C_ATTRIBUTE(deprecated)</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#define c23_deprecated [[deprecated]]</span></div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)</span></div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">#define c23_deprecated __attribute__((deprecated))</span></div>
@@ -141,14 +141,14 @@ $(document).ready(function(){initNavTree('compat__c23_8h_source.html',''); initR
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="compat__c23_8h.html#aa4a4a817c350d80852d5cf89934e093d">  114</a></span><span class="preprocessor">#define c23_deprecated</span></div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#if COMPAT_HAS_C_ATTRIBUTE(fallthrough)</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#if defined(__STDC_VERSION__) &amp;&amp; __STDC_VERSION__ &gt; 201710L &amp;&amp; COMPAT_HAS_C_ATTRIBUTE(fallthrough)</span></div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">#define c23_fallthrough [[fallthrough]]</span></div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)</span></div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">#define c23_fallthrough __attribute__((fallthrough))</span></div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="compat__c23_8h.html#a581ec67fa95d5b8986f253f766ccbd19">  135</a></span><span class="preprocessor">#define c23_fallthrough</span></div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">#if COMPAT_HAS_C_ATTRIBUTE(maybe_unused)</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">#if defined(__STDC_VERSION__) &amp;&amp; __STDC_VERSION__ &gt; 201710L &amp;&amp; COMPAT_HAS_C_ATTRIBUTE(maybe_unused)</span></div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="preprocessor">#define c23_maybe_unused [[maybe_unused]]</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="preprocessor">#elif defined(INFIX_COMPILER_GCC) || defined(INFIX_COMPILER_CLANG)</span></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="preprocessor">#define c23_maybe_unused __attribute__((unused))</span></div>

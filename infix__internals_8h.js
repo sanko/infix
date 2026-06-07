@@ -35,6 +35,7 @@ var infix__internals_8h =
       [ "ARG_LOCATION_SSE_SSE_PAIR", "infix__internals_8h.html#a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277", null ],
       [ "ARG_LOCATION_INTEGER_SSE_PAIR", "infix__internals_8h.html#a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096", null ],
       [ "ARG_LOCATION_SSE_INTEGER_PAIR", "infix__internals_8h.html#a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00", null ],
+      [ "ARG_LOCATION_GPR_REFERENCE", "infix__internals_8h.html#a563afdbfea1331be68965428418c4899ad0aab469f304d4c4ec9eb6d809a92053", null ],
       [ "ARG_LOCATION_STACK", "infix__internals_8h.html#a563afdbfea1331be68965428418c4899a57dd7a02a33aea12b547bc96bd73909b", null ]
     ] ],
     [ "infix_executable_category_t", "infix__internals_8h.html#a0176094e0d00db0c8a2647ed8dc5fe50", [

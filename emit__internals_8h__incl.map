@@ -1,0 +1,21 @@
+<map id="src/emit/emit_internals.h" name="src/emit/emit_internals.h">
+<area shape="rect" id="Node000001" title="Internal structures for the emit JIT code generation system." alt="" coords="193,5,378,31"/>
+<area shape="rect" id="Node000002" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="125,79,224,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="269,33,206,73,203,69,266,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,88,251"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="221,33,167,51,140,64,115,81,89,110,71,145,59,181,52,212,47,211,54,180,66,143,84,107,112,77,137,60,165,46,220,28"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="211,225,282,251"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="286,31,254,212,248,211,281,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="323,79,394,104"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="299,29,339,67,335,71,296,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="418,79,489,104"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="313,28,414,71,412,76,311,33"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="102,152,197,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="173,105,160,140,155,138,168,103"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="154,106,122,126,91,154,71,183,58,213,53,211,67,181,87,150,119,122,151,102"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="184,103,212,151,239,211,234,213,207,153,180,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="134,180,76,219,73,215,131,175"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="112,225,187,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="152,178,152,212,147,212,147,178"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="167,175,221,215,218,219,163,180"/>
+</map>

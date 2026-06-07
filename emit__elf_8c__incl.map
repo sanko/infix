@@ -1,0 +1,28 @@
+<map id="src/emit/elf/emit_elf.c" name="src/emit/elf/emit_elf.c">
+<area shape="rect" id="Node000001" title="ELF binary format support for emit system." alt="" coords="421,5,585,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="144,79,319,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="460,33,289,78,288,73,459,28"/>
+<area shape="rect" id="Node000008" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="347,79,446,104"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="488,33,427,73,424,69,485,28"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="470,79,537,104"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="506,31,506,65,501,65,501,31"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="561,79,632,104"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="520,29,572,68,569,72,517,33"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="656,79,727,104"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="534,28,649,71,647,76,533,33"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="24,152,193,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="213,106,142,147,139,143,210,102"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="269,152,364,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="247,102,294,141,291,145,243,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="275,225,358,251"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="236,104,244,137,260,176,276,197,293,214,290,218,272,200,256,179,239,139,231,105"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="63,225,138,251"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="151,107,67,126,34,139,13,154,9,162,8,171,18,188,37,204,61,217,58,222,34,208,14,191,3,172,4,161,9,150,31,134,66,121,150,101"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="319,178,319,212,314,212,314,178"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="283,180,149,223,148,218,281,175"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="400,225,471,251"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="337,175,405,216,403,220,334,180"/>
+<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="386,106,342,145,338,141,382,102"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="399,105,393,139,379,179,363,200,345,219,341,215,359,197,374,176,388,138,393,104"/>
+<area shape="poly" id="edge12_Node000008_Node000007" title=" " alt="" coords="405,103,423,151,435,211,430,212,418,153,400,105"/>
+</map>

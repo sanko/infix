@@ -1,0 +1,10 @@
+<map id="src/emit/emit_internals.h" name="src/emit/emit_internals.h">
+<area shape="rect" id="Node000001" title="Internal structures for the emit JIT code generation system." alt="" coords="55,5,241,31"/>
+<area shape="rect" id="Node000002" href="$emit_8c.html" title="Implementation of the emit API for generating machine code." alt="" coords="5,79,125,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,42,81,80,77,76,123,38"/>
+<area shape="rect" id="Node000004" href="$emit__math_8c.html" title="Math operations for JIT code generation (x86&#45;64 and ARM64)." alt="" coords="150,79,311,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,38,219,76,215,80,170,42"/>
+<area shape="rect" id="Node000003" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="106,152,190,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,111,136,150,133,154,87,115"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="209,115,163,154,160,150,205,111"/>
+</map>

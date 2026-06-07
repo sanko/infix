@@ -1,124 +1,124 @@
 <map id="src/common/infix_config.h" name="src/common/infix_config.h">
-<area shape="rect" id="Node000001" title="Platform, architecture, and ABI detection macros." alt="" coords="6414,5,6606,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="3747,79,3944,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="6399,25,3944,90,3944,85,6399,20"/>
+<area shape="rect" id="Node000001" title="Platform, architecture, and ABI detection macros." alt="" coords="6279,5,6471,31"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="3687,79,3884,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="6266,25,3884,90,3884,85,6265,20"/>
 <area shape="rect" id="Node000003" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="368,159,542,185"/>
-<area shape="poly" id="edge60_Node000001_Node000003" title=" " alt="" coords="6400,24,3735,81,3250,87,2839,85,2141,74,1806,75,1445,85,1036,110,554,155,507,162,506,157,553,149,1036,105,1445,80,1805,69,2142,69,2839,80,3250,82,3735,76,6400,19"/>
-<area shape="rect" id="Node000004" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="5660,247,5871,273"/>
-<area shape="poly" id="edge59_Node000001_Node000004" title=" " alt="" coords="6620,18,6907,28,7077,39,7244,55,7390,77,7451,90,7501,106,7538,124,7560,144,7565,156,7565,168,7560,181,7550,194,7525,205,7475,215,7314,231,7091,242,6828,251,6283,259,5871,261,5871,256,6283,254,6828,245,7091,237,7314,225,7474,210,7523,200,7547,190,7556,178,7560,167,7560,157,7556,147,7535,128,7499,111,7450,95,7389,82,7243,60,7077,44,6907,33,6619,23"/>
-<area shape="rect" id="Node000033" href="$501__direct__marshalling_8c.html" title="Test suite for the high&#45;performance direct marshalling API." alt="" coords="6279,328,6474,353"/>
-<area shape="poly" id="edge68_Node000001_Node000033" title=" " alt="" coords="6620,17,6819,20,7060,29,7289,47,7383,60,7454,76,7510,96,7560,121,7577,136,7588,154,7588,173,7576,194,7554,209,7517,224,7410,250,7266,272,7099,291,6751,321,6474,337,6474,332,6750,315,7098,286,7265,267,7409,244,7516,219,7551,205,7572,190,7583,172,7583,155,7573,140,7557,125,7508,100,7453,81,7382,65,7289,52,7060,34,6819,25,6620,22"/>
-<area shape="rect" id="Node000034" href="$830__security_8c.html" title="Unit test for security&#45;hardening features of the infix library." alt="" coords="4000,328,4123,353"/>
-<area shape="poly" id="edge71_Node000001_Node000034" title=" " alt="" coords="6399,22,5058,25,2929,34,1861,41,946,51,302,65,117,73,45,81,24,103,12,128,8,156,13,184,24,212,43,238,66,260,95,277,147,285,268,293,673,305,1896,323,3194,333,4000,336,4000,342,3194,338,1895,328,673,310,267,298,147,291,93,283,63,264,39,241,20,214,8,186,3,156,7,127,20,100,43,76,117,67,302,59,946,46,1861,36,2929,28,5058,20,6399,17"/>
+<area shape="poly" id="edge60_Node000001_Node000003" title=" " alt="" coords="6265,24,3675,81,3199,88,2796,86,2112,76,1783,76,1430,87,1028,111,555,155,508,162,507,157,555,149,1028,106,1429,82,1783,71,2112,70,2796,81,3199,82,3675,76,6265,19"/>
+<area shape="rect" id="Node000004" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="5536,247,5747,273"/>
+<area shape="poly" id="edge59_Node000001_Node000004" title=" " alt="" coords="6485,18,6772,28,6942,39,7109,55,7255,77,7316,90,7366,106,7403,124,7426,144,7431,156,7431,168,7426,181,7415,194,7390,205,7341,215,7181,230,6959,242,6698,250,6157,259,5747,261,5747,256,6157,254,6698,245,6959,237,7181,225,7340,209,7389,200,7412,190,7421,178,7426,167,7425,157,7421,147,7400,128,7364,111,7315,95,7254,82,7108,60,6942,44,6772,33,6485,23"/>
+<area shape="rect" id="Node000033" href="$501__direct__marshalling_8c.html" title="Test suite for the high&#45;performance direct marshalling API." alt="" coords="6144,328,6339,353"/>
+<area shape="poly" id="edge68_Node000001_Node000033" title=" " alt="" coords="6485,17,6685,20,6925,29,7155,47,7249,60,7320,76,7375,96,7425,121,7443,136,7453,154,7453,173,7441,194,7419,209,7383,224,7275,250,7131,272,6964,291,6616,321,6339,337,6339,332,6615,315,6964,286,7131,267,7274,244,7381,219,7416,205,7437,190,7448,172,7448,155,7439,140,7422,125,7373,100,7318,81,7248,65,7154,52,6925,34,6684,25,6485,22"/>
+<area shape="rect" id="Node000034" href="$830__security_8c.html" title="Unit test for security&#45;hardening features of the infix library." alt="" coords="3972,328,4095,353"/>
+<area shape="poly" id="edge71_Node000001_Node000034" title=" " alt="" coords="6265,22,4949,25,2865,34,1820,42,926,52,296,65,116,73,45,81,24,103,12,128,8,156,13,184,24,212,43,238,66,260,95,277,147,285,266,292,669,305,1882,323,3171,333,3972,336,3972,342,3171,338,1882,328,669,310,266,298,146,291,93,283,63,264,38,241,20,214,8,186,3,156,7,127,20,100,43,76,115,67,296,60,926,47,1820,36,2865,29,4949,20,6265,17"/>
 <area shape="rect" id="Node000037" href="$011__bitfields_8c.html" title="Unit test for bitfield support in structs." alt="" coords="106,247,231,273"/>
-<area shape="poly" id="edge62_Node000001_Node000037" title=" " alt="" coords="6399,22,5066,27,2951,37,980,55,339,67,155,74,83,81,53,103,34,129,29,143,29,158,32,174,40,191,56,210,75,225,120,245,118,250,73,229,52,213,35,193,27,176,23,159,24,142,29,127,49,99,81,76,155,69,339,62,980,50,2950,32,5066,21,6399,17"/>
+<area shape="poly" id="edge62_Node000001_Node000037" title=" " alt="" coords="6265,22,4957,27,2887,38,960,56,333,67,154,74,83,81,53,103,34,129,29,143,29,158,32,174,40,191,56,210,75,225,120,245,118,250,73,229,52,213,35,193,27,176,23,159,24,142,29,127,49,99,81,76,153,69,333,62,960,50,2887,32,4957,22,6265,17"/>
 <area shape="rect" id="Node000038" href="$405__simd__vectors__avx_8c.html" title="Unit test for 256&#45;bit (AVX) SIMD vector support." alt="" coords="255,240,404,280"/>
-<area shape="poly" id="edge66_Node000001_Node000038" title=" " alt="" coords="6400,22,5093,24,3016,31,1970,39,1067,49,421,63,228,72,142,81,111,93,87,106,69,125,52,153,45,173,46,181,51,190,123,209,255,239,254,245,122,214,48,194,41,183,40,173,47,151,65,121,84,102,109,88,141,76,228,66,420,58,1067,44,1970,33,3016,26,5093,18,6400,17"/>
+<area shape="poly" id="edge66_Node000001_Node000038" title=" " alt="" coords="6265,22,4984,24,2952,32,1929,39,1047,50,414,63,226,72,142,81,111,93,87,106,69,125,52,153,45,173,46,181,51,190,123,209,255,239,254,245,122,214,48,194,41,183,40,173,47,151,65,121,84,102,109,88,141,76,226,67,414,58,1046,44,1929,34,2952,27,4984,19,6265,17"/>
 <area shape="rect" id="Node000040" href="$407__float16_8c.html" title="Unit test for half&#45;precision floating&#45;point (float16_t) support." alt="" coords="429,247,548,273"/>
-<area shape="poly" id="edge67_Node000001_Node000040" title=" " alt="" coords="6400,22,5264,26,3458,37,1683,54,1025,67,638,81,550,82,471,74,333,55,271,55,241,59,211,68,182,81,152,99,123,123,93,154,57,192,56,193,58,194,78,196,189,202,287,214,417,237,448,245,447,250,416,243,286,220,189,207,78,201,56,199,51,195,52,190,89,150,119,119,149,94,179,76,209,63,239,54,270,50,333,50,472,69,551,77,638,76,1025,61,1682,49,3458,31,5264,21,6400,17"/>
-<area shape="rect" id="Node000042" href="$001__primitives_8c.html" title="Unit test for creating trampolines for functions with primitive C types." alt="" coords="103,159,242,185"/>
-<area shape="poly" id="edge61_Node000001_Node000042" title=" " alt="" coords="6400,22,5439,24,3899,32,2280,49,1598,63,1084,81,851,93,670,104,489,122,258,155,220,162,219,157,257,149,488,117,669,99,851,87,1084,76,1598,58,2280,44,3899,26,5439,19,6400,17"/>
-<area shape="rect" id="Node000062" href="$402__variadic__functions_8c.html" title="Unit test for FFI calls to and from variadic C functions." alt="" coords="6414,159,6606,185"/>
-<area shape="poly" id="edge63_Node000001_Node000062" title=" " alt="" coords="6512,44,6512,159,6507,159,6507,44"/>
-<area shape="rect" id="Node000063" href="$403__special__types_8c.html" title="Unit test for FFI calls with special, non&#45;standard, or platform&#45;dependent primitive types." alt="" coords="6630,159,6792,185"/>
-<area shape="poly" id="edge64_Node000001_Node000063" title=" " alt="" coords="6537,37,6697,157,6694,161,6534,41"/>
-<area shape="rect" id="Node000064" href="$404__simd__vectors_8c.html" title="Unit test for SIMD vector argument passing and return values." alt="" coords="6816,159,6976,185"/>
-<area shape="poly" id="edge65_Node000001_Node000064" title=" " alt="" coords="6552,33,6868,157,6866,162,6550,38"/>
-<area shape="rect" id="Node000068" href="$820__threading__helgrind_8c.html" title="A stress test to detect data races and other threading issues." alt="" coords="7000,159,7195,185"/>
-<area shape="poly" id="edge69_Node000001_Node000068" title=" " alt="" coords="6568,32,7054,157,7053,162,6566,37"/>
-<area shape="rect" id="Node000069" href="$821__threading__bare_8c.html" title="A minimal, dependency&#45;free version of the thread&#45;safety stress test." alt="" coords="7219,159,7390,185"/>
-<area shape="poly" id="edge70_Node000001_Node000069" title=" " alt="" coords="6584,31,7207,149,7246,157,7245,162,7206,155,6583,36"/>
-<area shape="rect" id="Node000073" href="$880__exports_8c.html" title="Unit test for the dynamic library loading and symbol access API." alt="" coords="7414,159,7536,185"/>
-<area shape="poly" id="edge72_Node000001_Node000073" title=" " alt="" coords="6620,29,6969,76,7186,110,7402,149,7434,157,7433,162,7401,155,7185,115,6968,81,6619,35"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="3733,97,1994,122,1040,140,714,148,554,155,506,162,506,157,553,149,713,142,1040,134,1994,117,3733,91"/>
-<area shape="rect" id="Node000031" href="$008__registry__introspection_8c.html" title="Unit test for the registry introspection and serialization APIs." alt="" coords="4861,328,5076,353"/>
-<area shape="poly" id="edge21_Node000002_Node000031" title=" " alt="" coords="3915,104,3988,123,4065,150,4102,170,4117,180,4139,190,4235,220,4334,246,4533,287,4715,313,4861,329,4860,334,4714,319,4532,292,4333,251,4233,225,4137,194,4115,185,4099,175,4063,154,3987,129,3914,110"/>
-<area shape="rect" id="Node000032" href="$101__by__value_8c.html" title="Unit test for passing and returning aggregates and vectors by value." alt="" coords="5756,328,5888,353"/>
-<area shape="poly" id="edge24_Node000002_Node000032" title=" " alt="" coords="3958,91,4432,97,5066,109,5627,126,5808,137,5861,143,5885,150,5905,181,5909,212,5900,244,5885,281,5866,309,5842,330,5838,326,5862,306,5881,279,5895,243,5903,211,5900,183,5881,154,5860,148,5808,142,5627,132,5066,114,4432,103,3958,97"/>
-<area shape="poly" id="edge43_Node000002_Node000033" title=" " alt="" coords="3958,91,4523,96,5304,108,6004,125,6231,136,6298,143,6328,150,6347,169,6361,192,6377,243,6381,292,6380,328,6375,328,6376,292,6371,244,6356,194,6343,172,6326,154,6297,148,6231,142,6004,130,5304,113,4523,102,3958,96"/>
-<area shape="poly" id="edge49_Node000002_Node000034" title=" " alt="" coords="3958,103,4001,121,4020,134,4037,150,4052,172,4062,196,4071,247,4070,295,4066,328,4061,328,4065,294,4065,248,4056,198,4047,175,4033,154,4017,138,3998,126,3956,108"/>
-<area shape="rect" id="Node000035" href="$840__arena__allocator_8c.html" title="Unit test for the internal arena allocator." alt="" coords="5970,328,6143,353"/>
-<area shape="poly" id="edge50_Node000002_Node000035" title=" " alt="" coords="3958,91,4519,95,5292,105,5983,123,6206,135,6272,142,6300,150,6312,165,6318,180,6318,195,6313,209,6292,236,6259,261,6218,283,6174,302,6096,330,6094,325,6172,297,6216,278,6256,256,6288,232,6308,207,6313,194,6313,181,6308,168,6297,154,6271,147,6206,140,5983,128,5291,110,4519,100,3958,96"/>
-<area shape="poly" id="edge23_Node000002_Node000037" title=" " alt="" coords="3733,95,2978,98,1874,106,1324,113,847,124,497,137,386,145,328,155,297,170,257,196,185,249,182,245,254,191,294,165,326,149,386,140,497,132,847,118,1324,108,1874,100,2978,92,3733,90"/>
-<area shape="poly" id="edge40_Node000002_Node000038" title=" " alt="" coords="3733,95,2965,97,1848,105,1298,112,828,123,495,137,398,145,356,154,342,172,334,195,330,240,325,239,329,194,337,170,354,150,397,140,495,131,828,117,1297,107,1848,100,2965,92,3733,90"/>
-<area shape="rect" id="Node000039" href="$406__simd__forward_8c.html" title="Unit test for forward SIMD vector calls." alt="" coords="1268,247,1431,273"/>
-<area shape="poly" id="edge41_Node000002_Node000039" title=" " alt="" coords="3733,97,2790,119,2311,136,2150,145,2072,155,2055,163,2044,174,2032,185,2015,194,1965,208,1900,220,1741,239,1572,251,1432,258,1431,253,1572,246,1740,233,1900,215,1964,203,2013,190,2029,180,2040,170,2052,159,2070,149,2149,140,2311,130,2789,113,3733,92"/>
-<area shape="poly" id="edge42_Node000002_Node000040" title=" " alt="" coords="3734,97,2759,116,2262,133,2095,143,2015,154,2002,163,1994,174,1985,185,1971,194,1901,205,1757,215,1335,235,548,260,548,254,1334,230,1757,210,1900,200,1969,190,1982,181,1989,170,1998,159,2013,150,2094,138,2262,127,2759,110,3734,91"/>
-<area shape="rect" id="Node000041" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="4627,159,4782,185"/>
-<area shape="poly" id="edge13_Node000002_Node000041" title=" " alt="" coords="3958,94,4256,112,4436,128,4615,149,4656,157,4655,162,4615,155,4435,133,4256,117,3958,99"/>
-<area shape="poly" id="edge14_Node000002_Node000042" title=" " alt="" coords="3733,96,3000,101,1915,112,871,129,487,141,261,155,218,162,217,157,260,149,487,136,871,124,1915,106,3000,95,3733,91"/>
-<area shape="rect" id="Node000043" href="$002__simple__calls_8c.html" title="Unit test for basic forward trampoline calls with simple function signatures." alt="" coords="4806,159,4960,185"/>
-<area shape="poly" id="edge15_Node000002_Node000043" title=" " alt="" coords="3958,92,4121,97,4330,107,4562,124,4794,149,4835,157,4834,162,4793,155,4561,129,4330,112,4121,102,3958,97"/>
-<area shape="rect" id="Node000044" href="$003__type__system__api_8c.html" title="Unit test for the Manual API (infix_type_create_* functions)." alt="" coords="4984,159,5168,185"/>
-<area shape="poly" id="edge16_Node000002_Node000044" title=" " alt="" coords="3958,91,4150,96,4403,106,4687,123,4973,149,5021,157,5020,162,4972,155,4686,128,4402,111,4150,101,3958,97"/>
-<area shape="rect" id="Node000045" href="$004__signatures_8c.html" title="Unit test for the signature string parser." alt="" coords="5192,159,5334,185"/>
-<area shape="poly" id="edge17_Node000002_Node000045" title=" " alt="" coords="3958,92,4585,111,4929,128,5072,138,5181,149,5220,157,5219,162,5180,155,5071,143,4929,133,4585,117,3958,98"/>
-<area shape="rect" id="Node000046" href="$005__layouts_8c.html" title="Unit test for the Manual API&#39;s struct and union layout calculations." alt="" coords="5358,159,5480,185"/>
-<area shape="poly" id="edge18_Node000002_Node000046" title=" " alt="" coords="3958,91,4264,97,4665,107,5058,124,5222,136,5346,149,5381,157,5380,162,5345,155,5221,141,5058,130,4664,113,4264,102,3958,97"/>
-<area shape="rect" id="Node000047" href="$006__end__to__end__calls_8c.html" title="End&#45;to&#45;end unit test for passing and returning aggregate types (structs)." alt="" coords="5504,159,5689,185"/>
-<area shape="poly" id="edge19_Node000002_Node000047" title=" " alt="" coords="3958,92,4733,111,5171,128,5353,138,5491,149,5541,157,5540,162,5491,155,5352,143,5171,133,4733,116,3958,97"/>
-<area shape="rect" id="Node000048" href="$007__type__registry_8c.html" title="Unit test for the named type registry system." alt="" coords="5714,159,5871,185"/>
-<area shape="poly" id="edge20_Node000002_Node000048" title=" " alt="" coords="3958,91,4329,96,4832,107,5333,124,5542,136,5701,149,5744,157,5743,162,5700,155,5542,141,5333,129,4832,112,4329,102,3958,96"/>
-<area shape="rect" id="Node000049" href="$009__bitfields__fam_8c.html" title="Unit test for Bitfields and Flexible Array Members (FAM)." alt="" coords="5946,159,6105,185"/>
-<area shape="poly" id="edge22_Node000002_Node000049" title=" " alt="" coords="3958,91,4369,95,4938,106,5509,123,5747,135,5927,149,5975,157,5974,162,5927,155,5747,140,5509,128,4938,111,4369,101,3958,96"/>
-<area shape="rect" id="Node000050" href="$102__by__reference_8c.html" title="Unit test for passing and returning large aggregates by reference." alt="" coords="6129,159,6288,185"/>
-<area shape="poly" id="edge25_Node000002_Node000050" title=" " alt="" coords="3958,90,4404,93,5027,102,5656,120,5918,133,6117,149,6161,157,6160,162,6116,155,5918,138,5656,125,5027,108,4404,99,3958,96"/>
-<area shape="rect" id="Node000051" href="$103__unions_8c.html" title="Unit test for passing and returning unions by value." alt="" coords="566,159,682,185"/>
-<area shape="poly" id="edge26_Node000002_Node000051" title=" " alt="" coords="3733,97,2067,120,1158,138,847,146,695,155,661,162,660,157,695,149,847,141,1158,132,2067,115,3733,91"/>
-<area shape="rect" id="Node000052" href="$105__bitfields__fam__jit_8c.html" title="End&#45;to&#45;end JIT execution tests for Bitfields and Flexible Array Members." alt="" coords="707,152,854,192"/>
-<area shape="poly" id="edge27_Node000002_Node000052" title=" " alt="" coords="3733,97,2157,122,1301,140,1009,148,866,155,854,156,853,151,865,149,1009,142,1301,134,2156,117,3733,92"/>
-<area shape="rect" id="Node000053" href="$201__basic_8c.html" title="Unit test for FFI calls involving pointer types." alt="" coords="878,159,984,185"/>
-<area shape="poly" id="edge28_Node000002_Node000053" title=" " alt="" coords="3733,97,2224,121,1410,138,1132,147,997,155,965,162,964,157,996,149,1132,141,1410,133,2224,115,3733,92"/>
-<area shape="rect" id="Node000054" href="$202__in__structs_8c.html" title="Unit test for passing structs that contain pointer members." alt="" coords="1008,159,1144,185"/>
-<area shape="poly" id="edge29_Node000002_Node000054" title=" " alt="" coords="3733,96,2363,115,1601,133,1322,143,1157,155,1118,162,1117,157,1156,149,1321,138,1601,127,2363,110,3733,91"/>
-<area shape="rect" id="Node000055" href="$203__complex_8c.html" title="Unit test for FFI calls involving C99 _Complex types." alt="" coords="1169,159,1298,185"/>
-<area shape="poly" id="edge30_Node000002_Node000055" title=" " alt="" coords="3733,97,2440,116,1727,133,1466,143,1311,155,1274,162,1273,157,1311,149,1465,138,1727,128,2440,110,3733,91"/>
-<area shape="rect" id="Node000056" href="$301__primitives_8c.html" title="Unit test for reverse trampolines (callbacks) with primitive C types." alt="" coords="1323,159,1462,185"/>
-<area shape="poly" id="edge31_Node000002_Node000056" title=" " alt="" coords="3733,97,2522,117,1860,135,1617,144,1474,155,1435,162,1434,157,1473,149,1617,139,1859,129,2522,112,3733,91"/>
-<area shape="rect" id="Node000057" href="$302__aggregates_8c.html" title="Unit test for reverse trampolines (callbacks) with aggregate types." alt="" coords="1486,159,1632,185"/>
-<area shape="poly" id="edge32_Node000002_Node000057" title=" " alt="" coords="3733,97,2609,119,1999,136,1777,145,1645,155,1604,162,1603,157,1644,149,1776,140,1999,131,2609,114,3733,92"/>
-<area shape="rect" id="Node000058" href="$303__advanced_8c.html" title="Unit test for advanced reverse trampoline (callback) scenarios." alt="" coords="1656,159,1792,185"/>
-<area shape="poly" id="edge33_Node000002_Node000058" title=" " alt="" coords="3733,97,2690,119,2130,136,1926,145,1805,155,1766,162,1765,157,1804,149,1925,140,2130,131,2690,114,3733,92"/>
-<area shape="rect" id="Node000059" href="$304__reverse__call__types_8c.html" title="Unit test to explicitly compare the &quot;Callback&quot; vs. &quot;Closure&quot; reverse trampoline APIs." alt="" coords="1816,152,1958,192"/>
-<area shape="poly" id="edge34_Node000002_Node000059" title=" " alt="" coords="3733,96,3359,101,2852,111,2346,129,2136,141,1977,155,1958,157,1958,152,1976,149,2136,135,2346,123,2852,106,3359,96,3733,91"/>
-<area shape="rect" id="Node000060" href="$305__bitfields__reverse_8c.html" title="Unit test for receiving bitfield structs in reverse trampolines (callbacks)." alt="" coords="2083,159,2264,185"/>
-<area shape="poly" id="edge35_Node000002_Node000060" title=" " alt="" coords="3733,98,2995,117,2580,134,2408,144,2277,155,2229,162,2228,157,2276,149,2407,138,2580,128,2995,112,3733,92"/>
-<area shape="rect" id="Node000061" href="$401__large__stack_8c.html" title="Unit test for FFI calls with a large number of arguments passed on the stack." alt="" coords="2289,159,2437,185"/>
-<area shape="poly" id="edge36_Node000002_Node000061" title=" " alt="" coords="3733,98,3076,116,2713,133,2563,143,2449,155,2408,162,2407,157,2448,149,2563,138,2713,128,3076,111,3733,92"/>
-<area shape="poly" id="edge37_Node000002_Node000062" title=" " alt="" coords="3958,91,4451,94,5156,104,5870,122,6169,134,6395,149,6450,157,6449,162,6395,155,6169,139,5870,127,5155,109,4451,100,3958,96"/>
-<area shape="poly" id="edge38_Node000002_Node000063" title=" " alt="" coords="3958,90,4490,91,5259,98,5663,105,6043,115,6370,130,6618,149,6663,157,6662,162,6617,155,6370,135,6043,121,5663,110,5259,103,4490,96,3958,95"/>
-<area shape="poly" id="edge39_Node000002_Node000064" title=" " alt="" coords="3958,90,4521,89,5345,95,5778,102,6187,113,6539,129,6805,149,6849,157,6848,162,6804,155,6538,134,6186,119,5778,108,5345,101,4521,95,3958,95"/>
-<area shape="rect" id="Node000065" href="$810__memory__stress_8c.html" title="A stress test to detect memory leaks under heavy allocation/deallocation cycles." alt="" coords="2461,159,2636,185"/>
-<area shape="poly" id="edge44_Node000002_Node000065" title=" " alt="" coords="3733,96,3529,99,3259,108,2955,126,2647,155,2602,162,2601,157,2647,149,2954,121,3259,103,3529,94,3733,90"/>
-<area shape="rect" id="Node000066" href="$811__fault__injection_8c.html" title="Unit test to verify resource cleanup under memory allocation failures." alt="" coords="2660,159,2826,185"/>
-<area shape="poly" id="edge45_Node000002_Node000066" title=" " alt="" coords="3733,97,3560,102,3337,112,3088,129,2838,155,2794,162,2793,157,2837,149,3087,123,3337,106,3560,96,3733,92"/>
-<area shape="rect" id="Node000067" href="$812__shared__arena_8c.html" title="Unit test for advanced arena&#45;based memory management features." alt="" coords="2850,159,3012,185"/>
-<area shape="poly" id="edge46_Node000002_Node000067" title=" " alt="" coords="3733,99,3413,116,3218,132,3023,155,2981,162,2980,157,3023,149,3218,127,3413,111,3733,94"/>
-<area shape="poly" id="edge47_Node000002_Node000068" title=" " alt="" coords="3958,90,4553,91,5429,98,5892,105,6328,116,6704,130,6989,149,7041,157,7040,162,6988,155,6704,136,6328,121,5892,111,5429,103,4553,96,3958,95"/>
-<area shape="poly" id="edge48_Node000002_Node000069" title=" " alt="" coords="3958,91,5664,109,6638,126,6996,137,7207,149,7254,157,7254,162,7207,155,6995,143,6637,132,5664,114,3958,96"/>
-<area shape="rect" id="Node000013" href="$850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="3036,159,3221,185"/>
-<area shape="poly" id="edge51_Node000002_Node000013" title=" " alt="" coords="3734,104,3503,124,3234,155,3188,162,3187,157,3233,149,3502,118,3733,98"/>
-<area shape="rect" id="Node000070" href="$851__lifecycle__regression_8c.html" title="Regression tests for specific memory lifecycle and ownership bugs." alt="" coords="3246,159,3448,185"/>
-<area shape="poly" id="edge52_Node000002_Node000070" title=" " alt="" coords="3757,109,3461,155,3416,162,3415,157,3460,149,3756,103"/>
-<area shape="rect" id="Node000071" href="$860__error__handling_8c.html" title="Unit test for the error reporting system." alt="" coords="3473,159,3640,185"/>
-<area shape="poly" id="edge53_Node000002_Node000071" title=" " alt="" coords="3791,110,3599,162,3598,157,3790,105"/>
-<area shape="rect" id="Node000072" href="$861__error__reporting_8c.html" title=" " alt="" coords="3664,159,3835,185"/>
-<area shape="poly" id="edge54_Node000002_Node000072" title=" " alt="" coords="3823,115,3766,161,3762,157,3819,111"/>
-<area shape="poly" id="edge55_Node000002_Node000073" title=" " alt="" coords="3958,90,4686,94,5762,103,6797,121,7177,134,7312,141,7402,149,7438,157,7437,162,7401,155,7312,146,7177,139,6797,126,5762,108,4686,99,3958,96"/>
-<area shape="rect" id="Node000074" href="$901__call__overhead_8c.html" title="A micro&#45;benchmark to measure the performance overhead of an FFI call." alt="" coords="3860,159,4024,185"/>
-<area shape="poly" id="edge56_Node000002_Node000074" title=" " alt="" coords="3872,111,3929,157,3926,161,3868,115"/>
-<area shape="rect" id="Node000075" href="$902__cache__deduplication_8c.html" title="Unit test for the trampoline deduplication (caching) system." alt="" coords="4150,159,4357,185"/>
-<area shape="poly" id="edge57_Node000002_Node000075" title=" " alt="" coords="3919,104,4195,157,4194,162,3918,109"/>
-<area shape="rect" id="Node000076" href="$903__generation__benchmark_8c.html" title="A micro&#45;benchmark to measure the performance of trampoline generation." alt="" coords="4381,159,4604,185"/>
-<area shape="poly" id="edge58_Node000002_Node000076" title=" " alt="" coords="3958,102,4369,149,4420,157,4419,162,4368,155,3957,107"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="519,185,554,189,690,199,895,207,1475,222,2217,233,3044,242,4644,252,5660,256,5660,261,4644,257,3044,247,2217,238,1475,227,895,213,690,204,553,195,519,190"/>
+<area shape="poly" id="edge67_Node000001_Node000040" title=" " alt="" coords="6265,22,5154,27,3395,37,1667,55,1027,67,650,81,561,82,480,74,338,54,275,53,244,58,214,66,184,79,154,98,123,122,93,154,57,192,56,193,58,194,78,196,189,202,286,214,417,237,448,245,447,250,416,243,286,219,188,207,77,201,56,199,51,195,52,189,89,150,120,118,151,93,181,74,212,61,243,53,274,48,339,49,480,68,561,76,650,76,1027,62,1666,50,3395,32,5154,22,6265,17"/>
+<area shape="rect" id="Node000045" href="$001__primitives_8c.html" title="Unit test for creating trampolines for functions with primitive C types." alt="" coords="103,159,242,185"/>
+<area shape="poly" id="edge61_Node000001_Node000045" title=" " alt="" coords="6265,22,5335,25,3850,34,2292,51,1636,65,1142,81,892,92,698,103,505,121,258,155,220,162,219,157,257,149,505,116,698,98,892,87,1142,76,1636,59,2292,46,3850,28,5335,20,6265,17"/>
+<area shape="rect" id="Node000065" href="$402__variadic__functions_8c.html" title="Unit test for FFI calls to and from variadic C functions." alt="" coords="6279,159,6471,185"/>
+<area shape="poly" id="edge63_Node000001_Node000065" title=" " alt="" coords="6378,44,6378,159,6372,159,6372,44"/>
+<area shape="rect" id="Node000066" href="$403__special__types_8c.html" title="Unit test for FFI calls with special, non&#45;standard, or platform&#45;dependent primitive types." alt="" coords="6495,159,6658,185"/>
+<area shape="poly" id="edge64_Node000001_Node000066" title=" " alt="" coords="6403,37,6563,157,6559,161,6399,41"/>
+<area shape="rect" id="Node000067" href="$404__simd__vectors_8c.html" title="Unit test for SIMD vector argument passing and return values." alt="" coords="6682,159,6842,185"/>
+<area shape="poly" id="edge65_Node000001_Node000067" title=" " alt="" coords="6418,33,6733,157,6731,162,6416,38"/>
+<area shape="rect" id="Node000071" href="$820__threading__helgrind_8c.html" title="A stress test to detect data races and other threading issues." alt="" coords="6866,159,7060,185"/>
+<area shape="poly" id="edge69_Node000001_Node000071" title=" " alt="" coords="6433,32,6919,157,6918,162,6432,37"/>
+<area shape="rect" id="Node000072" href="$821__threading__bare_8c.html" title="A minimal, dependency&#45;free version of the thread&#45;safety stress test." alt="" coords="7084,159,7255,185"/>
+<area shape="poly" id="edge70_Node000001_Node000072" title=" " alt="" coords="6449,31,7073,149,7111,157,7110,162,7072,155,6448,36"/>
+<area shape="rect" id="Node000077" href="$880__exports_8c.html" title="Unit test for the dynamic library loading and symbol access API." alt="" coords="7279,159,7402,185"/>
+<area shape="poly" id="edge72_Node000001_Node000077" title=" " alt="" coords="6485,29,6835,76,7051,110,7267,149,7299,157,7298,162,7266,155,7050,115,6834,81,6484,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="3673,97,1966,123,1031,140,712,148,555,155,507,162,506,157,555,149,712,143,1031,135,1966,117,3673,92"/>
+<area shape="rect" id="Node000031" href="$008__registry__introspection_8c.html" title="Unit test for the registry introspection and serialization APIs." alt="" coords="4782,328,4997,353"/>
+<area shape="poly" id="edge24_Node000002_Node000031" title=" " alt="" coords="3873,104,3955,122,4040,150,4061,160,4076,170,4090,180,4111,190,4199,219,4291,245,4475,284,4645,311,4782,328,4782,333,4644,317,4474,290,4290,250,4198,224,4109,194,4088,185,4073,174,4058,164,4038,154,3954,128,3872,109"/>
+<area shape="rect" id="Node000032" href="$101__by__value_8c.html" title="Unit test for passing and returning aggregates and vectors by value." alt="" coords="5629,328,5761,353"/>
+<area shape="poly" id="edge27_Node000002_Node000032" title=" " alt="" coords="3898,91,4359,98,4971,110,5513,127,5687,137,5738,143,5761,150,5781,181,5785,212,5777,245,5761,281,5741,310,5716,330,5712,326,5737,306,5757,279,5772,243,5780,212,5776,183,5757,154,5737,148,5686,143,5512,132,4971,115,4359,103,3898,97"/>
+<area shape="poly" id="edge46_Node000002_Node000033" title=" " alt="" coords="3898,91,4448,97,5204,108,5881,126,6100,137,6165,143,6194,150,6213,169,6226,192,6242,243,6246,292,6245,328,6240,328,6241,292,6237,244,6221,194,6208,172,6191,154,6164,148,6100,142,5880,131,5204,114,4448,102,3898,96"/>
+<area shape="poly" id="edge52_Node000002_Node000034" title=" " alt="" coords="3878,104,3957,123,3989,135,4010,150,4025,172,4035,196,4044,247,4043,294,4039,328,4033,328,4038,294,4039,247,4030,197,4020,174,4006,154,3987,140,3955,128,3876,109"/>
+<area shape="rect" id="Node000035" href="$840__arena__allocator_8c.html" title="Unit test for the internal arena allocator." alt="" coords="5840,328,6014,353"/>
+<area shape="poly" id="edge53_Node000002_Node000035" title=" " alt="" coords="3898,91,4443,95,5191,106,5859,123,6075,135,6138,142,6166,150,6177,165,6183,180,6183,194,6178,209,6157,236,6125,260,6085,283,6042,302,5965,330,5963,325,6040,297,6083,278,6122,256,6154,232,6174,206,6178,194,6178,181,6173,167,6163,154,6137,147,6074,140,5859,129,5191,111,4443,101,3898,96"/>
+<area shape="poly" id="edge26_Node000002_Node000037" title=" " alt="" coords="3673,95,2930,98,1845,106,1305,114,838,124,494,137,385,146,328,155,297,170,257,196,185,249,182,245,254,191,294,165,326,149,385,140,494,132,837,119,1305,108,1845,101,2930,93,3673,90"/>
+<area shape="poly" id="edge43_Node000002_Node000038" title=" " alt="" coords="3674,95,2918,97,1820,105,1280,113,819,123,493,137,397,145,356,154,342,172,334,195,330,240,325,239,329,194,337,170,354,150,396,140,492,132,819,118,1280,107,1820,100,2918,92,3673,90"/>
+<area shape="rect" id="Node000039" href="$406__simd__forward_8c.html" title="Unit test for forward SIMD vector calls." alt="" coords="1294,247,1456,273"/>
+<area shape="poly" id="edge44_Node000002_Node000039" title=" " alt="" coords="3673,96,3304,99,2822,107,2585,115,2378,125,2217,138,2161,146,2124,155,2107,163,2096,174,2084,185,2067,194,2015,209,1947,221,1779,240,1603,252,1456,259,1456,253,1602,246,1779,234,1946,216,2014,204,2065,190,2081,180,2092,170,2104,159,2122,149,2160,141,2217,133,2377,120,2585,110,2821,102,3304,93,3673,90"/>
+<area shape="poly" id="edge45_Node000002_Node000040" title=" " alt="" coords="3674,97,2759,117,2296,134,2141,144,2067,154,2054,163,2046,174,2037,185,2023,194,1950,205,1801,216,1362,235,548,260,548,255,1361,230,1800,211,1949,200,2021,190,2034,181,2041,170,2050,159,2065,150,2141,138,2296,128,2759,111,3674,92"/>
+<area shape="rect" id="Node000041" href="$utility_8h.html" title="A header for conditionally compiled debugging utilities." alt="" coords="4520,159,4675,185"/>
+<area shape="poly" id="edge13_Node000002_Node000041" title=" " alt="" coords="3898,95,4176,113,4342,129,4507,149,4548,157,4547,162,4507,155,4341,134,4175,119,3898,100"/>
+<area shape="rect" id="Node000042" href="$emit__elf_8c.html" title="ELF binary format support for emit system." alt="" coords="4700,159,4864,185"/>
+<area shape="poly" id="edge14_Node000002_Node000042" title=" " alt="" coords="3898,93,4251,109,4469,126,4687,149,4731,157,4730,162,4687,155,4468,131,4250,114,3898,98"/>
+<area shape="rect" id="Node000043" href="$emit_8c.html" title="Implementation of the emit API for generating machine code." alt="" coords="4888,159,5008,185"/>
+<area shape="poly" id="edge15_Node000002_Node000043" title=" " alt="" coords="3898,89,4085,91,4329,99,4601,117,4740,131,4875,149,4910,157,4909,162,4874,155,4739,137,4601,122,4328,104,4085,96,3898,94"/>
+<area shape="rect" id="Node000044" href="$emit__pe_8c.html" title="PE binary format support for emit system." alt="" coords="5032,159,5195,185"/>
+<area shape="poly" id="edge16_Node000002_Node000044" title=" " alt="" coords="3898,90,4108,92,4387,101,4702,119,4863,132,5021,149,5064,157,5064,162,5020,155,4863,138,4702,124,4387,106,4108,98,3898,95"/>
+<area shape="poly" id="edge17_Node000002_Node000045" title=" " alt="" coords="3673,96,2951,101,1885,112,860,129,483,141,261,155,218,162,217,157,260,149,483,136,860,124,1885,106,2951,96,3673,91"/>
+<area shape="rect" id="Node000046" href="$002__simple__calls_8c.html" title="Unit test for basic forward trampoline calls with simple function signatures." alt="" coords="5219,159,5374,185"/>
+<area shape="poly" id="edge18_Node000002_Node000046" title=" " alt="" coords="3898,92,4566,111,4937,128,5090,138,5207,149,5250,157,5249,162,5207,155,5090,143,4936,133,4566,117,3898,98"/>
+<area shape="rect" id="Node000047" href="$003__type__system__api_8c.html" title="Unit test for the Manual API (infix_type_create_* functions)." alt="" coords="5398,159,5582,185"/>
+<area shape="poly" id="edge19_Node000002_Node000047" title=" " alt="" coords="3898,92,4652,111,5076,128,5252,138,5386,149,5435,157,5434,162,5385,155,5251,144,5075,133,4652,117,3898,97"/>
+<area shape="rect" id="Node000048" href="$004__signatures_8c.html" title="Unit test for the signature string parser." alt="" coords="5606,159,5747,185"/>
+<area shape="poly" id="edge20_Node000002_Node000048" title=" " alt="" coords="3899,91,4261,95,4751,105,5238,123,5440,135,5594,149,5634,157,5633,162,5593,155,5440,140,5237,128,4751,111,4261,101,3898,96"/>
+<area shape="rect" id="Node000049" href="$005__layouts_8c.html" title="Unit test for the Manual API&#39;s struct and union layout calculations." alt="" coords="5822,159,5944,185"/>
+<area shape="poly" id="edge21_Node000002_Node000049" title=" " alt="" coords="3898,90,4299,93,4849,102,5400,120,5629,133,5803,149,5842,157,5841,162,5803,155,5629,138,5400,125,4849,108,4298,99,3898,96"/>
+<area shape="rect" id="Node000050" href="$006__end__to__end__calls_8c.html" title="End&#45;to&#45;end unit test for passing and returning aggregate types (structs)." alt="" coords="5968,159,6153,185"/>
+<area shape="poly" id="edge22_Node000002_Node000050" title=" " alt="" coords="3898,91,4325,96,4919,106,5517,123,5766,135,5955,149,6005,157,6004,162,5955,155,5766,140,5517,129,4919,111,4325,101,3898,96"/>
+<area shape="rect" id="Node000051" href="$007__type__registry_8c.html" title="Unit test for the named type registry system." alt="" coords="567,159,724,185"/>
+<area shape="poly" id="edge23_Node000002_Node000051" title=" " alt="" coords="3673,97,2060,122,1183,140,883,148,737,155,693,162,692,157,736,149,883,142,1183,134,2060,117,3673,92"/>
+<area shape="rect" id="Node000052" href="$009__bitfields__fam_8c.html" title="Unit test for Bitfields and Flexible Array Members (FAM)." alt="" coords="749,159,908,185"/>
+<area shape="poly" id="edge25_Node000002_Node000052" title=" " alt="" coords="3673,96,2214,116,1396,133,1096,143,919,155,876,162,875,157,919,149,1096,138,1396,128,2214,110,3673,91"/>
+<area shape="rect" id="Node000053" href="$102__by__reference_8c.html" title="Unit test for passing and returning large aggregates by reference." alt="" coords="932,159,1090,185"/>
+<area shape="poly" id="edge28_Node000002_Node000053" title=" " alt="" coords="3673,97,2306,117,1545,134,1267,144,1102,155,1059,162,1058,157,1101,149,1266,139,1545,129,2306,111,3673,91"/>
+<area shape="rect" id="Node000054" href="$103__unions_8c.html" title="Unit test for passing and returning unions by value." alt="" coords="1114,159,1230,185"/>
+<area shape="poly" id="edge29_Node000002_Node000054" title=" " alt="" coords="3673,96,2376,114,1660,132,1398,142,1243,155,1209,162,1208,157,1243,149,1398,137,1660,126,2376,109,3673,91"/>
+<area shape="rect" id="Node000055" href="$105__bitfields__fam__jit_8c.html" title="End&#45;to&#45;end JIT execution tests for Bitfields and Flexible Array Members." alt="" coords="1255,152,1402,192"/>
+<area shape="poly" id="edge30_Node000002_Node000055" title=" " alt="" coords="3673,97,2462,118,1800,135,1557,145,1414,155,1402,156,1401,151,1413,149,1557,139,1800,130,2462,113,3673,92"/>
+<area shape="rect" id="Node000056" href="$201__basic_8c.html" title="Unit test for FFI calls involving pointer types." alt="" coords="1426,159,1532,185"/>
+<area shape="poly" id="edge31_Node000002_Node000056" title=" " alt="" coords="3673,97,2529,115,1906,133,1679,143,1545,155,1513,162,1512,157,1544,149,1679,138,1906,127,2529,110,3673,91"/>
+<area shape="rect" id="Node000057" href="$202__in__structs_8c.html" title="Unit test for passing structs that contain pointer members." alt="" coords="1556,159,1692,185"/>
+<area shape="poly" id="edge32_Node000002_Node000057" title=" " alt="" coords="3673,97,2610,119,2037,136,1828,145,1705,155,1666,162,1665,157,1704,149,1828,140,2037,131,2610,114,3673,92"/>
+<area shape="rect" id="Node000058" href="$203__complex_8c.html" title="Unit test for FFI calls involving C99 _Complex types." alt="" coords="1717,159,1846,185"/>
+<area shape="poly" id="edge33_Node000002_Node000058" title=" " alt="" coords="3673,96,3289,99,2765,108,2242,126,2024,139,1859,155,1822,162,1821,157,1859,149,2024,133,2242,120,2765,103,3289,94,3673,90"/>
+<area shape="rect" id="Node000059" href="$301__primitives_8c.html" title="Unit test for reverse trampolines (callbacks) with primitive C types." alt="" coords="1871,159,2010,185"/>
+<area shape="poly" id="edge34_Node000002_Node000059" title=" " alt="" coords="3673,97,3320,102,2845,112,2373,130,2177,141,2029,155,1987,162,1986,157,2028,149,2177,136,2373,124,2845,107,3319,97,3673,91"/>
+<area shape="rect" id="Node000060" href="$302__aggregates_8c.html" title="Unit test for reverse trampolines (callbacks) with aggregate types." alt="" coords="2135,159,2282,185"/>
+<area shape="poly" id="edge35_Node000002_Node000060" title=" " alt="" coords="3673,97,2971,115,2580,132,2417,143,2294,155,2254,162,2253,157,2293,149,2417,137,2579,127,2971,110,3673,92"/>
+<area shape="rect" id="Node000061" href="$303__advanced_8c.html" title="Unit test for advanced reverse trampoline (callback) scenarios." alt="" coords="2306,159,2442,185"/>
+<area shape="poly" id="edge36_Node000002_Node000061" title=" " alt="" coords="3673,98,3048,116,2704,133,2562,143,2454,155,2416,162,2415,157,2453,149,2562,138,2704,128,3047,111,3673,92"/>
+<area shape="rect" id="Node000062" href="$304__reverse__call__types_8c.html" title="Unit test to explicitly compare the &quot;Callback&quot; vs. &quot;Closure&quot; reverse trampoline APIs." alt="" coords="2466,152,2607,192"/>
+<area shape="poly" id="edge37_Node000002_Node000062" title=" " alt="" coords="3673,95,3475,97,3212,105,2917,123,2766,137,2619,155,2608,156,2607,151,2619,149,2766,132,2916,118,3212,100,3475,91,3673,89"/>
+<area shape="rect" id="Node000063" href="$305__bitfields__reverse_8c.html" title="Unit test for receiving bitfield structs in reverse trampolines (callbacks)." alt="" coords="2631,159,2812,185"/>
+<area shape="poly" id="edge38_Node000002_Node000063" title=" " alt="" coords="3673,98,3296,114,3061,131,2825,155,2778,162,2777,157,2824,149,3060,126,3296,109,3673,93"/>
+<area shape="rect" id="Node000064" href="$401__large__stack_8c.html" title="Unit test for FFI calls with a large number of arguments passed on the stack." alt="" coords="2837,159,2985,185"/>
+<area shape="poly" id="edge39_Node000002_Node000064" title=" " alt="" coords="3673,99,3367,116,3182,132,2997,155,2958,162,2957,157,2996,149,3181,127,3367,110,3673,93"/>
+<area shape="poly" id="edge40_Node000002_Node000065" title=" " alt="" coords="3898,91,4379,95,5062,105,5753,122,6042,134,6261,149,6315,157,6315,162,6260,155,6042,140,5753,128,5061,110,4379,100,3898,96"/>
+<area shape="poly" id="edge41_Node000002_Node000066" title=" " alt="" coords="3898,90,4417,91,5164,98,5556,106,5925,116,6243,131,6483,149,6528,157,6527,162,6483,155,6243,136,5925,122,5556,111,5164,104,4416,96,3898,95"/>
+<area shape="poly" id="edge42_Node000002_Node000067" title=" " alt="" coords="3898,90,4449,90,5251,96,5672,103,6069,114,6411,129,6670,149,6714,157,6713,162,6669,155,6411,135,6069,119,5672,109,5251,101,4449,95,3898,95"/>
+<area shape="rect" id="Node000068" href="$810__memory__stress_8c.html" title="A stress test to detect memory leaks under heavy allocation/deallocation cycles." alt="" coords="3009,159,3184,185"/>
+<area shape="poly" id="edge47_Node000002_Node000068" title=" " alt="" coords="3673,104,3452,124,3195,155,3152,162,3152,157,3195,149,3451,118,3673,98"/>
+<area shape="rect" id="Node000069" href="$811__fault__injection_8c.html" title="Unit test to verify resource cleanup under memory allocation failures." alt="" coords="3208,159,3374,185"/>
+<area shape="poly" id="edge48_Node000002_Node000069" title=" " alt="" coords="3688,109,3386,155,3347,162,3346,157,3385,149,3687,103"/>
+<area shape="rect" id="Node000070" href="$812__shared__arena_8c.html" title="Unit test for advanced arena&#45;based memory management features." alt="" coords="3398,159,3560,185"/>
+<area shape="poly" id="edge49_Node000002_Node000070" title=" " alt="" coords="3728,110,3524,162,3523,157,3727,105"/>
+<area shape="poly" id="edge50_Node000002_Node000071" title=" " alt="" coords="3898,90,4480,91,5335,99,5786,106,6210,117,6577,131,6854,149,6906,157,6905,162,6853,155,6577,136,6210,122,5786,111,5335,104,4480,97,3898,95"/>
+<area shape="poly" id="edge51_Node000002_Node000072" title=" " alt="" coords="3898,91,5568,109,6517,127,6866,137,7073,149,7120,157,7119,162,7072,155,6866,143,6517,132,5568,115,3898,96"/>
+<area shape="rect" id="Node000013" href="$850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="3584,159,3769,185"/>
+<area shape="poly" id="edge54_Node000002_Node000013" title=" " alt="" coords="3760,114,3694,161,3691,157,3757,110"/>
+<area shape="rect" id="Node000073" href="$851__lifecycle__regression_8c.html" title="Regression tests for specific memory lifecycle and ownership bugs." alt="" coords="3794,159,3996,185"/>
+<area shape="poly" id="edge55_Node000002_Node000073" title=" " alt="" coords="3815,110,3880,157,3877,161,3811,114"/>
+<area shape="rect" id="Node000074" href="$852__rax__preservation_8c.html" title="Regression test to verify rax preservation across reverse trampolines." alt="" coords="4122,159,4305,185"/>
+<area shape="poly" id="edge56_Node000002_Node000074" title=" " alt="" coords="3862,104,4152,157,4151,162,3861,109"/>
+<area shape="rect" id="Node000075" href="$860__error__handling_8c.html" title="Unit test for the error reporting system." alt="" coords="4329,159,4496,185"/>
+<area shape="poly" id="edge57_Node000002_Node000075" title=" " alt="" coords="3898,100,4094,120,4317,149,4358,157,4357,162,4316,155,4093,126,3898,105"/>
+<area shape="poly" id="edge58_Node000002_Node000077" title=" " alt="" coords="3898,90,4613,94,5665,104,6676,121,7048,134,7179,141,7267,149,7303,157,7302,162,7267,155,7179,147,7047,139,6676,127,5665,109,4613,99,3898,96"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="520,184,555,189,688,198,888,207,1453,221,2176,232,2981,241,4541,252,5536,256,5536,261,4541,257,2981,246,2175,237,1453,226,888,212,688,204,555,195,520,190"/>
 <area shape="poly" id="edge9_Node000003_Node000037" title=" " alt="" coords="404,191,208,250,206,245,403,186"/>
 <area shape="poly" id="edge10_Node000003_Node000038" title=" " alt="" coords="428,195,359,242,356,238,425,190"/>
-<area shape="poly" id="edge11_Node000003_Node000039" title=" " alt="" coords="523,185,554,189,755,213,954,231,1268,252,1268,257,954,236,754,218,553,195,522,190"/>
+<area shape="poly" id="edge11_Node000003_Node000039" title=" " alt="" coords="524,184,555,189,763,213,970,231,1293,252,1293,257,969,237,763,219,555,195,523,190"/>
 <area shape="poly" id="edge12_Node000003_Node000040" title=" " alt="" coords="467,197,486,246,481,248,462,199"/>
-<area shape="poly" id="edge4_Node000004_Node000031" title=" " alt="" coords="5647,276,5076,331,5076,326,5646,270"/>
-<area shape="poly" id="edge5_Node000004_Node000032" title=" " alt="" coords="5784,282,5815,326,5811,329,5780,285"/>
-<area shape="poly" id="edge6_Node000004_Node000033" title=" " alt="" coords="5868,272,6288,325,6287,331,5867,277"/>
-<area shape="poly" id="edge7_Node000004_Node000034" title=" " alt="" coords="5646,269,4123,339,4123,334,5646,264"/>
-<area shape="poly" id="edge8_Node000004_Node000035" title=" " alt="" coords="5821,274,6015,325,6013,331,5820,279"/>
+<area shape="poly" id="edge4_Node000004_Node000031" title=" " alt="" coords="5523,276,4998,331,4997,326,5522,271"/>
+<area shape="poly" id="edge5_Node000004_Node000032" title=" " alt="" coords="5659,283,5689,326,5685,329,5655,286"/>
+<area shape="poly" id="edge6_Node000004_Node000033" title=" " alt="" coords="5743,272,6155,325,6154,331,5742,277"/>
+<area shape="poly" id="edge7_Node000004_Node000034" title=" " alt="" coords="5523,270,4095,339,4095,334,5523,264"/>
+<area shape="poly" id="edge8_Node000004_Node000035" title=" " alt="" coords="5697,274,5886,325,5885,331,5695,279"/>
 </map>

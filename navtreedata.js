@@ -285,62 +285,65 @@ var NAVTREE =
       [ "Part 4: Technical Specification", "md_docs_2signatures.html#autotoc_md243", null ]
     ] ],
     [ "Changelog", "md_CHANGELOG.html", [
-      [ "[0.1.7] - 2026-03-30", "md_CHANGELOG.html#autotoc_md249", [
-        [ "Changed", "md_CHANGELOG.html#autotoc_md250", null ]
+      [ "[Unreleased]", "md_CHANGELOG.html#autotoc_md249", [
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md250", null ]
       ] ],
-      [ "[0.1.6] - 2026-02-14", "md_CHANGELOG.html#autotoc_md251", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md252", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md253", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.6...v0.1.7\" >0.1.7</a> - 2026-03-30", "md_CHANGELOG.html#autotoc_md251", [
+        [ "Changed", "md_CHANGELOG.html#autotoc_md252", null ]
       ] ],
-      [ "[0.1.5] - 2026-02-06", "md_CHANGELOG.html#autotoc_md254", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md255", null ],
-        [ "Changed", "md_CHANGELOG.html#autotoc_md256", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md257", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.5...v0.1.6\" >0.1.6</a> - 2026-02-14", "md_CHANGELOG.html#autotoc_md253", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md254", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md255", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.3...v0.1.4\" >0.1.4</a> - 2026-01-17", "md_CHANGELOG.html#autotoc_md258", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md259", null ],
-        [ "Changed", "md_CHANGELOG.html#autotoc_md260", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md261", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.4...v0.1.5\" >0.1.5</a> - 2026-02-06", "md_CHANGELOG.html#autotoc_md256", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md257", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md258", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md259", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.2...v0.1.3\" >0.1.3</a> - 2025-12-19", "md_CHANGELOG.html#autotoc_md262", [
-        [ "Changed", "md_CHANGELOG.html#autotoc_md263", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md264", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.3...v0.1.4\" >0.1.4</a> - 2026-01-17", "md_CHANGELOG.html#autotoc_md260", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md261", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md262", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md263", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.1...v0.1.2\" >0.1.2</a> - 2025-11-26", "md_CHANGELOG.html#autotoc_md265", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md266", null ],
-        [ "Changed", "md_CHANGELOG.html#autotoc_md267", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md268", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.2...v0.1.3\" >0.1.3</a> - 2025-12-19", "md_CHANGELOG.html#autotoc_md264", [
+        [ "Changed", "md_CHANGELOG.html#autotoc_md265", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md266", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...v0.1.1\" >0.1.1</a> - 2025-11-01", "md_CHANGELOG.html#autotoc_md269", [
-        [ "Added", "md_CHANGELOG.html#autotoc_md270", null ],
-        [ "Changed", "md_CHANGELOG.html#autotoc_md271", null ],
-        [ "Fixed", "md_CHANGELOG.html#autotoc_md272", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.1...v0.1.2\" >0.1.2</a> - 2025-11-26", "md_CHANGELOG.html#autotoc_md267", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md268", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md269", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md270", null ]
       ] ],
-      [ "<a href=\"https://github.com/sanko/infix/releases/tag/v0.1.0\" >0.1.0</a> - 2025-10-27", "md_CHANGELOG.html#autotoc_md273", [
-        [ "Initial Public Release", "md_CHANGELOG.html#autotoc_md274", null ],
-        [ "Added", "md_CHANGELOG.html#autotoc_md275", [
-          [ "Security & Hardening", "md_CHANGELOG.html#autotoc_md276", null ],
-          [ "Performance & Memory Management", "md_CHANGELOG.html#autotoc_md277", null ],
-          [ "Platform Support", "md_CHANGELOG.html#autotoc_md278", null ]
+      [ "<a href=\"https://github.com/sanko/infix/compare/v0.1.0...v0.1.1\" >0.1.1</a> - 2025-11-01", "md_CHANGELOG.html#autotoc_md271", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md272", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md273", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md274", null ]
+      ] ],
+      [ "<a href=\"https://github.com/sanko/infix/releases/tag/v0.1.0\" >0.1.0</a> - 2025-10-27", "md_CHANGELOG.html#autotoc_md275", [
+        [ "Initial Public Release", "md_CHANGELOG.html#autotoc_md276", null ],
+        [ "Added", "md_CHANGELOG.html#autotoc_md277", [
+          [ "Security & Hardening", "md_CHANGELOG.html#autotoc_md278", null ],
+          [ "Performance & Memory Management", "md_CHANGELOG.html#autotoc_md279", null ],
+          [ "Platform Support", "md_CHANGELOG.html#autotoc_md280", null ]
         ] ]
       ] ]
     ] ],
     [ "Project Roadmap: infix FFI", "md_TODO.html", [
-      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md280", null ],
-      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md281", null ],
-      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md282", null ],
-      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md283", null ]
+      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md282", null ],
+      [ "Medium Priority: Expansion & Optimization", "md_TODO.html#autotoc_md283", null ],
+      [ "Low Priority: Advanced Features & Polish", "md_TODO.html#autotoc_md284", null ],
+      [ "High Priority: Foundation & Stability", "md_TODO.html#autotoc_md285", null ]
     ] ],
     [ "Security Policy", "md_SECURITY.html", [
-      [ "Supported Versions", "md_SECURITY.html#autotoc_md285", null ],
-      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md286", null ],
-      [ "Security Model", "md_SECURITY.html#autotoc_md287", [
-        [ "Mitigations", "md_SECURITY.html#autotoc_md288", [
-          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md289", null ],
-          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md290", null ],
-          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md291", null ],
-          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md292", null ],
-          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md293", null ]
+      [ "Supported Versions", "md_SECURITY.html#autotoc_md287", null ],
+      [ "Reporting a Vulnerability", "md_SECURITY.html#autotoc_md288", null ],
+      [ "Security Model", "md_SECURITY.html#autotoc_md289", [
+        [ "Mitigations", "md_SECURITY.html#autotoc_md290", [
+          [ "1. W^X (Write XOR Execute) Memory Policy", "md_SECURITY.html#autotoc_md291", null ],
+          [ "2. Use-After-Free Prevention (Guard Pages)", "md_SECURITY.html#autotoc_md292", null ],
+          [ "3. Read-Only Context Hardening", "md_SECURITY.html#autotoc_md293", null ],
+          [ "4. API Hardening Against Integer Overflows", "md_SECURITY.html#autotoc_md294", null ],
+          [ "5. Continuous Security Validation (Fuzzing)", "md_SECURITY.html#autotoc_md295", null ]
         ] ]
       ] ]
     ] ],
@@ -373,14 +376,15 @@ var NAVTREEINDEX =
 "001__primitives_8c.html",
 "302__aggregates_8c.html",
 "850__regression__cases_8c.html#a67c1cbb549407d754fe1894f74b40c3e",
-"Ch08__SharedArena_8c.html",
-"abi__sysv__x64_8c.html#abce30af3054b896adb3dd7040027a727",
-"double__tap_8h.html#a000b950ad68ead8ceb24148f0151ef9d",
-"group__error__api.html#ggaa01b3a24da70df184cec497c18aaee70ad23174064850ac25c853a5c89b65a7e1",
-"group__type__system.html#ga7ae858c5c8d9fc138d31c0be4421dcdb",
-"infix__internals_8h.html#ab44e698d3d035f746bd5be98c8c5d30c",
-"md_docs_2porting.html",
-"structinfix__direct__forward__abi__spec.html"
+"Ch08__CustomAllocators_8c.html#ab7d023a596bb5300782601a0fc0216d6",
+"abi__sysv__x64_8c.html#a8b01450fbfa3268f00d8bc24b73b9153",
+"dir_aebb8dcc11953d78e620bbef0b9e2183.html",
+"functions_f.html",
+"group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837",
+"group__type__system.html#gae1e13524aa726298058cb1774d87fc2b",
+"md_CHANGELOG.html#autotoc_md265",
+"signature_8c.html#a2e5af7bab951a6f564a809ba05609783",
+"structinfix__error__details__t.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

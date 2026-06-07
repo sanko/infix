@@ -19,9 +19,10 @@ var searchData=
   ['a64_5fcond_5fvs_16',['A64_COND_VS',['../abi__arm64__common_8h.html#aeb144f0ee2dc13b215473acc4e252c4dac1f908493e09f56e8d126ed90af83999',1,'abi_arm64_common.h']]],
   ['arg_5flocation_5fgpr_17',['ARG_LOCATION_GPR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a9b39a346147ae50d2f750d61390eae77',1,'infix_internals.h']]],
   ['arg_5flocation_5fgpr_5fpair_18',['ARG_LOCATION_GPR_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a50fa7f6383f87cf3c249ba7d3dfd4f2f',1,'infix_internals.h']]],
-  ['arg_5flocation_5finteger_5fsse_5fpair_19',['ARG_LOCATION_INTEGER_SSE_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096',1,'infix_internals.h']]],
-  ['arg_5flocation_5fsse_5finteger_5fpair_20',['ARG_LOCATION_SSE_INTEGER_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00',1,'infix_internals.h']]],
-  ['arg_5flocation_5fsse_5fsse_5fpair_21',['ARG_LOCATION_SSE_SSE_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277',1,'infix_internals.h']]],
-  ['arg_5flocation_5fstack_22',['ARG_LOCATION_STACK',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a57dd7a02a33aea12b547bc96bd73909b',1,'infix_internals.h']]],
-  ['arg_5flocation_5fxmm_23',['ARG_LOCATION_XMM',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a60e841f3dea3544b709c24b07c2a1821',1,'infix_internals.h']]]
+  ['arg_5flocation_5fgpr_5freference_19',['ARG_LOCATION_GPR_REFERENCE',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899ad0aab469f304d4c4ec9eb6d809a92053',1,'infix_internals.h']]],
+  ['arg_5flocation_5finteger_5fsse_5fpair_20',['ARG_LOCATION_INTEGER_SSE_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a8afd3b93ac0f10eb75f35cf793f46096',1,'infix_internals.h']]],
+  ['arg_5flocation_5fsse_5finteger_5fpair_21',['ARG_LOCATION_SSE_INTEGER_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899ab89c001fb62457a2cb8aa6aecd586d00',1,'infix_internals.h']]],
+  ['arg_5flocation_5fsse_5fsse_5fpair_22',['ARG_LOCATION_SSE_SSE_PAIR',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899ab003ad4a2051ae688c4b1f08d8f78277',1,'infix_internals.h']]],
+  ['arg_5flocation_5fstack_23',['ARG_LOCATION_STACK',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a57dd7a02a33aea12b547bc96bd73909b',1,'infix_internals.h']]],
+  ['arg_5flocation_5fxmm_24',['ARG_LOCATION_XMM',['../infix__internals_8h.html#a563afdbfea1331be68965428418c4899a60e841f3dea3544b709c24b07c2a1821',1,'infix_internals.h']]]
 ];

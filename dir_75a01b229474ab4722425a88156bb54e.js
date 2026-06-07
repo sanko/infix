@@ -41,6 +41,7 @@ var dir_75a01b229474ab4722425a88156bb54e =
     [ "840_arena_allocator.c", "840__arena__allocator_8c.html", "840__arena__allocator_8c" ],
     [ "850_regression_cases.c", "850__regression__cases_8c.html", "850__regression__cases_8c" ],
     [ "851_lifecycle_regression.c", "851__lifecycle__regression_8c.html", "851__lifecycle__regression_8c" ],
+    [ "852_rax_preservation.c", "852__rax__preservation_8c.html", "852__rax__preservation_8c" ],
     [ "860_error_handling.c", "860__error__handling_8c.html", "860__error__handling_8c" ],
     [ "861_error_reporting.c", "861__error__reporting_8c.html", "861__error__reporting_8c" ],
     [ "880_exports.c", "880__exports_8c.html", "880__exports_8c" ],

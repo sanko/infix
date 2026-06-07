@@ -1,0 +1,17 @@
+<map id="include/emit/emit_math.h" name="include/emit/emit_math.h">
+<area shape="rect" id="Node000001" title="Math operations for JIT code generation." alt="" coords="54,5,245,31"/>
+<area shape="rect" id="Node000002" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="117,79,181,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,31,152,65,147,65,147,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,88,251"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="142,32,108,80,87,115,72,153,55,212,49,211,67,151,83,113,103,77,138,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="211,225,282,251"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="162,29,200,79,221,114,237,151,245,182,248,211,243,212,239,183,232,153,216,116,196,82,157,32"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="102,152,197,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="152,104,152,138,147,138,147,104"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="137,106,114,127,91,154,73,184,59,214,54,211,68,181,87,150,110,124,133,102"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="166,102,189,123,212,150,229,181,241,211,236,213,224,183,207,154,185,127,162,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="134,180,76,219,73,215,131,175"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="112,225,187,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="152,178,152,212,147,212,147,178"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="167,175,221,215,218,219,163,180"/>
+</map>

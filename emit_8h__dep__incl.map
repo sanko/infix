@@ -1,0 +1,23 @@
+<map id="include/emit/emit.h" name="include/emit/emit.h">
+<area shape="rect" id="Node000001" title="Public API for the emit JIT code generation system." alt="" coords="355,5,505,31"/>
+<area shape="rect" id="Node000002" href="$emit__math_8h.html" title="Math operations for JIT code generation." alt="" coords="5,79,196,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="365,36,155,81,153,76,363,31"/>
+<area shape="rect" id="Node000003" href="$emit__math_8c.html" title="Math operations for JIT code generation (x86&#45;64 and ARM64)." alt="" coords="133,152,295,177"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="350,37,303,54,261,81,246,98,234,117,220,153,215,151,229,115,242,94,258,77,301,49,348,32"/>
+<area shape="rect" id="Node000005" href="$emit__elf_8c.html" title="ELF binary format support for emit system." alt="" coords="464,152,628,177"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="455,38,492,77,521,117,542,150,537,153,516,120,488,80,451,42"/>
+<area shape="rect" id="Node000006" href="$emit_8c.html" title="Implementation of the emit API for generating machine code." alt="" coords="319,152,439,177"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="454,40,472,70,475,88,471,105,459,122,444,135,411,154,409,150,441,131,455,118,466,103,470,88,467,72,449,43"/>
+<area shape="rect" id="Node000007" href="$emit__internals_8h.html" title="Internal structures for the emit JIT code generation system." alt="" coords="272,79,457,104"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="412,43,377,80,373,77,408,39"/>
+<area shape="rect" id="Node000008" href="$emit__pe_8c.html" title="PE binary format support for emit system." alt="" coords="585,79,747,104"/>
+<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="482,32,629,76,627,81,480,37"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="132,109,197,150,194,154,129,114"/>
+<area shape="rect" id="Node000004" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="420,225,504,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="268,179,423,223,421,228,266,184"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="524,188,477,227,474,223,520,184"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="405,184,450,223,447,227,401,188"/>
+<area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="329,112,240,154,238,149,327,107"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="372,117,380,151,374,152,367,118"/>
+<area shape="poly" id="edge13_Node000008_Node000004" title=" " alt="" coords="667,118,659,149,641,179,610,203,574,220,538,230,505,236,504,231,537,225,572,215,607,198,637,176,654,147,662,117"/>
+</map>

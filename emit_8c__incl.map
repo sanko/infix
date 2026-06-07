@@ -1,0 +1,35 @@
+<map id="src/emit/emit.c" name="src/emit/emit.c">
+<area shape="rect" id="Node000001" title="Implementation of the emit API for generating machine code." alt="" coords="507,5,627,31"/>
+<area shape="rect" id="Node000002" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="348,152,447,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="527,33,483,52,442,81,421,109,408,140,403,138,417,107,438,77,481,47,525,28"/>
+<area shape="rect" id="Node000007" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="145,152,320,177"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="537,33,417,81,269,149,267,144,415,76,535,28"/>
+<area shape="rect" id="Node000009" href="$emit__internals_8h.html" title="Internal structures for the emit JIT code generation system." alt="" coords="452,79,580,104"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="561,33,535,69,530,66,556,29"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="582,152,653,177"/>
+<area shape="poly" id="edge20_Node000001_Node000010" title=" " alt="" coords="575,30,595,78,614,138,609,139,590,80,570,32"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="677,152,748,177"/>
+<area shape="poly" id="edge21_Node000001_Node000011" title=" " alt="" coords="581,29,693,140,689,144,577,33"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="706,79,772,104"/>
+<area shape="poly" id="edge19_Node000001_Node000012" title=" " alt="" coords="596,28,699,71,697,76,594,33"/>
+<area shape="rect" id="Node000003" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="270,225,365,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="387,179,343,218,339,214,383,175"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="319,299,402,324"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="397,178,379,251,370,286,364,285,374,250,392,177"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="469,299,540,324"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="409,176,490,286,486,289,404,179"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="327,250,349,286,344,288,322,252"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="107,299,182,324"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="291,253,186,296,184,291,289,248"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="349,248,462,291,460,296,347,253"/>
+<area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="248,175,295,214,292,219,244,179"/>
+<area shape="poly" id="edge11_Node000007_Node000004" title=" " alt="" coords="236,177,242,212,249,231,260,249,286,273,317,291,314,295,283,278,256,252,244,234,237,213,231,178"/>
+<area shape="poly" id="edge12_Node000007_Node000005" title=" " alt="" coords="152,180,68,199,35,212,14,227,9,239,10,249,16,259,27,268,58,284,95,296,93,301,56,289,24,272,12,262,4,251,4,238,10,224,32,207,67,194,151,175"/>
+<area shape="rect" id="Node000008" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="25,225,194,251"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="214,180,143,221,140,216,211,175"/>
+<area shape="poly" id="edge14_Node000009_Node000002" title=" " alt="" coords="499,106,430,147,428,142,496,102"/>
+<area shape="poly" id="edge15_Node000009_Node000004" title=" " alt="" coords="511,106,461,179,379,289,375,286,457,176,507,103"/>
+<area shape="poly" id="edge16_Node000009_Node000006" title=" " alt="" coords="518,104,508,285,503,284,513,104"/>
+<area shape="poly" id="edge17_Node000009_Node000010" title=" " alt="" coords="534,102,591,142,588,146,531,106"/>
+<area shape="poly" id="edge18_Node000009_Node000011" title=" " alt="" coords="549,102,668,145,667,150,547,107"/>
+</map>
