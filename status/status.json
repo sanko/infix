@@ -1,5 +1,5 @@
 {
-"dragonflybsd-x86_64-gcc": "👍🏽 passing"
+"dragonflybsd-x86_64-gcc": "👎🏽 failing"
 ,
 "freebsd-aarch64-clang": "👍🏽 passing"
 ,
@@ -19,7 +19,7 @@
 ,
 "netbsd-aarch64-gcc": "👍🏽 passing"
 ,
-"netbsd-x86_64-gcc": "👍🏽 passing"
+"netbsd-x86_64-gcc": "👎🏽 failing"
 ,
 "omnios-x86_64-gcc": "👍🏽 passing"
 ,
