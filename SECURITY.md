@@ -22,8 +22,6 @@ I take all security vulnerabilities seriously. To protect the project's users, I
 
 The preferred and most secure method for reporting is through **[GitHub's private vulnerability reporting feature](https://github.com/sanko/infix/security/advisories/new)**. This creates a private advisory and opens a direct, secure line of communication.
 
-If you are unable to use GitHub's reporting feature, you may send an email to [sanko@cpan.org](mailto:sanko@cpan.org).
-
 Please include the following information in your report:
 
 *   A detailed description of the vulnerability and how to reproduce it.
