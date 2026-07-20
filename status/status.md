@@ -1,7 +1,7 @@
 ## Build and Test Summary
 | OS | Arch | Compiler | Result |
 |:---|:---|:---|:---|
-| **dragonflybsd** | `x86_64` | `gcc` | ❌ failure |
+| **dragonflybsd** | `x86_64` | `gcc` | ✅ success |
 | **freebsd** | `aarch64` | `clang` | ✅ success |
 | **freebsd** | `aarch64` | `gcc` | ✅ success |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
@@ -11,7 +11,7 @@
 | **macos** | `x86_64` | `clang` | ✅ success |
 | **macos** | `x86_64` | `gcc` | ✅ success |
 | **netbsd** | `aarch64` | `gcc` | ✅ success |
-| **netbsd** | `x86_64` | `gcc` | ❌ failure |
+| **netbsd** | `x86_64` | `gcc` | ✅ success |
 | **omnios** | `x86_64` | `gcc` | ✅ success |
 | **openbsd** | `aarch64` | `clang` | ✅ success |
 | **openbsd** | `aarch64` | `egcc` | ✅ success |
