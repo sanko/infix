@@ -244,6 +244,8 @@ static bool _layout_struct(infix_type * type) {
             size_t align = mtype->alignment;
             if (align == 0)
                 align = 1;
+            if (type->meta.aggregate_info.is_packed)
+                align = 1;
             if (align > max_alignment && !type->meta.aggregate_info.is_packed)
                 max_alignment = align;
 
@@ -281,6 +283,8 @@ static bool _layout_struct(infix_type * type) {
                 size_t align = mtype->alignment;
                 if (align == 0)
                     align = 1;
+                if (type->meta.aggregate_info.is_packed)
+                    align = 1;
 
                 if (align > max_alignment && !type->meta.aggregate_info.is_packed)
                     max_alignment = align;
@@ -300,6 +304,8 @@ static bool _layout_struct(infix_type * type) {
             in_bitfield = false;
             size_t align = mtype->alignment;
             if (align == 0)
+                align = 1;
+            if (type->meta.aggregate_info.is_packed)
                 align = 1;
 
             if (align > max_alignment && !type->meta.aggregate_info.is_packed)

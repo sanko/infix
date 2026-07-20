@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This release fixes RAX register preservation in x64 reverse trampolines.
+This release fixes RAX register preservation in x64 reverse trampolines and fixes packed struct layout.
 
 ### Fixed
 
+- Fixed packed struct layout in `_layout_struct` where `is_packed` only suppressed struct-level alignment updates but did not force member alignment to 1, causing inter-member padding to be incorrectly inserted. Standard members, bitfield members, and flexible array members are now all correctly packed.
 - RAX register is now saved and restored in the Windows x64 reverse trampoline epilogue for void functions, preventing clobber of the return value register.
 - SysV x64 reverse trampoline now handles `ARG_LOCATION_GPR_REFERENCE` for aggregates >16 bytes passed by reference.
 - Corrected handling of aggregates classified as `MEMORY` during reverse trampoline calls in SysV. The `stack_arg_offset` was adjusted from 24 to 16, and `MEMORY`-class arguments now correctly set `is_from_stack = true`.
