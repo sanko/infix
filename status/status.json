@@ -1,5 +1,5 @@
 {
-"dragonflybsd-x86_64-gcc": "👎🏽 failing"
+"dragonflybsd-x86_64-gcc": "👍🏽 passing"
 ,
 "freebsd-aarch64-clang": "👍🏽 passing"
 ,
