@@ -1,9 +1,9 @@
 {
 "dragonflybsd-x86_64-gcc": "👍🏽 passing"
 ,
-"freebsd-aarch64-clang": "👍🏽 passing"
+"freebsd-aarch64-clang": "👎🏽 failing"
 ,
-"freebsd-aarch64-gcc": "👍🏽 passing"
+"freebsd-aarch64-gcc": "👎🏽 failing"
 ,
 "freebsd-x86_64-clang": "👍🏽 passing"
 ,
@@ -17,15 +17,15 @@
 ,
 "macos-x86_64-gcc": "👍🏽 passing"
 ,
-"netbsd-aarch64-gcc": "👍🏽 passing"
+"netbsd-aarch64-gcc": "👎🏽 failing"
 ,
 "netbsd-x86_64-gcc": "👍🏽 passing"
 ,
 "omnios-x86_64-gcc": "👍🏽 passing"
 ,
-"openbsd-aarch64-clang": "👍🏽 passing"
+"openbsd-aarch64-clang": "👎🏽 failing"
 ,
-"openbsd-aarch64-egcc": "👍🏽 passing"
+"openbsd-aarch64-egcc": "👎🏽 failing"
 ,
 "openbsd-x86_64-clang": "👍🏽 passing"
 ,
@@ -33,9 +33,9 @@
 ,
 "solaris-x86_64-gcc": "👍🏽 passing"
 ,
-"ubuntu-aarch64-clang": "👍🏽 passing"
+"ubuntu-aarch64-clang": "👎🏽 failing"
 ,
-"ubuntu-aarch64-gcc": "👍🏽 passing"
+"ubuntu-aarch64-gcc": "👎🏽 failing"
 ,
 "ubuntu-riscv64-clang": "👎🏽 failing"
 ,
@@ -49,7 +49,7 @@
 ,
 "windows-aarch64-gcc": "👍🏽 passing"
 ,
-"windows-aarch64-msvc": "👍🏽 passing"
+"windows-aarch64-msvc": "👎🏽 failing"
 ,
 "windows-x86_64-clang": "👍🏽 passing"
 ,
