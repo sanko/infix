@@ -43,7 +43,7 @@ typedef struct {
     int c;
     long long d;
 } packed_mixed;
-#pragma pack()
+#pragma pack(pop)
 
 PackedABC return_packed_abc(void) { return (PackedABC){42, -66, 99}; }
 PackedTiny return_packed_tiny(void) { return (PackedTiny){-1, 300}; }
