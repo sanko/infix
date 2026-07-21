@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This release fixes RAX register preservation in x64 reverse trampolines and fixes packed struct layout.
+This release fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
 
 ### Fixed
 
 - Fixed packed struct layout in `_layout_struct` where `is_packed` only suppressed struct-level alignment updates but did not force member alignment to 1, causing inter-member padding to be incorrectly inserted. Standard members, bitfield members, and flexible array members are now all correctly packed.
 - Fixed packed struct by-value returns reading all fields at offset 0. `infix_type_create_packed_struct` was not calling `_layout_struct`, so member offsets remained at zero when the type was created via the signature parser. The offsets are now computed at creation time with `is_packed` enforcement (alignment=1 for all members).
-- Fixed ARM64 forward trampoline epilogue silently dropping return values for non-power-of-2 sized structs (3, 5, 6, 7, 9-15 bytes). The `switch(ret_type->size)` only handled sizes {1, 2, 4, 8, 16}; all other sizes hit `default: break;` and wrote zero bytes from X0/X1 into the return buffer. A generic fallback now decomposes any size into the correct sequence of byte/halfword/word stores from X0 and X1.
+- Fixed ARM64 forward trampoline epilogue silently dropping return values for non-power-of-2 sized structs (3, 5, 6, 7, 9-15 bytes). The `switch(ret_type->size)` only handled sizes {1, 2, 4, 8, 16}; all other sizes hit `default: break;` and wrote zero bytes from X0/X1 into the return buffer. A generic fallback now decomposes any size into the correct sequence of stores from X0 and X1, using LSR (UBFM) to shift bytes into position before sub-register stores (STRH/STRB) which only read the low bits.
 - RAX register is now saved and restored in the Windows x64 reverse trampoline epilogue for void functions, preventing clobber of the return value register.
 - SysV x64 reverse trampoline now handles `ARG_LOCATION_GPR_REFERENCE` for aggregates >16 bytes passed by reference.
 - Corrected handling of aggregates classified as `MEMORY` during reverse trampoline calls in SysV. The `stack_arg_offset` was adjusted from 24 to 16, and `MEMORY`-class arguments now correctly set `is_from_stack = true`.

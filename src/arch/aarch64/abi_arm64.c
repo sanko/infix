@@ -286,8 +286,8 @@ static infix_status prepare_forward_call_frame_arm64(infix_arena_t * arena,
     layout->num_stack_args = 0;
     // Determine if the return value is passed by reference (via hidden pointer in X8).
     // HFAs/HVAs are always returned in V0-V3 registers regardless of size, so they
-    // are never indirect. AAPCS64 returns composites <= 16 bytes in X0/X1 and only
-    // uses X8 (Memory strategy) for composites > 16 bytes.
+    // are never indirect. Composites <= 16 bytes are returned in X0/X1; larger ones
+    // use the Memory strategy (X8 points to caller-allocated buffer).
     bool ret_is_aggregate = (ret_type->category == INFIX_TYPE_STRUCT || ret_type->category == INFIX_TYPE_UNION ||
                              ret_type->category == INFIX_TYPE_ARRAY || ret_type->category == INFIX_TYPE_COMPLEX);
     const infix_type * hfa_base = nullptr;
