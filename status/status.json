@@ -9,9 +9,9 @@
 ,
 "freebsd-x86_64-gcc": "👍🏽 passing"
 ,
-"macos-aarch64-clang": "👎🏽 failing"
+"macos-aarch64-clang": "👍🏽 passing"
 ,
-"macos-aarch64-gcc": "👎🏽 failing"
+"macos-aarch64-gcc": "👍🏽 passing"
 ,
 "macos-x86_64-clang": "👍🏽 passing"
 ,

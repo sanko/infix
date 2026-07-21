@@ -6,8 +6,8 @@
 | **freebsd** | `aarch64` | `gcc` | ❌ failure |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
 | **freebsd** | `x86_64` | `gcc` | ✅ success |
-| **macos** | `aarch64` | `clang` | ❌ failure |
-| **macos** | `aarch64` | `gcc` | ❌ failure |
+| **macos** | `aarch64` | `clang` | ✅ success |
+| **macos** | `aarch64` | `gcc` | ✅ success |
 | **macos** | `x86_64` | `clang` | ✅ success |
 | **macos** | `x86_64` | `gcc` | ✅ success |
 | **netbsd** | `aarch64` | `gcc` | ❌ failure |
