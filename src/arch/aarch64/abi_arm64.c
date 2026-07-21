@@ -716,7 +716,44 @@ static infix_status generate_forward_epilogue_arm64(code_buffer * buf,
                 emit_arm64_str_imm(buf, true, X1_REG, X20_REG, 8);
                 break;
             default:
-                break;
+                {
+                    // Generic fallback for non-power-of-2 return sizes (3,5, 6, 7, 9-15).
+                    // AAPCS64: structs <= 16 bytes are returned in X0 (first 8) and X1 (bytes 8-15).
+                    size_t size = ret_type->size;
+                    // Store from X0 (bytes 0..min(size,8)-1)
+                    size_t x0_bytes = size < 8 ? size : 8;
+                    size_t off = 0;
+                    if (x0_bytes >= 4) {
+                        emit_arm64_str_imm(buf, false, X0_REG, X20_REG, (int32_t)off);
+                        off += 4;
+                        x0_bytes -= 4;
+                    }
+                    if (x0_bytes >= 2) {
+                        emit_arm64_strh_imm(buf, X0_REG, X20_REG, (int32_t)off);
+                        off += 2;
+                        x0_bytes -= 2;
+                    }
+                    if (x0_bytes >= 1)
+                        emit_arm64_strb_imm(buf, X0_REG, X20_REG, (int32_t)off);
+                    // Store from X1 (bytes 8..size-1) for structs > 8 bytes
+                    if (size > 8) {
+                        size_t x1_bytes = size - 8;
+                        off = 8;
+                        if (x1_bytes >= 4) {
+                            emit_arm64_str_imm(buf, false, X1_REG, X20_REG, (int32_t)off);
+                            off += 4;
+                            x1_bytes -= 4;
+                        }
+                        if (x1_bytes >= 2) {
+                            emit_arm64_strh_imm(buf, X1_REG, X20_REG, (int32_t)off);
+                            off += 2;
+                            x1_bytes -= 2;
+                        }
+                        if (x1_bytes >= 1)
+                            emit_arm64_strb_imm(buf, X1_REG, X20_REG, (int32_t)off);
+                    }
+                    break;
+                }
             }
         }
     }
@@ -1564,7 +1601,41 @@ static infix_status generate_direct_forward_epilogue_arm64(code_buffer * buf,
                 emit_arm64_str_imm(buf, true, X1_REG, X20_REG, 8);
                 break;
             default:
-                break;
+                {
+                    // Generic fallback for non-power-of-2 return sizes (3,5, 6, 7, 9-15).
+                    size_t size = ret_type->size;
+                    size_t x0_bytes = size < 8 ? size : 8;
+                    size_t off = 0;
+                    if (x0_bytes >= 4) {
+                        emit_arm64_str_imm(buf, false, X0_REG, X20_REG, (int32_t)off);
+                        off += 4;
+                        x0_bytes -= 4;
+                    }
+                    if (x0_bytes >= 2) {
+                        emit_arm64_strh_imm(buf, X0_REG, X20_REG, (int32_t)off);
+                        off += 2;
+                        x0_bytes -= 2;
+                    }
+                    if (x0_bytes >= 1)
+                        emit_arm64_strb_imm(buf, X0_REG, X20_REG, (int32_t)off);
+                    if (size > 8) {
+                        size_t x1_bytes = size - 8;
+                        off = 8;
+                        if (x1_bytes >= 4) {
+                            emit_arm64_str_imm(buf, false, X1_REG, X20_REG, (int32_t)off);
+                            off += 4;
+                            x1_bytes -= 4;
+                        }
+                        if (x1_bytes >= 2) {
+                            emit_arm64_strh_imm(buf, X1_REG, X20_REG, (int32_t)off);
+                            off += 2;
+                            x1_bytes -= 2;
+                        }
+                        if (x1_bytes >= 1)
+                            emit_arm64_strb_imm(buf, X1_REG, X20_REG, (int32_t)off);
+                    }
+                    break;
+                }
             }
         }
     }

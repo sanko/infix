@@ -63,3 +63,34 @@ typedef struct {
 typedef struct {
     int a, b, c;
 } NonPowerOfTwoStruct;
+/**
+ * @brief Packed struct with size 9, used to test by-value return through forward trampolines.
+ * @details On AAPCS64, a 9-byte struct is returned in X0 (bytes 0-7) and X1 (byte 8).
+ *          The epilogue must correctly decompose the store into X0 and X1 parts.
+ */
+#pragma pack(push, 1)
+typedef struct {
+    int32_t a;
+    int8_t b;
+    int32_t c;
+} PackedABC;
+#pragma pack(pop)
+/**
+ * @brief Packed struct with size 3, used to test non-power-of-2 return sizes.
+ */
+#pragma pack(push, 1)
+typedef struct {
+    int8_t a;
+    int16_t b;
+} PackedTiny;
+#pragma pack(pop)
+/**
+ * @brief Packed struct with size 6, used to test non-power-of-2 return sizes.
+ */
+#pragma pack(push, 1)
+typedef struct {
+    int8_t a;
+    int8_t b;
+    int32_t c;
+} PackedSix;
+#pragma pack(pop)
