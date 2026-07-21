@@ -766,6 +766,11 @@ INFIX_API c23_nodiscard infix_status infix_type_create_packed_struct(infix_arena
     type->meta.aggregate_info.members = arena_members;
     type->meta.aggregate_info.num_members = num_members;
     type->meta.aggregate_info.is_packed = true;  // Marked as packed
+    // Calculate member offsets (with alignment=1 for all members).
+    if (!_layout_struct(type)) {
+        *out_type = nullptr;
+        return INFIX_ERROR_INVALID_ARGUMENT;
+    }
     *out_type = type;
     return INFIX_SUCCESS;
 }

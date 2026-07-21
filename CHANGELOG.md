@@ -12,6 +12,7 @@ This release fixes RAX register preservation in x64 reverse trampolines and fixe
 ### Fixed
 
 - Fixed packed struct layout in `_layout_struct` where `is_packed` only suppressed struct-level alignment updates but did not force member alignment to 1, causing inter-member padding to be incorrectly inserted. Standard members, bitfield members, and flexible array members are now all correctly packed.
+- Fixed packed struct by-value returns reading all fields at offset 0. `infix_type_create_packed_struct` was not calling `_layout_struct`, so member offsets remained at zero when the type was created via the signature parser. The offsets are now computed at creation time with `is_packed` enforcement (alignment=1 for all members).
 - RAX register is now saved and restored in the Windows x64 reverse trampoline epilogue for void functions, preventing clobber of the return value register.
 - SysV x64 reverse trampoline now handles `ARG_LOCATION_GPR_REFERENCE` for aggregates >16 bytes passed by reference.
 - Corrected handling of aggregates classified as `MEMORY` during reverse trampoline calls in SysV. The `stack_arg_offset` was adjusted from 24 to 16, and `MEMORY`-class arguments now correctly set `is_from_stack = true`.
