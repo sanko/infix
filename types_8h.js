@@ -8,5 +8,8 @@ var types_8h =
     [ "MixedIntDouble", "structMixedIntDouble.html", "structMixedIntDouble" ],
     [ "PointerStruct", "structPointerStruct.html", "structPointerStruct" ],
     [ "PackedStruct", "structPackedStruct.html", "structPackedStruct" ],
-    [ "NonPowerOfTwoStruct", "structNonPowerOfTwoStruct.html", "structNonPowerOfTwoStruct" ]
+    [ "NonPowerOfTwoStruct", "structNonPowerOfTwoStruct.html", "structNonPowerOfTwoStruct" ],
+    [ "PackedABC", "structPackedABC.html", "structPackedABC" ],
+    [ "PackedTiny", "structPackedTiny.html", "structPackedTiny" ],
+    [ "PackedSix", "structPackedSix.html", "structPackedSix" ]
 ];

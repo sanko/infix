@@ -12,6 +12,7 @@ var searchData=
   ['852_5frax_5fpreservation_2ec_9',['852_rax_preservation.c',['../852__rax__preservation_8c.html',1,'']]],
   ['860_5ferror_5fhandling_2ec_10',['860_error_handling.c',['../860__error__handling_8c.html',1,'']]],
   ['861_5ferror_5freporting_2ec_11',['861_error_reporting.c',['../861__error__reporting_8c.html',1,'']]],
-  ['880_5fexports_2ec_12',['880_exports.c',['../880__exports_8c.html',1,'']]],
-  ['8_3a_20performance_20memory_20management_13',['Chapter 8: Performance &amp; Memory Management',['../md_docs_2cookbook.html#autotoc_md124',1,'']]]
+  ['862_5fpacked_5flayout_2ec_12',['862_packed_layout.c',['../862__packed__layout_8c.html',1,'']]],
+  ['880_5fexports_2ec_13',['880_exports.c',['../880__exports_8c.html',1,'']]],
+  ['8_3a_20performance_20memory_20management_14',['Chapter 8: Performance &amp; Memory Management',['../md_docs_2cookbook.html#autotoc_md124',1,'']]]
 ];
