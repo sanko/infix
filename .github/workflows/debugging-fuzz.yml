@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload Crash Artifacts
         if: steps.test-execution.outcome == 'failure'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           # The artifact name now embeds the harness name, which is key for the re-test job
           name: crash-artifact,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}
@@ -60,7 +60,7 @@ jobs:
 
       - name: Upload Build Status Artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: result-artifact-fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result
           path: fuzz,${{ inputs.harness }},${{ inputs.os }},${{ inputs.abi }}.result

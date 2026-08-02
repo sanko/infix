@@ -78,7 +78,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang perl
 
       - name: Download all crash artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           pattern: crash-artifact-*
           path: crash_artifacts/
@@ -163,7 +163,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all result artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           pattern: result-artifact-*
           path: results/
