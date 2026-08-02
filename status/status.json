@@ -19,7 +19,7 @@
 ,
 "netbsd-aarch64-gcc": "👍🏽 passing"
 ,
-"netbsd-x86_64-gcc": "👎🏽 failing"
+"netbsd-x86_64-gcc": "👍🏽 passing"
 ,
 "omnios-x86_64-gcc": "👍🏽 passing"
 ,
