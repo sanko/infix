@@ -109,15 +109,18 @@ static void * tracked_calloc(size_t nelem, size_t size) {
 
 static void * tracked_realloc(void * ptr, size_t new_size) {
     // realloc(NULL, n) acts like malloc; realloc(p, 0) frees p. Either way the
-    // old block is invalidated (or, on failure, still owned. Keep reading).
-    void * p = realloc(ptr, new_size);
-    tracked_realloc_count++;
+    // old block is invalidated on success, so it is retired from the live set
+    // *before* calling realloc and never read afterwards - GCC's -Wuse-after-free
+    // (on by default at -O2 since GCC 12) otherwise flags the comparison even
+    // though the pointer is never dereferenced. A failed realloc leaves the old
+    // block live but untracked; realloc cannot fail in this test, so that case
+    // never occurs and is not part of the balance check.
     if (ptr != NULL)
         tracked_remove(ptr);
+    void * p = realloc(ptr, new_size);
+    tracked_realloc_count++;
     if (p != NULL)
         tracked_add(p);
-    else if (ptr != NULL && new_size > 0)
-        tracked_add(ptr);  // realloc failed; the original block is still live.
     return p;
 }
 
@@ -135,15 +138,41 @@ static const infix_allocator_t tracked_allocator = {
 /** @brief Total blocks handed out by the tracking allocator (malloc + calloc). */
 static size_t tracked_total_alloc(void) { return tracked_alloc_count + tracked_calloc_count; }
 
+// The libc defaults are verified behaviorally rather than by pointer identity.
+// With MSVC's incremental linking (/INCREMENTAL, the default whenever the
+// linker emits a PDB under /Zi), a function pointer stored in a global's
+// static initializer (allocator.c) can be fixed up to a different address than
+// a local reference to the same symbol (e.g. `malloc` here), so
+// `infix_allocator.malloc == malloc` is not reliably true. What the test
+// actually needs - that the table is populated, that all four slots work, and
+// that none of them route through the tracking allocator - is what this checks.
+static void ok_libc_defaults(const char * label) {
+    ok(infix_allocator.malloc != NULL && infix_allocator.calloc != NULL && infix_allocator.realloc != NULL &&
+           infix_allocator.free != NULL,
+       "%s: all four slots are populated",
+       label);
+    size_t before = tracked_total_alloc();
+    void * probe = infix_allocator.malloc(64);
+    infix_allocator.free(probe);
+    probe = infix_allocator.calloc(2, 32);
+    infix_allocator.free(probe);
+    probe = infix_allocator.malloc(32);
+    probe = infix_allocator.realloc(probe, 64);
+    infix_allocator.free(probe);
+    ok(tracked_total_alloc() == before, "%s: malloc/calloc/realloc roundtrip bypasses the tracking allocator", label);
+    ok(infix_allocator.malloc != tracked_malloc && infix_allocator.free != tracked_free,
+       "%s: slots are not the tracking allocator",
+       label);
+}
+
 TEST {
     plan(3);
     subtest("installing and restoring the allocator") {
-        plan(11);
+        plan(13);
         tracked_reset();
 
         // Before any install, the table must default to the C library.
-        ok(infix_allocator.malloc == malloc, "default malloc slot is libc malloc");
-        ok(infix_allocator.free == free, "default free slot is libc free");
+        ok_libc_defaults("default");
         //
         infix_set_allocator(&tracked_allocator);
         ok(infix_allocator.malloc == tracked_malloc, "installed malloc slot is the tracking malloc");
@@ -158,15 +187,14 @@ TEST {
         ok(arena != nullptr, "infix_arena_create succeeds under the tracking allocator");
         infix_arena_destroy(arena);
         ok(tracked_total_alloc() > 0 && tracked_total_alloc() == tracked_free_count && tracked_live_count == 0,
-           "arena lifecycle balanced through the tracking allocator (%zu alloc, %zu free, %zu live)",
-           tracked_total_alloc(),
-           tracked_free_count,
-           tracked_live_count);
+           "arena lifecycle balanced through the tracking allocator (%llu alloc, %llu free, %llu live)",
+           (unsigned long long)tracked_total_alloc(),
+           (unsigned long long)tracked_free_count,
+           (unsigned long long)tracked_live_count);
 
         // Restoring with NULL must hand the table back to libc.
         infix_set_allocator(NULL);
-        ok(infix_allocator.malloc == malloc, "restoring with NULL returns the malloc slot to libc");
-        ok(infix_allocator.free == free, "restoring with NULL returns the free slot to libc");
+        ok_libc_defaults("restored");
         size_t before = tracked_total_alloc();
         arena = infix_arena_create(512);
         infix_arena_destroy(arena);
@@ -207,15 +235,15 @@ TEST {
         infix_registry_destroy(registry);
         //
         ok(tracked_alloc_count > 0 && tracked_calloc_count > 0 && tracked_realloc_count > 0,
-           "malloc/calloc/realloc all reached the tracking table (%zu/%zu/%zu)",
-           tracked_alloc_count,
-           tracked_calloc_count,
-           tracked_realloc_count);
+           "malloc/calloc/realloc all reached the tracking table (%llu/%llu/%llu)",
+           (unsigned long long)tracked_alloc_count,
+           (unsigned long long)tracked_calloc_count,
+           (unsigned long long)tracked_realloc_count);
         ok(tracked_total_alloc() == tracked_free_count && tracked_live_count == 0 && !tracked_unmatched_free,
-           "every allocation freed through the same custom allocator (%zu alloc, %zu free, %zu live)",
-           tracked_total_alloc(),
-           tracked_free_count,
-           tracked_live_count);
+           "every allocation freed through the same custom allocator (%llu alloc, %llu free, %llu live)",
+           (unsigned long long)tracked_total_alloc(),
+           (unsigned long long)tracked_free_count,
+           (unsigned long long)tracked_live_count);
         //
         infix_set_allocator(NULL);
     }
@@ -234,9 +262,9 @@ TEST {
         infix_forward_destroy(a);
         _infix_cache_clear();  // Free A's cached trampoline through the tracker.
         ok(tracked_total_alloc() == tracked_free_count && tracked_live_count == 0 && !tracked_unmatched_free,
-           "trampoline A fully balanced through the tracking allocator (%zu alloc, %zu free)",
-           tracked_total_alloc(),
-           tracked_free_count);
+           "trampoline A fully balanced through the tracking allocator (%llu alloc, %llu free)",
+           (unsigned long long)tracked_total_alloc(),
+           (unsigned long long)tracked_free_count);
 
         // Switch allocators BETWEEN objects. Object B's whole life is under
         // libc, so the tracking counters must stay untouched.
