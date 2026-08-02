@@ -29,7 +29,7 @@ Both `infix_forward_t` and `infix_reverse_t` are designed as **self-contained ob
 
 #### Arena-Based Manual API
 The low-level, "manual" API for creating `infix_type` objects is **exclusively arena-based**.
-*   **Rationale:** The old rule—"the library takes ownership on success, the caller owns on failure"—is a notorious source of memory leaks. By forcing the use of an arena, we eliminate this entire class of bugs. The user's responsibility is simplified to a single pattern: create an arena, perform all type creations, and destroy the arena once.
+*   **Rationale:** The old rule "the library takes ownership on success, the caller owns on failure" is a notorious source of memory leaks. By forcing the use of an arena, we eliminate this entire class of bugs. The user's responsibility is simplified to a single pattern: create an arena, perform all type creations, and destroy the arena once.
 
 #### A Dual-Model API for Callbacks and Closures
 The reverse call API is built on a dual model to serve two distinct audiences with different needs.

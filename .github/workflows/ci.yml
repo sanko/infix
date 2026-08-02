@@ -156,7 +156,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all result artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           pattern: result-artifact-*
           path: results/
@@ -198,7 +198,7 @@ jobs:
           echo "}" >> $STATUS_JSON
           cat $SUMMARY_MD >> $GITHUB_STEP_SUMMARY
       - name: Upload Status Artifact for Publishing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: status-files
           path: status/
@@ -212,7 +212,7 @@ jobs:
     steps:
       - name: Download status files
         #~ if: success() || failure()
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: status-files
           path: ./status

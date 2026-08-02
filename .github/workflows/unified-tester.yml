@@ -46,7 +46,7 @@ jobs:
 
       - name: Setup MSVC
         if: inputs.toolchain == 'msvc'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4.1.0
         with:
           arch: ${{ inputs.arch == 'aarch64' && 'arm64' || 'x64' }}
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build and Test in FreeBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'freebsd'
-        uses: vmactions/freebsd-vm@v1.3.7
+        uses: vmactions/freebsd-vm@v1.5.2
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build and Test in OpenBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'openbsd'
-        uses: vmactions/openbsd-vm@v1.3.1
+        uses: vmactions/openbsd-vm@v1.4.5
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -81,7 +81,7 @@ jobs:
 
       - name: Build and Test in NetBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'netbsd'
-        uses: vmactions/netbsd-vm@v1.3.1
+        uses: vmactions/netbsd-vm@v1.4.5
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -92,7 +92,7 @@ jobs:
 
       - name: Build and Test in DragonflyBSD
         if: inputs.runner_type == 'vm' && inputs.os == 'dragonflybsd'
-        uses: vmactions/dragonflybsd-vm@v1.2.1
+        uses: vmactions/dragonflybsd-vm@v1.3.1
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -102,7 +102,7 @@ jobs:
 
       - name: Build and Test in Solaris
         if: inputs.runner_type == 'vm' && inputs.os == 'solaris'
-        uses: vmactions/solaris-vm@v1.2.6
+        uses: vmactions/solaris-vm@v1.3.8
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -112,7 +112,7 @@ jobs:
 
       - name: Build and Test in OmniOS
         if: inputs.runner_type == 'vm' && inputs.os == 'omnios'
-        uses: vmactions/omnios-vm@v1.2.1
+        uses: vmactions/omnios-vm@v1.3.4
         with:
           release: ${{ inputs.os_version }}
           usesh: true
@@ -136,7 +136,7 @@ jobs:
 
       - name: Upload Build Status Artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: result-artifact-${{ inputs.platform_name }}-${{ inputs.arch }}-${{ inputs.toolchain }}
           path: ${{ inputs.platform_name }}-${{ inputs.arch }}-${{ inputs.toolchain }}.result

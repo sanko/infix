@@ -1358,21 +1358,54 @@ infix_forward_create_manual(&trampoline, point_type, arg_types, 2, 2, (void*)mov
 
 **Problem**: Your application uses a custom memory manager for tracking, pooling, or integration with a garbage collector. You need `infix` to use your allocators instead of the standard `malloc`, `calloc`, etc.
 
-**Solution**: `infix` provides override macros (`infix_malloc`, `infix_free`, etc.). Define these macros *before* you include `infix.h` to redirect all of its internal memory operations.
+**Solution**: Install your allocator at runtime with `infix_set_allocator()`. This works whether `infix` is built from source or consumed as a precompiled library, and it is safe to call before `infix` is used from multiple threads.
 
 ```c
-// 1. Define your custom memory management functions.
-static void* tracking_malloc(size_t size) { /* ... */ }
-static void tracking_free(void* ptr) { /* ... */ }
+#include <infix/infix.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-// 2. Define the infix override macros BEFORE including infix.h
+static size_t g_total_allocated = 0;
+
+static void* tracking_malloc(size_t size) {
+    g_total_allocated += size;
+    return malloc(size);
+}
+
+static void tracking_free(void* ptr) {
+    // A real tracking allocator would need to know the size of the block
+    // being freed; for this example we just log the call.
+    printf(">> Custom Free: %p\n", (void*)ptr);
+    free(ptr);
+}
+
+int main(void) {
+    static const infix_allocator_t tracking = {
+        .malloc  = tracking_malloc,
+        .calloc  = calloc,        // or your own calloc/realloc
+        .realloc = realloc,
+        .free    = tracking_free,
+    };
+    infix_set_allocator(&tracking);
+
+    // All internal allocations now go through the callbacks above.
+    infix_forward_t* trampoline = NULL;
+    infix_forward_create(&trampoline, "()->void", (void*)dummy_func, NULL);
+
+    // Any infix-owned memory you release must go through the same allocator.
+    infix_forward_destroy(trampoline); // uses tracking_free internally
+    return 0;
+}
+```
+
+**Compile-time alternative**: If you build `infix` from source and want zero runtime overhead, define the `infix_malloc`, `infix_free`, etc., macros *before* including `infix.h`. All four must be defined consistently, and anything that frees infix-owned memory must use `infix_free`.
+
+```c
 #define infix_malloc(size) tracking_malloc(size)
 #define infix_free(ptr)    tracking_free(ptr)
-
+#define infix_calloc(a, b) tracking_calloc(a, b)
+#define infix_realloc(p, n) tracking_realloc(p, n)
 #include <infix/infix.h>
-
-// Now, all calls like infix_forward_create will use your allocators.
-infix_forward_create(&trampoline, "()->void", (void*)dummy_func, NULL);
 ```
 
 > Full example available in [`Ch08_CustomAllocators.c`](/eg/cookbook/Ch08_CustomAllocators.c).
@@ -1465,7 +1498,7 @@ void dynamic_ffi_call(infix_forward_t* trampoline, ...) {
 
 2.  **Performance**: The allocations within the arena are extremely fast "bump" allocations, which is significantly cheaper than heap allocation, especially for many small objects.
 
-3.  **Simplified Cleanup**: All temporary data for the call—the `void**` array and the unboxed C values—lives in the arena. A single call to `infix_arena_destroy` cleans everything up instantly, eliminating the risk of memory leaks from forgetting to `free` one of the many small allocations.
+3.  **Simplified Cleanup**: All temporary data for the call (the `void**` array and the unboxed C values) lives in the arena. A single call to `infix_arena_destroy` cleans everything up instantly, eliminating the risk of memory leaks from forgetting to `free` one of the many small allocations.
 
 #### Advanced Optimization: Arena Resetting for Hot Loops
 

@@ -6,18 +6,20 @@
  * manager. This is useful for applications that need to track allocations,
  * use a memory pool, or integrate with a garbage collector.
  *
- * The mechanism is simple: define the `infix_malloc`, `infix_free`, etc.,
- * macros *before* including `infix.h`. All internal memory operations in the
- * library will then be redirected to your custom functions.
+ * The recommended mechanism is `infix_set_allocator()`, which redirects all of
+ * infix's internal heap allocations to your callbacks at runtime. (A
+ * compile-time alternative, defining the `infix_malloc`/`infix_free`/etc.
+ * macros before including `infix.h`, is also supported for builds from source.)
  */
 
+#include <infix/infix.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-// 1. Define your custom memory management functions.
+// 1. Define your custom memory management callbacks.
 //    These simple wrappers just print a message and track the total allocated memory.
 static size_t g_total_allocated = 0;
-void * tracking_malloc(size_t size) {
+static void * tracking_malloc(size_t size) {
     g_total_allocated += size;
     printf(">> Custom Malloc: Allocating %llu bytes (Total outstanding: %llu)\n",
            (unsigned long long)size,
@@ -25,24 +27,27 @@ void * tracking_malloc(size_t size) {
     return malloc(size);
 }
 
-void tracking_free(void * ptr) {
+static void tracking_free(void * ptr) {
     // A real tracking allocator would need to know the size of the block being freed.
     // For this example, we just log the call.
     printf(">> Custom Free: Deallocating block at %p\n", ptr);
     free(ptr);
 }
 
-// 2. Define the infix override macros BEFORE including infix.h
-#define infix_malloc(size) tracking_malloc(size)
-#define infix_free(ptr) tracking_free(ptr)
-// You can also override infix_calloc and infix_realloc if needed.
-
-#include <infix/infix.h>
-
 void dummy_func() {}
 
 int main() {
     printf("Cookbook Chapter 8: Using Custom Memory Allocators\n");
+
+    // 2. Install the allocator. Do this before any trampolines are created and
+    //    before infix is used from more than one thread.
+    static const infix_allocator_t tracking = {
+        .malloc = tracking_malloc,
+        .calloc = calloc,
+        .realloc = realloc,
+        .free = tracking_free,
+    };
+    infix_set_allocator(&tracking);
 
     printf("\nCreating trampoline with custom allocators...\n");
     infix_forward_t * trampoline = NULL;
