@@ -35,7 +35,7 @@ void handler_void(infix_context_t * ctx, void * ret, void ** args) {
 TEST {
     plan(1);
 // MSVC doesn't support GCC inline assembly syntax (`__asm__`). On x64 MSVC
-// there is no inline assembly at all — you need MASM or intrinsics.
+// there is no inline assembly at all, you need MASM or intrinsics.
 #if !defined(_MSC_VER) && defined(__x86_64__)
     subtest("Reverse Trampoline: RAX Preservation") {
         plan(2);

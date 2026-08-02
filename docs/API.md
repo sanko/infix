@@ -342,3 +342,27 @@ APIs for the fast, region-based arena allocator used by the Manual API. The inte
 *   `void infix_arena_destroy(infix_arena_t* arena)`: Destroys an arena and frees all memory allocated from it.
 *   `void* infix_arena_alloc(infix_arena_t* arena, size_t size, size_t alignment)`: Allocates a block of memory from an arena.
 *   `void* infix_arena_calloc(infix_arena_t* arena, ...)`: Allocates and zero-initializes memory from an arena.
+
+### Custom Allocators
+
+Every internal heap allocation `infix` makes (arenas, trampolines, the type registry, code emitters) is routed through a single `infix_allocator_t` table. By default the table points at the C library's `malloc`, `calloc`, `realloc`, and `free`, so `infix` behaves exactly as before out of the box.
+
+Install your own allocator at runtime to make `infix` allocate from your memory manager (e.g. a language runtime's tracked heap or a garbage collector):
+
+```c
+typedef struct {
+    void* (*malloc)(size_t);
+    void* (*calloc)(size_t, size_t);
+    void* (*realloc)(void*, size_t);
+    void  (*free)(void*);
+} infix_allocator_t;
+
+void infix_set_allocator(const infix_allocator_t* allocator);
+```
+
+*   `infix_set_allocator(allocator)`: Replaces the allocator used for all internal heap allocations. `infix` copies the callback pointers, so you may pass a temporary struct. Pass `NULL` to restore the default C library allocator.
+*   Call it before creating any trampolines (typically during host initialization) and before `infix` is used from more than one thread. The table is not internally synchronized.
+*   **Consistency is required:** memory returned by one callback must be released with the matching `free` callback. Never mix allocators. In particular, release infix-owned memory (such as the buffer returned by `emit_get_binary`) with `infix_free` or the equivalent entry point of the allocator you installed, not the C library's `free`.
+*   The callbacks must honor standard C library semantics: `realloc(NULL, n)` acts like `malloc`, and `free(NULL)` is a no-op.
+
+A compile-time alternative is also available for builds from source: define the `infix_malloc`, `infix_calloc`, `infix_realloc`, and `infix_free` macros **before** including `infix.h` to replace the runtime table lookup with direct calls (all four must be defined consistently).

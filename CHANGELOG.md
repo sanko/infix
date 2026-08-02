@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This release fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
+This release adds a pluggable, runtime-configurable memory allocator, fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
+
+### Added
+
+- New test `t/813_custom_allocator.c` installs a tracking allocator via `infix_set_allocator()` and verifies a full lifecycle (registry, bulk type registration, signature parsing, JIT emission, FFI call, teardown) allocates and frees exclusively through the installed callbacks, that `calloc`/`realloc` reach the table, that nothing leaks, and that passing `NULL` restores the libc defaults.
+
+### Changed
+
+- Custom memory allocator API. All of infix's internal heap allocations now flow through a single `infix_allocator_t` table, installable at runtime with `infix_set_allocator()` and defaulting to the C library's `malloc`/`calloc`/`realloc`/`free`. This lets host applications (language runtimes, garbage collectors, memory trackers) own every block infix allocates, whether infix is built from source or consumed as a precompiled library. The existing compile-time override macros (`infix_malloc`, `infix_calloc`, `infix_realloc`, `infix_free`) remain fully supported for builds from source.
+- Every allocation site in the code emitter (`src/emit/emit.c`) routes through the `infix_*` macros, so the allocator override is complete across the whole library.
 
 ### Fixed
 

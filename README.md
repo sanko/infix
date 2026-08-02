@@ -14,6 +14,7 @@ It's designed to be the simplest way to add a dynamic Foreign Function Interface
 *   **Simple Integration:** Add a single C file and a header directory to your project to get started. No complex dependencies.
 *   **Type Registry:** Define, reuse, and link complex, recursive, and mutually-dependent structs by name.
 *   **Safe Exception Boundaries:** Catch C++ and hardware exceptions (SEH) from native code to prevent host process crashes.
+*   **Pluggable Memory Allocator:** Every internal allocation is routed through a single allocator table you can replace at runtime (`infix_set_allocator`).
 *   **Security-First Design:** Hardened against vulnerabilities with Write XOR Execute (W^X) memory, guard pages, and fuzz testing.
 *   **High Performance:** A Just-in-Time (JIT) compiler generates optimized machine code trampolines, making calls nearly as fast as a direct C call after the initial setup.
 
@@ -43,7 +44,7 @@ int main() {
     // 1. Describe the function's signature as a string.
     const char* signature = "(int, int) -> int";
 
-    // 2. Create a "trampoline"—a JIT-compiled function wrapper.
+    // 2. Create a "trampoline", a JIT-compiled function wrapper.
     infix_forward_t* trampoline = NULL;
     infix_forward_create(&trampoline, signature, (void*)add, NULL);
     infix_cif_func cif = infix_forward_get_code(trampoline);
@@ -110,7 +111,7 @@ void run_safe_example(void* crashing_func) {
     infix_forward_create_safe(&trampoline, "() -> void", crashing_func, NULL);
 
     infix_cif_func cif = infix_forward_get_code(trampoline);
-    
+
     // Call the function. If it throws a C++ exception, it will be caught.
     cif(NULL, NULL);
 
