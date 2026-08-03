@@ -133,6 +133,13 @@ if ( $opts{verbose} ) {
     push @base_cflags, '-DINFIX_DEBUG_ENABLED=1';
 }
 
+# Force a specific ABI if requested
+if ( $opts{abi} ) {
+    my %valid_abis = map { $_ => 1 } qw[windows_x64 sysv_x64 aapcs64 riscv64];
+    die "Error: Unknown ABI '$opts{abi}'. Supported: windows_x64, sysv_x64, aapcs64, riscv64." if !$valid_abis{ $opts{abi} };
+    push @base_cflags, '-DINFIX_FORCE_ABI_' . uc( $opts{abi} );
+}
+
 # Configure Build
 my $obj_suffix = ( $config{compiler} eq 'msvc' ) ? '.obj' : '.o';
 if ( $config{compiler} eq 'msvc' ) {
@@ -347,7 +354,7 @@ sub show_help {
       --cc, --compiler=<s>  Force a specific compiler (e.g., 'msvc', 'gcc', 'egcc', 'clang').
       --cflags=<s>          Append custom flags to the compiler command line.
       --abi=<s>             Force a specific ABI for code generation. Overrides auto-detection.
-                            Supported: windows_x64, sysv_x64, aapcs64
+                            Supported: windows_x64, sysv_x64, aapcs64, riscv64
       --codecov=<s>         Specify a Codecov token to upload coverage results (or use CODECOV_TOKEN env var).
       --examples            Build all cookbook examples (used with 'build' command).
       --shared              Build the shared library (DLL/.so) in addition to the static library.

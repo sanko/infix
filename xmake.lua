@@ -2,16 +2,16 @@
 -- This single file supports Windows, macOS, and Linux.
 
 set_project("infix")
-set_version("0.1.4", {build = "%Y%m%d%H%M", soname = true})
+set_version("0.2.0", {build = "%Y%m%d%H%M", soname = true})
 set_languages("c17", "cxx17")
 
 -- Config
 option("examples",     {showmenu = true, default = true,   description = "Build the cookbook example programs."})
 option("enable_debug", {showmenu = true, default = false,  description = "Enable library debug features (-DINFIX_DEBUG_ENABLED=1)."})
-option("abi",          {showmenu = true, default = "auto", description = "Force a specific ABI for code generation.", values = {"auto", "windows_x64", "sysv_x64", "aapcs64"}})
+option("abi",          {showmenu = true, default = "auto", description = "Force a specific ABI for code generation.", values = {"auto", "windows_x64", "sysv_x64", "aapcs64", "riscv64"}})
 
 -- Add all necessary include directories for the build process.
-add_includedirs("include", "src", "src/core", "src/arch/x64", "src/arch/aarch64")
+add_includedirs("include", "src", "src/core", "src/arch/x64", "src/arch/aarch64", "src/arch/riscv")
 
 add_rules("mode.valgrind", "mode.coverage", "mode.release","mode.check")
 
@@ -46,7 +46,7 @@ on_config(function (target)
     end
 
     if get_config("abi") ~= "auto" then
---~         local abi_def = "INFIX_FORCE_ABI_" .. get_config("abi"):upper()
+        local abi_def = "INFIX_FORCE_ABI_" .. get_config("abi"):upper()
         target:add("defines", abi_def)
     end
 end)

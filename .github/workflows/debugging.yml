@@ -55,8 +55,8 @@ jobs:
       fail-fast: false
       matrix:
         harness: [abi, types, trampoline, signature, direct, roundtrip]
-        os: [ubuntu-latest, ubuntu-24.04-arm]
-        abi: [INFIX_FORCE_ABI_WINDOWS_X64, INFIX_FORCE_ABI_SYSV_X64, INFIX_FORCE_ABI_AAPCS64]
+        os: [ubuntu-latest, ubuntu-24.04-arm, ubuntu-24.04-riscv]
+        abi: [INFIX_FORCE_ABI_WINDOWS_X64, INFIX_FORCE_ABI_SYSV_X64, INFIX_FORCE_ABI_AAPCS64, INFIX_FORCE_ABI_RISCV64]
     uses: ./.github/workflows/debugging-fuzz.yml
     with:
       harness: ${{ matrix.harness }}

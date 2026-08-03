@@ -64,6 +64,10 @@ jobs:
             arch: 'aarch64'
           - platform: { os: 'dragonflybsd' }
             arch: 'riscv64'
+          # FreeBSD publishes no binary packages for riscv64 (Tier 2), so pkg(8)
+          # cannot bootstrap on it; perl/gcc/llvm are only available via ports.
+          - platform: { os: 'freebsd' }
+            arch: 'riscv64'
           - platform: { os: 'netbsd' }
             arch: 'riscv64'
           - platform: { os: 'solaris' }
@@ -79,8 +83,6 @@ jobs:
             toolchain: 'clang'
           - platform: { os: 'omnios' }
             toolchain: 'clang'
-          # Skip RISC-V because, well, I haven't worked on adding support for it.
-          - arch: 'riscv64'
         include:
           # Use specific 'egcc' command for packaged GCC on OpenBSD
           - platform: { os: 'openbsd' }
@@ -139,7 +141,9 @@ jobs:
             os: 'ubuntu-24.04-riscv'
             arch: 'riscv64'
             prepare_gcc: 'sudo apt-get update && sudo apt-get install -y gcc perl'
-            prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl'
+            # libclang-rt-dev provides libclang_rt.profile-riscv64.a, which clang's
+            # --coverage link step needs on RISC-V (not pulled in by `clang` alone).
+            prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl libclang-rt-dev'
         toolchain: ['gcc', 'clang', 'msvc']
         exclude:
           #~ - platform: { name: 'macos' }
