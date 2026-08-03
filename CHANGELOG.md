@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This release adds a pluggable, runtime-configurable memory allocator, fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
+This release adds a pluggable, runtime-configurable memory allocator, full RISC-V 64-bit (RV64GC, lp64d) ABI support, fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
+
+Yeah, it's time for a new tagged release.
 
 ### Added
 
+- Completed RISC-V 64-bit (RV64GC) support.
 - New test `t/813_custom_allocator.c` installs a tracking allocator via `infix_set_allocator()` and verifies a full lifecycle (registry, bulk type registration, signature parsing, JIT emission, FFI call, teardown) allocates and frees exclusively through the installed callbacks, that `calloc`/`realloc` reach the table, that nothing leaks, and that passing `NULL` restores the libc defaults.
+- Added `ARG_LOCATION_MIXED` and `ARG_LOCATION_GPR_STACK_SPLIT` to the internal argument location enums for aggregates split across GPR/FPR registers or across registers and the stack.
 
 ### Changed
 
