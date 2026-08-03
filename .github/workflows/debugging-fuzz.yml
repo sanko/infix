@@ -26,12 +26,15 @@ permissions:
 
 jobs:
   fuzz:
-    name: ${{ (inputs.abi == 'INFIX_FORCE_ABI_SYSV_X64' && 'SysV') || (inputs.abi == 'INFIX_FORCE_ABI_WINDOWS_X64' && 'Win64') || 'ARM' }} ABI on ${{ inputs.os }}
+    name: ${{ (inputs.abi == 'INFIX_FORCE_ABI_SYSV_X64' && 'SysV') || (inputs.abi == 'INFIX_FORCE_ABI_WINDOWS_X64' && 'Win64') || (inputs.abi == 'INFIX_FORCE_ABI_RISCV64' && 'RISC-V') || 'ARM' }} ABI on ${{ inputs.os }}
     runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@v6.0.0
       - name: Install Dependencies
-        run: sudo apt-get update && sudo apt-get install -y clang perl
+        # libclang-rt-18-dev / libfuzzer-18-dev provide the ASan/UBSan/libFuzzer
+        # runtimes that clang needs for -fsanitize=fuzzer,address,undefined on riscv64
+        # (and are no-ops where `clang` already pulls them in).
+        run: sudo apt-get update && sudo apt-get install -y clang perl libclang-rt-18-dev libfuzzer-18-dev
 
       - name: Build and Run Fuzzer
         id: test-execution
