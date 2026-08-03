@@ -137,7 +137,9 @@ jobs:
             os: 'ubuntu-24.04-riscv'
             arch: 'riscv64'
             prepare_gcc: 'sudo apt-get update && sudo apt-get install -y gcc perl'
-            prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl'
+            # libclang-rt-dev provides libclang_rt.profile-riscv64.a, which clang's
+            # --coverage link step needs on RISC-V (not pulled in by `clang` alone).
+            prepare_clang: 'sudo apt-get update && sudo apt-get install -y clang perl libclang-rt-dev'
         toolchain: ['gcc', 'clang', 'msvc']
         exclude:
           #~ - platform: { name: 'macos' }
