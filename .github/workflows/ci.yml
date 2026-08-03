@@ -64,6 +64,10 @@ jobs:
             arch: 'aarch64'
           - platform: { os: 'dragonflybsd' }
             arch: 'riscv64'
+          # FreeBSD publishes no binary packages for riscv64 (Tier 2), so pkg(8)
+          # cannot bootstrap on it; perl/gcc/llvm are only available via ports.
+          - platform: { os: 'freebsd' }
+            arch: 'riscv64'
           - platform: { os: 'netbsd' }
             arch: 'riscv64'
           - platform: { os: 'solaris' }
