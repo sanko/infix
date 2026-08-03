@@ -15,13 +15,15 @@
 | **omnios** | `x86_64` | `gcc` | ✅ success |
 | **openbsd** | `aarch64` | `clang` | ✅ success |
 | **openbsd** | `aarch64` | `egcc` | ✅ success |
+| **openbsd** | `riscv64` | `clang` | ✅ success |
+| **openbsd** | `riscv64` | `egcc` | ✅ success |
 | **openbsd** | `x86_64` | `clang` | ✅ success |
 | **openbsd** | `x86_64` | `egcc` | ✅ success |
 | **solaris** | `x86_64` | `gcc` | ✅ success |
 | **ubuntu** | `aarch64` | `clang` | ✅ success |
 | **ubuntu** | `aarch64` | `gcc` | ✅ success |
-| **ubuntu** | `riscv64` | `clang` | ❌ failure |
-| **ubuntu** | `riscv64` | `gcc` | ❌ failure |
+| **ubuntu** | `riscv64` | `clang` | ✅ success |
+| **ubuntu** | `riscv64` | `gcc` | ✅ success |
 | **ubuntu** | `x86_64` | `clang` | ✅ success |
 | **ubuntu** | `x86_64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `clang` | ✅ success |

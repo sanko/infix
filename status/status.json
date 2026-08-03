@@ -27,6 +27,10 @@
 ,
 "openbsd-aarch64-egcc": "👍🏽 passing"
 ,
+"openbsd-riscv64-clang": "👍🏽 passing"
+,
+"openbsd-riscv64-egcc": "👍🏽 passing"
+,
 "openbsd-x86_64-clang": "👍🏽 passing"
 ,
 "openbsd-x86_64-egcc": "👍🏽 passing"
@@ -37,9 +41,9 @@
 ,
 "ubuntu-aarch64-gcc": "👍🏽 passing"
 ,
-"ubuntu-riscv64-clang": "👎🏽 failing"
+"ubuntu-riscv64-clang": "👍🏽 passing"
 ,
-"ubuntu-riscv64-gcc": "👎🏽 failing"
+"ubuntu-riscv64-gcc": "👍🏽 passing"
 ,
 "ubuntu-x86_64-clang": "👍🏽 passing"
 ,
