@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed layout recalculation skipping function signatures. `_infix_type_recalculate_layout_recursive` had no case for `INFIX_TYPE_REVERSE_TRAMPOLINE`, so it never descended into the return type or arguments of a function signature. A struct declared inline in a signature whose members referenced named types (e.g., `@png_uint_32`) kept the offsets computed at parse time while those members were still unresolved (size 0), so after the Resolve stage replaced them every scalar member collapsed to the same offset. The Layout stage now recurses into `func_ptr_info.return_type` and each `func_ptr_info.args[i].type`, fixing wrong field reads/writes through struct-typed FFI arguments (e.g., libpng's `png_image_write_to_file` reading back `version == 0`).
+
 ## [0.2.0] - 2026-08-03
 
 This release adds a pluggable, runtime-configurable memory allocator, full RISC-V 64-bit (RV64GC, lp64d) ABI support, fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
