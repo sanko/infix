@@ -34,7 +34,7 @@ ifeq ($(DEBUG),1)
 endif
 
 # Include directories needed for the LIBRARY
-LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64
+LIB_INC_DIRS := -Iinclude -Isrc -Isrc/arch/x64 -Isrc/arch/aarch64 -Isrc/arch/riscv
 
 # Flags for compiling the LIBRARY ONLY. No test flags here.
 LIB_CFLAGS   := $(BASE_CFLAGS) $(LIB_INC_DIRS)

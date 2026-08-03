@@ -48,6 +48,7 @@ target_include_directories(infix
         src/core
         src/arch/x64
         src/arch/aarch64
+        src/arch/riscv
 )
 
 # Installation Rules:
