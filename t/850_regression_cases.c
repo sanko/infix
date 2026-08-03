@@ -49,7 +49,8 @@ typedef enum {
     TARGET_TYPE_GENERATOR,
     TARGET_SIGNATURE_PARSER,
     TARGET_TRAMPOLINE_GENERATOR,
-    TARGET_DIRECT_TRAMPOLINE_GENERATOR
+    TARGET_DIRECT_TRAMPOLINE_GENERATOR,
+    TARGET_ABI_CLASSIFIER
 } fuzzer_target_t;
 typedef struct {
     const char * name;
@@ -175,6 +176,11 @@ static const regression_test_case_t regression_tests[] = {
     {.name = "Leak in direct trampoline due to uninitialized ref_count",
      .b64_input = "CQEAJA==",
      .target = TARGET_DIRECT_TRAMPOLINE_GENERATOR,
+     .expected_status = INFIX_SUCCESS},
+    {.name = "Timeout in RISC-V Classifier (zero-sized aggregate flatten)",
+     .b64_input = "CP8EAP//////////////AAAAAAAAAAD///////////////////////////////f/////////////////////////////////////"
+                  "////////////////AAAAIwo=",
+     .target = TARGET_ABI_CLASSIFIER,
      .expected_status = INFIX_SUCCESS},
 };
 
@@ -351,6 +357,83 @@ static void run_regression_case(const regression_test_case_t * test) {
 
             free(arg_types);
             free(handlers);
+            infix_arena_destroy(arena);
+        }
+        else if (test->target == TARGET_ABI_CLASSIFIER) {
+            // Mirror the fuzz_abi fuzzer target: build a random signature from the
+            // type pool and exercise the active ABI's forward/reverse classifiers.
+            fuzzer_input in = {(const uint8_t *)data, data_size};
+            infix_arena_t * arena = infix_arena_create(65536);
+            if (!arena) {
+                fail("Failed to create arena for ABI classifier test.");
+                free(data);
+                return;
+            }
+            size_t total_fields = 0;
+            infix_type * type_pool[MAX_TYPES_IN_POOL] = {0};
+            int type_count = 0;
+            for (int i = 0; i < MAX_TYPES_IN_POOL; ++i) {
+                infix_type * t = generate_random_type(arena, &in, 0, &total_fields);
+                if (!t)
+                    break;
+                type_pool[type_count++] = t;
+            }
+            bool classifier_ok = false;
+            if (type_count > 0) {
+                uint8_t arg_count_byte;
+                if (consume_uint8_t(&in, &arg_count_byte)) {
+                    size_t num_args = arg_count_byte % MAX_ARGS_IN_SIGNATURE;
+                    uint8_t fixed_arg_byte = 0;
+                    consume_uint8_t(&in, &fixed_arg_byte);
+                    size_t num_fixed_args = num_args > 0 ? (fixed_arg_byte % (num_args + 1)) : 0;
+
+                    infix_type ** arg_types = (infix_type **)calloc(num_args, sizeof(infix_type *));
+                    if (arg_types) {
+                        uint8_t idx_byte = 0;
+                        consume_uint8_t(&in, &idx_byte);
+                        infix_type * return_type = type_pool[idx_byte % type_count];
+                        for (size_t i = 0; i < num_args; ++i)
+                            arg_types[i] = type_pool[i % type_count];
+
+                        infix_status fwd_status = INFIX_SUCCESS;
+                        infix_status fwd_bound_status = INFIX_SUCCESS;
+                        infix_status rev_status = INFIX_SUCCESS;
+
+                        const infix_forward_abi_spec * fwd_spec = get_current_forward_abi_spec();
+                        if (fwd_spec) {
+                            infix_arena_t * fwd_arena = infix_arena_create(16384);
+                            if (fwd_arena) {
+                                infix_call_frame_layout * layout = NULL;
+                                fwd_status = fwd_spec->prepare_forward_call_frame(
+                                    fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args, nullptr);
+                                fwd_bound_status = fwd_spec->prepare_forward_call_frame(
+                                    fwd_arena, &layout, return_type, arg_types, num_args, num_fixed_args, (void *)0x1);
+                                infix_arena_destroy(fwd_arena);
+                            }
+                        }
+
+                        const infix_reverse_abi_spec * rev_spec = get_current_reverse_abi_spec();
+                        if (rev_spec) {
+                            infix_reverse_t mock_context = {.return_type = return_type,
+                                                            .arg_types = arg_types,
+                                                            .num_args = num_args,
+                                                            .num_fixed_args = num_fixed_args};
+                            infix_arena_t * rev_arena = infix_arena_create(16384);
+                            if (rev_arena) {
+                                infix_reverse_call_frame_layout * rev_layout = NULL;
+                                rev_status =
+                                    rev_spec->prepare_reverse_call_frame(rev_arena, &rev_layout, &mock_context);
+                                infix_arena_destroy(rev_arena);
+                            }
+                        }
+
+                        free(arg_types);
+                        classifier_ok = fwd_status == test->expected_status &&
+                            fwd_bound_status == test->expected_status && rev_status == test->expected_status;
+                    }
+                }
+            }
+            ok(classifier_ok, "ABI classifier completed without timeout/crash (expected %d).", test->expected_status);
             infix_arena_destroy(arena);
         }
         free(data);

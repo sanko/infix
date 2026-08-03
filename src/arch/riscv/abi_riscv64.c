@@ -75,6 +75,8 @@ static const riscv_fpr FPR_ARGS[] = {
 #define RV_NUM_FPR_ARGS 8
 /** @internal A safety limit on the number of FP members to classify in an aggregate. */
 #define RV_MAX_FLATTENED_FIELDS 32
+/** @internal A safety limit on the recursion depth when flattening an aggregate. */
+#define RV_MAX_FLATTEN_DEPTH 32
 /** @internal Stack space reserved for the three callee-saved context registers (s1/s2/s3). */
 #define RV_FWD_SAVED_SIZE 32
 /** @internal Stack space reserved for the saved return address in a reverse stub. */
@@ -487,23 +489,57 @@ typedef struct {
  * @internal
  * @brief Recursively flatten every scalar leaf of an aggregate (structs and arrays).
  * @details Unions are not flattened; `_Complex` types expand into two leaves of the
- *          component type. Returns `false` if a leaf exceeds the leaf-table capacity.
+ *          component type. Returns `false` if a leaf exceeds the leaf-table capacity,
+ *          the type graph is pathologically deep, or a malformed (null) node is reached.
  */
-static bool rv64_flatten_all_recursive(const infix_type * type, size_t base_offset, rv64_all_leaf_list * out) {
+static bool rv64_flatten_all_recursive(const infix_type * type,
+                                       size_t base_offset,
+                                       rv64_all_leaf_list * out,
+                                       size_t depth) {
+    // A recursive call can be made with a NULL type from a malformed aggregate.
+    if (type == nullptr)
+        return false;  // Terminate this recursion path.
+    // Give up on pathologically deep type graphs instead of exhausting the stack.
+    if (depth > RV_MAX_FLATTEN_DEPTH)
+        return false;
     if (type->category == INFIX_TYPE_STRUCT) {
+        if (type->meta.aggregate_info.members == nullptr)
+            return false;
         for (size_t i = 0; i < type->meta.aggregate_info.num_members; ++i) {
             const infix_struct_member * member = &type->meta.aggregate_info.members[i];
-            if (!rv64_flatten_all_recursive(member->type, base_offset + member->offset, out))
+            if (member->type == nullptr)
+                return false;
+            // Check the leaf-table capacity before descending any further.
+            if (out->count >= RV_MAX_FLATTENED_FIELDS)
+                return false;
+            if (!rv64_flatten_all_recursive(member->type, base_offset + member->offset, out, depth + 1))
                 return false;
         }
         return true;
     }
     if (type->category == INFIX_TYPE_ARRAY) {
-        for (size_t i = 0; i < type->meta.array_info.num_elements; ++i)
+        if (type->meta.array_info.element_type == nullptr)
+            return false;
+        // A zero-sized element never advances the offset, so iterating every
+        // element is pointless and, for chains like `a[127][127][...][0]`,
+        // explodes exponentially without ever producing a leaf (which would
+        // otherwise trip the leaf-table capacity guard). Flatten the element
+        // type just once at the starting offset.
+        if (type->meta.array_info.element_type->size == 0) {
+            if (type->meta.array_info.num_elements > 0)
+                return rv64_flatten_all_recursive(type->meta.array_info.element_type, base_offset, out, depth + 1);
+            return true;  // An empty array has no effect on the leaf list.
+        }
+        for (size_t i = 0; i < type->meta.array_info.num_elements; ++i) {
+            // Check the leaf-table capacity before each recursive call.
+            if (out->count >= RV_MAX_FLATTENED_FIELDS)
+                return false;
             if (!rv64_flatten_all_recursive(type->meta.array_info.element_type,
                                             base_offset + i * type->meta.array_info.element_type->size,
-                                            out))
+                                            out,
+                                            depth + 1))
                 return false;
+        }
         return true;
     }
     if (type->category == INFIX_TYPE_COMPLEX) {
@@ -531,7 +567,7 @@ static bool rv64_flatten_all_recursive(const infix_type * type, size_t base_offs
  */
 static bool rv64_flatten_all(const infix_type * type, rv64_all_leaf_list * out) {
     out->count = 0;
-    return rv64_flatten_all_recursive(type, 0, out);
+    return rv64_flatten_all_recursive(type, 0, out, 0);
 }
 
 /**
