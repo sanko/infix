@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-03
+
 This release adds a pluggable, runtime-configurable memory allocator, full RISC-V 64-bit (RV64GC, lp64d) ABI support, fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.
 
 Yeah, it's time for a new tagged release.
@@ -283,7 +285,8 @@ Everything. It's brand new.
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
-[0.1.8]: https://github.com/sanko/infix/compare/v0.1.7...v0.1.8
+[Unreleased]: https://github.com/sanko/infix/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/sanko/infix/compare/v0.1.7...v0.2.0
 [0.1.7]: https://github.com/sanko/infix/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/sanko/infix/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/sanko/infix/compare/v0.1.4...v0.1.5
