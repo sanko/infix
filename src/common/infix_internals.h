@@ -817,11 +817,16 @@ static inline bool is_long_double(const infix_type * type) {
 #endif
 
 // Trampoline Caching
+/** @internal Maximum number of trampoline handles the global forward cache will retain.
+ *  The cache is bounded so that applications creating many unique trampoline signatures
+ *  cannot exhaust memory by permanently retaining every JIT-compiled handle. */
+#define INFIX_CACHE_MAX_ENTRIES 1024
 INFIX_INTERNAL infix_forward_t * _infix_cache_lookup(const char * signature, void * target_fn, bool is_safe);
 INFIX_INTERNAL void _infix_cache_insert(infix_forward_t * trampoline);
 INFIX_INTERNAL bool _infix_cache_remove(infix_forward_t * trampoline);
 INFIX_INTERNAL void _infix_cache_release(infix_forward_t * trampoline);
 INFIX_INTERNAL void _infix_cache_clear(void);
+INFIX_INTERNAL size_t _infix_cache_count(void);
 
 // Internal Cleanup
 INFIX_INTERNAL void _infix_forward_destroy_internal(infix_forward_t * trampoline);

@@ -50,7 +50,8 @@ typedef enum {
     TARGET_SIGNATURE_PARSER,
     TARGET_TRAMPOLINE_GENERATOR,
     TARGET_DIRECT_TRAMPOLINE_GENERATOR,
-    TARGET_ABI_CLASSIFIER
+    TARGET_ABI_CLASSIFIER,
+    TARGET_CACHE_BOUNDED
 } fuzzer_target_t;
 typedef struct {
     const char * name;
@@ -182,6 +183,10 @@ static const regression_test_case_t regression_tests[] = {
                   "////////////////AAAAIwo=",
      .target = TARGET_ABI_CLASSIFIER,
      .expected_status = INFIX_SUCCESS},
+    {.name = "Fuzz trampoline OOM: unbounded forward trampoline cache",
+     .b64_input = "LCwsLCwsLCwsLCwsLCwsLCws/zkAhYWFhYWFhYWFhYSFIwAAAwB+AAABAQQsLCwsLCwsLCwsLM7TtNP1yzQ0yw==",
+     .target = TARGET_CACHE_BOUNDED,
+     .expected_status = INFIX_SUCCESS}
 };
 
 static void run_regression_case(const regression_test_case_t * test) {
@@ -435,6 +440,32 @@ static void run_regression_case(const regression_test_case_t * test) {
             }
             ok(classifier_ok, "ABI classifier completed without timeout/crash (expected %d).", test->expected_status);
             infix_arena_destroy(arena);
+        }
+        else if (test->target == TARGET_CACHE_BOUNDED) {
+            // Regression for the fuzz_trampoline OOM: the global forward trampoline
+            // cache was unbounded, so creating unique trampoline signatures (even while
+            // destroying each handle immediately) permanently retained every JIT-compiled
+            // handle and grew memory without limit. The cache must stay bounded at
+            // INFIX_CACHE_MAX_ENTRIES.
+            _infix_cache_clear();
+            bool bounded = true;
+            for (size_t i = 1; i <= INFIX_CACHE_MAX_ENTRIES + 64; ++i) {
+                char sig[256];
+                snprintf(sig, sizeof(sig), "([%zu:sint32])->void", i);
+                infix_forward_t * fwd = nullptr;
+                if (infix_forward_create(&fwd, sig, (void *)dummy_reg_handler, nullptr) == INFIX_SUCCESS) {
+                    infix_forward_destroy(fwd);
+                    if (_infix_cache_count() > INFIX_CACHE_MAX_ENTRIES) {
+                        bounded = false;
+                        break;
+                    }
+                }
+            }
+            ok(bounded,
+               "Forward trampoline cache remained bounded (%d entries, limit %d).",
+               (int)_infix_cache_count(),
+               (int)INFIX_CACHE_MAX_ENTRIES);
+            _infix_cache_clear();
         }
         free(data);
     }
