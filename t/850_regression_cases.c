@@ -186,8 +186,7 @@ static const regression_test_case_t regression_tests[] = {
     {.name = "Fuzz trampoline OOM: unbounded forward trampoline cache",
      .b64_input = "LCwsLCwsLCwsLCwsLCwsLCws/zkAhYWFhYWFhYWFhYSFIwAAAwB+AAABAQQsLCwsLCwsLCwsLM7TtNP1yzQ0yw==",
      .target = TARGET_CACHE_BOUNDED,
-     .expected_status = INFIX_SUCCESS}
-};
+     .expected_status = INFIX_SUCCESS}};
 
 static void run_regression_case(const regression_test_case_t * test) {
     subtest(test->name) {

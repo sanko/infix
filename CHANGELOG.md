@@ -5,7 +5,9 @@ All notable changes to `infix` will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.1] - 2026-08-04
+
+This release fixes memory growth in the trampoline cache, a RISC-V classifier hang on zero-sized aggregate chains, and wrong field offsets for struct-typed FFI arguments declared inline in function signatures.
 
 ### Fixed
 
@@ -291,7 +293,8 @@ Everything. It's brand new.
 - Operating Systems: Rigorously tested on Windows, Linux (Ubuntu), macOS, and multiple BSD variants.
 - Runtime CPU Feature Detection: Safely runs code with advanced instruction sets (AVX2, AVX-512, SVE) by performing runtime checks, preventing crashes on unsupported hardware and enabling maximum performance where available.
 
-[Unreleased]: https://github.com/sanko/infix/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/sanko/infix/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/sanko/infix/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/sanko/infix/compare/v0.1.7...v0.2.0
 [0.1.7]: https://github.com/sanko/infix/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/sanko/infix/compare/v0.1.5...v0.1.6

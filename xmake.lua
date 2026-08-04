@@ -2,7 +2,7 @@
 -- This single file supports Windows, macOS, and Linux.
 
 set_project("infix")
-set_version("0.2.0", {build = "%Y%m%d%H%M", soname = true})
+set_version("0.2.1", {build = "%Y%m%d%H%M", soname = true})
 set_languages("c17", "cxx17")
 
 -- Config

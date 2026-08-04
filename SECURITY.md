@@ -10,7 +10,7 @@ Security updates are provided for the latest public release. As this is a pre-1.
 
 | Version       | Supported          |
 | ------------- | ------------------ |
-| 0.2.0         | :white_check_mark: |
+| 0.2.1         | :white_check_mark: |
 | <= 0.1.7      | :x:                |
 | [unversioned] | :white_check_mark: |
 
