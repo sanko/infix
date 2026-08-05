@@ -11,14 +11,14 @@
 | **macos** | `x86_64` | `clang` | ✅ success |
 | **macos** | `x86_64` | `gcc` | ✅ success |
 | **netbsd** | `aarch64` | `gcc` | ✅ success |
-| **netbsd** | `x86_64` | `gcc` | ✅ success |
+| **netbsd** | `x86_64` | `gcc` | ❌ failure |
 | **omnios** | `x86_64` | `gcc` | ✅ success |
 | **openbsd** | `aarch64` | `clang` | ✅ success |
 | **openbsd** | `aarch64` | `egcc` | ✅ success |
 | **openbsd** | `riscv64` | `clang` | ✅ success |
 | **openbsd** | `riscv64` | `egcc` | ✅ success |
 | **openbsd** | `x86_64` | `clang` | ✅ success |
-| **openbsd** | `x86_64` | `egcc` | ✅ success |
+| **openbsd** | `x86_64` | `egcc` | ❌ failure |
 | **solaris** | `x86_64` | `gcc` | ✅ success |
 | **ubuntu** | `aarch64` | `clang` | ✅ success |
 | **ubuntu** | `aarch64` | `gcc` | ✅ success |
