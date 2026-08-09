@@ -207,6 +207,8 @@ Macros</h2></td></tr>
 <tr class="memitem:a417e0209604532a4b0761190672b2a4b" id="r_a417e0209604532a4b0761190672b2a4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a417e0209604532a4b0761190672b2a4b">EMIT_BYTES</a>(buf, ...)</td></tr>
 <tr class="memdesc:a417e0209604532a4b0761190672b2a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a sequence of bytes (e.g., an instruction opcode) to a code buffer.  <br /></td></tr>
 <tr class="separator:a417e0209604532a4b0761190672b2a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74a8dfb2c01e9cf3769a4f10c624303a" id="r_a74a8dfb2c01e9cf3769a4f10c624303a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a74a8dfb2c01e9cf3769a4f10c624303a">INFIX_CACHE_MAX_ENTRIES</a>&#160;&#160;&#160;1024</td></tr>
+<tr class="separator:a74a8dfb2c01e9cf3769a4f10c624303a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -348,6 +350,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab4939fc6fa391d43ffbf5220ad1e2cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7032c382301880335e911a565c123167" id="r_a7032c382301880335e911a565c123167"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a7032c382301880335e911a565c123167">_infix_cache_clear</a> (void)</td></tr>
 <tr class="separator:a7032c382301880335e911a565c123167"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd76578532a54b9ce9f6eb1fffce4138" id="r_afd76578532a54b9ce9f6eb1fffce4138"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#afd76578532a54b9ce9f6eb1fffce4138">_infix_cache_count</a> (void)</td></tr>
+<tr class="separator:afd76578532a54b9ce9f6eb1fffce4138"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95624761d279c723fe0297c092996c58" id="r_a95624761d279c723fe0297c092996c58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="infix__internals_8h.html#a95624761d279c723fe0297c092996c58">_infix_forward_destroy_internal</a> (<a class="el" href="structinfix__forward__t.html">infix_forward_t</a> *trampoline)</td></tr>
 <tr class="separator:a95624761d279c723fe0297c092996c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -393,6 +397,20 @@ Functions</h2></td></tr>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 <p>Appends a sequence of bytes (e.g., an instruction opcode) to a code buffer. </p>
+
+</div>
+</div>
+<a id="a74a8dfb2c01e9cf3769a4f10c624303a" name="a74a8dfb2c01e9cf3769a4f10c624303a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74a8dfb2c01e9cf3769a4f10c624303a">&#9670;&#160;</a></span>INFIX_CACHE_MAX_ENTRIES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INFIX_CACHE_MAX_ENTRIES&#160;&#160;&#160;1024</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -558,7 +576,7 @@ Functions</h2></td></tr>
 <p>Describes the physical location where a function argument is passed according to the ABI. </p>
 <p>This enumeration abstracts away the differences in how various ABIs use registers and the stack to pass data. It is the primary output of the ABI classification process. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a9b39a346147ae50d2f750d61390eae77" name="a563afdbfea1331be68965428418c4899a9b39a346147ae50d2f750d61390eae77"></a>ARG_LOCATION_GPR&#160;</td><td class="fielddoc"><p>Argument is passed in a general-purpose integer register (e.g., <code>RCX</code>, <code>RDI</code>, <code>X0</code>). </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a9b39a346147ae50d2f750d61390eae77" name="a563afdbfea1331be68965428418c4899a9b39a346147ae50d2f750d61390eae77"></a>ARG_LOCATION_GPR&#160;</td><td class="fielddoc"><p>Argument is passed in a general-purpose integer register (e.g., <code>RCX</code>, <code>RDI</code>, <code>X0</code>, <code>a0</code>). </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a563afdbfea1331be68965428418c4899a60e841f3dea3544b709c24b07c2a1821" name="a563afdbfea1331be68965428418c4899a60e841f3dea3544b709c24b07c2a1821"></a>ARG_LOCATION_XMM&#160;</td><td class="fielddoc"><p>(x64) Argument is passed in an SSE/XMM register (e.g., <code>XMM0</code>). </p>
 </td></tr>
@@ -691,6 +709,24 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> void _infix_cache_clear </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd76578532a54b9ce9f6eb1fffce4138" name="afd76578532a54b9ce9f6eb1fffce4138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd76578532a54b9ce9f6eb1fffce4138">&#9670;&#160;</a></span>_infix_cache_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="infix__config_8h.html#a280d05886c0cb71aa83c4ab137b8415e">INFIX_INTERNAL</a> size_t _infix_cache_count </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>

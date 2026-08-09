@@ -1,0 +1,5 @@
+<map id="src/core/allocator.c" name="src/core/allocator.c">
+<area shape="rect" id="Node000001" title="The process&#45;wide allocator table used for all of infix&#39;s internal heap allocations." alt="" coords="5,5,149,31"/>
+<area shape="rect" id="Node000002" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="35,79,119,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,44,80,79,75,79,75,44"/>
+</map>

@@ -137,10 +137,15 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a069f203eb4bd59c4b6e646ea3cef8c26" id="r_a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26">fuzzer_target_t</a> { <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3">TARGET_TYPE_GENERATOR</a>
+<tr class="memitem:a069f203eb4bd59c4b6e646ea3cef8c26" id="r_a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26">fuzzer_target_t</a> { <br />
+&#160;&#160;<a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3">TARGET_TYPE_GENERATOR</a>
 , <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883">TARGET_SIGNATURE_PARSER</a>
 , <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a">TARGET_TRAMPOLINE_GENERATOR</a>
 , <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a">TARGET_DIRECT_TRAMPOLINE_GENERATOR</a>
+, <br />
+&#160;&#160;<a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a43f585ae1360df0304b5115f871ec8a4">TARGET_ABI_CLASSIFIER</a>
+, <a class="el" href="850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a3d2438b39f09abfe9055e52e9de9f549">TARGET_CACHE_BOUNDED</a>
+<br />
  }</td></tr>
 <tr class="separator:a069f203eb4bd59c4b6e646ea3cef8c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -211,6 +216,8 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883" name="a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883"></a>TARGET_SIGNATURE_PARSER&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a" name="a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a"></a>TARGET_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a" name="a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a"></a>TARGET_DIRECT_TRAMPOLINE_GENERATOR&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a43f585ae1360df0304b5115f871ec8a4" name="a069f203eb4bd59c4b6e646ea3cef8c26a43f585ae1360df0304b5115f871ec8a4"></a>TARGET_ABI_CLASSIFIER&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a069f203eb4bd59c4b6e646ea3cef8c26a3d2438b39f09abfe9055e52e9de9f549" name="a069f203eb4bd59c4b6e646ea3cef8c26a3d2438b39f09abfe9055e52e9de9f549"></a>TARGET_CACHE_BOUNDED&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -467,7 +474,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="keywordtype">size_t</span> num_tests = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a>[0])</div>
-<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:60</div></div>
+<div class="ttc" id="a850__regression__cases_8c_html_ab67501984f4d33d142c20ee810cbd894"><div class="ttname"><a href="850__regression__cases_8c.html#ab67501984f4d33d142c20ee810cbd894">regression_tests</a></div><div class="ttdeci">static const regression_test_case_t regression_tests[]</div><div class="ttdef"><b>Definition</b> 850_regression_cases.c:62</div></div>
 </div><!-- fragment -->
 </div>
 </div>

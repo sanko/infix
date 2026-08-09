@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['len_0',['len',['../structStructWithFAM.html#a18c011c785297feb4a43618e2160e379',1,'StructWithFAM']]],
-  ['length_1',['length',['../structDataSeries.html#a18c04a5bf5c3a1410734cb956029d695',1,'DataSeries']]],
-  ['lib_5fa_5fname_2',['LIB_A_NAME',['../Ch06__LibraryDependencies_8c.html#a582b6c58449fa15b15586a2d77e91c65',1,'Ch06_LibraryDependencies.c']]],
-  ['lib_5fname_3',['lib_name',['../Ch05__CppMangledNames_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch05_CppMangledNames.c'],['../Ch05__CppTemplates_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch05_CppTemplates.c'],['../Ch05__CppVirtualFunctions_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch05_CppVirtualFunctions.c'],['../Ch06__GlobalVariables_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch06_GlobalVariables.c']]],
-  ['location_4',['location',['../structinfix__direct__arg__layout.html#a6606d86a984da8f2d5d99382358ea34a',1,'infix_direct_arg_layout']]]
+  ['leaves_0',['leaves',['../structrv64__all__leaf__list.html#aec7e954640d24ad4ebdfab87e8039890',1,'rv64_all_leaf_list']]],
+  ['len_1',['len',['../structStructWithFAM.html#a18c011c785297feb4a43618e2160e379',1,'StructWithFAM']]],
+  ['length_2',['length',['../structDataSeries.html#a18c04a5bf5c3a1410734cb956029d695',1,'DataSeries']]],
+  ['lib_5fa_5fname_3',['LIB_A_NAME',['../Ch06__LibraryDependencies_8c.html#a582b6c58449fa15b15586a2d77e91c65',1,'Ch06_LibraryDependencies.c']]],
+  ['lib_5fname_4',['lib_name',['../Ch05__CppMangledNames_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch05_CppMangledNames.c'],['../Ch05__CppTemplates_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch05_CppTemplates.c'],['../Ch05__CppVirtualFunctions_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch05_CppVirtualFunctions.c'],['../Ch06__GlobalVariables_8c.html#a90a6fe3c7e17d0e75acc1e959eff6b85',1,'LIB_NAME:&#160;Ch06_GlobalVariables.c']]],
+  ['location_5',['location',['../structinfix__direct__arg__layout.html#a6606d86a984da8f2d5d99382358ea34a',1,'infix_direct_arg_layout']]],
+  ['lru_5fnext_6',['lru_next',['../struct__cache__entry__t.html#aa60727185d8418ee1ea6fd46452683a3',1,'_cache_entry_t']]],
+  ['lru_5fprev_7',['lru_prev',['../struct__cache__entry__t.html#a0223e44d2ab0ccae5333c8e7d0f0ddb8',1,'_cache_entry_t']]]
 ];

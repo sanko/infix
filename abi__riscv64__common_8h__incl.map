@@ -1,0 +1,5 @@
+<map id="src/arch/riscv/abi_riscv64_common.h" name="src/arch/riscv/abi_riscv64_common.h">
+<area shape="rect" id="Node000001" title="Common register definitions and instruction encodings for the RISC&#45;V RV64GC architecture." alt="" coords="5,5,157,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="46,93,117,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,46,84,79,79,79,79,46"/>
+</map>

@@ -220,7 +220,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Extra bytes to allocate in a trampoline's private arena. </p>
-<p>Defines <code>INFIX_ARCH_*</code> for the two currently supported architectures. The library will fail to compile if the architecture is not one of these, as the JIT code emitters are architecture-specific.</p>
+<p>Defines <code>INFIX_ARCH_*</code> for the supported architectures. The library will fail to compile if the architecture is not one of these, as the JIT code emitters are architecture-specific.</p>
 <p>This is the most critical section of the configuration. It determines which ABI implementation will be compiled and used by the JIT engine.</p>
 <p>It supports two modes:</p><ol type="1">
 <li><b>Forced ABI:</b> A user can define <code>INFIX_FORCE_ABI_*</code> (e.g., via a compiler flag like <code>-DINFIX_FORCE_ABI_SYSV_X64</code>) to override automatic detection. This is essential for cross-compilation, where the host compiler's macros would not reflect the target environment.</li>

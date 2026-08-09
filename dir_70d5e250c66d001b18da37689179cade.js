@@ -1,5 +1,6 @@
 var dir_70d5e250c66d001b18da37689179cade =
 [
     [ "aarch64", "dir_49610b2200846401e1c49e6871f5269a.html", "dir_49610b2200846401e1c49e6871f5269a" ],
+    [ "riscv", "dir_3230303e5984acafe45a2f99e1efc49d.html", "dir_3230303e5984acafe45a2f99e1efc49d" ],
     [ "x64", "dir_469590fa3792927175a3ef254e19d19c.html", "dir_469590fa3792927175a3ef254e19d19c" ]
 ];

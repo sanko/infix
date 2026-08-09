@@ -1,0 +1,30 @@
+<map id="src/arch/riscv/abi_riscv64_emitters.h" name="src/arch/riscv/abi_riscv64_emitters.h">
+<area shape="rect" id="Node000001" title="Public interface for emitting RISC&#45;V (RV64GC) instructions." alt="" coords="101,5,252,45"/>
+<area shape="rect" id="Node000002" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="158,93,345,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,44,233,81,229,85,193,47"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="374,387,457,412"/>
+<area shape="poly" id="edge16_Node000001_Node000007" title=" " alt="" coords="253,36,356,57,466,87,515,106,554,127,581,151,589,164,591,178,591,254,588,278,579,300,565,319,547,337,506,364,464,384,462,379,503,360,544,333,561,316,574,297,583,277,586,254,586,178,584,166,577,154,551,131,512,111,464,92,354,62,252,41"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="119,387,194,412"/>
+<area shape="poly" id="edge17_Node000001_Node000008" title=" " alt="" coords="154,48,128,71,102,102,82,138,76,158,74,178,74,254,79,298,99,337,115,358,133,376,129,380,111,362,94,340,74,299,69,254,69,178,71,157,77,136,98,99,124,68,150,44"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="5,387,76,412"/>
+<area shape="poly" id="edge18_Node000001_Node000009" title=" " alt="" coords="136,48,99,69,62,99,34,135,26,156,23,178,23,254,28,318,38,373,32,374,23,319,18,254,18,178,21,154,30,132,58,95,96,65,133,43"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="331,313,500,339"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,117,308,165,339,201,367,239,405,300,400,302,362,241,335,204,304,168,260,121"/>
+<area shape="rect" id="Node000004" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="400,167,551,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="288,116,427,160,425,165,287,121"/>
+<area shape="rect" id="Node000006" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="109,313,204,339"/>
+<area shape="poly" id="edge14_Node000002_Node000006" title=" " alt="" coords="241,121,221,142,200,168,181,203,169,241,160,300,155,299,163,239,176,201,196,165,217,138,237,117"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="209,167,293,192"/>
+<area shape="poly" id="edge15_Node000002_Node000010" title=" " alt="" coords="254,119,254,153,249,153,249,119"/>
+<area shape="poly" id="edge12_Node000004_Node000003" title=" " alt="" coords="473,193,428,302,423,299,468,191"/>
+<area shape="rect" id="Node000005" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="177,240,352,265"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="442,195,312,238,311,233,441,189"/>
+<area shape="poly" id="edge13_Node000004_Node000007" title=" " alt="" coords="486,191,502,218,518,256,525,299,523,320,515,340,493,366,464,383,462,379,489,362,510,337,518,319,520,299,513,258,497,221,481,194"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="290,263,379,305,377,310,288,268"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="249,268,187,308,184,303,246,263"/>
+<area shape="poly" id="edge10_Node000005_Node000007" title=" " alt="" coords="272,264,292,299,321,337,350,360,380,378,377,383,347,364,317,341,287,302,268,267"/>
+<area shape="poly" id="edge11_Node000005_Node000008" title=" " alt="" coords="262,267,244,301,219,340,182,379,178,376,215,337,240,298,257,264"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="199,336,362,381,360,386,198,341"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="159,339,159,373,154,373,154,339"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="139,341,73,382,70,377,137,336"/>
+</map>

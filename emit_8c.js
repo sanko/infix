@@ -11,6 +11,7 @@ var emit_8c =
     [ "_emit_lookup_section", "emit_8c.html#ae9b3e7b7c4bdc2f92aff870addcee311", null ],
     [ "_emit_lookup_symbol", "emit_8c.html#a5116d1df7e6833019515846d7517f0d2", null ],
     [ "_emit_resolve_relocations", "emit_8c.html#a3bef3e106ae82be8c7b9c1a72329a3c3", null ],
+    [ "_emit_strdup", "emit_8c.html#a386bd06a9a160f6aef6c0f6201a0f0de", null ],
     [ "_ensure_section_capacity", "emit_8c.html#a52f112f5a38b839b7ffb4838d1a567d1", null ],
     [ "emit_add_relocation", "emit_8c.html#a9dfd9fc556d28332403a3c2e6903241d", null ],
     [ "emit_add_section", "emit_8c.html#aa4fd95d136c8dde7668f535c0ca90571", null ],

@@ -6,7 +6,9 @@ var 850__regression__cases_8c =
       [ "TARGET_TYPE_GENERATOR", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a2246791a3ac8f7a85236a7ef499a89d3", null ],
       [ "TARGET_SIGNATURE_PARSER", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26ac1087e2263e08e0f1e32f593dd317883", null ],
       [ "TARGET_TRAMPOLINE_GENERATOR", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a494ecff800c5258badaa4a6594bf475a", null ],
-      [ "TARGET_DIRECT_TRAMPOLINE_GENERATOR", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a", null ]
+      [ "TARGET_DIRECT_TRAMPOLINE_GENERATOR", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26adaa759a72b46b692183937e9e902766a", null ],
+      [ "TARGET_ABI_CLASSIFIER", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a43f585ae1360df0304b5115f871ec8a4", null ],
+      [ "TARGET_CACHE_BOUNDED", "850__regression__cases_8c.html#a069f203eb4bd59c4b6e646ea3cef8c26a3d2438b39f09abfe9055e52e9de9f549", null ]
     ] ],
     [ "dummy_agg_marshaller", "850__regression__cases_8c.html#a9d1cccceee863e55223f3605dcbe6473", null ],
     [ "dummy_reg_handler", "850__regression__cases_8c.html#ab0ce6fb1160ee0e1ea988c69ed613d18", null ],

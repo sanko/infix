@@ -103,8 +103,10 @@ $(document).ready(function(){initNavTree('group__memory__management.html',''); i
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Memory Management<div class="ingroups"><a class="el" href="group__high__level__api.html">High-Level Signature API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -117,20 +119,25 @@ Collaboration diagram for Memory Management:</div>
 <div class="center"><iframe scrolling="no" frameborder="0" src="group__memory__management.svg" width="408" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:gae386105bc20f1819f8ffc8e808f0a7d9" id="r_gae386105bc20f1819f8ffc8e808f0a7d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gae386105bc20f1819f8ffc8e808f0a7d9">infix_malloc</a>&#160;&#160;&#160;malloc</td></tr>
-<tr class="memdesc:gae386105bc20f1819f8ffc8e808f0a7d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override the default <code>malloc</code> function.  <br /></td></tr>
-<tr class="separator:gae386105bc20f1819f8ffc8e808f0a7d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5c774b30b31bdd5524a1f34a89335fe6" id="r_ga5c774b30b31bdd5524a1f34a89335fe6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga5c774b30b31bdd5524a1f34a89335fe6">infix_calloc</a>&#160;&#160;&#160;calloc</td></tr>
-<tr class="memdesc:ga5c774b30b31bdd5524a1f34a89335fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override the default <code>calloc</code> function.  <br /></td></tr>
-<tr class="separator:ga5c774b30b31bdd5524a1f34a89335fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga84d15b7c77d469bf3e41faaa8a74b629" id="r_ga84d15b7c77d469bf3e41faaa8a74b629"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga84d15b7c77d469bf3e41faaa8a74b629">infix_realloc</a>&#160;&#160;&#160;realloc</td></tr>
-<tr class="memdesc:ga84d15b7c77d469bf3e41faaa8a74b629"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override the default <code>realloc</code> function.  <br /></td></tr>
-<tr class="separator:ga84d15b7c77d469bf3e41faaa8a74b629"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga04e9a217a378e5c109ddfaef2f775d31" id="r_ga04e9a217a378e5c109ddfaef2f775d31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga04e9a217a378e5c109ddfaef2f775d31">infix_free</a>&#160;&#160;&#160;<a class="el" href="904__registry__benchmark_8c.html#a436ed185228ea99d3173c3045401fdd7">free</a></td></tr>
-<tr class="memdesc:ga04e9a217a378e5c109ddfaef2f775d31"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override the default <code>free</code> function.  <br /></td></tr>
-<tr class="separator:ga04e9a217a378e5c109ddfaef2f775d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga459e3866dfd0e173cc062562b10dc04b" id="r_ga459e3866dfd0e173cc062562b10dc04b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga459e3866dfd0e173cc062562b10dc04b">infix_malloc</a>(n)&#160;&#160;&#160;infix_allocator.malloc(n)</td></tr>
+<tr class="memdesc:ga459e3866dfd0e173cc062562b10dc04b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override infix's allocator at compile time.  <br /></td></tr>
+<tr class="separator:ga459e3866dfd0e173cc062562b10dc04b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga28183be3d9f834fe941113a294c2fdf8" id="r_ga28183be3d9f834fe941113a294c2fdf8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga28183be3d9f834fe941113a294c2fdf8">infix_calloc</a>(nelem,  size)&#160;&#160;&#160;infix_allocator.calloc(nelem, size)</td></tr>
+<tr class="memdesc:ga28183be3d9f834fe941113a294c2fdf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override infix's allocator at compile time.  <br /></td></tr>
+<tr class="separator:ga28183be3d9f834fe941113a294c2fdf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga416aacab4908109eccb18102ec3cf775" id="r_ga416aacab4908109eccb18102ec3cf775"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga416aacab4908109eccb18102ec3cf775">infix_realloc</a>(ptr,  n)&#160;&#160;&#160;infix_allocator.realloc(ptr, n)</td></tr>
+<tr class="memdesc:ga416aacab4908109eccb18102ec3cf775"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override infix's allocator at compile time.  <br /></td></tr>
+<tr class="separator:ga416aacab4908109eccb18102ec3cf775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3e681db4a5f9ce30fe53913cf656a7c8" id="r_ga3e681db4a5f9ce30fe53913cf656a7c8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga3e681db4a5f9ce30fe53913cf656a7c8">infix_free</a>(ptr)&#160;&#160;&#160;<a class="el" href="904__registry__benchmark_8c.html#a436ed185228ea99d3173c3045401fdd7">infix_allocator.free</a>(ptr)</td></tr>
+<tr class="memdesc:ga3e681db4a5f9ce30fe53913cf656a7c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override infix's allocator at compile time.  <br /></td></tr>
+<tr class="separator:ga3e681db4a5f9ce30fe53913cf656a7c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5453d4e1b0c22fec8b5265c786bb7d9e" id="r_ga5453d4e1b0c22fec8b5265c786bb7d9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga5453d4e1b0c22fec8b5265c786bb7d9e">infix_memcpy</a>&#160;&#160;&#160;memcpy</td></tr>
 <tr class="memdesc:ga5453d4e1b0c22fec8b5265c786bb7d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A macro that can be defined to override the default <code>memcpy</code> function.  <br /></td></tr>
 <tr class="separator:ga5453d4e1b0c22fec8b5265c786bb7d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,6 +147,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gaf664085e93821c1a8a22e17860ac1f6a" id="r_gaf664085e93821c1a8a22e17860ac1f6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gaf664085e93821c1a8a22e17860ac1f6a">infix_set_allocator</a> (const <a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a> *allocator)</td></tr>
+<tr class="memdesc:gaf664085e93821c1a8a22e17860ac1f6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the allocator infix uses for all internal heap allocations.  <br /></td></tr>
+<tr class="separator:gaf664085e93821c1a8a22e17860ac1f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab81d4a611a176166ec13c31fb51c55cb" id="r_gab81d4a611a176166ec13c31fb51c55cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> <a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gab81d4a611a176166ec13c31fb51c55cb">infix_arena_create</a> (size_t)</td></tr>
 <tr class="memdesc:gab81d4a611a176166ec13c31fb51c55cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new memory arena.  <br /></td></tr>
 <tr class="separator:gab81d4a611a176166ec13c31fb51c55cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,56 +162,85 @@ Functions</h2></td></tr>
 <tr class="memitem:gabbf76b863b1a10d8a09b5b0a8181b5bf" id="r_gabbf76b863b1a10d8a09b5b0a8181b5bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__version__info.html#gaf6436c47724bc1059aa82f37329f7991">INFIX_API</a> <a class="el" href="group__version__info.html#ga9806a5783de91a5ddc7798bca59aaa10">INFIX_NODISCARD</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#gabbf76b863b1a10d8a09b5b0a8181b5bf">infix_arena_calloc</a> (<a class="el" href="structinfix__arena__t.html">infix_arena_t</a> *, size_t, size_t, size_t)</td></tr>
 <tr class="memdesc:gabbf76b863b1a10d8a09b5b0a8181b5bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates and zero-initializes a block of memory from an arena.  <br /></td></tr>
 <tr class="separator:gabbf76b863b1a10d8a09b5b0a8181b5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga200f8af6bba59777e96ca2b54c4fa7af" id="r_ga200f8af6bba59777e96ca2b54c4fa7af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__memory__management.html#ga200f8af6bba59777e96ca2b54c4fa7af">infix_allocator</a></td></tr>
+<tr class="memdesc:ga200f8af6bba59777e96ca2b54c4fa7af"><td class="mdescLeft">&#160;</td><td class="mdescRight">The allocator currently used for all of infix's internal heap allocations.  <br /></td></tr>
+<tr class="separator:ga200f8af6bba59777e96ca2b54c4fa7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>APIs for memory management, including custom allocators and arenas. </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga5c774b30b31bdd5524a1f34a89335fe6" name="ga5c774b30b31bdd5524a1f34a89335fe6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5c774b30b31bdd5524a1f34a89335fe6">&#9670;&#160;</a></span>infix_calloc</h2>
+<a id="ga28183be3d9f834fe941113a294c2fdf8" name="ga28183be3d9f834fe941113a294c2fdf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga28183be3d9f834fe941113a294c2fdf8">&#9670;&#160;</a></span>infix_calloc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define infix_calloc&#160;&#160;&#160;calloc</td>
+          <td class="memname">#define infix_calloc</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">nelem, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">size&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;infix_allocator.calloc(nelem, size)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A macro that can be defined to override the default <code>calloc</code> function. </p>
+<p>A macro that can be defined to override infix's allocator at compile time. </p>
 
 </div>
 </div>
-<a id="ga04e9a217a378e5c109ddfaef2f775d31" name="ga04e9a217a378e5c109ddfaef2f775d31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga04e9a217a378e5c109ddfaef2f775d31">&#9670;&#160;</a></span>infix_free</h2>
+<a id="ga3e681db4a5f9ce30fe53913cf656a7c8" name="ga3e681db4a5f9ce30fe53913cf656a7c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3e681db4a5f9ce30fe53913cf656a7c8">&#9670;&#160;</a></span>infix_free</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define infix_free&#160;&#160;&#160;<a class="el" href="904__registry__benchmark_8c.html#a436ed185228ea99d3173c3045401fdd7">free</a></td>
+          <td class="memname">#define infix_free</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">ptr</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="904__registry__benchmark_8c.html#a436ed185228ea99d3173c3045401fdd7">infix_allocator.free</a>(ptr)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A macro that can be defined to override the default <code>free</code> function. </p>
+<p>A macro that can be defined to override infix's allocator at compile time. </p>
 
 </div>
 </div>
-<a id="gae386105bc20f1819f8ffc8e808f0a7d9" name="gae386105bc20f1819f8ffc8e808f0a7d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae386105bc20f1819f8ffc8e808f0a7d9">&#9670;&#160;</a></span>infix_malloc</h2>
+<a id="ga459e3866dfd0e173cc062562b10dc04b" name="ga459e3866dfd0e173cc062562b10dc04b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga459e3866dfd0e173cc062562b10dc04b">&#9670;&#160;</a></span>infix_malloc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define infix_malloc&#160;&#160;&#160;malloc</td>
+          <td class="memname">#define infix_malloc</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n</td><td>)</td>
+          <td>&#160;&#160;&#160;infix_allocator.malloc(n)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A macro that can be defined to override the default <code>malloc</code> function. </p>
-<p>If you need to integrate <code>infix</code> with a custom memory allocator (e.g., for memory tracking or garbage collection), define this macro <b>before</b> including <code><a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a></code>. You must also define the other <code>infix_*</code> memory macros. </p><div class="fragment"><div class="line"><span class="preprocessor">#define infix_malloc my_custom_malloc</span></div>
+<p>A macro that can be defined to override infix's allocator at compile time. </p>
+<p>infix routes every internal heap allocation through the <code>infix_malloc</code>, <code>infix_calloc</code>, <code>infix_realloc</code>, and <code>infix_free</code> macros. By default they dispatch to the runtime allocator installed with <code><a class="el" href="group__memory__management.html#gaf664085e93821c1a8a22e17860ac1f6a" title="Replaces the allocator infix uses for all internal heap allocations.">infix_set_allocator()</a></code>.</p>
+<p>If you prefer a compile-time override (no indirect call at all), define these macros <b>before</b> including <code><a class="el" href="infix_8h.html" title="The public interface for the infix FFI library.">infix.h</a></code>. You must then define all four consistently, and anything that frees infix-owned memory must use <code>infix_free</code>. </p><div class="fragment"><div class="line"><span class="preprocessor">#define infix_malloc my_custom_malloc</span></div>
 <div class="line"><span class="preprocessor">#define infix_calloc my_custom_calloc</span></div>
 <div class="line"><span class="preprocessor">#define infix_free my_custom_free</span></div>
 <div class="line"><span class="preprocessor">#define infix_realloc my_custom_realloc</span></div>
@@ -242,19 +281,33 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga84d15b7c77d469bf3e41faaa8a74b629" name="ga84d15b7c77d469bf3e41faaa8a74b629"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga84d15b7c77d469bf3e41faaa8a74b629">&#9670;&#160;</a></span>infix_realloc</h2>
+<a id="ga416aacab4908109eccb18102ec3cf775" name="ga416aacab4908109eccb18102ec3cf775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga416aacab4908109eccb18102ec3cf775">&#9670;&#160;</a></span>infix_realloc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define infix_realloc&#160;&#160;&#160;realloc</td>
+          <td class="memname">#define infix_realloc</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">ptr, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;infix_allocator.realloc(ptr, n)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A macro that can be defined to override the default <code>realloc</code> function. </p>
+<p>A macro that can be defined to override infix's allocator at compile time. </p>
 
 </div>
 </div>
@@ -406,6 +459,60 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="gaf664085e93821c1a8a22e17860ac1f6a" name="gaf664085e93821c1a8a22e17860ac1f6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf664085e93821c1a8a22e17860ac1f6a">&#9670;&#160;</a></span>infix_set_allocator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void infix_set_allocator </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a> *&#160;</td>
+          <td class="paramname"><em>allocator</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Replaces the allocator infix uses for all internal heap allocations. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">allocator</td><td>A pointer to a valid <code><a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a></code>, or <code>NULL</code> to restore the default C library allocator.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>infix copies the callback pointers, so the caller may pass a temporary struct. Call this before creating any trampolines (typically during host initialization) and before infix is used from more than one thread, since the table is not internally synchronized.</p>
+<p>Every pointer infix returns must be freed through the same allocator: callers that release infix-owned memory (such as the buffer returned by <code>emit_get_binary</code>) must use <code>infix_free</code> or the equivalent entry point of the allocator they installed rather than the C library's <code>free</code>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga200f8af6bba59777e96ca2b54c4fa7af" name="ga200f8af6bba59777e96ca2b54c4fa7af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga200f8af6bba59777e96ca2b54c4fa7af">&#9670;&#160;</a></span>infix_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a> infix_allocator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The allocator currently used for all of infix's internal heap allocations. </p>
+<p>Initialized to the C library's <code>malloc</code>/<code>calloc</code>/<code>realloc</code>/<code>free</code>. Do not assign to it directly. Use <code><a class="el" href="group__memory__management.html#gaf664085e93821c1a8a22e17860ac1f6a" title="Replaces the allocator infix uses for all internal heap allocations.">infix_set_allocator()</a></code> so the documentation and any future locking stay in one place. </p>
 
 </div>
 </div>
