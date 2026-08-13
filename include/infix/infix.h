@@ -222,6 +222,8 @@ typedef struct infix_arena_t infix_arena_t;
 typedef struct infix_library_t infix_library_t;
 /** @brief An opaque handle to a named type registry. */
 typedef struct infix_registry_t infix_registry_t;
+
+
 /**
  * @brief Enumerates the fundamental categories of types that `infix` can represent.
  */
@@ -1554,6 +1556,16 @@ typedef struct {
     /** @brief For "out" or "in-out" parameters. Called after the C function returns. */
     infix_writeback_fn writeback_handler;
 } infix_direct_arg_handler_t;
+
+
+typedef struct {
+    infix_arena_t * block;
+    size_t offset;
+} infix_arena_mark_t;
+
+
+INFIX_API infix_arena_mark_t infix_arena_get_mark(infix_arena_t * arena);
+INFIX_API void infix_arena_rewind(infix_arena_t * arena, infix_arena_mark_t mark);
 
 /**
  * @brief Creates a forward trampoline with direct, JIT-bound marshalling.
