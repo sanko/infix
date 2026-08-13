@@ -5,6 +5,12 @@ All notable changes to `infix` will (I hope) be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `infix_arena_get_mark()` and `infix_arena_rewind()` let callers capture the current allocation state of an arena chain and rewind it later, resetting the marked block and every secondary block for immediate reuse. This gives hosts a way to reuse per-call arenas instead of destroying and recreating them (Affix uses it to recycle its 4096-byte argument arenas across FFI calls).
+
 ## [0.2.1] - 2026-08-04
 
 This release fixes memory growth in the trampoline cache, a RISC-V classifier hang on zero-sized aggregate chains, and wrong field offsets for struct-typed FFI arguments declared inline in function signatures.
