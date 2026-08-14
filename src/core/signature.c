@@ -284,7 +284,7 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                     size_t width_val = 0;
                     if (!parse_size_t(state, &width_val))
                         return nullptr;  // Error set by parse_size_t
-                    if (width_val > 255) {
+                    if (width_val > 64) {
                         _infix_set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
                         return nullptr;
                     }
