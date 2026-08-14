@@ -813,6 +813,10 @@ static infix_status prepare_reverse_call_frame_arm64(infix_arena_t * arena,
     if (!layout)
         return INFIX_ERROR_ALLOCATION_FAILED;
     // The return buffer must be large enough and aligned for any type.
+    if (context->return_type->size > INFIX_MAX_ARG_SIZE) {
+        *out_layout = nullptr;
+        return INFIX_ERROR_LAYOUT_FAILED;
+    }
     size_t return_size = (context->return_type->size + 15) & ~15;
     // The array of pointers that will be passed to the C dispatcher.
     size_t args_array_size = (context->num_args * sizeof(void *) + 15) & ~15;
