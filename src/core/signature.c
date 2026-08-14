@@ -1245,15 +1245,15 @@ static void _infix_type_print_body_only_recursive(printer_state * state, const i
  * would otherwise recurse forever; the guard bounds the descent and aborts
  * the print with an error once the cap is exceeded.
  */
-#define PRINT_RECURSE(state, fn, arg)                                      \
-    do {                                                                   \
-        if ((state)->depth >= MAX_PRINT_RECURSION_DEPTH) {                 \
-            (state)->status = INFIX_ERROR_INVALID_ARGUMENT;                \
-            return;                                                        \
-        }                                                                  \
-        (state)->depth++;                                                  \
-        fn((state), (arg));                                                \
-        (state)->depth--;                                                  \
+#define PRINT_RECURSE(state, fn, arg)                       \
+    do {                                                    \
+        if ((state)->depth >= MAX_PRINT_RECURSION_DEPTH) {  \
+            (state)->status = INFIX_ERROR_INVALID_ARGUMENT; \
+            return;                                         \
+        }                                                   \
+        (state)->depth++;                                   \
+        fn((state), (arg));                                 \
+        (state)->depth--;                                   \
     } while (0)
 
 // Itanium Mangling Helpers
