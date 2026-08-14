@@ -536,8 +536,8 @@ TEST {
         infix_direct_arg_handler_t handlers[1] = {{.aggregate_marshaller = &mock_marshaller_raw}};
 
         infix_forward_t * tr = NULL;
-        infix_status st = infix_forward_create_direct(
-            &tr, "({arr:[4:uint16],x:uint16}) -> int", (void *)&am_sum_u16, handlers, reg);
+        infix_status st =
+            infix_forward_create_direct(&tr, "({arr:[4:uint16],x:uint16}) -> int", (void *)&am_sum_u16, handlers, reg);
         ok(st == INFIX_SUCCESS, "Created direct trampoline for {arr:[4:uint16],x:uint16}");
         if (st == INFIX_SUCCESS) {
             AM_U16x4 src = {{10, 20, 30, 40}, 7};
@@ -550,8 +550,7 @@ TEST {
         }
 
         infix_forward_t * tr8 = NULL;
-        st = infix_forward_create_direct(
-            &tr8, "({arr:[4:uint8],x:uint8}) -> int", (void *)&am_sum_u8, handlers, reg);
+        st = infix_forward_create_direct(&tr8, "({arr:[4:uint8],x:uint8}) -> int", (void *)&am_sum_u8, handlers, reg);
         ok(st == INFIX_SUCCESS, "Created direct trampoline for {arr:[4:uint8],x:uint8}");
         if (st == INFIX_SUCCESS) {
             AM_U8x4 src = {{1, 2, 3, 4}, 9};
