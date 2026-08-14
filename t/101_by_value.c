@@ -121,6 +121,47 @@ int process_char_array_param(char s[20]) {
     return 0;      // Failure
 }
 
+typedef struct {
+    unsigned short arr[2];
+    unsigned short x;
+} SmallArr6;
+typedef struct {
+    unsigned char arr[2];
+    unsigned char a;
+    unsigned char b;
+    unsigned char c;
+} SmallArr5;
+typedef struct {
+    unsigned char arr[2];
+    unsigned char a;
+    unsigned char b;
+    unsigned char c;
+    unsigned char d;
+    unsigned char e;
+} SmallArr7;
+DBLTAP_NOINLINE int sum_smallarr6(SmallArr6 s) { return (int)s.arr[0] + (int)s.arr[1] + (int)s.x; }
+DBLTAP_NOINLINE int sum_smallarr5(SmallArr5 s) {
+    return (int)s.arr[0] + (int)s.arr[1] + (int)s.a + (int)s.b + (int)s.c;
+}
+DBLTAP_NOINLINE int sum_smallarr7(SmallArr7 s) {
+    return (int)s.arr[0] + (int)s.arr[1] + (int)s.a + (int)s.b + (int)s.c + (int)s.d + (int)s.e;
+}
+static void run_small_byval_case(
+    const char * name, void * fn, infix_type * struct_type, const void * value, int expected) {
+    infix_forward_t * trampoline = NULL;
+    if (infix_forward_create_manual(
+            &trampoline, infix_type_create_primitive(INFIX_PRIMITIVE_SINT32), &struct_type, 1, 1, fn) != INFIX_SUCCESS)
+        fail("Failed to create trampoline for %s.", name);
+    else {
+        void * args[] = {(void *)value};
+        int result = 0;
+        infix_cif_func cif = infix_forward_get_code(trampoline);
+        cif(&result, args);
+        ok(result == expected, "%s by-value struct roundtripped (got %d, want %d)", name, result, expected);
+        infix_forward_destroy(trampoline);
+    }
+}
+
 #if defined(INFIX_ARCH_X86_AVX2) || defined(INFIX_ARCH_X86_AVX512)
 // Helper to ensure strict alignment for AVX types, which malloc/calloc
 // on Windows (16-byte align) does not guarantee.
@@ -144,7 +185,7 @@ static void free_aligned(void * p) {
 }
 #endif
 TEST {
-    plan(10);
+    plan(11);
     subtest("Simple struct (Point) passed and returned by value") {
         plan(7);
         infix_arena_t * arena = infix_arena_create(4096);
@@ -670,5 +711,84 @@ TEST {
 #else
         skip(2, "This test is specific to the System V x64 ABI.");
 #endif
+    }
+    subtest("Small by-value structs with array members (regression)") {
+        plan(6);
+        note("Verifying 5/6/7-byte structs with array members pass all members by value.");
+        infix_arena_t * arena = infix_arena_create(4096);
+        infix_type * u16 = infix_type_create_primitive(INFIX_PRIMITIVE_UINT16);
+        infix_type * u8 = infix_type_create_primitive(INFIX_PRIMITIVE_UINT8);
+        {
+            // { uint16_t arr[2]; uint16_t x; } (6 bytes)
+            infix_type * arr_type = NULL;
+            infix_status arr_status = infix_type_create_array(arena, &arr_type, u16, 2);
+            infix_struct_member members[] = {
+                infix_type_create_member("arr", arr_type, offsetof(SmallArr6, arr)),
+                infix_type_create_member("x", u16, offsetof(SmallArr6, x)),
+            };
+            infix_type * struct_type = NULL;
+            if (arr_status != INFIX_SUCCESS ||
+                infix_type_create_struct(arena, &struct_type, members, 2) != INFIX_SUCCESS) {
+                fail("Failed to create SmallArr6 type");
+                skip(1, "Cannot proceed with SmallArr6 call");
+            }
+            else {
+                ok(1, "Created SmallArr6 type");
+                SmallArr6 val = {{0x6CE6, 0x13BD}, 0x6436};
+                run_small_byval_case("SmallArr6", (void *)sum_smallarr6, struct_type, &val, 0x6CE6 + 0x13BD + 0x6436);
+            }
+        }
+        {
+            // { uint8_t arr[2]; uint8_t a,b,c; } (5 bytes)
+            infix_type * arr_type = NULL;
+            infix_status arr_status = infix_type_create_array(arena, &arr_type, u8, 2);
+            infix_struct_member members[] = {
+                infix_type_create_member("arr", arr_type, offsetof(SmallArr5, arr)),
+                infix_type_create_member("a", u8, offsetof(SmallArr5, a)),
+                infix_type_create_member("b", u8, offsetof(SmallArr5, b)),
+                infix_type_create_member("c", u8, offsetof(SmallArr5, c)),
+            };
+            infix_type * struct_type = NULL;
+            if (arr_status != INFIX_SUCCESS ||
+                infix_type_create_struct(arena, &struct_type, members, 4) != INFIX_SUCCESS) {
+                fail("Failed to create SmallArr5 type");
+                skip(1, "Cannot proceed with SmallArr5 call");
+            }
+            else {
+                ok(1, "Created SmallArr5 type");
+                SmallArr5 val = {{0x0A, 0x14}, 0x1E, 0x28, 0x32};
+                run_small_byval_case(
+                    "SmallArr5", (void *)sum_smallarr5, struct_type, &val, 0x0A + 0x14 + 0x1E + 0x28 + 0x32);
+            }
+        }
+        {
+            // { uint8_t arr[2]; uint8_t a,b,c,d,e; } (7 bytes)
+            infix_type * arr_type = NULL;
+            infix_status arr_status = infix_type_create_array(arena, &arr_type, u8, 2);
+            infix_struct_member members[] = {
+                infix_type_create_member("arr", arr_type, offsetof(SmallArr7, arr)),
+                infix_type_create_member("a", u8, offsetof(SmallArr7, a)),
+                infix_type_create_member("b", u8, offsetof(SmallArr7, b)),
+                infix_type_create_member("c", u8, offsetof(SmallArr7, c)),
+                infix_type_create_member("d", u8, offsetof(SmallArr7, d)),
+                infix_type_create_member("e", u8, offsetof(SmallArr7, e)),
+            };
+            infix_type * struct_type = NULL;
+            if (arr_status != INFIX_SUCCESS ||
+                infix_type_create_struct(arena, &struct_type, members, 6) != INFIX_SUCCESS) {
+                fail("Failed to create SmallArr7 type");
+                skip(1, "Cannot proceed with SmallArr7 call");
+            }
+            else {
+                ok(1, "Created SmallArr7 type");
+                SmallArr7 val = {{0x01, 0x02}, 0x04, 0x08, 0x10, 0x20, 0x40};
+                run_small_byval_case("SmallArr7",
+                                     (void *)sum_smallarr7,
+                                     struct_type,
+                                     &val,
+                                     0x01 + 0x02 + 0x04 + 0x08 + 0x10 + 0x20 + 0x40);
+            }
+        }
+        infix_arena_destroy(arena);
     }
 }
