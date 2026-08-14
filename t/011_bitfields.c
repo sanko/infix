@@ -19,6 +19,13 @@ typedef struct {
     unsigned int d : 1;
 } BitfieldStruct;
 
+typedef struct {
+    unsigned int a : 16;
+    unsigned int b : 16;
+    unsigned int c : 16;
+    unsigned int d : 16;
+} TrailingUnitBitfields;
+
 void bitfield_handler(infix_reverse_t * ctx, void * ret, void ** args) {
     (void)ctx;
     BitfieldStruct * s = (BitfieldStruct *)args[0];
@@ -32,7 +39,7 @@ void bitfield_handler(infix_reverse_t * ctx, void * ret, void ** args) {
 }
 
 TEST {
-    plan(1);
+    plan(2);
     subtest("Basic Bitfields") {
         plan(8);
         infix_arena_t * arena = NULL;
@@ -64,6 +71,39 @@ TEST {
                 ok(result == 116, "Bitfield handler returned correct sum (%d)", result);
 
                 infix_reverse_destroy(ctx);
+            }
+        }
+
+        infix_arena_destroy(arena);
+    }
+    subtest("Trailing Storage Unit Bitfield Offsets") {
+        plan(6);
+        infix_arena_t * arena = NULL;
+
+        // signature: "{a: uint32:16, b: uint32:16, c: uint32:16, d: uint32:16}"
+        const char * sig = "{a: uint32:16, b: uint32:16, c: uint32:16, d: uint32:16}";
+        infix_type * stype = NULL;
+        infix_status status = infix_type_from_signature(&stype, &arena, sig, NULL);
+        ok(status == INFIX_SUCCESS, "Parsed trailing-unit bitfield struct signature");
+
+        if (stype) {
+            ok(stype->size == sizeof(TrailingUnitBitfields),
+               "Struct size matches native (%llu == %llu)",
+               (unsigned long long)stype->size,
+               (unsigned long long)sizeof(TrailingUnitBitfields));
+
+            // Regression: bitfield members record the storage-unit base in
+            // `offset` with `bit_offset` relative to that unit, so unit-sized
+            // loads/stores stay inside the aggregate. The old layout put `d`
+            // at byte 6 (bit 0), driving 4-byte accesses 2 bytes past the end
+            // of this 8-byte struct.
+            const size_t exp_offset[] = {0, 0, 4, 4};
+            const uint8_t exp_bit_offset[] = {0, 16, 0, 16};
+            for (size_t i = 0; i < 4; ++i) {
+                const infix_struct_member * m = infix_type_get_member(stype, i);
+                ok(m && m->offset == exp_offset[i] && m->bit_offset == exp_bit_offset[i],
+                   "Member %c offset %zu bit_offset %u",
+                   (int)('a' + i), exp_offset[i], (unsigned)exp_bit_offset[i]);
             }
         }
 

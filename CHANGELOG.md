@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `infix_arena_get_mark()` and `infix_arena_rewind()` let callers capture the current allocation state of an arena chain and rewind it later, resetting the marked block and every secondary block for immediate reuse. This gives hosts a way to reuse per-call arenas instead of destroying and recreating them (Affix uses it to recycle its 4096-byte argument arenas across FFI calls).
 
+### Fixed
+
+- Bitfield member layout now records the storage-unit base in `member->offset` with `bit_offset` relative to that unit, instead of pointing `member->offset` at the bitfield's own (possibly mid-unit) byte with a `% 8` bit remainder. Callers that read or write a whole storage unit, like Affix's marshaller and pinned bitfield magic, always stay within the aggregate's bounds now; previously a bitfield whose low bit was not byte-aligned could drive a unit-sized access one byte past the end of the struct (heap-buffer-overflow caught by ASan).
+- JIT executable memory is now flushed with `FlushInstructionCache` whenever built on Windows, including clang builds.
+
 ## [0.2.1] - 2026-08-04
 
 This release fixes memory growth in the trampoline cache, a RISC-V classifier hang on zero-sized aggregate chains, and wrong field offsets for struct-typed FFI arguments declared inline in function signatures.

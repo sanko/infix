@@ -337,9 +337,9 @@ struct infix_type_t {
 struct infix_struct_member_t {
     const char * name;  /**< The name of the member, or `nullptr` if anonymous. */
     infix_type * type;  /**< The `infix_type` of the member. */
-    size_t offset;      /**< The byte offset of the member from the start of the aggregate. */
+    size_t offset;      /**< The byte offset of the member from the start of the aggregate. For bitfields, the offset of the storage unit that contains them. */
     uint8_t bit_width;  /**< The width of the bitfield in bits. 0 for standard members. */
-    uint8_t bit_offset; /**< The bit offset within the byte (0-7). */
+    uint8_t bit_offset; /**< For bitfields, the bit offset of the field within its storage unit (0-63); 0 for standard members. */
     bool is_bitfield;   /**< True if this member is a bitfield (even if width is 0). */
 };
 /**
