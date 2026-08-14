@@ -39,7 +39,7 @@ void bitfield_handler(infix_reverse_t * ctx, void * ret, void ** args) {
 }
 
 TEST {
-    plan(2);
+    plan(3);
     subtest("Basic Bitfields") {
         plan(8);
         infix_arena_t * arena = NULL;
@@ -110,5 +110,43 @@ TEST {
         }
 
         infix_arena_destroy(arena);
+    }
+    subtest("Wide Bitfield Round Trip") {
+        // Regression (fuzz_roundtrip crash 9421a219): bitfield widths up to the
+        // underlying type's bit size must survive parse -> print -> re-parse.
+        // A flat cap of 64 rejected valid 128-bit-type widths (e.g. `sint128:93`).
+        plan(13);
+        const char * sigs[] = {
+            "{fuzz_bf:sint128:93,fuzz:*void}",
+            "{a:sint128:128}",
+            "{a:sint64:64}",
+            "{a:sint8:8}",
+        };
+        for (size_t i = 0; i < sizeof(sigs) / sizeof(sigs[0]); ++i) {
+            infix_type * t = NULL;
+            infix_arena_t * a = NULL;
+            infix_status s = infix_type_from_signature(&t, &a, sigs[i], NULL);
+            ok(s == INFIX_SUCCESS, "Parsed %s", sigs[i]);
+            if (s == INFIX_SUCCESS) {
+                char buf[512];
+                infix_status p = infix_type_print(buf, sizeof(buf), t, INFIX_DIALECT_SIGNATURE);
+                ok(p == INFIX_SUCCESS, "Printed %s", sigs[i]);
+                infix_type * t2 = NULL;
+                infix_arena_t * a2 = NULL;
+                infix_status r = infix_type_from_signature(&t2, &a2, buf, NULL);
+                ok(r == INFIX_SUCCESS, "Re-parsed printed output %s", sigs[i]);
+                if (a2)
+                    infix_arena_destroy(a2);
+            }
+            if (a)
+                infix_arena_destroy(a);
+        }
+        // Over-wide bitfields must still be rejected.
+        infix_type * bad = NULL;
+        infix_arena_t * bad_arena = NULL;
+        infix_status bs = infix_type_from_signature(&bad, &bad_arena, "{a:sint64:65}", NULL);
+        ok(bs != INFIX_SUCCESS, "Rejected width beyond underlying type ({a:sint64:65})");
+        if (bad_arena)
+            infix_arena_destroy(bad_arena);
     }
 }

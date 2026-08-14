@@ -294,7 +294,12 @@ static infix_struct_member * parse_aggregate_members(parser_state * state, char 
                     size_t width_val = 0;
                     if (!parse_size_t(state, &width_val))
                         return nullptr;  // Error set by parse_size_t
-                    if (width_val > 64) {
+                    size_t type_bits = member_type->size * 8;
+                    // Unresolved named reference (size 0) or a huge base type: cap at the
+                    // uint8_t storage limit so the width is never truncated.
+                    if (type_bits == 0 || type_bits > 255)
+                        type_bits = 255;
+                    if (width_val > type_bits) {
                         _infix_set_parser_error(state, INFIX_CODE_TYPE_TOO_LARGE);
                         return nullptr;
                     }
