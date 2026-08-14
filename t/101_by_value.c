@@ -399,7 +399,9 @@ TEST {
             note("Testing ARM64 Scalable Vector Extension (SVE).");
             infix_arena_t * arena = infix_arena_create(4096);
             size_t num_elements = svcntd();
-            note("Detected SVE vector width: %zu bits (%zu double elements).", svcntb() * 8, num_elements);
+            note("Detected SVE vector width: %llu bits (%llu double elements).",
+                 (unsigned long long)(svcntb() * 8),
+                 (unsigned long long)num_elements);
             infix_type * sve_vector_type = nullptr;
             infix_status status = infix_type_create_vector(
                 arena, &sve_vector_type, infix_type_create_primitive(INFIX_PRIMITIVE_DOUBLE), num_elements);
@@ -428,10 +430,12 @@ TEST {
                 for (size_t i = 0; i < num_elements; ++i) {
                     if (fabs(result_data[i] - 42.0) > 1e-9) {
                         all_correct = false;
-                        diag("Mismatch at element %zu: expected 42.0, got %f", i, result_data[i]);
+                        diag("Mismatch at element %llu: expected 42.0, got %f", (unsigned long long)i, result_data[i]);
                     }
                 }
-                ok(all_correct, "SVE vector passed/returned correctly for all %zu elements", num_elements);
+                ok(all_correct,
+                   "SVE vector passed/returned correctly for all %llu elements",
+                   (unsigned long long)num_elements);
                 free(vec_a_data);
                 free(vec_b_data);
                 free(result_data);
@@ -603,8 +607,8 @@ TEST {
         infix_type * struct_type = NULL;
         status = infix_type_create_struct(arena, &struct_type, members, 1);
         ok(status == INFIX_SUCCESS && struct_type->size >= 20,
-           "Created infix_type for 20-byte struct (size: %zu)",
-           struct_type ? struct_type->size : 0);
+           "Created infix_type for 20-byte struct (size: %llu)",
+           (unsigned long long)(struct_type ? struct_type->size : 0));
         infix_forward_t * trampoline = NULL;
         if (infix_forward_create_manual(&trampoline,
                                         infix_type_create_primitive(INFIX_PRIMITIVE_SINT32),

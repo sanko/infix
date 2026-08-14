@@ -102,9 +102,9 @@ TEST {
             for (size_t i = 0; i < 4; ++i) {
                 const infix_struct_member * m = infix_type_get_member(stype, i);
                 ok(m && m->offset == exp_offset[i] && m->bit_offset == exp_bit_offset[i],
-                   "Member %c offset %zu bit_offset %u",
+                   "Member %c offset %llu bit_offset %u",
                    (int)('a' + i),
-                   exp_offset[i],
+                   (unsigned long long)exp_offset[i],
                    (unsigned)exp_bit_offset[i]);
             }
         }

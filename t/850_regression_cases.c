@@ -450,7 +450,7 @@ static void run_regression_case(const regression_test_case_t * test) {
             bool bounded = true;
             for (size_t i = 1; i <= INFIX_CACHE_MAX_ENTRIES + 64; ++i) {
                 char sig[256];
-                snprintf(sig, sizeof(sig), "([%zu:sint32])->void", i);
+                snprintf(sig, sizeof(sig), "([%llu:sint32])->void", (unsigned long long)i);
                 infix_forward_t * fwd = nullptr;
                 if (infix_forward_create(&fwd, sig, (void *)dummy_reg_handler, nullptr) == INFIX_SUCCESS) {
                     infix_forward_destroy(fwd);

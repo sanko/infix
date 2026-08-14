@@ -90,45 +90,45 @@ TEST {
 
         ok(infix_type_get_member_count(st) == 6, "struct has 6 members");
         ok(infix_type_get_size(st) == sizeof(signature_layout_image),
-           "struct size %zu matches C sizeof %zu",
-           infix_type_get_size(st),
-           sizeof(signature_layout_image));
+           "struct size %llu matches C sizeof %llu",
+           (unsigned long long)infix_type_get_size(st),
+           (unsigned long long)sizeof(signature_layout_image));
         ok(infix_type_get_alignment(st) == _Alignof(signature_layout_image),
-           "struct alignment %zu matches C _Alignof %zu",
-           infix_type_get_alignment(st),
-           _Alignof(signature_layout_image));
+           "struct alignment %llu matches C _Alignof %llu",
+           (unsigned long long)infix_type_get_alignment(st),
+           (unsigned long long)_Alignof(signature_layout_image));
 
         const infix_struct_member * m;
         m = infix_type_get_member(st, 0);
         ok(m != nullptr && m->offset == offsetof(signature_layout_image, opaque),
-           "member 0 'opaque' offset %zu matches C %zu",
-           m ? m->offset : (size_t)-1,
-           offsetof(signature_layout_image, opaque));
+           "member 0 'opaque' offset %llu matches C %llu",
+           m ? (unsigned long long)m->offset : (unsigned long long)-1,
+           (unsigned long long)offsetof(signature_layout_image, opaque));
         m = infix_type_get_member(st, 1);
         ok(m != nullptr && m->offset == offsetof(signature_layout_image, version),
-           "member 1 'version' offset %zu matches C %zu",
-           m ? m->offset : (size_t)-1,
-           offsetof(signature_layout_image, version));
+           "member 1 'version' offset %llu matches C %llu",
+           m ? (unsigned long long)m->offset : (unsigned long long)-1,
+           (unsigned long long)offsetof(signature_layout_image, version));
         m = infix_type_get_member(st, 2);
         ok(m != nullptr && m->offset == offsetof(signature_layout_image, width),
-           "member 2 'width' offset %zu matches C %zu",
-           m ? m->offset : (size_t)-1,
-           offsetof(signature_layout_image, width));
+           "member 2 'width' offset %llu matches C %llu",
+           m ? (unsigned long long)m->offset : (unsigned long long)-1,
+           (unsigned long long)offsetof(signature_layout_image, width));
         m = infix_type_get_member(st, 3);
         ok(m != nullptr && m->offset == offsetof(signature_layout_image, height),
-           "member 3 'height' offset %zu matches C %zu",
-           m ? m->offset : (size_t)-1,
-           offsetof(signature_layout_image, height));
+           "member 3 'height' offset %llu matches C %llu",
+           m ? (unsigned long long)m->offset : (unsigned long long)-1,
+           (unsigned long long)offsetof(signature_layout_image, height));
         m = infix_type_get_member(st, 4);
         ok(m != nullptr && m->offset == offsetof(signature_layout_image, format),
-           "member 4 'format' offset %zu matches C %zu",
-           m ? m->offset : (size_t)-1,
-           offsetof(signature_layout_image, format));
+           "member 4 'format' offset %llu matches C %llu",
+           m ? (unsigned long long)m->offset : (unsigned long long)-1,
+           (unsigned long long)offsetof(signature_layout_image, format));
         m = infix_type_get_member(st, 5);
         ok(m != nullptr && m->offset == offsetof(signature_layout_image, flags),
-           "member 5 'flags' offset %zu matches C %zu",
-           m ? m->offset : (size_t)-1,
-           offsetof(signature_layout_image, flags));
+           "member 5 'flags' offset %llu matches C %llu",
+           m ? (unsigned long long)m->offset : (unsigned long long)-1,
+           (unsigned long long)offsetof(signature_layout_image, flags));
 
         infix_arena_destroy(arena);
         infix_registry_destroy(registry);
