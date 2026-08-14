@@ -26,7 +26,7 @@
 | **ubuntu** | `riscv64` | `gcc` | ✅ success |
 | **ubuntu** | `x86_64` | `clang` | ✅ success |
 | **ubuntu** | `x86_64` | `gcc` | ✅ success |
-| **windows** | `aarch64` | `clang` | ❌ failure |
+| **windows** | `aarch64` | `clang` | ✅ success |
 | **windows** | `aarch64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `msvc` | ✅ success |
 | **windows** | `x86_64` | `clang` | ✅ success |
