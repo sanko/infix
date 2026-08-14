@@ -117,8 +117,6 @@ TEST {
         // A flat cap of 64 rejected valid 128-bit-type widths (e.g. `sint128:93`).
         plan(13);
         const char * sigs[] = {
-            "{fuzz_bf:sint128:93,fuzz:*void}",
-            "{a:sint128:128}",
             "{a:sint64:64}",
             "{a:sint8:8}",
         };
@@ -135,6 +133,37 @@ TEST {
                 infix_arena_t * a2 = NULL;
                 infix_status r = infix_type_from_signature(&t2, &a2, buf, NULL);
                 ok(r == INFIX_SUCCESS, "Re-parsed printed output %s", sigs[i]);
+                if (a2)
+                    infix_arena_destroy(a2);
+            }
+            if (a)
+                infix_arena_destroy(a);
+        }
+        // `__int128` is a GCC/Clang extension; compilers without it (e.g. MSVC)
+        // have no 128-bit integer type, so the 128-bit-width cases only exist
+        // where the primitive is available.
+        const bool have_int128 = infix_type_create_primitive(INFIX_PRIMITIVE_SINT128) != NULL;
+        const char * wide_sigs[] = {
+            "{fuzz_bf:sint128:93,fuzz:*void}",
+            "{a:sint128:128}",
+        };
+        for (size_t i = 0; i < sizeof(wide_sigs) / sizeof(wide_sigs[0]); ++i) {
+            if (!have_int128) {
+                skip(3, "No 128-bit integer type on this compiler");
+                continue;
+            }
+            infix_type * t = NULL;
+            infix_arena_t * a = NULL;
+            infix_status s = infix_type_from_signature(&t, &a, wide_sigs[i], NULL);
+            ok(s == INFIX_SUCCESS, "Parsed %s", wide_sigs[i]);
+            if (s == INFIX_SUCCESS) {
+                char buf[512];
+                infix_status p = infix_type_print(buf, sizeof(buf), t, INFIX_DIALECT_SIGNATURE);
+                ok(p == INFIX_SUCCESS, "Printed %s", wide_sigs[i]);
+                infix_type * t2 = NULL;
+                infix_arena_t * a2 = NULL;
+                infix_status r = infix_type_from_signature(&t2, &a2, buf, NULL);
+                ok(r == INFIX_SUCCESS, "Re-parsed printed output %s", wide_sigs[i]);
                 if (a2)
                     infix_arena_destroy(a2);
             }
