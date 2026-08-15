@@ -203,8 +203,32 @@ static infix_direct_value_t mock_marshaller_func_ptr(void * source_obj) {
 
 static int mock_c_callback(int a) { return a * a; }
 
+typedef struct {
+    uint16_t arr[4];
+    uint16_t x;
+} AM_U16x4;
+typedef struct {
+    uint8_t arr[4];
+    uint8_t x;
+} AM_U8x4;
+static int am_sum_u16(AM_U16x4 s) {
+    int sum = (int)s.x;
+    for (int i = 0; i < 4; i++)
+        sum += (int)s.arr[i];
+    return sum;
+}
+static int am_sum_u8(AM_U8x4 s) {
+    int sum = (int)s.x;
+    for (int i = 0; i < 4; i++)
+        sum += (int)s.arr[i];
+    return sum;
+}
+static void mock_marshaller_raw(void * source_obj, void * dest_buffer, const infix_type * type) {
+    memcpy(dest_buffer, source_obj, infix_type_get_size(type));
+}
+
 TEST {
-    plan(10);
+    plan(11);
 
     infix_registry_t * reg = infix_registry_create();
     ok(infix_register_types(reg,
@@ -506,6 +530,39 @@ TEST {
         skip(1, "Test is only for x64");
 #endif
     };
+    subtest("Test trailing-member aggregate arg (fuzzer struct_array_member shapes)") {
+        plan(4);
+
+        infix_direct_arg_handler_t handlers[1] = {{.aggregate_marshaller = &mock_marshaller_raw}};
+
+        infix_forward_t * tr = NULL;
+        infix_status st =
+            infix_forward_create_direct(&tr, "({arr:[4:uint16],x:uint16}) -> int", (void *)&am_sum_u16, handlers, reg);
+        ok(st == INFIX_SUCCESS, "Created direct trampoline for {arr:[4:uint16],x:uint16}");
+        if (st == INFIX_SUCCESS) {
+            AM_U16x4 src = {{10, 20, 30, 40}, 7};
+            void * args[] = {&src};
+            int result = 0;
+            infix_direct_cif_func cif = infix_forward_get_direct_code(tr);
+            cif(&result, args);
+            ok(result == (7 + 10 + 20 + 30 + 40), "Trailing uint16 member x preserved (got %d)", result);
+            infix_forward_destroy(tr);
+        }
+
+        infix_forward_t * tr8 = NULL;
+        st = infix_forward_create_direct(&tr8, "({arr:[4:uint8],x:uint8}) -> int", (void *)&am_sum_u8, handlers, reg);
+        ok(st == INFIX_SUCCESS, "Created direct trampoline for {arr:[4:uint8],x:uint8}");
+        if (st == INFIX_SUCCESS) {
+            AM_U8x4 src = {{1, 2, 3, 4}, 9};
+            void * args[] = {&src};
+            int result = 0;
+            infix_direct_cif_func cif = infix_forward_get_direct_code(tr8);
+            cif(&result, args);
+            ok(result == (9 + 1 + 2 + 3 + 4), "Trailing uint8 member x preserved (got %d)", result);
+            infix_forward_destroy(tr8);
+        }
+    };
+
     infix_registry_destroy(reg);
     done();
 }

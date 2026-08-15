@@ -200,7 +200,6 @@ INFIX_API c23_nodiscard void * infix_arena_calloc(infix_arena_t * arena, size_t 
     return ptr;
 }
 
-
 /**
  * @brief Captures the current allocation state of an arena chain.
  */
@@ -210,9 +209,8 @@ INFIX_API c23_nodiscard infix_arena_mark_t infix_arena_get_mark(infix_arena_t * 
         return mark;
 
     infix_arena_t * current = arena;
-    while (current->next_block != nullptr && current->next_block->current_offset > 0) {
+    while (current->next_block != nullptr && current->next_block->current_offset > 0)
         current = current->next_block;
-    }
     mark.block = current;
     mark.offset = current->current_offset;
     return mark;
