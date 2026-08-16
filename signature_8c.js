@@ -1,7 +1,9 @@
 var signature_8c =
 [
     [ "printer_state", "structprinter__state.html", "structprinter__state" ],
+    [ "MAX_PRINT_RECURSION_DEPTH", "signature_8c.html#ab03fc982afa5ecafcaca863cff632e3f", null ],
     [ "MAX_RECURSION_DEPTH", "signature_8c.html#a4e3b689e9483994cfcd85954cba23338", null ],
+    [ "PRINT_RECURSE", "signature_8c.html#ac668c9f8fc443aa52cb33bbfbc6720a4", null ],
     [ "_add_itanium_sub", "signature_8c.html#a01dffcbceb792ab2adf596e2c4734e0e", null ],
     [ "_create_named_primitive", "signature_8c.html#a9fc7b71dd00a881f4266b225644d65c4", null ],
     [ "_find_itanium_sub", "signature_8c.html#a52a94cc62134c8f2a788f4c9a1368b8c", null ],

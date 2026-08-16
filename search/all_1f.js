@@ -14,7 +14,7 @@ var searchData=
   ['universal_20principle_3a_20the_20c_20abi_11',['The Universal Principle: The C ABI',['../md_docs_2cookbook.html#autotoc_md98',1,'']]],
   ['unwinding_12',['4.1 Exception Propagation (Transparent Unwinding)',['../md_docs_2internals.html#autotoc_md206',1,'']]],
   ['usage_13',['Basic Usage',['..//home/runner/work/infix/infix/include/infix/infix.h#usage_sec',1,'']]],
-  ['use_20after_20free_20prevention_20guard_20pages_14',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md297',1,'']]],
+  ['use_20after_20free_20prevention_20guard_20pages_14',['2. Use-After-Free Prevention (Guard Pages)',['../md_SECURITY.html#autotoc_md300',1,'']]],
   ['useful_20tools_15',['Useful Tools',['../md_docs_2internals.html#autotoc_md214',1,'']]],
   ['user_16',['User',['../structUser.html',1,'']]],
   ['user_5fcallback_5ffn_17',['user_callback_fn',['../structinfix__reverse__t.html#a14fd69f1efa6fedb2a879ae3e61cadaf',1,'infix_reverse_t']]],

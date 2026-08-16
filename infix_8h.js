@@ -117,6 +117,8 @@ var infix_8h =
     [ "infix_arena_calloc", "group__memory__management.html#gabbf76b863b1a10d8a09b5b0a8181b5bf", null ],
     [ "infix_arena_create", "group__memory__management.html#gab81d4a611a176166ec13c31fb51c55cb", null ],
     [ "infix_arena_destroy", "group__memory__management.html#gaf4e09f4c1d2dcedacc729fec39f1c124", null ],
+    [ "infix_arena_get_mark", "group__direct__marshalling__api.html#ga93f0bed85f5f2e954c925660636e109a", null ],
+    [ "infix_arena_rewind", "group__direct__marshalling__api.html#ga78f73a4c3064444c46de75162ca72e97", null ],
     [ "infix_forward_create", "group__high__level__api.html#gaf82cdf348e2e3ad7d851422b1bf648d2", null ],
     [ "infix_forward_create_direct", "group__direct__marshalling__api.html#gab17fd59a6911f44237f38661a630ebfc", null ],
     [ "infix_forward_create_in_arena", "group__high__level__api.html#ga8968ef07b76dfafd9f63371e77259799", null ],

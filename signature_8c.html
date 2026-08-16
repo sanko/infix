@@ -142,6 +142,11 @@ Classes</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a4e3b689e9483994cfcd85954cba23338" id="r_a4e3b689e9483994cfcd85954cba23338"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a4e3b689e9483994cfcd85954cba23338">MAX_RECURSION_DEPTH</a>&#160;&#160;&#160;32</td></tr>
 <tr class="separator:a4e3b689e9483994cfcd85954cba23338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab03fc982afa5ecafcaca863cff632e3f" id="r_ab03fc982afa5ecafcaca863cff632e3f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ab03fc982afa5ecafcaca863cff632e3f">MAX_PRINT_RECURSION_DEPTH</a>&#160;&#160;&#160;128</td></tr>
+<tr class="separator:ab03fc982afa5ecafcaca863cff632e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac668c9f8fc443aa52cb33bbfbc6720a4" id="r_ac668c9f8fc443aa52cb33bbfbc6720a4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#ac668c9f8fc443aa52cb33bbfbc6720a4">PRINT_RECURSE</a>(state,  fn,  arg)</td></tr>
+<tr class="memdesc:ac668c9f8fc443aa52cb33bbfbc6720a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively prints a type with a depth guard.  <br /></td></tr>
+<tr class="separator:ac668c9f8fc443aa52cb33bbfbc6720a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -190,14 +195,14 @@ Functions</h2></td></tr>
 <tr class="separator:adff9bc326df1c7da3561c4630e30d1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecd926b99dafd36103620c5371bf9ae2" id="r_aecd926b99dafd36103620c5371bf9ae2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#aecd926b99dafd36103620c5371bf9ae2">_infix_type_print_msvc_recursive</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
 <tr class="separator:aecd926b99dafd36103620c5371bf9ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5af7bab951a6f564a809ba05609783" id="r_a2e5af7bab951a6f564a809ba05609783"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a2e5af7bab951a6f564a809ba05609783">_infix_type_print_body_only_recursive</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="separator:a2e5af7bab951a6f564a809ba05609783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52a94cc62134c8f2a788f4c9a1368b8c" id="r_a52a94cc62134c8f2a788f4c9a1368b8c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a52a94cc62134c8f2a788f4c9a1368b8c">_find_itanium_sub</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const void *component, size_t *index)</td></tr>
 <tr class="separator:a52a94cc62134c8f2a788f4c9a1368b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01dffcbceb792ab2adf596e2c4734e0e" id="r_a01dffcbceb792ab2adf596e2c4734e0e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a01dffcbceb792ab2adf596e2c4734e0e">_add_itanium_sub</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const void *component)</td></tr>
 <tr class="separator:a01dffcbceb792ab2adf596e2c4734e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c666a121263fef0b9ed65616b6d70c3" id="r_a8c666a121263fef0b9ed65616b6d70c3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a8c666a121263fef0b9ed65616b6d70c3">_print_itanium_sub</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, size_t index)</td></tr>
 <tr class="separator:a8c666a121263fef0b9ed65616b6d70c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e5af7bab951a6f564a809ba05609783" id="r_a2e5af7bab951a6f564a809ba05609783"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a2e5af7bab951a6f564a809ba05609783">_infix_type_print_body_only_recursive</a> (<a class="el" href="structprinter__state.html">printer_state</a> *state, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
-<tr class="separator:a2e5af7bab951a6f564a809ba05609783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a318cbbcc66e97bc549fea21d23a9ac4d" id="r_a318cbbcc66e97bc549fea21d23a9ac4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="compat__c23_8h.html#a17f672198fb63e31ca0dba6aea752863">c23_nodiscard</a> <a class="el" href="group__high__level__api.html#ga8643667be6ea1ef9269c2e46d8f11ff7">infix_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signature_8c.html#a318cbbcc66e97bc549fea21d23a9ac4d">_infix_type_print_body_only</a> (char *buffer, size_t buffer_size, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type, <a class="el" href="group__introspection__api.html#gac8c5bb029a977b1d6befd2bef7d2aa55">infix_print_dialect_t</a> dialect)</td></tr>
 <tr class="memdesc:a318cbbcc66e97bc549fea21d23a9ac4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">An internal-only function to serialize a type's body without its registered name.  <br /></td></tr>
 <tr class="separator:a318cbbcc66e97bc549fea21d23a9ac4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,6 +236,20 @@ Variables</h2></td></tr>
 </ol>
 <p>The public functions <code>infix_type_from_signature</code> and <code>infix_signature_parse</code> are high-level orchestrators. They manage the entire **"Parse -&gt; Copy -&gt; Resolve -&gt; Layout"** pipeline, providing the user with a fully validated, self-contained, and ready-to-use type object that is safe to use for the lifetime of its returned arena. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ab03fc982afa5ecafcaca863cff632e3f" name="ab03fc982afa5ecafcaca863cff632e3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab03fc982afa5ecafcaca863cff632e3f">&#9670;&#160;</a></span>MAX_PRINT_RECURSION_DEPTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_PRINT_RECURSION_DEPTH&#160;&#160;&#160;128</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4e3b689e9483994cfcd85954cba23338" name="a4e3b689e9483994cfcd85954cba23338"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e3b689e9483994cfcd85954cba23338">&#9670;&#160;</a></span>MAX_RECURSION_DEPTH</h2>
 
@@ -242,6 +261,55 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac668c9f8fc443aa52cb33bbfbc6720a4" name="ac668c9f8fc443aa52cb33bbfbc6720a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac668c9f8fc443aa52cb33bbfbc6720a4">&#9670;&#160;</a></span>PRINT_RECURSE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PRINT_RECURSE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">state, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">fn, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">arg&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                    \</div>
+<div class="line">        if ((state)-&gt;depth &gt;= <a class="code hl_define" href="signature_8c.html#ab03fc982afa5ecafcaca863cff632e3f">MAX_PRINT_RECURSION_DEPTH</a>) {  \</div>
+<div class="line">            (state)-&gt;<a class="code hl_variable" href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a> = <a class="code hl_enumvalue" href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7afad878b13765c831a64f0d7d2c245e6d">INFIX_ERROR_INVALID_ARGUMENT</a>; \</div>
+<div class="line">            <span class="keywordflow">return</span>;                                         \</div>
+<div class="line">        }                                                   \</div>
+<div class="line">        (state)-&gt;depth++;                                   \</div>
+<div class="line">        fn((state), (arg));                                 \</div>
+<div class="line">        (state)-&gt;depth--;                                   \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="a103__unions_8c_html_a433468dce2d10c4f34424732ef15ebdd"><div class="ttname"><a href="103__unions_8c.html#a433468dce2d10c4f34424732ef15ebdd">status</a></div><div class="ttdeci">infix_status status</div><div class="ttdef"><b>Definition</b> 103_unions.c:61</div></div>
+<div class="ttc" id="agroup__high__level__api_html_gga8643667be6ea1ef9269c2e46d8f11ff7afad878b13765c831a64f0d7d2c245e6d"><div class="ttname"><a href="group__high__level__api.html#gga8643667be6ea1ef9269c2e46d8f11ff7afad878b13765c831a64f0d7d2c245e6d">INFIX_ERROR_INVALID_ARGUMENT</a></div><div class="ttdeci">@ INFIX_ERROR_INVALID_ARGUMENT</div><div class="ttdef"><b>Definition</b> infix.h:489</div></div>
+<div class="ttc" id="asignature_8c_html_ab03fc982afa5ecafcaca863cff632e3f"><div class="ttname"><a href="signature_8c.html#ab03fc982afa5ecafcaca863cff632e3f">MAX_PRINT_RECURSION_DEPTH</a></div><div class="ttdeci">#define MAX_PRINT_RECURSION_DEPTH</div><div class="ttdef"><b>Definition</b> signature.c:49</div></div>
+</div><!-- fragment -->
+<p>Recursively prints a type with a depth guard. </p>
+<p>Cyclic type graphs (e.g., a structure that directly embeds itself by value) would otherwise recurse forever; the guard bounds the descent and aborts the print with an error once the cap is exceeded. </p>
 
 </div>
 </div>

@@ -108,33 +108,49 @@ $(document).ready(function(){initNavTree('md_CHANGELOG.html',''); initResizable(
 <div class="textblock"><p><a class="anchor" id="autotoc_md249"></a> All notable changes to <code>infix</code> will (I hope) be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h1><a class="anchor" id="autotoc_md250"></a>
+&lt;a href="https://github.com/sanko/infix/compare/v0.2.1...HEAD"</h1>
+<p>&gt;Unreleased</p>
+<h2><a class="anchor" id="autotoc_md251"></a>
+Added</h2>
+<ul>
+<li><code><a class="el" href="group__direct__marshalling__api.html#ga93f0bed85f5f2e954c925660636e109a" title="Captures the current allocation state of an arena chain.">infix_arena_get_mark()</a></code> and <code><a class="el" href="group__direct__marshalling__api.html#ga78f73a4c3064444c46de75162ca72e97" title="Rewinds an arena chain back to a previously captured mark, resetting all secondary blocks for immedia...">infix_arena_rewind()</a></code> let callers capture the current allocation state of an arena chain and rewind it later, resetting the marked block and every secondary block for immediate reuse. This gives hosts a way to reuse per-call arenas instead of destroying and recreating them (Affix uses it to recycle its 4096-byte argument arenas across FFI calls).</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md252"></a>
+Fixed</h2>
+<ul>
+<li>Bitfield member layout now records the storage-unit base in <code>member-&gt;offset</code> with <code>bit_offset</code> relative to that unit, instead of pointing <code>member-&gt;offset</code> at the bitfield's own (possibly mid-unit) byte with a <code>% 8</code> bit remainder. Callers that read or write a whole storage unit, like Affix's marshaller and pinned bitfield magic, always stay within the aggregate's bounds now; previously a bitfield whose low bit was not byte-aligned could drive a unit-sized access one byte past the end of the struct (heap-buffer-overflow caught by ASan).</li>
+<li>JIT executable memory is now flushed with <code>FlushInstructionCache</code> whenever built on Windows, including clang builds.</li>
+<li>Bitfield widths are validated against the underlying type's bit size (1 to <code>sizeof(type) * 8</code>), so widths that C allows for 128-bit types (e.g. <code>sint128:93</code>) no longer get rejected after a type→string→type round trip, while still-invalid widths (larger than the type) are refused. A flat cap of 64 had made the <code>fuzz_roundtrip</code> harness abort on <code>{fuzz_bf:sint128:93,...}</code> because the printer emitted a width the parser would not accept again.</li>
+<li>Fixed ARM64 forward trampoline GPR marshalling dropping the trailing members of 5/6/7-byte structs passed by value. <code>generate_forward_argument_moves_arm64</code> emitted a 32-bit load (<code>ldr w</code>) for every GPR-passed aggregate unless its size was exactly 8, so a struct like <code>{ uint16_t arr[2]; uint16_t x; }</code> loaded only the first four bytes. Sizes 5-7 now load a full 64-bit register; sizes 1-4 keep their exact-byte loads.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md253"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.2.0...v0.2.1" &gt;0.2.1&lt;/a&gt; - 2026-08-04</h1>
 <p>This release fixes memory growth in the trampoline cache, a RISC-V classifier hang on zero-sized aggregate chains, and wrong field offsets for struct-typed FFI arguments declared inline in function signatures.</p>
-<h2><a class="anchor" id="autotoc_md251"></a>
+<h2><a class="anchor" id="autotoc_md254"></a>
 Fixed</h2>
 <ul>
 <li>Fixed unbounded memory growth in the global forward trampoline cache. Every unique signature permanently retained its JIT-compiled handle (executable code, deep-copied type graph, and signature string) with no eviction, so an application. The cache is now bounded to <code>INFIX_CACHE_MAX_ENTRIES</code> (1024) entries with least-recently-used eviction; evicted handles are destroyed when their reference count drops to zero.</li>
 <li>Fixed RISC-V classifier failing to deal with zero-sized aggregate chains. A zero-sized element never advances the offset so chains like <code>struct { array[127][127][127][127][127][0] }</code> exploded exponentially (~33M iterations) without ever producing a leaf to trip the <code>RV_MAX_FLATTENED_FIELDS</code> leaf-table guard. The flattener now has a recursion-depth limit (<code>RV_MAX_FLATTEN_DEPTH</code>), null member/element guards, leaf-table capacity checks before descending, and flattens zero-sized elements once at the starting offset.</li>
 <li>Fixed layout recalculation skipping function signatures. <code>_infix_type_recalculate_layout_recursive</code> had no case for <code>INFIX_TYPE_REVERSE_TRAMPOLINE</code>, so it never descended into the return type or arguments of a function signature. A struct declared inline in a signature whose members referenced named types (e.g., <code>@png_uint_32</code>) kept the offsets computed at parse time while those members were still unresolved (size 0), so after the Resolve stage replaced them every scalar member collapsed to the same offset. The Layout stage now recurses into <code>func_ptr_info.return_type</code> and each <code>func_ptr_info.args[i].type</code>, fixing wrong field reads/writes through struct-typed FFI arguments (e.g., libpng's <code>png_image_write_to_file</code> reading back <code>version == 0</code>).</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md252"></a>
+<h1><a class="anchor" id="autotoc_md255"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.7...v0.2.0" &gt;0.2.0&lt;/a&gt; - 2026-08-03</h1>
 <p>This release adds a pluggable, runtime-configurable memory allocator, full RISC-V 64-bit (RV64GC, lp64d) ABI support, fixes packed struct layout, ARM64 epilogue byte extraction, and x64 reverse trampoline stability.</p>
 <p>Yeah, it's time for a new tagged release.</p>
-<h2><a class="anchor" id="autotoc_md253"></a>
+<h2><a class="anchor" id="autotoc_md256"></a>
 Added</h2>
 <ul>
 <li>Completed RISC-V 64-bit (RV64GC) support.</li>
 <li>New test <code><a class="el" href="813__custom__allocator_8c.html" title="Unit test for the runtime pluggable allocator API (infix_set_allocator).">t/813_custom_allocator.c</a></code> installs a tracking allocator via <code><a class="el" href="group__memory__management.html#gaf664085e93821c1a8a22e17860ac1f6a" title="Replaces the allocator infix uses for all internal heap allocations.">infix_set_allocator()</a></code> and verifies a full lifecycle (registry, bulk type registration, signature parsing, JIT emission, FFI call, teardown) allocates and frees exclusively through the installed callbacks, that <code>calloc</code>/<code>realloc</code> reach the table, that nothing leaks, and that passing <code>NULL</code> restores the libc defaults.</li>
 <li>Added <code>ARG_LOCATION_MIXED</code> and <code>ARG_LOCATION_GPR_STACK_SPLIT</code> to the internal argument location enums for aggregates split across GPR/FPR registers or across registers and the stack.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md254"></a>
+<h2><a class="anchor" id="autotoc_md257"></a>
 Changed</h2>
 <ul>
 <li>Custom memory allocator API. All of infix's internal heap allocations now flow through a single <code><a class="el" href="structinfix__allocator__t.html">infix_allocator_t</a></code> table, installable at runtime with <code><a class="el" href="group__memory__management.html#gaf664085e93821c1a8a22e17860ac1f6a" title="Replaces the allocator infix uses for all internal heap allocations.">infix_set_allocator()</a></code> and defaulting to the C library's <code>malloc</code>/<code>calloc</code>/<code>realloc</code>/<code>free</code>. This lets host applications (language runtimes, garbage collectors, memory trackers) own every block infix allocates, whether infix is built from source or consumed as a precompiled library. The existing compile-time override macros (<code>infix_malloc</code>, <code>infix_calloc</code>, <code>infix_realloc</code>, <code>infix_free</code>) remain fully supported for builds from source.</li>
 <li>Every allocation site in the code emitter (<code><a class="el" href="emit_8c.html" title="Implementation of the emit API for generating machine code.">src/emit/emit.c</a></code>) routes through the <code>infix_*</code> macros, so the allocator override is complete across the whole library.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md255"></a>
+<h2><a class="anchor" id="autotoc_md258"></a>
 Fixed</h2>
 <ul>
 <li>Fixed packed struct layout in <code>_layout_struct</code> where <code>is_packed</code> only suppressed struct-level alignment updates but did not force member alignment to 1, causing inter-member padding to be incorrectly inserted. Standard members, bitfield members, and flexible array members are now all correctly packed.</li>
@@ -145,31 +161,31 @@ Fixed</h2>
 <li>Corrected handling of aggregates classified as <code>MEMORY</code> during reverse trampoline calls in SysV. The <code>stack_arg_offset</code> was adjusted from 24 to 16, and <code>MEMORY</code>-class arguments now correctly set <code>is_from_stack = true</code>.</li>
 <li>Minor correctness adjustments for aggregate argument classification in reverse trampolines on Windows.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md256"></a>
+<h1><a class="anchor" id="autotoc_md259"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.6...v0.1.7" &gt;0.1.7&lt;/a&gt; - 2026-03-30</h1>
-<h2><a class="anchor" id="autotoc_md257"></a>
+<h2><a class="anchor" id="autotoc_md260"></a>
 Changed</h2>
 <ul>
 <li>The string parser now preserves names for character-specific primitives (<code>wchar_t</code>, <code>char16_t</code>, <code>char32_t</code>, and <code>char8_t</code>). This prevents semantic erasure where these types were previously indistinguishable from raw integers.</li>
 <li>Updated <code><a class="el" href="group__type__system.html#gaa34520b3888b00a7d32c694a00911acf" title="Gets the semantic alias of a type, if one exists.">infix_type_get_name()</a></code> to return the alias name for these specific primitives, enabling high-level marshallers to correctly identify string buffers without relying on fragile <code>sizeof()</code> heuristics.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md258"></a>
+<h1><a class="anchor" id="autotoc_md261"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.5...v0.1.6" &gt;0.1.6&lt;/a&gt; - 2026-02-14</h1>
-<h2><a class="anchor" id="autotoc_md259"></a>
+<h2><a class="anchor" id="autotoc_md262"></a>
 Added</h2>
 <ul>
 <li>Added <code>TARGET_DIRECT_TRAMPOLINE_GENERATOR</code> to the regression tester in <code><a class="el" href="850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing.">t/850_regression_cases.c</a></code> to support debugging and preventing regressions in the direct marshalling pipeline.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md260"></a>
+<h2><a class="anchor" id="autotoc_md263"></a>
 Fixed</h2>
 <ul>
 <li>Fixed a memory leak in <code>_infix_forward_create_direct_impl</code> where the <code>ref_count</code> of the newly created trampoline handle was not being initialized. This caused the handle to never be freed during destruction as the library incorrectly assumed other references existed.</li>
 <li>Trampolines allocated in a user-managed "shared arena" were being added to the internal global cache. When the user destroyed the arena, the cache retained dangling pointers to the trampoline signatures.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md261"></a>
+<h1><a class="anchor" id="autotoc_md264"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.4...v0.1.5" &gt;0.1.5&lt;/a&gt; - 2026-02-06</h1>
 <p>This release expands platform stability. Focus was on SEH and DWARF unwinding, float16 and AVX-512 vector types.</p>
-<h2><a class="anchor" id="autotoc_md262"></a>
+<h2><a class="anchor" id="autotoc_md265"></a>
 Added</h2>
 <ul>
 <li>Added support for half-precision floating-point (<code>float16</code>).</li>
@@ -182,7 +198,7 @@ Added</h2>
 <li>Added a new opt-in build mode (<code>--sanity</code>) that emits extra JIT instructions to verify stack pointer consistency around user-provided marshaller calls, making it easier to debug corrupting language bindings.</li>
 <li>Added <code><a class="el" href="405__simd__vectors__avx_8c.html" title="Unit test for 256-bit (AVX) SIMD vector support.">t/405_simd_vectors_avx.c</a></code>, <code><a class="el" href="406__simd__forward_8c.html" title="Unit test for forward SIMD vector calls.">t/406_simd_forward.c</a></code>, <code><a class="el" href="407__float16_8c.html" title="Unit test for half-precision floating-point (float16_t) support.">t/407_float16.c</a></code>, and <code><a class="el" href="902__cache__deduplication_8c.html" title="Unit test for the trampoline deduplication (caching) system.">t/902_cache_deduplication.c</a></code> to the test suite.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md263"></a>
+<h2><a class="anchor" id="autotoc_md266"></a>
 Changed</h2>
 <ul>
 <li>Unified platform and compiler detection macros into a consistent <code>INFIX_*</code> namespace (e.g., <code>INFIX_OS_LINUX</code>, <code>INFIX_ARCH_X64</code>, <code>INFIX_COMPILER_GCC</code>) throughout the codebase.</li>
@@ -198,7 +214,7 @@ Changed</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md264"></a>
+<h2><a class="anchor" id="autotoc_md267"></a>
 Fixed</h2>
 <ul>
 <li>Corrected an ARM64 bug in <code>emit_arm64_ldr_vpr</code> and <code>emit_arm64_str_vpr</code> where boolean conditions were being passed instead of actual byte sizes, causing data truncation for floating-point values in the direct marshalling path.</li>
@@ -211,10 +227,10 @@ Fixed</h2>
 <li>Rewrote <code>_layout_struct</code> in <code><a class="el" href="types_8c.html" title="Implements the public API for creating and managing type descriptions.">src/core/types.c</a></code> to correctly handle bitfields larger than 8 bits and ensures <code>bit_offset</code> is always within the correct byte, matching standard C (well, GNU) compiler packing behavior.</li>
 <li>Fixed a bug in the SysV recursive classifier that was incorrectly applying strict natural alignment checks to bitfield members. This was causing structs containing bitfields to be unnecessarily passed on the stack instead of in registers.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md265"></a>
+<h1><a class="anchor" id="autotoc_md268"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.3...v0.1.4" &gt;0.1.4&lt;/a&gt; - 2026-01-17</h1>
 <p>This release focuses on SIMD vector support and critical platform-specific stability fixes for macOS (both Intel and Apple Silicon), and improving internal code hygiene.</p>
-<h2><a class="anchor" id="autotoc_md266"></a>
+<h2><a class="anchor" id="autotoc_md269"></a>
 Added</h2>
 <ul>
 <li>Added <code>infix_get_version</code> and <code><a class="el" href="structinfix__version__t.html" title="A structure representing the semantic version of the library.">infix_version_t</a></code> to the public API. This allows applications to query the semantic version of the library at runtime.</li>
@@ -225,7 +241,7 @@ Added</h2>
 </li>
 <li>Introduced <code>INFIX_API</code> and <code>INFIX_INTERNAL</code> macros to explicitly control symbol visibility.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md267"></a>
+<h2><a class="anchor" id="autotoc_md270"></a>
 Changed</h2>
 <ul>
 <li>The JIT memory allocator on Linux now uses <code>memfd_create</code> (on kernels 3.17+) to create anonymous file descriptors for dual-mapped W^X memory. This avoids creating visible temporary files in <code>/dev/shm</code> and improves hygiene and security. On FreeBSD, <code>SHM_ANON</code> is now used.</li>
@@ -233,7 +249,7 @@ Changed</h2>
 <li>The library now builds with hidden symbol visibility by default on supported compilers (GCC/Clang). Only public API functions (<code>infix_*</code>) are exported. Internal functions (<code>_infix_*</code>) are now hidden, preventing symbol collisions and ABI leakage when <code>infix</code> is linked statically into a shared library.</li>
 <li><code>infix_library_open</code> now uses <code>RTLD_LOCAL</code> instead of <code>RTLD_GLOBAL</code> on POSIX systems. This prevents symbols from loaded libraries from polluting the global namespace and causing conflicts with other plugins or the host application.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md268"></a>
+<h2><a class="anchor" id="autotoc_md271"></a>
 Fixed</h2>
 <ul>
 <li>Fixed stack corruption on macOS ARM64 (Apple Silicon). <code>long double</code> on this platform is 8 bytes (an alias for <code>double</code>), unlike standard AAPCS64 where it is 16 bytes. The JIT previously emitted 16-byte stores (<code>STR Qn</code>) for these types, overwriting adjacent stack memory.</li>
@@ -267,15 +283,15 @@ Fixed</h2>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md269"></a>
+<h1><a class="anchor" id="autotoc_md272"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.2...v0.1.3" &gt;0.1.3&lt;/a&gt; - 2025-12-19</h1>
 <p>This release contains real-world usage fixes since I'm using it in Affix.pm and not just experimenting with different JIT forms.</p>
-<h2><a class="anchor" id="autotoc_md270"></a>
+<h2><a class="anchor" id="autotoc_md273"></a>
 Changed</h2>
 <ul>
 <li>Updated JIT validation logic to explicitly reject incomplete forward declarations, preventing the creation of broken trampolines.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md271"></a>
+<h2><a class="anchor" id="autotoc_md274"></a>
 Fixed</h2>
 <ul>
 <li>Fixed a critical file descriptor leak on POSIX platforms (Linux/FreeBSD) where the file descriptor returned by <code>shm_open</code> was kept open for the lifetime of the trampoline, eventually hitting the process file descriptor limit (EMFILE). The descriptor is now closed immediately after mapping, as intended.</li>
@@ -286,10 +302,10 @@ Fixed</h2>
 <li>Updated <code>prepare_forward_call_frame_arm64</code> to treat <code>INFIX_TYPE_ARRAY</code> explicitly as a pointer passed in a GPR, bypassing the HFA and aggregate logic.</li>
 <li>Updated <code>generate_forward_argument_moves_arm64</code> to handle <code>INFIX_TYPE_ARRAY</code> inside the <code>ARG_LOCATION_GPR</code> case by using <code>emit_arm64_mov_reg</code> to copy the pointer from the scratch register (X9) to the argument register.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md272"></a>
+<h1><a class="anchor" id="autotoc_md275"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.1...v0.1.2" &gt;0.1.2&lt;/a&gt; - 2025-11-26</h1>
 <p>We'll find out where I go from here.</p>
-<h2><a class="anchor" id="autotoc_md273"></a>
+<h2><a class="anchor" id="autotoc_md276"></a>
 Added</h2>
 <ul>
 <li><b>Direct Marshalling API:</b> A new, high-performance API (<code>infix_forward_create_direct</code>) for language bindings. This allows the JIT compiler to call user-provided marshaller functions directly, bypassing intermediate argument buffers and reducing overhead.<ul>
@@ -304,7 +320,7 @@ Added</h2>
 <li>Added full support for C-style bitfields in structs using the syntax <code>name : type : width</code> (e.g., <code>flags:uint32:3</code>). The layout engine correctly packs them according to System V rules.</li>
 <li>Added support for C99 Flexible Array Members using the syntax <code>name : [ ? : type ]</code>. The layout engine correctly handles their alignment and placement at the end of structs.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md274"></a>
+<h2><a class="anchor" id="autotoc_md277"></a>
 Changed</h2>
 <ul>
 <li>Growable Arena: The internal arena for the type registry is no longer fixed-size. Now, it transparently allocates new memory blocks as needed, removing the risk of allocation failures when registering and/or copying a large number of interconnected types.</li>
@@ -312,16 +328,16 @@ Changed</h2>
 <li>Renamed all cookbook examples in <code>/eg/cookbook</code>. I can't expect to keep track of recipe numbers with every little idea I decide to throw into the cookbook so I'll just stop trying to count them.</li>
 <li>Windows opens the current executable in <code>infix_library_open</code> when the path value is <code>NULL</code>.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md275"></a>
+<h2><a class="anchor" id="autotoc_md278"></a>
 Fixed</h2>
 <ul>
 <li>Fixed a series of low-level instruction encoding errors in the AVX and AVX-512 instructions leading to <code>SIGILL</code> errors when calling functions with <code><a class="el" href="struct____m256d.html">__m256d</a></code> or <code><a class="el" href="struct____m512d.html">__m512d</a></code> vector types.</li>
 <li>Fixed a critical ABI classification bug on SysV where function parameters of an array type (e.g., <code>void func(char s[20])</code>) were incorrectly treated as by-value aggregates. The faulty classification caused <code>infix</code> to generate code that passed the array's content on the stack instead of a pointer, leading to stack corruption, crashes, and incorrect argument marshalling.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md276"></a>
+<h1><a class="anchor" id="autotoc_md279"></a>
 &lt;a href="https://github.com/sanko/infix/compare/v0.1.0...v0.1.1" &gt;0.1.1&lt;/a&gt; - 2025-11-01</h1>
 <p>Really sanding down the rough edges this time around. This release includes significant ergonomic improvements to the high-level API.</p>
-<h2><a class="anchor" id="autotoc_md277"></a>
+<h2><a class="anchor" id="autotoc_md280"></a>
 Added</h2>
 <ul>
 <li>New Signature Keywords: Added keywords for common C and C++ types to improve signature readability and portability.<ul>
@@ -336,7 +352,7 @@ Added</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md278"></a>
+<h2><a class="anchor" id="autotoc_md281"></a>
 Changed</h2>
 <ul>
 <li>Improved C++ Interoperability Recipes: Refined the C++ recipes to focus on direct interaction with C++ ABIs (mangled names, v-tables) rather than relying on C-style wrappers, showcasing more advanced use cases.</li>
@@ -345,22 +361,22 @@ Changed</h2>
 <div class="fragment"><div class="line"><span class="comment">// The high-level API now understands the &quot;@Name&quot; syntax directly.</span></div>
 <div class="line"><span class="comment">// Assume the registry already has &quot;@Adder_add_fn = (*{ val: int }, int) -&gt; int;&quot;</span></div>
 <div class="line"><a class="code hl_function" href="group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837">infix_reverse_create_callback</a>(&amp;ctx, <span class="stringliteral">&quot;@Adder_add_fn&quot;</span>, (<span class="keywordtype">void</span>*)Adder_add, <a class="code hl_variable" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>);</div>
-<div class="ttc" id="a501__direct__marshalling_8c_html_a70b9c24db773fd9634f2bafb98f7b3d9"><div class="ttname"><a href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a></div><div class="ttdeci">infix_registry_t * reg</div><div class="ttdef"><b>Definition</b> 501_direct_marshalling.c:209</div></div>
-<div class="ttc" id="agroup__high__level__api_html_ga532ee465ac7af787e8022c115b7bb837"><div class="ttname"><a href="group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837">infix_reverse_create_callback</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1169</div></div>
+<div class="ttc" id="a501__direct__marshalling_8c_html_a70b9c24db773fd9634f2bafb98f7b3d9"><div class="ttname"><a href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a></div><div class="ttdeci">infix_registry_t * reg</div><div class="ttdef"><b>Definition</b> 501_direct_marshalling.c:233</div></div>
+<div class="ttc" id="agroup__high__level__api_html_ga532ee465ac7af787e8022c115b7bb837"><div class="ttname"><a href="group__high__level__api.html#ga532ee465ac7af787e8022c115b7bb837">infix_reverse_create_callback</a></div><div class="ttdeci">INFIX_API INFIX_NODISCARD infix_status infix_reverse_create_callback(infix_reverse_t **, const char *, void *, infix_registry_t *)</div><div class="ttdoc">Creates a type-safe reverse trampoline (callback).</div><div class="ttdef"><b>Definition</b> trampoline.c:1170</div></div>
 </div><!-- fragment --></li>
 <li>The <code>infix_read_global</code> and <code>infix_write_global</code> functions now take an additional <code>infix_registry_t*</code> argument to support reading and writing global variables that are defined by a named type (e.g., <code>@MyStruct</code>).</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md279"></a>
+<h2><a class="anchor" id="autotoc_md282"></a>
 Fixed</h2>
 <ul>
 <li>Fixed a critical parsing bug in <code>infix_register_types</code> that occurred when defining a function pointer type alias (e.g., <code>@MyFunc = (...) -&gt; ...;</code>). The preliminary parser for finding definition boundaries would incorrectly interpret the <code>&gt;</code> in the <code>-&gt;</code> token as a closing delimiter, corrupting its internal nesting level calculation. This resulted in an <code>INFIX_CODE_UNEXPECTED_TOKEN</code> error and prevented the registration of function pointer types. The parser is now context-aware and correctly handles the <code>-&gt;</code> token, allowing for the clean and correct registration of function pointer aliases as intended.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md280"></a>
+<h1><a class="anchor" id="autotoc_md283"></a>
 &lt;a href="https://github.com/sanko/infix/releases/tag/v0.1.0" &gt;0.1.0&lt;/a&gt; - 2025-10-27</h1>
-<h2><a class="anchor" id="autotoc_md281"></a>
+<h2><a class="anchor" id="autotoc_md284"></a>
 Initial Public Release</h2>
 <p>This is the first tagged version of <code>infix</code>. It's all downhill from here.</p>
-<h2><a class="anchor" id="autotoc_md282"></a>
+<h2><a class="anchor" id="autotoc_md285"></a>
 Added</h2>
 <p>Everything. It's brand new.</p>
 <ul>
@@ -405,7 +421,7 @@ Added</h2>
 <li>Manual API: A programmatic, arena-based API (<code>infix_type_create_struct</code>, etc.) for building <code>infix_type</code> objects without the string parser.</li>
 <li>Introspection API: A comprehensive suite of getter functions to inspect the layout of any type at runtime, including its size, alignment, and the name/offset/type of every member. This is ideal for building dynamic language bindings and data marshallers.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md283"></a>
+<h3><a class="anchor" id="autotoc_md286"></a>
 Security &amp; Hardening</h3>
 <ul>
 <li>W^X Memory Protection: JIT-compiled code is never writable and executable at the same time, enforced with platform-native APIs (<code>VirtualProtect</code>, <code>mprotect</code>, <code>MAP_JIT</code>).</li>
@@ -415,7 +431,7 @@ Security &amp; Hardening</h3>
 <li>Comprehensive Test Suite: Over 30 unit and regression tests covering more than 300 assertions for ABI edge cases, memory lifecycle bugs, and security features.</li>
 <li>Fuzz Tested: The entire API surface, especially the signature parser and ABI classifiers, is continuously validated with <code>libFuzzer</code> and <code>AFL++</code> to find and fix potential crashes and hangs.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md284"></a>
+<h3><a class="anchor" id="autotoc_md287"></a>
 Performance &amp; Memory Management</h3>
 <ul>
 <li>High-Performance Design: The API separates the one-time JIT compilation cost from the near-native call-time overhead, making cached trampolines extremely fast.</li>
@@ -423,7 +439,7 @@ Performance &amp; Memory Management</h3>
 <li>Self-Contained Objects: Trampoline handles (<code><a class="el" href="structinfix__forward__t.html" title="Internal definition of a forward trampoline handle.">infix_forward_t</a></code>, <code><a class="el" href="structinfix__reverse__t.html" title="Internal definition of a reverse trampoline (callback/closure) handle.">infix_reverse_t</a></code>) perform a deep copy of all necessary type information, making them fully self-contained and immune to use-after-free errors from other parts of the system.</li>
 <li>Zero Dependencies: The library is written in pure C11 and has no external library dependencies.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md285"></a>
+<h3><a class="anchor" id="autotoc_md288"></a>
 Platform Support</h3>
 <ul>
 <li>Architectures: x86-64 and AArch64 (ARM64).</li>

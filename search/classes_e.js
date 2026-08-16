@@ -8,5 +8,6 @@ var searchData=
   ['teststruct_5',['TestStruct',['../structTestStruct.html',1,'']]],
   ['testunion_6',['TestUnion',['../unionTestUnion.html',1,'']]],
   ['thread_5fdata_5ft_7',['thread_data_t',['../structthread__data__t.html',1,'']]],
-  ['tracked_5frecord_5ft_8',['tracked_record_t',['../structtracked__record__t.html',1,'']]]
+  ['tracked_5frecord_5ft_8',['tracked_record_t',['../structtracked__record__t.html',1,'']]],
+  ['trailingunitbitfields_9',['TrailingUnitBitfields',['../structTrailingUnitBitfields.html',1,'']]]
 ];

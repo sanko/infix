@@ -139,6 +139,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMockObject.html">MockObject</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAM__U16x4.html">AM_U16x4</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAM__U8x4.html">AM_U8x4</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -204,6 +208,12 @@ Functions</h2></td></tr>
 <tr class="separator:a422b3cf8832ebed5846b2a6e4ab76f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a516ae92e0ae3b68a1323f3d8de5bc8eb" id="r_a516ae92e0ae3b68a1323f3d8de5bc8eb"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a516ae92e0ae3b68a1323f3d8de5bc8eb">mock_c_callback</a> (int a)</td></tr>
 <tr class="separator:a516ae92e0ae3b68a1323f3d8de5bc8eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a652c58bbc6525f45ad331af44da37c05" id="r_a652c58bbc6525f45ad331af44da37c05"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a652c58bbc6525f45ad331af44da37c05">am_sum_u16</a> (<a class="el" href="structAM__U16x4.html">AM_U16x4</a> s)</td></tr>
+<tr class="separator:a652c58bbc6525f45ad331af44da37c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b8b374889790812b43c48b1bb46b3af" id="r_a1b8b374889790812b43c48b1bb46b3af"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a1b8b374889790812b43c48b1bb46b3af">am_sum_u8</a> (<a class="el" href="structAM__U8x4.html">AM_U8x4</a> s)</td></tr>
+<tr class="separator:a1b8b374889790812b43c48b1bb46b3af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3260903a5cde5fc60e824a20960b11cc" id="r_a3260903a5cde5fc60e824a20960b11cc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a3260903a5cde5fc60e824a20960b11cc">mock_marshaller_raw</a> (void *source_obj, void *dest_buffer, const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *type)</td></tr>
+<tr class="separator:a3260903a5cde5fc60e824a20960b11cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0612357232526083b8d2dddc1e27b14" id="r_ab0612357232526083b8d2dddc1e27b14"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#ab0612357232526083b8d2dddc1e27b14">ok</a> (<a class="el" href="group__registry__api.html#ga9ffe6b87941bcb364cc386ae7b0877cd">infix_register_types</a>(<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>, &quot;@Point = { x: double, y: double };&quot; &quot;@<a class="el" href="structLine.html">Line</a> = { start: @<a class="el" href="structPoint.html">Point</a>, end: @<a class="el" href="structPoint.html">Point</a> };&quot; &quot;@Empty = {};&quot; &quot;@<a class="el" href="501__direct__marshalling_8c.html#a19e90595dab081328e512e81494242aa">IntFunc</a> = (int)-&gt;int;&quot;)==INFIX_SUCCESS, &quot;Successfully registered all test types&quot;)</td></tr>
 <tr class="separator:ab0612357232526083b8d2dddc1e27b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f90d22b2257a83b0737bc5861a790ba" id="r_a9f90d22b2257a83b0737bc5861a790ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#a9f90d22b2257a83b0737bc5861a790ba">subtest</a> (&quot;Test struct-by-value with add_points&quot;)</td></tr>
@@ -224,6 +234,8 @@ Functions</h2></td></tr>
 <tr class="separator:aefc9d1aede863ee53c34dd4fef3a322b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa668139059b6003e076538ded9eab74" id="r_aaa668139059b6003e076538ded9eab74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#aaa668139059b6003e076538ded9eab74">subtest</a> (&quot;Test SIMD vectors with direct marshalling&quot;)</td></tr>
 <tr class="separator:aaa668139059b6003e076538ded9eab74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acee24626b4f8bf6a99b8b306e2dc9ded" id="r_acee24626b4f8bf6a99b8b306e2dc9ded"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#acee24626b4f8bf6a99b8b306e2dc9ded">subtest</a> (&quot;Test trailing-member aggregate arg (fuzzer struct_array_member shapes)&quot;)</td></tr>
+<tr class="separator:acee24626b4f8bf6a99b8b306e2dc9ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af94ea97d56591d95bcc2cd5f4c2aa994" id="r_af94ea97d56591d95bcc2cd5f4c2aa994"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#af94ea97d56591d95bcc2cd5f4c2aa994">infix_registry_destroy</a> (<a class="el" href="501__direct__marshalling_8c.html#a70b9c24db773fd9634f2bafb98f7b3d9">reg</a>)</td></tr>
 <tr class="separator:af94ea97d56591d95bcc2cd5f4c2aa994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4152c13a06d002f268af780c0433c3a" id="r_af4152c13a06d002f268af780c0433c3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="501__direct__marshalling_8c.html#af4152c13a06d002f268af780c0433c3a">done</a> ()</td></tr>
@@ -340,6 +352,58 @@ Variables</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a652c58bbc6525f45ad331af44da37c05" name="a652c58bbc6525f45ad331af44da37c05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a652c58bbc6525f45ad331af44da37c05">&#9670;&#160;</a></span>am_sum_u16()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int am_sum_u16 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAM__U16x4.html">AM_U16x4</a>&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1b8b374889790812b43c48b1bb46b3af" name="a1b8b374889790812b43c48b1bb46b3af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b8b374889790812b43c48b1bb46b3af">&#9670;&#160;</a></span>am_sum_u8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int am_sum_u8 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAM__U8x4.html">AM_U8x4</a>&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -672,6 +736,48 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3260903a5cde5fc60e824a20960b11cc" name="a3260903a5cde5fc60e824a20960b11cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3260903a5cde5fc60e824a20960b11cc">&#9670;&#160;</a></span>mock_marshaller_raw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void mock_marshaller_raw </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>source_obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>dest_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__type__system.html#ga0ab49e30398b3c31b723e8b82bf16029">infix_type</a> *&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6d27d34afd67536408f412fa40b5cc03" name="a6d27d34afd67536408f412fa40b5cc03"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d27d34afd67536408f412fa40b5cc03">&#9670;&#160;</a></span>mock_marshaller_string()</h2>
 
@@ -853,7 +959,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a6a00bfaca1914793c8cd4501f21eb0d0" name="a6a00bfaca1914793c8cd4501f21eb0d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a00bfaca1914793c8cd4501f21eb0d0">&#9670;&#160;</a></span>subtest() <span class="overload">[1/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a00bfaca1914793c8cd4501f21eb0d0">&#9670;&#160;</a></span>subtest() <span class="overload">[1/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -871,7 +977,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a58ccd153d3a094729c96dbd717e07350" name="a58ccd153d3a094729c96dbd717e07350"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58ccd153d3a094729c96dbd717e07350">&#9670;&#160;</a></span>subtest() <span class="overload">[2/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a58ccd153d3a094729c96dbd717e07350">&#9670;&#160;</a></span>subtest() <span class="overload">[2/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -889,7 +995,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aefc9d1aede863ee53c34dd4fef3a322b" name="aefc9d1aede863ee53c34dd4fef3a322b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefc9d1aede863ee53c34dd4fef3a322b">&#9670;&#160;</a></span>subtest() <span class="overload">[3/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aefc9d1aede863ee53c34dd4fef3a322b">&#9670;&#160;</a></span>subtest() <span class="overload">[3/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -907,7 +1013,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="ac9e81f82a43126d1188ceef5d50b4ee3" name="ac9e81f82a43126d1188ceef5d50b4ee3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9e81f82a43126d1188ceef5d50b4ee3">&#9670;&#160;</a></span>subtest() <span class="overload">[4/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9e81f82a43126d1188ceef5d50b4ee3">&#9670;&#160;</a></span>subtest() <span class="overload">[4/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -925,7 +1031,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aa5053e77edad9f95c25b5498b4e383e5" name="aa5053e77edad9f95c25b5498b4e383e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5053e77edad9f95c25b5498b4e383e5">&#9670;&#160;</a></span>subtest() <span class="overload">[5/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5053e77edad9f95c25b5498b4e383e5">&#9670;&#160;</a></span>subtest() <span class="overload">[5/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -943,7 +1049,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aac2fb6386b59ac79a257139869607fd3" name="aac2fb6386b59ac79a257139869607fd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac2fb6386b59ac79a257139869607fd3">&#9670;&#160;</a></span>subtest() <span class="overload">[6/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aac2fb6386b59ac79a257139869607fd3">&#9670;&#160;</a></span>subtest() <span class="overload">[6/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -961,7 +1067,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aaa668139059b6003e076538ded9eab74" name="aaa668139059b6003e076538ded9eab74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa668139059b6003e076538ded9eab74">&#9670;&#160;</a></span>subtest() <span class="overload">[7/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa668139059b6003e076538ded9eab74">&#9670;&#160;</a></span>subtest() <span class="overload">[7/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -979,7 +1085,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a9f90d22b2257a83b0737bc5861a790ba" name="a9f90d22b2257a83b0737bc5861a790ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f90d22b2257a83b0737bc5861a790ba">&#9670;&#160;</a></span>subtest() <span class="overload">[8/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f90d22b2257a83b0737bc5861a790ba">&#9670;&#160;</a></span>subtest() <span class="overload">[8/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -996,8 +1102,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="acee24626b4f8bf6a99b8b306e2dc9ded" name="acee24626b4f8bf6a99b8b306e2dc9ded"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acee24626b4f8bf6a99b8b306e2dc9ded">&#9670;&#160;</a></span>subtest() <span class="overload">[9/10]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subtest </td>
+          <td>(</td>
+          <td class="paramtype">&quot;Test trailing-member aggregate arg (fuzzer struct_array_member shapes)&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aadbe46f947e9ad3d30aca6cdee11e6c4" name="aadbe46f947e9ad3d30aca6cdee11e6c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadbe46f947e9ad3d30aca6cdee11e6c4">&#9670;&#160;</a></span>subtest() <span class="overload">[9/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aadbe46f947e9ad3d30aca6cdee11e6c4">&#9670;&#160;</a></span>subtest() <span class="overload">[10/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1191,7 +1315,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(10)</div>
+<div class="line">    <a class="code hl_define" href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a>(11)</div>
 <div class="ttc" id="adouble__tap_8h_html_a1cf5990a750112f555ca38cadef37398"><div class="ttname"><a href="double__tap_8h.html#a1cf5990a750112f555ca38cadef37398">plan</a></div><div class="ttdeci">#define plan(count)</div><div class="ttdef"><b>Definition</b> double_tap.h:192</div></div>
 </div><!-- fragment -->
 </div>

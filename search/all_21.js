@@ -1,7 +1,7 @@
 var searchData=
 [
   ['w_20x_0',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md197',1,'']]],
-  ['w_20x_20write_20xor_20execute_20memory_20policy_1',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md296',1,'']]],
+  ['w_20x_20write_20xor_20execute_20memory_20policy_1',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md299',1,'']]],
   ['way_3a_20add_20tt_20infix_20tt_20directly_20to_20your_20project_2',['1. The Easiest Way: Add &lt;tt&gt;infix&lt;/tt&gt; Directly to Your Project',['../md_docs_2INSTALL.html#autotoc_md167',1,'']]],
   ['wchar_5ft_20tt_20etc_3',['Recipe: Handling Strings and Semantic Types (&lt;tt&gt;wchar_t&lt;/tt&gt;, etc.)',['../md_docs_2cookbook.html#autotoc_md109',1,'']]],
   ['whitespace_20and_20comments_4',['4.1 Whitespace and Comments',['../md_docs_2signatures.html#autotoc_md245',1,'']]],
@@ -49,7 +49,7 @@ var searchData=
   ['works_20why_20it_20s_20better_46',['How It Works &amp; Why It&apos;s Better',['../md_docs_2cookbook.html#autotoc_md132',1,'']]],
   ['works_3a_20a_20quick_20example_47',['How It Works: A Quick Example',['../index.html#autotoc_md4',1,'']]],
   ['wrapper_48',['Recipe: Introspecting a Trampoline for a Wrapper',['../md_docs_2cookbook.html#autotoc_md123',1,'']]],
-  ['write_20xor_20execute_20memory_20policy_49',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md296',1,'']]],
+  ['write_20xor_20execute_20memory_20policy_49',['1. W^X (Write XOR Execute) Memory Policy',['../md_SECURITY.html#autotoc_md299',1,'']]],
   ['write_20xor_20execute_20w_20x_50',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md197',1,'']]],
   ['write_5foptional_5fheader_51',['write_optional_header',['../emit__pe_8c.html#a099ae8a5a028a3b61724fce69933aa6f',1,'emit_pe.c']]],
   ['write_5fraw_5fbinary_52',['write_raw_binary',['../emit_8c.html#a828de6312eccf84ef685f739cbde8f54',1,'emit.c']]],

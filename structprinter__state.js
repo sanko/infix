@@ -1,5 +1,6 @@
 var structprinter__state =
 [
+    [ "depth", "structprinter__state.html#a31688551082ab3c88c5ea5a326767382", null ],
     [ "itanium_sub_count", "structprinter__state.html#abaca68543857ae6c16096d2e22ce131b", null ],
     [ "itanium_subs", "structprinter__state.html#a9a07c57a1abc208e0c8f852f3dc96c51", null ],
     [ "msvc_type_count", "structprinter__state.html#aa70ab4a4a87215e8fdcb528f594eb2a3", null ],

@@ -53,7 +53,7 @@ var searchData=
   ['long_20double_20tt_50',['Recipe: Handling &lt;tt&gt;long double&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md93',1,'']]],
   ['look_3a_20tt_20infix_20tt_20vs_20tt_20libffi_20tt_20and_20tt_20dyncall_20tt_51',['Chapter 10: A Comparative Look: &lt;tt&gt;infix&lt;/tt&gt; vs. &lt;tt&gt;libffi&lt;/tt&gt; and &lt;tt&gt;dyncall&lt;/tt&gt;',['../md_docs_2cookbook.html#autotoc_md141',1,'']]],
   ['loops_52',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md133',1,'']]],
-  ['low_20priority_3a_20advanced_20features_20polish_53',['Low Priority: Advanced Features &amp; Polish',['../md_TODO.html#autotoc_md289',1,'']]],
+  ['low_20priority_3a_20advanced_20features_20polish_53',['Low Priority: Advanced Features &amp; Polish',['../md_TODO.html#autotoc_md292',1,'']]],
   ['lru_5fnext_54',['lru_next',['../struct__cache__entry__t.html#aa60727185d8418ee1ea6fd46452683a3',1,'_cache_entry_t']]],
   ['lru_5fprev_55',['lru_prev',['../struct__cache__entry__t.html#a0223e44d2ab0ccae5333c8e7d0f0ddb8',1,'_cache_entry_t']]]
 ];

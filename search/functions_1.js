@@ -5,5 +5,7 @@ var searchData=
   ['add_5ffor_5fbenchmark_2',['add_for_benchmark',['../901__call__overhead_8c.html#aed3344f1605a3876df2f8bb77557f8b3',1,'901_call_overhead.c']]],
   ['add_5fints_3',['add_ints',['../002__simple__calls_8c.html#a9af107eb75c4b1a86c6588d00a4be76c',1,'add_ints(int a, int b):&#160;002_simple_calls.c'],['../813__custom__allocator_8c.html#a01b324b1e94516bd590965a087a0d0ed',1,'add_ints(int a, int b):&#160;813_custom_allocator.c']]],
   ['add_5fpoints_4',['add_points',['../501__direct__marshalling_8c.html#abf805158fc0836021372203d9c31f043',1,'501_direct_marshalling.c']]],
-  ['average_5fseries_5',['average_series',['../Ch02__FlexibleArrayMembers_8c.html#a841c71d1018eedd92bd2c45890c0ffb6',1,'Ch02_FlexibleArrayMembers.c']]]
+  ['am_5fsum_5fu16_5',['am_sum_u16',['../501__direct__marshalling_8c.html#a652c58bbc6525f45ad331af44da37c05',1,'501_direct_marshalling.c']]],
+  ['am_5fsum_5fu8_6',['am_sum_u8',['../501__direct__marshalling_8c.html#a1b8b374889790812b43c48b1bb46b3af',1,'501_direct_marshalling.c']]],
+  ['average_5fseries_7',['average_series',['../Ch02__FlexibleArrayMembers_8c.html#a841c71d1018eedd92bd2c45890c0ffb6',1,'Ch02_FlexibleArrayMembers.c']]]
 ];
