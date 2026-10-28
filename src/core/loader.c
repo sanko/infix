@@ -27,7 +27,7 @@
  * variables of any type described by a signature string.
  */
 #include "common/infix_internals.h"
-#if defined(INFIX_OS_WINDOWS && !defined(__CYGWIN__)
+#if defined(INFIX_OS_WINDOWS) && !defined(__CYGWIN__)
 #include <windows.h>
 #else
 #include <dlfcn.h>
@@ -94,7 +94,7 @@ INFIX_API void infix_library_close(infix_library_t * lib) {
     if (lib == nullptr)
         return;
     if (lib->handle) {
-#if defined(INFIX_OS_WINDOWS && !defined(__CYGWIN__)
+#if defined(INFIX_OS_WINDOWS) && !defined(__CYGWIN__)
         // Only call FreeLibrary on real handles obtained from LoadLibrary.
         // Never call it on a pseudo-handle from GetModuleHandle.
         if (!lib->is_pseudo_handle)
