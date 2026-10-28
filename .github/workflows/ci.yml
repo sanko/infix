@@ -15,7 +15,7 @@ permissions:
 jobs:
 
   vm:
-    name:  ${{ matrix.platform.os }}
+    name: ${{ matrix.platform.os }}
     uses: ./.github/workflows/unified-tester.yml
     secrets: inherit
     with:
@@ -24,7 +24,7 @@ jobs:
       os: ${{ matrix.platform.os }}
       os_version: ${{ matrix.platform.version }}
       arch: ${{ matrix.arch }}
-      prepare:  ${{ matrix.toolchain == 'clang' && matrix.platform.prepare_clang || matrix.platform.prepare_gcc }}
+      prepare: ${{ matrix.toolchain == 'clang' && matrix.platform.prepare_clang || matrix.platform.prepare_gcc }}
       host_os: 'ubuntu-latest'
       toolchain: ${{ matrix.compiler_cmd || matrix.toolchain }}
     strategy:
@@ -52,6 +52,9 @@ jobs:
           - os: 'omnios'
             version: 'r151056'
             prepare_gcc:   'pkg install -v --accept perl build-essential'
+          - os: 'haiku'
+            version: 'r1beta6'
+            prepare_gcc:   'pkgman install -y cmd:gcc cmd:make cmd:curl cmd:wget cmd:perl'
         arch: ['x86_64', 'aarch64', 'riscv64']
         toolchain: ['gcc', 'clang']
         exclude:
@@ -61,6 +64,8 @@ jobs:
           - platform: { os: 'solaris' }
             arch: 'aarch64'
           - platform: { os: 'omnios' }
+            arch: 'aarch64'
+          - platform: { os: 'haiku' }
             arch: 'aarch64'
           - platform: { os: 'dragonflybsd' }
             arch: 'riscv64'
@@ -74,6 +79,10 @@ jobs:
             arch: 'riscv64'
           - platform: { os: 'omnios' }
             arch: 'riscv64'
+          - platform: { os: 'haiku' }
+            arch: 'riscv64'
+          - platform: { os: 'openbsd' }
+            arch: 'riscv64'
           # Toolchain exclusions for simplicity
           - platform: { os: 'netbsd' }
             toolchain: 'clang'
@@ -82,6 +91,8 @@ jobs:
           - platform: { os: 'solaris' }
             toolchain: 'clang'
           - platform: { os: 'omnios' }
+            toolchain: 'clang'
+          - platform: { os: 'haiku' }
             toolchain: 'clang'
         include:
           # Use specific 'egcc' command for packaged GCC on OpenBSD
@@ -126,6 +137,11 @@ jobs:
             prepare_gcc: 'choco install mingw'
             prepare_clang: 'choco install llvm'
             prepare_msvc: 'choco install opencppcoverage strawberryperl; bash'
+          - name: 'cygwin'
+            os: 'windows-latest'
+            arch: 'x86_64'
+            prepare_gcc: 'curl -fsSL -o /c/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe && /c/setup-x86_64.exe --quiet-mode --no-desktop --root C:/cygwin --local-package-dir C:/cygwin/cache --site https://mirrors.kernel.org/sourceware/cygwin/ --packages gcc-core,gcc-g++,make,perl,curl && rm -f /c/setup-x86_64.exe && printf "%s\n" "C:\cygwin\bin" >> "$GITHUB_PATH"'
+            prepare_clang: 'curl -fsSL -o /c/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe && /c/setup-x86_64.exe --quiet-mode --no-desktop --root C:/cygwin --local-package-dir C:/cygwin/cache --site https://mirrors.kernel.org/sourceware/cygwin/ --packages clang,make,perl,curl && rm -f /c/setup-x86_64.exe && printf "%s\n" "C:\cygwin\bin" >> "$GITHUB_PATH"'
           - name: 'ubuntu'
             os: 'ubuntu-24.04-arm'
             arch: 'aarch64'
@@ -152,6 +168,10 @@ jobs:
             toolchain: 'msvc'
           - platform: { name: 'macos' }
             toolchain: 'msvc'
+          - platform: { name: 'cygwin' }
+            toolchain: 'msvc'
+          - platform: { name: 'windows', arch: 'aarch64' }
+            toolchain: 'gcc'
 
   results:
     name: Summary
