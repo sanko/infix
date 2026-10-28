@@ -87,6 +87,7 @@ typedef struct _UNWIND_INFO {
     uint8_t FrameOffset : 4;
     UNWIND_CODE UnwindCode[1];  // Variable length array
 } UNWIND_INFO;
+#pragma pack(pop)
 
 // We reserve 512 bytes at the end of every JIT block for SEH metadata.
 #define INFIX_SEH_METADATA_SIZE 256

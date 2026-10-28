@@ -45,6 +45,9 @@
 #if (defined(__linux__) || defined(__gnu_linux__)) && !defined(_GNU_SOURCE)
 #define _GNU_SOURCE
 #endif
+#if !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
 
 /**
  * @details Solaris/Illumos system headers (`<sys/feature_tests.h>`),
