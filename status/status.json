@@ -1,4 +1,8 @@
 {
+"cygwin-x86_64-clang": "👍🏽 passing"
+,
+"cygwin-x86_64-gcc": "👍🏽 passing"
+,
 "dragonflybsd-x86_64-gcc": "👍🏽 passing"
 ,
 "freebsd-aarch64-clang": "👍🏽 passing"
@@ -8,6 +12,8 @@
 "freebsd-x86_64-clang": "👍🏽 passing"
 ,
 "freebsd-x86_64-gcc": "👍🏽 passing"
+,
+"haiku-x86_64-gcc": "👍🏽 passing"
 ,
 "macos-aarch64-clang": "👍🏽 passing"
 ,
@@ -19,17 +25,13 @@
 ,
 "netbsd-aarch64-gcc": "👍🏽 passing"
 ,
-"netbsd-x86_64-gcc": "👎🏽 failing"
+"netbsd-x86_64-gcc": "👍🏽 passing"
 ,
 "omnios-x86_64-gcc": "👍🏽 passing"
 ,
 "openbsd-aarch64-clang": "👍🏽 passing"
 ,
 "openbsd-aarch64-egcc": "👍🏽 passing"
-,
-"openbsd-riscv64-clang": "👍🏽 passing"
-,
-"openbsd-riscv64-egcc": "👍🏽 passing"
 ,
 "openbsd-x86_64-clang": "👍🏽 passing"
 ,
@@ -50,8 +52,6 @@
 "ubuntu-x86_64-gcc": "👍🏽 passing"
 ,
 "windows-aarch64-clang": "👍🏽 passing"
-,
-"windows-aarch64-gcc": "👍🏽 passing"
 ,
 "windows-aarch64-msvc": "👍🏽 passing"
 ,

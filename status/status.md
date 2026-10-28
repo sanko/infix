@@ -1,22 +1,23 @@
 ## Build and Test Summary
 | OS | Arch | Compiler | Result |
 |:---|:---|:---|:---|
+| **cygwin** | `x86_64` | `clang` | ✅ success |
+| **cygwin** | `x86_64` | `gcc` | ✅ success |
 | **dragonflybsd** | `x86_64` | `gcc` | ✅ success |
 | **freebsd** | `aarch64` | `clang` | ✅ success |
 | **freebsd** | `aarch64` | `gcc` | ✅ success |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
 | **freebsd** | `x86_64` | `gcc` | ✅ success |
+| **haiku** | `x86_64` | `gcc` | ✅ success |
 | **macos** | `aarch64` | `clang` | ✅ success |
 | **macos** | `aarch64` | `gcc` | ✅ success |
 | **macos** | `x86_64` | `clang` | ✅ success |
 | **macos** | `x86_64` | `gcc` | ✅ success |
 | **netbsd** | `aarch64` | `gcc` | ✅ success |
-| **netbsd** | `x86_64` | `gcc` | ❌ failure |
+| **netbsd** | `x86_64` | `gcc` | ✅ success |
 | **omnios** | `x86_64` | `gcc` | ✅ success |
 | **openbsd** | `aarch64` | `clang` | ✅ success |
 | **openbsd** | `aarch64` | `egcc` | ✅ success |
-| **openbsd** | `riscv64` | `clang` | ✅ success |
-| **openbsd** | `riscv64` | `egcc` | ✅ success |
 | **openbsd** | `x86_64` | `clang` | ✅ success |
 | **openbsd** | `x86_64` | `egcc` | ✅ success |
 | **solaris** | `x86_64` | `gcc` | ✅ success |
@@ -27,7 +28,6 @@
 | **ubuntu** | `x86_64` | `clang` | ✅ success |
 | **ubuntu** | `x86_64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `clang` | ✅ success |
-| **windows** | `aarch64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `msvc` | ✅ success |
 | **windows** | `x86_64` | `clang` | ✅ success |
 | **windows** | `x86_64` | `gcc` | ✅ success |
