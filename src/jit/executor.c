@@ -886,7 +886,7 @@ void infix_executable_free(infix_executable_t exec) {
 #elif defined(INFIX_OS_ANDROID) || defined(INFIX_OS_OPENBSD) || defined(INFIX_OS_DRAGONFLY)
     // Other single-mapping POSIX systems.
     if (exec.rw_ptr) {
-        mprotect(exec.rw_ptr, exec.size, PROT_NONE);
+        //mprotect(exec.rw_ptr, exec.size, PROT_NONE);
         munmap(exec.rw_ptr, exec.size);
     }
 #else
