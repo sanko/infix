@@ -636,7 +636,7 @@ static void _infix_register_seh_windows_arm64(infix_executable_t * exec,
  *          and a Frame Description Entry (FDE) that match the stack behavior
  *          of our trampolines (standard RBP-based frame).
  */
-static void _infix_register_eh_frame_linux_x64(infix_executable_t * exec, infix_executable_category_t category) {
+static c23_maybe_unused void _infix_register_eh_frame_linux_x64(infix_executable_t * exec, infix_executable_category_t category) {
     // Simplified .eh_frame layout: [ CIE | FDE | Terminator ]
     const size_t cie_size = 32;
     const size_t fde_size = 64;
