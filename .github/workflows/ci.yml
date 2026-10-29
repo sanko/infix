@@ -51,7 +51,7 @@ jobs:
             prepare_gcc:   'pkg install -v --accept perl-538 gcc'
           - os: 'omnios'
             version: 'r151056'
-            prepare_gcc:   'pkg install -v --accept perl build-essential'
+            prepare_gcc:   'pkg install -v --accept perl build-essential developer/build/make'
           - os: 'haiku'
             version: 'r1beta6'
             prepare_gcc:   'pkgman install -y cmd:gcc cmd:make cmd:curl cmd:wget cmd:perl'
