@@ -45,6 +45,8 @@
 ,
 "ubuntu-riscv64-clang": "👍🏽 passing"
 ,
+"ubuntu-riscv64-gcc": "👍🏽 passing"
+,
 "ubuntu-x86_64-clang": "👍🏽 passing"
 ,
 "ubuntu-x86_64-gcc": "👍🏽 passing"
