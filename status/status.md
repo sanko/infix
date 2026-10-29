@@ -24,7 +24,6 @@
 | **ubuntu** | `aarch64` | `clang` | ✅ success |
 | **ubuntu** | `aarch64` | `gcc` | ✅ success |
 | **ubuntu** | `riscv64` | `clang` | ✅ success |
-| **ubuntu** | `riscv64` | `gcc` | ✅ success |
 | **ubuntu** | `x86_64` | `clang` | ✅ success |
 | **ubuntu** | `x86_64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `clang` | ✅ success |
