@@ -4,8 +4,8 @@
 | **cygwin** | `x86_64` | `clang` | ✅ success |
 | **cygwin** | `x86_64` | `gcc` | ✅ success |
 | **dragonflybsd** | `x86_64` | `gcc` | ✅ success |
-| **freebsd** | `aarch64` | `clang` | ✅ success |
-| **freebsd** | `aarch64` | `gcc` | ✅ success |
+| **freebsd** | `aarch64` | `clang` | ❌ failure |
+| **freebsd** | `aarch64` | `gcc` | ❌ failure |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
 | **freebsd** | `x86_64` | `gcc` | ✅ success |
 | **haiku** | `x86_64` | `gcc` | ✅ success |
