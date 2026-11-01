@@ -1,5 +1,5 @@
 <map id="fuzz/fuzz_regression_helpers.h" name="fuzz/fuzz_regression_helpers.h">
-<area shape="rect" id="Node000001" title="Helper functions specifically for running regression tests from saved fuzzer inputs." alt="" coords="21,5,175,45"/>
-<area shape="rect" id="Node000002" href="$850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="5,93,191,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,59,101,93,95,93,95,59"/>
+<area shape="rect" id="Node000001" title="Helper functions specifically for running regression tests from saved fuzzer inputs." alt="" coords="20,5,175,50"/>
+<area shape="rect" id="Node000002" href="$850__regression__cases_8c.html" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="5,98,190,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,64,100,98,95,96,96,68"/>
 </map>

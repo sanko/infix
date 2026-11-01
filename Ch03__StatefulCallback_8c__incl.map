@@ -1,13 +1,13 @@
 <map id="eg/cookbook/Ch03_StatefulCallback.c" name="eg/cookbook/Ch03_StatefulCallback.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 3: Creating a Stateful Callback." alt="" coords="101,5,301,45"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="102,93,197,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,47,167,83,162,80,187,44"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="221,93,288,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="216,44,241,80,237,83,212,47"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,88,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,121,76,161,73,156,131,116"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="112,167,187,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="152,119,152,153,147,153,147,119"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="211,167,282,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="167,117,221,156,218,160,163,121"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 3: Creating a Stateful Callback." alt="" coords="100,5,299,50"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="101,98,194,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,49,166,86,162,83,184,52"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="219,98,284,126"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="214,48,237,85,232,84,212,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,174,87,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="132,125,78,167,75,162,127,127"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="111,174,184,201"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="149,124,150,159,145,157,146,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="208,174,278,201"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="165,124,217,164,212,164,164,129"/>
 </map>

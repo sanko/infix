@@ -1,14 +1,14 @@
 <map id="eg/cookbook/Ch08_ManualAPI.c" name="eg/cookbook/Ch08_ManualAPI.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 8: The Full Manual API Lifecycle." alt="" coords="127,5,356,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="106,79,201,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,33,180,72,177,68,226,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="208,152,283,177"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="244,31,247,138,242,138,239,31"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="279,79,345,104"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="255,29,293,67,289,71,251,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,88,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="138,106,77,147,74,142,135,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="170,102,221,141,218,146,166,106"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="113,152,183,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="155,105,153,139,147,138,150,104"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 8: The Full Manual API Lifecycle." alt="" coords="124,5,352,33"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="105,81,198,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,32,180,73,176,69,220,35"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="205,157,279,184"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="240,32,244,142,239,140,236,35"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="276,81,341,109"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="251,31,288,70,283,70,250,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,157,87,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="135,109,78,150,75,146,130,110"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="168,107,217,147,211,147,167,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="111,157,181,184"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="152,107,150,142,146,140,149,111"/>
 </map>

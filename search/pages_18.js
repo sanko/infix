@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['object_20model_0',['The Self-Contained Object Model',['../md_docs_2internals.html#autotoc_md187',1,'']]],
+  ['of_20a_20language_20binding_1',['The Four Pillars of a Language Binding',['../md_docs_2cookbook.html#autotoc_md157',1,'']]],
+  ['of_20a_20pointer_20in_20args_2',['Mistake: Passing a Value Instead of a Pointer in &lt;span class=&quot;tt&quot;&gt;args[]&lt;/span&gt;',['../md_docs_2cookbook.html#autotoc_md137',1,'']]],
+  ['of_20c_20declarations_3',['1.2 The Limitations of C Declarations',['../md_docs_2signatures.html#autotoc_md226',1,'']]],
+  ['of_20callbacks_20reverse_20calls_4',['Chapter 3: The Power of Callbacks (Reverse Calls)',['../md_docs_2cookbook.html#autotoc_md85',1,'']]],
+  ['of_20contents_5',['of Contents',['../md_docs_2API.html#autotoc_md13',1,'Table of Contents'],['../md_docs_2cookbook.html#autotoc_md57',1,'Table of Contents']]],
+  ['of_20interoperability_6',['1.1 The Challenge of Interoperability',['../md_docs_2signatures.html#autotoc_md225',1,'']]],
+  ['of_20types_7',['Recipe: Using a Custom Arena for a Group of Types',['../md_docs_2cookbook.html#autotoc_md127',1,'']]],
+  ['on_20apple_20silicon_8',['The Challenge: Hardened Runtimes on Apple Silicon',['../md_docs_2internals.html#autotoc_md200',1,'']]],
+  ['only_20context_20hardening_9',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md301',1,'']]],
+  ['only_20contexts_10',['3.2 Guard Pages and Read-Only Contexts',['../md_docs_2internals.html#autotoc_md198',1,'']]],
+  ['opaque_20pointers_20incomplete_20types_11',['Recipe: Working with Opaque Pointers (Incomplete Types)',['../md_docs_2cookbook.html#autotoc_md63',1,'']]],
+  ['optimization_12',['Medium Priority: Expansion &amp;amp; Optimization',['../md_TODO.html#autotoc_md291',1,'']]],
+  ['optimization_3a_20arena_20resetting_20for_20hot_20loops_13',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md133',1,'']]],
+  ['optimizing_20memory_20with_20a_20shared_20arena_14',['Recipe: Optimizing Memory with a Shared Arena',['../md_docs_2cookbook.html#autotoc_md130',1,'']]],
+  ['optional_15',['2. Building &lt;span class=&quot;tt&quot;&gt;infix&lt;/span&gt; as a Standalone Library (Optional)',['../md_docs_2INSTALL.html#autotoc_md169',1,'']]],
+  ['optional_20but_20recommended_16',['Step 6: Exception Handling Support (Optional but Recommended)',['../md_docs_2porting.html#autotoc_md222',1,'']]],
+  ['other_20compiled_20languages_17',['The Pattern for Other Compiled Languages',['../md_docs_2cookbook.html#autotoc_md101',1,'']]],
+  ['other_20languages_18',['Chapter 5: Interoperability with Other Languages',['../md_docs_2cookbook.html#autotoc_md97',1,'']]],
+  ['other_20systems_19',['4.4 Comparison with Other Systems',['../md_docs_2signatures.html#autotoc_md248',1,'']]],
+  ['our_20solution_3a_20a_20human_20first_20signature_20system_20',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md227',1,'']]],
+  ['out_20parameters_21',['Recipe: Working with &quot;Out&quot; Parameters',['../md_docs_2cookbook.html#autotoc_md62',1,'']]],
+  ['overflows_22',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md302',1,'']]],
+  ['overview_23',['2. Architectural Overview',['../md_docs_2internals.html#autotoc_md191',1,'']]]
+];

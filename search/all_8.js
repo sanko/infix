@@ -16,5 +16,5 @@ var searchData=
   ['862_5fpacked_5flayout_2ec_13',['862_packed_layout.c',['../862__packed__layout_8c.html',1,'']]],
   ['863_5fsignature_5flayout_5frecalc_2ec_14',['863_signature_layout_recalc.c',['../863__signature__layout__recalc_8c.html',1,'']]],
   ['880_5fexports_2ec_15',['880_exports.c',['../880__exports_8c.html',1,'']]],
-  ['8_3a_20performance_20memory_20management_16',['Chapter 8: Performance &amp; Memory Management',['../md_docs_2cookbook.html#autotoc_md125',1,'']]]
+  ['8_3a_20performance_20memory_20management_16',['Chapter 8: Performance &amp;amp; Memory Management',['../md_docs_2cookbook.html#autotoc_md125',1,'']]]
 ];

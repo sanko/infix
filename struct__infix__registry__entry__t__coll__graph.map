@@ -1,16 +1,16 @@
 <map id="_infix_registry_entry_t" name="_infix_registry_entry_t">
-<area shape="rect" id="Node000001" title="A single entry in the registry&#39;s hash table." alt="" coords="5,229,172,255"/>
-<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="187,234,199,242,190,249,173,252,172,247,188,244,193,242,185,239"/>
-<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="331,117,430,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="338,150,120,232,118,227,336,145"/>
-<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="445,117,453,122,457,130,449,141,431,145,429,140,446,137,451,130,449,126,442,122"/>
-<area shape="rect" id="Node000004" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="254,229,422,255"/>
-<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="351,153,331,170,316,192,315,201,317,210,329,228,324,231,312,212,310,201,312,190,327,167,347,149"/>
-<area shape="rect" id="Node000005" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="446,229,638,255"/>
-<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="405,149,475,203,519,227,516,232,473,208,402,154"/>
-<area shape="rect" id="Node000003" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="327,5,434,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,45,383,117,378,117,378,45"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="449,9,461,18,452,26,435,29,434,23,450,21,455,18,446,14"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="345,215,374,142,379,144,350,217"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="530,218,511,193,467,164,421,145,424,140,470,159,515,189,534,215"/>
+<area shape="rect" id="Node000001" title="A single entry in the registry&#39;s hash table." alt="" coords="5,293,172,321"/>
+<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="188,298,198,307,190,315,172,319,172,313,188,310,193,307,186,303"/>
+<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="326,149,424,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,187,116,295,114,290,334,182"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="415,143,439,147,447,153,450,163,446,175,433,182,417,183,401,180,400,175,418,178,432,177,442,172,445,163,443,156,437,152,416,148"/>
+<area shape="rect" id="Node000004" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="257,293,424,321"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="351,186,327,214,310,245,307,257,310,268,327,294,322,292,305,270,302,257,305,243,323,211,346,189"/>
+<area shape="rect" id="Node000005" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="449,293,640,321"/>
+<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="395,187,431,227,474,267,516,293,511,292,471,271,427,231,393,192"/>
+<area shape="rect" id="Node000003" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="322,5,428,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="377,47,378,150,373,148,373,51"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="443,9,454,19,446,28,429,31,427,26,444,23,449,19,443,15"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="345,276,370,179,374,176,349,280"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="533,277,525,262,513,246,489,225,462,206,410,180,411,175,465,202,493,220,517,243,529,259,538,280"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="include/infix/infix.h" name="include/infix/infix.h">
-<area shape="rect" id="Node000001" title="The public interface for the infix FFI library." alt="" coords="77,5,222,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,88,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,33,76,73,73,68,131,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="112,79,187,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="152,31,152,65,147,65,147,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="211,79,282,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="167,29,221,68,218,72,163,33"/>
+<area shape="rect" id="Node000001" title="The public interface for the infix FFI library." alt="" coords="75,5,220,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,87,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,33,78,74,75,70,127,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="111,81,184,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,32,150,67,145,64,146,36"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="208,81,278,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,31,217,71,212,72,164,36"/>
 </map>

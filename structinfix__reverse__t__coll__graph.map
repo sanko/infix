@@ -1,26 +1,26 @@
 <map id="infix_reverse_t" name="infix_reverse_t">
-<area shape="rect" id="Node000001" title="Internal definition of a reverse trampoline (callback/closure) handle." alt="" coords="462,336,580,361"/>
-<area shape="poly" id="edge12_Node000001_Node000001" title=" " alt="" coords="596,340,607,349,599,356,581,359,580,354,597,352,602,349,593,345"/>
-<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="264,5,370,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,34,167,56,123,73,82,94,48,118,22,147,9,181,8,199,12,219,23,253,38,277,61,295,93,309,164,325,263,335,462,344,461,349,263,340,163,330,91,315,58,299,34,280,18,255,6,221,3,200,4,180,18,144,44,114,79,89,121,68,165,51,249,29"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="386,9,397,18,389,26,371,29,370,23,387,21,392,18,383,14"/>
-<area shape="rect" id="Node000005" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="268,117,366,143"/>
-<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="320,45,320,117,314,117,314,45"/>
-<area shape="rect" id="Node000008" href="$structinfix__forward__t.html" title="Internal definition of a forward trampoline handle." alt="" coords="555,246,674,271"/>
-<area shape="poly" id="edge14_Node000008_Node000002" title=" " alt="" coords="384,32,448,55,480,71,509,91,547,130,577,173,612,244,607,247,572,176,543,133,506,95,477,76,446,60,382,37"/>
-<area shape="rect" id="Node000003" href="$structinfix__executable__t.html" title="Internal representation of an executable memory block for JIT code." alt="" coords="658,117,798,143"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="736,156,740,191,741,233,732,276,723,296,710,314,689,327,656,336,581,346,580,341,655,330,686,322,706,310,718,293,727,274,735,232,735,191,731,157"/>
-<area shape="poly" id="edge15_Node000008_Node000003" title=" " alt="" coords="710,155,675,192,626,248,622,244,671,189,706,151"/>
-<area shape="rect" id="Node000004" href="$structinfix__protected__t.html" title="Internal representation of a memory block that will be made read&#45;only." alt="" coords="785,246,916,271"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="821,280,786,299,746,315,660,335,581,346,580,340,659,330,744,309,784,294,819,276"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="255,144,176,162,135,174,99,189,70,207,52,226,48,236,48,247,52,259,60,271,87,291,128,307,179,320,237,329,358,340,461,344,461,350,358,346,236,334,178,325,126,312,84,296,56,275,47,261,43,248,43,235,47,223,67,203,96,185,133,169,174,157,254,139"/>
-<area shape="poly" id="edge7_Node000005_Node000005" title=" " alt="" coords="381,117,390,122,393,130,385,141,367,145,366,140,382,137,388,130,386,126,379,122"/>
-<area shape="rect" id="Node000006" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="146,246,314,271"/>
-<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="267,151,239,168,217,192,213,205,214,219,225,245,220,247,209,220,208,204,212,189,235,164,264,146"/>
-<area shape="rect" id="Node000007" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="338,246,530,271"/>
-<area shape="poly" id="edge11_Node000007_Node000005" title=" " alt="" coords="328,154,343,187,366,218,384,233,405,244,402,248,381,237,362,222,338,190,323,157"/>
-<area shape="poly" id="edge16_Node000008_Node000005" title=" " alt="" coords="366,145,413,164,461,188,480,204,498,218,532,232,566,243,565,249,530,237,496,222,477,208,458,193,410,169,364,150"/>
-<area shape="poly" id="edge8_Node000005_Node000006" title=" " alt="" coords="242,233,270,189,306,141,310,145,274,192,246,236"/>
-<area shape="poly" id="edge10_Node000005_Node000007" title=" " alt="" coords="424,234,414,213,400,192,370,165,338,145,341,141,373,161,404,189,419,210,429,232"/>
-<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="547,279,525,299,519,317,521,336,515,336,514,316,520,296,543,275"/>
+<area shape="rect" id="Node000001" title="Internal definition of a reverse trampoline (callback/closure) handle." alt="" coords="472,436,589,464"/>
+<area shape="poly" id="edge12_Node000001_Node000001" title=" " alt="" coords="605,440,616,450,608,459,590,462,590,456,605,454,611,450,604,445"/>
+<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="266,5,371,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,41,179,77,133,101,90,130,53,164,25,202,10,245,8,267,11,291,21,332,34,364,56,389,90,410,121,420,163,428,266,439,377,444,474,449,469,449,377,450,266,444,162,433,120,425,88,414,52,393,30,367,16,334,6,292,3,267,5,243,20,200,49,161,87,126,130,97,177,72,264,37"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="386,9,398,19,390,28,373,31,370,26,387,23,393,19,387,15"/>
+<area shape="rect" id="Node000005" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="270,149,367,177"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="320,46,321,150,316,148,317,51"/>
+<area shape="rect" id="Node000008" href="$structinfix__forward__t.html" title="Internal definition of a forward trampoline handle." alt="" coords="564,326,682,353"/>
+<area shape="poly" id="edge14_Node000008_Node000002" title=" " alt="" coords="386,35,454,61,488,81,518,104,542,130,562,160,593,224,613,283,623,326,618,324,608,284,588,226,558,163,538,134,514,108,485,85,452,66,386,40"/>
+<area shape="rect" id="Node000003" href="$structinfix__executable__t.html" title="Internal representation of an executable memory block for JIT code." alt="" coords="676,149,815,177"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="749,191,748,313,740,373,733,397,723,414,702,427,668,436,590,447,590,442,667,431,699,422,719,410,728,395,735,372,743,312,745,195"/>
+<area shape="poly" id="edge15_Node000008_Node000003" title=" " alt="" coords="728,187,686,246,632,327,629,323,681,243,723,190"/>
+<area shape="rect" id="Node000004" href="$structinfix__protected__t.html" title="Internal representation of a memory block that will be made read&#45;only." alt="" coords="802,326,932,353"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="843,362,804,391,760,414,716,428,672,438,590,449,589,443,671,433,715,423,758,410,802,387,838,364"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="257,184,179,214,137,234,100,256,70,280,52,306,49,319,49,333,53,347,63,361,90,382,132,399,184,413,243,424,367,438,474,447,469,447,366,443,243,429,183,418,130,404,88,387,59,365,49,349,44,334,43,318,47,304,67,276,97,252,135,229,177,210,260,180"/>
+<area shape="poly" id="edge7_Node000005_Node000005" title=" " alt="" coords="358,143,383,147,391,153,394,163,389,175,377,182,361,183,345,180,343,175,361,178,376,177,385,172,389,163,387,156,381,152,360,148"/>
+<area shape="rect" id="Node000006" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="156,326,324,353"/>
+<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="273,186,241,211,225,227,213,245,208,267,214,291,221,308,232,326,227,325,217,311,209,293,203,267,209,243,221,224,237,207,277,183"/>
+<area shape="rect" id="Node000007" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="348,326,540,353"/>
+<area shape="poly" id="edge11_Node000007_Node000005" title=" " alt="" coords="328,190,347,247,368,290,389,309,414,325,409,325,386,313,364,293,342,249,325,195"/>
+<area shape="poly" id="edge16_Node000008_Node000005" title=" " alt="" coords="369,181,423,207,474,242,485,255,491,267,496,278,507,290,539,306,585,325,580,325,537,311,503,294,492,281,486,270,480,258,470,246,420,211,369,186"/>
+<area shape="poly" id="edge8_Node000005_Node000006" title=" " alt="" coords="245,309,268,243,288,206,308,180,311,176,292,209,272,245,249,312"/>
+<area shape="poly" id="edge10_Node000005_Node000007" title=" " alt="" coords="435,309,423,279,406,246,371,208,338,180,338,175,375,204,410,243,428,276,440,311"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="565,359,547,374,535,388,528,412,530,437,525,434,523,412,530,386,544,370,560,361"/>
 </map>

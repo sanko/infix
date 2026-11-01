@@ -1,4 +1,10 @@
 var searchData=
 [
-  ['library_20for_20c_0',['infix: A JIT-powered FFI library for C',['../index.html',1,'']]]
+  ['6_202026_2002_2014_0',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.5...v0.1.6&quot;&gt;0.1.6&lt;/a&gt; - 2026-02-14',['../md_CHANGELOG.html#autotoc_md261',1,'']]],
+  ['6_20built_20in_20aliases_20vs_20registry_20aliases_1',['2.6 Built-in Aliases vs. Registry Aliases',['../md_docs_2signatures.html#autotoc_md237',1,'']]],
+  ['6_20maintainer_20s_20debugging_20guide_2',['6. Maintainer&apos;s Debugging Guide',['../md_docs_2internals.html#autotoc_md211',1,'']]],
+  ['6_20manual_20api_20advanced_3',['6. Manual API (Advanced)',['../md_docs_2API.html#autotoc_md49',1,'']]],
+  ['64_20sse_20avx_20and_20avx_20512_4',['x86-64 (SSE, AVX, and AVX-512)',['../md_docs_2cookbook.html#autotoc_md78',1,'']]],
+  ['6_3a_20dynamic_20libraries_20system_20calls_5',['Chapter 6: Dynamic Libraries &amp;amp; System Calls',['../md_docs_2cookbook.html#autotoc_md112',1,'']]],
+  ['6_3a_20exception_20handling_20support_20optional_20but_20recommended_6',['Step 6: Exception Handling Support (Optional but Recommended)',['../md_docs_2porting.html#autotoc_md222',1,'']]]
 ];

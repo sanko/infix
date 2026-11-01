@@ -1,17 +1,17 @@
 <map id="eg/win32_msgbox.c" name="eg/win32_msgbox.c">
-<area shape="rect" id="Node000001" title=" " alt="" coords="155,5,306,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="98,79,193,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,33,171,72,168,68,215,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,152,80,177"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="181,33,133,51,110,65,89,81,67,109,53,140,48,138,62,107,85,77,107,60,131,47,179,28"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="211,152,282,177"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="235,31,247,138,241,139,229,31"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="268,79,335,104"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="244,29,282,67,278,71,240,33"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="359,79,449,104"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="260,28,364,71,362,76,258,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="104,152,187,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="148,104,148,138,143,138,143,104"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="130,106,72,146,69,142,127,102"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="163,102,220,142,217,146,160,106"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="152,5,302,33"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="97,81,190,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,32,171,73,168,69,210,35"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,157,79,184"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="171,35,128,54,106,67,87,83,65,112,52,143,47,140,61,109,83,79,103,63,126,50,175,32"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="208,157,278,184"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="231,31,243,142,238,140,227,35"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="265,81,331,109"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="241,31,278,70,272,70,239,36"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="354,81,444,109"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="258,31,357,74,352,75,258,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,157,184,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,107,146,142,141,140,142,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="128,109,74,150,71,145,123,110"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="162,107,216,147,211,148,160,112"/>
 </map>

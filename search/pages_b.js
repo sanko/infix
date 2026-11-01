@@ -1,6 +1,29 @@
 var searchData=
 [
-  ['security_20policy_0',['Security Policy',['../md_SECURITY.html',1,'']]],
-  ['signature_20and_20type_20system_1',['The infix Signature and Type System',['../md_docs_2signatures.html',1,'']]],
-  ['system_2',['The infix Signature and Type System',['../md_docs_2signatures.html',1,'']]]
+  ['based_20manual_20api_0',['Arena-Based Manual API',['../md_docs_2internals.html#autotoc_md188',1,'']]],
+  ['basic_20usage_1',['Basic Usage',['..//home/runner/work/infix/infix/include/infix/infix.h#usage_sec',1,'']]],
+  ['basics_20forward_20calls_2',['Chapter 1: The Basics (Forward Calls)',['../md_docs_2cookbook.html#autotoc_md59',1,'']]],
+  ['best_20practice_3a_20caching_20trampolines_3',['Best Practice: Caching Trampolines',['../md_docs_2cookbook.html#autotoc_md126',1,'']]],
+  ['better_4',['How It Works &amp;amp; Why It&apos;s Better',['../md_docs_2cookbook.html#autotoc_md132',1,'']]],
+  ['binding_5',['The Four Pillars of a Language Binding',['../md_docs_2cookbook.html#autotoc_md157',1,'']]],
+  ['binding_20from_20dyncall_20to_20infix_6',['Recipe: Porting a Python Binding from &lt;span class=&quot;tt&quot;&gt;dyncall&lt;/span&gt; to &lt;span class=&quot;tt&quot;&gt;infix&lt;/span&gt;',['../md_docs_2cookbook.html#autotoc_md158',1,'']]],
+  ['bindings_7',['Bindings',['../md_docs_2cookbook.html#autotoc_md156',1,'Chapter 11: Building Language Bindings'],['../md_docs_2API.html#autotoc_md21',1,'Direct Marshalling (Advanced Language Bindings)'],['../index.html#autotoc_md7',1,'High-Performance Language Bindings']]],
+  ['bindings_20direct_20marshalling_8',['Chapter 12: High-Performance Language Bindings (Direct Marshalling)',['../md_docs_2cookbook.html#autotoc_md159',1,'']]],
+  ['bitfields_9',['Recipe: Working with Bitfields',['../md_docs_2cookbook.html#autotoc_md70',1,'']]],
+  ['bitfields_20and_20flexible_20arrays_10',['2.4 Bitfields and Flexible Arrays',['../md_docs_2signatures.html#autotoc_md235',1,'']]],
+  ['boundaries_11',['Boundaries',['../md_docs_2internals.html#autotoc_md205',1,'4. Exception Handling Boundaries'],['../index.html#autotoc_md6',1,'Safe Exception Boundaries']]],
+  ['boundaries_20infix_5fforward_5fcreate_5fsafe_12',['4.2 Safe Boundaries (&lt;span class=&quot;tt&quot;&gt;infix_forward_create_safe&lt;/span&gt;)',['../md_docs_2internals.html#autotoc_md207',1,'']]],
+  ['boundary_13',['Recipe: Establishing a Safe Exception Boundary',['../md_docs_2cookbook.html#autotoc_md162',1,'']]],
+  ['bridging_20c_20callbacks_20std_3a_3afunction_20and_20lambdas_14',['Recipe: Bridging C++ Callbacks (&lt;span class=&quot;tt&quot;&gt;std::function&lt;/span&gt;) and Lambdas',['../md_docs_2cookbook.html#autotoc_md111',1,'']]],
+  ['build_15',['The Unity Build',['../md_docs_2internals.html#autotoc_md186',1,'']]],
+  ['building_20a_20dynamic_20call_20frame_20with_20an_20arena_16',['Recipe: Building a Dynamic Call Frame with an Arena',['../md_docs_2cookbook.html#autotoc_md131',1,'']]],
+  ['building_20a_20signature_20string_20at_20runtime_17',['Recipe: Building a Signature String at Runtime',['../md_docs_2cookbook.html#autotoc_md122',1,'']]],
+  ['building_20and_20integrating_20infix_18',['Building and Integrating infix',['../md_docs_2INSTALL.html',1,'']]],
+  ['building_20infix_20as_20a_20standalone_20library_20optional_19',['2. Building &lt;span class=&quot;tt&quot;&gt;infix&lt;/span&gt; as a Standalone Library (Optional)',['../md_docs_2INSTALL.html#autotoc_md169',1,'']]],
+  ['building_20language_20bindings_20',['Chapter 11: Building Language Bindings',['../md_docs_2cookbook.html#autotoc_md156',1,'']]],
+  ['built_20in_20aliases_20vs_20registry_20aliases_21',['2.6 Built-in Aliases vs. Registry Aliases',['../md_docs_2signatures.html#autotoc_md237',1,'']]],
+  ['built_20library_22',['3. Linking Against a Pre-Built Library',['../md_docs_2INSTALL.html#autotoc_md177',1,'']]],
+  ['but_20recommended_23',['Step 6: Exception Handling Support (Optional but Recommended)',['../md_docs_2porting.html#autotoc_md222',1,'']]],
+  ['by_20reference_24',['Recipe: Large Structs Passed by Reference',['../md_docs_2cookbook.html#autotoc_md68',1,'']]],
+  ['by_20value_25',['Recipe: Small Structs Passed by Value',['../md_docs_2cookbook.html#autotoc_md66',1,'']]]
 ];

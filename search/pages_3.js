@@ -1,7 +1,23 @@
 var searchData=
 [
-  ['ffi_0',['Project Roadmap: infix FFI',['../md_TODO.html',1,'']]],
-  ['ffi_20cookbook_1',['The infix FFI Cookbook',['../md_docs_2cookbook.html',1,'']]],
-  ['ffi_20library_20for_20c_2',['infix: A JIT-powered FFI library for C',['../index.html',1,'']]],
-  ['for_20c_3',['infix: A JIT-powered FFI library for C',['../index.html',1,'']]]
+  ['3_201_20write_20xor_20execute_20w_20x_0',['3.1 Write XOR Execute (W^X)',['../md_docs_2internals.html#autotoc_md197',1,'']]],
+  ['3_202_20guard_20pages_20and_20read_20only_20contexts_1',['3.2 Guard Pages and Read-Only Contexts',['../md_docs_2internals.html#autotoc_md198',1,'']]],
+  ['3_202025_2012_2019_2',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...v0.1.3&quot;&gt;0.1.3&lt;/a&gt; - 2025-12-19',['../md_CHANGELOG.html#autotoc_md272',1,'']]],
+  ['3_203_20macos_20jit_20hardening_20and_20the_20entitlement_20fallback_3',['3.3 macOS JIT Hardening and the Entitlement Fallback',['../md_docs_2internals.html#autotoc_md199',1,'']]],
+  ['3_204_20fuzz_20testing_4',['3.4 Fuzz Testing',['../md_docs_2internals.html#autotoc_md202',1,'']]],
+  ['3_205_20api_20input_20hardening_5',['3.5 API Input Hardening',['../md_docs_2internals.html#autotoc_md203',1,'']]],
+  ['3_20design_20rationale_3a_20why_20this_20syntax_6',['4.3 Design Rationale: Why This Syntax?',['../md_docs_2signatures.html#autotoc_md247',1,'']]],
+  ['3_20introspection_20api_7',['3. Introspection API',['../md_docs_2API.html#autotoc_md37',1,'']]],
+  ['3_20linking_20against_20a_20pre_20built_20library_8',['3. Linking Against a Pre-Built Library',['../md_docs_2INSTALL.html#autotoc_md177',1,'']]],
+  ['3_20macos_20jit_20hardening_20and_20the_20entitlement_20fallback_9',['3.3 macOS JIT Hardening and the Entitlement Fallback',['../md_docs_2internals.html#autotoc_md199',1,'']]],
+  ['3_20our_20solution_3a_20a_20human_20first_20signature_20system_10',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md227',1,'']]],
+  ['3_20read_20only_20context_20hardening_11',['3. Read-Only Context Hardening',['../md_SECURITY.html#autotoc_md301',1,'']]],
+  ['3_20security_20features_20deep_20dive_12',['3. Security Features Deep Dive',['../md_docs_2internals.html#autotoc_md196',1,'']]],
+  ['3_20syntax_20showcase_13',['2.3 Syntax Showcase',['../md_docs_2signatures.html#autotoc_md234',1,'']]],
+  ['30_14',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.6...v0.1.7&quot;&gt;0.1.7&lt;/a&gt; - 2026-03-30',['../md_CHANGELOG.html#autotoc_md259',1,'']]],
+  ['3_3a_20creating_20a_20callback_15',['Scenario 3: Creating a Callback',['../md_docs_2cookbook.html#autotoc_md150',1,'']]],
+  ['3_3a_20implement_20the_20instruction_20emitters_16',['Step 3: Implement the Instruction Emitters',['../md_docs_2porting.html#autotoc_md219',1,'']]],
+  ['3_3a_20simd_20vector_20aliases_17',['Tier 3: SIMD Vector Aliases',['../md_docs_2signatures.html#autotoc_md232',1,'']]],
+  ['3_3a_20the_20named_20type_20registry_18',['Part 3: The Named Type Registry',['../md_docs_2signatures.html#autotoc_md240',1,'']]],
+  ['3_3a_20the_20power_20of_20callbacks_20reverse_20calls_19',['Chapter 3: The Power of Callbacks (Reverse Calls)',['../md_docs_2cookbook.html#autotoc_md85',1,'']]]
 ];

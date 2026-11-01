@@ -1,27 +1,27 @@
 <map id="t/007_type_registry.c" name="t/007_type_registry.c">
-<area shape="rect" id="Node000001" title="Unit test for the named type registry system." alt="" coords="346,5,503,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="177,79,352,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="400,33,304,75,302,71,398,28"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="9,152,104,177"/>
-<area shape="poly" id="edge13_Node000001_Node000004" title=" " alt="" coords="346,31,257,49,210,63,166,81,118,111,80,144,76,140,115,107,163,76,209,58,256,44,345,26"/>
-<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="484,79,651,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="449,28,533,70,531,75,446,33"/>
-<area shape="rect" id="Node000009" href="$types_8h.html" title="Defines common C structures used across the infix test suite." alt="" coords="389,79,460,104"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="427,31,427,65,422,65,422,31"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="675,79,743,104"/>
-<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="471,28,662,76,661,81,470,33"/>
-<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="180,152,349,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="267,104,267,138,262,138,262,104"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="232,107,104,150,103,145,230,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="101,225,183,251"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="236,106,201,125,169,154,155,182,147,212,142,211,150,181,165,150,198,121,233,102"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="350,225,425,251"/>
-<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="296,102,332,121,364,150,380,181,387,211,382,212,375,182,360,154,328,125,293,106"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="72,175,119,214,116,219,69,179"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="105,174,337,223,336,228,103,179"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="5,225,76,251"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="57,178,49,213,44,212,51,177"/>
-<area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="425,105,409,178,398,213,393,211,403,177,420,104"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="476,152,563,177"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="441,102,494,141,491,146,438,106"/>
+<area shape="rect" id="Node000001" title="Unit test for the named type registry system." alt="" coords="342,5,499,33"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="175,81,348,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="390,35,305,77,303,72,394,32"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="10,157,103,184"/>
+<area shape="poly" id="edge13_Node000001_Node000004" title=" " alt="" coords="340,31,255,50,208,65,164,83,118,114,81,147,77,144,115,110,162,79,207,60,253,45,344,28"/>
+<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="479,81,645,109"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="446,31,526,73,520,74,445,36"/>
+<area shape="rect" id="Node000009" href="$types_8h.html" title="Defines common C structures used across the infix test suite." alt="" coords="386,81,455,109"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="422,31,423,67,418,64,419,36"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="670,81,737,109"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="472,31,657,80,652,81,472,36"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="178,157,346,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="263,107,264,142,259,140,260,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="224,112,109,153,106,149,226,107"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="100,232,181,260"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="227,111,197,131,168,158,153,187,145,219,141,216,148,186,164,155,194,126,232,108"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="346,232,420,260"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="295,107,329,126,360,155,375,186,383,218,378,216,370,187,356,158,326,131,294,112"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="72,182,117,221,112,223,71,187"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="104,180,333,231,330,236,103,185"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,232,76,260"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="55,183,49,218,44,216,52,187"/>
+<area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="420,107,404,185,394,219,390,215,399,184,416,110"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="471,157,557,184"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="438,107,488,147,483,147,436,112"/>
 </map>

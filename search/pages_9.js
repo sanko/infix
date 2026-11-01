@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quick_20reference_0',['API Quick Reference',['../md_docs_2API.html',1,'']]]
+  ['9_3a_20common_20pitfalls_20troubleshooting_0',['Chapter 9: Common Pitfalls &amp;amp; Troubleshooting',['../md_docs_2cookbook.html#autotoc_md135',1,'']]]
 ];

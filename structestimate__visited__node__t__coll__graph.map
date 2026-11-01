@@ -1,16 +1,16 @@
 <map id="estimate_visited_node_t" name="estimate_visited_node_t">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,188,255"/>
-<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="203,234,215,242,206,249,188,252,188,247,204,244,209,242,200,239"/>
-<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="347,117,446,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="353,150,129,232,127,227,352,145"/>
-<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="461,117,469,122,473,130,465,141,447,145,445,140,462,137,467,130,465,126,458,122"/>
-<area shape="rect" id="Node000004" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="270,229,438,255"/>
-<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="367,153,347,170,332,192,331,201,333,210,345,228,340,231,328,212,326,201,328,190,343,167,363,149"/>
-<area shape="rect" id="Node000005" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="462,229,654,255"/>
-<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="421,149,491,203,535,227,532,232,489,208,418,154"/>
-<area shape="rect" id="Node000003" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="343,5,450,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="399,45,399,117,394,117,394,45"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="465,9,477,18,468,26,451,29,450,23,466,21,471,18,462,14"/>
-<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="361,215,390,142,395,144,366,217"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="546,218,527,193,483,164,437,145,440,140,486,159,531,189,550,215"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,293,187,321"/>
+<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="203,299,213,307,205,315,188,318,187,313,203,310,208,307,201,304"/>
+<area shape="rect" id="Node000002" href="$structinfix__type__t.html" title="A semi&#45;opaque structure that describes a C type." alt="" coords="342,149,439,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="351,186,124,295,122,290,348,182"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="431,143,455,147,463,153,466,163,461,175,449,182,433,183,416,180,416,175,433,178,447,177,457,172,461,163,459,156,453,152,431,148"/>
+<area shape="rect" id="Node000004" href="$structinfix__struct__member__t.html" title="Describes a single member of a C struct or union." alt="" coords="272,293,440,321"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="366,186,343,214,325,245,323,257,325,268,343,294,338,292,321,270,317,257,321,243,339,211,362,189"/>
+<area shape="rect" id="Node000005" href="$structinfix__function__argument__t.html" title="Describes a single argument to a C function." alt="" coords="464,293,656,321"/>
+<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="411,187,446,227,490,267,531,293,526,292,487,271,442,231,409,192"/>
+<area shape="rect" id="Node000003" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="338,5,443,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,47,393,150,388,148,389,51"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="459,9,470,19,462,28,445,31,443,26,459,23,465,19,458,15"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="361,276,385,179,390,176,365,280"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="549,277,540,262,529,246,505,225,478,206,426,180,427,175,480,202,508,220,533,243,545,259,553,280"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="infix_arena_mark_t" name="infix_arena_mark_t">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,152,119"/>
-<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="25,5,132,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,45,81,93,76,93,76,45"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="147,9,159,18,150,26,133,29,132,23,148,21,153,18,144,14"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,106,152,134"/>
+<area shape="rect" id="Node000002" href="$structinfix__arena__t.html" title="Internal definition of a memory arena." alt="" coords="26,5,131,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,47,81,106,76,105,76,50"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="146,9,158,19,150,28,133,31,131,26,147,23,153,19,146,15"/>
 </map>

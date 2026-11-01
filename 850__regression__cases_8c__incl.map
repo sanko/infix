@@ -1,48 +1,48 @@
 <map id="t/850_regression_cases.c" name="t/850_regression_cases.c">
-<area shape="rect" id="Node000001" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="514,5,700,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="205,299,380,324"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="515,28,446,41,374,64,339,80,307,100,278,125,253,153,250,163,250,176,257,212,284,285,279,287,252,213,244,177,245,162,249,151,274,121,303,96,337,75,372,59,445,35,514,23"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="440,372,534,397"/>
-<area shape="poly" id="edge30_Node000001_Node000004" title=" " alt="" coords="589,33,559,54,526,84,500,121,492,141,490,164,490,239,490,358,484,358,484,239,484,163,487,140,495,118,522,80,555,50,586,29"/>
-<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="922,79,1089,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="671,28,928,74,927,79,670,33"/>
-<area shape="rect" id="Node000009" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="549,79,665,104"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="610,31,610,65,604,65,604,31"/>
-<area shape="rect" id="Node000016" href="$fuzz__regression__helpers_8h.html" title="Helper functions specifically for running regression tests from saved fuzzer inputs." alt="" coords="708,79,898,104"/>
-<area shape="poly" id="edge26_Node000001_Node000016" title=" " alt="" coords="639,28,759,71,757,76,637,33"/>
-<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="88,372,257,397"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,326,205,367,203,362,272,322"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="324,322,443,365,441,370,323,327"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="131,445,214,471"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="294,325,288,360,281,380,270,399,245,424,215,442,213,437,241,419,266,396,276,378,283,358,289,324"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="486,445,560,471"/>
-<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="312,322,428,395,494,436,491,440,425,400,309,326"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="440,399,228,447,227,442,439,394"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="495,396,513,432,508,434,490,399"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="657,445,728,471"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="521,395,647,438,645,443,519,400"/>
-<area shape="poly" id="edge19_Node000009_Node000004" title=" " alt="" coords="601,105,572,153,534,251,498,359,492,358,529,249,567,151,596,103"/>
-<area shape="poly" id="edge20_Node000009_Node000005" title=" " alt="" coords="549,100,426,114,277,138,206,155,143,175,93,199,75,213,62,227,51,236,36,241,23,245,12,252,8,267,13,293,31,335,65,396,89,421,119,438,116,443,85,425,61,399,26,337,8,295,3,267,8,249,20,240,35,235,48,231,58,223,72,209,90,195,141,170,204,150,276,133,425,108,548,95"/>
-<area shape="poly" id="edge21_Node000009_Node000006" title=" " alt="" coords="607,105,597,161,591,237,591,313,586,348,574,382,543,436,538,433,569,380,581,347,586,312,586,237,592,161,602,104"/>
-<area shape="poly" id="edge22_Node000009_Node000007" title=" " alt="" coords="638,102,674,121,706,150,721,172,728,191,732,237,732,313,730,346,723,379,705,433,700,432,718,378,724,345,727,313,727,237,723,192,716,174,702,154,671,125,636,106"/>
-<area shape="rect" id="Node000010" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="263,152,450,177"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="567,107,411,151,409,146,566,101"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="626,152,692,177"/>
-<area shape="poly" id="edge23_Node000009_Node000013" title=" " alt="" coords="618,103,644,139,640,142,613,106"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="862,152,933,177"/>
-<area shape="poly" id="edge24_Node000009_Node000014" title=" " alt="" coords="654,101,850,149,848,154,653,107"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="768,152,838,177"/>
-<area shape="poly" id="edge25_Node000009_Node000015" title=" " alt="" coords="639,102,759,145,757,150,637,107"/>
-<area shape="poly" id="edge12_Node000010_Node000003" title=" " alt="" coords="278,180,152,203,102,215,77,227,68,244,67,262,72,280,83,299,113,334,146,362,143,366,109,337,78,302,67,282,62,262,63,242,73,223,100,210,151,197,277,175"/>
-<area shape="poly" id="edge17_Node000010_Node000004" title=" " alt="" coords="370,176,412,224,452,295,480,358,475,360,447,298,407,227,366,179"/>
-<area shape="rect" id="Node000011" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="88,225,238,251"/>
-<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="326,180,208,223,206,218,324,175"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="314,225,398,251"/>
-<area shape="poly" id="edge18_Node000010_Node000012" title=" " alt="" coords="359,178,359,212,354,212,354,178"/>
-<area shape="poly" id="edge14_Node000011_Node000002" title=" " alt="" coords="185,248,260,289,257,294,182,253"/>
-<area shape="poly" id="edge15_Node000011_Node000003" title=" " alt="" coords="166,251,173,358,168,358,161,251"/>
-<area shape="poly" id="edge16_Node000011_Node000005" title=" " alt="" coords="149,253,120,279,90,315,78,335,71,355,70,376,77,396,98,420,126,437,123,442,95,424,73,399,65,377,66,355,73,333,85,312,116,275,146,249"/>
-<area shape="poly" id="edge27_Node000016_Node000006" title=" " alt="" coords="865,101,901,113,932,128,944,139,951,150,953,164,948,179,922,212,881,248,830,285,772,323,653,392,559,442,556,437,650,387,769,318,827,281,878,243,918,208,943,176,947,163,946,152,939,142,929,133,899,118,863,107"/>
-<area shape="poly" id="edge28_Node000016_Node000014" title=" " alt="" coords="820,102,873,141,870,146,816,106"/>
-<area shape="poly" id="edge29_Node000016_Node000015" title=" " alt="" coords="806,104,806,138,800,138,800,104"/>
+<area shape="rect" id="Node000001" title="A suite of regression tests for bugs discovered by fuzzing." alt="" coords="507,5,692,33"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="202,308,375,336"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="504,29,439,43,367,67,332,84,300,104,271,129,247,158,244,168,243,182,251,218,279,294,274,294,246,219,238,182,238,167,242,155,267,125,297,100,330,79,365,62,438,38,509,26"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="434,384,527,411"/>
+<area shape="poly" id="edge30_Node000001_Node000004" title=" " alt="" coords="576,35,550,58,519,89,493,126,486,147,483,169,483,248,483,369,478,367,478,248,478,169,481,146,489,124,515,85,547,54,580,32"/>
+<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="915,81,1081,109"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="671,31,914,77,909,79,671,36"/>
+<area shape="rect" id="Node000009" href="$fuzz__helpers_8h.html" title="Common definitions, structures, and helpers for all fuzzer targets." alt="" coords="542,81,657,109"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="601,31,602,66,597,64,598,36"/>
+<area shape="rect" id="Node000016" href="$fuzz__regression__helpers_8h.html" title="Helper functions specifically for running regression tests from saved fuzzer inputs." alt="" coords="700,81,891,109"/>
+<area shape="poly" id="edge26_Node000001_Node000016" title=" " alt="" coords="634,31,749,75,744,76,634,36"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="86,384,254,411"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="270,335,205,378,202,373,265,338"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="323,334,435,377,430,378,323,339"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="129,459,211,487"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="290,334,286,372,279,393,268,413,245,436,218,454,215,449,242,432,264,410,274,391,280,371,287,338"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="480,459,553,487"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="309,334,423,409,486,451,480,450,421,414,307,339"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="436,411,226,461,225,456,431,409"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="489,410,506,446,501,444,486,414"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="651,459,721,487"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="518,409,639,454,633,454,517,415"/>
+<area shape="poly" id="edge19_Node000009_Node000004" title=" " alt="" coords="592,107,566,158,529,258,491,370,487,367,524,256,561,156,589,111"/>
+<area shape="poly" id="edge20_Node000009_Node000005" title=" " alt="" coords="539,103,420,118,272,144,202,161,139,182,90,206,73,220,60,234,49,244,35,250,22,256,12,265,8,282,13,309,30,351,63,410,86,435,117,454,112,455,83,439,59,413,25,353,8,310,3,282,7,263,19,252,33,245,46,239,56,230,69,216,88,202,137,177,200,156,271,139,419,113,544,100"/>
+<area shape="poly" id="edge21_Node000009_Node000006" title=" " alt="" coords="598,107,590,168,585,245,585,323,580,359,568,393,537,449,534,444,564,391,575,357,579,323,579,245,585,168,595,111"/>
+<area shape="poly" id="edge22_Node000009_Node000007" title=" " alt="" coords="633,107,669,126,700,155,715,177,723,197,726,245,726,323,723,357,717,390,699,447,695,443,712,389,718,356,721,323,721,245,717,198,710,180,696,158,666,131,633,112"/>
+<area shape="rect" id="Node000010" href="$infix__internals_8h.html" title="Internal data structures, function prototypes, and constants." alt="" coords="257,157,443,184"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="553,111,410,154,408,149,557,108"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="620,157,685,184"/>
+<area shape="poly" id="edge23_Node000009_Node000013" title=" " alt="" coords="610,107,637,144,632,144,608,112"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="854,157,923,184"/>
+<area shape="poly" id="edge24_Node000009_Node000014" title=" " alt="" coords="653,107,841,155,836,157,653,112"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="760,157,831,184"/>
+<area shape="poly" id="edge25_Node000009_Node000015" title=" " alt="" coords="634,107,749,151,744,151,634,112"/>
+<area shape="poly" id="edge12_Node000010_Node000003" title=" " alt="" coords="264,187,146,210,99,223,76,234,67,251,66,269,70,288,80,307,109,343,143,373,137,374,106,346,76,310,65,290,60,270,62,250,72,230,97,218,145,205,267,183"/>
+<area shape="poly" id="edge17_Node000010_Node000004" title=" " alt="" coords="364,182,386,204,407,231,447,304,473,370,468,368,442,306,402,234,382,208,364,187"/>
+<area shape="rect" id="Node000011" href="$platform_8h.html" title="Declares internal, runtime CPU/OS feature detection functions." alt="" coords="86,232,236,260"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="314,187,210,229,207,224,318,183"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="310,232,393,260"/>
+<area shape="poly" id="edge18_Node000010_Node000012" title=" " alt="" coords="351,183,353,218,348,216,349,187"/>
+<area shape="poly" id="edge14_Node000011_Node000002" title=" " alt="" coords="184,258,256,299,251,301,183,263"/>
+<area shape="poly" id="edge15_Node000011_Node000003" title=" " alt="" coords="163,258,171,369,166,368,160,262"/>
+<area shape="poly" id="edge16_Node000011_Node000005" title=" " alt="" coords="143,262,117,290,88,327,77,347,70,369,70,390,76,410,96,433,122,452,117,453,92,437,72,413,64,390,65,368,72,345,83,324,113,286,146,258"/>
+<area shape="poly" id="edge27_Node000016_Node000006" title=" " alt="" coords="857,107,893,119,923,135,934,146,941,157,942,171,938,186,913,218,873,255,767,331,650,402,556,454,554,449,647,397,764,327,870,251,909,215,933,183,937,170,936,159,930,149,920,140,891,124,857,112"/>
+<area shape="poly" id="edge28_Node000016_Node000014" title=" " alt="" coords="812,107,863,147,858,147,812,112"/>
+<area shape="poly" id="edge29_Node000016_Node000015" title=" " alt="" coords="797,107,798,142,793,140,794,111"/>
 </map>

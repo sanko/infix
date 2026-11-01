@@ -6,6 +6,7 @@ var abi__arm64__emitters_8c =
     [ "emit_arm64_b_reg", "abi__arm64__emitters_8c.html#a239e4cf9563d44192c400ec3cd522a56", null ],
     [ "emit_arm64_blr_reg", "abi__arm64__emitters_8c.html#a23e0898b6650decac30e6d45f628cdc2", null ],
     [ "emit_arm64_brk", "abi__arm64__emitters_8c.html#a677f5d9f8d6516590b04eda1590d98dc", null ],
+    [ "emit_arm64_bti_c", "abi__arm64__emitters_8c.html#a1ad1ecb316c7e16da829810875cd38f7", null ],
     [ "emit_arm64_cbnz", "abi__arm64__emitters_8c.html#a62a9ec3e6e7ed180cfa3b68fa30e4135", null ],
     [ "emit_arm64_cmp_reg_reg", "abi__arm64__emitters_8c.html#a9f696f1b07992e6fb18105635f89df20", null ],
     [ "emit_arm64_ldp_post_index", "abi__arm64__emitters_8c.html#a38810556833b52761519dcc759885db6", null ],

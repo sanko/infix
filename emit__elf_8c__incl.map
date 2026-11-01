@@ -1,28 +1,28 @@
 <map id="src/emit/elf/emit_elf.c" name="src/emit/elf/emit_elf.c">
-<area shape="rect" id="Node000001" title="ELF binary format support for emit system." alt="" coords="421,5,585,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="144,79,319,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="460,33,289,78,288,73,459,28"/>
-<area shape="rect" id="Node000008" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="347,79,446,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="488,33,427,73,424,69,485,28"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="470,79,537,104"/>
-<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="506,31,506,65,501,65,501,31"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="561,79,632,104"/>
-<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="520,29,572,68,569,72,517,33"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="656,79,727,104"/>
-<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="534,28,649,71,647,76,533,33"/>
-<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="24,152,193,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="213,106,142,147,139,143,210,102"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="269,152,364,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="247,102,294,141,291,145,243,106"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="275,225,358,251"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="236,104,244,137,260,176,276,197,293,214,290,218,272,200,256,179,239,139,231,105"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="63,225,138,251"/>
-<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="151,107,67,126,34,139,13,154,9,162,8,171,18,188,37,204,61,217,58,222,34,208,14,191,3,172,4,161,9,150,31,134,66,121,150,101"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="319,178,319,212,314,212,314,178"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="283,180,149,223,148,218,281,175"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="400,225,471,251"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="337,175,405,216,403,220,334,180"/>
-<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="386,106,342,145,338,141,382,102"/>
-<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="399,105,393,139,379,179,363,200,345,219,341,215,359,197,374,176,388,138,393,104"/>
-<area shape="poly" id="edge12_Node000008_Node000007" title=" " alt="" coords="405,103,423,151,435,211,430,212,418,153,400,105"/>
+<area shape="rect" id="Node000001" title="ELF binary format support for emit system." alt="" coords="416,5,580,33"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="142,81,315,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="448,35,292,79,290,74,452,32"/>
+<area shape="rect" id="Node000008" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="344,81,441,109"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="482,32,425,74,422,70,477,35"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="465,81,531,109"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="500,31,500,67,496,64,496,36"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="555,81,625,109"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="515,31,565,72,559,71,514,36"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="648,81,719,109"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="531,31,639,75,634,75,531,36"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="23,157,192,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,111,143,151,140,146,209,108"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="266,157,359,184"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="244,107,289,146,284,146,243,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="272,232,353,260"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="232,107,240,143,256,183,271,203,288,223,283,221,266,206,252,186,235,145,229,111"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="63,232,136,260"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="141,112,64,131,33,144,13,158,9,167,8,175,17,192,35,209,58,224,53,226,31,213,13,196,3,176,4,166,9,155,30,139,62,126,144,107"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="315,183,315,218,311,215,311,187"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="277,185,152,230,150,225,272,185"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="395,232,465,260"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="334,182,399,224,394,224,333,187"/>
+<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="381,108,340,148,337,144,376,110"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="394,107,389,145,374,186,359,206,342,224,340,219,355,203,369,183,383,143,390,111"/>
+<area shape="poly" id="edge12_Node000008_Node000007" title=" " alt="" coords="400,107,418,156,429,219,425,216,413,157,397,111"/>
 </map>

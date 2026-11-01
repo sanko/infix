@@ -1,23 +1,23 @@
 <map id="t/001_primitives.c" name="t/001_primitives.c">
-<area shape="rect" id="Node000001" title="Unit test for creating trampolines for functions with primitive C types." alt="" coords="277,5,415,31"/>
-<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="133,79,308,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="327,33,254,74,252,69,325,28"/>
-<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,152,175,177"/>
-<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="277,24,238,29,197,40,157,56,122,81,112,93,104,108,95,139,90,137,99,106,108,90,119,77,155,52,195,35,237,24,276,19"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="301,152,396,177"/>
-<area shape="poly" id="edge11_Node000001_Node000004" title=" " alt="" coords="349,31,351,138,346,138,344,31"/>
-<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="384,79,551,104"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="367,28,437,69,435,74,364,33"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="575,79,661,104"/>
-<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="390,28,562,73,561,78,389,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="201,106,124,148,122,143,198,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="243,102,317,143,314,147,240,106"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="171,225,254,251"/>
-<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="223,105,217,212,211,211,217,104"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="278,225,353,251"/>
-<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="231,103,302,212,298,215,226,106"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="328,180,248,221,246,217,326,175"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="346,179,329,214,324,212,341,177"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="377,225,448,251"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="361,176,395,213,391,217,357,179"/>
+<area shape="rect" id="Node000001" title="Unit test for creating trampolines for functions with primitive C types." alt="" coords="274,5,412,33"/>
+<area shape="rect" id="Node000002" href="$compat__c23_8h.html" title="Provides forward compatibility macros for C23 features." alt="" coords="132,81,306,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="318,35,255,75,253,71,323,32"/>
+<area shape="rect" id="Node000003" href="$infix__config_8h.html" title="Platform, architecture, and ABI detection macros." alt="" coords="5,157,174,184"/>
+<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="271,24,235,31,195,42,156,59,122,83,111,96,104,111,95,143,90,141,99,109,107,93,118,79,153,54,193,37,234,26,276,22"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="299,157,392,184"/>
+<area shape="poly" id="edge11_Node000001_Node000004" title=" " alt="" coords="345,31,347,142,343,140,341,35"/>
+<area shape="rect" id="Node000008" href="$double__tap_8h.html" title="A lightweight, single&#45;header TAP (Test Anything Protocol) library." alt="" coords="380,81,546,109"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="365,31,431,73,426,73,364,36"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="570,81,657,109"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="391,31,558,77,553,79,391,36"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,111,127,151,124,147,198,107"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="242,107,313,148,308,149,241,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="170,232,252,260"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="220,107,215,218,210,216,216,110"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="276,232,349,260"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="228,107,299,219,293,219,225,111"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="324,184,249,227,247,222,319,186"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="342,183,326,220,323,216,337,186"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="373,232,443,260"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="358,182,390,221,385,220,356,187"/>
 </map>

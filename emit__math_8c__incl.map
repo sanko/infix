@@ -1,32 +1,32 @@
 <map id="src/emit/emit_math.c" name="src/emit/emit_math.c">
-<area shape="rect" id="Node000001" title="Math operations for JIT code generation (x86&#45;64 and ARM64)." alt="" coords="271,5,433,31"/>
-<area shape="rect" id="Node000002" href="$emit__math_8h.html" title="Math operations for JIT code generation." alt="" coords="75,79,213,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="319,33,192,77,190,72,318,28"/>
-<area shape="rect" id="Node000003" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="112,152,176,177"/>
-<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="337,33,174,146,170,142,334,29"/>
-<area shape="rect" id="Node000008" href="$emit__internals_8h.html" title="Internal structures for the emit JIT code generation system." alt="" coords="288,79,416,104"/>
-<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="355,31,355,65,349,65,349,31"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="485,152,555,177"/>
-<area shape="poly" id="edge19_Node000001_Node000010" title=" " alt="" coords="369,29,430,77,500,140,496,144,426,81,366,33"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="491,79,557,104"/>
-<area shape="poly" id="edge18_Node000001_Node000011" title=" " alt="" coords="381,28,484,71,482,76,379,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,104,147,138,141,138,141,104"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="5,299,88,324"/>
-<area shape="poly" id="edge9_Node000002_Node000005" title=" " alt="" coords="133,106,89,155,66,189,49,226,44,256,45,285,40,285,39,256,44,225,61,186,85,152,129,102"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="246,299,317,324"/>
-<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="158,103,205,153,232,187,256,224,269,255,278,285,273,286,264,257,251,227,227,190,201,156,154,106"/>
-<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="118,225,213,251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="150,177,161,211,155,213,145,178"/>
-<area shape="poly" id="edge7_Node000003_Node000005" title=" " alt="" coords="120,180,90,199,64,227,52,256,49,285,43,284,47,254,59,224,86,195,117,175"/>
-<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="165,175,195,196,226,223,251,255,271,285,266,288,247,258,222,227,191,200,162,180"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="148,253,79,294,77,289,145,248"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="128,299,203,324"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="168,251,168,285,163,285,163,251"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="185,248,252,289,249,294,183,253"/>
-<area shape="poly" id="edge13_Node000008_Node000003" title=" " alt="" coords="319,107,190,150,188,145,318,101"/>
-<area shape="poly" id="edge14_Node000008_Node000005" title=" " alt="" coords="331,106,201,175,107,227,81,257,61,288,57,285,77,254,104,223,198,171,329,102"/>
-<area shape="poly" id="edge15_Node000008_Node000007" title=" " alt="" coords="354,105,345,168,336,210,322,252,301,289,296,286,318,250,331,209,340,167,349,104"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="390,152,461,177"/>
-<area shape="poly" id="edge16_Node000008_Node000009" title=" " alt="" coords="366,102,405,140,402,144,362,106"/>
-<area shape="poly" id="edge17_Node000008_Node000010" title=" " alt="" coords="380,102,481,144,479,149,378,106"/>
+<area shape="rect" id="Node000001" title="Math operations for JIT code generation (x86&#45;64 and ARM64)." alt="" coords="268,5,429,33"/>
+<area shape="rect" id="Node000002" href="$emit__math_8h.html" title="Math operations for JIT code generation." alt="" coords="72,81,210,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="310,35,193,78,191,73,313,32"/>
+<area shape="rect" id="Node000003" href="$emit_8h.html" title="Public API for the emit JIT code generation system." alt="" coords="109,157,172,184"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="329,36,173,149,170,145,332,31"/>
+<area shape="rect" id="Node000008" href="$emit__internals_8h.html" title="Internal structures for the emit JIT code generation system." alt="" coords="285,81,412,109"/>
+<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="350,31,351,66,346,64,347,36"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="479,157,549,184"/>
+<area shape="poly" id="edge19_Node000001_Node000010" title=" " alt="" coords="366,31,426,79,494,145,489,145,423,83,366,36"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="488,81,553,109"/>
+<area shape="poly" id="edge18_Node000001_Node000011" title=" " alt="" coords="379,31,479,74,474,75,379,36"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="142,107,143,142,138,140,140,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,308,87,336"/>
+<area shape="poly" id="edge9_Node000002_Node000005" title=" " alt="" coords="126,112,86,161,63,196,47,233,43,263,44,293,39,292,37,263,42,232,59,193,81,158,128,107"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="243,308,313,336"/>
+<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="155,107,203,159,230,193,254,231,267,262,275,294,270,292,262,264,249,234,226,196,199,162,154,112"/>
+<area shape="rect" id="Node000004" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="117,232,210,260"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="146,182,157,218,152,217,144,187"/>
+<area shape="poly" id="edge7_Node000003_Node000005" title=" " alt="" coords="112,187,87,207,63,234,52,263,48,293,43,292,47,262,58,231,84,203,116,183"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="163,182,194,204,224,231,248,262,267,295,262,293,244,265,220,234,190,208,162,188"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="145,260,81,302,78,298,140,261"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="127,308,200,336"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="165,259,166,294,161,291,162,263"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="185,258,248,299,242,300,183,263"/>
+<area shape="poly" id="edge13_Node000008_Node000003" title=" " alt="" coords="310,111,188,155,186,151,313,107"/>
+<area shape="poly" id="edge14_Node000008_Node000005" title=" " alt="" coords="323,111,197,182,106,234,81,264,61,296,57,293,76,261,103,230,194,177,327,107"/>
+<area shape="poly" id="edge15_Node000008_Node000007" title=" " alt="" coords="350,107,342,175,333,218,319,261,299,297,296,293,314,259,328,217,337,175,346,111"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="386,157,455,184"/>
+<area shape="poly" id="edge16_Node000008_Node000009" title=" " alt="" coords="362,107,400,146,395,145,361,112"/>
+<area shape="poly" id="edge17_Node000008_Node000010" title=" " alt="" coords="378,107,473,150,468,151,378,112"/>
 </map>

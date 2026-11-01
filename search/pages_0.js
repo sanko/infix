@@ -1,10 +1,26 @@
 var searchData=
 [
-  ['a_20jit_20powered_20ffi_20library_20for_20c_0',['infix: A JIT-powered FFI library for C',['../index.html',1,'']]],
-  ['a_20new_20abi_1',['Porting infix to a New ABI',['../md_docs_2porting.html',1,'']]],
-  ['abi_2',['Porting infix to a New ABI',['../md_docs_2porting.html',1,'']]],
-  ['and_20integrating_20infix_3',['Building and Integrating infix',['../md_docs_2INSTALL.html',1,'']]],
-  ['and_20type_20system_4',['The infix Signature and Type System',['../md_docs_2signatures.html',1,'']]],
-  ['api_20quick_20reference_5',['API Quick Reference',['../md_docs_2API.html',1,'']]],
-  ['architectural_20notes_6',['Architectural Notes',['../md_docs_2internals.html',1,'']]]
+  ['0_201_200_202025_2010_2027_0',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot;&gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md283',1,'']]],
+  ['0_201_201_202025_2011_2001_1',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.0...v0.1.1&quot;&gt;0.1.1&lt;/a&gt; - 2025-11-01',['../md_CHANGELOG.html#autotoc_md279',1,'']]],
+  ['0_201_202_202025_2011_2026_2',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.1...v0.1.2&quot;&gt;0.1.2&lt;/a&gt; - 2025-11-26',['../md_CHANGELOG.html#autotoc_md275',1,'']]],
+  ['0_201_203_202025_2012_2019_3',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.2...v0.1.3&quot;&gt;0.1.3&lt;/a&gt; - 2025-12-19',['../md_CHANGELOG.html#autotoc_md272',1,'']]],
+  ['0_201_204_202026_2001_2017_4',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.3...v0.1.4&quot;&gt;0.1.4&lt;/a&gt; - 2026-01-17',['../md_CHANGELOG.html#autotoc_md268',1,'']]],
+  ['0_201_205_202026_2002_2006_5',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.4...v0.1.5&quot;&gt;0.1.5&lt;/a&gt; - 2026-02-06',['../md_CHANGELOG.html#autotoc_md264',1,'']]],
+  ['0_201_206_202026_2002_2014_6',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.5...v0.1.6&quot;&gt;0.1.6&lt;/a&gt; - 2026-02-14',['../md_CHANGELOG.html#autotoc_md261',1,'']]],
+  ['0_201_207_202026_2003_2030_7',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.6...v0.1.7&quot;&gt;0.1.7&lt;/a&gt; - 2026-03-30',['../md_CHANGELOG.html#autotoc_md259',1,'']]],
+  ['0_202_200_202026_2008_2003_8',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.7...v0.2.0&quot;&gt;0.2.0&lt;/a&gt; - 2026-08-03',['../md_CHANGELOG.html#autotoc_md255',1,'']]],
+  ['0_202_201_202026_2008_2004_9',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.2.0...v0.2.1&quot;&gt;0.2.1&lt;/a&gt; - 2026-08-04',['../md_CHANGELOG.html#autotoc_md253',1,'']]],
+  ['0_202025_2010_2027_10',['&lt;a href=&quot;https://github.com/sanko/infix/releases/tag/v0.1.0&quot;&gt;0.1.0&lt;/a&gt; - 2025-10-27',['../md_CHANGELOG.html#autotoc_md283',1,'']]],
+  ['0_202026_2008_2003_11',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.7...v0.2.0&quot;&gt;0.2.0&lt;/a&gt; - 2026-08-03',['../md_CHANGELOG.html#autotoc_md255',1,'']]],
+  ['01_12',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.0...v0.1.1&quot;&gt;0.1.1&lt;/a&gt; - 2025-11-01',['../md_CHANGELOG.html#autotoc_md279',1,'']]],
+  ['01_2017_13',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.3...v0.1.4&quot;&gt;0.1.4&lt;/a&gt; - 2026-01-17',['../md_CHANGELOG.html#autotoc_md268',1,'']]],
+  ['02_2006_14',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.4...v0.1.5&quot;&gt;0.1.5&lt;/a&gt; - 2026-02-06',['../md_CHANGELOG.html#autotoc_md264',1,'']]],
+  ['02_2014_15',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.5...v0.1.6&quot;&gt;0.1.6&lt;/a&gt; - 2026-02-14',['../md_CHANGELOG.html#autotoc_md261',1,'']]],
+  ['03_16',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.7...v0.2.0&quot;&gt;0.2.0&lt;/a&gt; - 2026-08-03',['../md_CHANGELOG.html#autotoc_md255',1,'']]],
+  ['03_2030_17',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.6...v0.1.7&quot;&gt;0.1.7&lt;/a&gt; - 2026-03-30',['../md_CHANGELOG.html#autotoc_md259',1,'']]],
+  ['04_18',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.2.0...v0.2.1&quot;&gt;0.2.1&lt;/a&gt; - 2026-08-04',['../md_CHANGELOG.html#autotoc_md253',1,'']]],
+  ['06_19',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.4...v0.1.5&quot;&gt;0.1.5&lt;/a&gt; - 2026-02-06',['../md_CHANGELOG.html#autotoc_md264',1,'']]],
+  ['08_2003_20',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.1.7...v0.2.0&quot;&gt;0.2.0&lt;/a&gt; - 2026-08-03',['../md_CHANGELOG.html#autotoc_md255',1,'']]],
+  ['08_2004_21',['&lt;a href=&quot;https://github.com/sanko/infix/compare/v0.2.0...v0.2.1&quot;&gt;0.2.1&lt;/a&gt; - 2026-08-04',['../md_CHANGELOG.html#autotoc_md253',1,'']]],
+  ['0_3a_20research_20and_20preparation_22',['Step 0: Research and Preparation',['../md_docs_2porting.html#autotoc_md216',1,'']]]
 ];

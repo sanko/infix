@@ -1,7 +1,7 @@
 <map id="t/include/types.h" name="t/include/types.h">
-<area shape="rect" id="Node000001" title="Defines common C structures used across the infix test suite." alt="" coords="35,5,166,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,92,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,33,67,69,63,66,90,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="117,79,191,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,29,139,66,135,69,107,33"/>
+<area shape="rect" id="Node000001" title="Defines common C structures used across the infix test suite." alt="" coords="36,5,165,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,92,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,32,68,70,64,67,89,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="116,81,189,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,31,137,68,132,68,109,36"/>
 </map>

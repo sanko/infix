@@ -1,14 +1,14 @@
 <map id="eg/cookbook/Ch02_Bitfields.c" name="eg/cookbook/Ch02_Bitfields.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with Structs that Contain Bitfields." alt="" coords="136,5,349,31"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="107,79,202,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,33,181,72,178,68,227,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="211,152,282,177"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="246,31,249,138,243,138,240,31"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="280,79,347,104"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="256,29,294,67,290,71,252,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,88,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,106,77,147,74,142,136,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="112,152,187,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,105,154,139,149,138,151,104"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="171,102,223,141,219,146,168,106"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with Structs that Contain Bitfields." alt="" coords="133,5,346,33"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="106,81,199,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,32,181,73,178,69,222,35"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="208,157,278,184"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="242,32,245,142,240,140,238,35"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="277,81,343,109"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="253,31,290,70,284,70,251,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,157,87,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="136,109,79,150,76,146,131,110"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="111,157,184,184"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="154,107,152,142,147,140,150,111"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="170,107,218,147,213,147,168,112"/>
 </map>

@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['h_0',['Step 1: Platform Detection (&lt;span class=&quot;tt&quot;&gt;src/common/infix_config.h&lt;/span&gt;)',['../md_docs_2porting.html#autotoc_md217',1,'']]],
+  ['handling_20api_1',['2. Error Handling API',['../md_docs_2API.html#autotoc_md29',1,'']]],
+  ['handling_20boundaries_2',['4. Exception Handling Boundaries',['../md_docs_2internals.html#autotoc_md205',1,'']]],
+  ['handling_20complex_20data_20structures_3',['Chapter 2: Handling Complex Data Structures',['../md_docs_2cookbook.html#autotoc_md65',1,'']]],
+  ['handling_20exceptions_20and_20errors_4',['Chapter 13: Handling Exceptions and Errors',['../md_docs_2cookbook.html#autotoc_md161',1,'']]],
+  ['handling_20library_20dependencies_5',['Recipe: Handling Library Dependencies',['../md_docs_2cookbook.html#autotoc_md117',1,'']]],
+  ['handling_20long_20double_6',['Recipe: Handling &lt;span class=&quot;tt&quot;&gt;long double&lt;/span&gt;',['../md_docs_2cookbook.html#autotoc_md93',1,'']]],
+  ['handling_20pattern_7',['The Error Handling Pattern',['../md_docs_2API.html#autotoc_md30',1,'']]],
+  ['handling_20strings_20and_20semantic_20types_20wchar_5ft_20etc_8',['Recipe: Handling Strings and Semantic Types (&lt;span class=&quot;tt&quot;&gt;wchar_t&lt;/span&gt;, etc.)',['../md_docs_2cookbook.html#autotoc_md109',1,'']]],
+  ['handling_20support_20optional_20but_20recommended_9',['Step 6: Exception Handling Support (Optional but Recommended)',['../md_docs_2porting.html#autotoc_md222',1,'']]],
+  ['hardened_20runtimes_20on_20apple_20silicon_10',['The Challenge: Hardened Runtimes on Apple Silicon',['../md_docs_2internals.html#autotoc_md200',1,'']]],
+  ['hardening_11',['Hardening',['../md_SECURITY.html#autotoc_md301',1,'3. Read-Only Context Hardening'],['../md_docs_2internals.html#autotoc_md203',1,'3.5 API Input Hardening'],['../md_CHANGELOG.html#autotoc_md286',1,'Security &amp;amp; Hardening']]],
+  ['hardening_20against_20integer_20overflows_12',['4. API Hardening Against Integer Overflows',['../md_SECURITY.html#autotoc_md302',1,'']]],
+  ['hardening_20and_20the_20entitlement_20fallback_13',['3.3 macOS JIT Hardening and the Entitlement Fallback',['../md_docs_2internals.html#autotoc_md199',1,'']]],
+  ['high_20level_20signature_20api_14',['1. High-Level Signature API',['../md_docs_2API.html#autotoc_md15',1,'']]],
+  ['high_20performance_20language_20bindings_15',['High-Performance Language Bindings',['../index.html#autotoc_md7',1,'']]],
+  ['high_20performance_20language_20bindings_20direct_20marshalling_16',['Chapter 12: High-Performance Language Bindings (Direct Marshalling)',['../md_docs_2cookbook.html#autotoc_md159',1,'']]],
+  ['high_20priority_3a_20foundation_20stability_17',['High Priority: Foundation Stability',['../md_TODO.html#autotoc_md290',1,'High Priority: Foundation &amp;amp; Stability'],['../md_TODO.html#autotoc_md293',1,'High Priority: Foundation &amp;amp; Stability']]],
+  ['hot_20loops_18',['Advanced Optimization: Arena Resetting for Hot Loops',['../md_docs_2cookbook.html#autotoc_md133',1,'']]],
+  ['how_20it_20works_20why_20it_20s_20better_19',['How It Works &amp;amp; Why It&apos;s Better',['../md_docs_2cookbook.html#autotoc_md132',1,'']]],
+  ['how_20it_20works_3a_20a_20quick_20example_20',['How It Works: A Quick Example',['../index.html#autotoc_md4',1,'']]],
+  ['human_20first_20signature_20system_21',['1.3 Our Solution: A Human-First Signature System',['../md_docs_2signatures.html#autotoc_md227',1,'']]]
+];

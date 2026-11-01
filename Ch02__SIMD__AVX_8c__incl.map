@@ -1,14 +1,14 @@
 <map id="eg/cookbook/Ch02_SIMD_AVX.c" name="eg/cookbook/Ch02_SIMD_AVX.c">
-<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with SIMD Vectors (x86&#45;64)" alt="" coords="53,5,235,45"/>
-<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="97,93,191,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,46,147,79,141,79,141,46"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,167,88,192"/>
-<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="126,47,86,95,70,125,58,154,53,152,65,123,82,92,122,44"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="216,93,283,119"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="171,43,224,83,221,87,168,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,121,75,160,72,156,127,117"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="112,167,187,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="148,119,150,153,145,153,142,119"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="211,167,282,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="162,116,220,156,217,161,159,121"/>
+<area shape="rect" id="Node000001" title="Cookbook Chapter 2: Working with SIMD Vectors (x86&#45;64)." alt="" coords="51,5,233,50"/>
+<area shape="rect" id="Node000002" href="$infix_8h.html" title="The public interface for the infix FFI library." alt="" coords="95,98,189,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,48,145,83,139,82,141,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,174,87,201"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="119,53,86,99,70,130,57,160,53,158,65,128,81,97,122,49"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="213,98,279,126"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="170,48,220,88,215,89,169,53"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,125,77,166,74,162,122,127"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="111,174,184,201"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="145,124,148,159,143,157,141,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="208,174,278,201"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="161,124,216,164,210,165,159,129"/>
 </map>

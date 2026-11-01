@@ -1,5 +1,5 @@
 <map id="src/emit/elf/emit_elf.c" name="src/emit/elf/emit_elf.c">
-<area shape="rect" id="Node000001" title="ELF binary format support for emit system." alt="" coords="5,5,169,31"/>
-<area shape="rect" id="Node000002" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="45,79,129,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,44,90,79,85,79,85,44"/>
+<area shape="rect" id="Node000001" title="ELF binary format support for emit system." alt="" coords="5,5,169,33"/>
+<area shape="rect" id="Node000002" href="$infix_8c.html" title="The unity build source file for the infix library." alt="" coords="45,81,129,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,47,89,82,85,80,85,51"/>
 </map>
