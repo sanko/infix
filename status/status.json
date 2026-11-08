@@ -53,7 +53,7 @@
 ,
 "windows-aarch64-clang": "👍🏽 passing"
 ,
-"windows-aarch64-msvc": "👍🏽 passing"
+"windows-aarch64-msvc": "👎🏽 failing"
 ,
 "windows-x86_64-clang": "👍🏽 passing"
 ,

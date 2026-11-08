@@ -28,7 +28,7 @@
 | **ubuntu** | `x86_64` | `clang` | ✅ success |
 | **ubuntu** | `x86_64` | `gcc` | ✅ success |
 | **windows** | `aarch64` | `clang` | ✅ success |
-| **windows** | `aarch64` | `msvc` | ✅ success |
+| **windows** | `aarch64` | `msvc` | ❌ failure |
 | **windows** | `x86_64` | `clang` | ✅ success |
 | **windows** | `x86_64` | `gcc` | ✅ success |
 | **windows** | `x86_64` | `msvc` | ✅ success |
