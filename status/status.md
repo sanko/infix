@@ -7,7 +7,7 @@
 | **freebsd** | `aarch64` | `clang` | ❌ failure |
 | **freebsd** | `aarch64` | `gcc` | ❌ failure |
 | **freebsd** | `x86_64` | `clang` | ✅ success |
-| **freebsd** | `x86_64` | `gcc` | ✅ success |
+| **freebsd** | `x86_64` | `gcc` | ❌ failure |
 | **haiku** | `x86_64` | `gcc` | ✅ success |
 | **macos** | `aarch64` | `clang` | ✅ success |
 | **macos** | `aarch64` | `gcc` | ✅ success |
